@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<langlist xmlns="none">  
+  <language code="cze">
+    <langname language="0x407">tschechisch</langname>
+    <langname language="0x409">czech</langname>
+    <langcode>cze</langcode>
+    <scriptcode>Latn</scriptcode>
+  </language>
+  <language code="dan">
+    <langname language="0x407">dänisch</langname>
+    <langname language="0x409">danish</langname>
+    <langcode>dan</langcode>
+    <scriptcode>Latn</scriptcode>
+  </language>
+  <language code="dsb">
+    <langname language="0x407">niedersorbisch</langname>
+    <langname language="0x409">niedersorbisch</langname>
+    <langcode>dsb</langcode>
+    <scriptcode>Latn</scriptcode>
+  </language>
+  <language code="dut">
+    <langname language="0x407">niederländisch</langname>
+    <langname language="0x409">dutch</langname>
+    <langcode>dut</langcode>
+    <scriptcode>Latn</scriptcode>
+  </language> 
+  <language code="eng">
+    <langname language="0x407">englisch</langname>
+    <langname language="0x409">english</langname>
+    <langcode>eng</langcode>
+    <scriptcode>Latn</scriptcode>
+  </language>
+  <language code="fin">
+    <langname language="0x407">finnisch</langname>
+    <langname language="0x409">finnish</langname>
+    <langcode>fin</langcode>
+    <scriptcode>Latn</scriptcode>
+  </language> 
+  <language code="fre">
+    <langname language="0x407">französisch</langname>
+    <langname language="0x409">french</langname>
+    <langcode>fre</langcode>
+    <scriptcode>Latn</scriptcode>
+  </language>
+  <language code="ger">
+    <langname language="0x407">deutsch</langname>
+    <langname language="0x409">german</langname>
+    <langcode>ger</langcode>
+    <scriptcode>Latn</scriptcode>
+  </language>
+  <language code="gmh">
+    <langname language="0x407">mittelhochdeutsch</langname>
+    <langname language="0x409">mittelhochdeutsch</langname>
+    <langcode>gmh</langcode>
+    <scriptcode>Latn</scriptcode>
+  </language>
+  <language code="goh">
+    <langname language="0x407">althochdeutsch</langname>
+    <langname language="0x409">althochdeutsch</langname>
+    <langcode>goh</langcode>
+    <scriptcode>Latn</scriptcode>
+  </language>
+  <language code="gre">
+    <langname language="0x407">neugriechisch</langname>
+    <langname language="0x409">modern greek</langname>
+    <langcode>gre</langcode>
+    <scriptcode>Grek</scriptcode>
+  </language>  
+  <language code="grc">
+    <langname language="0x407">altgriechisch</langname>
+    <langname language="0x409">ancient greek</langname>
+    <langcode>grc</langcode>
+    <scriptcode>Grek</scriptcode>
+  </language>
+  <language code="heb">
+    <langname language="0x407">hebräisch</langname>
+    <langname language="0x409">hebrew</langname>
+    <langcode>heb</langcode>
+    <scriptcode>Hebr</scriptcode>
+  </language>
+  <language code="hsb">
+    <langname language="0x407">obersorbisch</langname>
+    <langname language="0x409">obersorbisch</langname>
+    <langcode>hsb</langcode>
+    <scriptcode>Latn</scriptcode>
+  </language>
+  <language code="ita">
+    <langname language="0x407">italienisch</langname>
+    <langname language="0x409">italian</langname>
+    <langcode>ita</langcode>
+    <scriptcode>Latn</scriptcode>
+  </language>
+  <language code="lat">
+    <langname language="0x407">lateinisch</langname>
+    <langname language="0x409">latin</langname>
+    <langcode>lat</langcode>
+    <scriptcode>Latn</scriptcode>
+  </language>
+  <language code="lav">
+    <langname language="0x407">lettisch</langname>
+    <langname language="0x409">latvian</langname>
+    <langcode>lav</langcode>
+    <scriptcode>Latn</scriptcode>
+  </language>
+  <language code="mlt">
+    <langname language="0x407">maltesisch</langname>
+    <langname language="0x409">maltese</langname>
+    <langcode>mlt</langcode>
+    <scriptcode>Latn</scriptcode>
+  </language>
+  <language code="nds">
+    <langname language="0x407">niederdeutsch (auch: plattdeutsch)</langname>
+    <langname language="0x409">niederdeutsch (auch: plattdeutsch)</langname>
+    <langcode>nds</langcode>
+    <scriptcode>Latn</scriptcode>
+  </language>
+  <language code="pol">
+    <langname language="0x407">polnisch</langname>
+    <langname language="0x409">polish</langname>
+    <langcode>pol</langcode>
+    <scriptcode>Latn</scriptcode>
+  </language>
+  <language code="por">
+    <langname language="0x407">portugiesisch</langname>
+    <langname language="0x409">portuguese</langname>
+    <langcode>por</langcode>
+    <scriptcode>Latn</scriptcode>
+  </language>
+  <language code="rus">
+    <langname language="0x407">russisch</langname>
+    <langname language="0x409">russian</langname>
+    <langcode>rus</langcode>
+    <scriptcode>Cyrl</scriptcode>
+  </language>
+  <language code="slo">
+    <langname language="0x407">slowakisch</langname>
+    <langname language="0x409">slovak</langname>
+    <langcode>slo</langcode>
+    <scriptcode>Latn</scriptcode>
+  </language>
+  <language code="slv">
+    <langname language="0x407">slowenisch</langname>
+    <langname language="0x409">slovenian</langname>
+    <langcode>slv</langcode>
+    <scriptcode>Latn</scriptcode>
+  </language>
+  <language code="spa">
+    <langname language="0x407">spanisch</langname>
+    <langname language="0x409">spanish</langname>
+    <langcode>spa</langcode>
+    <scriptcode>Latn</scriptcode>
+  </language>
+  <language code="swe">
+    <langname language="0x407">schwedisch</langname>
+    <langname language="0x409">swedish</langname>
+    <langcode>swe</langcode>
+    <scriptcode>Latn</scriptcode>
+  </language>
+  <language code="wen">
+    <langname language="0x407">sorbische Sprachen</langname>
+    <langname language="0x409">sorbische Sprachen</langname>
+    <langcode>wen</langcode>
+    <scriptcode>Latn</scriptcode>
+  </language>
+</langlist>
