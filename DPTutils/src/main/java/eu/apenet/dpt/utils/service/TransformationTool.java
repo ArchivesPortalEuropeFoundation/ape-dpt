@@ -1,0 +1,165 @@
+package eu.apenet.dpt.utils.service;
+
+import eu.apenet.dpt.utils.util.DiscardDtdEntityResolver;
+import eu.apenet.dpt.utils.util.extendxsl.CounterCLevel;
+import eu.apenet.dpt.utils.util.extendxsl.CounterCLevelCall;
+import eu.apenet.dpt.utils.util.extendxsl.DateNormalization;
+import eu.apenet.dpt.utils.util.extendxsl.Oai2EadNormalization;
+import net.sf.saxon.Controller;
+
+import javax.xml.transform.*;
+import javax.xml.transform.sax.SAXSource;
+import javax.xml.transform.stream.StreamSource;
+import java.io.*;
+import java.util.HashMap;
+import java.util.Map;
+
+import net.sf.saxon.event.Receiver;
+import net.sf.saxon.s9api.*;
+import net.sf.saxon.serialize.Emitter;
+import net.sf.saxon.serialize.MessageEmitter;
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
+import org.apache.log4j.Logger;
+import org.xml.sax.*;
+import org.xml.sax.helpers.XMLReaderFactory;
+
+/**
+ * User: yoann.moranville
+ * Date: 4 dec. 2009
+ */
+public class TransformationTool {
+    private static final Logger LOG = Logger.getLogger(TransformationTool.class);
+    private static final String CHARACTER_SET = "UTF-8";
+
+    @Deprecated
+    public static StringWriter createTransformation(InputStream inputFileStream, File outputFile, String xslString, Map<String, String> parameters, boolean outputIsFile, boolean forWebApp, String provider, boolean isXsd11) throws SAXException, IOException {
+    	return createTransformation(inputFileStream, outputFile, xslString, parameters, outputIsFile, forWebApp, provider, isXsd11, new CounterCLevelCall());
+    }
+
+    public static StringWriter createTransformation(InputStream inputFileStream, File outputFile, InputStream xslFile, Map<String, String> parameters, boolean outputIsFile, boolean forWebApp, String provider, boolean isXsd11) throws SAXException {
+    	return createTransformation(inputFileStream, outputFile, xslFile, parameters, outputIsFile, forWebApp, provider, isXsd11, new CounterCLevelCall());
+    }
+    
+    public static StringWriter createTransformation(InputStream inputFileStream, File outputFile, InputStream xslFile, Map<String, String> parameters, boolean outputIsFile, boolean forWebApp, String provider, boolean isXsd11, CounterCLevelCall counterCLevelCall) throws SAXException {
+        Source xsltSource = new StreamSource(xslFile);
+        return createTransformation(inputFileStream, outputFile, xsltSource, parameters, outputIsFile, forWebApp, provider, isXsd11, counterCLevelCall);
+    }
+
+    public static StringWriter createTransformation(InputStream inputFileStream, File outputFile, File xslFile, Map<String, String> parameters, boolean outputIsFile, boolean forWebApp, String provider, boolean isXsd11, CounterCLevelCall counterCLevelCall) throws SAXException {
+        Source xsltSource = new StreamSource(xslFile);
+        return createTransformation(inputFileStream, outputFile, xsltSource, parameters, outputIsFile, forWebApp, provider, isXsd11, counterCLevelCall);
+    }
+
+    public static StringWriter createTransformation(InputStream inputFileStream, File outputFile, Source xsltSource, Map<String, String> parameters, boolean outputIsFile, boolean forWebApp, String provider, boolean isXsd11, CounterCLevelCall counterCLevelCall) throws SAXException {
+        try {
+            XMLReader saxParser =  XMLReaderFactory.createXMLReader();
+            saxParser.setEntityResolver(new DiscardDtdEntityResolver());
+
+            DateNormalization dateNormalization = new DateNormalization();
+            Oai2EadNormalization oai2EadNormalization = new Oai2EadNormalization();
+
+            InputSource is = new InputSource(inputFileStream);
+            SAXSource xmlSource = new SAXSource(saxParser, is);
+
+            Processor processor = new Processor(false);
+            processor.registerExtensionFunction(dateNormalization);
+            processor.registerExtensionFunction(oai2EadNormalization);
+
+            if(counterCLevelCall == null)
+                counterCLevelCall = new CounterCLevelCall();
+            CounterCLevel counterCLevel = new CounterCLevel(counterCLevelCall);
+            processor.registerExtensionFunction(counterCLevel);
+
+            XsltCompiler compiler = processor.newXsltCompiler();
+
+            compiler.setErrorListener(
+                new ErrorListener() {
+                    public void warning(TransformerException e) throws TransformerException {
+                        logError(e);
+                    }
+                    public void error(TransformerException e) throws TransformerException {
+                        logError(e);
+                    }
+                    public void fatalError(TransformerException e) throws TransformerException {
+                        logError(e);
+                    }
+                    public void logError(TransformerException e) {
+                        LOG.error("Error: " + e.getMessageAndLocation());
+                    }
+                }
+            );
+
+            XsltExecutable executable = compiler.compile(xsltSource);
+            XsltTransformer transformer = executable.load();
+
+            transformer.setSource(xmlSource);
+
+            FileOutputStream outputStream = new FileOutputStream(outputFile);
+            OutputStreamWriter writer = new OutputStreamWriter(outputStream, CHARACTER_SET);
+
+            Serializer serializer = new Serializer();
+            serializer.setOutputWriter(writer);
+            transformer.setDestination(serializer);
+            if(parameters == null)
+                parameters = new HashMap<String, String>();
+            parameters.put("provider", provider);
+            if(!isXsd11){
+                parameters.put("useXSD10", "true");
+            }
+            transformer = insertParameters(transformer, parameters);
+            StringWriter xslMessages = new StringWriter();
+            if(outputIsFile){
+                Controller controller = transformer.getUnderlyingController();
+                Receiver receiver = new MessageEmitter();
+                if(forWebApp){
+                    ((Emitter)receiver).setWriter(xslMessages);
+                } else {
+                    FileWriter fstream = new FileWriter("xsl_messages.txt");
+                    ((Emitter)receiver).setWriter(fstream);
+                }
+                controller.setMessageEmitter(receiver);
+            }
+            long start = System.currentTimeMillis();
+            transformer.transform();
+            long end = System.currentTimeMillis();
+            outputStream.close();
+            inputFileStream.close();
+
+            LOG.trace("Time elapsed for transformation: " + (end-start) + "ms");
+            return xslMessages;
+        } catch (SAXParseException e) {
+            LOG.error("Problem validating file", e);
+            throw e;
+        } catch (Exception e){
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Deprecated
+    public static StringWriter createTransformation(InputStream inputFileStream, File outputFile, String xslString, Map<String, String> parameters, boolean outputIsFile, boolean forWebApp, String provider, boolean isXsd11, CounterCLevelCall counterCLevelCall) throws SAXException, IOException {
+        return createTransformation(inputFileStream, outputFile, IOUtils.toInputStream(xslString, CHARACTER_SET), parameters, outputIsFile, forWebApp, provider, isXsd11, counterCLevelCall);
+    }
+
+    private static XsltTransformer insertParameters(XsltTransformer transformer, Map<String, String> parameters){
+        if(parameters != null){
+            for(String parameter : parameters.keySet()){
+                transformer.setParameter(new QName(parameter), new XdmAtomicValue(parameters.get(parameter)));
+            }
+        }
+        //transformer.setParameter("loclanguage", "languages.xml");
+        return transformer;
+    }
+
+    public static File modifyDefaultXslFile(String xslDirPath, String xslFilePath) throws IOException, SAXException {
+        File xslFile = new File(xslFilePath);
+        File xslMergedFile = new File(xslDirPath + "merged.xsl");
+        File xslMergerFile = new File(xslDirPath + "changeIncludes.xsl");
+        if(!xslMergedFile.exists() || FileUtils.isFileOlder(xslMergedFile, xslFile)) {
+            Map<String, String> params = new HashMap<String, String>();
+            params.put("mainPath", xslDirPath);
+            TransformationTool.createTransformation(FileUtils.openInputStream(xslFile), xslMergedFile, xslMergerFile, params, true, true, null, true, null);
+        }
+        return xslMergedFile;
+    }
+}

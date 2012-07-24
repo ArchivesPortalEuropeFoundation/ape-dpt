@@ -1,0 +1,117 @@
+package eu.apenet.dpt.utils.ead2ese;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.io.UnsupportedEncodingException;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
+
+import javanet.staxutils.IndentingXMLStreamWriter;
+
+import javax.xml.XMLConstants;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.stream.XMLInputFactory;
+import javax.xml.stream.XMLOutputFactory;
+import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.XMLStreamReader;
+import javax.xml.stream.XMLStreamWriter;
+import javax.xml.transform.OutputKeys;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
+import javax.xml.transform.stream.StreamSource;
+import javax.xml.validation.Schema;
+import javax.xml.validation.SchemaFactory;
+import javax.xml.validation.Validator;
+
+import org.w3c.dom.Document;
+import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
+
+public class XMLUtil {
+
+	public static final String UTF_8 = "UTF-8";
+
+
+
+	public static Document convertXMLToDocument(InputStream inputStream) throws SAXException, IOException,
+			ParserConfigurationException {
+
+		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+		factory.setNamespaceAware(true);
+		DocumentBuilder builder = factory.newDocumentBuilder();
+		//XMLErrorHandler errorHandler = new XMLErrorHandler();
+//		builder.setErrorHandler(errorHandler);
+		InputSource inputSource = new InputSource(inputStream);
+		Document document = builder.parse(inputSource);
+//		if (errorHandler.hasError()) {
+//			throw errorHandler.getException();
+//
+//		}
+		return document;
+
+	}
+	public static XMLStreamReader getXMLStreamReader(File inputFile) throws FileNotFoundException, XMLStreamException{
+	    XMLInputFactory inputFactory = (XMLInputFactory) XMLInputFactory.newInstance();
+	    FileInputStream fileInputStream = new FileInputStream(inputFile);
+	    return inputFactory.createXMLStreamReader(fileInputStream, UTF_8);
+	}
+	public static XMLStreamWriter getXMLStreamWriter(File outputFile, boolean indent) throws FileNotFoundException, XMLStreamException{
+		XMLOutputFactory outputFactory = XMLOutputFactory.newInstance();
+	    FileOutputStream out = new FileOutputStream(outputFile);
+	    XMLStreamWriter writer = outputFactory.createXMLStreamWriter(out, UTF_8);
+	    if (indent){
+	    	writer = new IndentingXMLStreamWriter(writer);
+	    }
+	    return writer;
+	}
+
+
+	public static void write(Document document, OutputStream outputStream) throws TransformerException,
+			UnsupportedEncodingException {
+		Transformer transformer = TransformerFactory.newInstance().newTransformer();
+		transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+		transformer.setOutputProperty(OutputKeys.ENCODING, UTF_8);
+		OutputStreamWriter writer = new OutputStreamWriter(outputStream, UTF_8);
+		StreamResult result = new StreamResult(writer);
+		DOMSource source = new DOMSource(document);
+		transformer.transform(source, result);
+	}
+
+	public static void validateESE(File file) throws SAXException, IOException, XMLStreamException{
+		List<URL> schemaURLs = new ArrayList<URL>();
+		schemaURLs.add(XMLUtil.class.getResource("/ead2ese/ese/dcmitype.xsd"));
+		schemaURLs.add(XMLUtil.class.getResource("/ead2ese/ese/dcterms.xsd"));
+		schemaURLs.add(XMLUtil.class.getResource("/ead2ese/ese/dc.xsd"));
+		schemaURLs.add(XMLUtil.class.getResource("/ead2ese/ese/ESE-V3.3.xsd"));
+		InputStreamReader reader = new InputStreamReader(new FileInputStream(file), UTF_8);
+		StreamSource source = new StreamSource(reader);
+
+		Schema schema = getSchema(schemaURLs);
+		Validator validator = schema.newValidator();
+		validator.validate(source);
+	}
+	
+	private static Schema getSchema(List<URL> schemaURLs) throws SAXException {
+		SchemaFactory schemaFactory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
+		List<StreamSource> schemaSources = new ArrayList<StreamSource>();
+		for (URL schemaURL : schemaURLs) {
+			schemaSources.add(new StreamSource(schemaURL.toExternalForm()));
+		}
+		return schemaFactory.newSchema(schemaSources.toArray(new StreamSource[] {}));
+	}
+
+
+}
