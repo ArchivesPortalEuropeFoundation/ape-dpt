@@ -8,7 +8,6 @@
                 xmlns:xs="http://www.w3.org/2001/XMLSchema"
                 xmlns:ape="http://www.archivesportaleurope.eu/functions"
                 xmlns:ape_static="http://www.archivesportaleurope.eu/functions_static"
-                xmlns:xlink="http://www.w3.org/1999/xlink"
                 xsi:schemaLocation="http://www.archivesportaleurope.eu/profiles/eag/ http://www.archivesportaleurope.eu/profiles/eag2012.xsd"
                 xpath-default-namespace="http://www.archivesportaleurope.eu/profiles/eag/"
                 exclude-result-prefixes="xsl xs ape ape_static">
@@ -17,10 +16,10 @@
 
     <!-- Options to be asked by the converter -->
     <xsl:param name="xmlLang" select="'eng'"/>
-    <xsl:param name="repositoryName" select="'repositoryname'"/>   <!-- From option of user? Or should it be coming from somewhere else? -->
-    <xsl:param name="repositoryRole" select="'Head quarter'"/>  <!-- Same question as above -->
+    <xsl:param name="repositoryName" select="'repositoryname'"/>   <!-- WP4: From option of user? Or should it be coming from somewhere else? -->
+    <xsl:param name="repositoryRole" select="'Head quarter'"/>  <!-- WP4: Same question as above -->
 
-    <xsl:variable name="unitList" select="('squaremetre', 'linearmetre', 'sites', 'books', 'titles')"/>
+    <xsl:variable name="unitList" select="('squaremetre', 'linearmetre', 'site', 'book', 'title')"/> <!-- WP4: Back to singular forms or not? -->
 
     <xsl:template match="/">
         <eag>
@@ -46,7 +45,12 @@
             <xsl:call-template name="maintenanceStatusTemplate">
                 <xsl:with-param name="status" select="@status"/>
             </xsl:call-template>
-            <xsl:apply-templates select="*:mainhist, *:languagedecl"/>
+            <xsl:apply-templates select="*:mainhist"/>
+            <xsl:if test="count(*:languagedecl) gt 0">
+                <languageDeclarations>
+                    <xsl:apply-templates select="*:languagedecl"/>
+                </languageDeclarations>
+            </xsl:if>
             <xsl:for-each select="('EAG', 'ISDIAH', @langencoding, @countryencoding, @dateencoding, @repositoryencoding, @scriptencoding)">
                 <xsl:call-template name="conventionDeclarationTemplate">
                     <xsl:with-param name="encoding" select="current()"/>
@@ -60,8 +64,14 @@
 
     <xsl:template name="maintenanceStatusTemplate">
         <xsl:param name="status"/>
+        <!-- Yoann: This is a dummy addition -->
+        <!-- WP4: What should appear here? Element maintenanceAgency is mandatory in the schema! -->
+        <maintenanceAgency>
+            <agencyCode>agencyCode</agencyCode>
+            <agencyName>agencyName</agencyName>
+        </maintenanceAgency>
         <maintenanceStatus>
-            <xsl:value-of select="if($status eq 'edited') then 'revised' else $status"/> <!-- Transform it to different terms ? -->
+            <xsl:value-of select="if($status eq 'edited') then 'revised' else $status"/> <!-- WP4: Transform it to different terms? What are new against old forms? -->
         </maintenanceStatus>
     </xsl:template>
 
@@ -164,11 +174,11 @@
     </xsl:template>
 
     <xsl:template match="*:eagid">
-        <recordId><xsl:value-of select="."/></recordId> <!-- Only if it follows the special rules of recordId? -->
+        <recordId><xsl:value-of select="."/></recordId> <!-- WP4: Only if it follows the special rules of recordId? What are those rules? Should it be ISIL codes? -->
     </xsl:template>
 
     <xsl:template match="*:mainhist">
-        <!-- What about maintenanceAgency? It should appear before maintenanceHistory and it is mandatory! -->
+        <!-- WP4: What about maintenanceAgency? It should appear before maintenanceHistory and before maintenanceStatus and it is mandatory! For the moment I add a dummy one in maintenanceStatusTemplate... -->
         <maintenanceHistory>
             <xsl:if test="exists($xmlLang)">
                 <xsl:attribute name="xml:lang" select="$xmlLang"/>
@@ -204,7 +214,7 @@
                 <xsl:if test="exists($xmlLang)">
                     <xsl:attribute name="xml:lang" select="$xmlLang"/>
                 </xsl:if>
-                <xsl:attribute name="standardDateTime" select="ape:normalizeDate(normalize-space($date/@normal))"/> <!-- Standardize this value and possibly add this T23:59:59 at the end-->
+                <xsl:attribute name="standardDateTime" select="ape:normalizeDate(normalize-space($date/@normal))"/> <!-- WP4: Standardize this value, ok! And should we really add this T23:59:59 at the end? -->
                 <xsl:value-of select="$date/@normal"/>
             </eventDateTime>
             <eventType>
@@ -229,7 +239,7 @@
                         <xsl:attribute name="xml:lang" select="$xmlLang"/>
                     </xsl:if>
                     <xsl:attribute name="languageCode" select="@langcode"/>
-                    <xsl:value-of select="@langcode"/> <!-- Use a map to get the real language name -->
+                    <xsl:value-of select="@langcode"/> <!-- Yoann: Use a map to get the real language name -->
                 </language>
                 <script>
                     <xsl:if test="exists($xmlLang)">
@@ -252,19 +262,19 @@
     <xsl:template match="*:identity">
         <identity>
             <xsl:apply-templates select="*:repositorid, *:autform, *:parform, *:nonpreform"/>
-            <!-- add repositoryType ? It is not mandatory in the schema... -->
+            <!-- WP4: Should we add repositoryType ? It is not mandatory in the schema... -->
         </identity>
     </xsl:template>
     <xsl:template match="*:repositorid">
-        <!--<xsl:variable name="isRepositorycodeCorrect" select="ape:testRepositorycode(@repositorycode)"/> &lt;!&ndash; Create function in java &ndash;&gt;-->
+        <!--<xsl:variable name="isRepositorycodeCorrect" select="ape:testRepositorycode(@repositorycode)"/>--> <!-- Yoann: Create function in java -->
         <xsl:variable name="isRepositorycodeCorrect" select="true()" as="xs:boolean"/>
         <repositorid>
             <xsl:attribute name="countrycode" select="@countrycode"/>
             <xsl:if test="$isRepositorycodeCorrect">
-                <xsl:attribute name="repositorycode" select="@repositorycode"/> <!-- else ? -->
+                <xsl:attribute name="repositorycode" select="@repositorycode"/> <!-- Yoann: else ? -->
             </xsl:if>
         </repositorid>
-        <!--<xsl:if test="not($isRepositorycodeCorrect)">--> <!-- no if because otherRepostorId is mandatory, really? -->
+        <!--<xsl:if test="not($isRepositorycodeCorrect)">--> <!-- no if because otherRepositorId is mandatory --> <!-- WP4: Should otherRepositorId really be mandatory in the schema? -->
             <otherRepositorId><xsl:value-of select="@repositorycode"/></otherRepositorId>
         <!--</xsl:if>-->
     </xsl:template>
@@ -295,7 +305,7 @@
                 <xsl:if test="exists($xmlLang)">
                     <xsl:attribute name="xml:lang" select="$xmlLang"/>
                 </xsl:if>
-                <xsl:value-of select="text()"/> <!-- add info on dates ?? What for? They are inexistent in the original EAG -->
+                <xsl:value-of select="text()"/> <!-- WP4: add info on dates ?? What for? They are non existent in the original EAG -->
             </nonpreform>
         </xsl:if>
     </xsl:template>
@@ -324,7 +334,7 @@
                         </xsl:call-template>
                     </location>
                     <xsl:apply-templates select="*:telephone, *:fax, *:email, *:webpage"/>
-                    <!-- element directions does not exist in EAG, why would we add it in the conversion? -->
+                    <!-- WP4: element "directions" does not exist in EAG, should we really add it in the conversion? If yes, from where does it come from? -->
                     <xsl:apply-templates select="*:repositorhist, *:repositorfound, *:repositorsup"/>
                     <xsl:apply-templates select="*:buildinginfo, *:adminhierarchy"/>
                     <xsl:apply-templates select="*:extent"/>
@@ -340,7 +350,7 @@
     </xsl:template>
 
     <xsl:template match="*:geogarea">
-        <xsl:variable name="continents" select="('Africa', 'Asia', 'Australia', 'Europe', 'North America', 'South America')" as="xs:string+"/> <!-- use 'Central America' ? -->
+        <xsl:variable name="continents" select="('Africa', 'Asia', 'Australia', 'Europe', 'North America', 'South America')" as="xs:string+"/>
         <geogarea>
             <xsl:choose>
                 <xsl:when test="ape_static:contains(text(), $continents)"><xsl:value-of select="text()"/></xsl:when>
@@ -436,18 +446,16 @@
 
     <xsl:template match="*:email">
         <email>
-            <xsl:attribute name="xlink:href" select="if(@xlink:href) then @xlink:href else @href"/>
-            <xsl:attribute name="xlink:type" select="'simple'"/>
-            <!-- Add default text in there ? Would be better to make it using the display in the portal -->
+            <xsl:attribute name="href" select="if(@*:href) then @*:href else @href"/>
+            <xsl:value-of select="'Send an e-mail'" />
         </email>
     </xsl:template>
 
     <xsl:template match="*:webpage">
         <xsl:if test="exists(text())">
             <webpage>
-                <xsl:attribute name="xlink:href" select="if(@xlink:href) then @xlink:href else @href"/>
-                <xsl:attribute name="xlink:type" select="'simple'"/>
-                <!-- Add default text in there ? Would be better to make it using the display in the portal -->
+                <xsl:attribute name="href" select="if(@*:href) then @*:href else @href"/>
+                <xsl:value-of select="'Go to the webpage'" />
             </webpage>
         </xsl:if>
     </xsl:template>
@@ -522,7 +530,7 @@
                 <xsl:if test="exists(*:repositorarea/*:num/text())">
                     <repositorarea>
                         <num>
-                            <xsl:attribute name="unit" select="*:repositorarea/*:num/@unit"/> <!-- only squaremetre ? -->
+                            <xsl:attribute name="unit" select="*:repositorarea/*:num/@unit"/> <!-- WP4: Should we always force it to "squaremetre"? -->
                             <xsl:value-of select="*:repositorarea/*:num/text()"/>
                         </num>
                     </repositorarea>
@@ -530,7 +538,7 @@
                 <xsl:if test="exists(*:lengthshelf/*:num/text())">
                     <lengthshelf>
                         <num>
-                            <xsl:attribute name="unit" select="*:lengthshelf/*:num/@unit"/> <!-- only linearmetre ? -->
+                            <xsl:attribute name="unit" select="*:lengthshelf/*:num/@unit"/> <!-- WP4: Should we always force it to "linearmetre"? -->
                             <xsl:value-of select="*:lengthshelf/*:num/text()"/>
                         </num>
                     </lengthshelf>
@@ -559,7 +567,7 @@
             <holdings>
                 <extent>
                     <num>
-                        <xsl:attribute name="unit" select="*:num/@unit"/> <!-- only linearmetre ? -->
+                        <xsl:attribute name="unit" select="*:num/@unit"/> <!-- WP4: Should we always force it to "linearmetre"? -->
                         <xsl:value-of select="*:num/text()"/>
                     </num>
                 </extent>
@@ -596,7 +604,7 @@
                     <xsl:if test="exists($xmlLang)">
                         <xsl:attribute name="xml:lang" select="$xmlLang"/>
                     </xsl:if>
-                    <!-- Include xlink:href with an option for user? It is not mandatory! Also, there is no data in there for the moment is the xml:lang necessary? I guess the whole termsOfUse is not needed -->
+                    <!-- WP4: Include href with an option for user? It is not mandatory! Also, there is no data in there for the moment is the xml:lang necessary? I think the whole element termsOfUse is not needed at all. -->
                 </termsOfUse>
             </xsl:if>
         </access>
@@ -618,7 +626,7 @@
             <searchroom>
                 <workPlaces>
                     <num>
-                        <xsl:attribute name="unit" select="$searchroom/*:num/@unit"/> <!-- unit must be sites ? -->
+                        <xsl:attribute name="unit" select="$searchroom/*:num/@unit"/> <!-- WP4: Should we always force it to "sites"? -->
                         <xsl:value-of select="$searchroom/*:num/text()"/>
                     </num>
                 </workPlaces>
@@ -696,21 +704,11 @@
     <xsl:template name="relations">
         <xsl:param name="repositorguides"/>
         <relations>
-            <xsl:if test="exists($xmlLang)">
-                <xsl:attribute name="xml:lang" select="$xmlLang"/>
-            </xsl:if>
             <xsl:for-each select="$repositorguides/*:repositorguide">
                 <resourceRelation>
-                    <xsl:if test="exists($xmlLang)">
-                        <xsl:attribute name="xml:lang" select="$xmlLang"/>
-                    </xsl:if>
                     <xsl:attribute name="resourceRelationType" select="'other'"/>
-                    <xsl:attribute name="xlink:href" select="@href"/>
-                    <xsl:attribute name="xlink:type" select="'simple'"/>
+                    <xsl:attribute name="href" select="@href"/>
                     <relationEntry>
-                        <xsl:if test="exists($xmlLang)">
-                            <xsl:attribute name="xml:lang" select="$xmlLang"/>
-                        </xsl:if>
                         <xsl:value-of select="text()"/>
                     </relationEntry>
                 </resourceRelation>

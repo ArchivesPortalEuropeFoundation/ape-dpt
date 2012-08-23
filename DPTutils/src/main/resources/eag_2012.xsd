@@ -1,13 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
     EAG 2012 Schema
-    Version: 0.1c
-    Date: 20120809
+    Version: 0.1d
+    Date: 20120823
     Editor: APEx project (www.apex-project.eu)
 -->
-<xs:schema xmlns="http://www.archivesportaleurope.eu/profiles/eag/" targetNamespace="http://www.archivesportaleurope.eu/profiles/eag/" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xlink="http://www.w3.org/1999/xlink" elementFormDefault="qualified">
-    <xs:import namespace="http://www.w3.org/1999/xlink"
-               schemaLocation="http://www.loc.gov/standards/xlink/xlink.xsd"/>
+<xs:schema xmlns="http://www.archivesportaleurope.eu/profiles/eag/" targetNamespace="http://www.archivesportaleurope.eu/profiles/eag/" xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
     <xs:import namespace="http://www.w3.org/XML/1998/namespace"
                schemaLocation="http://www.w3.org/2007/08/xml.xsd"/>
 
@@ -31,6 +29,9 @@
                 </xs:restriction>
             </xs:simpleType>
         </xs:attribute>
+    </xs:attributeGroup>
+    <xs:attributeGroup name="href">
+        <xs:attribute name="href" type="xs:anyURI"/>
     </xs:attributeGroup>
     <xs:attributeGroup name="a.xml.common">
         <xs:attribute ref="xml:id"/>
@@ -78,14 +79,14 @@
             <xs:simpleContent>
                 <xs:extension base="xs:string">
                     <xs:attribute ref="xml:id"/>
-                    <xs:attribute ref="localType"/>
+                    <xs:attributeGroup ref="localType"/>
                 </xs:extension>
             </xs:simpleContent>
         </xs:complexType>
     </xs:element>
-    <xs:attribute name="localType">
-        <!--todo-->
-    </xs:attribute>
+    <xs:attributeGroup name="localType">
+        <xs:attribute name="localType" type="xs:anyURI" /> <!-- anyURI or does WP4 wants a list of possibilities? -->
+    </xs:attributeGroup>
 
     <xs:element name="maintenanceAgency">
         <xs:complexType>
@@ -243,7 +244,7 @@
         </xs:complexType>
     </xs:element>
     <xs:attributeGroup name="a.scriptCode">
-        <xs:attribute name="scriptCode"> <!-- required true ? -->
+        <xs:attribute name="scriptCode">
             <xs:simpleType>
                 <xs:restriction base="xs:string">
                     <xs:pattern value="[A-Z][a-z]{3}"/>
@@ -268,7 +269,7 @@
     <xs:element name="citation">
         <xs:complexType mixed="true">
             <xs:attributeGroup ref="a.xml.common"/>
-            <xs:attributeGroup ref="xlink:simpleLink"/> <!--Not only type + href ... It contains about 5-6 attributes - ok? Or creation of our own attributeGroup with only those 2?-->
+            <xs:attributeGroup ref="href"/>
             <xs:attribute name="lastDateTimeVerified" type="m.data.standardDateTime"/>
         </xs:complexType>
     </xs:element>
@@ -283,7 +284,7 @@
                 </xs:choice>
             </xs:sequence>
             <xs:attributeGroup ref="a.xml.common"/>
-            <xs:attribute ref="localType"/>
+            <xs:attributeGroup ref="localType"/>
         </xs:complexType>
     </xs:element>
     <xs:element name="term">
@@ -299,7 +300,6 @@
                     <xs:attribute ref="xml:id"/>
                     <xs:attributeGroup ref="m.entryLanguageAttributes"/>
                     <xs:attribute name="lastDateTimeVerified" type="m.data.standardDateTime"/>
-                    <xs:attributeGroup ref="a.scriptCode"/>
                     <xs:attribute name="vocabularySource" type="xs:anyURI"/>
                 </xs:restriction>
             </xs:simpleContent>
@@ -369,8 +369,8 @@
     <xs:element name="localTypeDeclaration">
         <xs:complexType>
             <xs:sequence>
-                <xs:element ref="citation"/> <!-- With this ref, the citation used has restriction on EAG and ISDIAH -->
-                <xs:element ref="abbreviation" minOccurs="0"/> <!-- Same as above, it has restrictions -->
+                <xs:element ref="citation"/>
+                <xs:element ref="abbreviation" minOccurs="0"/>
                 <xs:element ref="descriptiveNote" minOccurs="0"/>
             </xs:sequence>
             <xs:attributeGroup ref="a.xml.common"/>
@@ -411,7 +411,7 @@
             </xs:sequence>
             <xs:attribute ref="xml:id"/>
             <xs:attribute name="lastDateTimeVerified" type="m.data.standardDateTime"/>
-            <xs:attributeGroup ref="xlink:simpleLink"/>
+            <xs:attributeGroup ref="href"/>
         </xs:complexType>
     </xs:element>
     <xs:element name="sourceEntry">
@@ -453,7 +453,7 @@
     </xs:element>
     <xs:element name="otherAgencyCode">
         <xs:complexType mixed="true">
-            <xs:attribute ref="localType"/>
+            <xs:attributeGroup ref="localType"/>
             <xs:attribute ref="xml:id"/>
         </xs:complexType>
     </xs:element>
@@ -490,7 +490,7 @@
         <xs:complexType>
             <xs:sequence>
                 <xs:element ref="repositorid"/>
-                <xs:element ref="otherRepositorId"/> <!-- mandatory ? -->
+                <xs:element ref="otherRepositorId"/> <!-- WP4: Is it really mandatory ? -->
                 <xs:element ref="autform" maxOccurs="unbounded"/>
                 <xs:element ref="parform" minOccurs="0" maxOccurs="unbounded"/>
                 <xs:element ref="nonpreform" minOccurs="0" maxOccurs="unbounded"/>
@@ -505,7 +505,7 @@
         </xs:complexType>
     </xs:element>
     <xs:element name="otherRepositorId">
-        <xs:complexType mixed="true"/> <!-- ComplexType needed? -->
+        <xs:complexType mixed="true"/>
     </xs:element>
     <xs:element name="autform">
         <xs:complexType mixed="true">
@@ -650,7 +650,6 @@
                             <xs:enumeration value="Antarctica"/>
                             <xs:enumeration value="Asia"/>
                             <xs:enumeration value="Australia"/>
-                            <!--<xs:enumeration value="Central America"/>-->
                             <xs:enumeration value="Europe"/>
                             <xs:enumeration value="North America"/>
                             <xs:enumeration value="South America"/>
@@ -671,17 +670,11 @@
                 <xs:element ref="localentity" minOccurs="0"/>
                 <xs:element ref="street"/>
             </xs:sequence>
-            <xs:attribute ref="localType"/>
-            <xs:attribute ref="latitude"/>
-            <xs:attribute ref="longitude"/>
+            <xs:attributeGroup ref="localType"/>
+            <xs:attribute name="longitude" type="xs:NMTOKEN"/>
+            <xs:attribute name="latitude" type="xs:NMTOKEN"/>
         </xs:complexType>
     </xs:element>
-    <xs:attribute name="latitude">
-        <!-- todo -->
-    </xs:attribute>
-    <xs:attribute name="longitude">
-        <!-- todo -->
-    </xs:attribute>
     <xs:element name="country">
         <xs:complexType mixed="true">
             <xs:attribute ref="xml:lang"/>
@@ -720,20 +713,20 @@
         <xs:complexType mixed="true" />
     </xs:element>
     <xs:element name="email">
-        <xs:complexType>
-            <xs:attributeGroup ref="xlink:simpleLink" />
+        <xs:complexType mixed="true">
+            <xs:attributeGroup ref="href" />
         </xs:complexType>
     </xs:element>
     <xs:element name="webpage">
-        <xs:complexType>
-            <xs:attributeGroup ref="xlink:simpleLink" />
+        <xs:complexType mixed="true">
+            <xs:attributeGroup ref="href" />
         </xs:complexType>
     </xs:element>
 
     <xs:element name="directions">
         <xs:complexType mixed="true">
             <xs:sequence>
-                <xs:element ref="citation" minOccurs="0" maxOccurs="unbounded"/> <!--This citation is absolutely not like the one described above, there is a big mistake in the XLS file - to be checked by WP4-->
+                <xs:element ref="citation" minOccurs="0" maxOccurs="unbounded"/>
             </xs:sequence>
             <xs:attribute ref="xml:lang" />
         </xs:complexType>
@@ -806,9 +799,9 @@
                     <xs:restriction base="xs:token">
                         <xs:enumeration value="squaremetre"/>
                         <xs:enumeration value="linearmetre"/>
-                        <xs:enumeration value="sites"/>
-                        <xs:enumeration value="books"/>
-                        <xs:enumeration value="titles"/>
+                        <xs:enumeration value="site"/>
+                        <xs:enumeration value="book"/>
+                        <xs:enumeration value="title"/>
                     </xs:restriction>
                 </xs:simpleType>
             </xs:attribute>
@@ -887,7 +880,7 @@
     <xs:element name="termsOfUse">
         <xs:complexType mixed="true">
             <xs:attribute ref="xml:lang"/>
-            <xs:attributeGroup ref="xlink:simpleLink"/>
+            <xs:attributeGroup ref="href"/>
         </xs:complexType>
     </xs:element>
 
@@ -974,13 +967,13 @@
     </xs:element>
     <xs:element name="readersTicket">
         <xs:complexType mixed="true">
-            <xs:attributeGroup ref="xlink:simpleLink"/>
+            <xs:attributeGroup ref="href"/>
             <xs:attribute ref="xml:lang"/>
         </xs:complexType>
     </xs:element>
     <xs:element name="advancedOrders">
         <xs:complexType mixed="true">
-            <xs:attributeGroup ref="xlink:simpleLink"/>
+            <xs:attributeGroup ref="href"/>
             <xs:attribute ref="xml:lang"/>
         </xs:complexType>
     </xs:element>
@@ -1157,7 +1150,7 @@
                     </xs:restriction>
                 </xs:simpleType>
             </xs:attribute>
-            <xs:attributeGroup ref="xlink:simpleLink"/>
+            <xs:attributeGroup ref="href"/>
         </xs:complexType>
     </xs:element>
 
@@ -1182,7 +1175,7 @@
                     </xs:restriction>
                 </xs:simpleType>
             </xs:attribute>
-            <xs:attributeGroup ref="xlink:simpleLink"/>
+            <xs:attributeGroup ref="href"/>
         </xs:complexType>
     </xs:element>
 </xs:schema>
