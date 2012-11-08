@@ -6,7 +6,7 @@ import java.util.Properties;
 
 import org.apache.commons.lang.StringUtils;
 
-public class Config implements Serializable {
+public class EseConfig implements Serializable {
 
     private static final long serialVersionUID = -3232731426711003838L;
     private XMLTransformer transformerXML2XML;
@@ -31,10 +31,10 @@ public class Config implements Serializable {
     private String dataProvider;
     private Properties properties = new Properties();
 
-    public Config(){
+    public EseConfig(){
     	
     }
-    public Config(Properties properties){
+    public EseConfig(Properties properties){
     	this.properties =properties;
     }
     
