@@ -1,8 +1,8 @@
 package eu.apenet.dpt.utils.ead2ese;
 
 import java.io.File;
-import java.util.HashMap;
 import java.util.Map;
+import java.util.Properties;
 
 import javax.xml.transform.TransformerException;
 
@@ -13,7 +13,7 @@ public class XMLTransformerTest {
 
 	@Test @Ignore
 	public void testTransformWithNoLanguage() throws TransformerException {
-		Map<String, Object> parameters = getParameters();
+		Properties parameters = getParameters();
 		XMLTransformer xmlTransformer = new XMLTransformer("/ead2ese/ead2ese.xslt", parameters);
 		File inputFile = new File ("C:/apenet/work/final/workspace/DPT-project/DPTutils/src/test/resources/IMAGES_LANGUAGES.ead.xml");
 		File outputFile = new File (inputFile.getParentFile(), getOutputName(inputFile.getName(),"no-language"));		
@@ -21,7 +21,7 @@ public class XMLTransformerTest {
 	}
 	@Test @Ignore
 	public void testTransformWithInheritLanguage() throws TransformerException {
-		Map<String, Object> parameters = getParameters();
+		Properties parameters = getParameters();
 		parameters.put("inheritLanguage", Boolean.TRUE.toString());
 		XMLTransformer xmlTransformer = new XMLTransformer("/ead2ese/ead2ese.xslt", parameters);
 		File inputFile = new File ("C:/apenet/work/final/workspace/DPT-project/DPTutils/src/test/resources/IMAGES_LANGUAGES.ead.xml");
@@ -30,7 +30,7 @@ public class XMLTransformerTest {
 	}
 	@Test @Ignore
 	public void testTransformWithGivenLanguage() throws TransformerException {
-		Map<String, Object> parameters = getParameters();
+		Properties parameters = getParameters();
 		parameters.put("language", "nl");
 		XMLTransformer xmlTransformer = new XMLTransformer("/ead2ese/ead2ese.xslt", parameters);
 		File inputFile = new File ("C:/apenet/work/final/workspace/DPT-project/DPTutils/src/test/resources/IMAGES_LANGUAGES.ead.xml");
@@ -39,7 +39,7 @@ public class XMLTransformerTest {
 	}	
 	@Test @Ignore
 	public void testTransformWithNoLanguage1() throws TransformerException {
-		Map<String, Object> parameters = getParameters();
+		Properties parameters = getParameters();
 		XMLTransformer xmlTransformer = new XMLTransformer("/ead2ese/ead2ese.xslt", parameters);
 		File inputFile = new File ("C:/apenet/work/final/workspace/DPT-project/DPTutils/src/test/resources/IMAGES_NO_LANGUAGES.ead.xml");
 		File outputFile = new File (inputFile.getParentFile(), getOutputName(inputFile.getName(),"no-language"));		
@@ -47,7 +47,7 @@ public class XMLTransformerTest {
 	}
 	@Test @Ignore
 	public void testTransformWithInheritLanguage1() throws TransformerException {
-		Map<String, Object> parameters = getParameters();
+		Properties parameters = getParameters();
 		parameters.put("inheritLanguage", Boolean.TRUE.toString());
 		XMLTransformer xmlTransformer = new XMLTransformer("/ead2ese/ead2ese.xslt", parameters);
 		File inputFile = new File ("C:/apenet/work/final/workspace/DPT-project/DPTutils/src/test/resources/IMAGES_NO_LANGUAGES.ead.xml");
@@ -56,7 +56,7 @@ public class XMLTransformerTest {
 	}
 	@Test @Ignore
 	public void testTransformWithGivenLanguage1() throws TransformerException {
-		Map<String, Object> parameters = getParameters();
+		Properties parameters = getParameters();
 		parameters.put("language", "nl");
 		XMLTransformer xmlTransformer = new XMLTransformer("/ead2ese/ead2ese.xslt", parameters);
 		File inputFile = new File ("C:/apenet/work/final/workspace/DPT-project/DPTutils/src/test/resources/IMAGES_NO_LANGUAGES.ead.xml");
@@ -67,8 +67,8 @@ public class XMLTransformerTest {
 		int lastIndex  = name.lastIndexOf(".ead.xml");
 		return name.substring(0,lastIndex) + "-" + suffix + ".ese.xml";
 	}
-	private Map<String, Object> getParameters(){
-		Map<String, Object> parameters = new HashMap<String, Object>();
+	private Properties getParameters(){
+		Properties parameters = new Properties();
 		parameters.put("europeana_provider", "Archives Portal Europe");
 		parameters.put("europeana_rights", "http://www.europeana.eu/rights/rr-f/");
 		parameters.put("dc_rights", "Difficult to choose this rights");

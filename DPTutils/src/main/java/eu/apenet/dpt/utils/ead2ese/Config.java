@@ -2,8 +2,7 @@ package eu.apenet.dpt.utils.ead2ese;
 
 import java.io.File;
 import java.io.Serializable;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.Properties;
 
 import org.apache.commons.lang.StringUtils;
 
@@ -30,7 +29,16 @@ public class Config implements Serializable {
     private String rights;
     private String rightsAdditionalInformation;
     private String dataProvider;
+    private Properties properties = new Properties();
 
+    public Config(){
+    	
+    }
+    public Config(Properties properties){
+    	this.properties =properties;
+    }
+    
+    
     public String getProvider() {
         return provider;
     }
@@ -161,23 +169,25 @@ public class Config implements Serializable {
 
     public XMLTransformer getTransformerXML2XML() {
         if (transformerXML2XML == null){
-            Map<String, Object> parameters = new HashMap<String, Object>();
-            parameters.put("europeana_provider", getProvider());
-            parameters.put("europeana_dataprovider", getDataProvider());
-            parameters.put("europeana_rights", getRights());
-            parameters.put("dc_rights", getRightsAdditionalInformation());
-            parameters.put("europeana_type", getType());
-            parameters.put("useISODates", "false");
-            parameters.put("language", getLanguage());
-            parameters.put("inheritElementsFromFileLevel", new Boolean(isInheritElementsFromFileLevel()).toString());
-            parameters.put("inheritOrigination", new Boolean(isInheritOrigination()).toString());
-            parameters.put("inheritLanguage", new Boolean(isInheritLanguage()).toString());
-            parameters.put("contextInformationPrefix", getContextInformationPrefix());
-            transformerXML2XML = new XMLTransformer("/ead2ese/ead2ese.xslt", parameters);
+            transformerXML2XML = new XMLTransformer("/ead2ese/ead2ese.xslt", getProperties());
         }
         return transformerXML2XML;
     }
 
+    public Properties getProperties(){
+    	properties.put("europeana_provider", getProvider());
+    	properties.put("europeana_dataprovider", getDataProvider());
+    	properties.put("europeana_rights", getRights());
+    	properties.put("dc_rights", getRightsAdditionalInformation());
+    	properties.put("europeana_type", getType());
+    	properties.put("useISODates", "false");
+    	properties.put("language", getLanguage());
+    	properties.put("inheritElementsFromFileLevel", new Boolean(isInheritElementsFromFileLevel()).toString());
+    	properties.put("inheritOrigination", new Boolean(isInheritOrigination()).toString());
+    	properties.put("inheritLanguage", new Boolean(isInheritLanguage()).toString());
+    	properties.put("contextInformationPrefix", getContextInformationPrefix());
+    	return properties;
+    }
     public XMLTransformer getTransformerXML2HTML() {
         if (transformerXML2HTML == null){
             transformerXML2HTML = new XMLTransformer("/ead2ese/ese2html.xslt", null);
