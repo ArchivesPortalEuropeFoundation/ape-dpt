@@ -175,17 +175,17 @@ public class EseConfig implements Serializable {
     }
 
     public Properties getProperties(){
-    	properties.put("europeana_provider", getProvider());
-    	properties.put("europeana_dataprovider", getDataProvider());
-    	properties.put("europeana_rights", getRights());
-    	properties.put("dc_rights", getRightsAdditionalInformation());
-    	properties.put("europeana_type", getType());
-    	properties.put("useISODates", "false");
-    	properties.put("language", getLanguage());
-    	properties.put("inheritElementsFromFileLevel", new Boolean(isInheritElementsFromFileLevel()).toString());
-    	properties.put("inheritOrigination", new Boolean(isInheritOrigination()).toString());
-    	properties.put("inheritLanguage", new Boolean(isInheritLanguage()).toString());
-    	properties.put("contextInformationPrefix", getContextInformationPrefix());
+    	properties.put("europeana_provider", getString(getProvider()));
+    	properties.put("europeana_dataprovider", getString(getDataProvider()));
+    	properties.put("europeana_rights", getString(getRights()));
+    	properties.put("dc_rights", getString(getRightsAdditionalInformation()));
+    	properties.put("europeana_type", getString(getType()));
+    	properties.put("useISODates", getString("false"));
+    	properties.put("language", getString(getLanguage()));
+    	properties.put("inheritElementsFromFileLevel", getString(new Boolean(isInheritElementsFromFileLevel()).toString()));
+    	properties.put("inheritOrigination", getString(new Boolean(isInheritOrigination()).toString()));
+    	properties.put("inheritLanguage", getString(new Boolean(isInheritLanguage()).toString()));
+    	properties.put("contextInformationPrefix", getString(getContextInformationPrefix()));
     	return properties;
     }
     public XMLTransformer getTransformerXML2HTML() {
@@ -193,6 +193,13 @@ public class EseConfig implements Serializable {
             transformerXML2HTML = new XMLTransformer("/ead2ese/ese2html.xslt", null);
         }
         return transformerXML2HTML;
+    }
+    private static String getString(String string){
+    	if (string == null){
+    		return "";
+    	}else {
+    		return string;
+    	}
     }
 
 }
