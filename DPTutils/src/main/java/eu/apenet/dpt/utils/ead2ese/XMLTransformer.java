@@ -17,6 +17,7 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
 /**
@@ -61,7 +62,12 @@ public class XMLTransformer {
         transformer.reset(); 
         if (parameters != null) {
             for (Map.Entry<Object, Object> entry : parameters.entrySet()) {
-                transformer.setParameter(entry.getKey().toString(), entry.getValue());
+            	String key = entry.getKey().toString();
+            	String value = entry.getValue().toString();
+            	if (StringUtils.isBlank(value)){
+            		value = null;
+            	}
+                transformer.setParameter(key.toString(), value);
             }
         }
     }
