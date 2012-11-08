@@ -1,7 +1,7 @@
 package eu.apenet.dpt.standalone.gui.ead2ese;
 
 import eu.apenet.dpt.standalone.gui.*;
-import eu.apenet.dpt.utils.ead2ese.Config;
+import eu.apenet.dpt.utils.ead2ese.EseConfig;
 import eu.apenet.dpt.utils.ead2ese.XMLUtil;
 import eu.apenet.dpt.utils.ead2ese.stax.ESEParser;
 import eu.apenet.dpt.utils.ead2ese.stax.RecordParser;
@@ -290,8 +290,8 @@ public class EseOptionsPanel extends JPanel {
         return languages.keySet().toArray(new String[]{});
     }
 
-    private Config fillConfig(){
-        Config config = new Config();
+    private EseConfig fillConfig(){
+        EseConfig config = new EseConfig();
         config.setProvider("Archives Portal Europe");
 
 
@@ -448,7 +448,7 @@ public class EseOptionsPanel extends JPanel {
                     DataPreparationToolGUI.createErrorOrWarningPanel(ex1, false, labels.getString("ese.formNotFilledError"), parent);
                     throw ex1;
                 }
-                Config config = fillConfig();
+                EseConfig config = fillConfig();
                 for(File selectedIndexFile : selectedIndices) {
                     SwingUtilities.invokeLater(new TransformEse(config, selectedIndexFile));
                     apeTabbedPane.appendEseConversionErrorText(MessageFormat.format(labels.getString("ese.convertedAndSaved"), selectedIndexFile.getAbsolutePath()) + "\n");
@@ -462,10 +462,10 @@ public class EseOptionsPanel extends JPanel {
     }
 
     private class TransformEse implements Runnable  {
-        private Config config;
+        private EseConfig config;
         private File selectedIndex;
 
-        TransformEse(Config config, File selectedIndex) {
+        TransformEse(EseConfig config, File selectedIndex) {
             this.config = config;
             this.selectedIndex = selectedIndex;
         }
