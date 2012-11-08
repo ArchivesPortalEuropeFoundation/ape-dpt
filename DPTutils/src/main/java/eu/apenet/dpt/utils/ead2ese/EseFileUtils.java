@@ -13,8 +13,8 @@ import java.util.zip.ZipOutputStream;
 
 import org.apache.log4j.Logger;
 
-public final class FileUtils {
-    private static final Logger LOGGER = Logger.getLogger(FileUtils.class);
+public final class EseFileUtils {
+    private static final Logger LOGGER = Logger.getLogger(EseFileUtils.class);
 	private static final String UNDERSCORE = "_";
 	private static final String OUTPUT_HTML_DIR_NAME = "ESE-HTML";
 	private static final String OUTPUT_XML_DIR_NAME = "ESE";
@@ -108,7 +108,7 @@ public final class FileUtils {
 	}
 
 	public static void unzip(File outputDir, File file) throws ZipException, IOException {
-		String prefix = outputDir.getAbsolutePath() + FileUtils.SEPARATOR;
+		String prefix = outputDir.getAbsolutePath() + EseFileUtils.SEPARATOR;
 		Enumeration<? extends ZipEntry> entries;
 		ZipFile zipFile;
 		zipFile = new ZipFile(file);
