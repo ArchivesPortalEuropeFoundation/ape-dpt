@@ -5,6 +5,7 @@
 package eu.apenet.dpt.utils.ead2ese;
 
 import java.io.File;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 
@@ -28,13 +29,20 @@ public class XMLTransformer {
     private static final Logger LOG = Logger.getLogger(XMLTransformer.class);
     
     private Transformer transformer;
-    private Properties parameters = new Properties();
+    private Map<String, Object> parameters = new HashMap<String, Object>();
     private String xsltLocation;
 	
     public XMLTransformer(String xsltLocation, Properties parameters){
         System.setProperty("javax.xml.transform.TransformerFactory", "net.sf.saxon.TransformerFactoryImpl");
         if (parameters != null){
-            this.parameters = parameters;
+            for (Map.Entry<Object, Object> entry : parameters.entrySet()) {
+            	String key = entry.getKey().toString();
+            	String value = entry.getValue().toString();
+            	if (StringUtils.isBlank(value)){
+            		value = null;
+            	}
+                transformer.setParameter(key, value);
+            }
         }
         this.xsltLocation = xsltLocation;
     }
@@ -61,13 +69,8 @@ public class XMLTransformer {
         transformer = transformerFactory.newTransformer(xsltSource);
         transformer.reset(); 
         if (parameters != null) {
-            for (Map.Entry<Object, Object> entry : parameters.entrySet()) {
-            	String key = entry.getKey().toString();
-            	String value = entry.getValue().toString();
-            	if (StringUtils.isBlank(value)){
-            		value = null;
-            	}
-                transformer.setParameter(key.toString(), value);
+            for (Map.Entry<String, Object> entry : parameters.entrySet()) {
+                transformer.setParameter(entry.getKey(), entry.getValue());
             }
         }
     }
