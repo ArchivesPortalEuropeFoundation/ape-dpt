@@ -34,7 +34,7 @@ import eu.apenet.dpt.standalone.gui.batch.ConvertAndValidateActionListener;
 import eu.apenet.dpt.standalone.gui.conversion.ConvertActionListener;
 import eu.apenet.dpt.standalone.gui.db.RetrieveFromDb;
 import eu.apenet.dpt.standalone.gui.ead2ese.ConvertEseActionListener;
-import eu.apenet.dpt.standalone.gui.eag2012.Eag2012Frame3;
+import eu.apenet.dpt.standalone.gui.eag2012.Eag2012Frame;
 import eu.apenet.dpt.standalone.gui.hgcreation.*;
 import eu.apenet.dpt.standalone.gui.validation.ValidateActionListener;
 
@@ -565,7 +565,7 @@ public class DataPreparationToolGUI extends JFrame {
 
         createEag2012Item.addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent e) {
-                new Eag2012Frame3();
+                new Eag2012Frame();
             }
         });
         digitalObjectTypeItem.addActionListener(new ActionListener() {

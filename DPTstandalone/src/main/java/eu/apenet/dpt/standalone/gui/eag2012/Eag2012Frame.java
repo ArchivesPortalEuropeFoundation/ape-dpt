@@ -18,12 +18,12 @@ import java.io.File;
  *
  * @author Yoann Moranville
  */
-public class Eag2012Frame3 {
+public class Eag2012Frame {
     private JTabbedPane tabbedPane;
     private EagInstitutionPanel eagInstitutionPanel;
     private EagIdentityPanel eagIdentityPanel;
 
-    public Eag2012Frame3() {
+    public Eag2012Frame() {
         JFrame frame = new JFrame();
 
         Eag eag = null;
