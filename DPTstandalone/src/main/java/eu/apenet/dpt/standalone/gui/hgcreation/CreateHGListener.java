@@ -180,7 +180,7 @@ public class CreateHGListener implements ActionListener {
                         summaryThread.setName(SummaryWorking.class.getName());
                         summaryThread.start();
 
-                        File hgFile = levelTreeActions.createXML(holdingsGuideTree.getModel(), title_f, id_f, dataPreparationToolGUI.getParams(), dataPreparationToolGUI.getCountrycode(), dataPreparationToolGUI.getGlobalIdentifier());
+                        File hgFile = levelTreeActions.createXML(holdingsGuideTree.getModel(), title_f, id_f, dataPreparationToolGUI.getParams(), dataPreparationToolGUI.getCountryCode(), dataPreparationToolGUI.getRepositoryCodeIdentifier());
                         ProfileListModel model = ((ProfileListModel)list.getModel());
                         if(model.existsFile(hgFile))
                             model.removeFile(hgFile);

@@ -110,7 +110,7 @@ public class ValidateActionListener implements ActionListener {
                 apeTabbedPane.setValidationErrorText(fileInstance.getValidationErrors());
                 LOG.error("Error when validating a file", ex);
             } finally {
-                dataPreparationToolGUI.enableSimpleSaveBtn();
+                dataPreparationToolGUI.enableSaveBtn();
                 apeTabbedPane.checkFlashingTab(APETabbedPane.TAB_VALIDATION, Utilities.FLASHING_COLOR);
                 summaryWorking.stop();
                 threadRunner.interrupt();

@@ -326,9 +326,8 @@ public class APETabbedPane extends JTabbedPane {
             JScrollPane paneTest = new JScrollPane(tree);
             editionPane.setViewportView(paneTest);
             tree.setEditable(true);
-            dataPreparationToolGUI.enableSimpleSaveBtn();
+            dataPreparationToolGUI.enableSaveBtn();
             ((XMLTreeTableModel)tree.getTreeTableModel()).setName(file.getName());
-            LOG.info("Tree created");
         } else {
             LOG.error("Tree not created (tree is null) - problems");
         }
@@ -440,16 +439,16 @@ public class APETabbedPane extends JTabbedPane {
             TreeModelSupport modelSupport = ((XMLTreeTableModel)tree.getTreeTableModel()).getModelSupport();
             if(actionCommand.equals(labels.getString(ActionNamesEnum.INSERT_COUNTRYCODE.getBundleCode()))){
                 Attr attr = node.getOwnerDocument().createAttributeNS(NodeAppendable.XMLNS_EAD, "countrycode");
-                attr.setValue(dataPreparationToolGUI.getCountrycode());
+                attr.setValue(dataPreparationToolGUI.getCountryCode());
                 ((Element)node).setAttributeNode(attr);
                 modelSupport.fireChildAdded(path, node.getAttributes().getLength()-1, attr);
             } else if(actionCommand.equals(labels.getString(ActionNamesEnum.INSERT_MAINAGENCYCODE.getBundleCode()))){
                 Attr attr = node.getOwnerDocument().createAttributeNS(NodeAppendable.XMLNS_EAD, "mainagencycode");
-                attr.setValue(dataPreparationToolGUI.getGlobalIdentifier());
+                attr.setValue(dataPreparationToolGUI.getRepositoryCodeIdentifier());
                 ((Element)node).setAttributeNode(attr);
                 modelSupport.fireChildAdded(path, node.getAttributes().getLength()-1, attr);
             } else if(actionCommand.equals(labels.getString(ActionNamesEnum.INSERT_TEXT.getBundleCode()))){
-                Text textNode = node.getOwnerDocument().createTextNode(dataPreparationToolGUI.getCountrycode() + "_" + dataPreparationToolGUI.getGlobalIdentifier());
+                Text textNode = node.getOwnerDocument().createTextNode(dataPreparationToolGUI.getCountryCode() + "_" + dataPreparationToolGUI.getRepositoryCodeIdentifier());
                 node.appendChild(textNode);
                 modelSupport.fireTreeStructureChanged(path);
             } else if(actionCommand.equals(labels.getString(ActionNamesEnum.INSERT_LANGUAGETAG.getBundleCode()))){

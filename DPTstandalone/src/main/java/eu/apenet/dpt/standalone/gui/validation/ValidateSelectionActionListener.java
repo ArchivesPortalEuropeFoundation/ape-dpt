@@ -110,7 +110,7 @@ public class ValidateSelectionActionListener implements ActionListener {
                     dataPreparationToolGUI.setResultAreaText(labels.getString("finished"));
                 else
                     dataPreparationToolGUI.setResultAreaText(labels.getString("aborted"));
-                dataPreparationToolGUI.enableSaveAllBtn();
+                dataPreparationToolGUI.enableSaveBtn();
             }
         }).start();
     }

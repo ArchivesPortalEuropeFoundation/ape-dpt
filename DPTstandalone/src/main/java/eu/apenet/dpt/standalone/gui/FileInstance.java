@@ -136,8 +136,8 @@ public class FileInstance {
     }
 
     public enum FileType{
-        EAD("APE_EAD"),
-        EAG("APE_EAG"),
+        EAD("apeEAD"),
+        EAG("EAG"),
         EAC_CPF("APE_CPF");
 
         private String filePrefix;

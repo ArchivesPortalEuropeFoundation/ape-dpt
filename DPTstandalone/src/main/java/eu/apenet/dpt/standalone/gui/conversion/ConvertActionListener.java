@@ -174,7 +174,7 @@ public class ConvertActionListener implements ActionListener {
                     progressFrame.dispose();
                 }
                 dataPreparationToolGUI.setResultAreaText(labels.getString("conversionFinished"));
-                dataPreparationToolGUI.enableSimpleSaveBtn();
+                dataPreparationToolGUI.enableSaveBtn();
             }
         }
     }

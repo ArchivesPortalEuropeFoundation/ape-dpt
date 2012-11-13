@@ -31,7 +31,7 @@ public class XsltSelectorListener implements ActionListener {
             } else if(e.getActionCommand().equals("eag2eag.xsl")){
                 fileInstance.setFileType(FileInstance.FileType.EAG);
                 if(!fileInstance.getValidationSchema().equals(Xsd_enum.XSD_EAG_SCHEMA)){
-                    fileInstance.setValidationSchema(Xsd_enum.XSD_APE_EAG_SCHEMA);
+                    fileInstance.setValidationSchema(Xsd_enum.XSD_EAG_2012_SCHEMA);
                 }
             } else {
                 if(!fileInstance.getValidationSchema().equals(Xsd_enum.XSD_EAD_SCHEMA) && !fileInstance.getValidationSchema().equals(Xsd_enum.XSD1_0_APE_SCHEMA))

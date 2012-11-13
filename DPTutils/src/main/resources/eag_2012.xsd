@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
     EAG 2012 Schema
-    Version: 0.1d
-    Date: 20120823
+    Version: 0.1e
+    Date: 20120828
     Editor: APEx project (www.apex-project.eu)
 -->
 <xs:schema xmlns="http://www.archivesportaleurope.eu/profiles/eag/" targetNamespace="http://www.archivesportaleurope.eu/profiles/eag/" xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
@@ -85,7 +85,7 @@
         </xs:complexType>
     </xs:element>
     <xs:attributeGroup name="localType">
-        <xs:attribute name="localType" type="xs:anyURI" /> <!-- anyURI or does WP4 wants a list of possibilities? -->
+        <xs:attribute name="localType" type="xs:anyURI" />
     </xs:attributeGroup>
 
     <xs:element name="maintenanceAgency">
@@ -490,7 +490,7 @@
         <xs:complexType>
             <xs:sequence>
                 <xs:element ref="repositorid"/>
-                <xs:element ref="otherRepositorId"/> <!-- WP4: Is it really mandatory ? -->
+                <xs:element ref="otherRepositorId"/> <!-- Should be optional in EAG 2012 but mandatory in APE EAG 2012... 2 schemas? -->
                 <xs:element ref="autform" maxOccurs="unbounded"/>
                 <xs:element ref="parform" minOccurs="0" maxOccurs="unbounded"/>
                 <xs:element ref="nonpreform" minOccurs="0" maxOccurs="unbounded"/>
@@ -596,13 +596,13 @@
     <xs:element name="repository">
         <xs:complexType>
             <xs:sequence>
-                <xs:element ref="repositoryName" minOccurs="0"/>
+                <xs:element ref="repositoryName" minOccurs="0" maxOccurs="unbounded"/>
                 <xs:element ref="repositoryRole" minOccurs="0"/>
                 <xs:element ref="geogarea"/>
                 <xs:element ref="location" maxOccurs="unbounded"/>
                 <xs:element ref="telephone" minOccurs="0" maxOccurs="unbounded"/>
                 <xs:element ref="fax" minOccurs="0" maxOccurs="unbounded"/>
-                <xs:element ref="email" maxOccurs="unbounded"/>
+                <xs:element ref="email" minOccurs="0" maxOccurs="unbounded"/>
                 <xs:element ref="webpage" minOccurs="0" maxOccurs="unbounded"/>
                 <xs:element ref="directions" minOccurs="0" maxOccurs="unbounded"/>
                 <xs:element ref="repositorhist" minOccurs="0"/>
@@ -613,7 +613,7 @@
                 <xs:element ref="holdings" minOccurs="0"/>
                 <xs:element ref="timetable"/>
                 <xs:element ref="access"/>
-                <xs:element ref="handicapped" maxOccurs="unbounded"/>
+                <xs:element ref="accessibility" maxOccurs="unbounded"/>
                 <xs:element ref="services" minOccurs="0"/>
                 <xs:element ref="descriptiveNote" minOccurs="0"/>
             </xs:sequence>
@@ -661,7 +661,7 @@
     </xs:element>
 
     <xs:element name="location">
-        <xs:complexType mixed="true">
+        <xs:complexType>
             <xs:sequence>
                 <xs:element ref="country"/>
                 <xs:element ref="firstdem" minOccurs="0"/>
@@ -850,7 +850,9 @@
         <xs:complexType mixed="true"/>
     </xs:element>
     <xs:element name="closing">
-        <xs:complexType mixed="true"/>
+        <xs:complexType mixed="true">
+            <xs:attribute name="standardDate" type="m.data.standardDate"/>
+        </xs:complexType>
     </xs:element>
 
     <xs:element name="access">
@@ -884,7 +886,7 @@
         </xs:complexType>
     </xs:element>
 
-    <xs:element name="handicapped">
+    <xs:element name="accessibility">
         <xs:complexType mixed="true">
             <xs:attribute ref="xml:lang"/>
             <xs:attributeGroup ref="question"/>

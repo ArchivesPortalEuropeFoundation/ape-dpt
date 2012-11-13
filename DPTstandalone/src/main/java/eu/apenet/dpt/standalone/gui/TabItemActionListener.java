@@ -22,7 +22,6 @@ public class TabItemActionListener implements ActionListener {
     }
 
     public void actionPerformed(ActionEvent actionEvent) {
-        LOG.info(actionEvent.getActionCommand());
         apePanel.getApeTabbedPane().setSelectedIndex(tab);
         apePanel.getApeTabbedPane().changeBackgroundColor(tab, Utilities.TAB_COLOR);
     }

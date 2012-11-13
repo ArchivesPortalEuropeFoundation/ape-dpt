@@ -40,7 +40,8 @@ public class DBUtil {
         OPTION_COUNTRYCODE("countrycode"),
         OPTION_ROLETYPE("roleType"),
         OPTION_USE_EXISTING_ROLETYPE("useExistingRoleType"),
-        OPTION_UPDATEDATE("lastUpdateCheck");
+        OPTION_UPDATEDATE("lastUpdateCheck"),
+        OPTION_CHECKS_LOADING_FILES("checksLoadingFiles");
 
         private String name;
         OptionKeys(String name){
