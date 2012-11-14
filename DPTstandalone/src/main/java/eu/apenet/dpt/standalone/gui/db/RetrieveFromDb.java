@@ -1,5 +1,7 @@
 package eu.apenet.dpt.standalone.gui.db;
 
+import eu.apenet.dpt.standalone.gui.Utilities;
+
 import java.util.Arrays;
 
 /**
@@ -17,13 +19,7 @@ public class RetrieveFromDb {
     }
 
     public String retrieveCurrentLoadingChecks() {
-        String result = retrieve(DBUtil.OptionKeys.OPTION_CHECKS_LOADING_FILES.getName());
-        if(result == null) {
-            String query = DBUtil.createInsertQuery(DBUtil.DBNames.TABLE_OPTIONS.getName());
-            dbUtil.doSqlQuery(query, Arrays.asList(DBUtil.OptionKeys.OPTION_CHECKS_LOADING_FILES.getName(), "NO"));
-            return "NO";
-        }
-        return result;
+        return retrieve(DBUtil.OptionKeys.OPTION_CHECKS_LOADING_FILES.getName(), "NO");
     }
 
     public void saveLoadingChecks(String value) {
@@ -32,7 +28,7 @@ public class RetrieveFromDb {
     }
 
     public String retrieveRepositoryCode() {
-        return retrieve(DBUtil.OptionKeys.OPTION_GLOBALID.getName());
+        return retrieve(DBUtil.OptionKeys.OPTION_GLOBALID.getName(), null);
     }
 
     public void saveRepositoryCode(String value) {
@@ -41,7 +37,7 @@ public class RetrieveFromDb {
     }
 
     public String retrieveCountryCode() {
-        return retrieve(DBUtil.OptionKeys.OPTION_COUNTRYCODE.getName());
+        return retrieve(DBUtil.OptionKeys.OPTION_COUNTRYCODE.getName(), null);
     }
 
     public void saveCountryCode(String value) {
@@ -49,12 +45,33 @@ public class RetrieveFromDb {
         dbUtil.doSqlQuery(query, null);
     }
 
-    private String retrieve(String optionKey) {
+    public String retrieveOpenLocation() {
+        return retrieve(DBUtil.OptionKeys.OPTION_OPEN_LOCATION.getName(), System.getProperty("user.home"));
+    }
+
+    public void saveOpenLocation(String location) {
+        String query = DBUtil.createUpdateQuery(DBUtil.DBNames.TABLE_OPTIONS.getName(), DBUtil.DBNames.COLUMN_VALUE.getName(), location, DBUtil.OptionKeys.OPTION_OPEN_LOCATION.getName());
+        dbUtil.doSqlQuery(query, null);
+    }
+
+    public String retrieveDefaultSaveFolder() {
+        return retrieve(DBUtil.OptionKeys.OPTION_SAVE_FOLDER.getName(), Utilities.LOG_DIR); //Default should be user's home directory???
+    }
+
+    public void saveDefaultSaveFolder(String location) {
+        String query = DBUtil.createUpdateQuery(DBUtil.DBNames.TABLE_OPTIONS.getName(), DBUtil.DBNames.COLUMN_VALUE.getName(), location, DBUtil.OptionKeys.OPTION_SAVE_FOLDER.getName());
+        dbUtil.doSqlQuery(query, null);
+    }
+
+    private String retrieve(String optionKey, String defaultValue) {
         String query = DBUtil.createSelectQuery(DBUtil.DBNames.TABLE_OPTIONS.getName(), optionKey);
         String[] res = dbUtil.retrieveSqlListResult(query, DBUtil.DBNames.COLUMN_VALUE);
-        if(res.length > 0){
+        if(res.length > 0) {
             return res[0];
+        } else {
+            query = DBUtil.createInsertQuery(DBUtil.DBNames.TABLE_OPTIONS.getName());
+            dbUtil.doSqlQuery(query, Arrays.asList(optionKey, defaultValue));
+            return defaultValue;
         }
-        return null;
     }
 }

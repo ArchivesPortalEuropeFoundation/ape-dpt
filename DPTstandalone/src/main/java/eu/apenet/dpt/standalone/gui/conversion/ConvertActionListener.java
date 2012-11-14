@@ -160,7 +160,6 @@ public class ConvertActionListener implements ActionListener {
                 LOG.error("Error when converting a file", ex);
             } finally {
                 apePanel.getApeTabbedPane().checkFlashingTab(APETabbedPane.TAB_CONVERSION, Utilities.FLASHING_COLOR);
-                apePanel.getApeTabbedPane().setValidationBtnText(labels.getString("validateBtn"));
                 dataPreparationToolGUI.enableValidationBtns();
                 summaryWorking.stop();
                 if(counterThread != null)

@@ -3,7 +3,6 @@ package eu.apenet.dpt.standalone.gui.hgcreation;
 import eu.apenet.dpt.standalone.gui.*;
 import eu.apenet.dpt.standalone.gui.adhoc.QueryComponent;
 import eu.apenet.dpt.standalone.gui.db.DBUtil;
-import eu.apenet.dpt.utils.util.FileUtil;
 import org.apache.log4j.Logger;
 
 import javax.swing.*;
@@ -32,7 +31,6 @@ public class CreateHGListener implements ActionListener {
     private DBUtil dbUtil;
     private ResourceBundle labels;
     private Component parent;
-    private FileUtil fileUtil;
     private JTree holdingsGuideTree;
     private JList listFilesForHG;
     private Map<String, FileInstance> fileInstances;
@@ -42,11 +40,10 @@ public class CreateHGListener implements ActionListener {
     private JButton buttonGoUp;
     private JFrame createHGFrame;
 
-    public CreateHGListener(DBUtil dbUtil, ResourceBundle labels, Component parent, FileUtil fileUtil, Map<String, FileInstance> fileInstances, JList list, DataPreparationToolGUI dataPreparationToolGUI) {
+    public CreateHGListener(DBUtil dbUtil, ResourceBundle labels, Component parent, Map<String, FileInstance> fileInstances, JList list, DataPreparationToolGUI dataPreparationToolGUI) {
         this.dbUtil = dbUtil;
         this.labels = labels;
         this.parent = parent;
-        this.fileUtil = fileUtil;
         this.fileInstances = fileInstances;
         this.list = list;
         this.dataPreparationToolGUI = dataPreparationToolGUI;
@@ -75,7 +72,7 @@ public class CreateHGListener implements ActionListener {
 
         DefaultMutableTreeNode rootNode = new DefaultMutableTreeNode(new CLevelTreeObject(id_f, title_f));
 
-        final LevelTreeActions levelTreeActions = new LevelTreeActions(fileUtil);
+        final LevelTreeActions levelTreeActions = new LevelTreeActions();
         LevelTreeModel levelTreeModel = new LevelTreeModel(rootNode);
 
         holdingsGuideTree.setModel(levelTreeModel);

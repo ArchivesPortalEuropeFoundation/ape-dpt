@@ -39,8 +39,8 @@ public class LevelTreeActions {
     private static final Logger LOG = Logger.getLogger(LevelTreeActions.class);
     private FileUtil fileUtil;
 
-    public LevelTreeActions(FileUtil fileUtil){
-        this.fileUtil = fileUtil;
+    public LevelTreeActions(){
+        this.fileUtil = new FileUtil();
     }
 
     public File createXML(TreeModel model, String title, String id, HashMap<String, String> paramMap, String countryCode, String globalIdentifier){

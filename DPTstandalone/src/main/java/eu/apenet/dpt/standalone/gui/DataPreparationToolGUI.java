@@ -39,6 +39,7 @@ import eu.apenet.dpt.standalone.gui.hgcreation.*;
 import eu.apenet.dpt.standalone.gui.validation.ValidateActionListener;
 
 import eu.apenet.dpt.standalone.gui.validation.ValidateSelectionActionListener;
+import eu.apenet.dpt.utils.util.XmlChecker;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Level;
@@ -52,7 +53,6 @@ import org.w3c.dom.*;
 import eu.apenet.dpt.standalone.gui.adhoc.FileNameComparator;
 import eu.apenet.dpt.standalone.gui.db.DBUtil;
 import eu.apenet.dpt.standalone.gui.edition.CheckList;
-import eu.apenet.dpt.utils.util.FileUtil;
 import eu.apenet.dpt.utils.util.Xsd_enum;
 import eu.apenet.dpt.utils.util.extendxsl.DateNormalization;
 
@@ -143,7 +143,6 @@ public class DataPreparationToolGUI extends JFrame {
     /**
      * Utilities
      */
-    private FileUtil fileUtil;
     private DBUtil dbUtil;
     private DateNormalization dateNormalization;
 
@@ -183,7 +182,6 @@ public class DataPreparationToolGUI extends JFrame {
     }
 
     private void setupTool() {
-        fileUtil = new FileUtil();
         Locale currentLocale = Locale.getDefault();
         labels = ResourceBundle.getBundle("i18n/apeBundle", currentLocale);
         apePanel = new APEPanel(labels, getContentPane(), this);
@@ -203,8 +201,8 @@ public class DataPreparationToolGUI extends JFrame {
 
         doChecks();
 
-        if(isFileMissing(Utilities.OUTPUT_DIR))
-            new File(Utilities.OUTPUT_DIR).mkdir();
+        if(isFileMissing(Utilities.LOG_DIR))
+            new File(Utilities.LOG_DIR).mkdir();
 
         File tempDir = new File(Utilities.TEMP_DIR);
         //In case it didn't deleteOnExit at the previous closing of the program, we clean up.
@@ -360,7 +358,7 @@ public class DataPreparationToolGUI extends JFrame {
 
         apePanel.setFilename("");
 
-        createHgListener = new CreateHGListener(dbUtil, labels, getContentPane(), fileUtil, fileInstances, list, this);
+        createHgListener = new CreateHGListener(dbUtil, labels, getContentPane(), fileInstances, list, this);
         createHGBtn.addActionListener(createHgListener);
         createHGBtn.setEnabled(false);
 
@@ -505,18 +503,17 @@ public class DataPreparationToolGUI extends JFrame {
 //        });
         fileItem.addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent actionEvent){
-                if(actionEvent.getSource() == fileItem){
-                    if (currentLocation != null)
-                        fileChooser.setCurrentDirectory(currentLocation);
-                    else //Todo: To erase this condition, only for tests with my computer
-                        fileChooser.setCurrentDirectory(new File("/Users/yoannmoranville/Work/APEnet/Projects/data"));
+                if(actionEvent.getSource() == fileItem) {
+                    currentLocation = new File(retrieveFromDb.retrieveOpenLocation());
+                    fileChooser.setCurrentDirectory(currentLocation);
                     int returnedVal = fileChooser.showOpenDialog(getParent());
 
                     if(returnedVal == JFileChooser.APPROVE_OPTION){
                         currentLocation = fileChooser.getCurrentDirectory();
+                        retrieveFromDb.saveOpenLocation(currentLocation.getAbsolutePath());
+
                         File[] files = fileChooser.getSelectedFiles();
-                        if(files == null || files.length == 0){
-                            File file = fileChooser.getSelectedFile();
+                        for(File file : files) {
                             if(file.isDirectory()){
                                 File[] fileArray = file.listFiles();
                                 Arrays.sort(fileArray, new FileNameComparator());
@@ -527,20 +524,6 @@ public class DataPreparationToolGUI extends JFrame {
                             } else {
                                 if(isCorrect(file))
                                     model.addFile(file);
-                            }
-                        } else {
-                            for(File file : files){
-                                if(file.isDirectory()){
-                                    File[] fileArray = file.listFiles();
-                                    Arrays.sort(fileArray, new FileNameComparator());
-                                    for(File children : fileArray){
-                                        if(isCorrect(children))
-                                            model.addFile(children);
-                                    }
-                                } else {
-                                    if(isCorrect(file))
-                                        model.addFile(file);
-                                }
                             }
                         }
                     }
@@ -579,28 +562,42 @@ public class DataPreparationToolGUI extends JFrame {
                 roleTypeFrame.setVisible(true);
             }
         });
+        defaultSaveFolderItem.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent actionEvent) {
+                JFileChooser defaultSaveFolderChooser = new JFileChooser();
+                defaultSaveFolderChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+                defaultSaveFolderChooser.setMultiSelectionEnabled(false);
+                defaultSaveFolderChooser.setCurrentDirectory(new File(retrieveFromDb.retrieveDefaultSaveFolder()));
+                if(defaultSaveFolderChooser.showOpenDialog(getParent()) == JFileChooser.APPROVE_OPTION) {
+                    File directory = defaultSaveFolderChooser.getSelectedFile();
+                    retrieveFromDb.saveDefaultSaveFolder(directory + "/");
+                }
+            }
+        });
         saveSelectedItem.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 for(String filename : fileInstances.keySet()) {
                     FileInstance fileInstance = fileInstances.get(filename);
                     String filePrefix = fileInstance.getFileType().getFilePrefix();
+                    String defaultOutputDirectory = retrieveFromDb.retrieveDefaultSaveFolder();
 
-                    //what for?
+                    //todo: do we really need this?
                     filename = filename.startsWith("temp_")?filename.replace("temp_", ""):filename;
 
                     if(!fileInstance.isValid())
                         filePrefix = "NOT_" + filePrefix;
+
                     if(tree != null && tree.getTreeTableModel() != null && !fileInstance.getLastOperation().equals(FileInstance.Operation.CONVERT)){
                         TreeTableModel treeTableModel = tree.getTreeTableModel();
                         Document document = (Document)treeTableModel.getRoot();
                         try {
-                            File file2 = new File(Utilities.OUTPUT_DIR + filePrefix + "_" + filename);
+                            File file2 = new File(defaultOutputDirectory + filePrefix + "_" + filename);
                             TransformerFactory tf = TransformerFactory.newInstance();
                             Transformer output = tf.newTransformer();
                             output.setOutputProperty(javax.xml.transform.OutputKeys.INDENT, "yes");
                             output.setOutputProperty("{http://xml.apache.org/xslt}indent-amount","2");
 
-                            output.transform(new DOMSource(document.getFirstChild()),new StreamResult(file2));
+                            output.transform(new DOMSource(document.getFirstChild()), new StreamResult(file2));
 
                             fileInstance.setLastOperation(FileInstance.Operation.SAVE);
                             fileInstance.setCurrentLocation(file2.getAbsolutePath());
@@ -608,14 +605,14 @@ public class DataPreparationToolGUI extends JFrame {
                             createErrorOrWarningPanel(ex, true, labels.getString("errorSavingTreeXML"), getContentPane());
                         }
                     } else if(fileInstance.isConverted()){
-                        File newFile = new File(Utilities.OUTPUT_DIR + filePrefix + "_" + filename);
+                        File newFile = new File(defaultOutputDirectory + filePrefix + "_" + filename);
                         (new File(fileInstance.getCurrentLocation())).renameTo(newFile);
                         fileInstance.setLastOperation(FileInstance.Operation.SAVE);
                         fileInstance.setCurrentLocation(newFile.getAbsolutePath());
                     } else {
                         try{
-                            File newFile = new File(Utilities.OUTPUT_DIR + filePrefix + "_" + filename);
-                            fileUtil.copyFile((File) list.getSelectedValue(), new File(Utilities.OUTPUT_DIR + filePrefix + "_" + filename));
+                            File newFile = new File(defaultOutputDirectory + filePrefix + "_" + filename);
+                            FileUtils.copyFile((File) list.getSelectedValue(), new File(defaultOutputDirectory + filePrefix + "_" + filename));
                             fileInstance.setLastOperation(FileInstance.Operation.SAVE);
                             fileInstance.setCurrentLocation(newFile.getAbsolutePath());
                         } catch (IOException ioe){
@@ -637,8 +634,13 @@ public class DataPreparationToolGUI extends JFrame {
             public void mouseClicked(MouseEvent e){
                 if(e.getButton() != MouseEvent.BUTTON3 && e.getClickCount() == 1 && list.getSelectedValues().length == 1){
                     changeInfoInGUI(((File)list.getSelectedValue()).getName());
-                    if(apePanel.getApeTabbedPane().getSelectedIndex() == APETabbedPane.TAB_EDITION)
-                        apePanel.getApeTabbedPane().createEditionTree(((File)list.getSelectedValue()));
+                    if(apePanel.getApeTabbedPane().getSelectedIndex() == APETabbedPane.TAB_EDITION) {
+                        try {
+                            apePanel.getApeTabbedPane().createEditionTree(((File)list.getSelectedValue()));
+                        } catch (Exception e1) {
+                            //nothing
+                        }
+                    }
                     apePanel.getApeTabbedPane().changeBackgroundColor(APETabbedPane.TAB_CONVERSION, Utilities.TAB_COLOR);
                     apePanel.getApeTabbedPane().changeBackgroundColor(APETabbedPane.TAB_VALIDATION, Utilities.TAB_COLOR);
                 } else if (e.getButton() == MouseEvent.BUTTON3) {
@@ -741,10 +743,7 @@ public class DataPreparationToolGUI extends JFrame {
     }
 
     private boolean isCorrect(File file){
-        if(file.isDirectory())
-            return false;
-        //todo: Do more checks on files
-        return true;
+        return !fileInstances.containsKey(file.getName()) && !file.isDirectory() && (!checkLoadingFiles() || checkLoadingFiles() && XmlChecker.isXmlParseable(file) == null);
     }
 
     public ButtonGroup getGroupXslt() {
@@ -876,6 +875,10 @@ public class DataPreparationToolGUI extends JFrame {
         } else {
             retrieveFromDb.saveLoadingChecks("NO");
         }
+    }
+
+    public boolean checkLoadingFiles() {
+        return retrieveFromDb.retrieveCurrentLoadingChecks().equals("YES");
     }
 
     private void changeInfoInGUI(String text){

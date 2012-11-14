@@ -1,6 +1,7 @@
 package eu.apenet.dpt.standalone.gui.ead2ese;
 
 import eu.apenet.dpt.standalone.gui.*;
+import eu.apenet.dpt.standalone.gui.db.RetrieveFromDb;
 import eu.apenet.dpt.utils.ead2ese.EseConfig;
 import eu.apenet.dpt.utils.ead2ese.XMLUtil;
 import eu.apenet.dpt.utils.ead2ese.stax.ESEParser;
@@ -472,8 +473,9 @@ public class EseOptionsPanel extends JPanel {
 
         public void run() {
             try {
+                RetrieveFromDb retrieveFromDb = new RetrieveFromDb();
                 int lastIndex = selectedIndex.getName().lastIndexOf('.');
-                String xmlOutputFilename = Utilities.OUTPUT_DIR + selectedIndex.getName().substring(0, lastIndex) + "-ese" + selectedIndex.getName().substring(lastIndex);
+                String xmlOutputFilename = retrieveFromDb.retrieveDefaultSaveFolder() + selectedIndex.getName().substring(0, lastIndex) + "-ese" + selectedIndex.getName().substring(lastIndex);
                 FileInstance fileInstance = fileInstances.get(selectedIndex.getName());
                 String loc;
                 if(fileInstance.isConverted() || fileInstance.getLastOperation().equals(FileInstance.Operation.SAVE))

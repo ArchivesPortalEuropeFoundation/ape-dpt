@@ -41,7 +41,9 @@ public class DBUtil {
         OPTION_ROLETYPE("roleType"),
         OPTION_USE_EXISTING_ROLETYPE("useExistingRoleType"),
         OPTION_UPDATEDATE("lastUpdateCheck"),
-        OPTION_CHECKS_LOADING_FILES("checksLoadingFiles");
+        OPTION_CHECKS_LOADING_FILES("checksLoadingFiles"),
+        OPTION_OPEN_LOCATION("openLocation"),
+        OPTION_SAVE_FOLDER("savedFolder");
 
         private String name;
         OptionKeys(String name){
@@ -75,7 +77,7 @@ public class DBUtil {
     private void createTables(){
         LOG.info("Creating the database tables, because it is the first launch of the tool.");
         List<String> queries = Arrays.asList(
-                "CREATE TABLE ape_options (ID INTEGER NOT NULL PRIMARY KEY GENERATED ALWAYS AS IDENTITY(START WITH 1, INCREMENT BY 1), MYKEY VARCHAR(30), VALUE VARCHAR(30))",
+                "CREATE TABLE ape_options (ID INTEGER NOT NULL PRIMARY KEY GENERATED ALWAYS AS IDENTITY(START WITH 1, INCREMENT BY 1), MYKEY VARCHAR(30), VALUE VARCHAR(256))",
                 "CREATE TABLE hg_titles (ID INTEGER NOT NULL PRIMARY KEY GENERATED ALWAYS AS IDENTITY(START WITH 1, INCREMENT BY 1), TITLE VARCHAR(64))",
                 "CREATE TABLE hg_ids (ID INTEGER NOT NULL PRIMARY KEY GENERATED ALWAYS AS IDENTITY(START WITH 1, INCREMENT BY 1), IDENTIFIER VARCHAR(64))"
         );
