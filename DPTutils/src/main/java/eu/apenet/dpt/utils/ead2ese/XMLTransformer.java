@@ -32,10 +32,11 @@ public class XMLTransformer {
     private Map<String, Object> parameters = new HashMap<String, Object>();
     private String xsltLocation;
 	
-    public XMLTransformer(String xsltLocation, Properties parameters){
+    public XMLTransformer(String xsltLocation, Properties properties){
+    	parameters = new HashMap<String, Object>();
         System.setProperty("javax.xml.transform.TransformerFactory", "net.sf.saxon.TransformerFactoryImpl");
         if (parameters != null){
-            for (Map.Entry<Object, Object> entry : parameters.entrySet()) {
+            for (Map.Entry<Object, Object> entry : properties.entrySet()) {
             	String key = entry.getKey().toString();
             	String value = entry.getValue().toString();
             	if (StringUtils.isBlank(value)){
