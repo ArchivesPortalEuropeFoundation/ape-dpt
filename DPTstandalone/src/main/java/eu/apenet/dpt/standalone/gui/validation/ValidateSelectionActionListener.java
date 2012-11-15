@@ -6,6 +6,7 @@ import eu.apenet.dpt.standalone.gui.SummaryWorking;
 import eu.apenet.dpt.standalone.gui.Utilities;
 import eu.apenet.dpt.standalone.gui.progress.ProgressFrame;
 import eu.apenet.dpt.utils.service.DocumentValidation;
+import eu.apenet.dpt.utils.util.XmlChecker;
 import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
 import org.xml.sax.SAXParseException;
@@ -71,33 +72,43 @@ public class ValidateSelectionActionListener implements ActionListener {
 
                     Map<String, FileInstance> fileInstances = dataPreparationToolGUI.getFileInstances();
                     FileInstance fileInstance = fileInstances.get(file.getName());
-                    try {
-                        List<SAXParseException> exceptions;
-                        if(fileInstance.isConverted()){
-                            InputStream is = FileUtils.openInputStream(new File(fileInstance.getCurrentLocation()));
-                            exceptions = DocumentValidation.xmlValidation(is, fileInstance.getValidationSchema());
-                        } else {
-                            exceptions = DocumentValidation.xmlValidation(FileUtils.openInputStream(file), fileInstance.getValidationSchema());
-                        }
-                        if (exceptions == null || exceptions.isEmpty()){
-                            fileInstance.setValid(true);
-                            fileInstance.setValidationErrors(labels.getString("validationSuccess"));
-                        } else {
-                            String errors = Utilities.stringFromList(exceptions);
-                            fileInstance.setValidationErrors(errors);
+                    if(!fileInstance.isXml()) {
+                        if(XmlChecker.isXmlParseable(file) == null)
+                            fileInstance.setXml(true);
+                        else {
                             fileInstance.setValid(false);
+                            fileInstance.setValidationErrors(labels.getString("validation.error.fileNotXml"));
                         }
-                        fileInstance.setLastOperation(FileInstance.Operation.VALIDATE);
-                    } catch (Exception ex){
-                        fileInstance.setValid(false);
-                        fileInstance.setValidationErrors(labels.getString("validationException") + "\n\n-------------\n" + ex.getMessage());
-                        LOG.error("Error when validating", ex);
-                    } finally {
-                        summaryWorking.stop();
-                        threadRunner.interrupt();
-                        dataPreparationToolGUI.getList().repaint();
-                        if(progressBar != null)
-                            progressBar.setVisible(false);
+                    }
+                    if(fileInstance.isXml()) {
+                        try {
+                            List<SAXParseException> exceptions;
+                            if(fileInstance.isConverted()){
+                                InputStream is = FileUtils.openInputStream(new File(fileInstance.getCurrentLocation()));
+                                exceptions = DocumentValidation.xmlValidation(is, fileInstance.getValidationSchema());
+                            } else {
+                                exceptions = DocumentValidation.xmlValidation(FileUtils.openInputStream(file), fileInstance.getValidationSchema());
+                            }
+                            if (exceptions == null || exceptions.isEmpty()){
+                                fileInstance.setValid(true);
+                                fileInstance.setValidationErrors(labels.getString("validationSuccess"));
+                            } else {
+                                String errors = Utilities.stringFromList(exceptions);
+                                fileInstance.setValidationErrors(errors);
+                                fileInstance.setValid(false);
+                            }
+                            fileInstance.setLastOperation(FileInstance.Operation.VALIDATE);
+                        } catch (Exception ex){
+                            fileInstance.setValid(false);
+                            fileInstance.setValidationErrors(labels.getString("validationException") + "\n\n-------------\n" + ex.getMessage());
+                            LOG.error("Error when validating", ex);
+                        } finally {
+                            summaryWorking.stop();
+                            threadRunner.interrupt();
+                            dataPreparationToolGUI.getList().repaint();
+                            if(progressBar != null)
+                                progressBar.setVisible(false);
+                        }
                     }
                 }
                 if(progressFrame != null){

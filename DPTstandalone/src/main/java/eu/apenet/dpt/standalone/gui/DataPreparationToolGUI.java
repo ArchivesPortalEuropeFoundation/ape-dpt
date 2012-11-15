@@ -362,7 +362,7 @@ public class DataPreparationToolGUI extends JFrame {
         createHGBtn.addActionListener(createHgListener);
         createHGBtn.setEnabled(false);
 
-        validateItem.addActionListener(new ValidateActionListener(labels, fileInstances, this, apePanel.getApeTabbedPane()));
+        validateItem.addActionListener(new ValidateActionListener(labels, this, apePanel.getApeTabbedPane()));
         convertItem.addActionListener(new ConvertActionListener(getContentPane(), labels, this, apePanel));
 
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -374,8 +374,6 @@ public class DataPreparationToolGUI extends JFrame {
 
         wireUp();
         setSize(Toolkit.getDefaultToolkit().getScreenSize());
-
-//        Eag2012Frame3 eag2012Frame = new Eag2012Frame3();
     }
 
     private void nameComponents(){

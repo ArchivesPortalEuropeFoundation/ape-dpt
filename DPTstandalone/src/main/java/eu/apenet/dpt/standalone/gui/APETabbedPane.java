@@ -47,6 +47,7 @@ public class APETabbedPane extends JTabbedPane {
     private JTextArea conversionErrors;
     private JTextArea eseConversionErrors;
 
+    private JScrollPane summaryPane;
     private JScrollPane validationPane;
     private JScrollPane conversionPane;
     private JScrollPane eseConversionPane;
@@ -135,7 +136,7 @@ public class APETabbedPane extends JTabbedPane {
         convertEdmBtn.setPreferredSize(DEFAULT_BTN_DIMENSION);
         convertEdmBtn.setEnabled(false);
 
-        validateBtn.addActionListener(new ValidateActionListener(labels, dataPreparationToolGUI.getFileInstances(), dataPreparationToolGUI, this));
+        validateBtn.addActionListener(new ValidateActionListener(labels, dataPreparationToolGUI, this));
         validateBtn.setPreferredSize(DEFAULT_BTN_DIMENSION);
         validateBtn.setEnabled(false);
     }
@@ -226,10 +227,16 @@ public class APETabbedPane extends JTabbedPane {
     private JComponent makeTextPanelSummary(){
         JPanel p = new JPanel();
         p.setLayout(new BoxLayout(p, BoxLayout.PAGE_AXIS));
-        p.add(makeButtons());
-        p.add(makeCheckboxes());
-        p.add(makeCheckboxesXsd());
-        p.add(makeResultsPanel());
+
+        JPanel summaryItems = new JPanel();
+        summaryItems.setLayout(new BoxLayout(summaryItems, BoxLayout.PAGE_AXIS));
+        summaryItems.add(makeButtons());
+        summaryItems.add(makeCheckboxes());
+        summaryItems.add(makeCheckboxesXsd());
+        summaryItems.add(makeResultsPanel());
+
+        summaryPane = new JScrollPane(summaryItems);
+        p.add(summaryPane);
         return p;
     }
 

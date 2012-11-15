@@ -38,7 +38,9 @@ public final class Utilities {
     public final static String[] SYSTEM_FILES = {XSL_BEFORE_NAME, XSL_DEFAULT_NAME, XML_LANGUAGES_NAME, "changeNS.xsl", "frontmatter.xsl", "import.xsl", "levels.xsl"};
     public final static String[] FILES_NOT_SHOWN = {XSL_BEFORE_NAME, "frontmatter.xsl", "import.xsl", "levels.xsl"};
 
-    public static final Color FLASHING_COLOR = new Color(255, 30, 30);
+//    public static final Color FLASHING_RED_COLOR = new Color(255, 30, 30);
+    public static final Color FLASHING_RED_COLOR = new Color(200, 90, 90);
+    public static final Color FLASHING_GREEN_COLOR = new Color(100, 180, 100);
     public static final Color TAB_COLOR = new Color(238, 238, 238);
 
     public final static String CONFIG_DIR = CONFIG_DIR_SIMPLE + DIR_SEPARATOR;
@@ -60,7 +62,7 @@ public final class Utilities {
     public static String stringFromList(List<SAXParseException> exceptions) {
         StringBuilder result = new StringBuilder();
         for(SAXParseException exception : exceptions)
-            result.append("l.").append(exception.getLineNumber()).append(", ").append(exception.getMessage()).append("\n");
+            result.append("l.").append(exception.getLineNumber()).append(", ").append("c.").append(exception.getColumnNumber()).append(": ").append(exception.getMessage()).append("\n");
         return result.toString();
     }
     
