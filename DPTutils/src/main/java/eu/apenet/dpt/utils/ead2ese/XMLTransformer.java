@@ -41,7 +41,7 @@ public class XMLTransformer {
             	if (StringUtils.isBlank(value)){
             		value = null;
             	}
-                transformer.setParameter(key, value);
+            	parameters.put(key, value);
             }
         }
         this.xsltLocation = xsltLocation;
