@@ -15,6 +15,13 @@ public class CLevelTreeObject extends DefaultMutableTreeNode {
     private String description;
     private File file;
 
+    public CLevelTreeObject(){
+        super("");
+        this.name = "";
+        this.id = "";
+        this.description = "";
+    }
+
     public CLevelTreeObject(String name){
         super("[" + name + "]");
         this.name = name;

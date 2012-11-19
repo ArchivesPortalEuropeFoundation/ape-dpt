@@ -143,7 +143,6 @@ public class DataPreparationToolGUI extends JFrame {
     /**
      * Utilities
      */
-    private DBUtil dbUtil;
     private DateNormalization dateNormalization;
 
     private JMenuItem deleteFileItem = new JMenuItem();
@@ -358,7 +357,7 @@ public class DataPreparationToolGUI extends JFrame {
 
         apePanel.setFilename("");
 
-        createHgListener = new CreateHGListener(dbUtil, labels, getContentPane(), fileInstances, list, this);
+        createHgListener = new CreateHGListener(retrieveFromDb, labels, getContentPane(), fileInstances, list, this);
         createHGBtn.addActionListener(createHgListener);
         createHGBtn.setEnabled(false);
 
@@ -551,7 +550,7 @@ public class DataPreparationToolGUI extends JFrame {
         });
         digitalObjectTypeItem.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                JFrame roleTypeFrame = new RoleTypeFrame(labels, dbUtil);
+                JFrame roleTypeFrame = new RoleTypeFrame(labels, retrieveFromDb);
 
                 roleTypeFrame.setPreferredSize(new Dimension(getContentPane().getWidth() *3/8, getContentPane().getHeight() *3/8));
                 roleTypeFrame.setLocation(getContentPane().getWidth() / 8, getContentPane().getHeight() / 8);
@@ -669,12 +668,18 @@ public class DataPreparationToolGUI extends JFrame {
         });
         list.addListSelectionListener(new ListSelectionListener(){
             public void valueChanged(ListSelectionEvent e) {
-                if(list.getSelectedValue() != null && list.getSelectedValues().length > 1){
-                    convertAndValidateBtn.setEnabled(true);
-                    validateSelectionBtn.setEnabled(true);
-                    convertEseSelectionBtn.setEnabled(true);
-                    createHGBtn.setEnabled(true);
-                    disableAllBtnAndItems();
+                if(list.getSelectedValues() != null) {
+                    if(list.getSelectedValues().length > 1) {
+                        convertAndValidateBtn.setEnabled(true);
+                        validateSelectionBtn.setEnabled(true);
+                        convertEseSelectionBtn.setEnabled(true);
+                        disableAllBtnAndItems();
+                    } else {
+                        convertAndValidateBtn.setEnabled(false);
+                        validateSelectionBtn.setEnabled(false);
+                        convertEseSelectionBtn.setEnabled(false);
+                    }
+                    checkHoldingsGuideButton();
                 } else {
                     convertAndValidateBtn.setEnabled(false);
                     validateSelectionBtn.setEnabled(false);
@@ -695,6 +700,16 @@ public class DataPreparationToolGUI extends JFrame {
                 BareBonesBrowserLaunch.openURL("http://www.apex-project.eu/");
             }
         });
+    }
+
+    private void checkHoldingsGuideButton() {
+        for(int i = 0; i < list.getSelectedValues().length; i++) {
+            FileInstance fileInstance = fileInstances.get(((File)list.getSelectedValues()[i]).getName());
+            if((fileInstance.getValidationSchema() == Xsd_enum.XSD_APE_SCHEMA || fileInstance.getValidationSchema() == Xsd_enum.XSD1_0_APE_SCHEMA) && fileInstance.isValid()) {
+                createHGBtn.setEnabled(true);
+                break;
+            }
+        }
     }
 
     public static void createErrorOrWarningPanel(Throwable e, boolean isError, String message, Component owner){
@@ -849,8 +864,9 @@ public class DataPreparationToolGUI extends JFrame {
             result = (String)JOptionPane.showInputDialog(getContentPane(), explanation, labels.getString("chooseCountryCode"), JOptionPane.QUESTION_MESSAGE, Utilities.icon, null, null);
             if(result == null)
                 break;
-        } while (dateNormalization.checkForMainagencycode(result) == null);
-        retrieveFromDb.saveCountryCode(result);
+        } while (dateNormalization.checkForCountrycode(result) == null);
+        if(result != null)
+            retrieveFromDb.saveCountryCode(result);
     }
 
     private void createOptionPaneForRepositoryCode() {
@@ -862,7 +878,8 @@ public class DataPreparationToolGUI extends JFrame {
             if(result == null)
                 break;
         } while (dateNormalization.checkForMainagencycode(result) == null);
-        retrieveFromDb.saveRepositoryCode(result);
+        if(result != null)
+            retrieveFromDb.saveRepositoryCode(result);
     }
 
     private void createOptionPaneForChecksLoadingFiles() {
@@ -949,8 +966,6 @@ public class DataPreparationToolGUI extends JFrame {
             System.exit(0);
         }
 
-        connectDatabase();
-
         String repositoryCodeIdentifier = getRepositoryCodeIdentifier();
         if(repositoryCodeIdentifier == null){
             do {
@@ -967,69 +982,9 @@ public class DataPreparationToolGUI extends JFrame {
             retrieveFromDb.saveCountryCode(countrycode);
         }
 
-        defaultRoleType = dbUtil.retrieveRoleType();
-        useExistingRoleType = dbUtil.retrieveUseExistingRoleType();
-        checkForUpdates();
-    }
-
-    private void checkForUpdates(){
-        SimpleDateFormat dateFormatYYYYMMDD = new SimpleDateFormat("yyyyMMdd");
-        Date today = new Date();
-
-        String date;
-        String query = DBUtil.createSelectQuery(DBUtil.DBNames.TABLE_OPTIONS.getName(), DBUtil.OptionKeys.OPTION_UPDATEDATE.getName());
-        String[] res = dbUtil.retrieveSqlListResult(query, DBUtil.DBNames.COLUMN_VALUE);
-        if(res.length > 0){
-            date = res[0];
-        } else {
-            query = DBUtil.createInsertQuery(DBUtil.DBNames.TABLE_OPTIONS.getName());
-            date = dateFormatYYYYMMDD.format(today);
-            dbUtil.doSqlQuery(query, Arrays.asList(DBUtil.OptionKeys.OPTION_UPDATEDATE.getName(), date));
-        }
-
-        boolean doCheckUpdate = false;
-        try {
-            Date lastUpdate = dateFormatYYYYMMDD.parse(date);
-            //Milliseconds between both dates
-            long difference = today.getTime() - lastUpdate.getTime();
-
-            long twoWeeksInMilliseconds = 14 * 24 * 60 * 60 * 1000;
-
-            if((twoWeeksInMilliseconds - difference) < 0){
-                LOG.info("We do a check for updates - it has been more than 2 weeks since the last one.");
-                doCheckUpdate = true;
-                query = DBUtil.createUpdateQuery(DBUtil.DBNames.TABLE_OPTIONS.getName(), DBUtil.DBNames.COLUMN_VALUE.getName(), dateFormatYYYYMMDD.format(today), DBUtil.OptionKeys.OPTION_UPDATEDATE.getName());
-                dbUtil.doSqlQuery(query, null);
-                LOG.info("We just updated the database with the date of today - next check in 2 weeks.");
-            } else {
-                LOG.info("We do not do a check for updates");
-            }
-
-        } catch (Exception e){
-            throw new RuntimeException(e);
-        }
-
-        if(doCheckUpdate){
-            try {
-                URL url = new URL("http://www.archivesportaleurope.eu/Portal/dptupate/version.action?versionNb=" + VERSION_NB);
-                HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-                if(connection.getResponseCode() == 200){
-                    //There is a new version
-                    LOG.info("New version available...");
-                    if(JOptionPane.showConfirmDialog(getContentPane(), labels.getString("newVersionAvailable")) == 0){
-                        BareBonesBrowserLaunch.openURL("http://www.apenet.eu/index.php?option=com_content&view=article&id=94&Itemid=150&lang=en");
-                        System.exit(0);
-                    }
-                }
-//                LOG.info(connection.getResponseCode());
-            } catch (Exception e) {
-                LOG.error("Error to connect for checking the new version (probably no internet connection)", e);
-            }
-        }
-    }
-
-    private void connectDatabase(){
-        dbUtil = new DBUtil();
+        defaultRoleType = retrieveFromDb.retrieveRoleType();
+        useExistingRoleType = retrieveFromDb.retrieveUseExistingRoleType();
+        retrieveFromDb.checkForUpdates(getContentPane(), labels.getString("newVersionAvailable"), VERSION_NB);
     }
 
     /**
@@ -1067,9 +1022,9 @@ public class DataPreparationToolGUI extends JFrame {
         parameters.put("mainagencycode", getRepositoryCodeIdentifier());
         parameters.put("versionnb", VERSION_NB);
 
-        parameters.put("defaultRoleType", dbUtil.retrieveRoleType());
+        parameters.put("defaultRoleType", retrieveFromDb.retrieveRoleType());
 
-        parameters.put("useDefaultRoleType", Boolean.toString(!(dbUtil.retrieveUseExistingRoleType())));
+        parameters.put("useDefaultRoleType", Boolean.toString(!(retrieveFromDb.retrieveUseExistingRoleType())));
         //todo: Need one for languages.xml file?
         return parameters;
     }

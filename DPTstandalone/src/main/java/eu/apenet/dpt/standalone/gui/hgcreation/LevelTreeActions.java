@@ -43,14 +43,15 @@ public class LevelTreeActions {
         this.fileUtil = new FileUtil();
     }
 
-    public File createXML(TreeModel model, String title, String id, HashMap<String, String> paramMap, String countryCode, String globalIdentifier){
+    public File createXML(TreeModel model, HashMap<String, String> paramMap, String countryCode, String globalIdentifier){
+        CLevelTreeObject obj = (CLevelTreeObject)((DefaultMutableTreeNode)model.getRoot()).getUserObject();
         try {
             DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
             DocumentBuilder builder = factory.newDocumentBuilder();
             DOMImplementation domImplementation = builder.getDOMImplementation();
             Document doc = domImplementation.createDocument(null, null, null);
 
-            Element root = createArchdesc(doc, model, model.getRoot(), paramMap, id, title);
+            Element root = createArchdesc(doc, model, model.getRoot(), paramMap, obj.getId(), obj.getName());
 
             doc.appendChild(root);
 
@@ -62,10 +63,10 @@ public class LevelTreeActions {
             output.transform(new DOMSource(doc.getFirstChild()), new StreamResult(new File("/tmp/test.xml")));
 
             File outputFile = new File(Utilities.TEMP_DIR + "temp_HG.xml");
-            File finalFile = new File(Utilities.TEMP_DIR + "Holdings_Guide_" + globalIdentifier + "_" + id + ".xml");
+            File finalFile = new File(Utilities.TEMP_DIR + "Holdings_Guide_" + globalIdentifier + "_" + obj.getId() + ".xml");
             finalFile.deleteOnExit();
 
-            FileUtils.writeStringToFile(outputFile, HoldingsGuideCreationUtils.eadDeclaration(title, id, countryCode, globalIdentifier, DataPreparationToolGUI.VERSION_NB), "UTF-8");
+            FileUtils.writeStringToFile(outputFile, HoldingsGuideCreationUtils.eadDeclaration(obj.getName(), obj.getId(), countryCode, globalIdentifier, DataPreparationToolGUI.VERSION_NB), "UTF-8");
             fileUtil.writeToFile(fileUtil.readFileAsString_linebreak("/tmp/test.xml"), Utilities.TEMP_DIR + outputFile.getName(), true);
             fileUtil.writeToFile(HoldingsGuideCreationUtils.endDeclaration(), Utilities.TEMP_DIR + outputFile.getName(), true);
 
