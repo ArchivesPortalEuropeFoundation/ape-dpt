@@ -859,12 +859,16 @@ public class DataPreparationToolGUI extends JFrame {
 
     private void createOptionPaneForCountryCode() {
         String currentResult = retrieveFromDb.retrieveCountryCode();
-        String explanation = labels.getString("enterCountryCode") + "\n" + labels.getString("currentCountryCode") + " '" + currentResult + "'";
+        String explanation = labels.getString("enterCountryCode") + "\n" + labels.getString("currentCountryCode") + ": '" + currentResult + "'";
+        int i = 0;
         String result;
         do {
+            if(i == 1)
+                explanation += "\n" + labels.getString("options.pleaseFollowRules");
             result = (String)JOptionPane.showInputDialog(getContentPane(), explanation, labels.getString("chooseCountryCode"), JOptionPane.QUESTION_MESSAGE, Utilities.icon, null, null);
             if(result == null)
                 break;
+            i++;
         } while (dateNormalization.checkForCountrycode(result) == null);
         if(result != null)
             retrieveFromDb.saveCountryCode(result);
@@ -873,11 +877,15 @@ public class DataPreparationToolGUI extends JFrame {
     private void createOptionPaneForRepositoryCode() {
         String currentResult = retrieveFromDb.retrieveRepositoryCode();
         String explanation = labels.getString("enterIdentifier") + "\n" + labels.getString("currentRepositoryCode") + ": '" + currentResult + "'";
+        int i = 0;
         String result;
         do {
+            if(i == 1)
+                explanation += "\n" + labels.getString("options.pleaseFollowRules");
             result = (String)JOptionPane.showInputDialog(getContentPane(), explanation, labels.getString("chooseRepositoryCode"), JOptionPane.QUESTION_MESSAGE, Utilities.icon, null, null);
             if(result == null)
                 break;
+            i++;
         } while (dateNormalization.checkForMainagencycode(result) == null);
         if(result != null)
             retrieveFromDb.saveRepositoryCode(result);
