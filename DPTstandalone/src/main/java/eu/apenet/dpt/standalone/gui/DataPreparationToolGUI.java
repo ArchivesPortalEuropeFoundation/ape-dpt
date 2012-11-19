@@ -707,9 +707,10 @@ public class DataPreparationToolGUI extends JFrame {
             FileInstance fileInstance = fileInstances.get(((File)list.getSelectedValues()[i]).getName());
             if((fileInstance.getValidationSchema() == Xsd_enum.XSD_APE_SCHEMA || fileInstance.getValidationSchema() == Xsd_enum.XSD1_0_APE_SCHEMA) && fileInstance.isValid()) {
                 createHGBtn.setEnabled(true);
-                break;
+                return;
             }
         }
+        createHGBtn.setEnabled(false);
     }
 
     public static void createErrorOrWarningPanel(Throwable e, boolean isError, String message, Component owner){
