@@ -19,20 +19,20 @@ import java.util.ResourceBundle;
 public class ConvertEseActionListener implements ActionListener {
     private DataPreparationToolGUI dataPreparationToolGUI;
     private ResourceBundle labels;
-    private APETabbedPane apeTabbedPane;
+    private APEPanel apePanel;
 
     public ConvertEseActionListener(ResourceBundle labels, DataPreparationToolGUI dataPreparationToolGUI, APEPanel apePanel) {
         this.labels = labels;
         this.dataPreparationToolGUI = dataPreparationToolGUI;
-        this.apeTabbedPane = apePanel.getApeTabbedPane();
+        this.apePanel = apePanel;
     }
 
     public void actionPerformed(ActionEvent e) {
-        apeTabbedPane.disableConversionEseBtn();
+        apePanel.getApeTabbedPane().disableConversionEseBtn();
         dataPreparationToolGUI.disableConversionEseBtn();
 
         JFrame eseOptionFrame = new JFrame(labels.getString("ese.eseOptionFrame"));
-        eseOptionFrame.add(new EseOptionsPanel(labels, dataPreparationToolGUI.getList().getSelectedValues(), eseOptionFrame, apeTabbedPane, dataPreparationToolGUI.getFileInstances()));
+        eseOptionFrame.add(new EseOptionsPanel(labels, dataPreparationToolGUI.getList().getSelectedValues(), eseOptionFrame, apePanel.getApeTabbedPane(), dataPreparationToolGUI.getFileInstances()));
         eseOptionFrame.setPreferredSize(new Dimension(dataPreparationToolGUI.getContentPane().getWidth() *3/4, dataPreparationToolGUI.getContentPane().getHeight() *3/4));
         eseOptionFrame.pack();
         eseOptionFrame.setVisible(true);
