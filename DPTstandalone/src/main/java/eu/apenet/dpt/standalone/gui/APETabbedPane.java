@@ -47,7 +47,6 @@ public class APETabbedPane extends JTabbedPane {
     private JTextArea conversionErrors;
     private JTextArea eseConversionErrors;
 
-    private JScrollPane summaryPane;
     private JScrollPane validationPane;
     private JScrollPane conversionPane;
     private JScrollPane eseConversionPane;
@@ -235,7 +234,7 @@ public class APETabbedPane extends JTabbedPane {
         summaryItems.add(makeCheckboxesXsd());
         summaryItems.add(makeResultsPanel());
 
-        summaryPane = new JScrollPane(summaryItems);
+        JScrollPane summaryPane = new JScrollPane(summaryItems);
         p.add(summaryPane);
         return p;
     }
