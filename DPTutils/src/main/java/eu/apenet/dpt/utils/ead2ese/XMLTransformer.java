@@ -4,11 +4,10 @@
  */
 package eu.apenet.dpt.utils.ead2ese;
 
-import org.apache.log4j.Logger;
-
 import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Properties;
 
 import javax.xml.transform.Result;
 import javax.xml.transform.Source;
@@ -18,6 +17,9 @@ import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
+
+import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
 
 /**
  *
@@ -30,10 +32,18 @@ public class XMLTransformer {
     private Map<String, Object> parameters = new HashMap<String, Object>();
     private String xsltLocation;
 	
-    public XMLTransformer(String xsltLocation, Map<String, Object> parameters){
+    public XMLTransformer(String xsltLocation, Properties properties){
+    	parameters = new HashMap<String, Object>();
         System.setProperty("javax.xml.transform.TransformerFactory", "net.sf.saxon.TransformerFactoryImpl");
         if (parameters != null){
-            this.parameters = parameters;
+            for (Map.Entry<Object, Object> entry : properties.entrySet()) {
+            	String key = entry.getKey().toString();
+            	String value = entry.getValue().toString();
+            	if (StringUtils.isBlank(value)){
+            		value = null;
+            	}
+            	parameters.put(key, value);
+            }
         }
         this.xsltLocation = xsltLocation;
     }

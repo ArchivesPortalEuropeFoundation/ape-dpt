@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<eag xmlns="http://www.archivesportaleurope.eu/profiles/eag/" audience="internal">
+    <control>
+        <recordId></recordId>
+        <otherRecordId></otherRecordId>
+        <maintenanceAgency>
+            <agencyCode></agencyCode>
+            <agencyName></agencyName>
+        </maintenanceAgency>
+        <maintenanceStatus>new</maintenanceStatus>
+        <maintenanceHistory>
+            <maintenanceEvent>
+                <agent></agent>
+                <agentType>human</agentType>
+                <eventDateTime standardDateTime=""></eventDateTime>
+                <eventType>created</eventType>
+            </maintenanceEvent>
+        </maintenanceHistory>
+        <languageDeclarations>
+            <languageDeclaration>
+                <language languageCode=""></language>
+                <script scriptCode="Latn"></script>
+            </languageDeclaration>
+        </languageDeclarations>
+        <conventionDeclaration>
+            <abbreviation>EAG</abbreviation>
+            <citation xml:lang="eng">EAG (Encoded Archival Guide) 2012</citation>
+        </conventionDeclaration>
+        <conventionDeclaration xml:lang="eng">
+            <abbreviation>ISDIAH</abbreviation>
+            <citation xml:lang="eng">International Standard for Describing Institutions with Archival Holdings</citation>
+        </conventionDeclaration>
+        <conventionDeclaration xml:lang="eng">
+            <abbreviation>ISO 639-2b</abbreviation>
+            <citation xml:lang="eng">Codes for the representation of names of languages — Part 2: Alpha-3 code</citation>
+        </conventionDeclaration>
+        <conventionDeclaration xml:lang="eng">
+            <abbreviation>ISO 3166-1</abbreviation>
+            <citation xml:lang="eng">Codes for the representation of names of countries and their subdivisions – Part 1: Country codes</citation>
+        </conventionDeclaration>
+        <conventionDeclaration xml:lang="eng">
+            <abbreviation>ISO 8601</abbreviation>
+            <citation xml:lang="eng">Data elements and interchange formats – Information interchange – Representation of dates and times</citation>
+        </conventionDeclaration>
+        <conventionDeclaration xml:lang="eng">
+            <abbreviation>ISO 15511</abbreviation>
+            <citation xml:lang="eng">International Standard Identifier for Libraries and Related Organisations</citation>
+        </conventionDeclaration>
+        <conventionDeclaration xml:lang="eng">
+            <abbreviation>ISO 15924</abbreviation>
+            <citation xml:lang="eng">Codes for the representation of names of scripts</citation>
+        </conventionDeclaration>
+    </control>
+    <archguide>
+        <identity>
+            <repositorid countrycode="" repositorycode=""/>
+            <otherRepositorId></otherRepositorId>
+            <autform></autform>
+        </identity>
+        <desc>
+            <repositories>
+                <repository>
+                    <repositoryName></repositoryName>
+                    <repositoryRole>Head quarter</repositoryRole>
+                    <geogarea></geogarea>
+                    <location>
+                        <country></country>
+                        <municipalityPostalcode></municipalityPostalcode>
+                        <localentity></localentity>
+                        <street></street>
+                    </location>
+                    <telephone></telephone>
+                    <fax></fax>
+                    <email href=""></email>
+                    <webpage href=""></webpage>
+                    <timetable>
+                        <opening></opening>
+                    </timetable>
+                    <access question="">
+                        <termsOfUse></termsOfUse>
+                    </access>
+                    <handicapped question=""></handicapped>
+                </repository>
+            </repositories>
+        </desc>
+    </archguide>
+    <relations>
+        <resourceRelation resourceRelationType="other" href="">
+            <relationEntry></relationEntry>
+        </resourceRelation>
+    </relations>
+</eag>

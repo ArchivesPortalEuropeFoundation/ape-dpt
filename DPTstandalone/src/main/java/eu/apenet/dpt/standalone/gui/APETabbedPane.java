@@ -55,6 +55,7 @@ public class APETabbedPane extends JTabbedPane {
     private JButton convertBtn;
     private JButton validateBtn;
     private JButton convertEseBtn;
+    private JButton convertEdmBtn;
 
     private JPanel xsltPanel;
     private JPanel xsdPanel;
@@ -99,13 +100,18 @@ public class APETabbedPane extends JTabbedPane {
         convertBtn = new JButton();
         validateBtn = new JButton();
         convertEseBtn = new JButton();
+        convertEdmBtn = new JButton();
 
         xsltPanel = new JPanel();
         xsdPanel = new JPanel();
     }
 
     private void initialize() {
-        editionPane.setViewportView(createEditionTree(null));
+        try {
+            editionPane.setViewportView(createEditionTree(null));
+        } catch (Exception e) {
+            //nothing
+        }
 
         validationErrors.setEditable(false);
         validationErrors.setLineWrap(true);
@@ -125,7 +131,11 @@ public class APETabbedPane extends JTabbedPane {
         convertEseBtn.setPreferredSize(DEFAULT_BTN_DIMENSION);
         convertEseBtn.setEnabled(false);
 
-        validateBtn.addActionListener(new ValidateActionListener(labels, dataPreparationToolGUI.getFileInstances(), dataPreparationToolGUI, this));
+//        convertEdmBtn.addActionListener();
+        convertEdmBtn.setPreferredSize(DEFAULT_BTN_DIMENSION);
+        convertEdmBtn.setEnabled(false);
+
+        validateBtn.addActionListener(new ValidateActionListener(labels, dataPreparationToolGUI, this));
         validateBtn.setPreferredSize(DEFAULT_BTN_DIMENSION);
         validateBtn.setEnabled(false);
     }
@@ -174,6 +184,12 @@ public class APETabbedPane extends JTabbedPane {
     public void disableConversionEseBtn() {
         convertEseBtn.setEnabled(false);
     }
+    public void enableConversionEdmBtn() {
+        convertEdmBtn.setEnabled(true);
+    }
+    public void disableConversionEdmBtn() {
+        convertEdmBtn.setEnabled(false);
+    }
 
     public void changeLanguage(ResourceBundle labels) {
         setTitleAt(TAB_CONVERSION, labels.getString("conversion"));
@@ -184,7 +200,8 @@ public class APETabbedPane extends JTabbedPane {
 
         convertBtn.setText(labels.getString("convert"));
         validateBtn.setText(labels.getString("validate"));
-        convertEseBtn.setText(labels.getString("convertEseBtn"));
+        convertEseBtn.setText(labels.getString("summary.convertEse.button"));
+        convertEdmBtn.setText(labels.getString("summary.convertEdm.button"));
     }
 
     public void setValidationBtnText(String text) {
@@ -209,14 +226,20 @@ public class APETabbedPane extends JTabbedPane {
     private JComponent makeTextPanelSummary(){
         JPanel p = new JPanel();
         p.setLayout(new BoxLayout(p, BoxLayout.PAGE_AXIS));
-        p.add(makeBoutons());
-        p.add(makeCheckboxes());
-        p.add(makeCheckboxesXsd());
-        p.add(makeResultsPanel());
+
+        JPanel summaryItems = new JPanel();
+        summaryItems.setLayout(new BoxLayout(summaryItems, BoxLayout.PAGE_AXIS));
+        summaryItems.add(makeButtons());
+        summaryItems.add(makeCheckboxes());
+        summaryItems.add(makeCheckboxesXsd());
+        summaryItems.add(makeResultsPanel());
+
+        JScrollPane summaryPane = new JScrollPane(summaryItems);
+        p.add(summaryPane);
         return p;
     }
 
-    private JComponent makeBoutons(){
+    private JComponent makeButtons(){
         JPanel p = new JPanel();
         p.setLayout(new BoxLayout(p, BoxLayout.PAGE_AXIS));
         p.add(convertBtn);
@@ -224,12 +247,14 @@ public class APETabbedPane extends JTabbedPane {
         p.add(validateBtn);
         p.add(Box.createRigidArea(new Dimension(0, 10)));
         p.add(convertEseBtn);
+        p.add(Box.createRigidArea(new Dimension(0, 10)));
+        p.add(convertEdmBtn);
         return p;
     }
 
     private JComponent makeCheckboxes() {
         xsltPanel.setLayout(new BoxLayout(xsltPanel, BoxLayout.PAGE_AXIS));
-        xsltPanel.add(new JLabel(labels.getString("xsltPanel") + ":"));
+        xsltPanel.add(new JLabel(labels.getString("summary.stylesheets.label") + ":"));
         JRadioButton radioButton;
         for(File xsltFile : Utilities.getXsltFiles()){
             radioButton = new JRadioButton(xsltFile.getName());
@@ -245,7 +270,7 @@ public class APETabbedPane extends JTabbedPane {
 
     private JComponent makeCheckboxesXsd() {
         xsdPanel.setLayout(new BoxLayout(xsdPanel, BoxLayout.PAGE_AXIS));
-        xsdPanel.add(new JLabel(labels.getString("xsdPanel") + ":"));
+        xsdPanel.add(new JLabel(labels.getString("summary.schemas.label") + ":"));
         JRadioButton radioButton;
         for(Xsd_enum xsdEnum : Xsd_enum.values()){
             radioButton = new JRadioButton(xsdEnum.getReadableName());
@@ -267,7 +292,7 @@ public class APETabbedPane extends JTabbedPane {
         return resultsView;
     }
 
-    private JComponent createMsgEditionTree(String msg){
+    public JComponent createMsgEditionTree(String msg){
         JEditorPane waitMessagePane = new JEditorPane();
         waitMessagePane.setEditable(false);
         waitMessagePane.setContentType("text/plain");
@@ -281,7 +306,7 @@ public class APETabbedPane extends JTabbedPane {
      * @param file The file represented in the list
      * @return A JComponent containing the tree if it exists, or an error message if not
      */
-    public JComponent createEditionTree(File file){
+    public JComponent createEditionTree(File file) throws Exception {
         if(file == null){
             return createMsgEditionTree(labels.getString("noTreeBuild") + "...");
         }
@@ -319,19 +344,18 @@ public class APETabbedPane extends JTabbedPane {
 //            tree.setHighlighters(HighlighterFactory.createSimpleStriping (HighlighterFactory.QUICKSILVER));
         } catch (Exception e){
             tree = null;
-            LOG.error("Could not create the tree of the XML file", e);
+            throw new Exception("Could not create the tree of the XML file", e);
         }
 
-        if(tree != null) {
+//        if(tree != null) {
             JScrollPane paneTest = new JScrollPane(tree);
             editionPane.setViewportView(paneTest);
             tree.setEditable(true);
-            dataPreparationToolGUI.enableSimpleSaveBtn();
+            dataPreparationToolGUI.enableSaveBtn();
             ((XMLTreeTableModel)tree.getTreeTableModel()).setName(file.getName());
-            LOG.info("Tree created");
-        } else {
-            LOG.error("Tree not created (tree is null) - problems");
-        }
+//        } else {
+//            LOG.error("Tree not created (tree is null) - problems");
+//        }
         return tree;
     }
 
@@ -364,18 +388,22 @@ public class APETabbedPane extends JTabbedPane {
                 changeBackgroundColor(TAB_ESE, Utilities.TAB_COLOR);
             else if(apeTabbedPane.getSelectedIndex() == TAB_EDITION){
                 if(dataPreparationToolGUI.getList().getSelectedValue() != null){
-                    createEditionTree((File)dataPreparationToolGUI.getList().getSelectedValue());
-                    tree.addMouseListener(new MouseListener(){
-                        public void mouseReleased(MouseEvent e){
-                            checkAndLaunchPopUp(e);
-                        }
-                        public void mousePressed(MouseEvent e){
-                            checkAndLaunchPopUp(e);
-                        }
-                        public void mouseExited(MouseEvent e) {}
-                        public void mouseEntered(MouseEvent e) {}
-                        public void mouseClicked(MouseEvent e) {}
-                    });
+                    try {
+                        createEditionTree((File)dataPreparationToolGUI.getList().getSelectedValue());
+                        tree.addMouseListener(new MouseListener(){
+                            public void mouseReleased(MouseEvent e){
+                                checkAndLaunchPopUp(e);
+                            }
+                            public void mousePressed(MouseEvent e){
+                                checkAndLaunchPopUp(e);
+                            }
+                            public void mouseExited(MouseEvent e) {}
+                            public void mouseEntered(MouseEvent e) {}
+                            public void mouseClicked(MouseEvent e) {}
+                        });
+                    } catch (Exception ex) {
+                        editionPane.setViewportView(createMsgEditionTree(labels.getString("edition.error.fileNoXmlOrCorrupted")));
+                    }
                 }
             }
         }
@@ -440,16 +468,16 @@ public class APETabbedPane extends JTabbedPane {
             TreeModelSupport modelSupport = ((XMLTreeTableModel)tree.getTreeTableModel()).getModelSupport();
             if(actionCommand.equals(labels.getString(ActionNamesEnum.INSERT_COUNTRYCODE.getBundleCode()))){
                 Attr attr = node.getOwnerDocument().createAttributeNS(NodeAppendable.XMLNS_EAD, "countrycode");
-                attr.setValue(dataPreparationToolGUI.getCountrycode());
+                attr.setValue(dataPreparationToolGUI.getCountryCode());
                 ((Element)node).setAttributeNode(attr);
                 modelSupport.fireChildAdded(path, node.getAttributes().getLength()-1, attr);
             } else if(actionCommand.equals(labels.getString(ActionNamesEnum.INSERT_MAINAGENCYCODE.getBundleCode()))){
                 Attr attr = node.getOwnerDocument().createAttributeNS(NodeAppendable.XMLNS_EAD, "mainagencycode");
-                attr.setValue(dataPreparationToolGUI.getGlobalIdentifier());
+                attr.setValue(dataPreparationToolGUI.getRepositoryCodeIdentifier());
                 ((Element)node).setAttributeNode(attr);
                 modelSupport.fireChildAdded(path, node.getAttributes().getLength()-1, attr);
             } else if(actionCommand.equals(labels.getString(ActionNamesEnum.INSERT_TEXT.getBundleCode()))){
-                Text textNode = node.getOwnerDocument().createTextNode(dataPreparationToolGUI.getCountrycode() + "_" + dataPreparationToolGUI.getGlobalIdentifier());
+                Text textNode = node.getOwnerDocument().createTextNode(dataPreparationToolGUI.getCountryCode() + "_" + dataPreparationToolGUI.getRepositoryCodeIdentifier());
                 node.appendChild(textNode);
                 modelSupport.fireTreeStructureChanged(path);
             } else if(actionCommand.equals(labels.getString(ActionNamesEnum.INSERT_LANGUAGETAG.getBundleCode()))){

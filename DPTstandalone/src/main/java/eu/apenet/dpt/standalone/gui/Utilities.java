@@ -24,7 +24,7 @@ public final class Utilities {
 
     private final static String CONFIG_DIR_SIMPLE = "xsl";
     private final static String SYSTEM_DIR_SIMPLE = "system";
-    private final static String OUTPUT_DIR_SIMPLE = "output";
+    private final static String LOG_DIR_SIMPLE = "output";
     private final static String TEMP_DIR_SIMPLE = "temp";
 
     public final static String XSL_DEFAULT_NAME = "default.xsl";
@@ -38,18 +38,20 @@ public final class Utilities {
     public final static String[] SYSTEM_FILES = {XSL_BEFORE_NAME, XSL_DEFAULT_NAME, XML_LANGUAGES_NAME, "changeNS.xsl", "frontmatter.xsl", "import.xsl", "levels.xsl"};
     public final static String[] FILES_NOT_SHOWN = {XSL_BEFORE_NAME, "frontmatter.xsl", "import.xsl", "levels.xsl"};
 
-    public static final Color FLASHING_COLOR = new Color(255, 30, 30);
+//    public static final Color FLASHING_RED_COLOR = new Color(255, 30, 30);
+    public static final Color FLASHING_RED_COLOR = new Color(200, 90, 90);
+    public static final Color FLASHING_GREEN_COLOR = new Color(100, 180, 100);
     public static final Color TAB_COLOR = new Color(238, 238, 238);
 
     public final static String CONFIG_DIR = CONFIG_DIR_SIMPLE + DIR_SEPARATOR;
-    public final static String OUTPUT_DIR = OUTPUT_DIR_SIMPLE + DIR_SEPARATOR;
+    public final static String LOG_DIR = LOG_DIR_SIMPLE + DIR_SEPARATOR;
     public final static String TEMP_DIR = TEMP_DIR_SIMPLE + DIR_SEPARATOR;
     public final static String SYSTEM_DIR = CONFIG_DIR + SYSTEM_DIR_SIMPLE + DIR_SEPARATOR;
 
     public final static String DEFAULT_XSL_FILE_PATH = SYSTEM_DIR + XSL_DEFAULT_NAME;
     public final static String BEFORE_XSL_FILE_PATH = SYSTEM_DIR + XSL_BEFORE_NAME;
     public final static String LANGUAGES_XML_FILE_PATH = SYSTEM_DIR + XML_LANGUAGES_NAME;
-    public final static String HG_TREE_SER_FILE_PATH = OUTPUT_DIR + SER_HG_TREE_NAME;
+    public final static String HG_TREE_SER_FILE_PATH = TEMP_DIR + SER_HG_TREE_NAME;
 
     public final static File BEFORE_XSL_FILE = new File(BEFORE_XSL_FILE_PATH);
 
@@ -60,7 +62,7 @@ public final class Utilities {
     public static String stringFromList(List<SAXParseException> exceptions) {
         StringBuilder result = new StringBuilder();
         for(SAXParseException exception : exceptions)
-            result.append("l.").append(exception.getLineNumber()).append(", ").append(exception.getMessage()).append("\n");
+            result.append("l.").append(exception.getLineNumber()).append(", ").append("c.").append(exception.getColumnNumber()).append(": ").append(exception.getMessage()).append("\n");
         return result.toString();
     }
     

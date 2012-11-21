@@ -159,8 +159,7 @@ public class ConvertActionListener implements ActionListener {
                 fileInstance.setConversionErrors(labels.getString("conversionException") + "\n\n-------------\n" + ex.getMessage());
                 LOG.error("Error when converting a file", ex);
             } finally {
-                apePanel.getApeTabbedPane().checkFlashingTab(APETabbedPane.TAB_CONVERSION, Utilities.FLASHING_COLOR);
-                apePanel.getApeTabbedPane().setValidationBtnText(labels.getString("validateBtn"));
+                apePanel.getApeTabbedPane().checkFlashingTab(APETabbedPane.TAB_CONVERSION, Utilities.FLASHING_RED_COLOR);
                 dataPreparationToolGUI.enableValidationBtns();
                 summaryWorking.stop();
                 if(counterThread != null)
@@ -174,7 +173,7 @@ public class ConvertActionListener implements ActionListener {
                     progressFrame.dispose();
                 }
                 dataPreparationToolGUI.setResultAreaText(labels.getString("conversionFinished"));
-                dataPreparationToolGUI.enableSimpleSaveBtn();
+                dataPreparationToolGUI.enableSaveBtn();
             }
         }
     }

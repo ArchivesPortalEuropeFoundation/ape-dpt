@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-    APE EAD Schema (XSD 1.1)
-    Version: 1.2.2
-    Date: 20110112
+    apeEAD Schema (XSD 1.0)
+    Version: 1.2.3
+    Date: 20121106
     Editor: APEnet project
 
-    This version of the APE EAD schema has been written from the official 2002 schema to accommodate the needs of the APEnet project.
-    However, we now use the XSD 1.1 (http://www.w3.org/TR/xmlschema11-1/)
+    This version of the apeEAD schema has been written from the official 2002 schema to accommodate the needs of the APEnet project.
+    This schema is in XSD 1.0, for the XSD 1.1 version please see (http://www.archivesportaleurope.eu/profiles/apeEAD.xsd)
 -->
 <xs:schema elementFormDefault="qualified" targetNamespace="urn:isbn:1-931666-22-9"
 	xmlns="urn:isbn:1-931666-22-9" xmlns:xlink="http://www.w3.org/1999/xlink"
@@ -889,9 +889,11 @@
             <xs:group ref="m.desc.base.lowlevels"/>
 			<xs:element maxOccurs="1" minOccurs="0" name="acqinfo" type="acqinfo"/>
 			<xs:element maxOccurs="1" minOccurs="0" name="arrangement" type="arrangement"/>
+			<xs:element maxOccurs="1" minOccurs="0" name="bibliography" type="bibliography"/>
 			<xs:element maxOccurs="1" minOccurs="0" name="fileplan" type="fileplan"/>
 			<xs:element maxOccurs="1" minOccurs="0" name="originalsloc" type="originalsloc"/>
 			<xs:element maxOccurs="1" minOccurs="0" name="prefercite" type="prefercite"/>
+			<xs:element maxOccurs="1" minOccurs="0" name="relatedmaterial" type="relatedmaterial"/>
 			<xs:element maxOccurs="1" minOccurs="0" name="separatedmaterial" type="separatedmaterial"/>
 		</xs:choice>
 	</xs:group>
@@ -901,7 +903,6 @@
 			<xs:element maxOccurs="1" minOccurs="0" name="accruals" type="accruals"/>
 			<xs:element maxOccurs="1" minOccurs="0" name="altformavail" type="altformavail"/>
 			<xs:element maxOccurs="1" minOccurs="0" name="appraisal" type="appraisal"/>
-            <xs:element maxOccurs="1" minOccurs="0" name="bibliography" type="bibliography"/>
 			<xs:element maxOccurs="1" minOccurs="0" name="bioghist" type="bioghist"/>
 			<xs:element maxOccurs="1" minOccurs="0" name="controlaccess" type="controlaccess"/>
 			<xs:element maxOccurs="1" minOccurs="0" name="custodhist" type="custodhist"/>
@@ -910,7 +911,6 @@
             <xs:element maxOccurs="1" minOccurs="0" name="otherfindaid" type="otherfindaid"/>
 			<xs:element maxOccurs="1" minOccurs="0" name="phystech" type="phystech"/>
 			<xs:element maxOccurs="1" minOccurs="0" name="processinfo" type="processinfo"/>
-            <xs:element maxOccurs="1" minOccurs="0" name="relatedmaterial" type="relatedmaterial"/>
 			<xs:element maxOccurs="2" minOccurs="0" name="scopecontent" type="scopecontent"/>
 			<xs:element maxOccurs="1" minOccurs="0" name="userestrict" type="userestrict"/>
 		</xs:choice>
@@ -940,56 +940,12 @@
 		<xs:attributeGroup ref="a.common"/>
 		<xs:attribute name="level">
             <xs:simpleType>
-		        <xs:restriction base="xs:string">
+		        <xs:restriction base="xs:token">
                     <xs:enumeration value="fonds"/>
-                    <!--xs:enumeration value="file"/>
+                    <xs:enumeration value="file"/>
                     <xs:enumeration value="item"/>
                     <xs:enumeration value="series"/>
-                    <xs:enumeration value="subseries"/-->
-                </xs:restriction>
-            </xs:simpleType>
-		</xs:attribute>
-		<xs:attributeGroup ref="a.desc.base"/>
-	</xs:attributeGroup>
-    <xs:attributeGroup name="a.desc.c.lowlevel">
-		<xs:attributeGroup ref="a.common"/>
-		<xs:attribute name="level">
-            <xs:simpleType>
-		        <xs:restriction base="xs:string">
-                    <xs:enumeration value="item"/>
-                </xs:restriction>
-            </xs:simpleType>
-		</xs:attribute>
-		<xs:attributeGroup ref="a.desc.base"/>
-	</xs:attributeGroup>
-    <xs:attributeGroup name="a.desc.c.serieslevel">
-		<xs:attributeGroup ref="a.common"/>
-		<xs:attribute name="level">
-            <xs:simpleType>
-		        <xs:restriction base="xs:string">
-			        <xs:enumeration value="series"/>
-                </xs:restriction>
-            </xs:simpleType>
-		</xs:attribute>
-		<xs:attributeGroup ref="a.desc.base"/>
-	</xs:attributeGroup>
-    <xs:attributeGroup name="a.desc.c.subserieslevel">
-		<xs:attributeGroup ref="a.common"/>
-		<xs:attribute name="level">
-            <xs:simpleType>
-		        <xs:restriction base="xs:string">
-			        <xs:enumeration value="subseries"/>
-                </xs:restriction>
-            </xs:simpleType>
-		</xs:attribute>
-		<xs:attributeGroup ref="a.desc.base"/>
-	</xs:attributeGroup>
-    <xs:attributeGroup name="a.desc.c.filelevel">
-		<xs:attributeGroup ref="a.common"/>
-		<xs:attribute name="level">
-            <xs:simpleType>
-		        <xs:restriction base="xs:string">
-			        <xs:enumeration value="file"/>
+                    <xs:enumeration value="subseries"/>
                 </xs:restriction>
             </xs:simpleType>
 		</xs:attribute>
@@ -1441,7 +1397,7 @@
 		<xs:sequence>
 			<xs:element minOccurs="0" name="head" type="head"/>
 			<xs:choice maxOccurs="unbounded">
-				<xs:group ref="m.blocks"/>
+                <xs:group ref="m.blocks"/>				
 				<xs:element name="bibref" type="bibref"/>
 			</xs:choice>
 		</xs:sequence>
@@ -1503,17 +1459,12 @@
 				<xs:group maxOccurs="unbounded" minOccurs="0" ref="m.blocks"/>
 			</xs:sequence>
 			<xs:choice maxOccurs="unbounded">
-				<xs:element name="c"><!--type="c"-->
-                    <xs:alternative test="@level != 'series' and @level != 'subseries' and @level != 'file' and @level != 'item'" type="c.highlevel" />
-                    <xs:alternative test="@level = 'series'" type="c.serieslevel" />
-                    <xs:alternative test="@level = 'subseries'" type="c.subserieslevel" />
-                    <xs:alternative test="@level = 'file'" type="c.filelevel" />
-                    <xs:alternative test="@level = 'item'" type="c.itemlevel" />
-                    <!--<xs:assert test="if(@level eq 'fonds') then (c/@level = 'fonds' or c/@level = 'series' or c/@level = 'subseries' or c/@level = 'file' or c/@level = 'item') else-->
-                          <!--if(@level eq 'series') then (c/@level = 'series' or c/@level = 'subseries' or c/@level = 'file' or c/@level = 'item') else-->
-                          <!--if(@level eq 'subseries') then (c/@level = 'subseries' or c/@level = 'file' or c/@level = 'item') else-->
-                          <!--if(@level eq 'file') then (c/@level = 'item')" />-->
-                    <!--<xs:alternative test="(@level ne 'fonds') and (@level ne 'series') and (@level ne 'subseries') and (@level ne 'file') and (@level ne 'item')" type="c.errorlevel"/>-->
+				<xs:element name="c" type="c.highlevel"><!--type="c"-->
+                    <!--xs:alternative test="@level eq 'fonds'" type="c.highlevel" />
+                    <xs:alternative test="@level eq 'series'" type="c.serieslevel" />
+                    <xs:alternative test="@level eq 'subseries'" type="c.subserieslevel" />
+                    <xs:alternative test="@level eq 'file'" type="c.filelevel" />
+                    <xs:alternative test="@level eq 'item'" type="c.itemlevel" /-->
 				</xs:element>
 			</xs:choice>
 		</xs:sequence>
@@ -1525,184 +1476,69 @@
 			</xs:simpleType>
 		</xs:attribute>
 	</xs:complexType>
-    <xs:complexType name="c.errorlevelfonds">
-        <xs:sequence>
-			<xs:element name="did" type="did"/>
-			<xs:group maxOccurs="unbounded" minOccurs="0" ref="m.desc.base.highlevels"/>
-			<xs:choice maxOccurs="unbounded" minOccurs="0">
-                <xs:element name="c">
-                    <xs:alternative test="@level eq 'fonds'" type="c.highlevel"/>
-                    <xs:alternative test="@level eq 'series'" type="c.serieslevel"/>
-                    <xs:alternative test="@level eq 'subseries'" type="c.subserieslevel"/>
-                    <xs:alternative test="@level eq 'file'" type="c.filelevel"/>
-                    <xs:alternative test="@level eq 'item'" type="c.itemlevel"/>
-                    <xs:alternative test="(@level ne 'fonds') and (@level ne 'series') and (@level ne 'subseries') and (@level ne 'file') and (@level ne 'item')" type="c.errorlevelfonds" />
-                </xs:element>
-			</xs:choice>
-		</xs:sequence>
-        <xs:attribute name="level">
-            <xs:simpleType>
-		        <xs:restriction base="xs:string">
-                    <xs:enumeration value="file"/>
-                    <xs:enumeration value="fonds"/>
-                    <xs:enumeration value="item"/>
-                    <xs:enumeration value="series"/>
-                    <xs:enumeration value="subseries"/>
-                </xs:restriction>
-            </xs:simpleType>
-        </xs:attribute>
-		<xs:attributeGroup ref="a.common"/>
-        <xs:attributeGroup ref="a.desc.base"/>
-    </xs:complexType>
-    <xs:complexType name="c.errorlevelseries">
-        <xs:sequence>
-			<xs:element name="did" type="did"/>
-			<xs:group maxOccurs="unbounded" minOccurs="0" ref="m.desc.base.highlevels"/>
-			<xs:choice maxOccurs="unbounded" minOccurs="0">
-                <xs:element name="c">
-                    <xs:alternative test="@level eq 'series'" type="c.serieslevel"/>
-                    <xs:alternative test="@level eq 'subseries'" type="c.subserieslevel"/>
-                    <xs:alternative test="@level eq 'file'" type="c.filelevel"/>
-                    <xs:alternative test="@level eq 'item'" type="c.itemlevel"/>
-                    <xs:alternative test="(@level ne 'series') and (@level ne 'subseries') and (@level ne 'file') and (@level ne 'item')" type="c.errorlevelseries" />
-                </xs:element>
-			</xs:choice>
-		</xs:sequence>
-        <xs:attribute name="level">
-            <xs:simpleType>
-		        <xs:restriction base="xs:string">
-                    <xs:enumeration value="file"/>
-                    <xs:enumeration value="item"/>
-                    <xs:enumeration value="series"/>
-                    <xs:enumeration value="subseries"/>
-                </xs:restriction>
-            </xs:simpleType>
-        </xs:attribute>
-		<xs:attributeGroup ref="a.common"/>
-        <xs:attributeGroup ref="a.desc.base"/>
-    </xs:complexType>
-    <xs:complexType name="c.errorlevelsubseries">
-        <xs:sequence>
-			<xs:element name="did" type="did"/>
-			<xs:group maxOccurs="unbounded" minOccurs="0" ref="m.desc.base.highlevels"/>
-			<xs:choice maxOccurs="unbounded" minOccurs="0">
-                <xs:element name="c">
-                    <xs:alternative test="@level eq 'subseries'" type="c.subserieslevel"/>
-                    <xs:alternative test="@level eq 'file'" type="c.filelevel"/>
-                    <xs:alternative test="@level eq 'item'" type="c.itemlevel"/>
-                    <xs:alternative test="(@level ne 'subseries') and (@level ne 'file') and (@level ne 'item')" type="c.errorlevelsubseries" />
-                </xs:element>
-			</xs:choice>
-		</xs:sequence>
-        <xs:attribute name="level">
-            <xs:simpleType>
-		        <xs:restriction base="xs:string">
-                    <xs:enumeration value="file"/>
-                    <xs:enumeration value="item"/>
-                    <xs:enumeration value="subseries"/>
-                </xs:restriction>
-            </xs:simpleType>
-        </xs:attribute>
-		<xs:attributeGroup ref="a.common"/>
-        <xs:attributeGroup ref="a.desc.base"/>
-    </xs:complexType>
-    <xs:complexType name="c.errorlevelitem">
-        <xs:sequence>
-			<xs:element name="did" type="did"/>
-			<xs:group maxOccurs="unbounded" minOccurs="0" ref="m.desc.base.highlevels"/>
-			<xs:choice maxOccurs="unbounded" minOccurs="0">
-                <xs:element name="c">
-                    <xs:alternative test="@level eq 'item'" type="c.itemlevel"/>
-                    <xs:alternative test="(@level ne 'item')" type="c.errorlevelitem" />
-                </xs:element>
-			</xs:choice>
-		</xs:sequence>
-        <xs:attribute name="level">
-            <xs:simpleType>
-		        <xs:restriction base="xs:string">
-                    <xs:enumeration value="file"/>
-                    <xs:enumeration value="item"/>
-                    <xs:enumeration value="subseries"/>
-                </xs:restriction>
-            </xs:simpleType>
-        </xs:attribute>
-		<xs:attributeGroup ref="a.common"/>
-        <xs:attributeGroup ref="a.desc.base"/>
-    </xs:complexType>
 	<xs:complexType name="c.highlevel">
 		<xs:sequence>
 			<xs:element name="did" type="did"/>
 			<xs:group maxOccurs="unbounded" minOccurs="0" ref="m.desc.base.highlevels"/>
 			<xs:choice maxOccurs="unbounded" minOccurs="0">
-                <xs:element name="c">
-                    <xs:alternative test="@level eq 'fonds'" type="c.highlevel"/>
+                <xs:element name="c" type="c.highlevel">
+                    <!--xs:alternative test="@level eq 'fonds'" type="c.highlevel"/>
                     <xs:alternative test="@level eq 'series'" type="c.serieslevel"/>
                     <xs:alternative test="@level eq 'subseries'" type="c.subserieslevel"/>
                     <xs:alternative test="@level eq 'file'" type="c.filelevel"/>
-                    <xs:alternative test="@level eq 'item'" type="c.itemlevel"/>
-                    <xs:alternative test="(@level ne 'fonds') and (@level ne 'series') and (@level ne 'subseries') and (@level ne 'file') and (@level ne 'item')" type="c.errorlevelfonds" />
+                    <xs:alternative test="@level eq 'item'" type="c.itemlevel"/-->
                 </xs:element>
 			</xs:choice>
 		</xs:sequence>
 		<xs:attributeGroup ref="a.desc.c.highlevel"/>
-        <!--<xs:assert test="(@level eq 'fonds') or (@level eq 'series') or (@level eq 'subseries') or (@level eq 'file') or (@level eq 'item')" />-->
         <!--<xs:attributeGroup ref="a.desc.c"/>-->
 	</xs:complexType>
-    <xs:complexType name="c.serieslevel">
-		<xs:sequence>
-			<xs:element name="did" type="did"/>
-			<xs:group maxOccurs="unbounded" minOccurs="0" ref="m.desc.base.lowlevels"/>
-			<xs:choice maxOccurs="unbounded" minOccurs="0">
-                <xs:element name="c">
-				    <xs:alternative test="@level eq 'series'" type="c.serieslevel"/>
-                    <xs:alternative test="@level eq 'subseries'" type="c.subserieslevel"/>
-                    <xs:alternative test="@level eq 'file'" type="c.filelevel"/>
-                    <xs:alternative test="@level eq 'item'" type="c.itemlevel"/>
-                    <xs:alternative test="(@level ne 'series') and (@level ne 'subseries') and (@level ne 'file') and (@level ne 'item')" type="c.errorlevelseries"/>
-                </xs:element>
-			</xs:choice>
-		</xs:sequence>
-		<xs:attributeGroup ref="a.desc.c.serieslevel"/>
-        <!--<xs:assert test="(@level eq 'series') or (@level eq 'subseries') or (@level eq 'file') or (@level eq 'item')" />-->
-	</xs:complexType>
-    <xs:complexType name="c.subserieslevel">
-		<xs:sequence>
-			<xs:element name="did" type="did"/>
-			<xs:group maxOccurs="unbounded" minOccurs="0" ref="m.desc.base.lowlevels"/>
-			<xs:choice maxOccurs="unbounded" minOccurs="0">
-                <xs:element name="c">
-    				<xs:alternative test="@level eq 'subseries'" type="c.subserieslevel"/>
-                    <xs:alternative test="@level eq 'file'" type="c.filelevel"/>
-                    <xs:alternative test="@level eq 'item'" type="c.itemlevel"/>
-                    <xs:alternative test="(@level ne 'subseries') and (@level ne 'file') and (@level ne 'item')" type="c.errorlevelsubseries"/>
-                </xs:element>
-			</xs:choice>
-		</xs:sequence>
-		<xs:attributeGroup ref="a.desc.c.subserieslevel"/>
-        <!--<xs:assert test="(@level eq 'subseries') or (@level eq 'file') or (@level eq 'item')" />-->
-	</xs:complexType>
-    <xs:complexType name="c.filelevel">
-		<xs:sequence>
-			<xs:element name="did" type="did"/>
-			<xs:group maxOccurs="unbounded" minOccurs="0" ref="m.desc.base.lowlevels"/>
-			<xs:choice maxOccurs="unbounded" minOccurs="0">
-				<xs:element name="c">
-                    <xs:alternative test="@level eq 'item'" type="c.itemlevel"/>
-                    <xs:alternative test="(@level ne 'item')" type="c.errorlevelitem"/>
-                </xs:element>
-			</xs:choice>
-		</xs:sequence>
-		<xs:attributeGroup ref="a.desc.c.filelevel"/>
-        <!--<xs:assert test="(@level eq 'file') or (@level eq 'item')" />-->
-	</xs:complexType>
-    <xs:complexType name="c.itemlevel">
-		<xs:sequence>
-			<xs:element name="did" type="did"/>
-			<xs:group maxOccurs="unbounded" minOccurs="0" ref="m.desc.base.lowlevels"/>
-		</xs:sequence>
-		<xs:attributeGroup ref="a.desc.c.lowlevel"/>
-        <!--<xs:assert test="(@level eq 'item')" />-->
-	</xs:complexType>
+    <!--<xs:complexType name="c.serieslevel">-->
+		<!--<xs:sequence>-->
+			<!--<xs:element name="did" type="did"/>-->
+			<!--<xs:group maxOccurs="unbounded" minOccurs="0" ref="m.desc.base.lowlevels"/>-->
+			<!--<xs:choice maxOccurs="unbounded" minOccurs="0">-->
+                <!--<xs:element name="c">-->
+				    <!--<xs:alternative test="@level eq 'series'" type="c.serieslevel"/>-->
+                    <!--<xs:alternative test="@level eq 'subseries'" type="c.subserieslevel"/>-->
+                    <!--<xs:alternative test="@level eq 'file'" type="c.filelevel"/>-->
+                    <!--<xs:alternative test="@level eq 'item'" type="c.itemlevel"/>-->
+                <!--</xs:element>-->
+			<!--</xs:choice>-->
+		<!--</xs:sequence>-->
+		<!--<xs:attributeGroup ref="a.desc.c.lowlevel"/>-->
+	<!--</xs:complexType>-->
+    <!--<xs:complexType name="c.subserieslevel">-->
+		<!--<xs:sequence>-->
+			<!--<xs:element name="did" type="did"/>-->
+			<!--<xs:group maxOccurs="unbounded" minOccurs="0" ref="m.desc.base.lowlevels"/>-->
+			<!--<xs:choice maxOccurs="unbounded" minOccurs="0">-->
+                <!--<xs:element name="c">-->
+    				<!--<xs:alternative test="@level eq 'subseries'" type="c.subserieslevel"/>-->
+                    <!--<xs:alternative test="@level eq 'file'" type="c.filelevel"/>-->
+                    <!--<xs:alternative test="@level eq 'item'" type="c.itemlevel"/>-->
+                <!--</xs:element>-->
+			<!--</xs:choice>-->
+		<!--</xs:sequence>-->
+		<!--<xs:attributeGroup ref="a.desc.c.lowlevel"/>-->
+	<!--</xs:complexType>-->
+    <!--<xs:complexType name="c.filelevel">-->
+		<!--<xs:sequence>-->
+			<!--<xs:element name="did" type="did"/>-->
+			<!--<xs:group maxOccurs="unbounded" minOccurs="0" ref="m.desc.base.lowlevels"/>-->
+			<!--<xs:choice maxOccurs="unbounded" minOccurs="0">-->
+				<!--<xs:element maxOccurs="unbounded" name="c" type="c.itemlevel"/>-->
+			<!--</xs:choice>-->
+		<!--</xs:sequence>-->
+		<!--<xs:attributeGroup ref="a.desc.c.lowlevel"/>-->
+	<!--</xs:complexType>-->
+    <!--<xs:complexType name="c.itemlevel">-->
+		<!--<xs:sequence>-->
+			<!--<xs:element name="did" type="did"/>-->
+			<!--<xs:group maxOccurs="unbounded" minOccurs="0" ref="m.desc.base.lowlevels"/>-->
+		<!--</xs:sequence>-->
+		<!--<xs:attributeGroup ref="a.desc.c.lowlevel"/>-->
+	<!--</xs:complexType>-->
 	<xs:complexType mixed="true" name="head" />
 	<xs:complexType mixed="true" name="p">
         <xs:choice maxOccurs="unbounded" minOccurs="0">

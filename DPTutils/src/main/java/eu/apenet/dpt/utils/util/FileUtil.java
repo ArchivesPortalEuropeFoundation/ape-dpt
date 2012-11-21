@@ -244,7 +244,7 @@ public class FileUtil {
         return chardetSniffer.getCharsetName();
     }
 
-    private final String XSD_APE_SCHEMA = "APE_EAD.xsd";
+    private final String XSD_APE_SCHEMA = "apeEAD.xsd";
     public String retrieveAPEXsdFile(){
         return getClass().getResource("/" + XSD_APE_SCHEMA).getPath();
     }

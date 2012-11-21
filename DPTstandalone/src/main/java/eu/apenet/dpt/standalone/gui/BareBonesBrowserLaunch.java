@@ -18,7 +18,7 @@ import java.util.Arrays;
  * @version 3.1, June 6, 2010
  */
 
-class BareBonesBrowserLaunch {
+public class BareBonesBrowserLaunch {
 
     private static final String[] browsers = {"google-chrome", "firefox", "opera",
             "epiphany", "konqueror", "conkeror", "midori", "kazehakase", "mozilla"};

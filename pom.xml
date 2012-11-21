@@ -3,16 +3,19 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>eu.apenet</groupId>
     <artifactId>DPT-project</artifactId>
-    <version>1.2.0-SNAPSHOT</version>
+    <version>1.2.0-alpha-1</version>
     <packaging>pom</packaging>
     <name>APE DPT tool Project</name>
     <description>Maven Project for building the DPT tools</description>
-    <scm>
-        <developerConnection>scm:svn:https://80.38.128.242:8765/apenet_wp4/tags/portal-wp4-project</developerConnection>
-    </scm>
-    <properties>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    </properties>
+	<scm>
+		<connection>scm:svn:https://195.169.26.11/svn/apex-dpt/tags/DPT-project-1.2.0-alpha-1</connection>
+		<developerConnection>scm:svn:https://195.169.26.11/svn/apex-dpt/tags/DPT-project-1.2.0-alpha-1</developerConnection>
+	</scm>
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<maven.repository.releases.location>file:///opt/maven/releases</maven.repository.releases.location>
+		<maven.repository.snapshots.location>file:///opt/maven/snapshots</maven.repository.snapshots.location>
+	</properties>
     <build>
         <plugins>
             <plugin>
@@ -67,16 +70,16 @@
     <distributionManagement>
         <snapshotRepository>
             <id>snapshots</id>
-            <url>http://nexus.archivesportaleurope.eu:8081/nexus/content/repositories/snapshots/</url>
+            <url>${maven.repository.snapshots.location}</url>
         </snapshotRepository>
         <repository>
             <id>releases</id>
-            <url>http://nexus.archivesportaleurope.eu:8081/nexus/content/repositories/releases/</url>
+            <url>${maven.repository.releases.location}</url>
         </repository>
     </distributionManagement>
     <modules>
         <module>DPTutils</module>
-        <module>DPTstandalone</module>
+       <!-- <module>DPTstandalone</module> --> 
     </modules>
     <dependencyManagement>
         <dependencies>
@@ -168,9 +171,24 @@
                 </exclusions>
             </dependency>
             <dependency>
+                <groupId>com.jgoodies</groupId>
+                <artifactId>forms</artifactId>
+                <version>1.6.0</version>
+            </dependency>
+            <dependency>
+                <groupId>com.jgoodies</groupId>
+                <artifactId>commons</artifactId>
+                <version>1.4.0</version>
+            </dependency>
+            <dependency>
                 <groupId>eu.apenet</groupId>
                 <artifactId>DPTutils</artifactId>
                 <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.sun.xml.bind</groupId>
+                <artifactId>jaxb-impl</artifactId>
+                <version>2.2.2</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

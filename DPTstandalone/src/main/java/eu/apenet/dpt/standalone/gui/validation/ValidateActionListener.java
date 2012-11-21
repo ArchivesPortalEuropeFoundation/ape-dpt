@@ -2,6 +2,7 @@ package eu.apenet.dpt.standalone.gui.validation;
 
 import eu.apenet.dpt.standalone.gui.*;
 import eu.apenet.dpt.utils.service.DocumentValidation;
+import eu.apenet.dpt.utils.util.XmlChecker;
 import eu.apenet.dpt.utils.util.Xsd_enum;
 import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
@@ -31,13 +32,11 @@ public class ValidateActionListener implements ActionListener {
     private static final Logger LOG = Logger.getLogger(ValidateActionListener.class);
 
     private ResourceBundle labels;
-    private Map<String, FileInstance> fileInstances;
     private DataPreparationToolGUI dataPreparationToolGUI;
     private APETabbedPane apeTabbedPane;
 
-    public ValidateActionListener(ResourceBundle labels, Map<String, FileInstance> fileInstances, DataPreparationToolGUI dataPreparationToolGUI, APETabbedPane apeTabbedPane) {
+    public ValidateActionListener(ResourceBundle labels, DataPreparationToolGUI dataPreparationToolGUI, APETabbedPane apeTabbedPane) {
         this.labels = labels;
-        this.fileInstances = fileInstances;
         this.dataPreparationToolGUI = dataPreparationToolGUI;
         this.apeTabbedPane = apeTabbedPane;
     }
@@ -62,61 +61,71 @@ public class ValidateActionListener implements ActionListener {
         public void run() {
             SummaryWorking summaryWorking = new SummaryWorking(dataPreparationToolGUI.getResultArea());
             Thread threadRunner = new Thread(summaryWorking);
-            FileInstance fileInstance = fileInstances.get(file.getName());
-            try{
-                dataPreparationToolGUI.setResultAreaText(labels.getString("validating"));
-                threadRunner.setName(SummaryWorking.class.toString());
-                threadRunner.start();
-                List<SAXParseException> exceptions;
-                if(dataPreparationToolGUI.getTree() != null && dataPreparationToolGUI.getTree().getTreeTableModel() != null && fileInstance.getLastOperation().equals(FileInstance.Operation.CREATE_TREE)){
-                    TreeTableModel treeTableModel = dataPreparationToolGUI.getTree().getTreeTableModel();
-                    Document document = (Document)treeTableModel.getRoot();
-                    try {
-                        File file2 = new File(Utilities.TEMP_DIR + "temp_" + file.getName());
-                        TransformerFactory tf = TransformerFactory.newInstance();
-                        Transformer output = tf.newTransformer();
-                        output.setOutputProperty(javax.xml.transform.OutputKeys.INDENT, "yes");
-                        output.setOutputProperty("{http://xml.apache.org/xslt}indent-amount","2");
+            FileInstance fileInstance = dataPreparationToolGUI.getFileInstances().get(file.getName());
+            if(!fileInstance.isXml()) {
+                if(XmlChecker.isXmlParseable(file) == null)
+                    fileInstance.setXml(true);
+                else
+                    dataPreparationToolGUI.setResultAreaText(labels.getString("validation.error.fileNotXml"));
+            }
+            if(fileInstance.isXml()) {
+                try{
+                    dataPreparationToolGUI.setResultAreaText(labels.getString("validating"));
+                    threadRunner.setName(SummaryWorking.class.toString());
+                    threadRunner.start();
+                    List<SAXParseException> exceptions;
+                    if(dataPreparationToolGUI.getTree() != null && dataPreparationToolGUI.getTree().getTreeTableModel() != null && fileInstance.getLastOperation().equals(FileInstance.Operation.CREATE_TREE)){
+                        TreeTableModel treeTableModel = dataPreparationToolGUI.getTree().getTreeTableModel();
+                        Document document = (Document)treeTableModel.getRoot();
+                        try {
+                            File file2 = new File(Utilities.TEMP_DIR + "temp_" + file.getName());
+                            TransformerFactory tf = TransformerFactory.newInstance();
+                            Transformer output = tf.newTransformer();
+                            output.setOutputProperty(javax.xml.transform.OutputKeys.INDENT, "yes");
+                            output.setOutputProperty("{http://xml.apache.org/xslt}indent-amount","2");
 
-                        output.transform(new DOMSource(document.getFirstChild()), new StreamResult(file2));
-                        exceptions = DocumentValidation.xmlValidation(FileUtils.openInputStream(file2), fileInstance.getValidationSchema());
-                    } catch (Exception ex){
-                        LOG.error("Error when taking the XML tree and validating it", ex);
-                        throw new RuntimeException(ex);
+                            output.transform(new DOMSource(document.getFirstChild()), new StreamResult(file2));
+                            exceptions = DocumentValidation.xmlValidation(FileUtils.openInputStream(file2), fileInstance.getValidationSchema());
+                        } catch (Exception ex){
+                            LOG.error("Error when taking the XML tree and validating it", ex);
+                            throw new RuntimeException(ex);
+                        }
+                    } else if(!fileInstance.isConverted())
+                        exceptions = DocumentValidation.xmlValidation(FileUtils.openInputStream(file), fileInstance.getValidationSchema());
+                    else {
+                        InputStream is = FileUtils.openInputStream(new File(fileInstance.getCurrentLocation()));
+                        exceptions = DocumentValidation.xmlValidation(is, fileInstance.getValidationSchema());
                     }
-                } else if(!fileInstance.isConverted())
-                    exceptions = DocumentValidation.xmlValidation(FileUtils.openInputStream(file), fileInstance.getValidationSchema());
-                else {
-                    InputStream is = FileUtils.openInputStream(new File(fileInstance.getCurrentLocation()));
-                    exceptions = DocumentValidation.xmlValidation(is, fileInstance.getValidationSchema());
-                }
-                if (exceptions == null || exceptions.isEmpty()){
-                    apeTabbedPane.setValidationErrorText(labels.getString("validationSuccess"));
-                    fileInstance.setValid(true);
-                    if(fileInstance.getValidationSchema() == Xsd_enum.XSD_APE_SCHEMA || fileInstance.getValidationSchema() == Xsd_enum.XSD1_0_APE_SCHEMA)
-                        dataPreparationToolGUI.enableEseConversionBtn();
-                } else {
-                    if(!fileInstance.isConverted())
-                        dataPreparationToolGUI.enableConversionBtns();
+                    if (exceptions == null || exceptions.isEmpty()){
+                        apeTabbedPane.setValidationErrorText(labels.getString("validationSuccess"));
+                        apeTabbedPane.checkFlashingTab(APETabbedPane.TAB_VALIDATION, Utilities.FLASHING_GREEN_COLOR);
+                        fileInstance.setValid(true);
+                        if(fileInstance.getValidationSchema() == Xsd_enum.XSD_APE_SCHEMA || fileInstance.getValidationSchema() == Xsd_enum.XSD1_0_APE_SCHEMA)
+                            dataPreparationToolGUI.enableEseConversionBtn();
+                    } else {
+                        if(!fileInstance.isConverted())
+                            dataPreparationToolGUI.enableConversionBtns();
 
-                    String errors = Utilities.stringFromList(exceptions);
-                    fileInstance.setValidationErrors(errors);
+                        String errors = Utilities.stringFromList(exceptions);
+                        fileInstance.setValidationErrors(errors);
+                        fileInstance.setValid(false);
+                        apeTabbedPane.setValidationErrorText(errors);
+                        apeTabbedPane.checkFlashingTab(APETabbedPane.TAB_VALIDATION, Utilities.FLASHING_RED_COLOR);
+                    }
+                } catch(Exception ex){
+                    fileInstance.setValidationErrors(labels.getString("validationException") + "\n\n-------------\n" + ex.getMessage());
                     fileInstance.setValid(false);
-                    apeTabbedPane.setValidationErrorText(errors);
+                    apeTabbedPane.setValidationErrorText(fileInstance.getValidationErrors());
+                    apeTabbedPane.checkFlashingTab(APETabbedPane.TAB_VALIDATION, Utilities.FLASHING_RED_COLOR);
+                    LOG.error("Error when validating a file", ex);
+                } finally {
+                    dataPreparationToolGUI.enableSaveBtn();
+                    summaryWorking.stop();
+                    threadRunner.interrupt();
+                    dataPreparationToolGUI.setResultAreaText(labels.getString("validationFinished"));
+                    fileInstance.setLastOperation(FileInstance.Operation.VALIDATE);
+                    dataPreparationToolGUI.getList().repaint();
                 }
-            } catch(Exception ex){
-                fileInstance.setValidationErrors(labels.getString("validationException") + "\n\n-------------\n" + ex.getMessage());
-                fileInstance.setValid(false);
-                apeTabbedPane.setValidationErrorText(fileInstance.getValidationErrors());
-                LOG.error("Error when validating a file", ex);
-            } finally {
-                dataPreparationToolGUI.enableSimpleSaveBtn();
-                apeTabbedPane.checkFlashingTab(APETabbedPane.TAB_VALIDATION, Utilities.FLASHING_COLOR);
-                summaryWorking.stop();
-                threadRunner.interrupt();
-                dataPreparationToolGUI.setResultAreaText(labels.getString("validationFinished"));
-                fileInstance.setLastOperation(FileInstance.Operation.VALIDATE);
-                dataPreparationToolGUI.getList().repaint();
             }
         }
     }

@@ -1,14 +1,12 @@
 package eu.apenet.dpt.standalone.gui;
 
-import eu.apenet.dpt.standalone.gui.db.DBUtil;
-import org.apache.log4j.Logger;
+import eu.apenet.dpt.standalone.gui.db.RetrieveFromDb;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.text.MessageFormat;
-import java.util.Arrays;
 import java.util.ResourceBundle;
 
 /**
@@ -19,15 +17,11 @@ import java.util.ResourceBundle;
  */
 public class RoleTypeFrame extends JFrame {
     private ResourceBundle labels;
-    private String defaultRoleType;
-    private boolean useExistingRoleType;
-    private DBUtil dbUtil;
+    private RetrieveFromDb retrieveFromDb;
 
-    public RoleTypeFrame(ResourceBundle labels, DBUtil dbUtil){
+    public RoleTypeFrame(ResourceBundle labels, RetrieveFromDb retrieveFromDb){
         this.labels = labels;
-        this.defaultRoleType = dbUtil.retrieveRoleType();
-        this.useExistingRoleType = dbUtil.retrieveUseExistingRoleType();
-        this.dbUtil = dbUtil;
+        this.retrieveFromDb = retrieveFromDb;
         createRoleTypeForm();
     }
 
@@ -44,7 +38,7 @@ public class RoleTypeFrame extends JFrame {
         final String unspecifiedType = "UNSPECIFIED";
 
         final JCheckBox useExistingCheckBox = new JCheckBox(labels.getString("useExistingIfFound"));
-        if(useExistingRoleType)
+        if(retrieveFromDb.retrieveUseExistingRoleType())
             useExistingCheckBox.setSelected(true);
 
         radioButtons[0] = new JRadioButton(MessageFormat.format(labels.getString("type"), "TEXT"));
@@ -62,6 +56,8 @@ public class RoleTypeFrame extends JFrame {
         radioButtons[4] = new JRadioButton(MessageFormat.format(labels.getString("type"), "UNSPECIFIED"));
         radioButtons[4].setActionCommand(unspecifiedType);
 
+        String defaultRoleType = retrieveFromDb.retrieveRoleType();
+
         for(JRadioButton radioButton : radioButtons) {
             group.add(radioButton);
             if(defaultRoleType != null && defaultRoleType.equals(radioButton.getActionCommand()))
@@ -74,7 +70,7 @@ public class RoleTypeFrame extends JFrame {
         showItButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 String command = group.getSelection().getActionCommand();
-                dbUtil.saveOrUpdateRoleType(command, useExistingCheckBox.isSelected());
+                retrieveFromDb.saveOrUpdateRoleType(command, useExistingCheckBox.isSelected());
                 setVisible(false);
             }
         });

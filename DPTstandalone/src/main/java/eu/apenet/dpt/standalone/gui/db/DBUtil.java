@@ -40,7 +40,10 @@ public class DBUtil {
         OPTION_COUNTRYCODE("countrycode"),
         OPTION_ROLETYPE("roleType"),
         OPTION_USE_EXISTING_ROLETYPE("useExistingRoleType"),
-        OPTION_UPDATEDATE("lastUpdateCheck");
+        OPTION_UPDATEDATE("lastUpdateCheck"),
+        OPTION_CHECKS_LOADING_FILES("checksLoadingFiles"),
+        OPTION_OPEN_LOCATION("openLocation"),
+        OPTION_SAVE_FOLDER("savedFolder");
 
         private String name;
         OptionKeys(String name){
@@ -74,7 +77,7 @@ public class DBUtil {
     private void createTables(){
         LOG.info("Creating the database tables, because it is the first launch of the tool.");
         List<String> queries = Arrays.asList(
-                "CREATE TABLE ape_options (ID INTEGER NOT NULL PRIMARY KEY GENERATED ALWAYS AS IDENTITY(START WITH 1, INCREMENT BY 1), MYKEY VARCHAR(30), VALUE VARCHAR(30))",
+                "CREATE TABLE ape_options (ID INTEGER NOT NULL PRIMARY KEY GENERATED ALWAYS AS IDENTITY(START WITH 1, INCREMENT BY 1), MYKEY VARCHAR(30), VALUE VARCHAR(256))",
                 "CREATE TABLE hg_titles (ID INTEGER NOT NULL PRIMARY KEY GENERATED ALWAYS AS IDENTITY(START WITH 1, INCREMENT BY 1), TITLE VARCHAR(64))",
                 "CREATE TABLE hg_ids (ID INTEGER NOT NULL PRIMARY KEY GENERATED ALWAYS AS IDENTITY(START WITH 1, INCREMENT BY 1), IDENTIFIER VARCHAR(64))"
         );
@@ -171,32 +174,5 @@ public class DBUtil {
     }
     public static String createInsertQuery(String tableName){
         return "INSERT INTO " + tableName + " (MYKEY, VALUE) VALUES (?, ?)";
-    }
-
-    public void saveOrUpdateRoleType(String roleType, boolean useExistingValue) {
-        String query = createUpdateQuery(DBNames.TABLE_OPTIONS.getName(), DBNames.COLUMN_VALUE.getName(), roleType, OptionKeys.OPTION_ROLETYPE.getName());
-        doSqlQuery(query, null);
-        query = createUpdateQuery(DBNames.TABLE_OPTIONS.getName(), DBNames.COLUMN_VALUE.getName(), Boolean.toString(useExistingValue), OptionKeys.OPTION_USE_EXISTING_ROLETYPE.getName());
-        doSqlQuery(query, null);
-    }
-
-    public String retrieveRoleType(){
-        String query = createSelectQuery(DBNames.TABLE_OPTIONS.getName(), OptionKeys.OPTION_ROLETYPE.getName());
-        String[] res = retrieveSqlListResult(query, DBNames.COLUMN_VALUE);
-        if(res.length > 0)
-            return res[0];
-        query = createInsertQuery(DBNames.TABLE_OPTIONS.getName());
-        doSqlQuery(query, Arrays.asList(DBUtil.OptionKeys.OPTION_ROLETYPE.getName(), "UNSPECIFIED"));
-        return "UNSPECIFIED";
-    }
-
-    public Boolean retrieveUseExistingRoleType(){
-        String query = createSelectQuery(DBNames.TABLE_OPTIONS.getName(), OptionKeys.OPTION_USE_EXISTING_ROLETYPE.getName());
-        String[] res = retrieveSqlListResult(query, DBNames.COLUMN_VALUE);
-        if(res.length > 0)
-            return Boolean.parseBoolean(res[0]);
-        query = createInsertQuery(DBNames.TABLE_OPTIONS.getName());
-        doSqlQuery(query, Arrays.asList(OptionKeys.OPTION_USE_EXISTING_ROLETYPE.getName(), "true"));
-        return true;
     }
 }

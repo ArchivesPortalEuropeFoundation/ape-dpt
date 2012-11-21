@@ -3,7 +3,7 @@ package eu.apenet.dpt.standalone.gui.hgcreation;
 import eu.apenet.dpt.standalone.gui.*;
 import eu.apenet.dpt.standalone.gui.adhoc.QueryComponent;
 import eu.apenet.dpt.standalone.gui.db.DBUtil;
-import eu.apenet.dpt.utils.util.FileUtil;
+import eu.apenet.dpt.standalone.gui.db.RetrieveFromDb;
 import org.apache.log4j.Logger;
 
 import javax.swing.*;
@@ -29,10 +29,9 @@ import java.util.ResourceBundle;
 public class CreateHGListener implements ActionListener {
     private static final Logger LOG = Logger.getLogger(CreateHGListener.class);
     
-    private DBUtil dbUtil;
+    private RetrieveFromDb retrieveFromDb;
     private ResourceBundle labels;
     private Component parent;
-    private FileUtil fileUtil;
     private JTree holdingsGuideTree;
     private JList listFilesForHG;
     private Map<String, FileInstance> fileInstances;
@@ -42,11 +41,10 @@ public class CreateHGListener implements ActionListener {
     private JButton buttonGoUp;
     private JFrame createHGFrame;
 
-    public CreateHGListener(DBUtil dbUtil, ResourceBundle labels, Component parent, FileUtil fileUtil, Map<String, FileInstance> fileInstances, JList list, DataPreparationToolGUI dataPreparationToolGUI) {
-        this.dbUtil = dbUtil;
+    public CreateHGListener(RetrieveFromDb retrieveFromDb, ResourceBundle labels, Component parent, Map<String, FileInstance> fileInstances, JList list, DataPreparationToolGUI dataPreparationToolGUI) {
+        this.retrieveFromDb = retrieveFromDb;
         this.labels = labels;
         this.parent = parent;
-        this.fileUtil = fileUtil;
         this.fileInstances = fileInstances;
         this.list = list;
         this.dataPreparationToolGUI = dataPreparationToolGUI;
@@ -58,24 +56,13 @@ public class CreateHGListener implements ActionListener {
     }
     
     public void actionPerformed(ActionEvent e){
-        QueryComponent queryComponent = new QueryComponent(dbUtil, labels.getString("titleHg"), labels.getString("identifier"), labels.getString("idOfHGTooltip"));
-        String title = "";
-        String id = "";
-        int result = JOptionPane.showConfirmDialog(parent, queryComponent.getMainPanel(), labels.getString("addInfo"), JOptionPane.INFORMATION_MESSAGE);
-        if(result == JOptionPane.OK_OPTION){
-            title = queryComponent.getEntryTitle();
-            id = queryComponent.getEntryId();
-        }
-        final String title_f = title;
-        final String id_f = id;
-
         createHGFrame = new JFrame(labels.getString("hgCreationFrame"));
 
         createHGFrame.setPreferredSize(new Dimension(parent.getWidth(), parent.getHeight())); //getContentPane()???
 
-        DefaultMutableTreeNode rootNode = new DefaultMutableTreeNode(new CLevelTreeObject(id_f, title_f));
+        DefaultMutableTreeNode rootNode = new DefaultMutableTreeNode(new CLevelTreeObject());
 
-        final LevelTreeActions levelTreeActions = new LevelTreeActions(fileUtil);
+        final LevelTreeActions levelTreeActions = new LevelTreeActions();
         LevelTreeModel levelTreeModel = new LevelTreeModel(rootNode);
 
         holdingsGuideTree.setModel(levelTreeModel);
@@ -180,7 +167,7 @@ public class CreateHGListener implements ActionListener {
                         summaryThread.setName(SummaryWorking.class.getName());
                         summaryThread.start();
 
-                        File hgFile = levelTreeActions.createXML(holdingsGuideTree.getModel(), title_f, id_f, dataPreparationToolGUI.getParams(), dataPreparationToolGUI.getCountrycode(), dataPreparationToolGUI.getGlobalIdentifier());
+                        File hgFile = levelTreeActions.createXML(holdingsGuideTree.getModel(), dataPreparationToolGUI.getParams(), retrieveFromDb.retrieveCountryCode(), retrieveFromDb.retrieveRepositoryCode());
                         ProfileListModel model = ((ProfileListModel)list.getModel());
                         if(model.existsFile(hgFile))
                             model.removeFile(hgFile);

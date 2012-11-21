@@ -1,5 +1,6 @@
 package eu.apenet.dpt.standalone.gui;
 
+import eu.apenet.dpt.utils.util.XmlChecker;
 import eu.apenet.dpt.utils.util.Xsd_enum;
 
 import java.io.File;
@@ -22,8 +23,11 @@ public class FileInstance {
     private Xsd_enum validationSchema;
     private FileType fileType;
     private Operation lastOperation;
+    private boolean isXml;
 
-    public FileInstance(File file){
+    public FileInstance(File file, boolean checkXml) {
+        if(checkXml && !isXml) //not sure about this !isXml
+            this.isXml = XmlChecker.isXmlParseable(file) == null;
         this.name = file.getName();
         this.originalPath = file.getPath();
         this.isValid = false;
@@ -35,6 +39,10 @@ public class FileInstance {
         this.validationSchema = Utilities.getDefaultXsd();
         this.fileType = FileType.EAD;
         this.lastOperation = Operation.NONE;
+    }
+
+    public FileInstance(File file) {
+        this(file, false);
     }
 
     public String getName() {
@@ -135,9 +143,17 @@ public class FileInstance {
         return lastOperation;
     }
 
+    public boolean isXml() {
+        return isXml;
+    }
+
+    public void setXml(boolean xml) {
+        isXml = xml;
+    }
+
     public enum FileType{
-        EAD("APE_EAD"),
-        EAG("APE_EAG"),
+        EAD("apeEAD"),
+        EAG("EAG"),
         EAC_CPF("APE_CPF");
 
         private String filePrefix;
