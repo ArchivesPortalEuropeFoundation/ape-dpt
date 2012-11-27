@@ -9,12 +9,8 @@ import java.awt.dnd.DropTargetListener;
 import java.awt.event.*;
 import java.io.File;
 import java.io.IOException;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.text.MessageFormat;
-import java.text.SimpleDateFormat;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
@@ -51,7 +47,6 @@ import org.jdesktop.swingx.treetable.TreeTableModel;
 import org.w3c.dom.*;
 
 import eu.apenet.dpt.standalone.gui.adhoc.FileNameComparator;
-import eu.apenet.dpt.standalone.gui.db.DBUtil;
 import eu.apenet.dpt.standalone.gui.edition.CheckList;
 import eu.apenet.dpt.utils.util.Xsd_enum;
 import eu.apenet.dpt.utils.util.extendxsl.DateNormalization;
@@ -93,10 +88,14 @@ public class DataPreparationToolGUI extends JFrame {
     private JMenu helpMenu = new JMenu();
 
     private JMenuItem fileItem = new JMenuItem();
-    private JMenuItem createEag2012Item = new JMenuItem();
+    private JMenu createEag2012Item = new JMenu();
     private JMenuItem saveSelectedItem = new JMenuItem();
 //    private JMenuItem sendFilesWebDAV = new JMenuItem();
     private JMenuItem quitItem = new JMenuItem();
+
+    private JMenuItem createEag2012FromExistingEag02 = new JMenuItem();
+    private JMenuItem createEag2012FromExistingEag2012 = new JMenuItem();
+    private JMenuItem createEag2012FromScratch = new JMenuItem();
 
     private JMenuItem repositoryCodeItem = new JMenuItem();
     private JMenuItem countryCodeItem = new JMenuItem();
@@ -303,6 +302,11 @@ public class DataPreparationToolGUI extends JFrame {
         menuBar.add(helpMenu);
         fileItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_O, Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()));
         fileMenu.add(fileItem);
+
+        createEag2012Item.add(createEag2012FromExistingEag02);
+        createEag2012Item.add(createEag2012FromExistingEag2012);
+        createEag2012Item.add(createEag2012FromScratch);
+
         fileMenu.add(createEag2012Item);
         saveSelectedItem.setEnabled(false);
         saveSelectedItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S, Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()));
@@ -382,6 +386,9 @@ public class DataPreparationToolGUI extends JFrame {
 
         fileItem.setText(labels.getString("selectFile"));
         createEag2012Item.setText(labels.getString("createEag2012"));
+        createEag2012FromExistingEag02.setText(labels.getString("menu.createEag2012FromEag02"));
+        createEag2012FromExistingEag2012.setText(labels.getString("menu.createEag2012FromEag2012"));
+        createEag2012FromScratch.setText(labels.getString("menu.createEag2012FromScratch"));
         saveSelectedItem.setText(labels.getString("saveSelectedFile"));
 //        sendFilesWebDAV.setText(labels.getString("sendFilesWebDAV"));
         quitItem.setText(labels.getString("quit"));
@@ -466,7 +473,7 @@ public class DataPreparationToolGUI extends JFrame {
         group.add(rbMenuItem);
         languageMenu.add(rbMenuItem);
 
-        rbMenuItem = new JRadioButtonMenuItem("Hungarian (to translate)");
+        rbMenuItem = new JRadioButtonMenuItem("Magyar");
         rbMenuItem.setActionCommand("hu");
         if(currentLocale.getLanguage().equals("hu")){
             rbMenuItem.setSelected(true);
@@ -542,8 +549,31 @@ public class DataPreparationToolGUI extends JFrame {
                 createOptionPaneForChecksLoadingFiles();
             }
         });
-
-        createEag2012Item.addActionListener(new ActionListener(){
+        createEag2012FromExistingEag02.addActionListener(new ActionListener(){
+            public void actionPerformed(ActionEvent e) {
+                JFileChooser eagFileChooser = new JFileChooser();
+                eagFileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+                eagFileChooser.setMultiSelectionEnabled(false);
+                eagFileChooser.setCurrentDirectory(new File(retrieveFromDb.retrieveOpenLocation()));
+                if(eagFileChooser.showOpenDialog(getParent()) == JFileChooser.APPROVE_OPTION) {
+                    File eagFile = eagFileChooser.getSelectedFile();
+                    new Eag2012Frame(eagFile, false);
+                }
+            }
+        });
+        createEag2012FromExistingEag2012.addActionListener(new ActionListener(){
+            public void actionPerformed(ActionEvent e) {
+                JFileChooser eagFileChooser = new JFileChooser();
+                eagFileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+                eagFileChooser.setMultiSelectionEnabled(false);
+                eagFileChooser.setCurrentDirectory(new File(retrieveFromDb.retrieveOpenLocation()));
+                if(eagFileChooser.showOpenDialog(getParent()) == JFileChooser.APPROVE_OPTION) {
+                    File eagFile = eagFileChooser.getSelectedFile();
+                    new Eag2012Frame(eagFile, true);
+                }
+            }
+        });
+        createEag2012FromScratch.addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent e) {
                 new Eag2012Frame();
             }

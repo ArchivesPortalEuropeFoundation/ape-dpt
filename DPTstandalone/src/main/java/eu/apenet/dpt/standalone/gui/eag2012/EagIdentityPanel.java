@@ -12,9 +12,7 @@ import javax.swing.text.AttributeSet;
 import javax.swing.text.PlainDocument;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 /**
  * User: Yoann Moranville
@@ -24,9 +22,6 @@ import java.util.List;
  */
 public class EagIdentityPanel extends EagPanels {
 
-    private JTextField countryCodeTf;
-    private JTextField identifierTf;
-    private List<JTextField> otherIdTfs;
     private List<JTextField> nameInstitutionTfs;
     private List<JTextField> parallelNameTfs;
     private List<JTextField> formerNameTfs;
@@ -44,15 +39,18 @@ public class EagIdentityPanel extends EagPanels {
     "Specialised non-governmental archives and archives of other cultural (heritage) institutions"};
     private JComboBox typeInstitutionCombo = new JComboBox(typeInstitution);
 
-    public EagIdentityPanel(Eag eag, JTabbedPane tabbedPane) {
-        super(eag, tabbedPane);
+    public EagIdentityPanel(Eag eag, JTabbedPane tabbedPane, JFrame eag2012Frame) {
+        super(eag, tabbedPane, eag2012Frame);
     }
 
     /**
      * Builds and answer the editor's tab for the given layout.
      * @return the editor's panel
      */
-    protected JComponent buildEditorPanel() {
+    protected JComponent buildEditorPanel(List<String> errors) {
+        if(errors == null)
+            errors = new ArrayList<String>(0);
+
         FormLayout layout = new FormLayout(
                 "right:max(50dlu;p), 4dlu, 100dlu, 7dlu, right:p, 4dlu, 100dlu",
                 EDITOR_ROW_SPEC);
@@ -65,29 +63,27 @@ public class EagIdentityPanel extends EagPanels {
 
         rowNb = 1;
         builder.addLabel(labels.getString("eag2012.countryCodeLabel"),    cc.xy (1, rowNb));
-        countryCodeTf = new JTextField(eag.getArchguide().getIdentity().getRepositorid().getCountrycode());
-
-        builder.add(countryCodeTf, cc.xy (3, rowNb));
+        builder.addLabel(eag.getArchguide().getIdentity().getRepositorid().getCountrycode(), cc.xy(3, rowNb));
         setNextRow();
         builder.addLabel(labels.getString("eag2012.identifierInstitutionLabel"),    cc.xy (1, rowNb));
-        identifierTf = new JTextField(eag.getControl().getRecordId().getValue());
-        builder.add(identifierTf, cc.xy (3, rowNb));
+        builder.addLabel(eag.getControl().getRecordId().getValue(), cc.xy(3, rowNb));
+        setNextRow();
 
-        otherIdTfs = new ArrayList<JTextField>(eag.getControl().getOtherRecordId().size());
         for(OtherRecordId otherRecordId : eag.getControl().getOtherRecordId()) {
-            JTextField otherIdTf = new JTextField(otherRecordId.getValue());
-            otherIdTfs.add(otherIdTf);
             builder.addLabel(labels.getString("eag2012.idUsedInApeLabel"),      cc.xy (5, rowNb));
-            builder.add(otherIdTf,               cc.xy (7, rowNb));
+            builder.addLabel(otherRecordId.getValue(), cc.xy(7, rowNb));
             setNextRow();
         }
 
         nameInstitutionTfs = new ArrayList<JTextField>(eag.getArchguide().getIdentity().getAutform().size());
+        int loop = 0;
         for(Autform autform : eag.getArchguide().getIdentity().getAutform()) {
             JTextField nameInstitutionTf = new JTextField(autform.getContent());
             nameInstitutionTfs.add(nameInstitutionTf);
+            if(loop++ == 0)
+                nameInstitutionTf.setEnabled(false);
             builder.addLabel(labels.getString("eag2012.nameOfInstitutionLabel"),    cc.xy (1, rowNb));
-            builder.add(nameInstitutionTf, cc.xy (3, rowNb));
+            builder.add(nameInstitutionTf, cc.xy(3, rowNb));
             setNextRow();
         }
         JButton addNewNameInstitutionBtn = new JButton(labels.getString("eag2012.addOtherNameInstitution"));
@@ -96,11 +92,14 @@ public class EagIdentityPanel extends EagPanels {
         setNextRow();
 
         parallelNameTfs = new ArrayList<JTextField>(eag.getArchguide().getIdentity().getParform().size());
+        loop = 0;
         for(Parform parform : eag.getArchguide().getIdentity().getParform()) {
             JTextField parallelNameTf = new JTextField(parform.getContent());
             parallelNameTfs.add(parallelNameTf);
+            if(loop++ == 0)
+                parallelNameTf.setEnabled(false);
             builder.addLabel(labels.getString("eag2012.parallelNameOfInstitutionLabel"),    cc.xy (1, rowNb));
-            builder.add(parallelNameTf, cc.xy (3, rowNb));
+            builder.add(parallelNameTf, cc.xy(3, rowNb));
             setNextRow();
         }
         JButton addNewParallelNameInstitutionBtn = new JButton(labels.getString("eag2012.addOtherParallelNameInstitution"));
@@ -173,6 +172,10 @@ public class EagIdentityPanel extends EagPanels {
         builder.add(typeInstitutionCombo, cc.xy (3, rowNb));
         setNextRow();
 
+        JButton exitBtn = new JButton(labels.getString("eag2012.exitButton"));
+        builder.add(exitBtn, cc.xy (1, rowNb));
+        exitBtn.addActionListener(new ExitBtnAction());
+
         JButton nextTabBtn = new JButton(labels.getString("eag2012.nextTabButton"));
         builder.add(nextTabBtn, cc.xy (3, rowNb));
         nextTabBtn.addActionListener(new NextTabBtnAction(eag, tabbedPane));
@@ -186,9 +189,13 @@ public class EagIdentityPanel extends EagPanels {
         }
         @Override
         public void actionPerformed(ActionEvent actionEvent) {
-            super.updateEagObject();
+            try {
+                super.updateEagObject();
+            } catch (Eag2012FormException e) {
+
+            }
             eag.getArchguide().getIdentity().getAutform().add(new Autform());
-            reloadTabbedPanel(new EagIdentityPanel(eag, tabbedPane).buildEditorPanel(), 1);
+            reloadTabbedPanel(new EagIdentityPanel(eag, tabbedPane, eag2012Frame).buildEditorPanel(errors), 1);
         }
     }
     public class AddParallelNameInstitutionAction extends UpdateEagObject {
@@ -197,9 +204,13 @@ public class EagIdentityPanel extends EagPanels {
         }
         @Override
         public void actionPerformed(ActionEvent actionEvent) {
-            super.updateEagObject();
+            try {
+                super.updateEagObject();
+            } catch (Eag2012FormException e) {
+
+            }
             eag.getArchguide().getIdentity().getParform().add(new Parform());
-            reloadTabbedPanel(new EagIdentityPanel(eag, tabbedPane).buildEditorPanel(), 1);
+            reloadTabbedPanel(new EagIdentityPanel(eag, tabbedPane, eag2012Frame).buildEditorPanel(errors), 1);
         }
     }
     public class AddNonpreNameInstitutionAction extends UpdateEagObject {
@@ -208,11 +219,15 @@ public class EagIdentityPanel extends EagPanels {
         }
         @Override
         public void actionPerformed(ActionEvent actionEvent) {
-            super.updateEagObject();
+            try {
+                super.updateEagObject();
+            } catch (Eag2012FormException e) {
+
+            }
             Nonpreform nonpreform = new Nonpreform();
             nonpreform.getContent().add(new UseDates());
             eag.getArchguide().getIdentity().getNonpreform().add(nonpreform);
-            reloadTabbedPanel(new EagIdentityPanel(eag, tabbedPane).buildEditorPanel(), 1);
+            reloadTabbedPanel(new EagIdentityPanel(eag, tabbedPane, eag2012Frame).buildEditorPanel(errors), 1);
         }
     }
 
@@ -223,15 +238,16 @@ public class EagIdentityPanel extends EagPanels {
 
         @Override
         public void actionPerformed(ActionEvent actionEvent) {
-            super.updateEagObject();
+            try {
+                super.updateEagObject();
 
-            tabbedPane.setEnabledAt(1, true);
-            tabbedPane.setSelectedIndex(1);
-            tabbedPane.setEnabledAt(0, false);
+                reloadTabbedPanel(new EagContactPanel(eag, tabbedPane, eag2012Frame).buildEditorPanel(errors), 2);
 
-
-
-            saveFile();
+                tabbedPane.setEnabledAt(2, true);
+                tabbedPane.setEnabledAt(1, false);
+            } catch (Eag2012FormException e) {
+                reloadTabbedPanel(new EagIdentityPanel(eag, tabbedPane, eag2012Frame).buildEditorPanel(errors), 1);
+            }
         }
     }
 
@@ -242,32 +258,10 @@ public class EagIdentityPanel extends EagPanels {
         }
 
         @Override
-        protected void updateEagObject() {
-            boolean hasChanged = false;
+        protected void updateEagObject() throws Eag2012FormException {
+            errors = new ArrayList<String>();
 
-            if(StringUtils.isNotEmpty(countryCodeTf.getText()) && !countryCodeTf.getText().equals(eag.getArchguide().getIdentity().getRepositorid().getCountrycode())) {
-                if(countryCodeTf.getText().length() == 2) {
-                    eag.getArchguide().getIdentity().getRepositorid().setCountrycode(countryCodeTf.getText());
-                    hasChanged = true;
-                } else {
-                    //todo: ERROR TO USER
-                }
-            }
-            if(StringUtils.isNotEmpty(identifierTf.getText()) && !identifierTf.getText().equals(eag.getControl().getRecordId().getValue())) {
-                eag.getControl().getRecordId().setValue(identifierTf.getText());
-                hasChanged = true;
-            }
-            if(otherIdTfs.size() > 0) {
-                eag.getControl().getOtherRecordId().clear();
-                for(JTextField field : otherIdTfs) {
-                    if(StringUtils.isNotEmpty(field.getText())) {
-                        OtherRecordId otherRecordId = new OtherRecordId();
-                        otherRecordId.setValue(field.getText());
-                        eag.getControl().getOtherRecordId().add(otherRecordId);
-                        hasChanged = true;
-                    }
-                }
-            }
+            boolean hasChanged = false;
 
             if(nameInstitutionTfs.size() > 0) {
                 eag.getArchguide().getIdentity().getAutform().clear();
@@ -310,6 +304,10 @@ public class EagIdentityPanel extends EagPanels {
                         hasChanged = true;
                     }
                 }
+            }
+
+            if(!errors.isEmpty()) {
+                throw new Eag2012FormException("Errors in validation of EAG 2012");
             }
         }
     }

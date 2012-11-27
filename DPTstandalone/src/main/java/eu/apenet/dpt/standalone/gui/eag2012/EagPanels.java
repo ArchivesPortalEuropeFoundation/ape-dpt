@@ -1,9 +1,11 @@
 package eu.apenet.dpt.standalone.gui.eag2012;
 
-import com.jgoodies.forms.layout.FormLayout;
 import eu.apenet.dpt.standalone.gui.eag2012.data.Eag;
 
 import javax.swing.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.List;
 
 /**
  * User: Yoann Moranville
@@ -31,22 +33,35 @@ public abstract class EagPanels {
     protected int rowNb;
     protected JTabbedPane tabbedPane;
     protected Eag eag;
+    protected JFrame eag2012Frame;
     protected SpecialTemporaryResourceBundle labels = new SpecialTemporaryResourceBundle();
 
-    public EagPanels(Eag eag, JTabbedPane tabbedPane) {
+    public EagPanels(Eag eag, JTabbedPane tabbedPane, JFrame eag2012Frame) {
+        this.eag2012Frame = eag2012Frame;
         this.eag = eag;
         this.tabbedPane = tabbedPane;
+    }
+
+    protected void closeFrame() {
+        eag2012Frame.dispose();
+        eag2012Frame.setVisible(false);
     }
 
     protected void setNextRow() {
         rowNb += 2;
     }
 
-    protected abstract JComponent buildEditorPanel();
+    protected abstract JComponent buildEditorPanel(List<String> errors);
 
     public class SpecialTemporaryResourceBundle {
         public String getString(String s) {
             return s.replace("eag2012.", "");
+        }
+    }
+
+    protected class ExitBtnAction implements ActionListener {
+        public void actionPerformed(ActionEvent actionEvent) {
+            closeFrame();
         }
     }
 }

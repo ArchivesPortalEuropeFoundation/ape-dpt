@@ -1,6 +1,7 @@
 package eu.apenet.dpt.standalone.gui.eag2012;
 
 import eu.apenet.dpt.standalone.gui.eag2012.data.Eag;
+import org.apache.commons.lang.StringUtils;
 
 import javax.swing.*;
 import javax.xml.bind.JAXBContext;
@@ -9,6 +10,7 @@ import javax.xml.bind.Marshaller;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.util.List;
 
 /**
  * User: Yoann Moranville
@@ -19,6 +21,7 @@ import java.io.File;
 public abstract class DefaultBtnAction implements ActionListener {
     protected Eag eag;
     protected JTabbedPane tabbedPane;
+    protected List<String> errors;
 
     DefaultBtnAction(Eag eag, JTabbedPane tabbedPane) {
         this.eag = eag;
@@ -26,7 +29,15 @@ public abstract class DefaultBtnAction implements ActionListener {
     }
 
     public abstract void actionPerformed(ActionEvent actionEvent);
-    protected abstract void updateEagObject();
+    protected abstract void updateEagObject() throws Eag2012FormException;
+
+    protected boolean notEqual(String newValue, String originalValue) {
+        return !newValue.equals(originalValue);
+    }
+
+    protected List<String> getErrors() {
+        return errors;
+    }
 
     protected void saveFile() {
         try {

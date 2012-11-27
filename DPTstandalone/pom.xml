@@ -18,6 +18,7 @@
 	<build>
 		<!--release of current TOOL version: mvn clean release:prepare release:perform 
 			release:clean clean -->
+        <!-- native2ascii to convert i18n files-->
 		<plugins>
 			<plugin>
 				<artifactId>maven-compiler-plugin</artifactId>
