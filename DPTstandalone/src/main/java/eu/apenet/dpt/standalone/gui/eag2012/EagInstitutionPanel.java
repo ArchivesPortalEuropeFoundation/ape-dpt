@@ -3,6 +3,7 @@ package eu.apenet.dpt.standalone.gui.eag2012;
 import com.jgoodies.forms.builder.PanelBuilder;
 import com.jgoodies.forms.layout.CellConstraints;
 import com.jgoodies.forms.layout.FormLayout;
+import eu.apenet.dpt.standalone.gui.ProfileListModel;
 import eu.apenet.dpt.standalone.gui.eag2012.data.*;
 import org.apache.commons.lang.StringUtils;
 
@@ -60,8 +61,8 @@ public class EagInstitutionPanel extends EagPanels {
     private JComboBox facilitiesForDisabledCombo = new JComboBox(yesOrNo);
 
 
-    public EagInstitutionPanel(Eag eag, JTabbedPane tabbedPane, JFrame eag2012Frame) {
-        super(eag, tabbedPane, eag2012Frame);
+    public EagInstitutionPanel(Eag eag, JTabbedPane tabbedPane, JFrame eag2012Frame, ProfileListModel model) {
+        super(eag, tabbedPane, eag2012Frame, model);
     }
 
     /**
@@ -70,6 +71,10 @@ public class EagInstitutionPanel extends EagPanels {
      */
 
     protected JComponent buildEditorPanel(List<String> errors) {
+        LOG.info("Test");
+        if(model == null)
+            LOG.info("The model is null, we can not add the EAG to the list...");
+
         if(errors == null)
             errors = new ArrayList<String>(0);
 
@@ -119,7 +124,7 @@ public class EagInstitutionPanel extends EagPanels {
             setNextRow();
         }
         JButton addNewOtherIdentifierBtn = new JButton(labels.getString("eag2012.addOtherIdentifier"));
-        addNewOtherIdentifierBtn.addActionListener(new AddOtherIdentifierAction(eag, tabbedPane));
+        addNewOtherIdentifierBtn.addActionListener(new AddOtherIdentifierAction(eag, tabbedPane, model));
         builder.add(addNewOtherIdentifierBtn, cc.xy(7, rowNb));
         setNextRow();
 
@@ -259,7 +264,7 @@ public class EagInstitutionPanel extends EagPanels {
 
             if(repository.getLocation().size() < 2) { //If equal or more than 2, we already have visitors and postal addresses
                 JButton addNewPostalAddressBtn = new JButton(labels.getString("eag2012.addPostalAddress"));
-                addNewPostalAddressBtn.addActionListener(new AddPostalAddressAction(eag, tabbedPane));
+                addNewPostalAddressBtn.addActionListener(new AddPostalAddressAction(eag, tabbedPane, model));
                 builder.add(addNewPostalAddressBtn, cc.xy(3, rowNb));
                 setNextRow();
             }
@@ -352,14 +357,14 @@ public class EagInstitutionPanel extends EagPanels {
         builder.add(nextTabBtn, cc.xy (3, rowNb));
 //        builder.add(new JButton(labels.getString("eag2012.validateButton")), cc.xy (5, rowNb));
         exitBtn.addActionListener(new ExitBtnAction());
-        nextTabBtn.addActionListener(new NextTabBtnAction(eag, tabbedPane));
+        nextTabBtn.addActionListener(new NextTabBtnAction(eag, tabbedPane, model));
 
         return builder.getPanel();
     }
 
     public class NextTabBtnAction extends UpdateEagObject {
-        NextTabBtnAction(Eag eag, JTabbedPane tabbedPane) {
-            super(eag, tabbedPane);
+        NextTabBtnAction(Eag eag, JTabbedPane tabbedPane, ProfileListModel model) {
+            super(eag, tabbedPane, model);
         }
 
         @Override
@@ -367,20 +372,24 @@ public class EagInstitutionPanel extends EagPanels {
             try {
                 super.updateEagObject();
 
-                reloadTabbedPanel(new EagIdentityPanel(eag, tabbedPane, eag2012Frame).buildEditorPanel(errors), 0);
+                if(model == null)
+                    LOG.info("The model is null, we can not add the EAG to the list...");
 
+                reloadTabbedPanel(new EagIdentityPanel(eag, tabbedPane, eag2012Frame, model).buildEditorPanel(errors), 1);
                 tabbedPane.setEnabledAt(1, true);
-//                tabbedPane.setSelectedIndex(1);
                 tabbedPane.setEnabledAt(0, false);
             } catch (Eag2012FormException e) {
-                reloadTabbedPanel(new EagInstitutionPanel(eag, tabbedPane, eag2012Frame).buildEditorPanel(errors), 0);
+                if(model == null)
+                    LOG.info("The model is null, we can not add the EAG to the list...");
+
+                reloadTabbedPanel(new EagInstitutionPanel(eag, tabbedPane, eag2012Frame, model).buildEditorPanel(errors), 0);
             }
         }
     }
 
     public class AddOtherIdentifierAction extends UpdateEagObject {
-        AddOtherIdentifierAction(Eag eag, JTabbedPane tabbedPane) {
-            super(eag, tabbedPane);
+        AddOtherIdentifierAction(Eag eag, JTabbedPane tabbedPane, ProfileListModel model) {
+            super(eag, tabbedPane, model);
         }
 
         @Override
@@ -393,14 +402,14 @@ public class EagInstitutionPanel extends EagPanels {
 //                }
             }
             eag.getControl().getOtherRecordId().add(new OtherRecordId());
-            reloadTabbedPanel(new EagInstitutionPanel(eag, tabbedPane, eag2012Frame).buildEditorPanel(errors), 0);
+            reloadTabbedPanel(new EagInstitutionPanel(eag, tabbedPane, eag2012Frame, model).buildEditorPanel(errors), 0);
         }
 
     }
 
     public class AddPostalAddressAction extends UpdateEagObject {
-        AddPostalAddressAction(Eag eag, JTabbedPane tabbedPane) {
-            super(eag, tabbedPane);
+        AddPostalAddressAction(Eag eag, JTabbedPane tabbedPane, ProfileListModel model) {
+            super(eag, tabbedPane, model);
         }
 
         @Override
@@ -420,15 +429,15 @@ public class EagInstitutionPanel extends EagPanels {
             location.setMunicipalityPostalcode(new MunicipalityPostalcode());
 
             eag.getArchguide().getDesc().getRepositories().getRepository().get(0).getLocation().add(location);
-            reloadTabbedPanel(new EagInstitutionPanel(eag, tabbedPane, eag2012Frame).buildEditorPanel(errors), 0);
+            reloadTabbedPanel(new EagInstitutionPanel(eag, tabbedPane, eag2012Frame, model).buildEditorPanel(errors), 0);
         }
 
     }
 
     public abstract class UpdateEagObject extends DefaultBtnAction {
 
-        UpdateEagObject(Eag eag, JTabbedPane tabbedPane) {
-            super(eag, tabbedPane);
+        UpdateEagObject(Eag eag, JTabbedPane tabbedPane, ProfileListModel model) {
+            super(eag, tabbedPane, model);
         }
 
         protected void updateEagObject() throws Eag2012FormException {

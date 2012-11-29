@@ -26,7 +26,7 @@ public class FileInstance {
     private boolean isXml;
 
     public FileInstance(File file, boolean checkXml) {
-        if(checkXml && !isXml) //not sure about this !isXml
+        if(checkXml && !isXml) //todo: not sure about this !isXml
             this.isXml = XmlChecker.isXmlParseable(file) == null;
         this.name = file.getName();
         this.originalPath = file.getPath();

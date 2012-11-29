@@ -1,6 +1,8 @@
 package eu.apenet.dpt.standalone.gui.eag2012;
 
+import eu.apenet.dpt.standalone.gui.ProfileListModel;
 import eu.apenet.dpt.standalone.gui.eag2012.data.Eag;
+import org.apache.log4j.Logger;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -14,6 +16,8 @@ import java.util.List;
  * @author Yoann Moranville
  */
 public abstract class EagPanels {
+    protected static final Logger LOG = Logger.getLogger(EagPanels.class);
+
     private static final int NB_ROWS = 25;
     private static final String EDITOR_ROW = "p, 3dlu, ";
     protected static String EDITOR_ROW_SPEC;
@@ -34,12 +38,14 @@ public abstract class EagPanels {
     protected JTabbedPane tabbedPane;
     protected Eag eag;
     protected JFrame eag2012Frame;
+    protected ProfileListModel model;
     protected SpecialTemporaryResourceBundle labels = new SpecialTemporaryResourceBundle();
 
-    public EagPanels(Eag eag, JTabbedPane tabbedPane, JFrame eag2012Frame) {
+    public EagPanels(Eag eag, JTabbedPane tabbedPane, JFrame eag2012Frame, ProfileListModel model) {
         this.eag2012Frame = eag2012Frame;
         this.eag = eag;
         this.tabbedPane = tabbedPane;
+        this.model = model;
     }
 
     protected void closeFrame() {

@@ -557,7 +557,7 @@ public class DataPreparationToolGUI extends JFrame {
                 eagFileChooser.setCurrentDirectory(new File(retrieveFromDb.retrieveOpenLocation()));
                 if(eagFileChooser.showOpenDialog(getParent()) == JFileChooser.APPROVE_OPTION) {
                     File eagFile = eagFileChooser.getSelectedFile();
-                    new Eag2012Frame(eagFile, false);
+                    new Eag2012Frame(eagFile, false, getContentPane().getSize(), (ProfileListModel)getList().getModel());
                 }
             }
         });
@@ -569,13 +569,13 @@ public class DataPreparationToolGUI extends JFrame {
                 eagFileChooser.setCurrentDirectory(new File(retrieveFromDb.retrieveOpenLocation()));
                 if(eagFileChooser.showOpenDialog(getParent()) == JFileChooser.APPROVE_OPTION) {
                     File eagFile = eagFileChooser.getSelectedFile();
-                    new Eag2012Frame(eagFile, true);
+                    new Eag2012Frame(eagFile, true, getContentPane().getSize(), (ProfileListModel)getList().getModel());
                 }
             }
         });
         createEag2012FromScratch.addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent e) {
-                new Eag2012Frame();
+                new Eag2012Frame(getContentPane().getSize(), (ProfileListModel)getList().getModel());
             }
         });
         digitalObjectTypeItem.addActionListener(new ActionListener() {

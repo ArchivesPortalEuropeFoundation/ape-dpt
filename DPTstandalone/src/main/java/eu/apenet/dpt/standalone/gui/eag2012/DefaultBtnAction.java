@@ -1,6 +1,10 @@
 package eu.apenet.dpt.standalone.gui.eag2012;
 
+import eu.apenet.dpt.standalone.gui.FileInstance;
+import eu.apenet.dpt.standalone.gui.ProfileListModel;
+import eu.apenet.dpt.standalone.gui.Utilities;
 import eu.apenet.dpt.standalone.gui.eag2012.data.Eag;
+import eu.apenet.dpt.utils.util.Xsd_enum;
 import org.apache.commons.lang.StringUtils;
 
 import javax.swing.*;
@@ -22,10 +26,12 @@ public abstract class DefaultBtnAction implements ActionListener {
     protected Eag eag;
     protected JTabbedPane tabbedPane;
     protected List<String> errors;
+    protected ProfileListModel model;
 
-    DefaultBtnAction(Eag eag, JTabbedPane tabbedPane) {
+    DefaultBtnAction(Eag eag, JTabbedPane tabbedPane, ProfileListModel model) {
         this.eag = eag;
         this.tabbedPane = tabbedPane;
+        this.model = model;
     }
 
     public abstract void actionPerformed(ActionEvent actionEvent);
@@ -39,16 +45,20 @@ public abstract class DefaultBtnAction implements ActionListener {
         return errors;
     }
 
-    protected void saveFile() {
+    protected void saveFile(String id) {
         try {
+            if(model == null)
+                throw new Eag2012FormException("The model is null, we can not add the EAG to the list...");
             JAXBContext jaxbContext = JAXBContext.newInstance(Eag.class);
             Marshaller jaxbMarshaller = jaxbContext.createMarshaller();
             jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
             jaxbMarshaller.setProperty("com.sun.xml.bind.namespacePrefixMapper", new EagNamespaceMapper());
-            jaxbMarshaller.marshal(eag, new File("/Users/yoannmoranville/Work/APEnet/Projects/dpt-project/NA/trunk/output/APE_EAD_eag_35_MARSHALL.xml"));
+            File eagFile = new File(Utilities.TEMP_DIR + "EAG2012_" + id + ".xml");
+            jaxbMarshaller.marshal(eag, eagFile);
 
-        } catch (JAXBException e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            model.addFile(eagFile, Xsd_enum.XSD_EAG_2012_SCHEMA, FileInstance.FileType.EAG);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 

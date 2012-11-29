@@ -3,6 +3,7 @@ package eu.apenet.dpt.standalone.gui.eag2012;
 import com.jgoodies.forms.builder.PanelBuilder;
 import com.jgoodies.forms.layout.CellConstraints;
 import com.jgoodies.forms.layout.FormLayout;
+import eu.apenet.dpt.standalone.gui.ProfileListModel;
 import eu.apenet.dpt.standalone.gui.eag2012.data.*;
 import org.apache.commons.lang.StringUtils;
 
@@ -39,8 +40,8 @@ public class EagIdentityPanel extends EagPanels {
     "Specialised non-governmental archives and archives of other cultural (heritage) institutions"};
     private JComboBox typeInstitutionCombo = new JComboBox(typeInstitution);
 
-    public EagIdentityPanel(Eag eag, JTabbedPane tabbedPane, JFrame eag2012Frame) {
-        super(eag, tabbedPane, eag2012Frame);
+    public EagIdentityPanel(Eag eag, JTabbedPane tabbedPane, JFrame eag2012Frame, ProfileListModel model) {
+        super(eag, tabbedPane, eag2012Frame, model);
     }
 
     /**
@@ -87,7 +88,7 @@ public class EagIdentityPanel extends EagPanels {
             setNextRow();
         }
         JButton addNewNameInstitutionBtn = new JButton(labels.getString("eag2012.addOtherNameInstitution"));
-        addNewNameInstitutionBtn.addActionListener(new AddNameInstitutionAction(eag, tabbedPane));
+        addNewNameInstitutionBtn.addActionListener(new AddNameInstitutionAction(eag, tabbedPane, model));
         builder.add(addNewNameInstitutionBtn, cc.xy(1, rowNb));
         setNextRow();
 
@@ -103,7 +104,7 @@ public class EagIdentityPanel extends EagPanels {
             setNextRow();
         }
         JButton addNewParallelNameInstitutionBtn = new JButton(labels.getString("eag2012.addOtherParallelNameInstitution"));
-        addNewParallelNameInstitutionBtn.addActionListener(new AddParallelNameInstitutionAction(eag, tabbedPane));
+        addNewParallelNameInstitutionBtn.addActionListener(new AddParallelNameInstitutionAction(eag, tabbedPane, model));
         builder.add(addNewParallelNameInstitutionBtn, cc.xy(1, rowNb));
         setNextRow();
 //        builder.addLabel(labels.getString("eag2012.languageLabel"),             cc.xy (5, rowNb));
@@ -156,7 +157,7 @@ public class EagIdentityPanel extends EagPanels {
             }
         }
         JButton addNewNonpreNameInstitutionBtn = new JButton(labels.getString("eag2012.addOtherNonpreNameInstitution"));
-        addNewNonpreNameInstitutionBtn.addActionListener(new AddNonpreNameInstitutionAction(eag, tabbedPane));
+        addNewNonpreNameInstitutionBtn.addActionListener(new AddNonpreNameInstitutionAction(eag, tabbedPane, model));
         builder.add(addNewNonpreNameInstitutionBtn, cc.xy(1, rowNb));
         setNextRow();
 //        builder.addLabel(labels.getString("eag2012.languageLabel"),             cc.xy (5, rowNb));
@@ -176,16 +177,20 @@ public class EagIdentityPanel extends EagPanels {
         builder.add(exitBtn, cc.xy (1, rowNb));
         exitBtn.addActionListener(new ExitBtnAction());
 
+        JButton previousTabBtn = new JButton(labels.getString("eag2012.previousTabButton"));
+        builder.add(previousTabBtn, cc.xy (3, rowNb));
+        previousTabBtn.addActionListener(new ChangeTabBtnAction(eag, tabbedPane, model, false));
+
         JButton nextTabBtn = new JButton(labels.getString("eag2012.nextTabButton"));
-        builder.add(nextTabBtn, cc.xy (3, rowNb));
-        nextTabBtn.addActionListener(new NextTabBtnAction(eag, tabbedPane));
+        builder.add(nextTabBtn, cc.xy (5, rowNb));
+        nextTabBtn.addActionListener(new ChangeTabBtnAction(eag, tabbedPane, model, true));
 
         return builder.getPanel();
     }
 
     public class AddNameInstitutionAction extends UpdateEagObject {
-        public AddNameInstitutionAction(Eag eag, JTabbedPane tabbedPane) {
-            super(eag, tabbedPane);
+        public AddNameInstitutionAction(Eag eag, JTabbedPane tabbedPane, ProfileListModel model) {
+            super(eag, tabbedPane, model);
         }
         @Override
         public void actionPerformed(ActionEvent actionEvent) {
@@ -195,12 +200,12 @@ public class EagIdentityPanel extends EagPanels {
 
             }
             eag.getArchguide().getIdentity().getAutform().add(new Autform());
-            reloadTabbedPanel(new EagIdentityPanel(eag, tabbedPane, eag2012Frame).buildEditorPanel(errors), 1);
+            reloadTabbedPanel(new EagIdentityPanel(eag, tabbedPane, eag2012Frame, model).buildEditorPanel(errors), 1);
         }
     }
     public class AddParallelNameInstitutionAction extends UpdateEagObject {
-        public AddParallelNameInstitutionAction(Eag eag, JTabbedPane tabbedPane) {
-            super(eag, tabbedPane);
+        public AddParallelNameInstitutionAction(Eag eag, JTabbedPane tabbedPane, ProfileListModel model) {
+            super(eag, tabbedPane, model);
         }
         @Override
         public void actionPerformed(ActionEvent actionEvent) {
@@ -210,12 +215,12 @@ public class EagIdentityPanel extends EagPanels {
 
             }
             eag.getArchguide().getIdentity().getParform().add(new Parform());
-            reloadTabbedPanel(new EagIdentityPanel(eag, tabbedPane, eag2012Frame).buildEditorPanel(errors), 1);
+            reloadTabbedPanel(new EagIdentityPanel(eag, tabbedPane, eag2012Frame, model).buildEditorPanel(errors), 1);
         }
     }
     public class AddNonpreNameInstitutionAction extends UpdateEagObject {
-        public AddNonpreNameInstitutionAction(Eag eag, JTabbedPane tabbedPane) {
-            super(eag, tabbedPane);
+        public AddNonpreNameInstitutionAction(Eag eag, JTabbedPane tabbedPane, ProfileListModel model) {
+            super(eag, tabbedPane, model);
         }
         @Override
         public void actionPerformed(ActionEvent actionEvent) {
@@ -227,13 +232,15 @@ public class EagIdentityPanel extends EagPanels {
             Nonpreform nonpreform = new Nonpreform();
             nonpreform.getContent().add(new UseDates());
             eag.getArchguide().getIdentity().getNonpreform().add(nonpreform);
-            reloadTabbedPanel(new EagIdentityPanel(eag, tabbedPane, eag2012Frame).buildEditorPanel(errors), 1);
+            reloadTabbedPanel(new EagIdentityPanel(eag, tabbedPane, eag2012Frame, model).buildEditorPanel(errors), 1);
         }
     }
 
-    public class NextTabBtnAction extends UpdateEagObject {
-        NextTabBtnAction(Eag eag, JTabbedPane tabbedPane) {
-            super(eag, tabbedPane);
+    public class ChangeTabBtnAction extends UpdateEagObject {
+        private boolean isNextTab;
+        ChangeTabBtnAction(Eag eag, JTabbedPane tabbedPane, ProfileListModel model, boolean isNextTab) {
+            super(eag, tabbedPane, model);
+            this.isNextTab = isNextTab;
         }
 
         @Override
@@ -241,20 +248,25 @@ public class EagIdentityPanel extends EagPanels {
             try {
                 super.updateEagObject();
 
-                reloadTabbedPanel(new EagContactPanel(eag, tabbedPane, eag2012Frame).buildEditorPanel(errors), 2);
-
-                tabbedPane.setEnabledAt(2, true);
-                tabbedPane.setEnabledAt(1, false);
+                if(isNextTab) {
+                    reloadTabbedPanel(new EagContactPanel(eag, tabbedPane, eag2012Frame, model).buildEditorPanel(errors), 2);
+                    tabbedPane.setEnabledAt(2, true);
+                    tabbedPane.setEnabledAt(1, false);
+                } else {
+                    reloadTabbedPanel(new EagInstitutionPanel(eag, tabbedPane, eag2012Frame, model).buildEditorPanel(errors), 0);
+                    tabbedPane.setEnabledAt(0, true);
+                    tabbedPane.setEnabledAt(1, false);
+                }
             } catch (Eag2012FormException e) {
-                reloadTabbedPanel(new EagIdentityPanel(eag, tabbedPane, eag2012Frame).buildEditorPanel(errors), 1);
+                reloadTabbedPanel(new EagIdentityPanel(eag, tabbedPane, eag2012Frame, model).buildEditorPanel(errors), 1);
             }
         }
     }
 
     public abstract class UpdateEagObject extends DefaultBtnAction {
 
-        public UpdateEagObject(Eag eag, JTabbedPane tabbedPane) {
-            super(eag, tabbedPane);
+        public UpdateEagObject(Eag eag, JTabbedPane tabbedPane, ProfileListModel model) {
+            super(eag, tabbedPane, model);
         }
 
         @Override
