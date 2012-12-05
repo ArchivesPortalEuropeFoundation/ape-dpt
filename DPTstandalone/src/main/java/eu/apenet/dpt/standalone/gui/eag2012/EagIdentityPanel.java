@@ -87,7 +87,7 @@ public class EagIdentityPanel extends EagPanels {
             builder.add(nameInstitutionTf, cc.xy(3, rowNb));
             setNextRow();
         }
-        JButton addNewNameInstitutionBtn = new JButton(labels.getString("eag2012.addOtherNameInstitution"));
+        JButton addNewNameInstitutionBtn = new ButtonEag(labels.getString("eag2012.addOtherNameInstitution"));
         addNewNameInstitutionBtn.addActionListener(new AddNameInstitutionAction(eag, tabbedPane, model));
         builder.add(addNewNameInstitutionBtn, cc.xy(1, rowNb));
         setNextRow();
@@ -103,7 +103,7 @@ public class EagIdentityPanel extends EagPanels {
             builder.add(parallelNameTf, cc.xy(3, rowNb));
             setNextRow();
         }
-        JButton addNewParallelNameInstitutionBtn = new JButton(labels.getString("eag2012.addOtherParallelNameInstitution"));
+        JButton addNewParallelNameInstitutionBtn = new ButtonEag(labels.getString("eag2012.addOtherParallelNameInstitution"));
         addNewParallelNameInstitutionBtn.addActionListener(new AddParallelNameInstitutionAction(eag, tabbedPane, model));
         builder.add(addNewParallelNameInstitutionBtn, cc.xy(1, rowNb));
         setNextRow();
@@ -156,7 +156,7 @@ public class EagIdentityPanel extends EagPanels {
                 }
             }
         }
-        JButton addNewNonpreNameInstitutionBtn = new JButton(labels.getString("eag2012.addOtherNonpreNameInstitution"));
+        JButton addNewNonpreNameInstitutionBtn = new ButtonEag(labels.getString("eag2012.addOtherNonpreNameInstitution"));
         addNewNonpreNameInstitutionBtn.addActionListener(new AddNonpreNameInstitutionAction(eag, tabbedPane, model));
         builder.add(addNewNonpreNameInstitutionBtn, cc.xy(1, rowNb));
         setNextRow();
@@ -173,15 +173,15 @@ public class EagIdentityPanel extends EagPanels {
         builder.add(typeInstitutionCombo, cc.xy (3, rowNb));
         setNextRow();
 
-        JButton exitBtn = new JButton(labels.getString("eag2012.exitButton"));
+        JButton exitBtn = new ButtonEag(labels.getString("eag2012.exitButton"));
         builder.add(exitBtn, cc.xy (1, rowNb));
         exitBtn.addActionListener(new ExitBtnAction());
 
-        JButton previousTabBtn = new JButton(labels.getString("eag2012.previousTabButton"));
+        JButton previousTabBtn = new ButtonEag(labels.getString("eag2012.previousTabButton"));
         builder.add(previousTabBtn, cc.xy (3, rowNb));
         previousTabBtn.addActionListener(new ChangeTabBtnAction(eag, tabbedPane, model, false));
 
-        JButton nextTabBtn = new JButton(labels.getString("eag2012.nextTabButton"));
+        JButton nextTabBtn = new ButtonEag(labels.getString("eag2012.nextTabButton"));
         builder.add(nextTabBtn, cc.xy (5, rowNb));
         nextTabBtn.addActionListener(new ChangeTabBtnAction(eag, tabbedPane, model, true));
 

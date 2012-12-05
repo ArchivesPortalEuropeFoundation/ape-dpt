@@ -57,6 +57,13 @@ public class Eag2012Frame extends JFrame {
 
     public void createFrame(File eagFile) {
 //        JFrame frame = new JFrame();
+        try {
+            UIManager.setLookAndFeel( UIManager.getCrossPlatformLookAndFeelClassName() );
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+
 
         Eag eag = null;
         try {

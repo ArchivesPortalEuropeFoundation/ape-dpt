@@ -8,9 +8,11 @@ import eu.apenet.dpt.standalone.gui.eag2012.data.*;
 import org.apache.commons.lang.StringUtils;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.*;
+import java.util.List;
 
 /**
  * User: Yoann Moranville
@@ -55,12 +57,6 @@ public class EagInstitutionPanel extends EagPanels {
     private JComboBox languageBoxCity = new JComboBox(languages);
     private JComboBox languageBoxCountry = new JComboBox(languages);
 
-    private JComboBox continentCombo = new JComboBox(continents);
-
-    private JComboBox accessiblePublicCombo = new JComboBox(yesOrNo);
-    private JComboBox facilitiesForDisabledCombo = new JComboBox(yesOrNo);
-
-
     public EagInstitutionPanel(Eag eag, JTabbedPane tabbedPane, JFrame eag2012Frame, ProfileListModel model) {
         super(eag, tabbedPane, eag2012Frame, model);
     }
@@ -71,10 +67,6 @@ public class EagInstitutionPanel extends EagPanels {
      */
 
     protected JComponent buildEditorPanel(List<String> errors) {
-        LOG.info("Test");
-        if(model == null)
-            LOG.info("The model is null, we can not add the EAG to the list...");
-
         if(errors == null)
             errors = new ArrayList<String>(0);
 
@@ -92,7 +84,14 @@ public class EagInstitutionPanel extends EagPanels {
         builder.addSeparator(labels.getString("eag2012.YourInstitution"), cc.xyw(1, rowNb, 7));
         setNextRow();
         builder.addLabel(labels.getString("eag2012.personResponsibleLabel"),    cc.xy (1, rowNb));
-        personTf = new JTextField("WHAT FIELD IS THIS???"); //agent? But agent is part of maintenance event that is UNBOUNDED in maintenanceHistory
+
+        if(eag.getControl().getMaintenanceHistory() == null)
+            eag.getControl().setMaintenanceHistory(new MaintenanceHistory());
+        eag.getControl().getMaintenanceHistory().getMaintenanceEvent().add(new MaintenanceEvent());
+        int sizeEvents = eag.getControl().getMaintenanceHistory().getMaintenanceEvent().size();
+        MaintenanceEvent event = eag.getControl().getMaintenanceHistory().getMaintenanceEvent().get(sizeEvents - 1); //always empty because new
+        event.setAgent(new Agent());
+        personTf = new JTextField(event.getAgent().getContent());
         builder.add(personTf, cc.xy(3, rowNb));
         setNextRow();
         builder.addLabel(labels.getString("eag2012.countryCodeLabel"),          cc.xy (1, rowNb));
@@ -102,6 +101,10 @@ public class EagInstitutionPanel extends EagPanels {
         if(errors.contains("countryCodeTf")) {
             builder.addLabel(labels.getString("eag2012.errors.countryCode"),          cc.xy (1, rowNb)).setIcon(UIManager.getIcon("OptionPane.errorIcon"));
             setNextRow();
+
+//            JLabel test = new JLabel("<html><font color=red>error</font></html>");
+//            builder.add(test, cc.xy(1, rowNb));
+
         }
         builder.addLabel(labels.getString("eag2012.identifierInstitutionLabel"),cc.xy (1, rowNb));
         identifierTf = new JTextField(eag.getControl().getRecordId().getValue());
@@ -123,8 +126,9 @@ public class EagInstitutionPanel extends EagPanels {
             builder.addLabel(labels.getString("eag2012.errors.otherId"),          cc.xy (5, rowNb));
             setNextRow();
         }
-        JButton addNewOtherIdentifierBtn = new JButton(labels.getString("eag2012.addOtherIdentifier"));
+        JButton addNewOtherIdentifierBtn = new ButtonEag(labels.getString("eag2012.addOtherIdentifier"));
         addNewOtherIdentifierBtn.addActionListener(new AddOtherIdentifierAction(eag, tabbedPane, model));
+//        addNewOtherIdentifierBtn.setBackground(new Color(97, 201, 237));
         builder.add(addNewOtherIdentifierBtn, cc.xy(7, rowNb));
         setNextRow();
 
@@ -263,7 +267,7 @@ public class EagInstitutionPanel extends EagPanels {
             }
 
             if(repository.getLocation().size() < 2) { //If equal or more than 2, we already have visitors and postal addresses
-                JButton addNewPostalAddressBtn = new JButton(labels.getString("eag2012.addPostalAddress"));
+                JButton addNewPostalAddressBtn = new ButtonEag(labels.getString("eag2012.addPostalAddress"));
                 addNewPostalAddressBtn.addActionListener(new AddPostalAddressAction(eag, tabbedPane, model));
                 builder.add(addNewPostalAddressBtn, cc.xy(3, rowNb));
                 setNextRow();
@@ -351,11 +355,11 @@ public class EagInstitutionPanel extends EagPanels {
             setNextRow();
         }
 
-        JButton exitBtn = new JButton(labels.getString("eag2012.exitButton"));
+        JButton exitBtn = new ButtonEag(labels.getString("eag2012.exitButton"));
         builder.add(exitBtn, cc.xy (1, rowNb));
-        JButton nextTabBtn = new JButton(labels.getString("eag2012.nextTabButton"));
+        JButton nextTabBtn = new ButtonEag(labels.getString("eag2012.nextTabButton"));
         builder.add(nextTabBtn, cc.xy (3, rowNb));
-//        builder.add(new JButton(labels.getString("eag2012.validateButton")), cc.xy (5, rowNb));
+//        builder.add(new ButtonEag(labels.getString("eag2012.validateButton")), cc.xy (5, rowNb));
         exitBtn.addActionListener(new ExitBtnAction());
         nextTabBtn.addActionListener(new NextTabBtnAction(eag, tabbedPane, model));
 

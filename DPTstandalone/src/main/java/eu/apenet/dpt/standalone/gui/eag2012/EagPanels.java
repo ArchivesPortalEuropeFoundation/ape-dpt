@@ -18,7 +18,7 @@ import java.util.List;
 public abstract class EagPanels {
     protected static final Logger LOG = Logger.getLogger(EagPanels.class);
 
-    private static final int NB_ROWS = 25;
+    private static final int NB_ROWS = 54;
     private static final String EDITOR_ROW = "p, 3dlu, ";
     protected static String EDITOR_ROW_SPEC;
     static {
@@ -33,6 +33,12 @@ public abstract class EagPanels {
     protected final String[] languages = {"---", "eng", "fre"};
     protected final String[] continents = {"Africa", "Antarctica", "Asia", "Australia", "Europe", "North America", "South America"};
     protected final String[] yesOrNo = {"yes", "no"};
+    protected final String[] photographAllowance = {"depending on the material", "no", "yes", "yes (without flash)"};
+
+    protected JComboBox continentCombo = new JComboBox(continents);
+    protected JComboBox accessiblePublicCombo = new JComboBox(yesOrNo);
+    protected JComboBox facilitiesForDisabledCombo = new JComboBox(yesOrNo);
+    protected JComboBox photographAllowanceCombo = new JComboBox(photographAllowance);
 
     protected int rowNb;
     protected JTabbedPane tabbedPane;

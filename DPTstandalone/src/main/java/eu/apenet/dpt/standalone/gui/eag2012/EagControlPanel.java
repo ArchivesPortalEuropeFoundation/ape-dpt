@@ -8,6 +8,7 @@ import eu.apenet.dpt.standalone.gui.eag2012.data.*;
 import org.apache.commons.lang.StringUtils;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.util.ArrayList;
 import java.util.List;
@@ -39,19 +40,69 @@ public class EagControlPanel extends EagPanels {
         builder.setDefaultDialogBorder();
         CellConstraints cc = new CellConstraints();
 
+        JTextField temp;
         rowNb = 1;
 
         //todo here
+        builder.addLabel(labels.getString("eag2012.descriptionIdentifier"), cc.xy(1, rowNb));
+        builder.addLabel(eag.getControl().getRecordId().getValue(), cc.xy(3, rowNb));
+        setNextRow();
 
-        JButton exitBtn = new JButton(labels.getString("eag2012.exitButton"));
+        builder.addLabel(labels.getString("eag2012.personInstitutionResponsible"), cc.xy(1, rowNb));
+        int sizeEvents = eag.getControl().getMaintenanceHistory().getMaintenanceEvent().size();
+        MaintenanceEvent event = eag.getControl().getMaintenanceHistory().getMaintenanceEvent().get(sizeEvents - 1);
+        temp = new JTextField(event.getAgent().getContent());
+        temp.setEnabled(false);
+        builder.add(temp, cc.xy(3, rowNb));
+        setNextRow();
+
+        builder.addLabel(labels.getString("eag2012.identifierInstitution"), cc.xy(1, rowNb));
+        temp = new JTextField(eag.getControl().getMaintenanceAgency().getAgencyCode().getContent());
+        temp.setEnabled(false);
+        builder.add(temp, cc.xy(3, rowNb));
+        setNextRow();
+
+        builder.addSeparator(labels.getString("eag2012.usedLanguages"), cc.xyw(1, rowNb, 3));
+        JButton addLanguagesBtn = new ButtonEag(labels.getString("eag2012.addLanguagesButton"));
+//        addLanguagesBtn.setBackground(new Color(0, 162, 222));
+        addLanguagesBtn.setBackground(new Color(97, 201, 237));
+//        addLanguagesBtn.setOpaque(true);
+//        addLanguagesBtn.setBorderPainted(false);
+        builder.add(addLanguagesBtn, cc.xy(5, rowNb));
+        setNextRow();
+
+
+        if(eag.getControl().getLanguageDeclarations().getLanguageDeclaration().size() == 0)
+            eag.getControl().getLanguageDeclarations().getLanguageDeclaration().add(new LanguageDeclaration());
+        for(LanguageDeclaration languageDeclaration : eag.getControl().getLanguageDeclarations().getLanguageDeclaration()) {
+            builder.addLabel(labels.getString("eag2012.language"),    cc.xy (1, rowNb));
+            temp = new JTextField(languageDeclaration.getLanguage().getContent());
+            builder.add(temp,                     cc.xy (3, rowNb));
+            builder.addLabel(labels.getString("eag2012.script"),    cc.xy (5, rowNb));
+            temp = new JTextField(languageDeclaration.getScript().getContent());
+            builder.add(temp,                     cc.xy (7, rowNb));
+            setNextRow();
+        }
+         //97, 201, 237
+        //0, 162, 222
+
+        builder.addLabel(labels.getString("eag2012.identifierInstitution"), cc.xy(1, rowNb));
+        temp = new JTextField(eag.getControl().getMaintenanceAgency().getAgencyCode().getContent());
+        temp.setEnabled(false);
+        builder.add(temp, cc.xy(3, rowNb));
+        setNextRow();
+
+
+
+        JButton exitBtn = new ButtonEag(labels.getString("eag2012.exitButton"));
         builder.add(exitBtn, cc.xy (1, rowNb));
         exitBtn.addActionListener(new ExitBtnAction());
 
-        JButton previousTabBtn = new JButton(labels.getString("eag2012.previousTabButton"));
+        JButton previousTabBtn = new ButtonEag(labels.getString("eag2012.previousTabButton"));
         builder.add(previousTabBtn, cc.xy (3, rowNb));
         previousTabBtn.addActionListener(new ChangeTabBtnAction(eag, tabbedPane, model, false));
 
-        JButton nextTabBtn = new JButton(labels.getString("eag2012.nextTabButton"));
+        JButton nextTabBtn = new ButtonEag(labels.getString("eag2012.nextTabButton"));
         builder.add(nextTabBtn, cc.xy (5, rowNb));
         nextTabBtn.addActionListener(new ChangeTabBtnAction(eag, tabbedPane, model, true));
 

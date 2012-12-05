@@ -158,7 +158,7 @@ public class EagContactPanel extends EagPanels {
         }
 
         if(repository.getLocation().size() < 2) { //If equal or more than 2, we already have visitors and postal addresses
-            JButton addNewPostalAddressBtn = new JButton(labels.getString("eag2012.addPostalAddress"));
+            JButton addNewPostalAddressBtn = new ButtonEag(labels.getString("eag2012.addPostalAddress"));
             addNewPostalAddressBtn.addActionListener(new AddPostalAddressAction(eag, tabbedPane, model));
             builder.add(addNewPostalAddressBtn, cc.xy(3, rowNb));
             setNextRow();
@@ -179,7 +179,7 @@ public class EagContactPanel extends EagPanels {
             telephoneTfs.add(telephoneTf);
             builder.add(telephoneTf, cc.xy (3, rowNb));
             if(i++ == 0) {
-                JButton addTelephoneBtn = new JButton(labels.getString("eag2012.addTelephoneNumbers"));
+                JButton addTelephoneBtn = new ButtonEag(labels.getString("eag2012.addTelephoneNumbers"));
                 addTelephoneBtn.addActionListener(new AddTelephoneAction(eag, tabbedPane, model));
                 builder.add(addTelephoneBtn, cc.xy(5, rowNb));
             }
@@ -200,7 +200,7 @@ public class EagContactPanel extends EagPanels {
             faxTfs.add(faxTf);
             builder.add(faxTf, cc.xy (3, rowNb));
             if(i++ == 0) {
-                JButton addFaxBtn = new JButton(labels.getString("eag2012.addFaxNumbers"));
+                JButton addFaxBtn = new ButtonEag(labels.getString("eag2012.addFaxNumbers"));
                 addFaxBtn.addActionListener(new AddFaxAction(eag, tabbedPane, model));
                 builder.add(addFaxBtn, cc.xy(5, rowNb));
             }
@@ -228,7 +228,7 @@ public class EagContactPanel extends EagPanels {
             builder.add(emailTitleTf,                                            cc.xy (7, rowNb));
             setNextRow();
         }
-        JButton addEmailBtn = new JButton(labels.getString("eag2012.addEmail"));
+        JButton addEmailBtn = new ButtonEag(labels.getString("eag2012.addEmail"));
         addEmailBtn.addActionListener(new AddEmailAction(eag, tabbedPane, model));
         builder.add(addEmailBtn, cc.xy(1, rowNb));
         setNextRow();
@@ -248,20 +248,20 @@ public class EagContactPanel extends EagPanels {
             builder.add(webpageTitleTf,                                            cc.xy (7, rowNb));
             setNextRow();
         }
-        JButton addWebpageBtn = new JButton(labels.getString("eag2012.addWebpage"));
+        JButton addWebpageBtn = new ButtonEag(labels.getString("eag2012.addWebpage"));
         addWebpageBtn.addActionListener(new AddWebpageAction(eag, tabbedPane, model));
         builder.add(addWebpageBtn, cc.xy(1, rowNb));
         setNextRow();
 
-        JButton exitBtn = new JButton(labels.getString("eag2012.exitButton"));
+        JButton exitBtn = new ButtonEag(labels.getString("eag2012.exitButton"));
         builder.add(exitBtn, cc.xy (1, rowNb));
         exitBtn.addActionListener(new ExitBtnAction());
 
-        JButton previousTabBtn = new JButton(labels.getString("eag2012.previousTabButton"));
+        JButton previousTabBtn = new ButtonEag(labels.getString("eag2012.previousTabButton"));
         builder.add(previousTabBtn, cc.xy (3, rowNb));
         previousTabBtn.addActionListener(new ChangeTabBtnAction(eag, tabbedPane, model, false));
 
-        JButton nextTabBtn = new JButton(labels.getString("eag2012.nextTabButton"));
+        JButton nextTabBtn = new ButtonEag(labels.getString("eag2012.nextTabButton"));
         builder.add(nextTabBtn, cc.xy (5, rowNb));
         nextTabBtn.addActionListener(new ChangeTabBtnAction(eag, tabbedPane, model, true));
 
