@@ -212,6 +212,10 @@ public class EagAccessAndServicesPanel extends EagPanels {
 
         builder.addSeparator(labels.getString("eag2012.searchroom"), cc.xyw(1, rowNb, 7));
         setNextRow();
+        if(repository.getServices() == null)
+            repository.setServices(new Services());
+        if(repository.getServices().getSearchroom() == null)
+            repository.getServices().setSearchroom(new Searchroom());
         Searchroom searchroom = repository.getServices().getSearchroom();
 
         if(searchroom.getContact() == null)
@@ -349,6 +353,8 @@ public class EagAccessAndServicesPanel extends EagPanels {
         builder.addSeparator(labels.getString("eag2012.library"), cc.xyw(1, rowNb, 7));
         setNextRow();
 
+        if(repository.getServices().getLibrary() == null)
+            repository.getServices().setLibrary(new Library());
         Library library = repository.getServices().getLibrary();
 
         if(library.getContact() == null)
@@ -425,6 +431,10 @@ public class EagAccessAndServicesPanel extends EagPanels {
         builder.addSeparator(labels.getString("eag2012.restaurationLab"), cc.xyw(1, rowNb, 7));
         setNextRow();
 
+        if(repository.getServices().getTechservices() == null)
+            repository.getServices().setTechservices(new Techservices());
+        if(repository.getServices().getTechservices().getRestorationlab() == null)
+            repository.getServices().getTechservices().setRestorationlab(new Restorationlab());
         Restorationlab restorationlab = repository.getServices().getTechservices().getRestorationlab();
 
         if(restorationlab.getContact() == null)
@@ -462,6 +472,8 @@ public class EagAccessAndServicesPanel extends EagPanels {
         builder.addSeparator(labels.getString("eag2012.reproductionService"), cc.xyw(1, rowNb, 7));
         setNextRow();
 
+        if(repository.getServices().getTechservices().getReproductionser() == null)
+            repository.getServices().getTechservices().setReproductionser(new Reproductionser());
         Reproductionser reproductionser = repository.getServices().getTechservices().getReproductionser();
 
         if(reproductionser.getContact() == null)

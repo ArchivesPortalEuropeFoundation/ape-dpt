@@ -99,18 +99,15 @@ public class EagInstitutionPanel extends EagPanels {
         builder.add(countryCodeTf, cc.xy(3, rowNb));
         setNextRow();
         if(errors.contains("countryCodeTf")) {
-            builder.addLabel(labels.getString("eag2012.errors.countryCode"),          cc.xy (1, rowNb)).setIcon(UIManager.getIcon("OptionPane.errorIcon"));
+            builder.add(createErrorLabel(labels.getString("eag2012.errors.countryCode")),          cc.xy (1, rowNb));
             setNextRow();
-
-//            JLabel test = new JLabel("<html><font color=red>error</font></html>");
-//            builder.add(test, cc.xy(1, rowNb));
-
         }
         builder.addLabel(labels.getString("eag2012.identifierInstitutionLabel"),cc.xy (1, rowNb));
         identifierTf = new JTextField(eag.getControl().getRecordId().getValue());
         builder.add(identifierTf,                                           cc.xy (3, rowNb));
+        setNextRow();
         if(errors.contains("identifierTf")) {
-            builder.addLabel(labels.getString("eag2012.errors.identifierEmpty"),          cc.xy (1, rowNb));
+            builder.add(createErrorLabel(labels.getString("eag2012.errors.identifierEmpty")),          cc.xy (1, rowNb));
             setNextRow();
         }
 
@@ -123,7 +120,7 @@ public class EagInstitutionPanel extends EagPanels {
             setNextRow();
         }
         if(errors.contains("otherIdTfs")) {
-            builder.addLabel(labels.getString("eag2012.errors.otherId"),          cc.xy (5, rowNb));
+            builder.add(createErrorLabel(labels.getString("eag2012.errors.otherId")),          cc.xy (5, rowNb));
             setNextRow();
         }
         JButton addNewOtherIdentifierBtn = new ButtonEag(labels.getString("eag2012.addOtherIdentifier"));
@@ -132,6 +129,8 @@ public class EagInstitutionPanel extends EagPanels {
         builder.add(addNewOtherIdentifierBtn, cc.xy(7, rowNb));
         setNextRow();
 
+        if(eag.getArchguide().getIdentity().getAutform().size() == 0)
+            eag.getArchguide().getIdentity().getAutform().add(new Autform());
         nameInstitutionTfs = new ArrayList<JTextField>(eag.getArchguide().getIdentity().getAutform().size());
         for(Autform autform : eag.getArchguide().getIdentity().getAutform()) {
             JTextField nameInstitutionTf = new JTextField(autform.getContent());
@@ -144,10 +143,12 @@ public class EagInstitutionPanel extends EagPanels {
 //        builder.add(languageBoxNameInstitution,                                            cc.xy (7, rowNb));
 //        setNextRow();
         if(errors.contains("nameInstitutionTfs")) {
-            builder.addLabel(labels.getString("eag2012.errors.nameInstitutionEmpty"),          cc.xy (1, rowNb));
+            builder.add(createErrorLabel(labels.getString("eag2012.errors.nameInstitutionEmpty")),          cc.xy (1, rowNb));
             setNextRow();
         }
 
+        if(eag.getArchguide().getIdentity().getParform().size() == 0)
+            eag.getArchguide().getIdentity().getParform().add(new Parform());
         parallelNameTfs = new ArrayList<JTextField>(eag.getArchguide().getIdentity().getParform().size());
         for(Parform parform : eag.getArchguide().getIdentity().getParform()) {
             JTextField parallelNameTf = new JTextField(parform.getContent());
@@ -358,7 +359,7 @@ public class EagInstitutionPanel extends EagPanels {
         JButton exitBtn = new ButtonEag(labels.getString("eag2012.exitButton"));
         builder.add(exitBtn, cc.xy (1, rowNb));
         JButton nextTabBtn = new ButtonEag(labels.getString("eag2012.nextTabButton"));
-        builder.add(nextTabBtn, cc.xy (3, rowNb));
+        builder.add(nextTabBtn, cc.xy (5, rowNb));
 //        builder.add(new ButtonEag(labels.getString("eag2012.validateButton")), cc.xy (5, rowNb));
         exitBtn.addActionListener(new ExitBtnAction());
         nextTabBtn.addActionListener(new NextTabBtnAction(eag, tabbedPane, model));
@@ -482,9 +483,17 @@ public class EagInstitutionPanel extends EagPanels {
                 }
             }
 
-            if(nameInstitutionTfs.size() == 0) {
+            boolean error = true;
+            for(JTextField field : nameInstitutionTfs) {
+                if(StringUtils.isNotEmpty(field.getText())) {
+                    error = false;
+                    break;
+                }
+            }
+            if(error || nameInstitutionTfs.size() == 0) {
                 errors.add("nameInstitutionTfs");
-            } else {
+            }
+            if(!error) {
                 eag.getArchguide().getIdentity().getAutform().clear();
                 for(JTextField field : nameInstitutionTfs) {
                     if(StringUtils.isNotEmpty(field.getText())) {

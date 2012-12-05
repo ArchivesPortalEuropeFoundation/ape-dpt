@@ -63,6 +63,12 @@ public abstract class EagPanels {
         rowNb += 2;
     }
 
+    protected static JLabel createErrorLabel(String errorMsg) {
+        JLabel label = new JLabel("<html><font color=red>" + errorMsg + "</font></html>");
+        label.setIcon(UIManager.getIcon("OptionPane.errorIcon"));
+        return label;
+    }
+
     protected abstract JComponent buildEditorPanel(List<String> errors);
 
     public class SpecialTemporaryResourceBundle {

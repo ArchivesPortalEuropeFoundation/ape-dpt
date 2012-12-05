@@ -59,6 +59,8 @@ public class Eag2012Frame extends JFrame {
 //        JFrame frame = new JFrame();
         try {
             UIManager.setLookAndFeel( UIManager.getCrossPlatformLookAndFeelClassName() );
+//            setUndecorated(true);
+//            getRootPane().setWindowDecorationStyle(JRootPane.WARNING_DIALOG);
         } catch (Exception e) {
             e.printStackTrace();
         }
