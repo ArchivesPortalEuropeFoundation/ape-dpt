@@ -63,7 +63,6 @@ public class DataPreparationToolGUI extends JFrame {
     public static final String VERSION_NB = "1.2.0-SNAPSHOT";
 
     private static final String[] LANGUAGES_OF_TOOL = {"en", "fr", "de", "hu", "xx"};
-    private boolean isDev = false;
 
     private ResourceBundle labels;
 
@@ -482,7 +481,7 @@ public class DataPreparationToolGUI extends JFrame {
         group.add(rbMenuItem);
         languageMenu.add(rbMenuItem);
 
-        if(isDev) {
+        if(Utilities.isDev) {
             languageMenu.addSeparator();
             rbMenuItem = new JRadioButtonMenuItem("XXXXXX");
             rbMenuItem.setActionCommand("xx");
@@ -826,14 +825,10 @@ public class DataPreparationToolGUI extends JFrame {
     public static void main(String[] args) throws Exception {
         Logger.getRootLogger().setLevel(Level.INFO);
         DataPreparationToolGUI dataPreparationToolGUI = new DataPreparationToolGUI();
-        if(args.length == 1 && args[0].equals("debug"))
-            dataPreparationToolGUI.enableDev();
+        if(args.length == 1 && args[0].equals("dev"))
+            Utilities.isDev = true;
         dataPreparationToolGUI.setupTool();
         dataPreparationToolGUI.setVisible(true);
-    }
-
-    public void enableDev() {
-        isDev = true;
     }
 
     private void makeDefaultXsdMenuItems() {

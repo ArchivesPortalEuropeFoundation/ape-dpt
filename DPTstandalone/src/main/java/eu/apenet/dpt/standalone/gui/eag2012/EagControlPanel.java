@@ -4,6 +4,7 @@ import com.jgoodies.forms.builder.PanelBuilder;
 import com.jgoodies.forms.layout.CellConstraints;
 import com.jgoodies.forms.layout.FormLayout;
 import eu.apenet.dpt.standalone.gui.ProfileListModel;
+import eu.apenet.dpt.standalone.gui.Utilities;
 import eu.apenet.dpt.standalone.gui.eag2012.data.*;
 import org.apache.commons.lang.StringUtils;
 
@@ -106,7 +107,31 @@ public class EagControlPanel extends EagPanels {
         builder.add(nextTabBtn, cc.xy (5, rowNb));
         nextTabBtn.addActionListener(new ChangeTabBtnAction(eag, tabbedPane, model, true));
 
+        if(Utilities.isDev) {
+            setNextRow();
+            JButton saveBtn = new ButtonEag(labels.getString("eag2012.saveButton"));
+            builder.add(saveBtn, cc.xy (5, rowNb));
+            saveBtn.addActionListener(new SaveBtnAction(eag, tabbedPane, model));
+        }
+
         return builder.getPanel();
+    }
+
+    public class SaveBtnAction extends UpdateEagObject {
+        SaveBtnAction(Eag eag, JTabbedPane tabbedPane, ProfileListModel model) {
+            super(eag, tabbedPane, model);
+        }
+
+        @Override
+        public void actionPerformed(ActionEvent actionEvent) {
+            try {
+                super.updateEagObject();
+                super.saveFile(eag.getControl().getRecordId().getValue());
+                closeFrame();
+            } catch (Eag2012FormException e) {
+                reloadTabbedPanel(new EagControlPanel(eag, tabbedPane, eag2012Frame, model).buildEditorPanel(errors), 0);
+            }
+        }
     }
 
     public class ChangeTabBtnAction extends UpdateEagObject {

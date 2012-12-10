@@ -4,7 +4,9 @@ import com.jgoodies.forms.builder.PanelBuilder;
 import com.jgoodies.forms.layout.CellConstraints;
 import com.jgoodies.forms.layout.FormLayout;
 import eu.apenet.dpt.standalone.gui.ProfileListModel;
+import eu.apenet.dpt.standalone.gui.Utilities;
 import eu.apenet.dpt.standalone.gui.eag2012.data.*;
+import eu.apenet.dpt.standalone.gui.eag2012.data.Date;
 import org.apache.commons.lang.StringUtils;
 
 import javax.swing.*;
@@ -23,16 +25,12 @@ import java.util.*;
  */
 public class EagIdentityPanel extends EagPanels {
 
-    private List<JTextField> nameInstitutionTfs;
-    private List<JTextField> parallelNameTfs;
-    private List<JTextField> formerNameTfs;
+    private List<TextFieldWithLanguage> nameInstitutionTfs;
+    private List<TextFieldWithLanguage> parallelNameTfs;
+    private List<TextFieldWithDate> formerNameTfs;
     private JTextField dateTf;
     private JTextField fromTf;
     private JTextField toTf;
-
-    final private String[] languages = {"---", "eng", "fre"};
-    private JComboBox languageBoxNameInstitution = new JComboBox(languages);
-    private JComboBox languageBoxParallelName = new JComboBox(languages);
 
     final private String[] typeInstitution = {"National archives", "Regional archives", "County/local authority archives",
     "Municipal archives", "Specialised governmental archives", "Private persons and family archives", "Church and religious archives",
@@ -76,15 +74,17 @@ public class EagIdentityPanel extends EagPanels {
             setNextRow();
         }
 
-        nameInstitutionTfs = new ArrayList<JTextField>(eag.getArchguide().getIdentity().getAutform().size());
+        nameInstitutionTfs = new ArrayList<TextFieldWithLanguage>(eag.getArchguide().getIdentity().getAutform().size());
         int loop = 0;
         for(Autform autform : eag.getArchguide().getIdentity().getAutform()) {
-            JTextField nameInstitutionTf = new JTextField(autform.getContent());
-            nameInstitutionTfs.add(nameInstitutionTf);
+            TextFieldWithLanguage textFieldWithLanguage = new TextFieldWithLanguage(autform.getContent(), autform.getLang());
+            nameInstitutionTfs.add(textFieldWithLanguage);
             if(loop++ == 0)
-                nameInstitutionTf.setEnabled(false);
+                textFieldWithLanguage.getTextField().setEnabled(false);
             builder.addLabel(labels.getString("eag2012.nameOfInstitutionLabel"),    cc.xy (1, rowNb));
-            builder.add(nameInstitutionTf, cc.xy(3, rowNb));
+            builder.add(textFieldWithLanguage.getTextField(), cc.xy(3, rowNb));
+            builder.addLabel(labels.getString("eag2012.language"),    cc.xy (5, rowNb));
+            builder.add(textFieldWithLanguage.getLanguageBox(), cc.xy(7, rowNb));
             setNextRow();
         }
         JButton addNewNameInstitutionBtn = new ButtonEag(labels.getString("eag2012.addOtherNameInstitution"));
@@ -92,67 +92,72 @@ public class EagIdentityPanel extends EagPanels {
         builder.add(addNewNameInstitutionBtn, cc.xy(1, rowNb));
         setNextRow();
 
-        parallelNameTfs = new ArrayList<JTextField>(eag.getArchguide().getIdentity().getParform().size());
+        parallelNameTfs = new ArrayList<TextFieldWithLanguage>(eag.getArchguide().getIdentity().getParform().size());
         loop = 0;
         for(Parform parform : eag.getArchguide().getIdentity().getParform()) {
-            JTextField parallelNameTf = new JTextField(parform.getContent());
-            parallelNameTfs.add(parallelNameTf);
-            if(loop++ == 0)
-                parallelNameTf.setEnabled(false);
+            TextFieldWithLanguage textFieldWithLanguage = new TextFieldWithLanguage(parform.getContent(), parform.getLang());
+            parallelNameTfs.add(textFieldWithLanguage);
+            if(loop++ == 0 && StringUtils.isNotEmpty(textFieldWithLanguage.getTextValue()))
+                textFieldWithLanguage.getTextField().setEnabled(false);
             builder.addLabel(labels.getString("eag2012.parallelNameOfInstitutionLabel"),    cc.xy (1, rowNb));
-            builder.add(parallelNameTf, cc.xy(3, rowNb));
+            builder.add(textFieldWithLanguage.getTextField(), cc.xy(3, rowNb));
+            builder.addLabel(labels.getString("eag2012.language"),    cc.xy (5, rowNb));
+            builder.add(textFieldWithLanguage.getLanguageBox(), cc.xy(7, rowNb));
             setNextRow();
         }
         JButton addNewParallelNameInstitutionBtn = new ButtonEag(labels.getString("eag2012.addOtherParallelNameInstitution"));
         addNewParallelNameInstitutionBtn.addActionListener(new AddParallelNameInstitutionAction(eag, tabbedPane, model));
         builder.add(addNewParallelNameInstitutionBtn, cc.xy(1, rowNb));
         setNextRow();
-//        builder.addLabel(labels.getString("eag2012.languageLabel"),             cc.xy (5, rowNb));
-//        builder.add(new JComboBox(),                                            cc.xy (7, rowNb));
-//        setNextRow();
 
-        formerNameTfs = new ArrayList<JTextField>(eag.getArchguide().getIdentity().getNonpreform().size());
+        formerNameTfs = new ArrayList<TextFieldWithDate>(eag.getArchguide().getIdentity().getNonpreform().size());
 //        fromTfs = new ArrayList<JTextField>(eag.getArchguide().getIdentity().getNonpreform().size());
 //        toTfs = new ArrayList<JTextField>(eag.getArchguide().getIdentity().getNonpreform().size());
         for(Nonpreform nonpreform : eag.getArchguide().getIdentity().getNonpreform()) {
             for(int i = 0; i < nonpreform.getContent().size(); i++) {
                 Object object = nonpreform.getContent().get(i);
-                if(object instanceof String) {
-                    JTextField formerNameTf = new JTextField((String)object);
-                    formerNameTfs.add(formerNameTf);
-                    builder.addLabel(labels.getString("eag2012.formerlyUsedNameLabel"),    cc.xy (1, rowNb));
-                    builder.add(formerNameTf, cc.xy (3, rowNb));
-                    setNextRow();
-                } else if(object instanceof UseDates) {
-                    if(nonpreform.getContent().size() == 1) { //Only a useDates obj but no title, we need to add title too
-                        JTextField formerNameTf = new JTextField();
-                        formerNameTfs.add(formerNameTf);
-                        builder.addLabel(labels.getString("eag2012.formerlyUsedNameLabel"),    cc.xy (1, rowNb));
-                        builder.add(formerNameTf, cc.xy (3, rowNb));
-                        setNextRow();
-                    }
+                String nameStr = "";
+                String dateStr = "";
+                String fromDateStr = "";
+                String toDateStr = "";
 
-                    UseDates useDates = ((UseDates)object);
+                if(object instanceof String) {
+                    nameStr = (String)object;
+                } else if (object instanceof UseDates) {
+                    UseDates useDates = (UseDates)object;
                     if(useDates.getDate() != null) {
-                        builder.addLabel(labels.getString("eag2012.datesOfUsedNameLabel"),    cc.xy (1, rowNb));
-                        setNextRow();
-                        dateTf = new JTextField(useDates.getDate().getContent());
-                        builder.addLabel(labels.getString("eag2012.dateLabel"),    cc.xy (1, rowNb));
-                        builder.add(dateTf, cc.xy (3, rowNb));
+                        dateStr = useDates.getDate().getContent();
                     } else if(useDates.getDateRange() != null) {
-                        builder.addLabel(labels.getString("eag2012.datesOfUsedNameLabel"),    cc.xy (1, rowNb));
-                        setNextRow();
-                        fromTf = new JTextField(useDates.getDateRange().getFromDate().getContent());
-                        toTf = new JTextField(useDates.getDateRange().getToDate().getContent());
-                        builder.addLabel(labels.getString("eag2012.fromLabel"),    cc.xy (1, rowNb));
-                        builder.add(fromTf, cc.xy (3, rowNb));
-                        builder.addLabel(labels.getString("eag2012.toLabel"),             cc.xy (5, rowNb));
-                        builder.add(toTf,                                            cc.xy (7, rowNb));
-                        setNextRow();
-                    } else if(useDates.getDateSet() != null) {
-                        builder.addLabel(labels.getString("eag2012.datesOfUsedNameLabel"),    cc.xy (1, rowNb));
-                        setNextRow();
+                        fromDateStr = useDates.getDateRange().getFromDate().getContent();
+                        toDateStr = useDates.getDateRange().getToDate().getContent();
                     }
+//                    else if(useDates.getDateSet() != null) {
+//                    }
+                }
+
+                TextFieldWithDate textFieldWithDate = new TextFieldWithDate(nameStr, nonpreform.getLang(), fromDateStr, toDateStr, dateStr);
+                formerNameTfs.add(textFieldWithDate);
+                builder.addLabel(labels.getString("eag2012.formerlyUsedNameLabel"),    cc.xy (1, rowNb));
+                builder.add(textFieldWithDate.getTextField(), cc.xy (3, rowNb));
+                builder.addLabel(labels.getString("eag2012.language"),    cc.xy (5, rowNb));
+                builder.add(textFieldWithDate.getLanguageBox(), cc.xy (7, rowNb));
+                setNextRow();
+
+                builder.addLabel(labels.getString("eag2012.datesOfUsedNameLabel"),    cc.xy (1, rowNb));
+                setNextRow();
+                if(StringUtils.isNotBlank(dateStr)) {
+                    builder.addLabel(labels.getString("eag2012.dateLabel"),    cc.xy (1, rowNb));
+                    builder.add(textFieldWithDate.getDateField(), cc.xy (3, rowNb));
+                    setNextRow();
+                }
+                if(StringUtils.isNotBlank(fromDateStr) && StringUtils.isNotBlank(toDateStr)) {
+                    builder.addLabel(labels.getString("eag2012.datesOfUsedNameLabel"),    cc.xy (1, rowNb));
+                    setNextRow();
+                    builder.addLabel(labels.getString("eag2012.fromLabel"),    cc.xy (1, rowNb));
+                    builder.add(textFieldWithDate.getFromDateField(), cc.xy (3, rowNb));
+                    builder.addLabel(labels.getString("eag2012.toLabel"),             cc.xy (5, rowNb));
+                    builder.add(textFieldWithDate.getToDateField(),                                            cc.xy (7, rowNb));
+                    setNextRow();
                 }
             }
         }
@@ -185,7 +190,31 @@ public class EagIdentityPanel extends EagPanels {
         builder.add(nextTabBtn, cc.xy (5, rowNb));
         nextTabBtn.addActionListener(new ChangeTabBtnAction(eag, tabbedPane, model, true));
 
+        if(Utilities.isDev) {
+            setNextRow();
+            JButton saveBtn = new ButtonEag(labels.getString("eag2012.saveButton"));
+            builder.add(saveBtn, cc.xy (5, rowNb));
+            saveBtn.addActionListener(new SaveBtnAction(eag, tabbedPane, model));
+        }
+
         return builder.getPanel();
+    }
+
+    public class SaveBtnAction extends UpdateEagObject {
+        SaveBtnAction(Eag eag, JTabbedPane tabbedPane, ProfileListModel model) {
+            super(eag, tabbedPane, model);
+        }
+
+        @Override
+        public void actionPerformed(ActionEvent actionEvent) {
+            try {
+                super.updateEagObject();
+                super.saveFile(eag.getControl().getRecordId().getValue());
+                closeFrame();
+            } catch (Eag2012FormException e) {
+                reloadTabbedPanel(new EagIdentityPanel(eag, tabbedPane, eag2012Frame, model).buildEditorPanel(errors), 0);
+            }
+        }
     }
 
     public class AddNameInstitutionAction extends UpdateEagObject {
@@ -277,10 +306,11 @@ public class EagIdentityPanel extends EagPanels {
 
             if(nameInstitutionTfs.size() > 0) {
                 eag.getArchguide().getIdentity().getAutform().clear();
-                for(JTextField field : nameInstitutionTfs) {
-                    if(StringUtils.isNotEmpty(field.getText())) {
+                for(TextFieldWithLanguage textFieldWithLanguage : nameInstitutionTfs) {
+                    if(StringUtils.isNotEmpty(textFieldWithLanguage.getTextValue())) {
                         Autform autform = new Autform();
-                        autform.setContent(field.getText());
+                        autform.setContent(textFieldWithLanguage.getTextValue());
+                        autform.setLang(textFieldWithLanguage.getLanguage());
                         eag.getArchguide().getIdentity().getAutform().add(autform);
                         hasChanged = true;
                     }
@@ -289,10 +319,11 @@ public class EagIdentityPanel extends EagPanels {
 
             if(parallelNameTfs.size() > 0) {
                 eag.getArchguide().getIdentity().getParform().clear();
-                for(JTextField field : parallelNameTfs) {
-                    if(StringUtils.isNotEmpty(field.getText())) {
+                for(TextFieldWithLanguage textFieldWithLanguage : parallelNameTfs) {
+                    if(StringUtils.isNotEmpty(textFieldWithLanguage.getTextValue())) {
                         Parform parform = new Parform();
-                        parform.setContent(field.getText());
+                        parform.setContent(textFieldWithLanguage.getTextValue());
+                        parform.setLang(textFieldWithLanguage.getLanguage());
                         eag.getArchguide().getIdentity().getParform().add(parform);
                         hasChanged = true;
                     }
@@ -301,18 +332,30 @@ public class EagIdentityPanel extends EagPanels {
 
             if(formerNameTfs.size() > 0) {
                 eag.getArchguide().getIdentity().getNonpreform().clear();
-                for(JTextField field : formerNameTfs) {
-                    if(StringUtils.isNotEmpty(field.getText())) {
+                for(TextFieldWithDate textFieldWithDate : formerNameTfs) {
+                    if(StringUtils.isNotEmpty(textFieldWithDate.getTextValue())) {
                         Nonpreform nonpreform = new Nonpreform();
-                        for(Object object : nonpreform.getContent()) {
-                            if(object instanceof String) {
-                                nonpreform.getContent().remove(object);
-                                nonpreform.getContent().add(field);
-                            }
+                        nonpreform.setLang(textFieldWithDate.getLanguage());
+                        nonpreform.getContent().add(textFieldWithDate.getTextValue());
+                        if(StringUtils.isNotEmpty(textFieldWithDate.getDate())) {
+                            UseDates useDates = new UseDates();
+                            Date date = new Date();
+                            date.setContent(textFieldWithDate.getDate());
+                            useDates.setDate(date);
+                            nonpreform.getContent().add(useDates);
                         }
-
-                        nonpreform.getContent().add(field.getText());
-                        eag.getArchguide().getIdentity().getNonpreform().add(nonpreform); //todo for dates too?
+                        if(StringUtils.isNotEmpty(textFieldWithDate.getFromDate()) && StringUtils.isNotEmpty(textFieldWithDate.getToDate())) {
+                            UseDates useDates = new UseDates();
+                            DateRange dateRange = new DateRange();
+                            FromDate fromDate = new FromDate();
+                            fromDate.setContent(textFieldWithDate.getFromDate());
+                            ToDate toDate = new ToDate();
+                            toDate.setContent(textFieldWithDate.getToDate());
+                            dateRange.setFromDate(fromDate);
+                            useDates.setDateRange(dateRange);
+                            nonpreform.getContent().add(useDates);
+                        }
+                        eag.getArchguide().getIdentity().getNonpreform().add(nonpreform);
                         hasChanged = true;
                     }
                 }

@@ -189,5 +189,9 @@
             <groupId>com.sun.xml.bind</groupId>
             <artifactId>jaxb-impl</artifactId>
         </dependency>
+        <!--<dependency>-->
+            <!--<groupId>org.eclipse.persistence</groupId>-->
+            <!--<artifactId>org.eclipse.persistence.moxy</artifactId>-->
+        <!--</dependency>-->
 	</dependencies>
 </project>

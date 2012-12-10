@@ -52,7 +52,7 @@ public abstract class DefaultBtnAction implements ActionListener {
             JAXBContext jaxbContext = JAXBContext.newInstance(Eag.class);
             Marshaller jaxbMarshaller = jaxbContext.createMarshaller();
             jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
-            jaxbMarshaller.setProperty("com.sun.xml.bind.namespacePrefixMapper", new EagNamespaceMapper());
+//            jaxbMarshaller.setProperty("com.sun.xml.bind.namespacePrefixMapper", new EagNamespaceMapper());
             File eagFile = new File(Utilities.TEMP_DIR + "EAG2012_" + id + ".xml");
             jaxbMarshaller.marshal(eag, eagFile);
 
