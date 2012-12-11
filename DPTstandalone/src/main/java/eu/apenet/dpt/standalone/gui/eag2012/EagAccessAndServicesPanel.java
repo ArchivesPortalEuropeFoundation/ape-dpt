@@ -225,12 +225,11 @@ public class EagAccessAndServicesPanel extends EagPanels {
             searchroom.setContact(new Contact());
 
         if(searchroom.getContact().getTelephone().size() == 0) {
-            Telephone telephone = new Telephone();
-            telephone.setContent("");
-            searchroom.getContact().getTelephone().add(telephone);
+            telephoneSearchroomTf = new JTextField();
+        } else {
+            telephoneSearchroomTf = new JTextField(searchroom.getContact().getTelephone().get(0).getContent());
         }
         builder.addLabel(labels.getString("eag2012.telephone"),    cc.xy (1, rowNb));
-        telephoneSearchroomTf = new JTextField(searchroom.getContact().getTelephone().get(0).getContent());
         builder.add(telephoneSearchroomTf, cc.xy(3, rowNb));
         setNextRow();
 
@@ -375,10 +374,12 @@ public class EagAccessAndServicesPanel extends EagPanels {
         if(library.getContact() == null)
             library.setContact(new Contact());
 
-        if(library.getContact().getTelephone().size() == 0)
-            library.getContact().getTelephone().add(new Telephone());
+        if(library.getContact().getTelephone().size() == 0) {
+            telephoneLibraryTf = new JTextField();
+        } else {
+            telephoneLibraryTf = new JTextField(library.getContact().getTelephone().get(0).getContent());
+        }
         builder.addLabel(labels.getString("eag2012.telephone"),    cc.xy (1, rowNb));
-        telephoneLibraryTf = new JTextField(library.getContact().getTelephone().get(0).getContent());
         builder.add(telephoneLibraryTf, cc.xy(3, rowNb));
         setNextRow();
 
@@ -456,10 +457,12 @@ public class EagAccessAndServicesPanel extends EagPanels {
         if(restorationlab.getContact() == null)
             restorationlab.setContact(new Contact());
 
-        if(restorationlab.getContact().getTelephone().size() == 0)
-            restorationlab.getContact().getTelephone().add(new Telephone());
+        if(restorationlab.getContact().getTelephone().size() == 0) {
+            telephoneRestorationlabTf = new JTextField();
+        } else {
+            telephoneRestorationlabTf = new JTextField(restorationlab.getContact().getTelephone().get(0).getContent());
+        }
         builder.addLabel(labels.getString("eag2012.telephone"),    cc.xy (1, rowNb));
-        telephoneRestorationlabTf = new JTextField(restorationlab.getContact().getTelephone().get(0).getContent());
         builder.add(telephoneRestorationlabTf, cc.xy(3, rowNb));
         setNextRow();
 
@@ -495,10 +498,12 @@ public class EagAccessAndServicesPanel extends EagPanels {
         if(reproductionser.getContact() == null)
             reproductionser.setContact(new Contact());
 
-        if(reproductionser.getContact().getTelephone().size() == 0)
-            reproductionser.getContact().getTelephone().add(new Telephone());
+        if(reproductionser.getContact().getTelephone().size() == 0) {
+            telephoneReproductionServiceTf = new JTextField();
+        } else {
+            telephoneReproductionServiceTf = new JTextField(reproductionser.getContact().getTelephone().get(0).getContent());
+        }
         builder.addLabel(labels.getString("eag2012.telephone"),    cc.xy (1, rowNb));
-        telephoneReproductionServiceTf = new JTextField(reproductionser.getContact().getTelephone().get(0).getContent());
         builder.add(telephoneReproductionServiceTf, cc.xy(3, rowNb));
         setNextRow();
 

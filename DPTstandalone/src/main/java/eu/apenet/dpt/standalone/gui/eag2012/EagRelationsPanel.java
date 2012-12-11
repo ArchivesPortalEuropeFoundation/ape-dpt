@@ -55,7 +55,15 @@ public class EagRelationsPanel extends EagPanels {
         builder.addSeparator(labels.getString("eag2012.resourceRelations"), cc.xyw(1, rowNb, 7));
         setNextRow();
 
+        resourceRelationTypes = new ArrayList<ResourceRelationType>(relations.getResourceRelation().size());
         for(ResourceRelation resourceRelation : relations.getResourceRelation()) {
+            if(resourceRelation.getRelationEntry() == null)
+                resourceRelation.setRelationEntry(new RelationEntry());
+            if(resourceRelation.getDescriptiveNote() == null) {
+                DescriptiveNote descriptiveNote = new DescriptiveNote();
+                descriptiveNote.setP(new ArrayList<P>(){{add(new P());}});
+                resourceRelation.setDescriptiveNote(descriptiveNote);
+            }
             ResourceRelationType resourceRelationType = new ResourceRelationType(resourceRelation.getResourceRelationType(), resourceRelation.getHref(), resourceRelation.getRelationEntry().getContent(), resourceRelation.getDescriptiveNote().getP().get(0).getContent(), resourceRelation.getDescriptiveNote().getLang(), true);
             resourceRelationTypes.add(resourceRelationType);
 

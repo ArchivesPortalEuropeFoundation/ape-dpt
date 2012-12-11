@@ -292,7 +292,7 @@ public class EagIdentityPanel extends EagPanels {
                     tabbedPane.setEnabledAt(2, true);
                     tabbedPane.setEnabledAt(1, false);
                 } else {
-                    reloadTabbedPanel(new EagInstitutionPanel(eag, tabbedPane, eag2012Frame, model).buildEditorPanel(errors), 0);
+                    reloadTabbedPanel(new EagInstitutionPanel(eag, tabbedPane, eag2012Frame, model, false).buildEditorPanel(errors), 0);
                     tabbedPane.setEnabledAt(0, true);
                     tabbedPane.setEnabledAt(1, false);
                 }

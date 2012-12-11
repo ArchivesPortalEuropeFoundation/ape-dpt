@@ -12,7 +12,9 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -56,8 +58,11 @@ public class EagInstitutionPanel extends EagPanels {
     private JComboBox languageBoxCity = new JComboBox(languages);
     private JComboBox languageBoxCountry = new JComboBox(languages);
 
-    public EagInstitutionPanel(Eag eag, JTabbedPane tabbedPane, JFrame eag2012Frame, ProfileListModel model) {
+    private boolean isNew;
+
+    public EagInstitutionPanel(Eag eag, JTabbedPane tabbedPane, JFrame eag2012Frame, ProfileListModel model, boolean isNew) {
         super(eag, tabbedPane, eag2012Frame, model);
+        this.isNew = isNew;
     }
 
     /**
@@ -92,7 +97,24 @@ public class EagInstitutionPanel extends EagPanels {
 
         if(eag.getControl().getMaintenanceHistory() == null)
             eag.getControl().setMaintenanceHistory(new MaintenanceHistory());
-        eag.getControl().getMaintenanceHistory().getMaintenanceEvent().add(new MaintenanceEvent());
+        MaintenanceEvent maintenanceEvent = new MaintenanceEvent();
+        AgentType agentType = new AgentType();
+        agentType.setValue("human");
+        maintenanceEvent.setAgentType(agentType);
+        EventDateTime eventDateTime = new EventDateTime();
+        Date date = new Date();
+        SimpleDateFormat format = new SimpleDateFormat("yyyy.MM.dd");
+        SimpleDateFormat formatStandard = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss"); //2099-12-31T23:59:59
+        eventDateTime.setContent(format.format(date));
+        eventDateTime.setStandardDateTime(formatStandard.format(date));
+        maintenanceEvent.setEventDateTime(eventDateTime);
+        EventType eventType = new EventType();
+        if(isNew)
+            eventType.setValue("created");
+        else
+            eventType.setValue("updated");
+        maintenanceEvent.setEventType(eventType);
+        eag.getControl().getMaintenanceHistory().getMaintenanceEvent().add(maintenanceEvent);
         int sizeEvents = eag.getControl().getMaintenanceHistory().getMaintenanceEvent().size();
         MaintenanceEvent event = eag.getControl().getMaintenanceHistory().getMaintenanceEvent().get(sizeEvents - 1); //always empty because new
         event.setAgent(new Agent());
@@ -405,7 +427,7 @@ public class EagInstitutionPanel extends EagPanels {
                 super.saveFile(eag.getControl().getRecordId().getValue());
                 closeFrame();
             } catch (Eag2012FormException e) {
-                reloadTabbedPanel(new EagInstitutionPanel(eag, tabbedPane, eag2012Frame, model).buildEditorPanel(errors), 0);
+                reloadTabbedPanel(new EagInstitutionPanel(eag, tabbedPane, eag2012Frame, model, isNew).buildEditorPanel(errors), 0);
             }
         }
     }
@@ -430,7 +452,7 @@ public class EagInstitutionPanel extends EagPanels {
                 if(model == null)
                     LOG.info("The model is null, we can not add the EAG to the list...");
 
-                reloadTabbedPanel(new EagInstitutionPanel(eag, tabbedPane, eag2012Frame, model).buildEditorPanel(errors), 0);
+                reloadTabbedPanel(new EagInstitutionPanel(eag, tabbedPane, eag2012Frame, model, isNew).buildEditorPanel(errors), 0);
             }
         }
     }
@@ -450,7 +472,7 @@ public class EagInstitutionPanel extends EagPanels {
 //                }
             }
             eag.getControl().getOtherRecordId().add(new OtherRecordId());
-            reloadTabbedPanel(new EagInstitutionPanel(eag, tabbedPane, eag2012Frame, model).buildEditorPanel(errors), 0);
+            reloadTabbedPanel(new EagInstitutionPanel(eag, tabbedPane, eag2012Frame, model, isNew).buildEditorPanel(errors), 0);
         }
 
     }
@@ -477,7 +499,7 @@ public class EagInstitutionPanel extends EagPanels {
             location.setMunicipalityPostalcode(new MunicipalityPostalcode());
 
             eag.getArchguide().getDesc().getRepositories().getRepository().get(0).getLocation().add(location);
-            reloadTabbedPanel(new EagInstitutionPanel(eag, tabbedPane, eag2012Frame, model).buildEditorPanel(errors), 0);
+            reloadTabbedPanel(new EagInstitutionPanel(eag, tabbedPane, eag2012Frame, model, isNew).buildEditorPanel(errors), 0);
         }
 
     }

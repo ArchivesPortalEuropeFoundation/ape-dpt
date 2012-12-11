@@ -43,7 +43,7 @@ public class Eag2012Frame extends JFrame {
         }
         this.dimension = dimension;
         this.model = model;
-        createFrame(eagFile);
+        createFrame(eagFile, false);
     }
 
     public Eag2012Frame(Dimension dimension, ProfileListModel model) {
@@ -52,10 +52,10 @@ public class Eag2012Frame extends JFrame {
 
         this.dimension = dimension;
         this.model = model;
-        createFrame(emptyEAGFile);
+        createFrame(emptyEAGFile, true);
     }
 
-    public void createFrame(File eagFile) {
+    public void createFrame(File eagFile, boolean isNew) {
 //        JFrame frame = new JFrame();
 
         Eag eag = null;
@@ -78,7 +78,7 @@ public class Eag2012Frame extends JFrame {
             e.printStackTrace();
         }
 
-        buildPanel(eag);
+        buildPanel(eag, isNew);
         this.getContentPane().add(tabbedPane);
 
 //        FormLayout layout = init2();
@@ -93,11 +93,11 @@ public class Eag2012Frame extends JFrame {
         this.setVisible(true);
     }
 
-    public void buildPanel(Eag eag) {
+    public void buildPanel(Eag eag, boolean isNew) {
         tabbedPane = new JTabbedPane();
         tabbedPane.putClientProperty("jgoodies.noContentBorder", Boolean.TRUE);
 
-        tabbedPane.add("eag2012.yourInstitutionTab",  buildInstitutionPanel(eag));
+        tabbedPane.add("eag2012.yourInstitutionTab",  buildInstitutionPanel(eag, isNew));
 
         tabbedPane.add("eag2012.identityTab",  null);
         tabbedPane.setEnabledAt(1, false);
@@ -114,7 +114,7 @@ public class Eag2012Frame extends JFrame {
     }
 
 
-    protected JComponent buildInstitutionPanel(Eag eag) {
-        return new JScrollPane(new EagInstitutionPanel(eag, tabbedPane, this, model).buildEditorPanel(null));
+    protected JComponent buildInstitutionPanel(Eag eag, boolean isNew) {
+        return new JScrollPane(new EagInstitutionPanel(eag, tabbedPane, this, model, isNew).buildEditorPanel(null));
     }
 }
