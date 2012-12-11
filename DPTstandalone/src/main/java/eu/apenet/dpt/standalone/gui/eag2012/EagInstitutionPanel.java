@@ -68,6 +68,12 @@ public class EagInstitutionPanel extends EagPanels {
     protected JComponent buildEditorPanel(List<String> errors) {
         if(errors == null)
             errors = new ArrayList<String>(0);
+        else if(Utilities.isDev && errors.size() > 0) {
+            LOG.info("Errors in form:");
+            for(String error : errors) {
+                LOG.info(error);
+            }
+        }
 
         FormLayout layout = new FormLayout(
                 "right:max(50dlu;p), 4dlu, 100dlu, 7dlu, right:p, 4dlu, 100dlu",
@@ -93,7 +99,7 @@ public class EagInstitutionPanel extends EagPanels {
         personTf = new JTextField(event.getAgent().getContent());
         builder.add(personTf, cc.xy(3, rowNb));
         setNextRow();
-        builder.addLabel(labels.getString("eag2012.countryCodeLabel"),          cc.xy (1, rowNb));
+        builder.addLabel(labels.getString("eag2012.countryCodeLabel") + "*",          cc.xy (1, rowNb));
         countryCodeTf = new JTextField(eag.getArchguide().getIdentity().getRepositorid().getCountrycode());
         builder.add(countryCodeTf, cc.xy(3, rowNb));
         setNextRow();
@@ -101,7 +107,7 @@ public class EagInstitutionPanel extends EagPanels {
             builder.add(createErrorLabel(labels.getString("eag2012.errors.countryCode")),          cc.xy (1, rowNb));
             setNextRow();
         }
-        builder.addLabel(labels.getString("eag2012.identifierInstitutionLabel"),cc.xy (1, rowNb));
+        builder.addLabel(labels.getString("eag2012.identifierInstitutionLabel") + "*",cc.xy (1, rowNb));
         identifierTf = new JTextField(eag.getControl().getRecordId().getValue());
         builder.add(identifierTf,                                           cc.xy (3, rowNb));
         setNextRow();
@@ -134,7 +140,7 @@ public class EagInstitutionPanel extends EagPanels {
         for(Autform autform : eag.getArchguide().getIdentity().getAutform()) {
             TextFieldWithLanguage textFieldWithLanguage = new TextFieldWithLanguage(autform.getContent(), autform.getLang());
             nameInstitutionTfs.add(textFieldWithLanguage);
-            builder.addLabel(labels.getString("eag2012.nameOfInstitutionLabel"),    cc.xy (1, rowNb));
+            builder.addLabel(labels.getString("eag2012.nameOfInstitutionLabel") + "*",    cc.xy (1, rowNb));
             builder.add(textFieldWithLanguage.getTextField(), cc.xy (3, rowNb));
             builder.addLabel(labels.getString("eag2012.language"),    cc.xy (5, rowNb));
             builder.add(textFieldWithLanguage.getLanguageBox(), cc.xy (7, rowNb));
@@ -157,9 +163,6 @@ public class EagInstitutionPanel extends EagPanels {
             builder.add(textFieldWithLanguage.getLanguageBox(), cc.xy (7, rowNb));
             setNextRow();
         }
-//        builder.addLabel(labels.getString("eag2012.languageLabel"),             cc.xy (5, rowNb));
-//        builder.add(languageBoxParallelName,                                                cc.xy (7, rowNb));
-//        setNextRow();
 
         if(eag.getArchguide().getDesc().getRepositories().getRepository().size() == 1) { //todo: BECAUSE FOR NOW ONLY ONE REPOSITORY!!!!
             Repository repository = eag.getArchguide().getDesc().getRepositories().getRepository().get(0);
@@ -191,7 +194,7 @@ public class EagInstitutionPanel extends EagPanels {
                 }
                 setNextRow();
 
-                builder.addLabel(labels.getString("eag2012.streetLabel"),    cc.xy (1, rowNb));
+                builder.addLabel(labels.getString("eag2012.streetLabel") + "*",    cc.xy (1, rowNb));
                 if(StringUtils.isNotEmpty(location.getStreet().getContent())) {
                     streetTf = new TextFieldWithLanguage(location.getStreet().getContent(), location.getStreet().getLang());
                     streetPTf = new TextFieldWithLanguage(location.getStreet().getContent(), location.getStreet().getLang());
@@ -203,6 +206,10 @@ public class EagInstitutionPanel extends EagPanels {
                     builder.add(streetTf.getTextField(),                               cc.xy (3, rowNb));
                     builder.addLabel(labels.getString("eag2012.language"),    cc.xy (5, rowNb));
                     builder.add(streetTf.getLanguageBox(),                               cc.xy (7, rowNb));
+                    if(errors.contains("streetTf")) {
+                        setNextRow();
+                        builder.add(createErrorLabel(labels.getString("eag2012.errors.street")),          cc.xy (1, rowNb));
+                    }
                 } else {
                     builder.add(streetPTf.getTextField(),                               cc.xy (3, rowNb));
                     builder.addLabel(labels.getString("eag2012.language"),    cc.xy (5, rowNb));
@@ -210,7 +217,7 @@ public class EagInstitutionPanel extends EagPanels {
                 }
                 setNextRow();
 
-                builder.addLabel(labels.getString("eag2012.cityTownLabel"),    cc.xy (1, rowNb));
+                builder.addLabel(labels.getString("eag2012.cityTownLabel") + "*",    cc.xy (1, rowNb));
                 if(StringUtils.isNotEmpty(location.getMunicipalityPostalcode().getContent())) {
                     cityTf = new TextFieldWithLanguage(location.getMunicipalityPostalcode().getContent(), location.getMunicipalityPostalcode().getLang());
                     cityPTf = new TextFieldWithLanguage(location.getMunicipalityPostalcode().getContent(), location.getMunicipalityPostalcode().getLang());
@@ -222,6 +229,10 @@ public class EagInstitutionPanel extends EagPanels {
                     builder.add(cityTf.getTextField(),                               cc.xy (3, rowNb));
                     builder.addLabel(labels.getString("eag2012.language"),    cc.xy (5, rowNb));
                     builder.add(cityTf.getLanguageBox(),                               cc.xy (7, rowNb));
+                    if(errors.contains("cityTf")) {
+                        setNextRow();
+                        builder.add(createErrorLabel(labels.getString("eag2012.errors.city")),          cc.xy (1, rowNb));
+                    }
                 } else {
                     builder.add(cityPTf.getTextField(),                               cc.xy (3, rowNb));
                     builder.addLabel(labels.getString("eag2012.language"),    cc.xy (5, rowNb));
@@ -229,7 +240,7 @@ public class EagInstitutionPanel extends EagPanels {
                 }
                 setNextRow();
 
-                builder.addLabel(labels.getString("eag2012.countryLabel"),    cc.xy (1, rowNb));
+                builder.addLabel(labels.getString("eag2012.countryLabel") + "*",    cc.xy (1, rowNb));
                 if(StringUtils.isNotEmpty(location.getCountry().getContent())) {
                     countryTf = new TextFieldWithLanguage(location.getCountry().getContent(), location.getCountry().getLang());
                     countryPTf = new TextFieldWithLanguage(location.getCountry().getContent(), location.getCountry().getLang());
@@ -241,6 +252,10 @@ public class EagInstitutionPanel extends EagPanels {
                     builder.add(countryTf.getTextField(), cc.xy (3, rowNb));
                     builder.addLabel(labels.getString("eag2012.language"),    cc.xy (5, rowNb));
                     builder.add(countryTf.getLanguageBox(),                               cc.xy (7, rowNb));
+                    if(errors.contains("countryTf")) {
+                        setNextRow();
+                        builder.add(createErrorLabel(labels.getString("eag2012.errors.country")),          cc.xy (1, rowNb));
+                    }
                 } else {
                     builder.add(countryPTf.getTextField(), cc.xy(3, rowNb));
                     builder.addLabel(labels.getString("eag2012.language"),    cc.xy (5, rowNb));
@@ -272,7 +287,7 @@ public class EagInstitutionPanel extends EagPanels {
                 setNextRow();
             }
 
-            builder.addLabel(labels.getString("eag2012.continentLabel"),    cc.xy (1, rowNb));
+            builder.addLabel(labels.getString("eag2012.continentLabel") + "*",    cc.xy (1, rowNb));
             if(Arrays.asList(continents).contains(repository.getGeogarea().getValue())){
                 continentCombo.setSelectedItem(repository.getGeogarea().getValue());
             }
@@ -300,7 +315,7 @@ public class EagInstitutionPanel extends EagPanels {
             builder.add(emailTitleTf,                                            cc.xy (7, rowNb));
             setNextRow();
 
-            builder.addLabel(labels.getString("eag2012.webpageLabel"),    cc.xy (1, rowNb));
+            builder.addLabel(labels.getString("eag2012.webpageLabel") + "*",    cc.xy (1, rowNb));
             if(repository.getWebpage().size() > 0) {
                 webpageTf = new JTextField(repository.getWebpage().get(0).getHref());
                 webpageTitleTf = new JTextField(repository.getWebpage().get(0).getContent());
@@ -311,9 +326,13 @@ public class EagInstitutionPanel extends EagPanels {
             builder.add(webpageTf, cc.xy (3, rowNb));
             builder.addLabel(labels.getString("eag2012.linkTitleLabel"),             cc.xy (5, rowNb));
             builder.add(webpageTitleTf,                                            cc.xy (7, rowNb));
+            if(errors.contains("webpageTf")) {
+                setNextRow();
+                builder.add(createErrorLabel(labels.getString("eag2012.errors.webpage")),          cc.xy (1, rowNb));
+            }
             setNextRow();
 
-            builder.addLabel(labels.getString("eag2012.openingTimesLabel"),    cc.xy (1, rowNb));
+            builder.addLabel(labels.getString("eag2012.openingTimesLabel") + "*",    cc.xy (1, rowNb));
             openingTimesTf = new JTextField(repository.getTimetable().getOpening().getContent());
             builder.add(openingTimesTf, cc.xy (3, rowNb));
             builder.addLabel(labels.getString("eag2012.closingTimesLabel"), cc.xy(5, rowNb));
@@ -321,14 +340,18 @@ public class EagInstitutionPanel extends EagPanels {
                 repository.getTimetable().setClosing(new Closing());
             closingTimesTf = new JTextField(repository.getTimetable().getClosing().getContent());
             builder.add(closingTimesTf,                                            cc.xy (7, rowNb));
+            if(errors.contains("openingTimesTf")) {
+                setNextRow();
+                builder.add(createErrorLabel(labels.getString("eag2012.errors.openingTimes")),          cc.xy (1, rowNb));
+            }
             setNextRow();
-            builder.addLabel(labels.getString("eag2012.accessiblePublicLabel"),    cc.xy (1, rowNb));
+            builder.addLabel(labels.getString("eag2012.accessiblePublicLabel") + "*",    cc.xy (1, rowNb));
             if(Arrays.asList(yesOrNo).contains(repository.getAccess().getQuestion())) {
                 accessiblePublicCombo.setSelectedItem(repository.getAccess().getQuestion());
             }
             builder.add(accessiblePublicCombo, cc.xy(3, rowNb));
             setNextRow();
-            builder.addLabel(labels.getString("eag2012.facilitiesForDisabledLabel"), cc.xy(1, rowNb));
+            builder.addLabel(labels.getString("eag2012.facilitiesForDisabledLabel") + "*", cc.xy(1, rowNb));
             if(repository.getAccessibility().size() > 0 && Arrays.asList(yesOrNo).contains(repository.getAccessibility().get(0).getQuestion())) {
                 facilitiesForDisabledCombo.setSelectedItem(repository.getAccessibility().get(0).getQuestion());
             }
@@ -526,26 +549,14 @@ public class EagInstitutionPanel extends EagPanels {
                 }
             }
 
-            error = true;
+            eag.getArchguide().getIdentity().getParform().clear();
             for(TextFieldWithLanguage textFieldWithLanguage : parallelNameTfs) {
-                if(StringUtils.isNotEmpty(textFieldWithLanguage.getTextField().getText())) {
-                    error = false;
-                    break;
-                }
-            }
-            if(error || parallelNameTfs.size() == 0) {
-                errors.add("parallelNameTfs");
-            }
-            if(!error) {
-                eag.getArchguide().getIdentity().getParform().clear();
-                for(TextFieldWithLanguage textFieldWithLanguage : parallelNameTfs) {
-                    if(StringUtils.isNotEmpty(textFieldWithLanguage.getTextValue())) {
-                        Parform parform = new Parform();
-                        parform.setContent(textFieldWithLanguage.getTextValue());
-                        parform.setLang(textFieldWithLanguage.getLanguage());
-                        eag.getArchguide().getIdentity().getParform().add(parform);
-                        hasChanged = true;
-                    }
+                if(StringUtils.isNotEmpty(textFieldWithLanguage.getTextValue())) {
+                    Parform parform = new Parform();
+                    parform.setContent(textFieldWithLanguage.getTextValue());
+                    parform.setLang(textFieldWithLanguage.getLanguage());
+                    eag.getArchguide().getIdentity().getParform().add(parform);
+                    hasChanged = true;
                 }
             }
 
@@ -565,6 +576,8 @@ public class EagInstitutionPanel extends EagPanels {
                             location.getStreet().setLang(streetTf.getLanguage());
                             hasChanged = true;
                         }
+                    } else {
+                        errors.add("streetTf");
                     }
                     if(StringUtils.isNotEmpty(cityTf.getTextValue())) {
                         if(!cityTf.getTextValue().equals(location.getMunicipalityPostalcode().getContent())) {
@@ -572,6 +585,8 @@ public class EagInstitutionPanel extends EagPanels {
                             location.getMunicipalityPostalcode().setLang(cityTf.getLanguage());
                             hasChanged = true;
                         }
+                    } else {
+                        errors.add("cityTf");
                     }
                     if(StringUtils.isNotEmpty(countryTf.getTextValue())) {
                         if(!countryTf.getTextValue().equals(location.getCountry().getContent())) {
@@ -579,6 +594,8 @@ public class EagInstitutionPanel extends EagPanels {
                             location.getCountry().setLang(countryTf.getLanguage());
                             hasChanged = true;
                         }
+                    } else {
+                        errors.add("countryTf");
                     }
 
                     if(StringUtils.isNotEmpty(coordinatesLatTf.getText()) && !coordinatesLatTf.getText().equals(location.getLatitude())) {
@@ -655,23 +672,27 @@ public class EagInstitutionPanel extends EagPanels {
                     }
                 }
 
-                if(repository.getWebpage().size() > 0) {
-                    if(StringUtils.isNotEmpty(webpageTf.getText()) && !webpageTf.getText().equals(repository.getWebpage().get(0).getHref())) {
+//                if(repository.getWebpage().size() > 0) {
+                    if(StringUtils.isNotEmpty(webpageTf.getText())) {
                         repository.getWebpage().get(0).setHref(webpageTf.getText());
                         hasChanged = true;
+                        if(StringUtils.isNotEmpty(webpageTitleTf.getText()) && !webpageTitleTf.getText().equals(repository.getWebpage().get(0).getContent())) {
+                            repository.getWebpage().get(0).setContent(webpageTitleTf.getText());
+                        } else if(StringUtils.isBlank(repository.getWebpage().get(0).getContent())) {
+                            repository.getWebpage().get(0).setContent("Visit website");
+                        }
+                    } else {
+                        errors.add("webpageTf");
                     }
-                    if(StringUtils.isNotEmpty(webpageTitleTf.getText()) && !webpageTitleTf.getText().equals(repository.getWebpage().get(0).getContent())) {
-                        repository.getWebpage().get(0).setContent(webpageTitleTf.getText());
-                        hasChanged = true;
-                    } else if(StringUtils.isBlank(repository.getWebpage().get(0).getContent())) {
-                        repository.getWebpage().get(0).setContent("Visit website");
-                        hasChanged = true;
-                    }
-                }
+//                } else {
 
-                if(StringUtils.isNotEmpty(openingTimesTf.getText()) && !openingTimesTf.getText().equals(repository.getTimetable().getOpening().getContent())) {
+//                }
+
+                if(StringUtils.isNotEmpty(openingTimesTf.getText())) {
                     repository.getTimetable().getOpening().setContent(openingTimesTf.getText());
                     hasChanged = true;
+                } else {
+                    errors.add("openingTimesTf");
                 }
 
                 if(StringUtils.isNotEmpty(closingTimesTf.getText())) {

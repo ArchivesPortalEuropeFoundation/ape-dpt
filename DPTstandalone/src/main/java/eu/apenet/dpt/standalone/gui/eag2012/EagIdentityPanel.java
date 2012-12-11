@@ -49,6 +49,12 @@ public class EagIdentityPanel extends EagPanels {
     protected JComponent buildEditorPanel(List<String> errors) {
         if(errors == null)
             errors = new ArrayList<String>(0);
+        else if(Utilities.isDev && errors.size() > 0) {
+            LOG.info("Errors in form:");
+            for(String error : errors) {
+                LOG.info(error);
+            }
+        }
 
         FormLayout layout = new FormLayout(
                 "right:max(50dlu;p), 4dlu, 100dlu, 7dlu, right:p, 4dlu, 100dlu",
@@ -61,10 +67,10 @@ public class EagIdentityPanel extends EagPanels {
         CellConstraints cc = new CellConstraints();
 
         rowNb = 1;
-        builder.addLabel(labels.getString("eag2012.countryCodeLabel"),    cc.xy (1, rowNb));
+        builder.addLabel(labels.getString("eag2012.countryCodeLabel") + "*",    cc.xy (1, rowNb));
         builder.addLabel(eag.getArchguide().getIdentity().getRepositorid().getCountrycode(), cc.xy(3, rowNb));
         setNextRow();
-        builder.addLabel(labels.getString("eag2012.identifierInstitutionLabel"),    cc.xy (1, rowNb));
+        builder.addLabel(labels.getString("eag2012.identifierInstitutionLabel") + "*",    cc.xy (1, rowNb));
         builder.addLabel(eag.getControl().getRecordId().getValue(), cc.xy(3, rowNb));
         setNextRow();
 
@@ -79,9 +85,13 @@ public class EagIdentityPanel extends EagPanels {
         for(Autform autform : eag.getArchguide().getIdentity().getAutform()) {
             TextFieldWithLanguage textFieldWithLanguage = new TextFieldWithLanguage(autform.getContent(), autform.getLang());
             nameInstitutionTfs.add(textFieldWithLanguage);
-            if(loop++ == 0)
+            if(loop++ == 0) {
+                builder.addLabel(labels.getString("eag2012.nameOfInstitutionLabel") + "*",    cc.xy (1, rowNb));
                 textFieldWithLanguage.getTextField().setEnabled(false);
-            builder.addLabel(labels.getString("eag2012.nameOfInstitutionLabel"),    cc.xy (1, rowNb));
+            } else {
+                builder.addLabel(labels.getString("eag2012.nameOfInstitutionLabel"),    cc.xy (1, rowNb));
+            }
+
             builder.add(textFieldWithLanguage.getTextField(), cc.xy(3, rowNb));
             builder.addLabel(labels.getString("eag2012.language"),    cc.xy (5, rowNb));
             builder.add(textFieldWithLanguage.getLanguageBox(), cc.xy(7, rowNb));

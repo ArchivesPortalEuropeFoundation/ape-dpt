@@ -18,7 +18,7 @@ import java.util.List;
 public abstract class EagPanels {
     protected static final Logger LOG = Logger.getLogger(EagPanels.class);
 
-    private static final int NB_ROWS = 54;
+    private static final int NB_ROWS = 150;
     private static final String EDITOR_ROW = "p, 3dlu, ";
     protected static String EDITOR_ROW_SPEC;
     static {

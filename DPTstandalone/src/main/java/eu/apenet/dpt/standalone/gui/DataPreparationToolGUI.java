@@ -823,6 +823,12 @@ public class DataPreparationToolGUI extends JFrame {
     }
 
     public static void main(String[] args) throws Exception {
+        try {
+            UIManager.setLookAndFeel( UIManager.getCrossPlatformLookAndFeelClassName() );
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
         Logger.getRootLogger().setLevel(Level.INFO);
         DataPreparationToolGUI dataPreparationToolGUI = new DataPreparationToolGUI();
         if(args.length == 1 && args[0].equals("dev"))

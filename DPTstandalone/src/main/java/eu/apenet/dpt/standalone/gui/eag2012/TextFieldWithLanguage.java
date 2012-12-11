@@ -17,16 +17,22 @@ import java.util.List;
 public class TextFieldWithLanguage {
     private JTextField textField;
     private JTextField extraField;
+    private JTextField secondExtraField;
     private JComboBox languageBox;
     private static final String[] languages = {"eng", "fre"};
     private static final String[] languagesDisplay = {"---", "eng", "fre"};
 
-    public TextFieldWithLanguage(String text, String language, String extraText) {
+    public TextFieldWithLanguage(String text, String language, String extraText, String secondExtraText) {
         textField = new JTextField(text);
         languageBox = new JComboBox(languagesDisplay);
         if(Arrays.asList(languages).contains(language))
             languageBox.setSelectedItem(language);
         extraField = new JTextField(extraText);
+        secondExtraField = new JTextField(secondExtraText);
+    }
+
+    public TextFieldWithLanguage(String text, String language, String extraText) {
+        this(text, language, extraText, "");
     }
 
     public TextFieldWithLanguage(String text, String language) {
@@ -41,6 +47,10 @@ public class TextFieldWithLanguage {
         return extraField;
     }
 
+    public JTextField getSecondExtraField() {
+        return secondExtraField;
+    }
+
     public JComboBox getLanguageBox() {
         return languageBox;
     }
@@ -51,6 +61,10 @@ public class TextFieldWithLanguage {
 
     public String getExtraValue() {
         return extraField.getText();
+    }
+
+    public String getSecondExtraValue() {
+        return secondExtraField.getText();
     }
 
     public String getLanguage() {
