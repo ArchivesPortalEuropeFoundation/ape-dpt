@@ -85,7 +85,7 @@ public class EagRelationsPanel extends EagPanels {
         }
         JButton addResourceRelation = new ButtonEag(labels.getString("eag2012.addResourceRelationBtn"));
         builder.add(addResourceRelation, cc.xy (1, rowNb));
-//        addResourceRelation.addActionListener();
+        addResourceRelation.addActionListener(new AddResourceRelationAction(eag, tabbedPane, model));
         setNextRow();
 
         for(EagRelation eagRelation : relations.getEagRelation()) {
@@ -110,7 +110,7 @@ public class EagRelationsPanel extends EagPanels {
         }
         JButton addInstitutionRelation = new ButtonEag(labels.getString("eag2012.addInstitutionRelationBtn"));
         builder.add(addInstitutionRelation, cc.xy (1, rowNb));
-//        addInstitutionRelation.addActionListener();
+        addInstitutionRelation.addActionListener(new AddInstitutionRelationAction(eag, tabbedPane, model));
         setNextRow();
 
 
@@ -127,6 +127,37 @@ public class EagRelationsPanel extends EagPanels {
         saveBtn.addActionListener(new SaveBtnAction(eag, tabbedPane, model));
 
         return builder.getPanel();
+    }
+
+    public class AddResourceRelationAction extends UpdateEagObject {
+        AddResourceRelationAction(Eag eag, JTabbedPane tabbedPane, ProfileListModel model) {
+            super(eag, tabbedPane, model);
+        }
+
+        @Override
+        public void actionPerformed(ActionEvent actionEvent) {
+            try {
+                super.updateEagObject();
+            } catch (Eag2012FormException e) {
+            }
+            eag.getRelations().getResourceRelation().add(new ResourceRelation());
+            reloadTabbedPanel(new EagRelationsPanel(eag, tabbedPane, eag2012Frame, model).buildEditorPanel(errors), 0);
+        }
+    }
+    public class AddInstitutionRelationAction extends UpdateEagObject {
+        AddInstitutionRelationAction(Eag eag, JTabbedPane tabbedPane, ProfileListModel model) {
+            super(eag, tabbedPane, model);
+        }
+
+        @Override
+        public void actionPerformed(ActionEvent actionEvent) {
+            try {
+                super.updateEagObject();
+            } catch (Eag2012FormException e) {
+            }
+            eag.getRelations().getEagRelation().add(new EagRelation());
+            reloadTabbedPanel(new EagRelationsPanel(eag, tabbedPane, eag2012Frame, model).buildEditorPanel(errors), 0);
+        }
     }
 
     public class PreviousTabBtnAction extends UpdateEagObject {

@@ -5,6 +5,7 @@ import eu.apenet.dpt.standalone.gui.Utilities;
 import eu.apenet.dpt.standalone.gui.eag2012.data.*;
 import eu.apenet.dpt.utils.service.TransformationTool;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
 import org.apache.log4j.Logger;
 
 import javax.swing.*;
@@ -47,48 +48,42 @@ public class Eag2012Frame extends JFrame {
     }
 
     public Eag2012Frame(Dimension dimension, ProfileListModel model) {
-        URL emptyEAGFileURL = getClass().getResource("/EAG_XML_XSL/Blank_EAG_2012.xml");
-        File emptyEAGFile = new File(emptyEAGFileURL.getPath());
+//        URL emptyEAGFileURL = getClass().getResource("/EAG_XML_XSL/Blank_EAG_2012.xml");
+        InputStream emptyEAGFileStream = getClass().getResourceAsStream("/EAG_XML_XSL/Blank_EAG_2012.xml");
+
+//        File emptyEAGFile = new File(emptyEAGFileURL.getPath());
 
         this.dimension = dimension;
         this.model = model;
-        createFrame(emptyEAGFile, true);
+        createFrame(emptyEAGFileStream, true);
     }
 
     public void createFrame(File eagFile, boolean isNew) {
-//        JFrame frame = new JFrame();
+        try {
+            createFrame(FileUtils.openInputStream(eagFile), isNew);
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+    }
 
+    public void createFrame(InputStream eagStream, boolean isNew) {
         Eag eag = null;
         try {
             JAXBContext jaxbContext = JAXBContext.newInstance(Eag.class);
 
             Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
-            eag = (Eag) jaxbUnmarshaller.unmarshal(eagFile);
-
-            //TESTS: CREATE AN EAG FILE FROM OBJECT
-//            eag.getControl().getMaintenanceAgency().getAgencyCode().setContent("TEST MARSHELLING");
-//            Marshaller jaxbMarshaller = jaxbContext.createMarshaller();
-//            jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
-//            jaxbMarshaller.setProperty("com.sun.xml.bind.namespacePrefixMapper", new EagNamespaceMapper());
-//            jaxbMarshaller.marshal(eag, new File("/Users/yoannmoranville/Work/APEnet/Projects/dpt-project/NA/trunk/output/APE_EAD_eag_35_MARSHALL.xml"));
-
-            //tests:
-//            eag.getArchguide().getDesc().getRepositories().setRepository(new ArrayList<Repository>());
-        } catch (JAXBException e) {
+            eag = (Eag) jaxbUnmarshaller.unmarshal(eagStream);
+            eagStream.close();
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
         buildPanel(eag, isNew);
         this.getContentPane().add(tabbedPane);
 
-//        FormLayout layout = init2();
         Dimension frameDim = new Dimension(((Double)(dimension.getWidth() * 0.95)).intValue(), ((Double)(dimension.getHeight() * 0.95)).intValue());
         this.setSize(frameDim);
         this.setPreferredSize(frameDim);
-//        this.setSize(new Dimension(1000, 1000));
-//        JPanel panel = new JPanel(layout);
-//        frame.getContentPane().add(panel);
-        
         this.pack();
         this.setVisible(true);
     }

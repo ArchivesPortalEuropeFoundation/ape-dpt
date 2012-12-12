@@ -141,7 +141,7 @@ public class EagAccessAndServicesPanel extends EagPanels {
 
         JButton addTravellingDirectionsBtn = new ButtonEag(labels.getString("eag2012.addTravellingDirectionsButton"));
         builder.add(addTravellingDirectionsBtn, cc.xy (1, rowNb));
-//        addTravellingDirectionsBtn.addActionListener(new AddTravellingDirectionsBtnAction());
+        addTravellingDirectionsBtn.addActionListener(new AddTravellingDirectionsBtnAction(eag, tabbedPane, model));
         setNextRow();
 
         builder.addLabel(labels.getString("eag2012.accessiblePublicLabel") + "*",    cc.xy (1, rowNb));
@@ -165,7 +165,7 @@ public class EagAccessAndServicesPanel extends EagPanels {
             if(last-- == 0) {
                 JButton addRestaccessBtn = new ButtonEag(labels.getString("eag2012.addRestaccessButton"));
                 builder.add(addRestaccessBtn, cc.xy (7, rowNb));
-//                addRestaccessBtn.addActionListener(new AddRestaccessBtnAction());
+                addRestaccessBtn.addActionListener(new AddRestaccessBtnAction(eag, tabbedPane, model));
             }
             setNextRow();
         }
@@ -208,7 +208,7 @@ public class EagAccessAndServicesPanel extends EagPanels {
             if(last-- == 0) {
                 JButton addAccessibilityBtn = new ButtonEag(labels.getString("eag2012.addAccessibilityButton"));
                 builder.add(addAccessibilityBtn, cc.xy (7, rowNb));
-//                addAccessibilityBtn.addActionListener(new AddAccessibilityBtnAction());
+                addAccessibilityBtn.addActionListener(new AddAccessibilityBtnAction(eag, tabbedPane, model));
             }
             setNextRow();
         }
@@ -278,7 +278,7 @@ public class EagAccessAndServicesPanel extends EagPanels {
         builder.add(computerplacesSearchroomTf,    cc.xy (3, rowNb));
         JButton addDescriptionBtn = new ButtonEag(labels.getString("eag2012.addDescriptionButton"));
         builder.add(addDescriptionBtn, cc.xy (5, rowNb));
-//        addDescriptionBtn.addActionListener(new AddDescriptionBtnAction());
+        addDescriptionBtn.addActionListener(new AddDescriptionBtnAction(eag, tabbedPane, model));
         setNextRow();
 
         if(searchroom.getMicrofilmPlaces() == null) {
@@ -317,7 +317,7 @@ public class EagAccessAndServicesPanel extends EagPanels {
         }
         JButton addReadersticketBtn = new ButtonEag(labels.getString("eag2012.addReadersticketButton"));
         builder.add(addReadersticketBtn, cc.xy (1, rowNb));
-//        addReadersticketBtn.addActionListener(new AddReadersticketBtnAction());
+        addReadersticketBtn.addActionListener(new AddReadersticketBtnAction(eag, tabbedPane, model));
         setNextRow();
 
         if(searchroom.getAdvancedOrders().size() == 0)
@@ -338,7 +338,7 @@ public class EagAccessAndServicesPanel extends EagPanels {
         }
         JButton addAdvancedordersBtn = new ButtonEag(labels.getString("eag2012.addAdvancedordersButton"));
         builder.add(addAdvancedordersBtn, cc.xy (1, rowNb));
-//        addAdvancedordersBtn.addActionListener(new AddAdvancedordersBtnAction());
+        addAdvancedordersBtn.addActionListener(new AddAdvancedordersBtnAction(eag, tabbedPane, model));
         setNextRow();
 
         if(searchroom.getResearchServices().size() == 0) {
@@ -350,6 +350,11 @@ public class EagAccessAndServicesPanel extends EagPanels {
         }
         researchServicesSearchroomTfs = new ArrayList<TextFieldWithLanguage>(searchroom.getResearchServices().size());
         for(ResearchServices researchServices : searchroom.getResearchServices()) {
+            if(researchServices.getDescriptiveNote() == null) {
+                DescriptiveNote descriptiveNote = new DescriptiveNote();
+                descriptiveNote.setP(new ArrayList<P>(){{ add(new P()); }});
+                researchServices.setDescriptiveNote(descriptiveNote);
+            }
             builder.addLabel(labels.getString("eag2012.researchServices"),    cc.xy (1, rowNb));
             TextFieldWithLanguage textFieldWithLanguage = new TextFieldWithLanguage(researchServices.getDescriptiveNote().getP().get(0).getContent(), researchServices.getDescriptiveNote().getLang());
             researchServicesSearchroomTfs.add(textFieldWithLanguage);
@@ -360,7 +365,7 @@ public class EagAccessAndServicesPanel extends EagPanels {
         }
         JButton addResearchservicesBtn = new ButtonEag(labels.getString("eag2012.addResearchservicesButton"));
         builder.add(addResearchservicesBtn, cc.xy (1, rowNb));
-//        addResearchservicesBtn.addActionListener(new AddResearchservicesBtnAction());
+        addResearchservicesBtn.addActionListener(new AddResearchservicesBtnAction(eag, tabbedPane, model));
         setNextRow();
 
 
@@ -528,6 +533,8 @@ public class EagAccessAndServicesPanel extends EagPanels {
         setNextRow();
 
         builder.addLabel(labels.getString("eag2012.microformServices"), cc.xy(1, rowNb));
+        if(reproductionser.getMicroformser() == null)
+            reproductionser.setMicroformser(new Microformser());
         if(Arrays.asList(yesOrNo).contains(reproductionser.getMicroformser().getQuestion())) {
             microformServicesCombo.setSelectedItem(reproductionser.getMicroformser().getQuestion());
         }
@@ -535,6 +542,8 @@ public class EagAccessAndServicesPanel extends EagPanels {
         setNextRow();
 
         builder.addLabel(labels.getString("eag2012.photographServices"), cc.xy(1, rowNb));
+        if(reproductionser.getPhotographser() == null)
+            reproductionser.setPhotographser(new Photographser());
         if(Arrays.asList(yesOrNo).contains(reproductionser.getPhotographser().getQuestion())) {
             photographServicesCombo.setSelectedItem(reproductionser.getPhotographser().getQuestion());
         }
@@ -542,6 +551,8 @@ public class EagAccessAndServicesPanel extends EagPanels {
         setNextRow();
 
         builder.addLabel(labels.getString("eag2012.digitalServices"), cc.xy(1, rowNb));
+        if(reproductionser.getDigitalser() == null)
+            reproductionser.setDigitalser(new Digitalser());
         if(Arrays.asList(yesOrNo).contains(reproductionser.getDigitalser().getQuestion())) {
             digitalServicesCombo.setSelectedItem(reproductionser.getDigitalser().getQuestion());
         }
@@ -549,6 +560,8 @@ public class EagAccessAndServicesPanel extends EagPanels {
         setNextRow();
 
         builder.addLabel(labels.getString("eag2012.photocopyServices"), cc.xy(1, rowNb));
+        if(reproductionser.getPhotocopyser() == null)
+            reproductionser.setPhotocopyser(new Photocopyser());
         if(Arrays.asList(yesOrNo).contains(reproductionser.getPhotocopyser().getQuestion())) {
             photocopyServicesCombo.setSelectedItem(reproductionser.getPhotocopyser().getQuestion());
         }
@@ -579,15 +592,17 @@ public class EagAccessAndServicesPanel extends EagPanels {
         setNextRow();
 
         if(recreationalServices.getExhibition().size() == 0) {
-            DescriptiveNote descriptiveNote = new DescriptiveNote();
-            descriptiveNote.getP().add(new P());
-            Exhibition exhibition = new Exhibition();
-            exhibition.setDescriptiveNote(descriptiveNote);
-            exhibition.setWebpage(new Webpage());
-            recreationalServices.getExhibition().add(exhibition);
+            recreationalServices.getExhibition().add(new Exhibition());
         }
         exhibitionTfs = new ArrayList<TextFieldWithLanguage>(recreationalServices.getExhibition().size());
         for(Exhibition exhibition : recreationalServices.getExhibition()) {
+            if(exhibition.getDescriptiveNote() == null) {
+                DescriptiveNote descriptiveNote = new DescriptiveNote();
+                descriptiveNote.getP().add(new P());
+                exhibition.setDescriptiveNote(descriptiveNote);
+                exhibition.setWebpage(new Webpage());
+            }
+
             builder.addLabel(labels.getString("eag2012.exhibition"),    cc.xy (1, rowNb));
             TextFieldWithLanguage exhibitionTf = new TextFieldWithLanguage(exhibition.getDescriptiveNote().getP().get(0).getContent(), exhibition.getDescriptiveNote().getLang(), exhibition.getWebpage().getHref(), exhibition.getWebpage().getContent());
             exhibitionTfs.add(exhibitionTf);
@@ -604,19 +619,20 @@ public class EagAccessAndServicesPanel extends EagPanels {
         }
         JButton addExhibitionsBtn = new ButtonEag(labels.getString("eag2012.addExhibitionsButton"));
         builder.add(addExhibitionsBtn, cc.xy (1, rowNb));
-//        addExhibitionsBtn.addActionListener(new AddExhibitionsBtnAction());
+        addExhibitionsBtn.addActionListener(new AddExhibitionsBtnAction(eag, tabbedPane, model));
         setNextRow();
 
         if(recreationalServices.getToursSessions().size() == 0) {
-            DescriptiveNote descriptiveNote = new DescriptiveNote();
-            descriptiveNote.getP().add(new P());
-            ToursSessions toursSessions = new ToursSessions();
-            toursSessions.setDescriptiveNote(descriptiveNote);
-            toursSessions.setWebpage(new Webpage());
-            recreationalServices.getToursSessions().add(toursSessions);
+            recreationalServices.getToursSessions().add(new ToursSessions());
         }
         toursAndSessionsTfs = new ArrayList<TextFieldWithLanguage>(recreationalServices.getToursSessions().size());
         for(ToursSessions toursSessions : recreationalServices.getToursSessions()) {
+            if(toursSessions.getDescriptiveNote() == null) {
+                DescriptiveNote descriptiveNote = new DescriptiveNote();
+                descriptiveNote.getP().add(new P());
+                toursSessions.setDescriptiveNote(descriptiveNote);
+                toursSessions.setWebpage(new Webpage());
+            }
             builder.addLabel(labels.getString("eag2012.toursAndSessions"),    cc.xy (1, rowNb));
             TextFieldWithLanguage textFieldWithLanguage = new TextFieldWithLanguage(toursSessions.getDescriptiveNote().getP().get(0).getContent(), toursSessions.getDescriptiveNote().getLang(), toursSessions.getWebpage().getHref(), toursSessions.getWebpage().getContent());
             toursAndSessionsTfs.add(textFieldWithLanguage);
@@ -632,19 +648,20 @@ public class EagAccessAndServicesPanel extends EagPanels {
         }
         JButton addToursSessionsBtn = new ButtonEag(labels.getString("eag2012.addToursSessionsButton"));
         builder.add(addToursSessionsBtn, cc.xy (1, rowNb));
-//        addToursSessionsBtn.addActionListener(new AddToursSessionsBtnAction());
+        addToursSessionsBtn.addActionListener(new AddToursSessionsBtnAction(eag, tabbedPane, model));
         setNextRow();
 
         if(recreationalServices.getOtherServices().size() == 0) {
-            DescriptiveNote descriptiveNote = new DescriptiveNote();
-            descriptiveNote.getP().add(new P());
-            OtherServices otherServices = new OtherServices();
-            otherServices.setDescriptiveNote(descriptiveNote);
-            otherServices.setWebpage(new Webpage());
-            recreationalServices.getOtherServices().add(otherServices);
+            recreationalServices.getOtherServices().add(new OtherServices());
         }
         otherServicesTfs = new ArrayList<TextFieldWithLanguage>(recreationalServices.getOtherServices().size());
         for(OtherServices otherServices : recreationalServices.getOtherServices()) {
+            if(otherServices.getDescriptiveNote() == null) {
+                DescriptiveNote descriptiveNote = new DescriptiveNote();
+                descriptiveNote.getP().add(new P());
+                otherServices.setDescriptiveNote(descriptiveNote);
+                otherServices.setWebpage(new Webpage());
+            }
             builder.addLabel(labels.getString("eag2012.otherServices"),    cc.xy (1, rowNb));
             TextFieldWithLanguage otherServicesTf = new TextFieldWithLanguage(otherServices.getDescriptiveNote().getP().get(0).getContent(), otherServices.getDescriptiveNote().getLang(), otherServices.getWebpage().getHref(), otherServices.getWebpage().getContent());
             otherServicesTfs.add(otherServicesTf);
@@ -660,7 +677,7 @@ public class EagAccessAndServicesPanel extends EagPanels {
         }
         JButton addOtherServicesBtn = new ButtonEag(labels.getString("eag2012.addOtherServicesButton"));
         builder.add(addOtherServicesBtn, cc.xy (1, rowNb));
-//        addOtherServicesBtn.addActionListener(new AddOtherServicesBtnAction());
+        addOtherServicesBtn.addActionListener(new AddOtherServicesBtnAction(eag, tabbedPane, model));
         setNextRow();
 
 
@@ -685,6 +702,160 @@ public class EagAccessAndServicesPanel extends EagPanels {
 
         return builder.getPanel();
     }
+
+    public class AddTravellingDirectionsBtnAction extends UpdateEagObject {
+        AddTravellingDirectionsBtnAction(Eag eag, JTabbedPane tabbedPane, ProfileListModel model) {
+            super(eag, tabbedPane, model);
+        }
+
+        @Override
+        public void actionPerformed(ActionEvent actionEvent) {
+            try {
+                super.updateEagObject();
+            } catch (Eag2012FormException e) {
+            }
+            eag.getArchguide().getDesc().getRepositories().getRepository().get(0).getDirections().add(new Directions());
+            reloadTabbedPanel(new EagAccessAndServicesPanel(eag, tabbedPane, eag2012Frame, model).buildEditorPanel(errors), 0);
+        }
+    }
+    public class AddRestaccessBtnAction extends UpdateEagObject {
+        AddRestaccessBtnAction(Eag eag, JTabbedPane tabbedPane, ProfileListModel model) {
+            super(eag, tabbedPane, model);
+        }
+
+        @Override
+        public void actionPerformed(ActionEvent actionEvent) {
+            try {
+                super.updateEagObject();
+            } catch (Eag2012FormException e) {
+            }
+            eag.getArchguide().getDesc().getRepositories().getRepository().get(0).getAccess().getRestaccess().add(new Restaccess());
+            reloadTabbedPanel(new EagAccessAndServicesPanel(eag, tabbedPane, eag2012Frame, model).buildEditorPanel(errors), 0);
+        }
+    }
+    public class AddAccessibilityBtnAction extends UpdateEagObject {
+        AddAccessibilityBtnAction(Eag eag, JTabbedPane tabbedPane, ProfileListModel model) {
+            super(eag, tabbedPane, model);
+        }
+
+        @Override
+        public void actionPerformed(ActionEvent actionEvent) {
+            try {
+                super.updateEagObject();
+            } catch (Eag2012FormException e) {
+            }
+            eag.getArchguide().getDesc().getRepositories().getRepository().get(0).getAccessibility().add(new Accessibility());
+            reloadTabbedPanel(new EagAccessAndServicesPanel(eag, tabbedPane, eag2012Frame, model).buildEditorPanel(errors), 0);
+        }
+    }
+    public class AddDescriptionBtnAction extends UpdateEagObject {
+        AddDescriptionBtnAction(Eag eag, JTabbedPane tabbedPane, ProfileListModel model) {
+            super(eag, tabbedPane, model);
+        }
+
+        @Override
+        public void actionPerformed(ActionEvent actionEvent) {
+            try {
+                super.updateEagObject();
+            } catch (Eag2012FormException e) {
+            }
+            DescriptiveNote descriptiveNote = new DescriptiveNote();
+            descriptiveNote.setP(new ArrayList<P>(){{add(new P());}});
+            eag.getArchguide().getDesc().getRepositories().getRepository().get(0).getServices().getSearchroom().getComputerPlaces().setDescriptiveNote(descriptiveNote);
+            reloadTabbedPanel(new EagAccessAndServicesPanel(eag, tabbedPane, eag2012Frame, model).buildEditorPanel(errors), 0);
+        }
+    }
+    public class AddReadersticketBtnAction extends UpdateEagObject {
+        AddReadersticketBtnAction(Eag eag, JTabbedPane tabbedPane, ProfileListModel model) {
+            super(eag, tabbedPane, model);
+        }
+
+        @Override
+        public void actionPerformed(ActionEvent actionEvent) {
+            try {
+                super.updateEagObject();
+            } catch (Eag2012FormException e) {
+            }
+            eag.getArchguide().getDesc().getRepositories().getRepository().get(0).getServices().getSearchroom().getReadersTicket().add(new ReadersTicket());
+            reloadTabbedPanel(new EagAccessAndServicesPanel(eag, tabbedPane, eag2012Frame, model).buildEditorPanel(errors), 0);
+        }
+    }
+    public class AddAdvancedordersBtnAction extends UpdateEagObject {
+        AddAdvancedordersBtnAction(Eag eag, JTabbedPane tabbedPane, ProfileListModel model) {
+            super(eag, tabbedPane, model);
+        }
+
+        @Override
+        public void actionPerformed(ActionEvent actionEvent) {
+            try {
+                super.updateEagObject();
+            } catch (Eag2012FormException e) {
+            }
+            eag.getArchguide().getDesc().getRepositories().getRepository().get(0).getServices().getSearchroom().getAdvancedOrders().add(new AdvancedOrders());
+            reloadTabbedPanel(new EagAccessAndServicesPanel(eag, tabbedPane, eag2012Frame, model).buildEditorPanel(errors), 0);
+        }
+    }
+    public class AddResearchservicesBtnAction extends UpdateEagObject {
+        AddResearchservicesBtnAction(Eag eag, JTabbedPane tabbedPane, ProfileListModel model) {
+            super(eag, tabbedPane, model);
+        }
+
+        @Override
+        public void actionPerformed(ActionEvent actionEvent) {
+            try {
+                super.updateEagObject();
+            } catch (Eag2012FormException e) {
+            }
+            eag.getArchguide().getDesc().getRepositories().getRepository().get(0).getServices().getSearchroom().getResearchServices().add(new ResearchServices());
+            reloadTabbedPanel(new EagAccessAndServicesPanel(eag, tabbedPane, eag2012Frame, model).buildEditorPanel(errors), 0);
+        }
+    }
+    public class AddExhibitionsBtnAction extends UpdateEagObject {
+        AddExhibitionsBtnAction(Eag eag, JTabbedPane tabbedPane, ProfileListModel model) {
+            super(eag, tabbedPane, model);
+        }
+
+        @Override
+        public void actionPerformed(ActionEvent actionEvent) {
+            try {
+                super.updateEagObject();
+            } catch (Eag2012FormException e) {
+            }
+            eag.getArchguide().getDesc().getRepositories().getRepository().get(0).getServices().getRecreationalServices().getExhibition().add(new Exhibition());
+            reloadTabbedPanel(new EagAccessAndServicesPanel(eag, tabbedPane, eag2012Frame, model).buildEditorPanel(errors), 0);
+        }
+    }
+    public class AddToursSessionsBtnAction extends UpdateEagObject {
+        AddToursSessionsBtnAction(Eag eag, JTabbedPane tabbedPane, ProfileListModel model) {
+            super(eag, tabbedPane, model);
+        }
+
+        @Override
+        public void actionPerformed(ActionEvent actionEvent) {
+            try {
+                super.updateEagObject();
+            } catch (Eag2012FormException e) {
+            }
+            eag.getArchguide().getDesc().getRepositories().getRepository().get(0).getServices().getRecreationalServices().getToursSessions().add(new ToursSessions());
+            reloadTabbedPanel(new EagAccessAndServicesPanel(eag, tabbedPane, eag2012Frame, model).buildEditorPanel(errors), 0);
+        }
+    }
+    public class AddOtherServicesBtnAction extends UpdateEagObject {
+        AddOtherServicesBtnAction(Eag eag, JTabbedPane tabbedPane, ProfileListModel model) {
+            super(eag, tabbedPane, model);
+        }
+
+        @Override
+        public void actionPerformed(ActionEvent actionEvent) {
+            try {
+                super.updateEagObject();
+            } catch (Eag2012FormException e) {
+            }
+            eag.getArchguide().getDesc().getRepositories().getRepository().get(0).getServices().getRecreationalServices().getOtherServices().add(new OtherServices());
+            reloadTabbedPanel(new EagAccessAndServicesPanel(eag, tabbedPane, eag2012Frame, model).buildEditorPanel(errors), 0);
+        }
+    }
+
 
     public class SaveBtnAction extends UpdateEagObject {
         SaveBtnAction(Eag eag, JTabbedPane tabbedPane, ProfileListModel model) {
@@ -741,8 +912,6 @@ public class EagAccessAndServicesPanel extends EagPanels {
             errors = new ArrayList<String>();
 
             boolean hasChanged = false;
-
-            //todo here
 
             if(eag.getArchguide().getDesc().getRepositories().getRepository().size() == 1) { //todo: BECAUSE FOR NOW ONLY ONE REPOSITORY!!!!
                 Repository repository = eag.getArchguide().getDesc().getRepositories().getRepository().get(0);
@@ -812,6 +981,8 @@ public class EagAccessAndServicesPanel extends EagPanels {
                     }
                 }
 
+                if(repository.getAccessibility() == null)
+                    repository.setAccessibility(new ArrayList<Accessibility>(){{ add(new Accessibility()); }});
                 repository.getAccessibility().get(0).setQuestion((String) facilitiesForDisabledCombo.getSelectedItem());
 
                 if(accessibilityTfs.size() > 0) {
@@ -899,8 +1070,13 @@ public class EagAccessAndServicesPanel extends EagPanels {
                     for(TextFieldWithLanguage textFieldWithLanguage : researchServicesSearchroomTfs) {
                         if(StringUtils.isNotEmpty(textFieldWithLanguage.getTextValue())) {
                             ResearchServices researchServices = new ResearchServices();
-                            researchServices.getDescriptiveNote().setLang(textFieldWithLanguage.getLanguage());
-                            researchServices.getDescriptiveNote().getP().get(0).setContent(textFieldWithLanguage.getTextValue());
+                            DescriptiveNote descriptiveNote = new DescriptiveNote();
+                            descriptiveNote.setLang(textFieldWithLanguage.getLanguage());
+                            descriptiveNote.setP(new ArrayList<P>() {{
+                                add(new P());
+                            }});
+                            descriptiveNote.getP().get(0).setContent(textFieldWithLanguage.getTextValue());
+                            researchServices.setDescriptiveNote(descriptiveNote);
                             searchroom.getResearchServices().add(researchServices);
                             hasChanged = true;
                         }
@@ -996,9 +1172,13 @@ public class EagAccessAndServicesPanel extends EagPanels {
                     for(TextFieldWithLanguage textFieldWithLanguage : exhibitionTfs) {
                         if(StringUtils.isNotEmpty(textFieldWithLanguage.getTextValue())) {
                             Exhibition exhibition = new Exhibition();
+                            DescriptiveNote descriptiveNote = new DescriptiveNote();
+                            descriptiveNote.setP(new ArrayList<P>(){{ add(new P()); }});
+                            exhibition.setDescriptiveNote(descriptiveNote);
                             exhibition.getDescriptiveNote().setLang(textFieldWithLanguage.getLanguage());
                             exhibition.getDescriptiveNote().getP().get(0).setContent(textFieldWithLanguage.getTextValue());
                             if(StringUtils.isNotEmpty(textFieldWithLanguage.getExtraValue())) {
+                                exhibition.setWebpage(new Webpage());
                                 exhibition.getWebpage().setHref(textFieldWithLanguage.getExtraValue());
                                 exhibition.getWebpage().setContent(textFieldWithLanguage.getSecondExtraValue());
                             }
@@ -1013,9 +1193,13 @@ public class EagAccessAndServicesPanel extends EagPanels {
                     for(TextFieldWithLanguage textFieldWithLanguage : toursAndSessionsTfs) {
                         if(StringUtils.isNotEmpty(textFieldWithLanguage.getTextValue())) {
                             ToursSessions toursSessions = new ToursSessions();
+                            DescriptiveNote descriptiveNote = new DescriptiveNote();
+                            descriptiveNote.setP(new ArrayList<P>(){{ add(new P()); }});
+                            toursSessions.setDescriptiveNote(descriptiveNote);
                             toursSessions.getDescriptiveNote().setLang(textFieldWithLanguage.getLanguage());
                             toursSessions.getDescriptiveNote().getP().get(0).setContent(textFieldWithLanguage.getTextValue());
                             if(StringUtils.isNotEmpty(textFieldWithLanguage.getExtraValue())) {
+                                toursSessions.setWebpage(new Webpage());
                                 toursSessions.getWebpage().setHref(textFieldWithLanguage.getExtraValue());
                                 toursSessions.getWebpage().setContent(textFieldWithLanguage.getSecondExtraValue());
                             }
@@ -1027,12 +1211,16 @@ public class EagAccessAndServicesPanel extends EagPanels {
 
                 if(otherServicesTfs.size() > 0) {
                     recreationalServices.getOtherServices().clear();
-                    for(TextFieldWithLanguage textFieldWithLanguage : exhibitionTfs) {
+                    for(TextFieldWithLanguage textFieldWithLanguage : otherServicesTfs) {
                         if(StringUtils.isNotEmpty(textFieldWithLanguage.getTextValue())) {
                             OtherServices otherServices = new OtherServices();
+                            DescriptiveNote descriptiveNote = new DescriptiveNote();
+                            descriptiveNote.setP(new ArrayList<P>(){{ add(new P()); }});
+                            otherServices.setDescriptiveNote(descriptiveNote);
                             otherServices.getDescriptiveNote().setLang(textFieldWithLanguage.getLanguage());
                             otherServices.getDescriptiveNote().getP().get(0).setContent(textFieldWithLanguage.getTextValue());
                             if(StringUtils.isNotEmpty(textFieldWithLanguage.getExtraValue())) {
+                                otherServices.setWebpage(new Webpage());
                                 otherServices.getWebpage().setHref(textFieldWithLanguage.getExtraValue());
                                 otherServices.getWebpage().setContent(textFieldWithLanguage.getSecondExtraValue());
                             }

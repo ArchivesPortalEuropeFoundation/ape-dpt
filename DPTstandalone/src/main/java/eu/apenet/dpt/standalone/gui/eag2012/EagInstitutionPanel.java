@@ -104,7 +104,7 @@ public class EagInstitutionPanel extends EagPanels {
         EventDateTime eventDateTime = new EventDateTime();
         Date date = new Date();
         SimpleDateFormat format = new SimpleDateFormat("yyyy.MM.dd");
-        SimpleDateFormat formatStandard = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss"); //2099-12-31T23:59:59
+        SimpleDateFormat formatStandard = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
         eventDateTime.setContent(format.format(date));
         eventDateTime.setStandardDateTime(formatStandard.format(date));
         maintenanceEvent.setEventDateTime(eventDateTime);
@@ -152,7 +152,6 @@ public class EagInstitutionPanel extends EagPanels {
         }
         JButton addNewOtherIdentifierBtn = new ButtonEag(labels.getString("eag2012.addOtherIdentifier"));
         addNewOtherIdentifierBtn.addActionListener(new AddOtherIdentifierAction(eag, tabbedPane, model));
-//        addNewOtherIdentifierBtn.setBackground(new Color(97, 201, 237));
         builder.add(addNewOtherIdentifierBtn, cc.xy(7, rowNb));
         setNextRow();
 

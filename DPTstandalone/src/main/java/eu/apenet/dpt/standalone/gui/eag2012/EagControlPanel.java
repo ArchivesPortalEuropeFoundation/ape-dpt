@@ -51,7 +51,6 @@ public class EagControlPanel extends EagPanels {
 
         rowNb = 1;
 
-        //todo here
         builder.addLabel(labels.getString("eag2012.descriptionIdentifier") + "*", cc.xy(1, rowNb));
         builder.addLabel(eag.getControl().getRecordId().getValue(), cc.xy(3, rowNb));
         setNextRow();
@@ -76,6 +75,7 @@ public class EagControlPanel extends EagPanels {
         builder.addSeparator(labels.getString("eag2012.usedLanguages"), cc.xyw(1, rowNb, 3));
         JButton addLanguagesBtn = new ButtonEag(labels.getString("eag2012.addLanguagesButton"));
         builder.add(addLanguagesBtn, cc.xy(5, rowNb));
+        addLanguagesBtn.addActionListener(new AddLanguagesBtnAction(eag, tabbedPane, model));
         setNextRow();
 
 
@@ -95,9 +95,15 @@ public class EagControlPanel extends EagPanels {
                 builder.addLabel(labels.getString("eag2012.script") + "*",    cc.xy (5, rowNb));
             else
                 builder.addLabel(labels.getString("eag2012.script"),    cc.xy (5, rowNb));
-            builder.add(languageWithScript.getScriptBox(),                     cc.xy (7, rowNb));
+            builder.add(languageWithScript.getScriptBox(), cc.xy(7, rowNb));
             setNextRow();
         }
+
+        builder.addSeparator(labels.getString("eag2012.usedConventions"), cc.xyw(1, rowNb, 3));
+        JButton addConventionBtn = new ButtonEag(labels.getString("eag2012.addConventionButton"));
+        builder.add(addConventionBtn, cc.xy(5, rowNb));
+        addConventionBtn.addActionListener(new AddConventionBtnAction(eag, tabbedPane, model));
+        setNextRow();
 
         if(eag.getControl().getConventionDeclaration().size() == 0)
             eag.getControl().getConventionDeclaration().add(new ConventionDeclaration());
@@ -133,6 +139,44 @@ public class EagControlPanel extends EagPanels {
         }
 
         return builder.getPanel();
+    }
+
+    public class AddLanguagesBtnAction extends UpdateEagObject {
+        AddLanguagesBtnAction(Eag eag, JTabbedPane tabbedPane, ProfileListModel model) {
+            super(eag, tabbedPane, model);
+        }
+
+        @Override
+        public void actionPerformed(ActionEvent actionEvent) {
+            try {
+                super.updateEagObject();
+            } catch (Eag2012FormException e) {
+            }
+            LanguageDeclaration languageDeclaration = new LanguageDeclaration();
+            languageDeclaration.setLanguage(new Language());
+            languageDeclaration.setScript(new Script());
+            eag.getControl().getLanguageDeclarations().getLanguageDeclaration().add(languageDeclaration);
+            reloadTabbedPanel(new EagControlPanel(eag, tabbedPane, eag2012Frame, model).buildEditorPanel(errors), 0);
+        }
+    }
+
+    public class AddConventionBtnAction extends UpdateEagObject {
+        AddConventionBtnAction(Eag eag, JTabbedPane tabbedPane, ProfileListModel model) {
+            super(eag, tabbedPane, model);
+        }
+
+        @Override
+        public void actionPerformed(ActionEvent actionEvent) {
+            try {
+                super.updateEagObject();
+            } catch (Eag2012FormException e) {
+            }
+            ConventionDeclaration conventionDeclaration = new ConventionDeclaration();
+            conventionDeclaration.setAbbreviation(new Abbreviation());
+            conventionDeclaration.getCitation().add(new Citation());
+            eag.getControl().getConventionDeclaration().add(conventionDeclaration);
+            reloadTabbedPanel(new EagControlPanel(eag, tabbedPane, eag2012Frame, model).buildEditorPanel(errors), 0);
+        }
     }
 
     public class SaveBtnAction extends UpdateEagObject {

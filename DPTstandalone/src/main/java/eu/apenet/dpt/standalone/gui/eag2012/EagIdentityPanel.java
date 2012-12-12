@@ -175,9 +175,6 @@ public class EagIdentityPanel extends EagPanels {
         addNewNonpreNameInstitutionBtn.addActionListener(new AddNonpreNameInstitutionAction(eag, tabbedPane, model));
         builder.add(addNewNonpreNameInstitutionBtn, cc.xy(1, rowNb));
         setNextRow();
-//        builder.addLabel(labels.getString("eag2012.languageLabel"),             cc.xy (5, rowNb));
-//        builder.add(new JComboBox(),                                            cc.xy (7, rowNb));
-//        setNextRow();
 
         builder.addLabel(labels.getString("eag2012.selectTypeInstitutionLabel"),    cc.xy (1, rowNb));
         if(eag.getArchguide().getIdentity().getRepositoryType() != null && eag.getArchguide().getIdentity().getRepositoryType().size() > 0) {

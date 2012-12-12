@@ -118,7 +118,8 @@ public class EagDescriptionPanel extends EagPanels {
         builder.addSeparator(labels.getString("eag2012.administrativeStructure"), cc.xy(1, rowNb));
         setNextRow();
 
-
+        if(repository.getAdminhierarchy() == null)
+            repository.setAdminhierarchy(new Adminhierarchy());
         if(repository.getAdminhierarchy().getAdminunit().size() == 0)
             repository.getAdminhierarchy().getAdminunit().add(new Adminunit());
         unitAdministrativeStructureTfs = new ArrayList<TextFieldWithLanguage>(repository.getAdminhierarchy().getAdminunit().size());
@@ -133,12 +134,15 @@ public class EagDescriptionPanel extends EagPanels {
         }
         JButton addUnitAdministrativeStructureBtn = new ButtonEag(labels.getString("eag2012.addUnitAdministrativeStructureButton"));
         builder.add(addUnitAdministrativeStructureBtn, cc.xy (1, rowNb));
-//        addUnitAdministrativeStructureBtn.addActionListener(new AddUnitAdministrativeStructureBtnAction());
+        addUnitAdministrativeStructureBtn.addActionListener(new AddUnitAdministrativeStructureBtnAction(eag, tabbedPane, model));
         setNextRow();
 
         builder.addSeparator(labels.getString("eag2012.buildingDescription"), cc.xy(1, rowNb));
         setNextRow();
 
+        if(repository.getBuildinginfo() == null) {
+            repository.setBuildinginfo(new Buildinginfo());
+        }
         if(repository.getBuildinginfo().getBuilding() == null) {
             DescriptiveNote descriptiveNote = new DescriptiveNote();
             descriptiveNote.getP().add(new P());
@@ -245,6 +249,22 @@ public class EagDescriptionPanel extends EagPanels {
         return builder.getPanel();
     }
 
+    public class AddUnitAdministrativeStructureBtnAction extends UpdateEagObject {
+        AddUnitAdministrativeStructureBtnAction(Eag eag, JTabbedPane tabbedPane, ProfileListModel model) {
+            super(eag, tabbedPane, model);
+        }
+
+        @Override
+        public void actionPerformed(ActionEvent actionEvent) {
+            try {
+                super.updateEagObject();
+            } catch (Eag2012FormException e) {
+            }
+            eag.getArchguide().getDesc().getRepositories().getRepository().get(0).getAdminhierarchy().getAdminunit().add(new Adminunit());
+            reloadTabbedPanel(new EagDescriptionPanel(eag, tabbedPane, eag2012Frame, model).buildEditorPanel(errors), 0);
+        }
+    }
+
     public class SaveBtnAction extends UpdateEagObject {
         SaveBtnAction(Eag eag, JTabbedPane tabbedPane, ProfileListModel model) {
             super(eag, tabbedPane, model);
@@ -301,7 +321,6 @@ public class EagDescriptionPanel extends EagPanels {
 
             boolean hasChanged = false;
 
-            //todo here
             if(eag.getArchguide().getDesc().getRepositories().getRepository().size() == 1) { //todo: BECAUSE FOR NOW ONLY ONE REPOSITORY!!!!
                 Repository repository = eag.getArchguide().getDesc().getRepositories().getRepository().get(0);
 
