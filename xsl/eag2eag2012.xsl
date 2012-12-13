@@ -628,6 +628,7 @@
             </searchroom>
             <xsl:if test="exists($techservices/*:library/*:monographicpub or $techservices/*:library/*:serialpub)">
                 <library>
+                    <xsl:attribute name="question" select="$techservices/*:library/@question"/>
                     <xsl:if test="exists($techservices/*:library/*:monographicpub)">
                         <monographicpub>
                             <num>
