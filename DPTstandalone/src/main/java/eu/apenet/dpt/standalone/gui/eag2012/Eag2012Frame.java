@@ -35,7 +35,7 @@ public class Eag2012Frame extends JFrame {
                 InputStream is = FileUtils.openInputStream(eagFile);
                 File tempEagFile = new File(Utilities.TEMP_DIR + "tmp_" + eagFile.getName());
                 LOG.info(tempEagFile.getAbsolutePath());
-                File xslFile = new File(Utilities.CONFIG_DIR + "eag2eag2012.xsl");
+                File xslFile = new File(Utilities.SYSTEM_DIR + "eag2eag2012.xsl");
                 TransformationTool.createTransformation(is, tempEagFile, xslFile, null, true, true, "", true, null);
                 eagFile = tempEagFile;
             } catch (Exception e) {
