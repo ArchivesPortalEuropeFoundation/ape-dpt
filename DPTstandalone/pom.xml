@@ -90,6 +90,7 @@
 										<copy verbose="true" file="../xsl/system/levels.xsl" todir="target/production/xsl/system/" />
 										<copy verbose="true" file="../xsl/system/before.xsl" todir="target/production/xsl/system/" />
 										<copy verbose="true" file="../xsl/system/languages.xml" todir="target/production/xsl/system/" />
+										<copy verbose="true" file="../xsl/system/eag2eag2012.xsl" todir="target/production/xsl/system/" />
 										<copy file="target/APE_data_preparation_tool-jar-with-dependencies.jar" todir="target/production/" verbose="true" />
 										<zip destfile="target/APE_data_preparation_tool_${project.version}.zip" basedir="target/production/" />
 										<delete dir="target/production/" />
@@ -185,6 +186,10 @@
             <groupId>com.jgoodies</groupId>
             <artifactId>commons</artifactId>
         </dependency>
+        <!--<dependency>-->
+            <!--<groupId>javax.xml.bind</groupId>-->
+            <!--<artifactId>jaxb-api</artifactId>-->
+        <!--</dependency>-->
         <dependency>
             <groupId>com.sun.xml.bind</groupId>
             <artifactId>jaxb-impl</artifactId>
