@@ -17,19 +17,56 @@ import java.util.ResourceBundle;
 public class ProgressFrame extends JFrame {
     private List<ApeProgressBar> apeProgressBars;
     private JPanel progressPanel;
-    private JButton abort;
+//    private JPanel progressBar1Pane;
+//    private JPanel progressBar2Pane;
+    private ApeProgressBar progressBarBatch;
+    private ApeProgressBar progressBarSingle;
 
-    public ProgressFrame(ResourceBundle labels, Component parent) {
+
+    public ProgressFrame(ResourceBundle labels, Component parent, boolean isBatch, ApexActionListener actionListener) {
         super(labels.getString("progressTrans"));
         setLayout(new GridLayout(2, 1));
 
-        abort = new JButton(labels.getString("abort"));
-        abort.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent actionEvent) {
-                //Abort the current action
-            }
-        });
-        progressPanel = new JPanel(new BorderLayout());
+        final String abortingStr = labels.getString("aborting");
+        progressPanel = new JPanel(new GridLayout(3, 1));
+
+        apeProgressBars = new ArrayList<ApeProgressBar>();
+
+        JButton abort = null;
+        if(isBatch) {
+            final ApexActionListener apexActionListener = actionListener;
+            abort = new JButton(labels.getString("abort"));
+            abort.addActionListener(new ActionListener() {
+                public void actionPerformed(ActionEvent actionEvent) {
+                    //Abort the current action
+//                    continueLoop = false;
+                    //Write that we aborted the action
+//                    resultArea.setText(abortingStr);
+                    apexActionListener.abort();
+                }
+            });
+
+//            progressBar1Pane = new JPanel(new BorderLayout());
+//            progressBar1Pane.setBorder(BorderFactory.createBevelBorder(1));
+//            progressBar2Pane = new JPanel(new BorderLayout());
+//            progressBar2Pane.setBorder(BorderFactory.createBevelBorder(1));
+
+            progressBarBatch = new ApeProgressBar(progressPanel.getWidth());
+            progressPanel.add(progressBarBatch);
+            apeProgressBars.add(progressBarBatch);
+        }
+
+        progressBarSingle = new ApeProgressBar(progressPanel.getWidth());
+        progressPanel.add(progressBarSingle);
+
+        if(isBatch) {
+            JPanel buttonPanel = new JPanel(new GridLayout(1, 3));
+            buttonPanel.setBorder(BorderFactory.createBevelBorder(1));
+            buttonPanel.add(new JLabel(""));
+            buttonPanel.add(abort);
+            buttonPanel.add(new JLabel(""));
+            progressPanel.add(buttonPanel);
+        }
 
         int width = parent.getWidth();
         int height = parent.getHeight();
@@ -37,7 +74,6 @@ public class ProgressFrame extends JFrame {
         setLocation((width - width/2) / 2, (height - getHeight()) / 2);
 
         getContentPane().add(progressPanel);
-        progressPanel.add(abort, BorderLayout.SOUTH);
 
         setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
         pack();
@@ -56,18 +92,17 @@ public class ProgressFrame extends JFrame {
         dispose();
     }
 
-    public ApeProgressBar addProgressBarToPanel() {
-        ApeProgressBar progressBar = new ApeProgressBar(progressPanel.getWidth());
-        progressPanel.add(progressBar, BorderLayout.CENTER);
-        if(apeProgressBars == null)
-            apeProgressBars = new ArrayList<ApeProgressBar>();
-        apeProgressBars.add(progressBar);
-        return progressBar;
+    public ApeProgressBar getProgressBarBatch() {
+        return progressBarBatch;
+    }
+
+    public ApeProgressBar getProgressBarSingle() {
+        return progressBarSingle;
     }
 
     public class ApeProgressBar extends JProgressBar {
         public ApeProgressBar(int widthParent) {
-            setPreferredSize(new Dimension(widthParent *9/10, 20));
+            setPreferredSize(new Dimension(widthParent *9/10, 30));
             setIndeterminate(true);
             setStringPainted(true);
         }

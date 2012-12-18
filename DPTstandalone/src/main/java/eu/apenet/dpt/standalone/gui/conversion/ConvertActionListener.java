@@ -7,6 +7,7 @@ import eu.apenet.dpt.utils.service.TransformationTool;
 import eu.apenet.dpt.utils.service.stax.CheckXslEadidVariable;
 import eu.apenet.dpt.utils.service.stax.StaxTransformationTool;
 import eu.apenet.dpt.utils.util.CountCLevels;
+import eu.apenet.dpt.utils.util.XmlChecker;
 import eu.apenet.dpt.utils.util.Xsd_enum;
 import eu.apenet.dpt.utils.util.extendxsl.CounterCLevelCall;
 import net.sf.saxon.s9api.SaxonApiException;
@@ -45,10 +46,19 @@ public class ConvertActionListener implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         Map<String, FileInstance> fileInstances = dataPreparationToolGUI.getFileInstances();
         JList list = dataPreparationToolGUI.getList();
-        apePanel.getApeTabbedPane().setConversionErrorText(labels.getString("conversionBegun"));
         dataPreparationToolGUI.disableAllBtnAndItems();
         File file = (File)list.getSelectedValue();
         FileInstance fileInstance = fileInstances.get(file.getName());
+        if(!fileInstance.isXml()) {
+            fileInstance.setXml(XmlChecker.isXmlParseable(file) == null);
+            if(!fileInstance.isXml()) {
+                apePanel.getApeTabbedPane().setConversionErrorText(labels.getString("conversion.error.fileNotXml"));
+                apePanel.getApeTabbedPane().checkFlashingTab(APETabbedPane.TAB_CONVERSION, Utilities.FLASHING_RED_COLOR);
+                dataPreparationToolGUI.enableSaveBtn();
+                return;
+            }
+        }
+        apePanel.getApeTabbedPane().setConversionErrorText(labels.getString("conversionBegun"));
         fileInstance.setLastOperation(FileInstance.Operation.CONVERT);
 
         boolean isDefaultTransformation = false;
@@ -114,8 +124,8 @@ public class ConvertActionListener implements ActionListener {
             CounterThread counterThread = null;
             ProgressFrame progressFrame = null;
             if(isDefaultTransformation) {
-                progressFrame = new ProgressFrame(labels, parent);
-                ProgressFrame.ApeProgressBar progressBar = progressFrame.addProgressBarToPanel();
+                progressFrame = new ProgressFrame(labels, parent, false, null);
+                ProgressFrame.ApeProgressBar progressBar = progressFrame.getProgressBarSingle();
                 CountCLevels countCLevels = new CountCLevels();
                 int counterMax = countCLevels.countOneFile(file);
                 if(counterMax > 0){

@@ -1,6 +1,8 @@
 package eu.apenet.dpt.standalone.gui.eag2012;
 
+import eu.apenet.dpt.standalone.gui.ProfileListModel;
 import eu.apenet.dpt.standalone.gui.eag2012.data.Eag;
+import org.apache.log4j.Logger;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -14,7 +16,9 @@ import java.util.List;
  * @author Yoann Moranville
  */
 public abstract class EagPanels {
-    private static final int NB_ROWS = 25;
+    protected static final Logger LOG = Logger.getLogger(EagPanels.class);
+
+    private static final int NB_ROWS = 150;
     private static final String EDITOR_ROW = "p, 3dlu, ";
     protected static String EDITOR_ROW_SPEC;
     static {
@@ -29,17 +33,25 @@ public abstract class EagPanels {
     protected final String[] languages = {"---", "eng", "fre"};
     protected final String[] continents = {"Africa", "Antarctica", "Asia", "Australia", "Europe", "North America", "South America"};
     protected final String[] yesOrNo = {"yes", "no"};
+    protected final String[] photographAllowance = {"depending on the material", "no", "yes", "yes (without flash)"};
+
+    protected JComboBox continentCombo = new JComboBox(continents);
+    protected JComboBox accessiblePublicCombo = new JComboBox(yesOrNo);
+    protected JComboBox facilitiesForDisabledCombo = new JComboBox(yesOrNo);
+    protected JComboBox photographAllowanceCombo = new JComboBox(photographAllowance);
 
     protected int rowNb;
     protected JTabbedPane tabbedPane;
     protected Eag eag;
     protected JFrame eag2012Frame;
+    protected ProfileListModel model;
     protected SpecialTemporaryResourceBundle labels = new SpecialTemporaryResourceBundle();
 
-    public EagPanels(Eag eag, JTabbedPane tabbedPane, JFrame eag2012Frame) {
+    public EagPanels(Eag eag, JTabbedPane tabbedPane, JFrame eag2012Frame, ProfileListModel model) {
         this.eag2012Frame = eag2012Frame;
         this.eag = eag;
         this.tabbedPane = tabbedPane;
+        this.model = model;
     }
 
     protected void closeFrame() {
@@ -49,6 +61,12 @@ public abstract class EagPanels {
 
     protected void setNextRow() {
         rowNb += 2;
+    }
+
+    protected static JLabel createErrorLabel(String errorMsg) {
+        JLabel label = new JLabel("<html><font color=red>" + errorMsg + "</font></html>");
+        label.setIcon(UIManager.getIcon("OptionPane.errorIcon"));
+        return label;
     }
 
     protected abstract JComponent buildEditorPanel(List<String> errors);

@@ -10,10 +10,9 @@ package eu.apenet.dpt.standalone.gui.eag2012.data;
 
 import java.util.ArrayList;
 import java.util.List;
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlType;
+import javax.xml.bind.annotation.*;
+import javax.xml.bind.annotation.adapters.CollapsedStringAdapter;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 
 /**
@@ -52,6 +51,9 @@ public class Library {
     protected List<Webpage> webpage;
     protected Monographicpub monographicpub;
     protected Serialpub serialpub;
+    @XmlAttribute(name = "question", required = true)
+    @XmlJavaTypeAdapter(CollapsedStringAdapter.class)
+    protected String question;
 
     /**
      * Gets the value of the contact property.
@@ -154,4 +156,11 @@ public class Library {
         this.serialpub = value;
     }
 
+    public String getQuestion() {
+        return question;
+    }
+
+    public void setQuestion(String question) {
+        this.question = question;
+    }
 }

@@ -1,13 +1,12 @@
 package eu.apenet.dpt.standalone.gui.eag2012;
 
-import com.jgoodies.forms.builder.PanelBuilder;
-import com.jgoodies.forms.layout.CellConstraints;
-import com.jgoodies.forms.layout.FormLayout;
+import eu.apenet.dpt.standalone.gui.ProfileListModel;
 import eu.apenet.dpt.standalone.gui.Utilities;
 import eu.apenet.dpt.standalone.gui.eag2012.data.*;
 import eu.apenet.dpt.utils.service.TransformationTool;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
+import org.apache.log4j.Logger;
 
 import javax.swing.*;
 import javax.xml.bind.JAXBContext;
@@ -25,77 +24,78 @@ import java.net.URL;
  * @author Yoann Moranville
  */
 public class Eag2012Frame extends JFrame {
+    private static final Logger LOG = Logger.getLogger(Eag2012Frame.class);
     private JTabbedPane tabbedPane;
-    private EagInstitutionPanel eagInstitutionPanel;
-    private EagIdentityPanel eagIdentityPanel;
+    private Dimension dimension;
+    private ProfileListModel model;
 
-    public Eag2012Frame(File eagFile, boolean isEag2012) {
+    public Eag2012Frame(File eagFile, boolean isEag2012, Dimension dimension, ProfileListModel model) {
         if(!isEag2012) {
-            //todo: do conversion first
-            //eagFile = convertInEag2012File(eagFile);
             try {
                 InputStream is = FileUtils.openInputStream(eagFile);
                 File tempEagFile = new File(Utilities.TEMP_DIR + "tmp_" + eagFile.getName());
-                File xslFile = new File(Utilities.CONFIG_DIR + "eag2eag2012.xsl");
+                LOG.info(tempEagFile.getAbsolutePath());
+                File xslFile = new File(Utilities.SYSTEM_DIR + "eag2eag2012.xsl");
                 TransformationTool.createTransformation(is, tempEagFile, xslFile, null, true, true, "", true, null);
                 eagFile = tempEagFile;
             } catch (Exception e) {
+                LOG.error("Something went wrong...", e);
             }
         }
-        createFrame(eagFile);
+        this.dimension = dimension;
+        this.model = model;
+        createFrame(eagFile, false);
     }
 
-    public Eag2012Frame() {
-        URL emptyEAGFileURL = getClass().getResource("/EAG_XML_XSL/Blank_EAG_2012.xml");
-        File emptyEAGFile = new File(emptyEAGFileURL.getPath());
+    public Eag2012Frame(Dimension dimension, ProfileListModel model) {
+//        URL emptyEAGFileURL = getClass().getResource("/EAG_XML_XSL/Blank_EAG_2012.xml");
+        InputStream emptyEAGFileStream = getClass().getResourceAsStream("/EAG_XML_XSL/Blank_EAG_2012.xml");
 
-        createFrame(emptyEAGFile);
+//        File emptyEAGFile = new File(emptyEAGFileURL.getPath());
+
+        this.dimension = dimension;
+        this.model = model;
+        createFrame(emptyEAGFileStream, true);
     }
 
-    public void createFrame(File eagFile) {
-//        JFrame frame = new JFrame();
+    public void createFrame(File eagFile, boolean isNew) {
+        try {
+            createFrame(FileUtils.openInputStream(eagFile), isNew);
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+    }
 
+    public void createFrame(InputStream eagStream, boolean isNew) {
         Eag eag = null;
         try {
             JAXBContext jaxbContext = JAXBContext.newInstance(Eag.class);
 
             Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
-            eag = (Eag) jaxbUnmarshaller.unmarshal(eagFile);
-
-            //TESTS: CREATE AN EAG FILE FROM OBJECT
-//            eag.getControl().getMaintenanceAgency().getAgencyCode().setContent("TEST MARSHELLING");
-//            Marshaller jaxbMarshaller = jaxbContext.createMarshaller();
-//            jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
-//            jaxbMarshaller.setProperty("com.sun.xml.bind.namespacePrefixMapper", new EagNamespaceMapper());
-//            jaxbMarshaller.marshal(eag, new File("/Users/yoannmoranville/Work/APEnet/Projects/dpt-project/NA/trunk/output/APE_EAD_eag_35_MARSHALL.xml"));
-
-            //tests:
-//            eag.getArchguide().getDesc().getRepositories().setRepository(new ArrayList<Repository>());
-        } catch (JAXBException e) {
+            eag = (Eag) jaxbUnmarshaller.unmarshal(eagStream);
+            eagStream.close();
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
-        buildPanel(eag);
+        buildPanel(eag, isNew);
         this.getContentPane().add(tabbedPane);
 
-//        FormLayout layout = init2();
-        this.setSize(new Dimension(1000, 1000));
-//        JPanel panel = new JPanel(layout);
-//        frame.getContentPane().add(panel);
-        
+        Dimension frameDim = new Dimension(((Double)(dimension.getWidth() * 0.95)).intValue(), ((Double)(dimension.getHeight() * 0.95)).intValue());
+        this.setSize(frameDim);
+        this.setPreferredSize(frameDim);
         this.pack();
         this.setVisible(true);
     }
 
-    public void buildPanel(Eag eag) {
+    public void buildPanel(Eag eag, boolean isNew) {
         tabbedPane = new JTabbedPane();
         tabbedPane.putClientProperty("jgoodies.noContentBorder", Boolean.TRUE);
 
-        tabbedPane.add("eag2012.yourInstitutionTab",  buildInstitutionPanel(eag));
+        tabbedPane.add("eag2012.yourInstitutionTab",  buildInstitutionPanel(eag, isNew));
 
         tabbedPane.add("eag2012.identityTab",  null);
-        tabbedPane.setEnabledAt(1, false); //disable identity panel
-
+        tabbedPane.setEnabledAt(1, false);
         tabbedPane.add("eag2012.contactTab", null);
         tabbedPane.setEnabledAt(2, false);
         tabbedPane.add("eag2012.accessAndServicesTab", null);
@@ -109,30 +109,7 @@ public class Eag2012Frame extends JFrame {
     }
 
 
-    protected JComponent buildInstitutionPanel(Eag eag) {
-        eagInstitutionPanel = new EagInstitutionPanel(eag, tabbedPane, this);
-        return new JScrollPane(eagInstitutionPanel.buildEditorPanel(null));
+    protected JComponent buildInstitutionPanel(Eag eag, boolean isNew) {
+        return new JScrollPane(new EagInstitutionPanel(eag, tabbedPane, this, model, isNew).buildEditorPanel(null));
     }
-
-    protected JComponent buildIdentityPanel(Eag eag) {
-        eagIdentityPanel = new EagIdentityPanel(eag, tabbedPane, this);
-        return new JScrollPane(eagIdentityPanel.buildEditorPanel(null));
-    }
-
-//    private JComponent buildContactPanel() {
-//        FormLayout layout = new FormLayout(
-//                "right:max(50dlu;pref), 4dlu, max(35dlu;min), 2dlu, min, 2dlu, min, 2dlu, min, ",
-//                EDITOR_ROW_SPEC);
-//        return buildEditorGeneralPanel(layout);
-//    }
-//
-//    private JComponent buildAccessAndServicesPanel() {
-//        FormLayout layout = new FormLayout(
-//                "right:max(50dlu;pref), 4dlu, max(35dlu;min), 2dlu, min, 2dlu, min, 2dlu, min, ",
-//                EDITOR_ROW_SPEC);
-//        return buildEditorTransportPanel(layout);
-//    }
-
-//    private static final String DEFAULT_ROW_SPEC = "3dlu, p";
-
 }

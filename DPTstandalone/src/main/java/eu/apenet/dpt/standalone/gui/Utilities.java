@@ -18,6 +18,8 @@ import java.util.List;
  * @author Yoann Moranville
  */
 public final class Utilities {
+    public static boolean isDev = false;
+
     private final static String XML_LANGUAGES_NAME = "languages.xml";
     private final static String SER_HG_TREE_NAME = "myHGtreeSaved.ser";
     private final static String DIR_SEPARATOR = "/";

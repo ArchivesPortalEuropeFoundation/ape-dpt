@@ -6,36 +6,6 @@
                 xpath-default-namespace="urn:isbn:1-931666-22-9"
                 exclude-result-prefixes="xsl">
 
-    <xsl:template name="frontmatter2scopecontent">
-        <xsl:apply-templates select="/ead/frontmatter" mode="frontmatter"/>
-    </xsl:template>
 
-    <xsl:template match="frontmatter" mode="frontmatter">
-        <scopecontent encodinganalog="summary">
-            <xsl:apply-templates mode="frontmatter"/>
-        </scopecontent>
-    </xsl:template>
-
-    <xsl:template match="div" mode="frontmatter">
-        <p>
-            <xsl:apply-templates mode="frontmatter"/>
-        </p>
-    </xsl:template>
-
-    <xsl:template match="div/head" mode="frontmatter">
-        <xsl:apply-templates mode="frontmatter"/>
-    </xsl:template>
-
-    <xsl:template match="div/p | div/p/note/p" mode="frontmatter">
-        <xsl:apply-templates mode="frontmatter"/>
-    </xsl:template>
-
-    <xsl:template match="div/p/note" mode="frontmatter">
-        <xsl:apply-templates mode="frontmatter"/>
-    </xsl:template>
-
-    <xsl:template match="div/p/list | div/p/list/item" mode="frontmatter">
-        <xsl:apply-templates mode="frontmatter"/>
-    </xsl:template>
 
 </xsl:stylesheet>

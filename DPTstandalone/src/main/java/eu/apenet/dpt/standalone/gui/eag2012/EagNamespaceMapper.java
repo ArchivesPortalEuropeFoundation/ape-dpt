@@ -1,12 +1,14 @@
 package eu.apenet.dpt.standalone.gui.eag2012;
 
+import com.sun.xml.bind.marshaller.NamespacePrefixMapper;
+
 /**
  * User: Yoann Moranville
  * Date: 26/09/2012
  *
  * @author Yoann Moranville
  */
-import com.sun.xml.bind.marshaller.NamespacePrefixMapper;
+//import com.sun.xml.bind.marshaller.NamespacePrefixMapper;
 
 public class EagNamespaceMapper extends NamespacePrefixMapper {
 

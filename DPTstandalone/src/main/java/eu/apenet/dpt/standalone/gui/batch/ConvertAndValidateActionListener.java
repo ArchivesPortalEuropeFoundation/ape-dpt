@@ -6,6 +6,7 @@ import eu.apenet.dpt.standalone.gui.SummaryWorking;
 import eu.apenet.dpt.standalone.gui.Utilities;
 import eu.apenet.dpt.standalone.gui.adhoc.EadidQueryComponent;
 import eu.apenet.dpt.standalone.gui.conversion.CounterThread;
+import eu.apenet.dpt.standalone.gui.progress.ApexActionListener;
 import eu.apenet.dpt.standalone.gui.progress.ProgressFrame;
 import eu.apenet.dpt.utils.service.DocumentValidation;
 import eu.apenet.dpt.utils.service.TransformationTool;
@@ -33,9 +34,8 @@ import java.util.ResourceBundle;
  *
  * @author Yoann Moranville
  */
-public class ConvertAndValidateActionListener implements ActionListener {
+public class ConvertAndValidateActionListener extends ApexActionListener {
     private static final Logger LOG = Logger.getLogger(ConvertAndValidateActionListener.class);
-    private boolean continueLoop;
     private DataPreparationToolGUI dataPreparationToolGUI;
     private ResourceBundle labels;
     private Component parent;
@@ -52,16 +52,17 @@ public class ConvertAndValidateActionListener implements ActionListener {
 //        dataPreparationToolGUI.enableAbortBtn();
         dataPreparationToolGUI.getAPEPanel().setFilename("");
         final Object[] objects = dataPreparationToolGUI.getList().getSelectedValues();
+        final ApexActionListener apexActionListener = this;
         new Thread(new Runnable(){
             public void run(){
                 int numberOfFiles = objects.length;
                 int currentFileNumberBatch = 0;
-                ProgressFrame progressFrame = new ProgressFrame(labels, parent);
+                ProgressFrame progressFrame = new ProgressFrame(labels, parent, true, apexActionListener);
+                JProgressBar batchProgressBar = progressFrame.getProgressBarBatch();
+
                 for(Object oneFile : objects){
                     if(!continueLoop)
                         break;
-
-                    JProgressBar batchProgressBar = progressFrame.addProgressBarToPanel();
 
                     File file = (File)oneFile;
                     dataPreparationToolGUI.setResultAreaText(labels.getString("converting")+ " " + file.getName() + " (" + (++currentFileNumberBatch) + "/" + numberOfFiles + ")");
@@ -106,7 +107,7 @@ public class ConvertAndValidateActionListener implements ActionListener {
                         CounterThread counterThread = null;
                         CounterCLevelCall counterCLevelCall = null;
                         if(fileInstance.getConversionScriptName().equals(Utilities.XSL_DEFAULT_NAME)){
-                            progressBar = progressFrame.addProgressBarToPanel();
+                            progressBar = progressFrame.getProgressBarSingle();
                             progressFrame.setTitle(labels.getString("progressTrans") + " - " + file.getName());
                             CountCLevels countCLevels = new CountCLevels();
                             int counterMax = countCLevels.countOneFile(file);

@@ -995,6 +995,7 @@
                 <xs:element ref="monographicpub" minOccurs="0"/>
                 <xs:element ref="serialpub" minOccurs="0"/>
             </xs:sequence>
+            <xs:attributeGroup ref="question"/>
         </xs:complexType>
     </xs:element>
     <xs:element name="monographicpub">
