@@ -124,8 +124,8 @@ public class ConvertActionListener implements ActionListener {
             CounterThread counterThread = null;
             ProgressFrame progressFrame = null;
             if(isDefaultTransformation) {
-                progressFrame = new ProgressFrame(labels, parent);
-                ProgressFrame.ApeProgressBar progressBar = progressFrame.addProgressBarToPanel();
+                progressFrame = new ProgressFrame(labels, parent, false, null);
+                ProgressFrame.ApeProgressBar progressBar = progressFrame.getProgressBarSingle();
                 CountCLevels countCLevels = new CountCLevels();
                 int counterMax = countCLevels.countOneFile(file);
                 if(counterMax > 0){

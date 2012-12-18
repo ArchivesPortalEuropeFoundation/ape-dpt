@@ -4,6 +4,7 @@ import eu.apenet.dpt.standalone.gui.DataPreparationToolGUI;
 import eu.apenet.dpt.standalone.gui.FileInstance;
 import eu.apenet.dpt.standalone.gui.SummaryWorking;
 import eu.apenet.dpt.standalone.gui.Utilities;
+import eu.apenet.dpt.standalone.gui.progress.ApexActionListener;
 import eu.apenet.dpt.standalone.gui.progress.ProgressFrame;
 import eu.apenet.dpt.utils.service.DocumentValidation;
 import eu.apenet.dpt.utils.util.XmlChecker;
@@ -27,7 +28,7 @@ import java.util.ResourceBundle;
  *
  * @author Yoann Moranville
  */
-public class ValidateSelectionActionListener implements ActionListener {
+public class ValidateSelectionActionListener extends ApexActionListener {
     private static final Logger LOG = Logger.getLogger(ValidateSelectionActionListener.class);
     private ResourceBundle labels;
     private DataPreparationToolGUI dataPreparationToolGUI;
@@ -46,17 +47,18 @@ public class ValidateSelectionActionListener implements ActionListener {
         dataPreparationToolGUI.disableAllBtnAndItems();
         dataPreparationToolGUI.getAPEPanel().setFilename("");
         final Object[] objects = dataPreparationToolGUI.getList().getSelectedValues();
+        final ApexActionListener apexActionListener = this;
         new Thread(new Runnable(){
             public void run(){
                 int numberOfFiles = objects.length;
                 int currentFileNumberBatch = 0;
-                ProgressFrame progressFrame = new ProgressFrame(labels, parent);
+                ProgressFrame progressFrame = new ProgressFrame(labels, parent, true, apexActionListener);
 
                 for(Object oneFile : objects){
                     if(!continueLoop)
                         break;
 
-                    ProgressFrame.ApeProgressBar progressBar = progressFrame.addProgressBarToPanel();
+                    ProgressFrame.ApeProgressBar progressBar = progressFrame.getProgressBarBatch();
 
                     File file = (File)oneFile;
                     dataPreparationToolGUI.setResultAreaText(labels.getString("validating")+ " " + file.getName() + " (" + (++currentFileNumberBatch) + "/" + numberOfFiles + ")");
