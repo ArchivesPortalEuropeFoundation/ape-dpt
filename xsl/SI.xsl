@@ -119,7 +119,7 @@
                         <revisiondesc>
                             <change>
                                 <date />
-                                <item>Converted_APE_EAD_version_<xsl:value-of select="$versionnb"/></item>
+                                <item>Converted_apeEAD_version_<xsl:value-of select="$versionnb"/></item>
                             </change>
                         </revisiondesc>
 	  	            </eadheader>
@@ -156,7 +156,7 @@
                         <revisiondesc>
                             <change>
                                 <date />
-                                <item>Converted_APE_EAD_version_<xsl:value-of select="$versionnb"/></item>
+                                <item>Converted_apeEAD_version_<xsl:value-of select="$versionnb"/></item>
                             </change>
                         </revisiondesc>
 	  	            </eadheader>

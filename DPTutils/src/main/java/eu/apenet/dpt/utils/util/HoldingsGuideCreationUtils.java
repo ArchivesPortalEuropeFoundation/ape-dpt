@@ -16,7 +16,7 @@ public class HoldingsGuideCreationUtils {
         string += "        <filedesc><titlestmt><titleproper>" + title + "</titleproper></titlestmt></filedesc>\n";
         string += "        <revisiondesc><change>\n";
         string += "         <date />\n";
-        string += "         <item>Converted_APE_EAD_version_" + versionNb + "</item>\n";
+        string += "         <item>Converted_apeEAD_version_" + versionNb + "</item>\n";
         string += "        </change></revisiondesc>\n";
         string += "    </eadheader>\n";
         return string;
