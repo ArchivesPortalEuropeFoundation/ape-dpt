@@ -1,5 +1,6 @@
 package eu.apenet.dpt.standalone.gui;
 
+import eu.apenet.dpt.utils.util.XsltChecker;
 import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
 
@@ -46,12 +47,14 @@ public class XsltAdderActionListener implements ActionListener {
                 } else {
                     JOptionPane.showMessageDialog(parent, labels.getString("xsltNotSaved")+".", labels.getString("fileNotSaved"), JOptionPane.ERROR_MESSAGE, Utilities.icon);
                 }
+            } else {
+                JOptionPane.showMessageDialog(parent, labels.getString("xsltNotSaved")+".", labels.getString("fileNotSaved"), JOptionPane.ERROR_MESSAGE, Utilities.icon);
             }
         }
     }
 
     private boolean isXSLT(File file){
-        return (file.isFile() && (file.getName().endsWith(".xsl") || file.getName().endsWith(".xslt")));
+        return (file.isFile() && (file.getName().endsWith(".xsl") || file.getName().endsWith(".xslt")) && XsltChecker.isXsltFile(file));
     }
 
     private boolean saveXslt(File file){

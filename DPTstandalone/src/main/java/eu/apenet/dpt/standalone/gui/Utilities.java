@@ -1,15 +1,26 @@
 package eu.apenet.dpt.standalone.gui;
 
 import eu.apenet.dpt.utils.util.Xsd_enum;
+import eu.apenet.dpt.utils.util.XsltChecker;
 import org.apache.commons.lang.StringUtils;
 import org.xml.sax.SAXParseException;
 
 import javax.swing.*;
 import java.awt.*;
+import java.io.ByteArrayInputStream;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import org.w3c.dom.Document;
+import org.xml.sax.SAXException;
 
 /**
  * User: Yoann Moranville
@@ -96,12 +107,14 @@ public final class Utilities {
     public static List<File> getXsltFiles(){
         List<File> list = new ArrayList<File>();
         List<String> xsltNotShown = Arrays.asList(Utilities.FILES_NOT_SHOWN);
+        System.out.println(System.getProperty("user.dir") + " " + Utilities.SYSTEM_DIR);
         for(File file : new File(Utilities.SYSTEM_DIR).listFiles()) {
-            if((file.getName().endsWith("xsl") || file.getName().endsWith("xslt")) && !xsltNotShown.contains(file.getName()))
+            if((file.getName().endsWith("xsl") || file.getName().endsWith("xslt")) && !xsltNotShown.contains(file.getName()) && XsltChecker.isXsltFile(file)){
                 list.add(file);
+            }
         }
         for(File file : new File(Utilities.CONFIG_DIR).listFiles()) {
-            if((file.getName().endsWith("xsl") || file.getName().endsWith("xslt")))
+            if((file.getName().endsWith("xsl") || file.getName().endsWith("xslt")) && XsltChecker.isXsltFile(file))
                 list.add(file);
         }
         return list;
