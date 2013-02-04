@@ -129,7 +129,7 @@
     <xsl:template match="emph" mode="#all">
         <xsl:choose>
             <xsl:when test="parent::bibref or parent::extref" />
-            <xsl:when test="parent::corpname or parent::origination or parent::physfacet or parent::persname or parent::head">
+            <xsl:when test="parent::corpname or parent::origination or parent::physfacet or parent::persname or parent::head or parent::titleproper or parent::unittitle"> <!--unittitle here is a hack - better fix it in the display xsl of portal/dashboard-->
                 <xsl:value-of select="normalize-space(.)"/>
             </xsl:when>
             <xsl:when test="@render='bold' or @render='italic'">
@@ -1561,6 +1561,9 @@
                     </xsl:if>
                     <xsl:if test="@type='ordered'">
                         <xsl:attribute name="numeration" select="'arabic'"/>
+                    </xsl:if>
+                    <xsl:if test="not(./item)">
+                        <item/>
                     </xsl:if>
                     <xsl:apply-templates select="node()" mode="#current"/>
                 </list>
