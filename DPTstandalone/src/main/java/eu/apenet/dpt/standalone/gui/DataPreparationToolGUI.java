@@ -52,20 +52,14 @@ import eu.apenet.dpt.utils.util.Xsd_enum;
 import eu.apenet.dpt.utils.util.extendxsl.DateNormalization;
 
 /**
- * User: Yoann
- * Date: Apr 19, 2010
- * Time: 8:07:25 PM
+ * User: Yoann Date: Apr 19, 2010 Time: 8:07:25 PM
  */
-
 public class DataPreparationToolGUI extends JFrame {
+
     private final static Logger LOG = Logger.getLogger(DataPreparationToolGUI.class);
-
     public static final String VERSION_NB = "1.2.0-SNAPSHOT";
-
     private static final String[] LANGUAGES_OF_TOOL = {"en", "fr", "de", "hu", "xx"};
-
     private ResourceBundle labels;
-
     /**
      * Button and titles to be used in the GUI
      */
@@ -73,29 +67,24 @@ public class DataPreparationToolGUI extends JFrame {
     private JButton validateSelectionBtn = new JButton();
     private JButton convertEseSelectionBtn = new JButton();
     private JButton createHGBtn = new JButton();
-
     /**
      * Tabs to be visible in the GUI
      */
     private APEPanel apePanel;
-
     private JMenu fileMenu = new JMenu();
     private JMenu optionMenu = new JMenu();
     private JMenu actionMenu = new JMenu();
     private JMenu windowMenu = new JMenu();
     private JMenu languageMenu = new JMenu();
     private JMenu helpMenu = new JMenu();
-
     private JMenuItem fileItem = new JMenuItem();
     private JMenu createEag2012Item = new JMenu();
     private JMenuItem saveSelectedItem = new JMenuItem();
-//    private JMenuItem sendFilesWebDAV = new JMenuItem();
+    private JMenuItem sendFilesWebDAV = new JMenuItem();
     private JMenuItem quitItem = new JMenuItem();
-
     private JMenuItem createEag2012FromExistingEag02 = new JMenuItem();
     private JMenuItem createEag2012FromExistingEag2012 = new JMenuItem();
     private JMenuItem createEag2012FromScratch = new JMenuItem();
-
     private JMenuItem repositoryCodeItem = new JMenuItem();
     private JMenuItem countryCodeItem = new JMenuItem();
     private JMenuItem xsltItem = new JMenuItem();
@@ -106,67 +95,49 @@ public class DataPreparationToolGUI extends JFrame {
     private JMenu defaultXslSelectionSubmenu = new JMenu();
     private JMenu defaultXsdSelectionSubmenu = new JMenu();
     private JMenuItem listDateConversionRulesItem = new JMenuItem();
-
     private JMenuItem validateItem = new JMenuItem();
     private JMenuItem convertItem = new JMenuItem();
-
     private JMenuItem summaryWindowItem = new JMenuItem();
     private JMenuItem validationWindowItem = new JMenuItem();
     private JMenuItem conversionWindowItem = new JMenuItem();
     private JMenuItem eseConversionWindowItem = new JMenuItem();
     private JMenuItem editionWindowItem = new JMenuItem();
-
     private JMenuItem internetApexItem = new JMenuItem();
-
     private JFileChooser fileChooser = new JFileChooser();
     private File currentLocation = null;
-
     /**
      * List of files (model)
      */
     private ProfileListModel model;
-
     private JLabel progressLabel = new JLabel("", JLabel.CENTER);
 //    private JButton abort = new JButton("");
-
     private JList list;
-
     private JLabel resultArea = new JLabel();
-
     private JTable eagFormTable;
-
     private ButtonGroup groupXslt = new ButtonGroup();
     private ButtonGroup groupXsd = new ButtonGroup();
-
     /**
      * Utilities
      */
     private DateNormalization dateNormalization;
-
     private JMenuItem deleteFileItem = new JMenuItem();
-
     private JFrame eagCreationFrame;
 //    private JFrame roleTypeFrame;
-
     /**
      * Locations
      */
     private RetrieveFromDb retrieveFromDb;
-
     public boolean useExistingRoleType;
     public String defaultRoleType;
     private boolean continueLoop = true;
     private Map<String, FileInstance> fileInstances = new HashMap<String, FileInstance>();
     private List<String> langList;
     private List<String> levelList;
-
     private Point from;
-
     /**
      * ActionListeners
      */
     private CreateHGListener createHgListener;
-
     /**
      * For edition
      */
@@ -198,18 +169,19 @@ public class DataPreparationToolGUI extends JFrame {
 
         doChecks();
 
-        if(isFileMissing(Utilities.LOG_DIR))
+        if (isFileMissing(Utilities.LOG_DIR)) {
             new File(Utilities.LOG_DIR).mkdir();
+        }
 
         File tempDir = new File(Utilities.TEMP_DIR);
         //In case it didn't deleteOnExit at the previous closing of the program, we clean up.
-        if(tempDir.exists()){
+        if (tempDir.exists()) {
             LOG.warn("Probably a problem when deleting the temp files at closure, so we clean up");
             eraseOldTempFiles(tempDir);
             try {
                 FileUtils.deleteDirectory(tempDir);
-            } catch (IOException e){
-                LOG.error("Could not delete the temp directory. Attempt to delete the directory once more: " + (tempDir.delete()?"Successful.":"Unsuccessful."));
+            } catch (IOException e) {
+                LOG.error("Could not delete the temp directory. Attempt to delete the directory once more: " + (tempDir.delete() ? "Successful." : "Unsuccessful."));
             }
         }
         tempDir.mkdir();
@@ -236,8 +208,9 @@ public class DataPreparationToolGUI extends JFrame {
 
         list.setDropTarget(new DropTarget(list, new DropTargetListener() {
             private void updateLine(Point pt) {
-                if(list.locationToIndex(pt) < 0)
+                if (list.locationToIndex(pt) < 0) {
                     list.clearSelection();
+                }
                 list.repaint();
             }
 
@@ -280,14 +253,13 @@ public class DataPreparationToolGUI extends JFrame {
                     dstRow = m.getSize() - 1;
                 }
 
-                m.insertElementAt((File)m.getElementAt(srcRow), dstRow);
-                if(dstRow <= srcRow){
-                    m.removeElementAt(srcRow+1);
+                m.insertElementAt((File) m.getElementAt(srcRow), dstRow);
+                if (dstRow <= srcRow) {
+                    m.removeElementAt(srcRow + 1);
                     list.setSelectedIndex(dstRow);
-                }
-                else{
+                } else {
                     m.removeElementAt(srcRow);
-                    list.setSelectedIndex(dstRow-1);
+                    list.setSelectedIndex(dstRow - 1);
                 }
             }
         }));
@@ -310,7 +282,8 @@ public class DataPreparationToolGUI extends JFrame {
         saveSelectedItem.setEnabled(false);
         saveSelectedItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S, Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()));
         fileMenu.add(saveSelectedItem);
-//        fileMenu.add(sendFilesWebDAV); //todo: Future
+        sendFilesWebDAV.setEnabled(false);
+        fileMenu.add(sendFilesWebDAV);
         fileMenu.addSeparator();
         fileMenu.add(quitItem);
 
@@ -349,7 +322,7 @@ public class DataPreparationToolGUI extends JFrame {
         windowMenu.add(editionWindowItem);
         helpMenu.add(internetApexItem);
         helpMenu.addSeparator();
-        JMenuItem versionItem = new JMenuItem("APE DPT v"+ VERSION_NB);
+        JMenuItem versionItem = new JMenuItem("APE DPT v" + VERSION_NB);
         versionItem.setEnabled(false);
         helpMenu.add(versionItem);
         createLanguageMenu();
@@ -378,7 +351,7 @@ public class DataPreparationToolGUI extends JFrame {
         setSize(Toolkit.getDefaultToolkit().getScreenSize());
     }
 
-    private void nameComponents(){
+    private void nameComponents() {
         fileMenu.setText(labels.getString("file"));
         optionMenu.setText(labels.getString("options"));
         actionMenu.setText(labels.getString("actions"));
@@ -389,7 +362,7 @@ public class DataPreparationToolGUI extends JFrame {
         createEag2012FromExistingEag2012.setText(labels.getString("menu.createEag2012FromEag2012"));
         createEag2012FromScratch.setText(labels.getString("menu.createEag2012FromScratch"));
         saveSelectedItem.setText(labels.getString("saveSelectedFile"));
-//        sendFilesWebDAV.setText(labels.getString("sendFilesWebDAV"));
+        sendFilesWebDAV.setText(labels.getString("sendFilesWebDAV"));
         quitItem.setText(labels.getString("quit"));
 
         countryCodeItem.setText(labels.getString("countryCode"));
@@ -427,7 +400,7 @@ public class DataPreparationToolGUI extends JFrame {
         convertEseSelectionBtn.setText(labels.getString("convertEseSelectionBtn"));
     }
 
-    private void changeAllTextLg(){
+    private void changeAllTextLg() {
         nameComponents();
 
         createHgListener.changeLanguage(labels);
@@ -435,19 +408,20 @@ public class DataPreparationToolGUI extends JFrame {
 
         DataPreparationToolGUI.super.setTitle(labels.getString("title"));
 
-        if(list.getSelectedValue() == null)
+        if (list.getSelectedValue() == null) {
             apePanel.setFilename("");
-        else
+        } else {
             apePanel.setFilename(((File) list.getSelectedValue()).getName());
+        }
 
         apePanel.getApeTabbedPane().setValidationBtnText(labels.getString("validate"));
     }
 
-    private void createLanguageMenu(){
+    private void createLanguageMenu() {
         Locale currentLocale = Locale.getDefault();
         ButtonGroup group = new ButtonGroup();
         JRadioButtonMenuItem rbMenuItem = new JRadioButtonMenuItem("English");
-        if(!Arrays.asList(LANGUAGES_OF_TOOL).contains(currentLocale.getLanguage()) || currentLocale.getLanguage().equals("en")) {
+        if (!Arrays.asList(LANGUAGES_OF_TOOL).contains(currentLocale.getLanguage()) || currentLocale.getLanguage().equals("en")) {
             rbMenuItem.setSelected(true);
         }
 
@@ -456,7 +430,7 @@ public class DataPreparationToolGUI extends JFrame {
         languageMenu.add(rbMenuItem);
         rbMenuItem = new JRadioButtonMenuItem("Français");
         rbMenuItem.setActionCommand("fr");
-        if(currentLocale.getLanguage().equals("fr")){
+        if (currentLocale.getLanguage().equals("fr")) {
             rbMenuItem.setSelected(true);
         }
         rbMenuItem.addActionListener(new LanguageActionListener());
@@ -465,7 +439,7 @@ public class DataPreparationToolGUI extends JFrame {
 
         rbMenuItem = new JRadioButtonMenuItem("Deutsch");
         rbMenuItem.setActionCommand("de");
-        if(currentLocale.getLanguage().equals("de")){
+        if (currentLocale.getLanguage().equals("de")) {
             rbMenuItem.setSelected(true);
         }
         rbMenuItem.addActionListener(new LanguageActionListener());
@@ -474,18 +448,18 @@ public class DataPreparationToolGUI extends JFrame {
 
         rbMenuItem = new JRadioButtonMenuItem("Magyar");
         rbMenuItem.setActionCommand("hu");
-        if(currentLocale.getLanguage().equals("hu")){
+        if (currentLocale.getLanguage().equals("hu")) {
             rbMenuItem.setSelected(true);
         }
         rbMenuItem.addActionListener(new LanguageActionListener());
         group.add(rbMenuItem);
         languageMenu.add(rbMenuItem);
 
-        if(Utilities.isDev) {
+        if (Utilities.isDev) {
             languageMenu.addSeparator();
             rbMenuItem = new JRadioButtonMenuItem("XXXXXX");
             rbMenuItem.setActionCommand("xx");
-            if(currentLocale.getLanguage().equals("xx")){
+            if (currentLocale.getLanguage().equals("xx")) {
                 rbMenuItem.setSelected(true);
             }
             rbMenuItem.addActionListener(new LanguageActionListener());
@@ -493,8 +467,8 @@ public class DataPreparationToolGUI extends JFrame {
             languageMenu.add(rbMenuItem);
         }
     }
-
     int currentFileNumberBatch = 0;
+
     private void wireUp() {
 
 //        abort.addActionListener(new ActionListener() {
@@ -504,41 +478,43 @@ public class DataPreparationToolGUI extends JFrame {
 //                resultArea.setText(labels.getString("aborting"));
 //            }
 //        });
-        fileItem.addActionListener(new ActionListener(){
-            public void actionPerformed(ActionEvent actionEvent){
-                if(actionEvent.getSource() == fileItem) {
+        fileItem.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent actionEvent) {
+                if (actionEvent.getSource() == fileItem) {
                     currentLocation = new File(retrieveFromDb.retrieveOpenLocation());
                     fileChooser.setCurrentDirectory(currentLocation);
                     int returnedVal = fileChooser.showOpenDialog(getParent());
 
-                    if(returnedVal == JFileChooser.APPROVE_OPTION){
+                    if (returnedVal == JFileChooser.APPROVE_OPTION) {
                         currentLocation = fileChooser.getCurrentDirectory();
                         retrieveFromDb.saveOpenLocation(currentLocation.getAbsolutePath());
 
                         File[] files = fileChooser.getSelectedFiles();
-                        for(File file : files) {
-                            if(file.isDirectory()){
+                        for (File file : files) {
+                            if (file.isDirectory()) {
                                 File[] fileArray = file.listFiles();
                                 Arrays.sort(fileArray, new FileNameComparator());
-                                for(File children : fileArray){
-                                    if(isCorrect(children))
+                                for (File children : fileArray) {
+                                    if (isCorrect(children)) {
                                         model.addFile(children);
+                                    }
                                 }
                             } else {
-                                if(isCorrect(file))
+                                if (isCorrect(file)) {
                                     model.addFile(file);
+                                }
                             }
                         }
                     }
                 }
             }
         });
-        repositoryCodeItem.addActionListener(new ActionListener(){
+        repositoryCodeItem.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 createOptionPaneForRepositoryCode();
             }
         });
-        countryCodeItem.addActionListener(new ActionListener(){
+        countryCodeItem.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 createOptionPaneForCountryCode();
             }
@@ -548,40 +524,40 @@ public class DataPreparationToolGUI extends JFrame {
                 createOptionPaneForChecksLoadingFiles();
             }
         });
-        createEag2012FromExistingEag02.addActionListener(new ActionListener(){
+        createEag2012FromExistingEag02.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 JFileChooser eagFileChooser = new JFileChooser();
                 eagFileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
                 eagFileChooser.setMultiSelectionEnabled(false);
                 eagFileChooser.setCurrentDirectory(new File(retrieveFromDb.retrieveOpenLocation()));
-                if(eagFileChooser.showOpenDialog(getParent()) == JFileChooser.APPROVE_OPTION) {
+                if (eagFileChooser.showOpenDialog(getParent()) == JFileChooser.APPROVE_OPTION) {
                     File eagFile = eagFileChooser.getSelectedFile();
-                    new Eag2012Frame(eagFile, false, getContentPane().getSize(), (ProfileListModel)getList().getModel());
+                    new Eag2012Frame(eagFile, false, getContentPane().getSize(), (ProfileListModel) getList().getModel());
                 }
             }
         });
-        createEag2012FromExistingEag2012.addActionListener(new ActionListener(){
+        createEag2012FromExistingEag2012.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 JFileChooser eagFileChooser = new JFileChooser();
                 eagFileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
                 eagFileChooser.setMultiSelectionEnabled(false);
                 eagFileChooser.setCurrentDirectory(new File(retrieveFromDb.retrieveOpenLocation()));
-                if(eagFileChooser.showOpenDialog(getParent()) == JFileChooser.APPROVE_OPTION) {
+                if (eagFileChooser.showOpenDialog(getParent()) == JFileChooser.APPROVE_OPTION) {
                     File eagFile = eagFileChooser.getSelectedFile();
-                    new Eag2012Frame(eagFile, true, getContentPane().getSize(), (ProfileListModel)getList().getModel());
+                    new Eag2012Frame(eagFile, true, getContentPane().getSize(), (ProfileListModel) getList().getModel());
                 }
             }
         });
-        createEag2012FromScratch.addActionListener(new ActionListener(){
+        createEag2012FromScratch.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                new Eag2012Frame(getContentPane().getSize(), (ProfileListModel)getList().getModel());
+                new Eag2012Frame(getContentPane().getSize(), (ProfileListModel) getList().getModel());
             }
         });
         digitalObjectTypeItem.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 JFrame roleTypeFrame = new RoleTypeFrame(labels, retrieveFromDb);
 
-                roleTypeFrame.setPreferredSize(new Dimension(getContentPane().getWidth() *3/8, getContentPane().getHeight() *3/8));
+                roleTypeFrame.setPreferredSize(new Dimension(getContentPane().getWidth() * 3 / 8, getContentPane().getHeight() * 3 / 8));
                 roleTypeFrame.setLocation(getContentPane().getWidth() / 8, getContentPane().getHeight() / 8);
 
                 roleTypeFrame.pack();
@@ -594,75 +570,93 @@ public class DataPreparationToolGUI extends JFrame {
                 defaultSaveFolderChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
                 defaultSaveFolderChooser.setMultiSelectionEnabled(false);
                 defaultSaveFolderChooser.setCurrentDirectory(new File(retrieveFromDb.retrieveDefaultSaveFolder()));
-                if(defaultSaveFolderChooser.showOpenDialog(getParent()) == JFileChooser.APPROVE_OPTION) {
+                if (defaultSaveFolderChooser.showOpenDialog(getParent()) == JFileChooser.APPROVE_OPTION) {
                     File directory = defaultSaveFolderChooser.getSelectedFile();
                     retrieveFromDb.saveDefaultSaveFolder(directory + "/");
                 }
             }
         });
+        listDateConversionRulesItem.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent actionEvent) {
+                JFrame dateConversionRulesFrame = new DateConversionRulesFrame(labels, retrieveFromDb);
+
+                dateConversionRulesFrame.setPreferredSize(new Dimension(getContentPane().getWidth() * 3 / 8, getContentPane().getHeight() * 5 / 8));
+                dateConversionRulesFrame.setLocation(getContentPane().getWidth() / 8, getContentPane().getHeight() / 8);
+
+                dateConversionRulesFrame.pack();
+                dateConversionRulesFrame.setVisible(true);
+
+            }
+        });
         saveSelectedItem.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                for(String filename : fileInstances.keySet()) {
+                for (String filename : fileInstances.keySet()) {
                     FileInstance fileInstance = fileInstances.get(filename);
                     String filePrefix = fileInstance.getFileType().getFilePrefix();
                     String defaultOutputDirectory = retrieveFromDb.retrieveDefaultSaveFolder();
 
                     //todo: do we really need this?
-                    filename = filename.startsWith("temp_")?filename.replace("temp_", ""):filename;
+                    filename = filename.startsWith("temp_") ? filename.replace("temp_", "") : filename;
 
-                    if(!fileInstance.isValid())
+                    if (!fileInstance.isValid()) {
                         filePrefix = "NOT_" + filePrefix;
+                    }
 
-                    if(tree != null && tree.getTreeTableModel() != null && !fileInstance.getLastOperation().equals(FileInstance.Operation.CONVERT)){
+                    if (tree != null && tree.getTreeTableModel() != null && !fileInstance.getLastOperation().equals(FileInstance.Operation.CONVERT)) {
                         TreeTableModel treeTableModel = tree.getTreeTableModel();
-                        Document document = (Document)treeTableModel.getRoot();
+                        Document document = (Document) treeTableModel.getRoot();
                         try {
                             File file2 = new File(defaultOutputDirectory + filePrefix + "_" + filename);
                             TransformerFactory tf = TransformerFactory.newInstance();
                             Transformer output = tf.newTransformer();
                             output.setOutputProperty(javax.xml.transform.OutputKeys.INDENT, "yes");
-                            output.setOutputProperty("{http://xml.apache.org/xslt}indent-amount","2");
+                            output.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "2");
 
                             output.transform(new DOMSource(document.getFirstChild()), new StreamResult(file2));
 
                             fileInstance.setLastOperation(FileInstance.Operation.SAVE);
                             fileInstance.setCurrentLocation(file2.getAbsolutePath());
-                        } catch (Exception ex){
+                        } catch (Exception ex) {
                             createErrorOrWarningPanel(ex, true, labels.getString("errorSavingTreeXML"), getContentPane());
                         }
-                    } else if(fileInstance.isConverted()){
+                    } else if (fileInstance.isConverted()) {
                         File newFile = new File(defaultOutputDirectory + filePrefix + "_" + filename);
                         (new File(fileInstance.getCurrentLocation())).renameTo(newFile);
                         fileInstance.setLastOperation(FileInstance.Operation.SAVE);
                         fileInstance.setCurrentLocation(newFile.getAbsolutePath());
                     } else {
-                        try{
+                        try {
                             File newFile = new File(defaultOutputDirectory + filePrefix + "_" + filename);
                             FileUtils.copyFile((File) list.getSelectedValue(), new File(defaultOutputDirectory + filePrefix + "_" + filename));
                             fileInstance.setLastOperation(FileInstance.Operation.SAVE);
                             fileInstance.setCurrentLocation(newFile.getAbsolutePath());
-                        } catch (IOException ioe){
+                        } catch (IOException ioe) {
                             LOG.error("Error when saving file", ioe);
                         }
                     }
                 }
-                JOptionPane.showMessageDialog(getContentPane(), labels.getString("fileInOutput")+".", labels.getString("fileSaved"), JOptionPane.INFORMATION_MESSAGE, Utilities.icon);
+                JOptionPane.showMessageDialog(getContentPane(), labels.getString("fileInOutput") + ".", labels.getString("fileSaved"), JOptionPane.INFORMATION_MESSAGE, Utilities.icon);
             }
         });
-        quitItem.addActionListener(new ActionListener(){
+        sendFilesWebDAV.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+        });
+        quitItem.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 System.exit(0);
             }
         });
         xsltItem.addActionListener(new XsltAdderActionListener(this, labels));
-        list.addMouseListener(new MouseAdapter(){
+        list.addMouseListener(new MouseAdapter() {
             @Override
-            public void mouseClicked(MouseEvent e){
-                if(e.getButton() != MouseEvent.BUTTON3 && e.getClickCount() == 1 && list.getSelectedValues().length == 1){
-                    changeInfoInGUI(((File)list.getSelectedValue()).getName());
-                    if(apePanel.getApeTabbedPane().getSelectedIndex() == APETabbedPane.TAB_EDITION) {
+            public void mouseClicked(MouseEvent e) {
+                if (e.getButton() != MouseEvent.BUTTON3 && e.getClickCount() == 1 && list.getSelectedValues().length == 1) {
+                    changeInfoInGUI(((File) list.getSelectedValue()).getName());
+                    if (apePanel.getApeTabbedPane().getSelectedIndex() == APETabbedPane.TAB_EDITION) {
                         try {
-                            apePanel.getApeTabbedPane().createEditionTree(((File)list.getSelectedValue()));
+                            apePanel.getApeTabbedPane().createEditionTree(((File) list.getSelectedValue()));
                         } catch (Exception e1) {
                             //nothing
                         }
@@ -670,7 +664,7 @@ public class DataPreparationToolGUI extends JFrame {
                     apePanel.getApeTabbedPane().changeBackgroundColor(APETabbedPane.TAB_CONVERSION, Utilities.TAB_COLOR);
                     apePanel.getApeTabbedPane().changeBackgroundColor(APETabbedPane.TAB_VALIDATION, Utilities.TAB_COLOR);
                 } else if (e.getButton() == MouseEvent.BUTTON3) {
-                    if(list.getSelectedValues().length == 1){
+                    if (list.getSelectedValues().length == 1) {
                         final int indexToErase = list.locationToIndex(e.getPoint());
                         list.setSelectedIndex(indexToErase);
                     }
@@ -695,10 +689,10 @@ public class DataPreparationToolGUI extends JFrame {
                 }
             }
         });
-        list.addListSelectionListener(new ListSelectionListener(){
+        list.addListSelectionListener(new ListSelectionListener() {
             public void valueChanged(ListSelectionEvent e) {
-                if(list.getSelectedValues() != null) {
-                    if(list.getSelectedValues().length > 1) {
+                if (list.getSelectedValues() != null) {
+                    if (list.getSelectedValues().length > 1) {
                         convertAndValidateBtn.setEnabled(true);
                         validateSelectionBtn.setEnabled(true);
                         convertEseSelectionBtn.setEnabled(true);
@@ -724,17 +718,17 @@ public class DataPreparationToolGUI extends JFrame {
         eseConversionWindowItem.addActionListener(new TabItemActionListener(apePanel, APETabbedPane.TAB_ESE));
         editionWindowItem.addActionListener(new TabItemActionListener(apePanel, APETabbedPane.TAB_EDITION));
 
-        internetApexItem.addActionListener(new ActionListener(){
-            public void actionPerformed(ActionEvent actionEvent){
+        internetApexItem.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent actionEvent) {
                 BareBonesBrowserLaunch.openURL("http://www.apex-project.eu/");
             }
         });
     }
 
     private void checkHoldingsGuideButton() {
-        for(int i = 0; i < list.getSelectedValues().length; i++) {
-            FileInstance fileInstance = fileInstances.get(((File)list.getSelectedValues()[i]).getName());
-            if((fileInstance.getValidationSchema() == Xsd_enum.XSD_APE_SCHEMA || fileInstance.getValidationSchema() == Xsd_enum.XSD1_0_APE_SCHEMA) && fileInstance.isValid()) {
+        for (int i = 0; i < list.getSelectedValues().length; i++) {
+            FileInstance fileInstance = fileInstances.get(((File) list.getSelectedValues()[i]).getName());
+            if ((fileInstance.getValidationSchema() == Xsd_enum.XSD_APE_SCHEMA || fileInstance.getValidationSchema() == Xsd_enum.XSD1_0_APE_SCHEMA) && fileInstance.isValid()) {
                 createHGBtn.setEnabled(true);
                 return;
             }
@@ -742,12 +736,13 @@ public class DataPreparationToolGUI extends JFrame {
         createHGBtn.setEnabled(false);
     }
 
-    public static void createErrorOrWarningPanel(Throwable e, boolean isError, String message, Component owner){
+    public static void createErrorOrWarningPanel(Throwable e, boolean isError, String message, Component owner) {
         java.util.logging.Level level = java.util.logging.Level.INFO;
-        if(isError)
+        if (isError) {
             LOG.error(message, e);
-        else
+        } else {
             LOG.info(message, e);
+        }
         ErrorInfo errorInfo = new ErrorInfo("Error", message, null, "category", e, level, null);
         JXErrorPane.showDialog(owner, errorInfo);
         //todo: FIX below, should be uncommented
@@ -785,29 +780,33 @@ public class DataPreparationToolGUI extends JFrame {
         return p;
     }
 
-    private boolean isCorrect(File file){
+    private boolean isCorrect(File file) {
         return !fileInstances.containsKey(file.getName()) && !file.isDirectory() && (!checkLoadingFiles() || checkLoadingFiles() && XmlChecker.isXmlParseable(file) == null);
     }
 
     public ButtonGroup getGroupXslt() {
         return groupXslt;
     }
+
     public ButtonGroup getGroupXsd() {
         return groupXsd;
     }
+
     public DateNormalization getDateNormalization() {
         return dateNormalization;
     }
+
     public List<String> getLevelList() {
         return levelList;
     }
+
     public List<String> getLangList() {
         return langList;
     }
+
     public APEPanel getAPEPanel() {
         return apePanel;
     }
-
     private Runnable finalAct = new Runnable() {
         public void run() {
             convertAndValidateBtn.setEnabled(false);
@@ -818,21 +817,23 @@ public class DataPreparationToolGUI extends JFrame {
             list.setEnabled(true);
         }
     };
+
     public Runnable getFinalAct() {
         return finalAct;
     }
 
     public static void main(String[] args) throws Exception {
         try {
-            UIManager.setLookAndFeel( UIManager.getCrossPlatformLookAndFeelClassName() );
+            UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
         } catch (Exception e) {
             e.printStackTrace();
         }
 
         Logger.getRootLogger().setLevel(Level.INFO);
         DataPreparationToolGUI dataPreparationToolGUI = new DataPreparationToolGUI();
-        if(args.length == 1 && args[0].equals("dev"))
+        if (args.length == 1 && args[0].equals("dev")) {
             Utilities.isDev = true;
+        }
         dataPreparationToolGUI.setupTool();
         dataPreparationToolGUI.setVisible(true);
     }
@@ -840,47 +841,55 @@ public class DataPreparationToolGUI extends JFrame {
     private void makeDefaultXsdMenuItems() {
         ButtonGroup group = new ButtonGroup();
         JRadioButtonMenuItem jRadioButtonMenuItem;
-        for(Xsd_enum xsdEnum : Xsd_enum.values()){
+        for (Xsd_enum xsdEnum : Xsd_enum.values()) {
             jRadioButtonMenuItem = new JRadioButtonMenuItem(xsdEnum.getReadableName());
-            if(xsdEnum.equals(Xsd_enum.XSD_APE_SCHEMA))
+            if (xsdEnum.equals(Xsd_enum.XSD_APE_SCHEMA)) {
                 jRadioButtonMenuItem.setSelected(true);
+            }
             jRadioButtonMenuItem.addActionListener(new XsdSelectActionListener());
             group.add(jRadioButtonMenuItem);
             defaultXsdSelectionSubmenu.add(jRadioButtonMenuItem);
         }
     }
-    private class XsdSelectActionListener implements ActionListener{
+
+    private class XsdSelectActionListener implements ActionListener {
+
         public void actionPerformed(ActionEvent e) {
             Utilities.setDefaultXsd(e.getActionCommand());
-            for(String key : fileInstances.keySet()) {
+            for (String key : fileInstances.keySet()) {
                 FileInstance fileInstance = fileInstances.get(key);
                 fileInstance.setValidationSchema(e.getActionCommand());
 
-                if(fileInstance.getValidationSchema().equals(Xsd_enum.XSD_EAG_SCHEMA) || fileInstance.getValidationSchema().equals(Xsd_enum.XSD_EAG_2012_SCHEMA))
+                if (fileInstance.getValidationSchema().equals(Xsd_enum.XSD_EAG_SCHEMA) || fileInstance.getValidationSchema().equals(Xsd_enum.XSD_EAG_2012_SCHEMA)) {
                     fileInstance.setFileType(FileInstance.FileType.EAG);
-                else if(fileInstance.getValidationSchema().equals(Xsd_enum.XSD_EAC_SCHEMA))
+                } else if (fileInstance.getValidationSchema().equals(Xsd_enum.XSD_EAC_SCHEMA)) {
                     fileInstance.setFileType(FileInstance.FileType.EAC_CPF);
+                }
 
                 changeInfoInGUI(key);
             }
         }
     }
+
     private void makeDefaultXslMenuItems() {
         ButtonGroup group = new ButtonGroup();
         JRadioButtonMenuItem jRadioButtonMenuItem;
-        for(File xsltFile : Utilities.getXsltFiles()) {
+        for (File xsltFile : Utilities.getXsltFiles()) {
             jRadioButtonMenuItem = new JRadioButtonMenuItem(xsltFile.getName());
-            if(xsltFile.getName().equals(Utilities.XSL_DEFAULT_NAME))
+            if (xsltFile.getName().equals(Utilities.XSL_DEFAULT_NAME)) {
                 jRadioButtonMenuItem.setSelected(true);
+            }
             jRadioButtonMenuItem.addActionListener(new XslSelectActionListener());
             group.add(jRadioButtonMenuItem);
             defaultXslSelectionSubmenu.add(jRadioButtonMenuItem);
         }
     }
-    private class XslSelectActionListener implements ActionListener{
+
+    private class XslSelectActionListener implements ActionListener {
+
         public void actionPerformed(ActionEvent e) {
             Utilities.setDefaultXsl(e.getActionCommand());
-            for(String key : fileInstances.keySet()) {
+            for (String key : fileInstances.keySet()) {
                 FileInstance fileInstance = fileInstances.get(key);
                 fileInstance.setConversionScriptName(e.getActionCommand());
                 changeInfoInGUI(key);
@@ -894,15 +903,18 @@ public class DataPreparationToolGUI extends JFrame {
         int i = 0;
         String result;
         do {
-            if(i == 1)
+            if (i == 1) {
                 explanation += "\n" + labels.getString("options.pleaseFollowRules");
-            result = (String)JOptionPane.showInputDialog(getContentPane(), explanation, labels.getString("chooseCountryCode"), JOptionPane.QUESTION_MESSAGE, Utilities.icon, null, null);
-            if(result == null)
+            }
+            result = (String) JOptionPane.showInputDialog(getContentPane(), explanation, labels.getString("chooseCountryCode"), JOptionPane.QUESTION_MESSAGE, Utilities.icon, null, null);
+            if (result == null) {
                 break;
+            }
             i++;
         } while (dateNormalization.checkForCountrycode(result) == null);
-        if(result != null)
+        if (result != null) {
             retrieveFromDb.saveCountryCode(result);
+        }
     }
 
     private void createOptionPaneForRepositoryCode() {
@@ -911,21 +923,24 @@ public class DataPreparationToolGUI extends JFrame {
         int i = 0;
         String result;
         do {
-            if(i == 1)
+            if (i == 1) {
                 explanation += "\n" + labels.getString("options.pleaseFollowRules");
-            result = (String)JOptionPane.showInputDialog(getContentPane(), explanation, labels.getString("chooseRepositoryCode"), JOptionPane.QUESTION_MESSAGE, Utilities.icon, null, null);
-            if(result == null)
+            }
+            result = (String) JOptionPane.showInputDialog(getContentPane(), explanation, labels.getString("chooseRepositoryCode"), JOptionPane.QUESTION_MESSAGE, Utilities.icon, null, null);
+            if (result == null) {
                 break;
+            }
             i++;
         } while (dateNormalization.checkForMainagencycode(result) == null);
-        if(result != null)
+        if (result != null) {
             retrieveFromDb.saveRepositoryCode(result);
+        }
     }
 
     private void createOptionPaneForChecksLoadingFiles() {
         String currentResult = retrieveFromDb.retrieveCurrentLoadingChecks();
         String explanation = labels.getString("options.loadFilesExplanationYes") + "\n" + labels.getString("options.loadFilesExplanationNo") + "\n" + labels.getString("options.currentLoadFiles") + " '" + currentResult + "'";
-        if(JOptionPane.showConfirmDialog(getContentPane(), explanation, labels.getString("options.howLoadNewFiles"), JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, Utilities.icon) == JOptionPane.YES_OPTION) {
+        if (JOptionPane.showConfirmDialog(getContentPane(), explanation, labels.getString("options.howLoadNewFiles"), JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, Utilities.icon) == JOptionPane.YES_OPTION) {
             retrieveFromDb.saveLoadingChecks("YES");
         } else {
             retrieveFromDb.saveLoadingChecks("NO");
@@ -936,17 +951,18 @@ public class DataPreparationToolGUI extends JFrame {
         return retrieveFromDb.retrieveCurrentLoadingChecks().equals("YES");
     }
 
-    private void changeInfoInGUI(String text){
+    private void changeInfoInGUI(String text) {
         APETabbedPane apeTabbedPane = apePanel.getApeTabbedPane();
         resultArea.setText("");
         apePanel.setFilename(text);
         FileInstance fileInstance = fileInstances.get(text);
-        if(fileInstance.isValid())
+        if (fileInstance.isValid()) {
             apeTabbedPane.setValidationErrorText(labels.getString("validationSuccess"));
-        else
+        } else {
             apeTabbedPane.setValidationErrorText(fileInstance.getValidationErrors());
+        }
         apeTabbedPane.setConversionErrorText(fileInstance.getConversionErrors());
-        if(fileInstance.isConverted()){
+        if (fileInstance.isConverted()) {
             convertItem.setEnabled(false);
             apeTabbedPane.disableConversionBtn();
             apeTabbedPane.setValidationBtnText(labels.getString("validate"));
@@ -955,12 +971,13 @@ public class DataPreparationToolGUI extends JFrame {
             apeTabbedPane.enableConversionBtn();
             apeTabbedPane.setValidationBtnText(labels.getString("validate"));
         }
-        if(fileInstance.isValid()){
+        if (fileInstance.isValid()) {
             validateItem.setEnabled(false);
             apeTabbedPane.disableValidationBtn();
             saveSelectedItem.setEnabled(true);
-            if(fileInstance.getValidationSchema() == Xsd_enum.XSD_APE_SCHEMA || fileInstance.getValidationSchema() == Xsd_enum.XSD1_0_APE_SCHEMA)
+            if (fileInstance.getValidationSchema() == Xsd_enum.XSD_APE_SCHEMA || fileInstance.getValidationSchema() == Xsd_enum.XSD1_0_APE_SCHEMA) {
                 apeTabbedPane.enableConversionEseBtn();
+            }
         } else {
             validateItem.setEnabled(true);
             apeTabbedPane.enableValidationBtn();
@@ -972,53 +989,57 @@ public class DataPreparationToolGUI extends JFrame {
         refreshButtons(fileInstance, Utilities.XSD_GROUP);
     }
 
-    public void refreshButtons(FileInstance fileInstance, int groupId){
+    public void refreshButtons(FileInstance fileInstance, int groupId) {
         Enumeration buttons;
-        if(groupId == Utilities.XSD_GROUP)
+        if (groupId == Utilities.XSD_GROUP) {
             buttons = groupXsd.getElements();
-        else
+        } else {
             buttons = groupXslt.getElements();
+        }
 
-        while(buttons.hasMoreElements()){
-            JRadioButton jRadioButton = (JRadioButton)buttons.nextElement();
-            if(jRadioButton.getText().equals(fileInstance.getConversionScriptName()) || jRadioButton.getText().equals(fileInstance.getValidationSchemaName())){
+        while (buttons.hasMoreElements()) {
+            JRadioButton jRadioButton = (JRadioButton) buttons.nextElement();
+            if (jRadioButton.getText().equals(fileInstance.getConversionScriptName()) || jRadioButton.getText().equals(fileInstance.getValidationSchemaName())) {
                 jRadioButton.setSelected(true);
                 break;
             }
         }
     }
 
-    private void doChecks(){
+    private void doChecks() {
         //2 Files MUST exist - xsl/default.xsl and xsl/languages.xml
         String errorMsg = "";
-        if(isFileMissing(Utilities.DEFAULT_XSL_FILE_PATH))
+        if (isFileMissing(Utilities.DEFAULT_XSL_FILE_PATH)) {
             errorMsg = MessageFormat.format(labels.getString("fileNotFound"), Utilities.DEFAULT_XSL_FILE_PATH) + "\n";
+        }
 
-        if(isFileMissing(Utilities.LANGUAGES_XML_FILE_PATH))
+        if (isFileMissing(Utilities.LANGUAGES_XML_FILE_PATH)) {
             errorMsg += MessageFormat.format(labels.getString("fileNotFound"), Utilities.LANGUAGES_XML_FILE_PATH) + "\n";
+        }
 
-        if(isFileMissing(Utilities.BEFORE_XSL_FILE_PATH))
+        if (isFileMissing(Utilities.BEFORE_XSL_FILE_PATH)) {
             errorMsg += MessageFormat.format(labels.getString("fileNotFound"), Utilities.BEFORE_XSL_FILE_PATH) + "\n";
+        }
 
-        if(StringUtils.isNotEmpty(errorMsg)){
+        if (StringUtils.isNotEmpty(errorMsg)) {
             errorMsg += "\n" + labels.getString("exitProgram");
             JOptionPane.showMessageDialog(getContentPane(), errorMsg, labels.getString("error"), JOptionPane.ERROR_MESSAGE, Utilities.icon);
             System.exit(0);
         }
 
         String repositoryCodeIdentifier = getRepositoryCodeIdentifier();
-        if(repositoryCodeIdentifier == null){
+        if (repositoryCodeIdentifier == null) {
             do {
-                repositoryCodeIdentifier = (String)JOptionPane.showInputDialog(getContentPane(), labels.getString("enterIdentifier") + "\n" + labels.getString("modifyInOption") + "\n\n", labels.getString("chooseId"), JOptionPane.QUESTION_MESSAGE, Utilities.icon, null, null);
-            } while(repositoryCodeIdentifier == null || repositoryCodeIdentifier.equals(""));
+                repositoryCodeIdentifier = (String) JOptionPane.showInputDialog(getContentPane(), labels.getString("enterIdentifier") + "\n" + labels.getString("modifyInOption") + "\n\n", labels.getString("chooseId"), JOptionPane.QUESTION_MESSAGE, Utilities.icon, null, null);
+            } while (repositoryCodeIdentifier == null || repositoryCodeIdentifier.equals(""));
             retrieveFromDb.saveRepositoryCode(repositoryCodeIdentifier);
         }
 
         String countrycode = getCountryCode();
-        if(countrycode == null){
+        if (countrycode == null) {
             do {
-                countrycode = (String)JOptionPane.showInputDialog(getContentPane(), labels.getString("enterCountryCode") + "\n" + labels.getString("modifyInOption") + "\n\n", labels.getString("chooseCountryCode"), JOptionPane.QUESTION_MESSAGE, Utilities.icon, null, null);
-            } while(countrycode == null || countrycode.equals(""));
+                countrycode = (String) JOptionPane.showInputDialog(getContentPane(), labels.getString("enterCountryCode") + "\n" + labels.getString("modifyInOption") + "\n\n", labels.getString("chooseCountryCode"), JOptionPane.QUESTION_MESSAGE, Utilities.icon, null, null);
+            } while (countrycode == null || countrycode.equals(""));
             retrieveFromDb.saveCountryCode(countrycode);
         }
 
@@ -1029,11 +1050,12 @@ public class DataPreparationToolGUI extends JFrame {
 
     /**
      * Erase old temp files (temp_* and .temp_*) from a directory
+     *
      * @param dir The directory where we want to erase temp files
      */
-    private void eraseOldTempFiles(File dir){
-        if(dir.isDirectory()){
-            for(File file : dir.listFiles()){
+    private void eraseOldTempFiles(File dir) {
+        if (dir.isDirectory()) {
+            for (File file : dir.listFiles()) {
                 file.delete();
             }
         }
@@ -1041,22 +1063,23 @@ public class DataPreparationToolGUI extends JFrame {
 
     /**
      * Checks if a file or a directory exists
+     *
      * @param filePath Path of the file to be checked
      * @return True if the file/dir exists, False if not
      */
-    private boolean isFileMissing(String filePath){
+    private boolean isFileMissing(String filePath) {
         return !(new File(filePath)).exists();
     }
 
-    public String getCountryCode(){
+    public String getCountryCode() {
         return retrieveFromDb.retrieveCountryCode();
     }
 
-    public String getRepositoryCodeIdentifier(){
+    public String getRepositoryCodeIdentifier() {
         return retrieveFromDb.retrieveRepositoryCode();
     }
 
-    public HashMap<String, String> getParams(){
+    public HashMap<String, String> getParams() {
         HashMap<String, String> parameters = new HashMap<String, String>();
         parameters.put("countrycode", getCountryCode());
         parameters.put("mainagencycode", getRepositoryCodeIdentifier());
@@ -1088,6 +1111,7 @@ public class DataPreparationToolGUI extends JFrame {
     public JList getList() {
         return list;
     }
+
     public Map<String, FileInstance> getFileInstances() {
         return fileInstances;
     }
@@ -1114,6 +1138,7 @@ public class DataPreparationToolGUI extends JFrame {
     public void enableEseConversionBtn() {
         apePanel.getApeTabbedPane().enableConversionEseBtn();
     }
+
     public void disableConversionEseBtn() {
         convertEseSelectionBtn.setEnabled(false);
     }
@@ -1124,7 +1149,6 @@ public class DataPreparationToolGUI extends JFrame {
 //    public void disableAbortBtn() {
 //        abort.setEnabled(false);
 //    }
-
     public void enableSaveBtn() {
         saveSelectedItem.setEnabled(true);
     }
@@ -1135,17 +1159,18 @@ public class DataPreparationToolGUI extends JFrame {
         apePanel.getApeTabbedPane().enableConversionEseBtn();
     }
 
-    private class LanguageActionListener implements ActionListener{
+    private class LanguageActionListener implements ActionListener {
+
         public void actionPerformed(ActionEvent e) {
-            if(e.getActionCommand().equals("English")){
+            if (e.getActionCommand().equals("English")) {
                 labels = ResourceBundle.getBundle("i18n/apeBundle", new Locale("en"));
-            } else if(e.getActionCommand().equals("fr")){
+            } else if (e.getActionCommand().equals("fr")) {
                 labels = ResourceBundle.getBundle("i18n/apeBundle", new Locale("fr"));
-            } else if(e.getActionCommand().equals("de")){
+            } else if (e.getActionCommand().equals("de")) {
                 labels = ResourceBundle.getBundle("i18n/apeBundle", new Locale("de"));
-            } else if(e.getActionCommand().equals("hu")){
+            } else if (e.getActionCommand().equals("hu")) {
                 labels = ResourceBundle.getBundle("i18n/apeBundle", new Locale("hu"));
-            } else if(e.getActionCommand().equals("xx")){
+            } else if (e.getActionCommand().equals("xx")) {
                 labels = ResourceBundle.getBundle("i18n/apeBundle", new Locale("xx"));
             }
             changeAllTextLg();
