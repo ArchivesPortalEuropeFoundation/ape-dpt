@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xsl:stylesheet version="2.0" xmlns="http://www.archivesportaleurope.eu/profiles/APEnet_EAG/"
+<xsl:stylesheet version="2.0" xmlns="http://www.archivesportaleurope.net/Portal/profiles/eag_2012/"
                 xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
                 xmlns:fo="http://www.w3.org/1999/XSL/Format"
                 xmlns:xs="http://www.w3.org/2001/XMLSchema"
-                xmlns:ape="http://www.archivesportaleurope.eu/functions"
-                xpath-default-namespace="http://www.archivesportaleurope.eu/profiles/APEnet_EAG/"
+                xmlns:ape="http://www.archivesportaleurope.net/functions"
+                xpath-default-namespace="http://www.archivesportaleurope.net/Portal/profiles/eag_2012/"
                 exclude-result-prefixes="xsl fo xs ape">
 
     <xsl:output indent="yes" method="xml" />
@@ -12,13 +12,13 @@
     <xsl:template match="*:xml-stylesheet"/>
 
     <xsl:template match="*:eag">
-        <eag xmlns="http://www.archivesportaleurope.eu/profiles/APEnet_EAG/" audience="external">
+        <eag xmlns="http://www.archivesportaleurope.net/Portal/profiles/eag_2012/" audience="external">
             <xsl:apply-templates select="node()" mode="inside"/>
         </eag>
     </xsl:template>
 
     <xsl:template match="node()" mode="inside">
-        <xsl:element name="{local-name()}" namespace="http://www.archivesportaleurope.eu/profiles/APEnet_EAG/">
+        <xsl:element name="{local-name()}" namespace="http://www.archivesportaleurope.net/Portal/profiles/eag_2012/">
             <xsl:apply-templates select="node()|@*" mode="inside"/>
         </xsl:element>
     </xsl:template>

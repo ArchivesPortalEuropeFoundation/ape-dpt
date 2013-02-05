@@ -47,7 +47,7 @@ public class OtherAgencyCode {
 
     @XmlValue
     protected String content;
-    @XmlAttribute(name = "localType", namespace = "http://www.archivesportaleurope.eu/profiles/eag/")
+    @XmlAttribute(name = "localType", namespace = "http://www.archivesportaleurope.net/Portal/profiles/eag_2012/")
     @XmlSchemaType(name = "anySimpleType")
     protected String localType;
     @XmlAttribute(name = "id", namespace = "http://www.w3.org/XML/1998/namespace")

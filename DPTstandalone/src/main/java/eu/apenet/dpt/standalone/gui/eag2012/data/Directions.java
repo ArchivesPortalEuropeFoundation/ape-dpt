@@ -46,7 +46,7 @@ import javax.xml.bind.annotation.XmlType;
 @XmlRootElement(name = "directions")
 public class Directions {
 
-    @XmlElementRef(name = "citation", namespace = "http://www.archivesportaleurope.eu/profiles/eag/", type = Citation.class)
+    @XmlElementRef(name = "citation", namespace = "http://www.archivesportaleurope.net/Portal/profiles/eag_2012/", type = Citation.class)
     @XmlMixed
     protected List<Object> content;
     @XmlAttribute(name = "lang", namespace = "http://www.w3.org/XML/1998/namespace")

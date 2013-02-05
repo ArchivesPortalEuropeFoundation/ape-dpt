@@ -129,7 +129,7 @@ public class RetrieveFromDb {
 
         if(doCheckUpdate){
             try {
-                URL url = new URL("http://www.archivesportaleurope.eu/Portal/dptupate/version.action?versionNb=" + versionNb);
+                URL url = new URL("http://www.archivesportaleurope.net/Portal/dptupate/version?versionNb=" + versionNb);
                 HttpURLConnection connection = (HttpURLConnection) url.openConnection();
                 if(connection.getResponseCode() == 200){
                     //There is a new version

@@ -6,7 +6,7 @@
     Editor: APEnet project
 
     This version of the apeEAD schema has been written from the official 2002 schema to accommodate the needs of the APEnet project.
-    This schema is in XSD 1.0, for the XSD 1.1 version please see (http://www.archivesportaleurope.eu/profiles/apeEAD.xsd)
+    This schema is in XSD 1.0, for the XSD 1.1 version please see (http://www.archivesportaleurope.net/Portal/profiles/apeEAD.xsd)
 -->
 <xs:schema elementFormDefault="qualified" targetNamespace="urn:isbn:1-931666-22-9"
 	xmlns="urn:isbn:1-931666-22-9" xmlns:xlink="http://www.w3.org/1999/xlink"

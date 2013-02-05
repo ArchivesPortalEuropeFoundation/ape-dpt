@@ -5,7 +5,7 @@
                 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                 xmlns:xs="http://www.w3.org/2001/XMLSchema"
                 xmlns:xlink="http://www.w3.org/1999/xlink"
-				xmlns:ape="http://www.archivesportaleurope.eu/functions"
+				xmlns:ape="http://www.archivesportaleurope.net/functions"
                 xsi:schemaLocation="urn:isbn:1-931666-22-9 http://www.loc.gov/ead/ead.xsd"
                 xpath-default-namespace="urn:isbn:1-931666-22-9"
                 exclude-result-prefixes="xsl fo xs ape">
@@ -16,7 +16,7 @@
 				<xsl:output indent="yes" method="xml" />
 
 				<xsl:template match="/">
-					<ead xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="urn:isbn:1-931666-22-9" xsi:schemaLocation="urn:isbn:1-931666-22-9 http://www.archivesportaleurope.eu/profiles/APEnet_EAD.xsd http://www.w3.org/1999/xlink http://www.loc.gov/standards/xlink/xlink.xsd" audience="external">
+					<ead xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="urn:isbn:1-931666-22-9" xsi:schemaLocation="urn:isbn:1-931666-22-9 http://www.archivesportaleurope.net/Protal/profiles/apeEAD.xsd http://www.w3.org/1999/xlink http://www.loc.gov/standards/xlink/xlink.xsd" audience="external">
 						<eadheader countryencoding="iso3166-1" dateencoding="iso8601" langencoding="iso639-2b" repositoryencoding="iso15511" scriptencoding="iso15924" relatedencoding="MARC21">
 							<eadid>
                                 <xsl:attribute name="countrycode" select="$countrycode"/>

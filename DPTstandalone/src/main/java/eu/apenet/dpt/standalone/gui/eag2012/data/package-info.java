@@ -5,5 +5,5 @@
 // Generated on: 2012.08.17 at 08:52:22 AM CEST 
 //
 
-@javax.xml.bind.annotation.XmlSchema(namespace = "http://www.archivesportaleurope.eu/profiles/eag/", elementFormDefault = javax.xml.bind.annotation.XmlNsForm.QUALIFIED)
+@javax.xml.bind.annotation.XmlSchema(namespace = "http://www.archivesportaleurope.net/Portal/profiles/eag_2012/", elementFormDefault = javax.xml.bind.annotation.XmlNsForm.QUALIFIED)
 package eu.apenet.dpt.standalone.gui.eag2012.data;

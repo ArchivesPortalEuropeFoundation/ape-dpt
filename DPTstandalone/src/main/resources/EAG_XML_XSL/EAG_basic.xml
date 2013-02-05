@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<eag audience="external" xmlns="http://www.archivesportaleurope.eu/profiles/APEnet_EAG/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.archivesportaleurope.eu/profiles/APEnet_EAG/ http://www.archivesportaleurope.eu/profiles/APEnet_EAG.xsd">
+<eag audience="external" xmlns="http://www.archivesportaleurope.net/Portal/profiles/eag_2012/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.archivesportaleurope.net/Portal/profiles/eag_2012/ http://www.archivesportaleurope.net/Portal/profiles/eag_2012.xsd">
    <eagheader status="draft" langencoding="iso639-2b" scriptencoding="iso15924"
    dateencoding="iso8601" countryencoding="iso3166-1" repositoryencoding="iso15511">
       <eagid/>

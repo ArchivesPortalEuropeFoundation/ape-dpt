@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<eag xmlns="http://www.archivesportaleurope.eu/profiles/eag/" audience="internal">
+<eag xmlns="http://www.archivesportaleurope.net/Portal/profiles/eag_2012/" audience="internal">
     <control>
         <recordId></recordId>
         <otherRecordId></otherRecordId>

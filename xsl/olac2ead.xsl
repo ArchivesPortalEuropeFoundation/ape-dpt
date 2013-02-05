@@ -4,7 +4,7 @@
                 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                 xmlns:xs="http://www.w3.org/2001/XMLSchema"
                 xmlns:none="none"
-                xmlns:ape="http://www.archivesportaleurope.eu/functions"
+                xmlns:ape="http://www.archivesportaleurope.net/functions"
                 xmlns:xlink="http://www.w3.org/1999/xlink"
 		        xmlns:olac="http://www.language-archives.org/OLAC/1.1/"
                 xmlns:dc="http://purl.org/dc/elements/1.1/"
@@ -20,7 +20,7 @@
         <ead xmlns="urn:isbn:1-931666-22-9"
              xmlns:xlink="http://www.w3.org/1999/xlink"
              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-             xsi:schemaLocation="urn:isbn:1-931666-22-9 http://www.archivesportaleurope.eu/profiles/APEnet_EAD.xsd http://www.w3.org/1999/xlink http://www.loc.gov/standards/xlink/xlink.xsd" audience="external">
+             xsi:schemaLocation="urn:isbn:1-931666-22-9 http://www.archivesportaleurope.net/Portal/profiles/apeEAD.xsd http://www.w3.org/1999/xlink http://www.loc.gov/standards/xlink/xlink.xsd" audience="external">
             <eadheader>
                 <eadid />
                 <filedesc>

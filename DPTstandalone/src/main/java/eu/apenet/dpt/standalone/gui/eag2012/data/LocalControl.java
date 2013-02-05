@@ -58,7 +58,7 @@ public class LocalControl {
     protected List<Term> term;
     protected Date date;
     protected DateRange dateRange;
-    @XmlAttribute(name = "localType", namespace = "http://www.archivesportaleurope.eu/profiles/eag/")
+    @XmlAttribute(name = "localType", namespace = "http://www.archivesportaleurope.net/Portal/profiles/eag_2012/")
     @XmlSchemaType(name = "anySimpleType")
     protected String localType;
     @XmlAttribute(name = "id", namespace = "http://www.w3.org/XML/1998/namespace")

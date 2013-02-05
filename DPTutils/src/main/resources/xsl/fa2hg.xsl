@@ -5,7 +5,7 @@
 <xsl:stylesheet version="2.0"
                 xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
                 xmlns:xlink="http://www.w3.org/1999/xlink"
-                xmlns:ape="http://www.archivesportaleurope.eu/functions"
+                xmlns:ape="http://www.archivesportaleurope.net/functions"
                 exclude-result-prefixes="#all">
 
     <xsl:param name="addXMLNS" select="'false'"/>

@@ -22,7 +22,7 @@ import java.util.regex.Pattern;
  * Date: Apr 22, 2010
  */
 public class Oai2EadNormalization extends ExtensionFunctionDefinition {
-    private static final StructuredQName funcname = new StructuredQName("ape", "http://www.archivesportaleurope.eu/functions", "oai2EadNormalization");
+    private static final StructuredQName funcname = new StructuredQName("ape", "http://www.archivesportaleurope.net/functions", "oai2EadNormalization");
     private Logger log = Logger.getLogger(getClass());
 
     private final Pattern pattern_unitid = Pattern.compile("(.*)unitid%3D(.*)%26unitdate(.*)");

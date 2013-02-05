@@ -6,7 +6,7 @@
                 xmlns:xs="http://www.w3.org/2001/XMLSchema"
                 xmlns:none="none"
                 xmlns:xlink="http://www.w3.org/1999/xlink"
-                xmlns:ape="http://www.archivesportaleurope.eu/functions"
+                xmlns:ape="http://www.archivesportaleurope.net/functions"
                 xsi:schemaLocation="urn:isbn:1-931666-22-9 http://www.loc.gov/ead/ead.xsd"
                 xpath-default-namespace="urn:isbn:1-931666-22-9"
                 exclude-result-prefixes="xsl fo xs none ape">
@@ -91,7 +91,7 @@
                 <ead xmlns="urn:isbn:1-931666-22-9"
                     xmlns:xlink="http://www.w3.org/1999/xlink"
                     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-                    xsi:schemaLocation="urn:isbn:1-931666-22-9 http://www.archivesportaleurope.eu/profiles/APEnet_EAD_XSD1.0.xsd http://www.w3.org/1999/xlink http://www.loc.gov/standards/xlink/xlink.xsd" audience="external">
+                    xsi:schemaLocation="urn:isbn:1-931666-22-9 http://www.archivesportaleurope.net/Portal/profiles/apeEAD_XSD1.0.xsd http://www.w3.org/1999/xlink http://www.loc.gov/standards/xlink/xlink.xsd" audience="external">
                     <xsl:apply-templates select="node()" mode="copy"/>
                 </ead>
             </xsl:when>
@@ -99,7 +99,7 @@
                 <ead xmlns="urn:isbn:1-931666-22-9"
                     xmlns:xlink="http://www.w3.org/1999/xlink"
                     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-                    xsi:schemaLocation="urn:isbn:1-931666-22-9 http://www.archivesportaleurope.eu/profiles/APEnet_EAD.xsd http://www.w3.org/1999/xlink http://www.loc.gov/standards/xlink/xlink.xsd" audience="external">
+                    xsi:schemaLocation="urn:isbn:1-931666-22-9 http://www.archivesportaleurope.net/Portal/profiles/apeEAD.xsd http://www.w3.org/1999/xlink http://www.loc.gov/standards/xlink/xlink.xsd" audience="external">
                     <xsl:apply-templates select="node()" mode="copy"/>
                 </ead>
             </xsl:otherwise>
@@ -293,7 +293,7 @@
         </unitid>
     </xsl:template>
 
-    <xsl:template match="*[name()='title']" mode="copy">
+    <xsl:template match="*[lower-case(name())='title']" mode="copy">
         <unittitle encodinganalog="3.1.2">
             <xsl:value-of select="." />
         </unittitle>

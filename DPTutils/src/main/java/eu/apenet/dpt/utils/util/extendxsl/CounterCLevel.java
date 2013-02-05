@@ -13,7 +13,7 @@ import org.apache.log4j.Logger;
  * @author Yoann Moranville
  */
 public class CounterCLevel extends ExtensionFunctionDefinition {
-    private static final StructuredQName funcname = new StructuredQName("ape", "http://www.archivesportaleurope.eu/functions", "counterclevel");
+    private static final StructuredQName funcname = new StructuredQName("ape", "http://www.archivesportaleurope.net/functions", "counterclevel");
     private static final Logger LOG = Logger.getLogger(CounterCLevel.class);
     private CounterCLevelCall counterCLevelCall;
 

@@ -52,7 +52,7 @@ public class OtherRecordId {
     @XmlID
     @XmlSchemaType(name = "ID")
     protected String id;
-    @XmlAttribute(name = "localType", namespace = "http://www.archivesportaleurope.eu/profiles/eag/")
+    @XmlAttribute(name = "localType", namespace = "http://www.archivesportaleurope.net/Portal/profiles/eag_2012/")
     @XmlSchemaType(name = "anySimpleType")
     protected String localType;
 

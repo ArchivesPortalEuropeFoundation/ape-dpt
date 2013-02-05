@@ -46,7 +46,7 @@ import javax.xml.bind.annotation.XmlType;
 @XmlRootElement(name = "nonpreform")
 public class Nonpreform {
 
-    @XmlElementRef(name = "useDates", namespace = "http://www.archivesportaleurope.eu/profiles/eag/", type = UseDates.class)
+    @XmlElementRef(name = "useDates", namespace = "http://www.archivesportaleurope.net/Portal/profiles/eag_2012/", type = UseDates.class)
     @XmlMixed
     protected List<Object> content;
     @XmlAttribute(name = "lang", namespace = "http://www.w3.org/XML/1998/namespace")

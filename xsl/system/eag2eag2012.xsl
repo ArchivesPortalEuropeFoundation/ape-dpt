@@ -6,10 +6,10 @@
                 xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
                 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                 xmlns:xs="http://www.w3.org/2001/XMLSchema"
-                xmlns:ape="http://www.archivesportaleurope.eu/functions"
-                xmlns:ape_static="http://www.archivesportaleurope.eu/functions_static"
-                xsi:schemaLocation="http://www.archivesportaleurope.eu/profiles/eag/ http://www.archivesportaleurope.eu/profiles/eag2012.xsd"
-                xpath-default-namespace="http://www.archivesportaleurope.eu/profiles/eag/"
+                xmlns:ape="http://www.archivesportaleurope.net/functions"
+                xmlns:ape_static="http://www.archivesportaleurope.net/functions_static"
+                xsi:schemaLocation="http://www.archivesportaleurope.net/Portal/profiles/eag/ http://www.archivesportaleurope.net/Portal/profiles/eag_2012.xsd"
+                xpath-default-namespace="http://www.archivesportaleurope.net/Portal/profiles/eag/"
                 exclude-result-prefixes="xsl xs ape ape_static">
 
     <xsl:output encoding="utf-8" indent="yes" method="xml"/>
