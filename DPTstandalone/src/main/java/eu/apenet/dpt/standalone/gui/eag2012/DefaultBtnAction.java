@@ -65,7 +65,9 @@ public abstract class DefaultBtnAction implements ActionListener {
     protected void reloadTabbedPanel(JComponent panel, int tabPosition) {
         String labelTitle = tabbedPane.getTitleAt(tabPosition);
         tabbedPane.remove(tabPosition);
-        tabbedPane.insertTab(labelTitle, null, new JScrollPane(panel), "", tabPosition);
+        JScrollPane jScrollPane = new JScrollPane(panel);
+        jScrollPane.getVerticalScrollBar().setUnitIncrement(20);
+        tabbedPane.insertTab(labelTitle, null, jScrollPane, "", tabPosition);
         tabbedPane.setSelectedIndex(tabPosition);
     }
 }
