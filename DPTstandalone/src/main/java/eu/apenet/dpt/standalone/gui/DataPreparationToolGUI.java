@@ -1018,6 +1018,32 @@ public class DataPreparationToolGUI extends JFrame {
         }
     }
 
+    public void disableRadioButtons() {
+        Enumeration buttons = groupXsd.getElements();
+        while (buttons.hasMoreElements()) {
+            JRadioButton jRadioButton = (JRadioButton) buttons.nextElement();
+            jRadioButton.setEnabled(false);
+        }
+        buttons = groupXslt.getElements();
+        while (buttons.hasMoreElements()) {
+            JRadioButton jRadioButton = (JRadioButton) buttons.nextElement();
+            jRadioButton.setEnabled(false);
+        }
+    }
+
+    public void enableRadioButtons() {
+        Enumeration buttons = groupXsd.getElements();
+        while (buttons.hasMoreElements()) {
+            JRadioButton jRadioButton = (JRadioButton) buttons.nextElement();
+            jRadioButton.setEnabled(true);
+        }
+        buttons = groupXslt.getElements();
+        while (buttons.hasMoreElements()) {
+            JRadioButton jRadioButton = (JRadioButton) buttons.nextElement();
+            jRadioButton.setEnabled(true);
+        }
+    }
+
     private void doChecks() {
         //2 Files MUST exist - xsl/default.xsl and xsl/languages.xml
         String errorMsg = "";

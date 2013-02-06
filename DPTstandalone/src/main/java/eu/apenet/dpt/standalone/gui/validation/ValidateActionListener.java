@@ -45,6 +45,7 @@ public class ValidateActionListener implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         apeTabbedPane.setValidationErrorText(labels.getString("validationBegun"));
         dataPreparationToolGUI.disableAllBtnAndItems();
+        dataPreparationToolGUI.disableRadioButtons();
 
         File file = (File) dataPreparationToolGUI.getList().getSelectedValue();
 //        SwingUtilities.invokeLater(new ValidateRunner(file));
@@ -69,6 +70,7 @@ public class ValidateActionListener implements ActionListener {
                     apeTabbedPane.checkFlashingTab(APETabbedPane.TAB_VALIDATION, Utilities.FLASHING_RED_COLOR);
                     dataPreparationToolGUI.setResultAreaText(labels.getString("validation.error.fileNotXml"));
                     dataPreparationToolGUI.enableSaveBtn();
+                    dataPreparationToolGUI.enableRadioButtons();
                     return;
                 }
             }
@@ -128,6 +130,7 @@ public class ValidateActionListener implements ActionListener {
                 dataPreparationToolGUI.setResultAreaText(labels.getString("validationFinished"));
                 fileInstance.setLastOperation(FileInstance.Operation.VALIDATE);
                 dataPreparationToolGUI.getList().repaint();
+                dataPreparationToolGUI.enableRadioButtons();
             }
         }
     }
