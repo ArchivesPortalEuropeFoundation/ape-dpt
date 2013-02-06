@@ -572,7 +572,10 @@ public class DataPreparationToolGUI extends JFrame {
                 defaultSaveFolderChooser.setCurrentDirectory(new File(retrieveFromDb.retrieveDefaultSaveFolder()));
                 if (defaultSaveFolderChooser.showOpenDialog(getParent()) == JFileChooser.APPROVE_OPTION) {
                     File directory = defaultSaveFolderChooser.getSelectedFile();
-                    retrieveFromDb.saveDefaultSaveFolder(directory + "/");
+                    if(directory.canWrite())
+                        retrieveFromDb.saveDefaultSaveFolder(directory + "/");
+                    else
+                        createErrorOrWarningPanel(new Exception(labels.getString("error.directory.nowrites")), false, labels.getString("error.directory.nowrites"), getContentPane());
                 }
             }
         });
