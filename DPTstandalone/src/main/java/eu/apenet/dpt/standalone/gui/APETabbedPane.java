@@ -107,11 +107,7 @@ public class APETabbedPane extends JTabbedPane {
     }
 
     private void initialize() {
-        try {
-            editionPane.setViewportView(createEditionTree(null));
-        } catch (Exception e) {
-            //nothing
-        }
+        editionPane.setViewportView(createEditionTree(null));
 
         validationErrors.setEditable(false);
         validationErrors.setLineWrap(true);
@@ -306,7 +302,7 @@ public class APETabbedPane extends JTabbedPane {
      * @param file The file represented in the list
      * @return A JComponent containing the tree if it exists, or an error message if not
      */
-    public JComponent createEditionTree(File file) throws Exception {
+    public JComponent createEditionTree(File file) {
         if(file == null){
             return createMsgEditionTree(labels.getString("noTreeBuild") + "...");
         }
@@ -342,20 +338,15 @@ public class APETabbedPane extends JTabbedPane {
             expandFirstLevel();
 //            tree.expandAll();
 //            tree.setHighlighters(HighlighterFactory.createSimpleStriping (HighlighterFactory.QUICKSILVER));
-        } catch (Exception e){
-            tree = null;
-            throw new Exception("Could not create the tree of the XML file", e);
-        }
-
-//        if(tree != null) {
             JScrollPane paneTest = new JScrollPane(tree);
             editionPane.setViewportView(paneTest);
             tree.setEditable(true);
             dataPreparationToolGUI.enableSaveBtn();
             ((XMLTreeTableModel)tree.getTreeTableModel()).setName(file.getName());
-//        } else {
-//            LOG.error("Tree not created (tree is null) - problems");
-//        }
+        } catch (Exception e){
+            tree = null;
+            editionPane.setViewportView(createMsgEditionTree(labels.getString("edition.error.fileNoXmlOrCorrupted")));
+        }
         return tree;
     }
 
@@ -388,8 +379,8 @@ public class APETabbedPane extends JTabbedPane {
                 changeBackgroundColor(TAB_ESE, Utilities.TAB_COLOR);
             else if(apeTabbedPane.getSelectedIndex() == TAB_EDITION){
                 if(dataPreparationToolGUI.getList().getSelectedValue() != null){
-                    try {
-                        createEditionTree((File)dataPreparationToolGUI.getList().getSelectedValue());
+                    createEditionTree((File)dataPreparationToolGUI.getList().getSelectedValue());
+                    if(tree != null)
                         tree.addMouseListener(new MouseListener(){
                             public void mouseReleased(MouseEvent e){
                                 checkAndLaunchPopUp(e);
@@ -401,9 +392,6 @@ public class APETabbedPane extends JTabbedPane {
                             public void mouseEntered(MouseEvent e) {}
                             public void mouseClicked(MouseEvent e) {}
                         });
-                    } catch (Exception ex) {
-                        editionPane.setViewportView(createMsgEditionTree(labels.getString("edition.error.fileNoXmlOrCorrupted")));
-                    }
                 }
             }
         }

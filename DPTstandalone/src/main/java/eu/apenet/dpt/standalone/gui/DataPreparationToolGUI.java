@@ -662,13 +662,8 @@ public class DataPreparationToolGUI extends JFrame {
             public void mouseClicked(MouseEvent e) {
                 if (e.getButton() != MouseEvent.BUTTON3 && e.getClickCount() == 1 && list.getSelectedValues().length == 1) {
                     changeInfoInGUI(((File) list.getSelectedValue()).getName());
-                    if (apePanel.getApeTabbedPane().getSelectedIndex() == APETabbedPane.TAB_EDITION) {
-                        try {
-                            apePanel.getApeTabbedPane().createEditionTree(((File) list.getSelectedValue()));
-                        } catch (Exception e1) {
-                            //nothing
-                        }
-                    }
+                    if (apePanel.getApeTabbedPane().getSelectedIndex() == APETabbedPane.TAB_EDITION)
+                        apePanel.getApeTabbedPane().createEditionTree(((File) list.getSelectedValue()));
                     apePanel.getApeTabbedPane().changeBackgroundColor(APETabbedPane.TAB_CONVERSION, Utilities.TAB_COLOR);
                     apePanel.getApeTabbedPane().changeBackgroundColor(APETabbedPane.TAB_VALIDATION, Utilities.TAB_COLOR);
                 } else if (e.getButton() == MouseEvent.BUTTON3) {
