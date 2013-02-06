@@ -2194,7 +2194,14 @@
                             <!--test-->
                             <xsl:choose>
                                 <xsl:when test="//eadid[@countrycode='NL']">
-                                    <xsl:value-of select="concat(//eadid/text(), concat(' - ', .))"/>
+                                    <xsl:choose>
+                                        <xsl:when test="starts-with(., //eadid/text())">
+                                            <xsl:value-of select="."/>
+                                        </xsl:when>
+                                        <xsl:otherwise>
+                                            <xsl:value-of select="concat(//eadid/text(), concat(' - ', .))"/>
+                                        </xsl:otherwise>
+                                    </xsl:choose>
                                 </xsl:when>
                                 <xsl:otherwise>
                                     <xsl:choose>
