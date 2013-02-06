@@ -282,8 +282,8 @@ public class DataPreparationToolGUI extends JFrame {
         saveSelectedItem.setEnabled(false);
         saveSelectedItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S, Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()));
         fileMenu.add(saveSelectedItem);
-        sendFilesWebDAV.setEnabled(false);
-        fileMenu.add(sendFilesWebDAV);
+//        sendFilesWebDAV.setEnabled(false);
+//        fileMenu.add(sendFilesWebDAV);
         fileMenu.addSeparator();
         fileMenu.add(quitItem);
 
