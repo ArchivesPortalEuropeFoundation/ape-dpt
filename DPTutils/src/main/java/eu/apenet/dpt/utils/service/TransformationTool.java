@@ -1,10 +1,7 @@
 package eu.apenet.dpt.utils.service;
 
 import eu.apenet.dpt.utils.util.DiscardDtdEntityResolver;
-import eu.apenet.dpt.utils.util.extendxsl.CounterCLevel;
-import eu.apenet.dpt.utils.util.extendxsl.CounterCLevelCall;
-import eu.apenet.dpt.utils.util.extendxsl.DateNormalization;
-import eu.apenet.dpt.utils.util.extendxsl.Oai2EadNormalization;
+import eu.apenet.dpt.utils.util.extendxsl.*;
 import net.sf.saxon.Controller;
 
 import javax.xml.transform.*;
@@ -58,6 +55,7 @@ public class TransformationTool {
 
             DateNormalization dateNormalization = new DateNormalization();
             Oai2EadNormalization oai2EadNormalization = new Oai2EadNormalization();
+            FlagSet flagSet = new FlagSet();
 
             InputSource is = new InputSource(inputFileStream);
             SAXSource xmlSource = new SAXSource(saxParser, is);
@@ -65,6 +63,7 @@ public class TransformationTool {
             Processor processor = new Processor(false);
             processor.registerExtensionFunction(dateNormalization);
             processor.registerExtensionFunction(oai2EadNormalization);
+            processor.registerExtensionFunction(flagSet);
 
             if(counterCLevelCall == null)
                 counterCLevelCall = new CounterCLevelCall();

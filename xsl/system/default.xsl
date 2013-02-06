@@ -54,21 +54,15 @@
     <!--<xsl:include href="levels.xsl"/>-->
 
     <xsl:template match="/">
-        <xsl:choose>
-            <xsl:when test="//eadid[@countrycode]">
-                <xsl:message>The countrycode is: <xsl:value-of select="//eadid/@countrycode"/></xsl:message>
-            </xsl:when>
-            <xsl:otherwise>
-                <xsl:message>No countrycode, we will use default transformation.</xsl:message>
-            </xsl:otherwise>
-        </xsl:choose>
-        <xsl:message>Element excluded from the transformation (if any):</xsl:message>
         <xsl:apply-templates select="node()" mode="top"/>
     </xsl:template>
 
     <!--#all: copy fonds intermediate lowest nested-->
     <!-- Elements unknown -->
     <xsl:template match="*" name="excludeElement" mode="#all">
+        <xsl:if test="ape:flagSet() = 'true'">
+            <xsl:message>Element(s) excluded from the transformation:</xsl:message>
+        </xsl:if>
         <xsl:variable name="excludedElement">
             <xsl:if test="name(../../../../../../../..) != ''">
                 <xsl:value-of select="name(../../../../../../../..)"/><xsl:if test="name(../../../../../../../..)='c'">@<xsl:value-of select="../../../../../../../../@level" /></xsl:if><xsl:text>/</xsl:text>
