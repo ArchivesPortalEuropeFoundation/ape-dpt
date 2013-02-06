@@ -781,6 +781,8 @@ public class DataPreparationToolGUI extends JFrame {
     }
 
     private boolean isCorrect(File file) {
+        if(fileInstances.containsKey(file.getName()))
+            createErrorOrWarningPanel(new Exception(labels.getString("error.file.exists")), false, labels.getString("error.file.exists"), this);
         return !fileInstances.containsKey(file.getName()) && !file.isDirectory() && (!checkLoadingFiles() || checkLoadingFiles() && XmlChecker.isXmlParseable(file) == null);
     }
 
