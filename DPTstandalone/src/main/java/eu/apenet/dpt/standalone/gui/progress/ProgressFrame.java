@@ -16,19 +16,16 @@ import java.util.ResourceBundle;
  */
 public class ProgressFrame extends JFrame {
     private List<ApeProgressBar> apeProgressBars;
-    private JPanel progressPanel;
-//    private JPanel progressBar1Pane;
-//    private JPanel progressBar2Pane;
     private ApeProgressBar progressBarBatch;
     private ApeProgressBar progressBarSingle;
 
 
     public ProgressFrame(ResourceBundle labels, Component parent, boolean isBatch, ApexActionListener actionListener) {
         super(labels.getString("progressTrans"));
-        setLayout(new GridLayout(2, 1));
+        setLayout(new GridLayout(1, 1));
 
-        final String abortingStr = labels.getString("aborting");
-        progressPanel = new JPanel(new GridLayout(3, 1));
+        JPanel progressPanel = new JPanel(new GridLayout(3, 1));
+        progressPanel.setBorder(BorderFactory.createBevelBorder(1));
 
         apeProgressBars = new ArrayList<ApeProgressBar>();
 
@@ -38,18 +35,9 @@ public class ProgressFrame extends JFrame {
             abort = new JButton(labels.getString("abort"));
             abort.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent actionEvent) {
-                    //Abort the current action
-//                    continueLoop = false;
-                    //Write that we aborted the action
-//                    resultArea.setText(abortingStr);
                     apexActionListener.abort();
                 }
             });
-
-//            progressBar1Pane = new JPanel(new BorderLayout());
-//            progressBar1Pane.setBorder(BorderFactory.createBevelBorder(1));
-//            progressBar2Pane = new JPanel(new BorderLayout());
-//            progressBar2Pane.setBorder(BorderFactory.createBevelBorder(1));
 
             progressBarBatch = new ApeProgressBar(progressPanel.getWidth());
             progressPanel.add(progressBarBatch);

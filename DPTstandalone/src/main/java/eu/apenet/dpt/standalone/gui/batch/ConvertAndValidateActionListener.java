@@ -93,9 +93,9 @@ public class ConvertAndValidateActionListener extends ApexActionListener {
                         } else {
                             eadidQueryComponent = new EadidQueryComponent(labels);
                         }
-                        int result = JOptionPane.showConfirmDialog(parent, eadidQueryComponent.getMainPanel(), labels.getString("enterEADID"), JOptionPane.INFORMATION_MESSAGE);
-                        while (result == JOptionPane.NO_OPTION || eadidQueryComponent.getEntryEadid() == null || eadidQueryComponent.getEntryEadid().equals("")){
-                            result = JOptionPane.showConfirmDialog(parent, eadidQueryComponent.getMainPanel(), labels.getString("enterEADID"), JOptionPane.INFORMATION_MESSAGE);
+                        int result = JOptionPane.showConfirmDialog(parent, eadidQueryComponent.getMainPanel(), labels.getString("enterEADID"), JOptionPane.OK_CANCEL_OPTION);
+                        while (eadidQueryComponent.getEntryEadid() == null || eadidQueryComponent.getEntryEadid().equals("")){
+                            result = JOptionPane.showConfirmDialog(parent, eadidQueryComponent.getMainPanel(), labels.getString("enterEADID"), JOptionPane.OK_CANCEL_OPTION);
                         }
                         if(result == JOptionPane.OK_OPTION)
                             eadid = eadidQueryComponent.getEntryEadid();
@@ -106,11 +106,13 @@ public class ConvertAndValidateActionListener extends ApexActionListener {
                         Thread threadProgress = null;
                         CounterThread counterThread = null;
                         CounterCLevelCall counterCLevelCall = null;
+                        int counterMax = 0;
                         if(fileInstance.getConversionScriptName().equals(Utilities.XSL_DEFAULT_NAME)){
                             progressBar = progressFrame.getProgressBarSingle();
+                            progressBar.setVisible(true);
                             progressFrame.setTitle(labels.getString("progressTrans") + " - " + file.getName());
                             CountCLevels countCLevels = new CountCLevels();
-                            int counterMax = countCLevels.countOneFile(file);
+                            counterMax = countCLevels.countOneFile(file);
                             if(counterMax > 0){
                                 counterCLevelCall = new CounterCLevelCall();
                                 counterCLevelCall.initializeCounter(counterMax);
@@ -151,6 +153,14 @@ public class ConvertAndValidateActionListener extends ApexActionListener {
                                 throw new Exception("Error when converting " + file.getName(), e);
                             }
 
+                            if(threadProgress != null){
+                                counterThread.stop();
+                                threadProgress.interrupt();
+                            }
+                            if(counterMax > 0)
+                                progressBar.setValue(counterMax);
+                            progressBar.setIndeterminate(true);
+
                             try {
                                 InputStream is = FileUtils.openInputStream(new File(fileInstance.getCurrentLocation()));
                                 dataPreparationToolGUI.setResultAreaText(labels.getString("validating")+ " " + file.getName() + " (" + currentFileNumberBatch + "/" + numberOfFiles + ")");
@@ -175,22 +185,14 @@ public class ConvertAndValidateActionListener extends ApexActionListener {
                             summaryWorking.stop();
                             threadRunner.interrupt();
                             dataPreparationToolGUI.getList().repaint();
-                            if(threadProgress != null){
-                                counterThread.stop();
-                                threadProgress.interrupt();
-                            }
                             if(progressBar != null)
                                 progressBar.setVisible(false);
-                            if(batchProgressBar != null)
-                                batchProgressBar.setVisible(false);
                         }
                     }
                 }
                 Toolkit.getDefaultToolkit().beep();
-                if(progressFrame != null){
-                    progressFrame.setVisible(false);
-                    progressFrame.dispose();
-                }
+                if(progressFrame != null)
+                    progressFrame.stop();
                 dataPreparationToolGUI.getFinalAct().run();
                 dataPreparationToolGUI.getList().clearSelection();
                 if(continueLoop)
