@@ -2477,6 +2477,15 @@
                     <xsl:call-template name="daoRoleType" />
                 </dao>
             </xsl:when>
+            <xsl:when test="@xlink:href">
+                <dao>
+                    <xsl:attribute name="xlink:href" select="@xlink:href"/>
+                    <xsl:if test="@xlink:title">
+                        <xsl:attribute name="xlink:title" select="@xlink:title"/>
+                    </xsl:if>
+                    <xsl:call-template name="daoRoleType" />
+                </dao>
+            </xsl:when>
             <xsl:otherwise>
                 <xsl:call-template name="excludeElement" />
             </xsl:otherwise>
