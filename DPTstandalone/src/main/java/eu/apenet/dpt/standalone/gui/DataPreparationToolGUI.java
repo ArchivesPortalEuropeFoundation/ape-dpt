@@ -58,7 +58,7 @@ public class DataPreparationToolGUI extends JFrame {
 
     private final static Logger LOG = Logger.getLogger(DataPreparationToolGUI.class);
     public static final String VERSION_NB = "1.2.0-SNAPSHOT";
-    private static final String[] LANGUAGES_OF_TOOL = {"en", "fr", "de", "hu", "xx"};
+    private static final String[] LANGUAGES_OF_TOOL = {"en", "fr", "de", "el", "nl", "hu", "xx"};
     private ResourceBundle labels;
     /**
      * Button and titles to be used in the GUI
@@ -421,6 +421,7 @@ public class DataPreparationToolGUI extends JFrame {
         Locale currentLocale = Locale.getDefault();
         ButtonGroup group = new ButtonGroup();
         JRadioButtonMenuItem rbMenuItem = new JRadioButtonMenuItem("English");
+        rbMenuItem.setActionCommand("en");
         if (!Arrays.asList(LANGUAGES_OF_TOOL).contains(currentLocale.getLanguage()) || currentLocale.getLanguage().equals("en")) {
             rbMenuItem.setSelected(true);
         }
@@ -445,6 +446,25 @@ public class DataPreparationToolGUI extends JFrame {
         rbMenuItem.addActionListener(new LanguageActionListener());
         group.add(rbMenuItem);
         languageMenu.add(rbMenuItem);
+
+        rbMenuItem = new JRadioButtonMenuItem("Ελληνικά");
+        rbMenuItem.setActionCommand("el");
+        if (currentLocale.getLanguage().equals("el")) {
+            rbMenuItem.setSelected(true);
+        }
+        rbMenuItem.addActionListener(new LanguageActionListener());
+        group.add(rbMenuItem);
+        languageMenu.add(rbMenuItem);
+
+        rbMenuItem = new JRadioButtonMenuItem("Nederlands");
+        rbMenuItem.setActionCommand("nl");
+        if (currentLocale.getLanguage().equals("nl")) {
+            rbMenuItem.setSelected(true);
+        }
+        rbMenuItem.addActionListener(new LanguageActionListener());
+        group.add(rbMenuItem);
+        languageMenu.add(rbMenuItem);
+
 
         rbMenuItem = new JRadioButtonMenuItem("Magyar");
         rbMenuItem.setActionCommand("hu");
@@ -1199,16 +1219,8 @@ public class DataPreparationToolGUI extends JFrame {
     private class LanguageActionListener implements ActionListener {
 
         public void actionPerformed(ActionEvent e) {
-            if (e.getActionCommand().equals("English")) {
-                labels = ResourceBundle.getBundle("i18n/apeBundle", new Locale("en"));
-            } else if (e.getActionCommand().equals("fr")) {
-                labels = ResourceBundle.getBundle("i18n/apeBundle", new Locale("fr"));
-            } else if (e.getActionCommand().equals("de")) {
-                labels = ResourceBundle.getBundle("i18n/apeBundle", new Locale("de"));
-            } else if (e.getActionCommand().equals("hu")) {
-                labels = ResourceBundle.getBundle("i18n/apeBundle", new Locale("hu"));
-            } else if (e.getActionCommand().equals("xx")) {
-                labels = ResourceBundle.getBundle("i18n/apeBundle", new Locale("xx"));
+            if(Arrays.asList(LANGUAGES_OF_TOOL).contains(e.getActionCommand())) {
+                labels = ResourceBundle.getBundle("i18n/apeBundle", new Locale(e.getActionCommand()));
             }
             changeAllTextLg();
         }
