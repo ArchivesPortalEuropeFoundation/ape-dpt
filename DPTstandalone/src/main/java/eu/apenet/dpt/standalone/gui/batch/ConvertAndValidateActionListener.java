@@ -49,7 +49,7 @@ public class ConvertAndValidateActionListener extends ApexActionListener {
     public void actionPerformed(ActionEvent event) {
         continueLoop = true;
         dataPreparationToolGUI.disableAllBtnAndItems();
-//        dataPreparationToolGUI.enableAbortBtn();
+        dataPreparationToolGUI.disableRadioButtons();
         dataPreparationToolGUI.getAPEPanel().setFilename("");
         final Object[] objects = dataPreparationToolGUI.getList().getSelectedValues();
         final ApexActionListener apexActionListener = this;
@@ -57,7 +57,7 @@ public class ConvertAndValidateActionListener extends ApexActionListener {
             public void run(){
                 int numberOfFiles = objects.length;
                 int currentFileNumberBatch = 0;
-                ProgressFrame progressFrame = new ProgressFrame(labels, parent, true, apexActionListener);
+                ProgressFrame progressFrame = new ProgressFrame(labels, parent, true, false, apexActionListener);
                 JProgressBar batchProgressBar = progressFrame.getProgressBarBatch();
 
                 for(Object oneFile : objects){
@@ -200,6 +200,7 @@ public class ConvertAndValidateActionListener extends ApexActionListener {
                 else
                     dataPreparationToolGUI.setResultAreaText(labels.getString("aborted"));
                 dataPreparationToolGUI.enableSaveBtn();
+                dataPreparationToolGUI.enableRadioButtons();
             }
         }).start();
     }

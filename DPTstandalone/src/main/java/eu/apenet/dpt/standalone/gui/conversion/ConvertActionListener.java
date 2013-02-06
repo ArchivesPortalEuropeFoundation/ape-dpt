@@ -47,6 +47,7 @@ public class ConvertActionListener implements ActionListener {
         Map<String, FileInstance> fileInstances = dataPreparationToolGUI.getFileInstances();
         JList list = dataPreparationToolGUI.getList();
         dataPreparationToolGUI.disableAllBtnAndItems();
+        dataPreparationToolGUI.disableRadioButtons();
         File file = (File)list.getSelectedValue();
         FileInstance fileInstance = fileInstances.get(file.getName());
         if(!fileInstance.isXml()) {
@@ -55,6 +56,7 @@ public class ConvertActionListener implements ActionListener {
                 apePanel.getApeTabbedPane().setConversionErrorText(labels.getString("conversion.error.fileNotXml"));
                 apePanel.getApeTabbedPane().checkFlashingTab(APETabbedPane.TAB_CONVERSION, Utilities.FLASHING_RED_COLOR);
                 dataPreparationToolGUI.enableSaveBtn();
+                dataPreparationToolGUI.enableRadioButtons();
                 return;
             }
         }
@@ -123,7 +125,7 @@ public class ConvertActionListener implements ActionListener {
             CounterThread counterThread = null;
             ProgressFrame progressFrame = null;
             if(isDefaultTransformation) {
-                progressFrame = new ProgressFrame(labels, parent, false, null);
+                progressFrame = new ProgressFrame(labels, parent, false, false, null);
                 ProgressFrame.ApeProgressBar progressBar = progressFrame.getProgressBarSingle();
                 CountCLevels countCLevels = new CountCLevels();
                 int counterMax = countCLevels.countOneFile(file);
@@ -175,6 +177,7 @@ public class ConvertActionListener implements ActionListener {
                 } else
                     apePanel.getApeTabbedPane().checkFlashingTab(APETabbedPane.TAB_CONVERSION, Utilities.FLASHING_RED_COLOR);
                 dataPreparationToolGUI.enableValidationBtns();
+                dataPreparationToolGUI.enableRadioButtons();
                 summaryWorking.stop();
                 if(counterThread != null)
                     counterThread.stop();

@@ -43,8 +43,8 @@ public class ValidateSelectionActionListener extends ApexActionListener {
 
     public void actionPerformed(ActionEvent e){
         continueLoop = true;
-//        dataPreparationToolGUI.enableAbortBtn();
         dataPreparationToolGUI.disableAllBtnAndItems();
+        dataPreparationToolGUI.disableRadioButtons();
         dataPreparationToolGUI.getAPEPanel().setFilename("");
         final Object[] objects = dataPreparationToolGUI.getList().getSelectedValues();
         final ApexActionListener apexActionListener = this;
@@ -52,13 +52,12 @@ public class ValidateSelectionActionListener extends ApexActionListener {
             public void run(){
                 int numberOfFiles = objects.length;
                 int currentFileNumberBatch = 0;
-                ProgressFrame progressFrame = new ProgressFrame(labels, parent, true, apexActionListener);
+                ProgressFrame progressFrame = new ProgressFrame(labels, parent, true, true, apexActionListener);
 
+                ProgressFrame.ApeProgressBar progressBar = progressFrame.getProgressBarBatch();
                 for(Object oneFile : objects){
                     if(!continueLoop)
                         break;
-
-                    ProgressFrame.ApeProgressBar progressBar = progressFrame.getProgressBarBatch();
 
                     File file = (File)oneFile;
                     dataPreparationToolGUI.setResultAreaText(labels.getString("validating")+ " " + file.getName() + " (" + (++currentFileNumberBatch) + "/" + numberOfFiles + ")");
@@ -108,14 +107,11 @@ public class ValidateSelectionActionListener extends ApexActionListener {
                             summaryWorking.stop();
                             threadRunner.interrupt();
                             dataPreparationToolGUI.getList().repaint();
-                            if(progressBar != null)
-                                progressBar.setVisible(false);
                         }
                     }
                 }
                 if(progressFrame != null){
-                    progressFrame.setVisible(false);
-                    progressFrame.dispose();
+                    progressFrame.stop();
                 }
                 dataPreparationToolGUI.getFinalAct().run();
                 dataPreparationToolGUI.getList().clearSelection();
@@ -124,6 +120,7 @@ public class ValidateSelectionActionListener extends ApexActionListener {
                 else
                     dataPreparationToolGUI.setResultAreaText(labels.getString("aborted"));
                 dataPreparationToolGUI.enableSaveBtn();
+                dataPreparationToolGUI.enableRadioButtons();
             }
         }).start();
     }

@@ -20,7 +20,7 @@ public class ProgressFrame extends JFrame {
     private ApeProgressBar progressBarSingle;
 
 
-    public ProgressFrame(ResourceBundle labels, Component parent, boolean isBatch, ApexActionListener actionListener) {
+    public ProgressFrame(ResourceBundle labels, Component parent, boolean isBatch, boolean isValidationOnly, ApexActionListener actionListener) {
         super(labels.getString("progressTrans"));
         setLayout(new GridLayout(1, 1));
 
@@ -44,8 +44,10 @@ public class ProgressFrame extends JFrame {
             apeProgressBars.add(progressBarBatch);
         }
 
-        progressBarSingle = new ApeProgressBar(progressPanel.getWidth());
-        progressPanel.add(progressBarSingle);
+        if(!isValidationOnly) {
+            progressBarSingle = new ApeProgressBar(progressPanel.getWidth());
+            progressPanel.add(progressBarSingle);
+        }
 
         if(isBatch) {
             JPanel buttonPanel = new JPanel(new GridLayout(1, 3));
