@@ -87,12 +87,12 @@ public class ConvertActionListener implements ActionListener {
                     } else {
                         eadidQueryComponent = new EadidQueryComponent(labels);
                     }
-                    int result = JOptionPane.showConfirmDialog(parent, eadidQueryComponent.getMainPanel(), labels.getString("enterEADID"), JOptionPane.YES_NO_OPTION);
+                    int result = JOptionPane.showConfirmDialog(parent, eadidQueryComponent.getMainPanel(), labels.getString("enterEADID"), JOptionPane.OK_CANCEL_OPTION);
                     while (eadidQueryComponent.getEntryEadid() == null || eadidQueryComponent.getEntryEadid().equals(""))
-                        result = JOptionPane.showConfirmDialog(parent, eadidQueryComponent.getMainPanel(), labels.getString("enterEADID"), JOptionPane.YES_NO_OPTION);
+                        result = JOptionPane.showConfirmDialog(parent, eadidQueryComponent.getMainPanel(), labels.getString("enterEADID"), JOptionPane.OK_CANCEL_OPTION);
                     if(result == JOptionPane.OK_OPTION)
                         eadid = eadidQueryComponent.getEntryEadid();
-                    if(result == JOptionPane.NO_OPTION)
+                    if(result == JOptionPane.CANCEL_OPTION)
                         doTransformation = false;
                 }
             }
