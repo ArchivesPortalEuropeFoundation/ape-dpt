@@ -729,11 +729,15 @@ public class DataPreparationToolGUI extends JFrame {
     }
 
     private void checkHoldingsGuideButton() {
+        boolean first = true;
         for (int i = 0; i < list.getSelectedValues().length; i++) {
             FileInstance fileInstance = fileInstances.get(((File) list.getSelectedValues()[i]).getName());
             if ((fileInstance.getValidationSchema() == Xsd_enum.XSD_APE_SCHEMA || fileInstance.getValidationSchema() == Xsd_enum.XSD1_0_APE_SCHEMA) && fileInstance.isValid()) {
-                createHGBtn.setEnabled(true);
-                return;
+                if(!first) {
+                    createHGBtn.setEnabled(true);
+                    return;
+                }
+                first = false;
             }
         }
         createHGBtn.setEnabled(false);
