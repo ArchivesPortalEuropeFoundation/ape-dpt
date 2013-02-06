@@ -2360,7 +2360,7 @@
                 <!--<dao xlink:href="{@href}"/>-->
                 <xsl:call-template name="dao"/>
             </xsl:for-each>
-            <xsl:for-each select="../daogrp/daoloc | ../odd/daogrp/daoloc">
+            <xsl:for-each select="../daogrp/daoloc | ../odd/daogrp/daoloc | ../daogrp/dao">
                 <dao>
                     <xsl:if test="@href!=''">
                         <xsl:attribute name="xlink:href" select="@href"/>
@@ -2414,6 +2414,7 @@
     <xsl:template match="c/daogrp/resource | c01/daogrp/resource | c02/daogrp/resource | c03/daogrp/resource | c04/daogrp/resource | c05/daogrp/resource | c06/daogrp/resource | c07/daogrp/resource | c08/daogrp/resource | c09/daogrp/resource | c10/daogrp/resource | c11/daogrp/resource | c12/daogrp/resource" mode="fonds intermediate lowest" />
     <xsl:template match="c/daogrp/arc | c01/daogrp/arc | c02/daogrp/arc | c03/daogrp/arc | c04/daogrp/arc | c05/daogrp/arc | c06/daogrp/arc | c07/daogrp/arc | c08/daogrp/arc | c09/daogrp/arc | c10/daogrp/arc | c11/daogrp/arc | c12/daogrp/arc" mode="fonds intermediate lowest" />
     <xsl:template match="c/daogrp/daoloc | c01/daogrp/daoloc | c02/daogrp/daoloc | c03/daogrp/daoloc | c04/daogrp/daoloc | c05/daogrp/daoloc | c06/daogrp/daoloc | c07/daogrp/daoloc | c08/daogrp/daoloc | c09/daogrp/daoloc | c10/daogrp/daoloc | c11/daogrp/daoloc | c12/daogrp/daoloc" mode="fonds intermediate lowest" />
+    <xsl:template match="c/daogrp/dao | c01/daogrp/dao | c02/daogrp/dao | c03/daogrp/dao | c04/daogrp/dao | c05/daogrp/dao | c06/daogrp/dao | c07/daogrp/dao | c08/daogrp/dao | c09/daogrp/dao | c10/daogrp/dao | c11/daogrp/dao | c12/daogrp/dao" mode="fonds intermediate lowest" />
     <xsl:template match="c/odd/daogrp | c01/odd/daogrp | c02/odd/daogrp | c03/odd/daogrp | c04/odd/daogrp | c05/odd/daogrp | c06/odd/daogrp | c07/odd/daogrp | c08/odd/daogrp | c09/odd/daogrp | c10/odd/daogrp | c11/odd/daogrp | c12/odd/daogrp" mode="fonds intermediate lowest">
         <xsl:apply-templates select="node()" mode="#current" />
     </xsl:template>
