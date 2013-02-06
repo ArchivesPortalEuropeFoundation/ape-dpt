@@ -877,7 +877,7 @@
 
     <!-- copy: archdesc/originalsloc -->
     <xsl:template match="archdesc/originalsloc" mode="copy">
-        <originalsloc>
+        <originalsloc encodinganalog="3.5.1">
             <xsl:apply-templates select="node()" mode="#current"/>
         </originalsloc>
     </xsl:template>
