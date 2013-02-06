@@ -590,7 +590,8 @@ public class DataPreparationToolGUI extends JFrame {
         });
         saveSelectedItem.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                for (String filename : fileInstances.keySet()) {
+                for (Object selectedValue : list.getSelectedValues()) {
+                    String filename = ((File)selectedValue).getName();
                     FileInstance fileInstance = fileInstances.get(filename);
                     String filePrefix = fileInstance.getFileType().getFilePrefix();
                     String defaultOutputDirectory = retrieveFromDb.retrieveDefaultSaveFolder();
