@@ -6,6 +6,7 @@ import org.apache.log4j.Logger;
 
 import javax.swing.*;
 import java.awt.*;
+import java.io.File;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.text.SimpleDateFormat;
@@ -64,7 +65,7 @@ public class RetrieveFromDb {
     }
 
     public String retrieveDefaultSaveFolder() {
-        return retrieve(DBUtil.OptionKeys.OPTION_SAVE_FOLDER.getName(), Utilities.LOG_DIR); //Default should be user's home directory???
+        return retrieve(DBUtil.OptionKeys.OPTION_SAVE_FOLDER.getName(), new File(Utilities.LOG_DIR).getAbsolutePath() + "/"); //Default should be user's home directory???
     }
 
     public void saveDefaultSaveFolder(String location) {

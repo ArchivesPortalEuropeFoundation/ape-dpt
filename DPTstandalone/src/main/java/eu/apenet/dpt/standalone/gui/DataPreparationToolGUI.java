@@ -590,11 +590,12 @@ public class DataPreparationToolGUI extends JFrame {
         });
         saveSelectedItem.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
+                String defaultOutputDirectory = retrieveFromDb.retrieveDefaultSaveFolder();
+                boolean isMultipleFiles = list.getSelectedIndices().length > 1;
                 for (Object selectedValue : list.getSelectedValues()) {
                     String filename = ((File)selectedValue).getName();
                     FileInstance fileInstance = fileInstances.get(filename);
                     String filePrefix = fileInstance.getFileType().getFilePrefix();
-                    String defaultOutputDirectory = retrieveFromDb.retrieveDefaultSaveFolder();
 
                     //todo: do we really need this?
                     filename = filename.startsWith("temp_") ? filename.replace("temp_", "") : filename;
@@ -636,7 +637,10 @@ public class DataPreparationToolGUI extends JFrame {
                         }
                     }
                 }
-                JOptionPane.showMessageDialog(getContentPane(), labels.getString("fileInOutput") + ".", labels.getString("fileSaved"), JOptionPane.INFORMATION_MESSAGE, Utilities.icon);
+                if(isMultipleFiles)
+                    JOptionPane.showMessageDialog(getContentPane(), MessageFormat.format(labels.getString("fileInOutput"), defaultOutputDirectory) + ".", labels.getString("fileSaved"), JOptionPane.INFORMATION_MESSAGE, Utilities.icon);
+                else
+                    JOptionPane.showMessageDialog(getContentPane(), MessageFormat.format(labels.getString("filesInOutput"), defaultOutputDirectory) + ".", labels.getString("fileSaved"), JOptionPane.INFORMATION_MESSAGE, Utilities.icon);
             }
         });
         sendFilesWebDAV.addActionListener(new ActionListener() {
