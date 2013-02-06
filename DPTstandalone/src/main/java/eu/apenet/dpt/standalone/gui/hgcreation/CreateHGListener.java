@@ -320,11 +320,11 @@ public class CreateHGListener implements ActionListener {
             JButton saveButton = new JButton(labels.getString("saveBtn"));
             buttonPanel.add(saveButton, BorderLayout.EAST);
 
-            JLabel idLevel = new JLabel(labels.getString("identifier") + " [unitid]: ");
+            JLabel idLevel = new JLabel(labels.getString("identifier") + " [unitid] *: ");
 
             final JTextField idLevelText = new JTextField(obj.getId());
 
-            final JLabel nameLevel = new JLabel(labels.getString("name") + " [unittitle]: ");
+            final JLabel nameLevel = new JLabel(labels.getString("name") + " [unittitle] *: ");
 
             final JTextField nameLevelText = new JTextField(obj.getName());
 
@@ -342,16 +342,19 @@ public class CreateHGListener implements ActionListener {
 
             saveButton.addActionListener(new ActionListener(){
                 public void actionPerformed(ActionEvent e) {
-                    if(!nameLevelText.getText().equals("") && !nameLevelText.getText().equals("[" + labels.getString("changeTitle") + "]")){
+                    if(!nameLevelText.getText().equals("") && !nameLevelText.getText().equals("[" + labels.getString("changeTitle") + "]") && !idLevelText.getText().equals("") && !idLevelText.getText().equals("[" + labels.getString("changeId") + "]")) {
                         obj.setId(idLevelText.getText());
                         obj.setName(nameLevelText.getText());
                         obj.setDescription(descLevelText.getText());
                         editLevelFrame.dispose();
                         ((LevelTreeModel) holdingsGuideTree.getModel()).reload(cLevelTreeObject);
                     } else {
-                        nameLevelText.setText("[" + labels.getString("changeTitle") + "]");
-                        if(!nameLevel.getText().endsWith("(" + labels.getString("mandatory") + ")"))
-                            nameLevel.setText(nameLevel.getText() + " (" + labels.getString("mandatory") + ")");
+                        if(idLevelText.getText().equals("")) {
+                            idLevelText.setText("[" + labels.getString("changeId") + "]");
+                        }
+                        if(nameLevelText.getText().equals("")) {
+                            nameLevelText.setText("[" + labels.getString("changeTitle") + "]");
+                        }
                     }
                 }
             });
