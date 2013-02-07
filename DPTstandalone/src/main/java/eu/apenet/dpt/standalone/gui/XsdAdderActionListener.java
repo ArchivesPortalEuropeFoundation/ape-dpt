@@ -1,7 +1,9 @@
 package eu.apenet.dpt.standalone.gui;
 
+import eu.apenet.dpt.standalone.gui.db.RetrieveFromDb;
 import eu.apenet.dpt.utils.util.XsdChecker;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
 import javax.swing.*;
@@ -23,11 +25,13 @@ public class XsdAdderActionListener implements ActionListener {
     private DataPreparationToolGUI dataPreparationToolGUI;
     private Component parent;
     private ResourceBundle labels;
+    private RetrieveFromDb retrieveFromDb;
 
-    public XsdAdderActionListener(DataPreparationToolGUI dataPreparationToolGUI, ResourceBundle labels) {
+    public XsdAdderActionListener(DataPreparationToolGUI dataPreparationToolGUI, ResourceBundle labels, RetrieveFromDb retrieveFromDb) {
         this.dataPreparationToolGUI = dataPreparationToolGUI;
         this.parent = dataPreparationToolGUI.getContentPane();
         this.labels = labels;
+        this.retrieveFromDb = retrieveFromDb;
     }
 
     public void actionPerformed(ActionEvent e) {
@@ -37,7 +41,11 @@ public class XsdAdderActionListener implements ActionListener {
         if(xsdChooser.showOpenDialog(parent) == JFileChooser.APPROVE_OPTION){
             File file = xsdChooser.getSelectedFile();
             if(isXSD(file)){
-                if(saveXsd(file)){
+                //todo: Ask user to provide a readable name for this schema
+                String result = (String) JOptionPane.showInputDialog(parent, "enter name", "title", JOptionPane.QUESTION_MESSAGE, Utilities.icon, null, null);
+                while (StringUtils.isBlank(result))
+                    result = (String) JOptionPane.showInputDialog(parent, "enter name", "title", JOptionPane.QUESTION_MESSAGE, Utilities.icon, null, null);
+                if(saveXsd(file, result)){
                     JRadioButton newButton = new JRadioButton(file.getName());
                     newButton.addActionListener(new XsdSelectorListener(dataPreparationToolGUI));
                     dataPreparationToolGUI.getGroupXsd().add(newButton);
@@ -57,10 +65,11 @@ public class XsdAdderActionListener implements ActionListener {
         return (file.isFile() && file.getName().endsWith(".xsd") && XsdChecker.isXsdFile(file));
     }
 
-    private boolean saveXsd(File file){
-        try{
+    private boolean saveXsd(File file, String name){
+        try {
+            if(!retrieveFromDb.saveNewAdditionalXsd(name, file.getName()))
+                return false;
             FileUtils.copyFile(file, new File(Utilities.CONFIG_DIR + file.getName()));
-            //todo: add to database!
             return true;
         } catch (IOException e){
             LOG.error("Moving file " + file.getAbsolutePath() + " failed", e);

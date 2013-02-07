@@ -675,7 +675,7 @@ public class DataPreparationToolGUI extends JFrame {
             }
         });
         xsltItem.addActionListener(new XsltAdderActionListener(this, labels));
-        xsdItem.addActionListener(new XsdAdderActionListener(this, labels));
+        xsdItem.addActionListener(new XsdAdderActionListener(this, labels, retrieveFromDb));
         if(Utilities.isDev)
             databaseItem.addActionListener(new DatabaseCheckerActionListener(retrieveFromDb, getContentPane()));
         list.addMouseListener(new MouseAdapter() {

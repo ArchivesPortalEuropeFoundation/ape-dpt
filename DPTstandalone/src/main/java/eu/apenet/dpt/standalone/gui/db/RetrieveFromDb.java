@@ -108,9 +108,15 @@ public class RetrieveFromDb {
         return list;
     }
 
-    public void saveNewAdditionalXsd(String name, String location) {
-        String query = DBUtil.createInsertQuery(DBUtil.DBNames.TABLE_XSD.getName());
-        dbUtil.doSqlQuery(query, Arrays.asList(name, location));
+    public boolean saveNewAdditionalXsd(String name, String location) {
+        try {
+            String query = DBUtil.createInsertQuery(DBUtil.DBNames.TABLE_XSD.getName());
+            dbUtil.doSqlQuery(query, Arrays.asList(name, location));
+            return true;
+        } catch (Exception e) {
+            LOG.error("Could not save in database a new XSD", e);
+            return false;
+        }
     }
 
     private String retrieve(String optionKey, String defaultValue) {
