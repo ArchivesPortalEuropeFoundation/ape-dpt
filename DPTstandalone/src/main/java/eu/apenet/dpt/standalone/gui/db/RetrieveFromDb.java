@@ -10,9 +10,10 @@ import java.io.File;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.text.SimpleDateFormat;
-import java.util.Arrays;
-import java.util.Date;
+import java.util.*;
+import java.util.List;
 
 /**
  * User: Yoann Moranville
@@ -87,6 +88,29 @@ public class RetrieveFromDb {
 
     public Boolean retrieveUseExistingRoleType(){
         return Boolean.parseBoolean(retrieve(DBUtil.OptionKeys.OPTION_USE_EXISTING_ROLETYPE.getName(), "true"));
+    }
+
+    public List<Map<String, String>> retrieveAdditionalXsds() {
+        ResultSet set = selectAllFromTable(DBUtil.DBNames.TABLE_XSD.getName());
+        List<Map<String, String>> list = new ArrayList<Map<String, String>>();
+        Map<String, String> xsdEntry;
+        try {
+            while (set.next()) {
+                xsdEntry = new HashMap<String, String>();
+                xsdEntry.put(DBUtil.DBNames.COLUMN_PRIMARY_ID.getName(), Integer.toString(set.getInt(DBUtil.DBNames.COLUMN_PRIMARY_ID.getName())));
+                xsdEntry.put(DBUtil.DBNames.COLUMN_TITLE.getName(), set.getString(DBUtil.DBNames.COLUMN_TITLE.getName()));
+                xsdEntry.put(DBUtil.DBNames.COLUMN_VALUE.getName(), set.getString(DBUtil.DBNames.COLUMN_VALUE.getName()));
+                list.add(xsdEntry);
+            }
+        } catch (SQLException e) {
+            LOG.error("Error retrieving the XSDs from the database", e);
+        }
+        return list;
+    }
+
+    public void saveNewAdditionalXsd(String name, String location) {
+        String query = DBUtil.createInsertQuery(DBUtil.DBNames.TABLE_XSD.getName());
+        dbUtil.doSqlQuery(query, Arrays.asList(name, location));
     }
 
     private String retrieve(String optionKey, String defaultValue) {

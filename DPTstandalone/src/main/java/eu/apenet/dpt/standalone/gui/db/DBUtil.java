@@ -21,6 +21,7 @@ public class DBUtil {
         TABLE_OPTIONS("ape_options"),
         TABLE_TITLES("hg_titles"),
         TABLE_IDS("hg_ids"),
+        TABLE_XSD("xsd_addition"),
         COLUMN_TITLE("TITLE"),
         COLUMN_ID("IDENTIFIER"),
         COLUMN_VALUE("VALUE"),
@@ -81,7 +82,8 @@ public class DBUtil {
         List<String> queries = Arrays.asList(
                 "CREATE TABLE ape_options (ID INTEGER NOT NULL PRIMARY KEY GENERATED ALWAYS AS IDENTITY(START WITH 1, INCREMENT BY 1), MYKEY VARCHAR(30), VALUE VARCHAR(256))",
                 "CREATE TABLE hg_titles (ID INTEGER NOT NULL PRIMARY KEY GENERATED ALWAYS AS IDENTITY(START WITH 1, INCREMENT BY 1), TITLE VARCHAR(64))",
-                "CREATE TABLE hg_ids (ID INTEGER NOT NULL PRIMARY KEY GENERATED ALWAYS AS IDENTITY(START WITH 1, INCREMENT BY 1), IDENTIFIER VARCHAR(64))"
+                "CREATE TABLE hg_ids (ID INTEGER NOT NULL PRIMARY KEY GENERATED ALWAYS AS IDENTITY(START WITH 1, INCREMENT BY 1), IDENTIFIER VARCHAR(64))",
+                "CREATE TABLE xsd_addition (ID INTEGER NOT NULL PRIMARY KEY GENERATED ALWAYS AS IDENTITY(START WITH 1, INCREMENT BY 1), TITLE VARCHAR(64), VALUE VARCHAR(256))"
         );
         Statement statement;
         try{
@@ -187,6 +189,9 @@ public class DBUtil {
     }
     public static String createInsertQuery(String tableName){
         return "INSERT INTO " + tableName + " (MYKEY, VALUE) VALUES (?, ?)";
+    }
+    public static String createInsertQueryInXsd(String tableName){
+        return "INSERT INTO " + tableName + " (TITLE, VALUE) VALUES (?, ?)";
     }
     public static String createSelectAllQuery(String tableName){
         return "SELECT * FROM " + tableName;
