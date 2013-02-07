@@ -677,16 +677,11 @@ public class DataPreparationToolGUI extends JFrame {
             }
         });
         xsltItem.addActionListener(new XsltAdderActionListener(this, labels));
+        xsdItem.addActionListener(new XsdAdderActionListener(this, labels));
         list.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                if (e.getButton() != MouseEvent.BUTTON3 && e.getClickCount() == 1 && list.getSelectedValues().length == 1) {
-                    changeInfoInGUI(((File) list.getSelectedValue()).getName());
-                    if (apePanel.getApeTabbedPane().getSelectedIndex() == APETabbedPane.TAB_EDITION)
-                        apePanel.getApeTabbedPane().createEditionTree(((File) list.getSelectedValue()));
-                    apePanel.getApeTabbedPane().changeBackgroundColor(APETabbedPane.TAB_CONVERSION, Utilities.TAB_COLOR);
-                    apePanel.getApeTabbedPane().changeBackgroundColor(APETabbedPane.TAB_VALIDATION, Utilities.TAB_COLOR);
-                } else if (e.getButton() == MouseEvent.BUTTON3) {
+                if (e.getButton() == MouseEvent.BUTTON3) {
                     if (list.getSelectedValues().length == 1) {
                         final int indexToErase = list.locationToIndex(e.getPoint());
                         list.setSelectedIndex(indexToErase);
@@ -714,16 +709,22 @@ public class DataPreparationToolGUI extends JFrame {
         });
         list.addListSelectionListener(new ListSelectionListener() {
             public void valueChanged(ListSelectionEvent e) {
-                if (list.getSelectedValues() != null) {
+                if (list.getSelectedValues() != null && list.getSelectedValues().length != 0) {
                     if (list.getSelectedValues().length > 1) {
                         convertAndValidateBtn.setEnabled(true);
                         validateSelectionBtn.setEnabled(true);
                         convertEseSelectionBtn.setEnabled(true);
                         disableAllBtnAndItems();
+                        changeInfoInGUI("");
                     } else {
                         convertAndValidateBtn.setEnabled(false);
                         validateSelectionBtn.setEnabled(false);
                         convertEseSelectionBtn.setEnabled(false);
+                        changeInfoInGUI(((File) list.getSelectedValue()).getName());
+                        if (apePanel.getApeTabbedPane().getSelectedIndex() == APETabbedPane.TAB_EDITION)
+                            apePanel.getApeTabbedPane().createEditionTree(((File) list.getSelectedValue()));
+                        apePanel.getApeTabbedPane().changeBackgroundColor(APETabbedPane.TAB_CONVERSION, Utilities.TAB_COLOR);
+                        apePanel.getApeTabbedPane().changeBackgroundColor(APETabbedPane.TAB_VALIDATION, Utilities.TAB_COLOR);
                     }
                     checkHoldingsGuideButton();
                 } else {
@@ -731,6 +732,7 @@ public class DataPreparationToolGUI extends JFrame {
                     validateSelectionBtn.setEnabled(false);
                     convertEseSelectionBtn.setEnabled(false);
                     createHGBtn.setEnabled(false);
+                    changeInfoInGUI("");
                 }
             }
         });
@@ -986,38 +988,45 @@ public class DataPreparationToolGUI extends JFrame {
         APETabbedPane apeTabbedPane = apePanel.getApeTabbedPane();
         resultArea.setText("");
         apePanel.setFilename(text);
-        FileInstance fileInstance = fileInstances.get(text);
-        if (fileInstance.isValid()) {
-            apeTabbedPane.setValidationErrorText(labels.getString("validationSuccess"));
-        } else {
-            apeTabbedPane.setValidationErrorText(fileInstance.getValidationErrors());
-        }
-        apeTabbedPane.setConversionErrorText(fileInstance.getConversionErrors());
-        if (fileInstance.isConverted()) {
-            convertItem.setEnabled(false);
-            apeTabbedPane.disableConversionBtn();
-            apeTabbedPane.setValidationBtnText(labels.getString("validate"));
-        } else {
-            convertItem.setEnabled(true);
-            apeTabbedPane.enableConversionBtn();
-            apeTabbedPane.setValidationBtnText(labels.getString("validate"));
-        }
-        if (fileInstance.isValid()) {
-            validateItem.setEnabled(false);
-            apeTabbedPane.disableValidationBtn();
-            saveSelectedItem.setEnabled(true);
-            if (fileInstance.getValidationSchema() == Xsd_enum.XSD_APE_SCHEMA || fileInstance.getValidationSchema() == Xsd_enum.XSD1_0_APE_SCHEMA) {
-                apeTabbedPane.enableConversionEseBtn();
-            }
-        } else {
-            validateItem.setEnabled(true);
-            apeTabbedPane.enableValidationBtn();
-            apeTabbedPane.disableConversionEseBtn();
-            saveSelectedItem.setEnabled(true);
-        }
 
-        refreshButtons(fileInstance, Utilities.XSLT_GROUP);
-        refreshButtons(fileInstance, Utilities.XSD_GROUP);
+        if(StringUtils.isNotBlank(text)) {
+            FileInstance fileInstance = fileInstances.get(text);
+            if (fileInstance.isValid()) {
+                apeTabbedPane.setValidationErrorText(labels.getString("validationSuccess"));
+            } else {
+                apeTabbedPane.setValidationErrorText(fileInstance.getValidationErrors());
+            }
+            apeTabbedPane.setConversionErrorText(fileInstance.getConversionErrors());
+            if (fileInstance.isConverted()) {
+                convertItem.setEnabled(false);
+                apeTabbedPane.disableConversionBtn();
+                apeTabbedPane.setValidationBtnText(labels.getString("validate"));
+            } else {
+                convertItem.setEnabled(true);
+                apeTabbedPane.enableConversionBtn();
+                apeTabbedPane.setValidationBtnText(labels.getString("validate"));
+            }
+            if (fileInstance.isValid()) {
+                validateItem.setEnabled(false);
+                apeTabbedPane.disableValidationBtn();
+                saveSelectedItem.setEnabled(true);
+                if (fileInstance.getValidationSchema() == Xsd_enum.XSD_APE_SCHEMA || fileInstance.getValidationSchema() == Xsd_enum.XSD1_0_APE_SCHEMA) {
+                    apeTabbedPane.enableConversionEseBtn();
+                }
+            } else {
+                validateItem.setEnabled(true);
+                apeTabbedPane.enableValidationBtn();
+                apeTabbedPane.disableConversionEseBtn();
+                saveSelectedItem.setEnabled(true);
+            }
+
+            refreshButtons(fileInstance, Utilities.XSLT_GROUP);
+            refreshButtons(fileInstance, Utilities.XSD_GROUP);
+        } else {
+            apeTabbedPane.setValidationErrorText("");
+            apeTabbedPane.setConversionErrorText("");
+            apeTabbedPane.setEseConversionErrorText("");
+        }
     }
 
     public void refreshButtons(FileInstance fileInstance, int groupId) {

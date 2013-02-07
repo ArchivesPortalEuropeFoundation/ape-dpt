@@ -17,6 +17,8 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.io.*;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
 
@@ -54,7 +56,7 @@ public class CreateHGListener implements ActionListener {
     public void changeLanguage(ResourceBundle labels) {
         this.labels = labels;
     }
-    
+
     public void actionPerformed(ActionEvent e){
         createHGFrame = new JFrame(labels.getString("hgCreationFrame"));
 
@@ -115,8 +117,7 @@ public class CreateHGListener implements ActionListener {
         createHGFrame.setVisible(true);
 
         buttonGoUp.addActionListener(new ActionListener(){
-            public void actionPerformed(ActionEvent e){
-
+            public void actionPerformed(ActionEvent e) {
                 MutableTreeNode node = (MutableTreeNode) holdingsGuideTree.getSelectionPath().getLastPathComponent();
                 int index;
                 if(node.getParent() != null){
@@ -128,11 +129,28 @@ public class CreateHGListener implements ActionListener {
                         holdingsGuideTree.setSelectionPath(pp);
                     }
                 }
+                //todo: this is a start for #228
+//                TreePath[] treePaths = holdingsGuideTree.getSelectionPaths();
+//                if(treePaths == null)
+//                    return;
+//                for(TreePath treePath : treePaths) {
+//                    MutableTreeNode node = (MutableTreeNode)treePath.getLastPathComponent();
+//
+//                    int index;
+//                    if(node.getParent() != null) {
+//                        MutableTreeNode parentNode = (MutableTreeNode) node.getParent();
+//                        LOG.info(parentNode.getIndex(node));
+//                        if((index = parentNode.getIndex(node)) != 0) {
+//                            ((LevelTreeModel) holdingsGuideTree.getModel()).removeNodeFromParent(node);
+//                            ((LevelTreeModel) holdingsGuideTree.getModel()).insertNodeInto(node, parentNode, index -1);
+//                            holdingsGuideTree.setSelectionPaths(treePaths);
+//                        }
+//                    }
+//                }
             }
         });
         buttonGoDown.addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent e){
-
                 MutableTreeNode node = (MutableTreeNode) holdingsGuideTree.getSelectionPath().getLastPathComponent();
                 int index;
                 if(node.getParent() != null){
@@ -144,6 +162,22 @@ public class CreateHGListener implements ActionListener {
                         holdingsGuideTree.setSelectionPath(pp);
                     }
                 }
+                //todo: this is a start for #228
+//                TreePath[] treePaths = holdingsGuideTree.getSelectionPaths();
+//                if(treePaths == null)
+//                    return;
+//                for(TreePath treePath : treePaths) {
+//                    MutableTreeNode node = (MutableTreeNode)treePath.getLastPathComponent();
+//                    int index;
+//                    if(node.getParent() != null){
+//                        MutableTreeNode parentNode = (MutableTreeNode) node.getParent();
+//                        if((index = parentNode.getIndex(node)) != (parentNode.getChildCount() - 1)) {
+//                            ((LevelTreeModel) holdingsGuideTree.getModel()).removeNodeFromParent(node);
+//                            ((LevelTreeModel) holdingsGuideTree.getModel()).insertNodeInto(node, parentNode, index + 1);
+//                            holdingsGuideTree.setSelectionPaths(treePaths);
+//                        }
+//                    }
+//                }
             }
         });
         buttonSaveHg.addActionListener(new ActionListener(){
