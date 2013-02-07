@@ -26,8 +26,6 @@
     <xsl:param name="loclanguage" select="'xsl/system/languages.xml'"/>
     <xsl:variable name="langfile" select="document($loclanguage)"/>
 
-    <xsl:variable name="PI" select="/processing-instruction('xml-stylesheet')" />
-
     <xsl:param name="langusage" select="''"/>
     <xsl:param name="langmaterial" select="''"/>
     <xsl:param name="addressline" select="''"/>
