@@ -43,12 +43,12 @@ public class XsdAdderActionListener implements ActionListener {
                     dataPreparationToolGUI.getGroupXsd().add(newButton);
                     dataPreparationToolGUI.getAPEPanel().getApeTabbedPane().addToXsdPanel(newButton);
                     dataPreparationToolGUI.getAPEPanel().getApeTabbedPane().addToXsdPanel(Box.createRigidArea(new Dimension(0, 10)));
-                    JOptionPane.showMessageDialog(parent, labels.getString("xsltSaved")+".", labels.getString("fileSaved"), JOptionPane.INFORMATION_MESSAGE, Utilities.icon);
+                    JOptionPane.showMessageDialog(parent, labels.getString("xsdSaved")+".", labels.getString("fileSaved"), JOptionPane.INFORMATION_MESSAGE, Utilities.icon);
                 } else {
-                    JOptionPane.showMessageDialog(parent, labels.getString("xsltNotSaved")+".", labels.getString("fileNotSaved"), JOptionPane.ERROR_MESSAGE, Utilities.icon);
+                    JOptionPane.showMessageDialog(parent, labels.getString("xsdNotSaved")+".", labels.getString("fileNotSaved"), JOptionPane.ERROR_MESSAGE, Utilities.icon);
                 }
             } else {
-                JOptionPane.showMessageDialog(parent, labels.getString("xsltNotSaved")+".", labels.getString("fileNotSaved"), JOptionPane.ERROR_MESSAGE, Utilities.icon);
+                JOptionPane.showMessageDialog(parent, labels.getString("xsdNotSaved")+".", labels.getString("fileNotSaved"), JOptionPane.ERROR_MESSAGE, Utilities.icon);
             }
         }
     }

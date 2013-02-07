@@ -147,10 +147,12 @@ public class APETabbedPane extends JTabbedPane {
 
     public void addToXsltPanel(Component component) {
         xsltPanel.add(component);
+        this.repaint();
     }
 
     public void addToXsdPanel(Component component) {
         xsdPanel.add(component);
+        this.repaint();
     }
 
     public void appendEseConversionErrorText(String text) {
