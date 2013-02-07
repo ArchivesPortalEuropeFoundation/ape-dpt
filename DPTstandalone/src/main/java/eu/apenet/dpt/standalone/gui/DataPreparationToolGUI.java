@@ -28,6 +28,7 @@ import javax.xml.transform.stream.StreamResult;
 
 import eu.apenet.dpt.standalone.gui.batch.ConvertAndValidateActionListener;
 import eu.apenet.dpt.standalone.gui.conversion.ConvertActionListener;
+import eu.apenet.dpt.standalone.gui.databaseChecker.DatabaseCheckerActionListener;
 import eu.apenet.dpt.standalone.gui.db.RetrieveFromDb;
 import eu.apenet.dpt.standalone.gui.ead2ese.ConvertEseActionListener;
 import eu.apenet.dpt.standalone.gui.eag2012.Eag2012Frame;
@@ -95,6 +96,7 @@ public class DataPreparationToolGUI extends JFrame {
     private JMenu defaultXslSelectionSubmenu = new JMenu();
     private JMenu defaultXsdSelectionSubmenu = new JMenu();
     private JMenuItem listDateConversionRulesItem = new JMenuItem();
+    private JMenuItem databaseItem = new JMenuItem();
     private JMenuItem validateItem = new JMenuItem();
     private JMenuItem convertItem = new JMenuItem();
     private JMenuItem summaryWindowItem = new JMenuItem();
@@ -298,6 +300,10 @@ public class DataPreparationToolGUI extends JFrame {
         optionMenu.add(defaultXsdSelectionSubmenu);
         optionMenu.add(languageMenu);
         optionMenu.add(listDateConversionRulesItem);
+        if (Utilities.isDev) {
+            optionMenu.addSeparator();
+            optionMenu.add(databaseItem);
+        }
 
         validateItem.setEnabled(false);
         validateItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_N, Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()));
@@ -372,6 +378,7 @@ public class DataPreparationToolGUI extends JFrame {
         defaultSaveFolderItem.setText(labels.getString("defaultSaveFolder"));
         xsltItem.setText(labels.getString("ownXsl"));
         xsdItem.setText(labels.getString("ownXsd"));
+        databaseItem.setText("Development database");
         defaultXslSelectionSubmenu.setText(labels.getString("defaultXslSelectionSubmenu"));
         defaultXsdSelectionSubmenu.setText(labels.getString("defaultXsdSelectionSubmenu"));
         languageMenu.setText(labels.getString("languageMenu"));
@@ -487,17 +494,8 @@ public class DataPreparationToolGUI extends JFrame {
             languageMenu.add(rbMenuItem);
         }
     }
-    int currentFileNumberBatch = 0;
 
     private void wireUp() {
-
-//        abort.addActionListener(new ActionListener() {
-//            //@Override
-//            public void actionPerformed(ActionEvent e) {
-//                continueLoop = false;
-//                resultArea.setText(labels.getString("aborting"));
-//            }
-//        });
         fileItem.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent actionEvent) {
                 if (actionEvent.getSource() == fileItem) {
@@ -678,6 +676,8 @@ public class DataPreparationToolGUI extends JFrame {
         });
         xsltItem.addActionListener(new XsltAdderActionListener(this, labels));
         xsdItem.addActionListener(new XsdAdderActionListener(this, labels));
+        if(Utilities.isDev)
+            databaseItem.addActionListener(new DatabaseCheckerActionListener(retrieveFromDb, getContentPane()));
         list.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {

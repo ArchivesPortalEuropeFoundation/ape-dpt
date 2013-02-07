@@ -23,7 +23,9 @@ public class DBUtil {
         TABLE_IDS("hg_ids"),
         COLUMN_TITLE("TITLE"),
         COLUMN_ID("IDENTIFIER"),
-        COLUMN_VALUE("VALUE");
+        COLUMN_VALUE("VALUE"),
+        COLUMN_PRIMARY_ID("ID"),
+        COLUMN_MYKEY("MYKEY");
 
         private String name;
         DBNames(String name){
@@ -166,6 +168,17 @@ public class DBUtil {
         return null;
     }
 
+    public ResultSet retrieveSqlResultSet(String query) {
+        Statement statement;
+        try {
+            statement = dbConnection.createStatement();
+            return statement.executeQuery(query);
+        } catch (SQLException e) {
+            LOG.error(e);
+        }
+        return null;
+    }
+
     public static String createSelectQuery(String tableName, String keyName){
         return "SELECT * FROM " + tableName + " WHERE MYKEY='" + keyName + "'";
     }
@@ -174,5 +187,8 @@ public class DBUtil {
     }
     public static String createInsertQuery(String tableName){
         return "INSERT INTO " + tableName + " (MYKEY, VALUE) VALUES (?, ?)";
+    }
+    public static String createSelectAllQuery(String tableName){
+        return "SELECT * FROM " + tableName;
     }
 }

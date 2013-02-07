@@ -9,6 +9,7 @@ import java.awt.*;
 import java.io.File;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.sql.ResultSet;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Date;
@@ -145,5 +146,9 @@ public class RetrieveFromDb {
                 LOG.error("Error to connect for checking the new version (probably no internet connection)", e);
             }
         }
+    }
+
+    public ResultSet selectAllFromTable(String dbname) {
+        return dbUtil.retrieveSqlResultSet(DBUtil.createSelectAllQuery(dbname));
     }
 }
