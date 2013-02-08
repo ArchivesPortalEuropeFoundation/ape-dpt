@@ -707,30 +707,32 @@ public class DataPreparationToolGUI extends JFrame {
         });
         list.addListSelectionListener(new ListSelectionListener() {
             public void valueChanged(ListSelectionEvent e) {
-                if (list.getSelectedValues() != null && list.getSelectedValues().length != 0) {
-                    if (list.getSelectedValues().length > 1) {
-                        convertAndValidateBtn.setEnabled(true);
-                        validateSelectionBtn.setEnabled(true);
-                        convertEseSelectionBtn.setEnabled(true);
-                        disableAllBtnAndItems();
-                        changeInfoInGUI("");
+                if(!e.getValueIsAdjusting()) {
+                    if (list.getSelectedValues() != null && list.getSelectedValues().length != 0) {
+                        if (list.getSelectedValues().length > 1) {
+                            convertAndValidateBtn.setEnabled(true);
+                            validateSelectionBtn.setEnabled(true);
+                            convertEseSelectionBtn.setEnabled(true);
+                            disableAllBtnAndItems();
+                            changeInfoInGUI("");
+                        } else {
+                            convertAndValidateBtn.setEnabled(false);
+                            validateSelectionBtn.setEnabled(false);
+                            convertEseSelectionBtn.setEnabled(false);
+                            changeInfoInGUI(((File) list.getSelectedValue()).getName());
+                            if (apePanel.getApeTabbedPane().getSelectedIndex() == APETabbedPane.TAB_EDITION)
+                                apePanel.getApeTabbedPane().createEditionTree(((File) list.getSelectedValue()));
+                            apePanel.getApeTabbedPane().changeBackgroundColor(APETabbedPane.TAB_CONVERSION, Utilities.TAB_COLOR);
+                            apePanel.getApeTabbedPane().changeBackgroundColor(APETabbedPane.TAB_VALIDATION, Utilities.TAB_COLOR);
+                        }
+                        checkHoldingsGuideButton();
                     } else {
                         convertAndValidateBtn.setEnabled(false);
                         validateSelectionBtn.setEnabled(false);
                         convertEseSelectionBtn.setEnabled(false);
-                        changeInfoInGUI(((File) list.getSelectedValue()).getName());
-                        if (apePanel.getApeTabbedPane().getSelectedIndex() == APETabbedPane.TAB_EDITION)
-                            apePanel.getApeTabbedPane().createEditionTree(((File) list.getSelectedValue()));
-                        apePanel.getApeTabbedPane().changeBackgroundColor(APETabbedPane.TAB_CONVERSION, Utilities.TAB_COLOR);
-                        apePanel.getApeTabbedPane().changeBackgroundColor(APETabbedPane.TAB_VALIDATION, Utilities.TAB_COLOR);
+                        createHGBtn.setEnabled(false);
+                        changeInfoInGUI("");
                     }
-                    checkHoldingsGuideButton();
-                } else {
-                    convertAndValidateBtn.setEnabled(false);
-                    validateSelectionBtn.setEnabled(false);
-                    convertEseSelectionBtn.setEnabled(false);
-                    createHGBtn.setEnabled(false);
-                    changeInfoInGUI("");
                 }
             }
         });

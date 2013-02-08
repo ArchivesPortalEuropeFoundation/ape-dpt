@@ -2323,29 +2323,34 @@
     <!--<xsl:template match="accessrestrict|userestrict|controlaccess" mode="class"/>-->
 
     <xsl:template name="daoRoleType">
-        <xsl:if test="@label or @role">
-            <xsl:choose>
-                <xsl:when test="@label='thumb' or @role='image_thumb' or @*:role='image_thumb'">
-                    <xsl:attribute name="xlink:title" select="'thumbnail'"/>
-                </xsl:when>
-                <xsl:when test="@label = 'Document'">
-                    <xsl:attribute name="xlink:title" select="@label"/>
-                    <xsl:attribute name="xlink:role" select="'TEXT'"/>
-                </xsl:when>
-                <xsl:when test="@label = 'Kaart'">
-                    <xsl:attribute name="xlink:title" select="@label"/>
-                    <xsl:attribute name="xlink:role" select="'IMAGE'"/>
-                </xsl:when>
-                <xsl:when test="@label = 'Foto'">
-                    <xsl:attribute name="xlink:title" select="@label"/>
-                    <xsl:attribute name="xlink:role" select="'IMAGE'"/>
-                </xsl:when>
-                <xsl:otherwise>
-                    <xsl:attribute name="xlink:title" select="@label"/>
-                    <xsl:attribute name="xlink:role" select="'UNSPECIFIED'"/>
-                </xsl:otherwise>
-            </xsl:choose>
-        </xsl:if>
+        <xsl:choose>
+            <xsl:when test="@label or @role">
+                <xsl:choose>
+                    <xsl:when test="@label='thumb' or @role='image_thumb' or @*:role='image_thumb'">
+                        <xsl:attribute name="xlink:title" select="'thumbnail'"/>
+                    </xsl:when>
+                    <xsl:when test="@label = 'Document'">
+                        <xsl:attribute name="xlink:title" select="@label"/>
+                        <xsl:attribute name="xlink:role" select="'TEXT'"/>
+                    </xsl:when>
+                    <xsl:when test="@label = 'Kaart'">
+                        <xsl:attribute name="xlink:title" select="@label"/>
+                        <xsl:attribute name="xlink:role" select="'IMAGE'"/>
+                    </xsl:when>
+                    <xsl:when test="@label = 'Foto'">
+                        <xsl:attribute name="xlink:title" select="@label"/>
+                        <xsl:attribute name="xlink:role" select="'IMAGE'"/>
+                    </xsl:when>
+                    <xsl:otherwise>
+                        <xsl:attribute name="xlink:title" select="@label"/>
+                        <xsl:attribute name="xlink:role" select="'UNSPECIFIED'"/>
+                    </xsl:otherwise>
+                </xsl:choose>
+            </xsl:when>
+            <xsl:otherwise>
+                <xsl:call-template name="daoDigitalType"/>
+            </xsl:otherwise>
+        </xsl:choose>
     </xsl:template>
 
     <!-- file: did -->
@@ -2366,6 +2371,12 @@
                     </xsl:if>
                     <xsl:if test="@*:href!=''">
                         <xsl:attribute name="xlink:href" select="@*:href"/>
+                    </xsl:if>
+                    <xsl:if test="@title!=''">
+                        <xsl:attribute name="xlink:title" select="@title"/>
+                    </xsl:if>
+                    <xsl:if test="@*:title!=''">
+                        <xsl:attribute name="xlink:title" select="@*:title"/>
                     </xsl:if>
                     <xsl:call-template name="daoRoleType"/>
                 </dao>
@@ -2435,24 +2446,28 @@
             <xsl:if test="@*:title!=''">
                 <xsl:attribute name="xlink:title" select="@*:title"/>
             </xsl:if>
-            <xsl:choose>
-                <xsl:when test="$useDefaultRoleType = 'true'">
-                    <xsl:attribute name="xlink:role" select="$defaultRoleType"/>
-                </xsl:when>
-                <xsl:when test="$useDefaultRoleType = 'false' and @role">
-                    <xsl:attribute name="xlink:role" select="@role"/>
-                </xsl:when>
-                <xsl:when test="$useDefaultRoleType = 'false' and @*:role">
-                    <xsl:attribute name="xlink:role" select="@*:role"/>
-                </xsl:when>
-                <xsl:when test="$useDefaultRoleType = 'false'">
-                    <xsl:attribute name="xlink:role" select="$defaultRoleType"/>
-                </xsl:when>
-                <xsl:otherwise>
-                    <xsl:attribute name="xlink:role" select="'UNSPECIFIED'"/>
-                </xsl:otherwise>
-            </xsl:choose>
+            <xsl:call-template name="daoDigitalType" />
         </dao>
+    </xsl:template>
+
+    <xsl:template name="daoDigitalType">
+        <xsl:choose>
+            <xsl:when test="$useDefaultRoleType = 'true'">
+                <xsl:attribute name="xlink:role" select="$defaultRoleType"/>
+            </xsl:when>
+            <xsl:when test="$useDefaultRoleType = 'false' and @role">
+                <xsl:attribute name="xlink:role" select="@role"/>
+            </xsl:when>
+            <xsl:when test="$useDefaultRoleType = 'false' and @*:role">
+                <xsl:attribute name="xlink:role" select="@*:role"/>
+            </xsl:when>
+            <xsl:when test="$useDefaultRoleType = 'false'">
+                <xsl:attribute name="xlink:role" select="$defaultRoleType"/>
+            </xsl:when>
+            <xsl:otherwise>
+                <xsl:attribute name="xlink:role" select="'UNSPECIFIED'"/>
+            </xsl:otherwise>
+        </xsl:choose>
     </xsl:template>
 
     <xsl:template match="did/daogrp" mode="fonds intermediate lowest">

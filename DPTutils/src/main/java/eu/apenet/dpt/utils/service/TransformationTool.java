@@ -56,6 +56,7 @@ public class TransformationTool {
             DateNormalization dateNormalization = new DateNormalization();
             Oai2EadNormalization oai2EadNormalization = new Oai2EadNormalization();
             FlagSet flagSet = new FlagSet();
+            XmlQualityChecker xmlQualityChecker = new XmlQualityChecker();
 
             InputSource is = new InputSource(inputFileStream);
             SAXSource xmlSource = new SAXSource(saxParser, is);
@@ -64,6 +65,7 @@ public class TransformationTool {
             processor.registerExtensionFunction(dateNormalization);
             processor.registerExtensionFunction(oai2EadNormalization);
             processor.registerExtensionFunction(flagSet);
+            processor.registerExtensionFunction(xmlQualityChecker);
 
             if(counterCLevelCall == null)
                 counterCLevelCall = new CounterCLevelCall();
