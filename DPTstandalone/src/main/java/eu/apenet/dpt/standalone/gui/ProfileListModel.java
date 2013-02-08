@@ -1,5 +1,6 @@
 package eu.apenet.dpt.standalone.gui;
 
+import eu.apenet.dpt.standalone.gui.XsdAddition.XsdObject;
 import eu.apenet.dpt.utils.util.Xsd_enum;
 
 import javax.swing.*;
@@ -46,9 +47,9 @@ public class ProfileListModel extends AbstractListModel {
         fireIntervalAdded(this, 1, 1);
     }
 
-    public void addFile(File file, Xsd_enum xsd_enum, FileInstance.FileType fileType){
+    public void addFile(File file, XsdObject xsdObject, FileInstance.FileType fileType){
         FileInstance fileInstance = new FileInstance(file);
-        fileInstance.setValidationSchema(xsd_enum);
+        fileInstance.setValidationSchema(xsdObject);
         fileInstance.setFileType(fileType);
         fileInstances.put(file.getName(), fileInstance);
         listFiles.add(file);

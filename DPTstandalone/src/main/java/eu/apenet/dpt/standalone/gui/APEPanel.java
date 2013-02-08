@@ -1,5 +1,7 @@
 package eu.apenet.dpt.standalone.gui;
 
+import eu.apenet.dpt.standalone.gui.db.RetrieveFromDb;
+
 import javax.swing.*;
 import java.awt.*;
 import java.util.ResourceBundle;
@@ -15,14 +17,14 @@ public class APEPanel extends JPanel {
     private ResourceBundle labels;
     private JLabel filename;
 
-    public APEPanel(ResourceBundle labels, Component parent, DataPreparationToolGUI dataPreparationToolGUI) {
+    public APEPanel(ResourceBundle labels, Component parent, DataPreparationToolGUI dataPreparationToolGUI, RetrieveFromDb retrieveFromDb) {
         super(new BorderLayout());
         this.labels = labels;
         filename = new JLabel();
         setFilename("");
         filename.setHorizontalAlignment(JLabel.LEFT);
         add(filename, BorderLayout.NORTH);
-        apeTabbedPane = new APETabbedPane(labels, this, parent, dataPreparationToolGUI);
+        apeTabbedPane = new APETabbedPane(labels, this, parent, dataPreparationToolGUI, retrieveFromDb);
         add(apeTabbedPane, BorderLayout.CENTER);
     }
 

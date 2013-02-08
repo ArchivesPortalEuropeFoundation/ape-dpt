@@ -1,6 +1,8 @@
 package eu.apenet.dpt.standalone.gui;
 
+import eu.apenet.dpt.standalone.gui.XsdAddition.XsdObject;
 import eu.apenet.dpt.standalone.gui.conversion.ConvertActionListener;
+import eu.apenet.dpt.standalone.gui.db.RetrieveFromDb;
 import eu.apenet.dpt.standalone.gui.ead2ese.ConvertEseActionListener;
 import eu.apenet.dpt.standalone.gui.edition.ActionNamesEnum;
 import eu.apenet.dpt.standalone.gui.edition.NodeAppendable;
@@ -63,17 +65,19 @@ public class APETabbedPane extends JTabbedPane {
     private ResourceBundle labels;
     private APEPanel apePanel;
     private DataPreparationToolGUI dataPreparationToolGUI;
+    private RetrieveFromDb retrieveFromDb;
     private Component parent;
 
     private JXTreeTable tree;
 
-    public APETabbedPane(ResourceBundle labels, APEPanel apePanel, Component parent, DataPreparationToolGUI dataPreparationToolGUI) {
+    public APETabbedPane(ResourceBundle labels, APEPanel apePanel, Component parent, DataPreparationToolGUI dataPreparationToolGUI, RetrieveFromDb retrieveFromDb) {
         super();
         this.labels = labels;
         this.apePanel = apePanel;
         this.parent = parent;
         this.dataPreparationToolGUI = dataPreparationToolGUI;
         this.tree = dataPreparationToolGUI.getTree();
+        this.retrieveFromDb = retrieveFromDb;
 
         create();
         initialize();
@@ -278,6 +282,13 @@ public class APETabbedPane extends JTabbedPane {
             radioButton = new JRadioButton(xsdEnum.getReadableName());
             if(xsdEnum.equals(Xsd_enum.XSD_APE_SCHEMA))
                 radioButton.setSelected(true);
+            radioButton.addActionListener(new XsdSelectorListener(dataPreparationToolGUI));
+            dataPreparationToolGUI.getGroupXsd().add(radioButton);
+            xsdPanel.add(radioButton);
+            xsdPanel.add(Box.createRigidArea(new Dimension(0, 10)));
+        }
+        for (XsdObject additionalXsd : retrieveFromDb.retrieveAdditionalXsds()) {
+            radioButton = new JRadioButton(additionalXsd.getName());
             radioButton.addActionListener(new XsdSelectorListener(dataPreparationToolGUI));
             dataPreparationToolGUI.getGroupXsd().add(radioButton);
             xsdPanel.add(radioButton);

@@ -4,6 +4,7 @@ import eu.apenet.dpt.standalone.gui.DataPreparationToolGUI;
 import eu.apenet.dpt.standalone.gui.FileInstance;
 import eu.apenet.dpt.standalone.gui.SummaryWorking;
 import eu.apenet.dpt.standalone.gui.Utilities;
+import eu.apenet.dpt.standalone.gui.XsdAddition.XsdObject;
 import eu.apenet.dpt.standalone.gui.progress.ApexActionListener;
 import eu.apenet.dpt.standalone.gui.progress.ProgressFrame;
 import eu.apenet.dpt.utils.service.DocumentValidation;
@@ -84,11 +85,12 @@ public class ValidateSelectionActionListener extends ApexActionListener {
                     if(fileInstance.isXml()) {
                         try {
                             List<SAXParseException> exceptions;
+                            XsdObject xsdObject = fileInstance.getValidationSchema();
                             if(fileInstance.isConverted()){
                                 InputStream is = FileUtils.openInputStream(new File(fileInstance.getCurrentLocation()));
-                                exceptions = DocumentValidation.xmlValidation(is, fileInstance.getValidationSchema());
+                                exceptions = DocumentValidation.xmlValidation(is, Utilities.getUrlPathXsd(xsdObject), xsdObject.isXsd11());
                             } else {
-                                exceptions = DocumentValidation.xmlValidation(FileUtils.openInputStream(file), fileInstance.getValidationSchema());
+                                exceptions = DocumentValidation.xmlValidation(FileUtils.openInputStream(file), Utilities.getUrlPathXsd(xsdObject), xsdObject.isXsd11());
                             }
                             if (exceptions == null || exceptions.isEmpty()){
                                 fileInstance.setValid(true);

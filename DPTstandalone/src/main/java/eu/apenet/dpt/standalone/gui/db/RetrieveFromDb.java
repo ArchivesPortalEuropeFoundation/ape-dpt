@@ -1,7 +1,9 @@
 package eu.apenet.dpt.standalone.gui.db;
 
 import eu.apenet.dpt.standalone.gui.BareBonesBrowserLaunch;
+import eu.apenet.dpt.standalone.gui.FileInstance;
 import eu.apenet.dpt.standalone.gui.Utilities;
+import eu.apenet.dpt.standalone.gui.XsdAddition.XsdObject;
 import org.apache.log4j.Logger;
 
 import javax.swing.*;
@@ -90,16 +92,13 @@ public class RetrieveFromDb {
         return Boolean.parseBoolean(retrieve(DBUtil.OptionKeys.OPTION_USE_EXISTING_ROLETYPE.getName(), "true"));
     }
 
-    public List<Map<String, String>> retrieveAdditionalXsds() {
+    public List<XsdObject> retrieveAdditionalXsds() {
         ResultSet set = selectAllFromTable(DBUtil.DBNames.TABLE_XSD.getName());
-        List<Map<String, String>> list = new ArrayList<Map<String, String>>();
-        Map<String, String> xsdEntry;
+        List<XsdObject> list = new ArrayList<XsdObject>();
+        XsdObject xsdEntry;
         try {
             while (set.next()) {
-                xsdEntry = new HashMap<String, String>();
-                xsdEntry.put(DBUtil.DBNames.COLUMN_PRIMARY_ID.getName(), Integer.toString(set.getInt(DBUtil.DBNames.COLUMN_PRIMARY_ID.getName())));
-                xsdEntry.put(DBUtil.DBNames.COLUMN_TITLE.getName(), set.getString(DBUtil.DBNames.COLUMN_TITLE.getName()));
-                xsdEntry.put(DBUtil.DBNames.COLUMN_VALUE.getName(), set.getString(DBUtil.DBNames.COLUMN_VALUE.getName()));
+                xsdEntry = new XsdObject(set.getInt(DBUtil.DBNames.COLUMN_PRIMARY_ID.getName()), set.getString(DBUtil.DBNames.COLUMN_TITLE.getName()), set.getString(DBUtil.DBNames.COLUMN_VALUE.getName()), set.getInt(DBUtil.DBNames.COLUMN_ISXSD11.getName()), set.getInt(DBUtil.DBNames.COLUMN_ISSYSTEM.getName()), set.getString(DBUtil.DBNames.COLUMN_FILETYPE.getName()));
                 list.add(xsdEntry);
             }
         } catch (SQLException e) {
@@ -108,10 +107,10 @@ public class RetrieveFromDb {
         return list;
     }
 
-    public boolean saveNewAdditionalXsd(String name, String location) {
+    public boolean saveNewAdditionalXsd(String name, String location, boolean isSystem, boolean isXsd11, FileInstance.FileType fileType) {
         try {
-            String query = DBUtil.createInsertQuery(DBUtil.DBNames.TABLE_XSD.getName());
-            dbUtil.doSqlQuery(query, Arrays.asList(name, location));
+            String query = DBUtil.createInsertQueryInXsd(DBUtil.DBNames.TABLE_XSD.getName());
+            dbUtil.doSqlQuery(query, Arrays.asList(name, location, isSystem?"1":"0", isXsd11?"1":"0", fileType.getFilePrefix()));
             return true;
         } catch (Exception e) {
             LOG.error("Could not save in database a new XSD", e);

@@ -1,5 +1,6 @@
 package eu.apenet.dpt.standalone.gui;
 
+import eu.apenet.dpt.standalone.gui.XsdAddition.XsdObject;
 import eu.apenet.dpt.utils.util.XmlChecker;
 import eu.apenet.dpt.utils.util.Xsd_enum;
 
@@ -20,7 +21,7 @@ public class FileInstance {
     private String conversionErrors;
     private String currentLocation;
     private String conversionScriptName;
-    private Xsd_enum validationSchema;
+    private XsdObject validationSchema;
     private FileType fileType;
     private Operation lastOperation;
     private boolean isXml;
@@ -108,22 +109,21 @@ public class FileInstance {
     }
 
     public String getValidationSchemaName() {
-        return validationSchema.getReadableName();
+        return validationSchema.getName();
     }
 
-    public Xsd_enum getValidationSchema() {
+    public XsdObject getValidationSchema() {
         return validationSchema;
     }
 
     public void setValidationSchema(String validationSchema) {
-        for (Xsd_enum xsdEnum : Xsd_enum.values()){
-            if(xsdEnum.getReadableName().equals(validationSchema)){
-                this.validationSchema = xsdEnum;
-                break;
+        for(XsdObject xsd : Utilities.getXsdList()) {
+            if(xsd.getName().equals(validationSchema)) {
+                this.validationSchema = xsd;
             }
         }
     }
-    public void setValidationSchema(Xsd_enum validationSchema) {
+    public void setValidationSchema(XsdObject validationSchema) {
         this.validationSchema = validationSchema;
     }
 
@@ -154,7 +154,8 @@ public class FileInstance {
     public enum FileType{
         EAD("apeEAD"),
         EAG("EAG"),
-        EAC_CPF("APE_CPF");
+        EAC_CPF("APE_CPF"),
+        OTHER("Other");
 
         private String filePrefix;
         FileType(String filePrefix){
@@ -162,6 +163,14 @@ public class FileInstance {
         }
         public String getFilePrefix(){
             return filePrefix;
+        }
+
+        public static FileType getCorrectFileType(String filetypeStr) {
+            for(FileType type : FileType.values()) {
+                if(type.getFilePrefix().equals(filetypeStr))
+                    return type;
+            }
+            return null;
         }
     }
 

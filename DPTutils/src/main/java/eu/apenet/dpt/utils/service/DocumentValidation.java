@@ -33,16 +33,13 @@ public class DocumentValidation {
      * @param schemaToUse Is the schema contained in an enum.
      * @return A List of SAXParserException containing the errors of the validation. Null if there are none.
      */
-    public static List<SAXParseException> xmlValidation(InputStream in, Xsd_enum schemaToUse) throws SAXException {
+    public static List<SAXParseException> xmlValidation(InputStream in, URL schemaPath, boolean isXsd11) throws SAXException {
         ErrorHandler  errorHandler = new ErrorHandler();
         try {
             List<URL> schemaURLs = new ArrayList<URL>();
-            boolean isXsd11 = false;
-            if(schemaToUse.equals(Xsd_enum.XSD_APE_SCHEMA)){
+            if(isXsd11)
                 System.setProperty("javax.xml.validation.SchemaFactory:http://www.w3.org/XML/XMLSchema/v1.1", "org.apache.xerces.jaxp.validation.XMLSchema11Factory");
-                isXsd11 = true;
-            }
-            schemaURLs.add(DocumentValidation.class.getResource("/" + schemaToUse.getPath()));
+            schemaURLs.add(schemaPath);
             schemaURLs.add(DocumentValidation.class.getResource("/xlink.xsd"));
             Schema schema = getSchema(schemaURLs, isXsd11);
 
@@ -67,12 +64,12 @@ public class DocumentValidation {
         }
     }
 
-    public static List<SAXParseException> xmlValidation(File file, Xsd_enum schemaToUse) throws SAXException, IOException {
-        return xmlValidation(FileUtils.openInputStream(file), schemaToUse);
+    public static List<SAXParseException> xmlValidation(File file, URL schemaPath, boolean isXsd11) throws SAXException, IOException {
+        return xmlValidation(FileUtils.openInputStream(file), schemaPath, isXsd11);
     }
 
-    public static List<SAXParseException> xmlValidation(String filePath, Xsd_enum schemaToUse) throws SAXException, IOException {
-        return xmlValidation(new File(filePath), schemaToUse);
+    public static List<SAXParseException> xmlValidation(String filePath, URL schemaPath, boolean isXsd11) throws SAXException, IOException {
+        return xmlValidation(new File(filePath), schemaPath, isXsd11);
     }
 
     private static Schema getSchema(List<URL> schemaURLs, boolean isXsd11) throws SAXException {

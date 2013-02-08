@@ -4,6 +4,7 @@ import eu.apenet.dpt.standalone.gui.DataPreparationToolGUI;
 import eu.apenet.dpt.standalone.gui.FileInstance;
 import eu.apenet.dpt.standalone.gui.SummaryWorking;
 import eu.apenet.dpt.standalone.gui.Utilities;
+import eu.apenet.dpt.standalone.gui.XsdAddition.XsdObject;
 import eu.apenet.dpt.standalone.gui.adhoc.EadidQueryComponent;
 import eu.apenet.dpt.standalone.gui.conversion.CounterThread;
 import eu.apenet.dpt.standalone.gui.progress.ApexActionListener;
@@ -164,7 +165,9 @@ public class ConvertAndValidateActionListener extends ApexActionListener {
                             try {
                                 InputStream is = FileUtils.openInputStream(new File(fileInstance.getCurrentLocation()));
                                 dataPreparationToolGUI.setResultAreaText(labels.getString("validating")+ " " + file.getName() + " (" + currentFileNumberBatch + "/" + numberOfFiles + ")");
-                                List<SAXParseException> exceptions = DocumentValidation.xmlValidation(is, fileInstance.getValidationSchema());
+                                XsdObject xsdObject = fileInstance.getValidationSchema();
+
+                                List<SAXParseException> exceptions = DocumentValidation.xmlValidation(is, Utilities.getUrlPathXsd(xsdObject), xsdObject.isXsd11());
                                 if (exceptions == null || exceptions.isEmpty()){
                                     fileInstance.setValid(true);
                                     fileInstance.setValidationErrors(labels.getString("validationSuccess"));

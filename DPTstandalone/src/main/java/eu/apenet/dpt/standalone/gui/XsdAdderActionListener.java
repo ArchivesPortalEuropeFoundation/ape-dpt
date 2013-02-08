@@ -1,5 +1,6 @@
 package eu.apenet.dpt.standalone.gui;
 
+import eu.apenet.dpt.standalone.gui.XsdAddition.XsdInfoQueryComponent;
 import eu.apenet.dpt.standalone.gui.db.RetrieveFromDb;
 import eu.apenet.dpt.utils.util.XsdChecker;
 import org.apache.commons.io.FileUtils;
@@ -42,32 +43,43 @@ public class XsdAdderActionListener implements ActionListener {
             File file = xsdChooser.getSelectedFile();
             if(isXSD(file)){
                 //todo: Ask user to provide a readable name for this schema
-                String result = (String) JOptionPane.showInputDialog(parent, "enter name", "title", JOptionPane.QUESTION_MESSAGE, Utilities.icon, null, null);
-                while (StringUtils.isBlank(result))
-                    result = (String) JOptionPane.showInputDialog(parent, "enter name", "title", JOptionPane.QUESTION_MESSAGE, Utilities.icon, null, null);
-                if(saveXsd(file, result)){
-                    JRadioButton newButton = new JRadioButton(file.getName());
-                    newButton.addActionListener(new XsdSelectorListener(dataPreparationToolGUI));
-                    dataPreparationToolGUI.getGroupXsd().add(newButton);
-                    dataPreparationToolGUI.getAPEPanel().getApeTabbedPane().addToXsdPanel(newButton);
-                    dataPreparationToolGUI.getAPEPanel().getApeTabbedPane().addToXsdPanel(Box.createRigidArea(new Dimension(0, 10)));
-                    JOptionPane.showMessageDialog(parent, labels.getString("xsdSaved")+".", labels.getString("fileSaved"), JOptionPane.INFORMATION_MESSAGE, Utilities.icon);
-                } else {
-                    JOptionPane.showMessageDialog(parent, labels.getString("xsdNotSaved")+".", labels.getString("fileNotSaved"), JOptionPane.ERROR_MESSAGE, Utilities.icon);
+                XsdInfoQueryComponent xsdInfoQueryComponent = new XsdInfoQueryComponent(labels, file.getName());
+
+                int result = JOptionPane.showConfirmDialog(parent, xsdInfoQueryComponent, "title", JOptionPane.OK_CANCEL_OPTION);
+                if(result == JOptionPane.OK_OPTION) {
+                    LOG.info("Ok");
+                    if(saveXsd(file, xsdInfoQueryComponent.getName(), false, xsdInfoQueryComponent.getXsdVersion(), xsdInfoQueryComponent.getFileType())) {
+                        JRadioButton newButton = new JRadioButton(file.getName());
+                        newButton.addActionListener(new XsdSelectorListener(dataPreparationToolGUI));
+                        dataPreparationToolGUI.getGroupXsd().add(newButton);
+                        dataPreparationToolGUI.getAPEPanel().getApeTabbedPane().addToXsdPanel(newButton);
+                        dataPreparationToolGUI.getAPEPanel().getApeTabbedPane().addToXsdPanel(Box.createRigidArea(new Dimension(0, 10)));
+                        JOptionPane.showMessageDialog(parent, labels.getString("xsdSaved")+".", labels.getString("fileSaved"), JOptionPane.INFORMATION_MESSAGE, Utilities.icon);
+                    } else {
+                        errorMessage();
+                    }
                 }
             } else {
-                JOptionPane.showMessageDialog(parent, labels.getString("xsdNotSaved")+".", labels.getString("fileNotSaved"), JOptionPane.ERROR_MESSAGE, Utilities.icon);
+                errorMessage();
             }
         }
+    }
+
+    private void errorMessage() {
+        JOptionPane.showMessageDialog(parent, labels.getString("xsdNotSaved")+".", labels.getString("fileNotSaved"), JOptionPane.ERROR_MESSAGE, Utilities.icon);
     }
 
     private boolean isXSD(File file){
         return (file.isFile() && file.getName().endsWith(".xsd") && XsdChecker.isXsdFile(file));
     }
 
-    private boolean saveXsd(File file, String name){
+    private boolean saveXsd(File file, String name, boolean isSystem, String isXsd11Str, String fileTypeStr){
         try {
-            if(!retrieveFromDb.saveNewAdditionalXsd(name, file.getName()))
+            boolean isXsd11 = true;
+            if(isXsd11Str.equals("1"))
+                isXsd11 = false;
+            FileInstance.FileType fileType = FileInstance.FileType.getCorrectFileType(fileTypeStr);
+            if(!retrieveFromDb.saveNewAdditionalXsd(name, file.getName(), isSystem, isXsd11, fileType))
                 return false;
             FileUtils.copyFile(file, new File(Utilities.CONFIG_DIR + file.getName()));
             return true;

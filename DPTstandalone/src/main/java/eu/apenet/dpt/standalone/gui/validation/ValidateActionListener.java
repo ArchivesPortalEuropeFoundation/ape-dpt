@@ -1,6 +1,7 @@
 package eu.apenet.dpt.standalone.gui.validation;
 
 import eu.apenet.dpt.standalone.gui.*;
+import eu.apenet.dpt.standalone.gui.XsdAddition.XsdObject;
 import eu.apenet.dpt.utils.service.DocumentValidation;
 import eu.apenet.dpt.utils.util.XmlChecker;
 import eu.apenet.dpt.utils.util.Xsd_enum;
@@ -18,6 +19,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.InputStream;
+import java.net.URL;
 import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
@@ -79,6 +81,8 @@ public class ValidateActionListener implements ActionListener {
                 threadRunner.setName(SummaryWorking.class.toString());
                 threadRunner.start();
                 List<SAXParseException> exceptions;
+                XsdObject xsdObject = fileInstance.getValidationSchema();
+                URL schemaPath = Utilities.getUrlPathXsd(xsdObject);
                 if(dataPreparationToolGUI.getTree() != null && dataPreparationToolGUI.getTree().getTreeTableModel() != null && fileInstance.getLastOperation().equals(FileInstance.Operation.CREATE_TREE)){
                     TreeTableModel treeTableModel = dataPreparationToolGUI.getTree().getTreeTableModel();
                     Document document = (Document)treeTableModel.getRoot();
@@ -90,22 +94,22 @@ public class ValidateActionListener implements ActionListener {
                         output.setOutputProperty("{http://xml.apache.org/xslt}indent-amount","2");
 
                         output.transform(new DOMSource(document.getFirstChild()), new StreamResult(file2));
-                        exceptions = DocumentValidation.xmlValidation(FileUtils.openInputStream(file2), fileInstance.getValidationSchema());
+                        exceptions = DocumentValidation.xmlValidation(FileUtils.openInputStream(file2), schemaPath, xsdObject.isXsd11());
                     } catch (Exception ex){
                         LOG.error("Error when taking the XML tree and validating it", ex);
                         throw new RuntimeException(ex);
                     }
                 } else if(!fileInstance.isConverted())
-                    exceptions = DocumentValidation.xmlValidation(FileUtils.openInputStream(file), fileInstance.getValidationSchema());
+                    exceptions = DocumentValidation.xmlValidation(FileUtils.openInputStream(file), schemaPath, xsdObject.isXsd11());
                 else {
                     InputStream is = FileUtils.openInputStream(new File(fileInstance.getCurrentLocation()));
-                    exceptions = DocumentValidation.xmlValidation(is, fileInstance.getValidationSchema());
+                    exceptions = DocumentValidation.xmlValidation(is, schemaPath, xsdObject.isXsd11());
                 }
                 if (exceptions == null || exceptions.isEmpty()){
                     apeTabbedPane.setValidationErrorText(labels.getString("validationSuccess"));
                     apeTabbedPane.checkFlashingTab(APETabbedPane.TAB_VALIDATION, Utilities.FLASHING_GREEN_COLOR);
                     fileInstance.setValid(true);
-                    if(fileInstance.getValidationSchema() == Xsd_enum.XSD_APE_SCHEMA || fileInstance.getValidationSchema() == Xsd_enum.XSD1_0_APE_SCHEMA)
+                    if(xsdObject.getFileType().equals(FileInstance.FileType.EAD))
                         dataPreparationToolGUI.enableEseConversionBtn();
                 } else {
                     if(!fileInstance.isConverted())

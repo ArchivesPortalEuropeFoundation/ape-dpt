@@ -56,7 +56,7 @@ public abstract class DefaultBtnAction implements ActionListener {
             File eagFile = new File(Utilities.TEMP_DIR + "EAG2012_" + id + ".xml");
             jaxbMarshaller.marshal(eag, eagFile);
 
-            model.addFile(eagFile, Xsd_enum.XSD_EAG_2012_SCHEMA, FileInstance.FileType.EAG);
+            model.addFile(eagFile, Utilities.getXsdObjectFromPath(Xsd_enum.XSD_EAG_2012_SCHEMA.getPath()), FileInstance.FileType.EAG);
         } catch (Exception e) {
             e.printStackTrace();
         }

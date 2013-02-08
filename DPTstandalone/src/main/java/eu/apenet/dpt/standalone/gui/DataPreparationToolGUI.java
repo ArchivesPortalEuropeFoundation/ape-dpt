@@ -10,13 +10,8 @@ import java.awt.event.*;
 import java.io.File;
 import java.io.IOException;
 import java.text.MessageFormat;
-import java.util.Arrays;
-import java.util.Enumeration;
-import java.util.HashMap;
+import java.util.*;
 import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.ResourceBundle;
 
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
@@ -26,6 +21,7 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
+import eu.apenet.dpt.standalone.gui.XsdAddition.XsdObject;
 import eu.apenet.dpt.standalone.gui.batch.ConvertAndValidateActionListener;
 import eu.apenet.dpt.standalone.gui.conversion.ConvertActionListener;
 import eu.apenet.dpt.standalone.gui.databaseChecker.DatabaseCheckerActionListener;
@@ -154,9 +150,11 @@ public class DataPreparationToolGUI extends JFrame {
     private void setupTool() {
         Locale currentLocale = Locale.getDefault();
         labels = ResourceBundle.getBundle("i18n/apeBundle", currentLocale);
-        apePanel = new APEPanel(labels, getContentPane(), this);
 
         retrieveFromDb = new RetrieveFromDb();
+        apePanel = new APEPanel(labels, getContentPane(), this, retrieveFromDb);
+
+        Utilities.setXsdList(fillXsdList());
 
         CheckList checkList = new CheckList();
         langList = checkList.getLangList();
@@ -754,7 +752,7 @@ public class DataPreparationToolGUI extends JFrame {
         boolean first = true;
         for (int i = 0; i < list.getSelectedValues().length; i++) {
             FileInstance fileInstance = fileInstances.get(((File) list.getSelectedValues()[i]).getName());
-            if ((fileInstance.getValidationSchema() == Xsd_enum.XSD_APE_SCHEMA || fileInstance.getValidationSchema() == Xsd_enum.XSD1_0_APE_SCHEMA) && fileInstance.isValid()) {
+            if (fileInstance.getValidationSchema().getFileType().equals(FileInstance.FileType.EAD) && fileInstance.isValid()) {
                 if(!first) {
                     createHGBtn.setEnabled(true);
                     return;
@@ -883,6 +881,12 @@ public class DataPreparationToolGUI extends JFrame {
             group.add(jRadioButtonMenuItem);
             defaultXsdSelectionSubmenu.add(jRadioButtonMenuItem);
         }
+        for (XsdObject additionalXsd : retrieveFromDb.retrieveAdditionalXsds()) {
+            jRadioButtonMenuItem = new JRadioButtonMenuItem(additionalXsd.getName());
+            jRadioButtonMenuItem.addActionListener(new XsdSelectActionListener());
+            group.add(jRadioButtonMenuItem);
+            defaultXsdSelectionSubmenu.add(jRadioButtonMenuItem);
+        }
     }
 
     private class XsdSelectActionListener implements ActionListener {
@@ -928,6 +932,27 @@ public class DataPreparationToolGUI extends JFrame {
                 changeInfoInGUI(key);
             }
         }
+    }
+
+    private List<XsdObject> fillXsdList() {
+        List<XsdObject> xsdObjects = new ArrayList<XsdObject>();
+        for (Xsd_enum xsdEnum : Xsd_enum.values()) {
+            String filetype;
+            if(xsdEnum.getPath().equals("apeEAD.xsd") || xsdEnum.getPath().equals("apeEAD_XSD1.0.xsd") || xsdEnum.getPath().equals("ead_2002.xsd")) {
+                filetype = FileInstance.FileType.EAD.getFilePrefix();
+            } else if (xsdEnum.getPath().equals("APE_EAG.xsd") || xsdEnum.getPath().equals("eag.xsd") || xsdEnum.getPath().equals("eag_2012.xsd")) {
+                filetype = FileInstance.FileType.EAG.getFilePrefix();
+            } else if(xsdEnum.getPath().equals("cpf.xsd")) {
+                filetype = FileInstance.FileType.EAC_CPF.getFilePrefix();
+            } else {
+                filetype = FileInstance.FileType.OTHER.getFilePrefix();
+            }
+            xsdObjects.add(new XsdObject(-1, xsdEnum.getReadableName(), xsdEnum.getPath(), xsdEnum.getPath().equals("apeEAD.xsd")?1:0, 1, filetype));
+        }
+        for (XsdObject additionalXsd : retrieveFromDb.retrieveAdditionalXsds()) {
+            xsdObjects.add(additionalXsd);
+        }
+        return xsdObjects;
     }
 
     private void createOptionPaneForCountryCode() {
@@ -1010,9 +1035,8 @@ public class DataPreparationToolGUI extends JFrame {
                 validateItem.setEnabled(false);
                 apeTabbedPane.disableValidationBtn();
                 saveSelectedItem.setEnabled(true);
-                if (fileInstance.getValidationSchema() == Xsd_enum.XSD_APE_SCHEMA || fileInstance.getValidationSchema() == Xsd_enum.XSD1_0_APE_SCHEMA) {
+                if (fileInstance.getValidationSchema().getFileType().equals(FileInstance.FileType.EAD))
                     apeTabbedPane.enableConversionEseBtn();
-                }
             } else {
                 validateItem.setEnabled(true);
                 apeTabbedPane.enableValidationBtn();

@@ -1,26 +1,19 @@
 package eu.apenet.dpt.standalone.gui;
 
-import eu.apenet.dpt.utils.util.Xsd_enum;
+import eu.apenet.dpt.standalone.gui.XsdAddition.XsdObject;
+import eu.apenet.dpt.utils.service.DocumentValidation;
 import eu.apenet.dpt.utils.util.XsltChecker;
 import org.apache.commons.lang.StringUtils;
 import org.xml.sax.SAXParseException;
 
 import javax.swing.*;
 import java.awt.*;
-import java.io.ByteArrayInputStream;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-import org.w3c.dom.Document;
-import org.xml.sax.SAXException;
 
 /**
  * User: Yoann Moranville
@@ -68,6 +61,8 @@ public final class Utilities {
 
     public final static File BEFORE_XSL_FILE = new File(BEFORE_XSL_FILE_PATH);
 
+    private static List<XsdObject> xsdList;
+
     public static boolean isSystemFile(String filename) {
         return Arrays.asList(SYSTEM_FILES).contains(filename);
     }
@@ -89,19 +84,52 @@ public final class Utilities {
         return defaultXsl;
     }
 
-    private static Xsd_enum defaultXsd;
-    public static void setDefaultXsd(String defaultXsdString){
-        for (Xsd_enum xsdEnum : Xsd_enum.values()){
-            if(xsdEnum.getReadableName().equals(defaultXsdString)){
-                Utilities.defaultXsd = xsdEnum;
+    private static XsdObject defaultXsd;
+    public static void setDefaultXsd(String defaultXsdString) {
+        for (XsdObject xsd : xsdList) {
+            if(xsd.getName().equals(defaultXsdString)) {
+                Utilities.defaultXsd = xsd;
                 break;
             }
         }
     }
-    public static Xsd_enum getDefaultXsd(){
-        if(defaultXsd == null)
-            return Xsd_enum.XSD_APE_SCHEMA;
+    public static XsdObject getDefaultXsd(){
+        if(defaultXsd == null) {
+            for(XsdObject xsdObject : getXsdList()) {
+                if(xsdObject.getPath().equals("apeEAD.xsd")) {
+                    return xsdObject;
+                }
+            }
+        }
         return defaultXsd;
+    }
+
+    public static XsdObject getXsdObjectFromPath(String xsdPath) {
+        for(XsdObject xsdObject : getXsdList()) {
+            if(xsdObject.getPath().equals(xsdPath)) {
+                return xsdObject;
+            }
+        }
+        return null;
+    }
+
+    public static URL getUrlPathXsd(XsdObject xsdObject) throws MalformedURLException {
+        if(xsdObject.isSystem())
+            return DocumentValidation.class.getResource("/" + xsdObject.getPath());
+        else
+            return new URL("file://" + new File(CONFIG_DIR + xsdObject.getPath()).getAbsolutePath());
+    }
+
+    public static List<XsdObject> getXsdList() {
+        return xsdList;
+    }
+
+    public static void setXsdList(List<XsdObject> xsdList) {
+        Utilities.xsdList = xsdList;
+    }
+
+    public static void addToXsdList(XsdObject xsd) {
+        Utilities.xsdList.add(xsd);
     }
 
     public static List<File> getXsltFiles(){

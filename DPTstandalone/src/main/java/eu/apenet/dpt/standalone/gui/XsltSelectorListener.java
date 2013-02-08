@@ -27,15 +27,14 @@ public class XsltSelectorListener implements ActionListener {
             fileInstance.setConversionScriptName(e.getActionCommand());
             if(e.getActionCommand().equals("eac2eaccpf.xsl")){
                 fileInstance.setFileType(FileInstance.FileType.EAC_CPF);
-                fileInstance.setValidationSchema(Xsd_enum.XSD_EAC_SCHEMA);
+                fileInstance.setValidationSchema(Utilities.getXsdObjectFromPath(Xsd_enum.XSD_EAC_SCHEMA.getPath()));
             } else if(e.getActionCommand().equals("eag2eag.xsl")){
                 fileInstance.setFileType(FileInstance.FileType.EAG);
-                if(!fileInstance.getValidationSchema().equals(Xsd_enum.XSD_EAG_SCHEMA)){
-                    fileInstance.setValidationSchema(Xsd_enum.XSD_EAG_2012_SCHEMA);
-                }
+                if(!fileInstance.getValidationSchema().equals(Utilities.getXsdObjectFromPath(Xsd_enum.XSD_EAG_SCHEMA.getPath())))
+                    fileInstance.setValidationSchema(Utilities.getXsdObjectFromPath(Xsd_enum.XSD_EAG_2012_SCHEMA.getPath()));
             } else {
-                if(!fileInstance.getValidationSchema().equals(Xsd_enum.XSD_EAD_SCHEMA) && !fileInstance.getValidationSchema().equals(Xsd_enum.XSD1_0_APE_SCHEMA))
-                    fileInstance.setValidationSchema(Xsd_enum.XSD_APE_SCHEMA);
+                if(!fileInstance.getValidationSchema().equals(Utilities.getXsdObjectFromPath(Xsd_enum.XSD_EAD_SCHEMA.getPath())) && !fileInstance.getValidationSchema().equals(Utilities.getXsdObjectFromPath(Xsd_enum.XSD1_0_APE_SCHEMA.getPath())))
+                    fileInstance.setValidationSchema(Utilities.getXsdObjectFromPath(Xsd_enum.XSD_APE_SCHEMA.getPath()));
             }
             dataPreparationToolGUI.refreshButtons(fileInstance, Utilities.XSD_GROUP);
         }

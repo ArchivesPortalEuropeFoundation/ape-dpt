@@ -26,7 +26,10 @@ public class DBUtil {
         COLUMN_ID("IDENTIFIER"),
         COLUMN_VALUE("VALUE"),
         COLUMN_PRIMARY_ID("ID"),
-        COLUMN_MYKEY("MYKEY");
+        COLUMN_MYKEY("MYKEY"),
+        COLUMN_ISSYSTEM("ISSYSTEM"),
+        COLUMN_ISXSD11("ISXSD11"),
+        COLUMN_FILETYPE("FILETYPE");
 
         private String name;
         DBNames(String name){
@@ -65,6 +68,8 @@ public class DBUtil {
             
             System.setProperty("derby.system.home", "xsl");
             dbConnection = DriverManager.getConnection(dbPath);
+//            dropTable(DBNames.TABLE_XSD.getName());
+//            createTables();
         } catch (Exception e){
             try{
                 dbPath += ";create=true";
@@ -83,7 +88,7 @@ public class DBUtil {
                 "CREATE TABLE ape_options (ID INTEGER NOT NULL PRIMARY KEY GENERATED ALWAYS AS IDENTITY(START WITH 1, INCREMENT BY 1), MYKEY VARCHAR(30), VALUE VARCHAR(256))",
                 "CREATE TABLE hg_titles (ID INTEGER NOT NULL PRIMARY KEY GENERATED ALWAYS AS IDENTITY(START WITH 1, INCREMENT BY 1), TITLE VARCHAR(64))",
                 "CREATE TABLE hg_ids (ID INTEGER NOT NULL PRIMARY KEY GENERATED ALWAYS AS IDENTITY(START WITH 1, INCREMENT BY 1), IDENTIFIER VARCHAR(64))",
-                "CREATE TABLE xsd_addition (ID INTEGER NOT NULL PRIMARY KEY GENERATED ALWAYS AS IDENTITY(START WITH 1, INCREMENT BY 1), TITLE VARCHAR(64), VALUE VARCHAR(256))"
+                "CREATE TABLE xsd_addition (ID INTEGER NOT NULL PRIMARY KEY GENERATED ALWAYS AS IDENTITY(START WITH 1, INCREMENT BY 1), TITLE VARCHAR(64), VALUE VARCHAR(256), ISSYSTEM INTEGER, ISXSD11 INTEGER, FILETYPE VARCHAR(64))"
         );
         Statement statement;
         try{
@@ -191,7 +196,7 @@ public class DBUtil {
         return "INSERT INTO " + tableName + " (MYKEY, VALUE) VALUES (?, ?)";
     }
     public static String createInsertQueryInXsd(String tableName){
-        return "INSERT INTO " + tableName + " (TITLE, VALUE) VALUES (?, ?)";
+        return "INSERT INTO " + tableName + " (TITLE, VALUE, ISSYSTEM, ISXSD11, FILETYPE) VALUES (?, ?, ?, ?, ?)";
     }
     public static String createSelectAllQuery(String tableName){
         return "SELECT * FROM " + tableName;
