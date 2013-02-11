@@ -13,6 +13,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.ResourceBundle;
 
 /**
  * User: Yoann Moranville
@@ -24,8 +25,8 @@ public class EagControlPanel extends EagPanels {
     private List<LanguageWithScript> languageWithScriptTfs;
     private List<TextFieldWithLanguage> rulesConventionTfs;
 
-    public EagControlPanel(Eag eag, JTabbedPane tabbedPane, JFrame eag2012Frame, ProfileListModel model) {
-        super(eag, tabbedPane, eag2012Frame, model);
+    public EagControlPanel(Eag eag, JTabbedPane tabbedPane, JFrame eag2012Frame, ProfileListModel model, ResourceBundle labels) {
+        super(eag, tabbedPane, eag2012Frame, model, labels);
     }
 
     @Override
@@ -156,7 +157,7 @@ public class EagControlPanel extends EagPanels {
             languageDeclaration.setLanguage(new Language());
             languageDeclaration.setScript(new Script());
             eag.getControl().getLanguageDeclarations().getLanguageDeclaration().add(languageDeclaration);
-            reloadTabbedPanel(new EagControlPanel(eag, tabbedPane, eag2012Frame, model).buildEditorPanel(errors), 0);
+            reloadTabbedPanel(new EagControlPanel(eag, tabbedPane, eag2012Frame, model, labels).buildEditorPanel(errors), 0);
         }
     }
 
@@ -175,7 +176,7 @@ public class EagControlPanel extends EagPanels {
             conventionDeclaration.setAbbreviation(new Abbreviation());
             conventionDeclaration.getCitation().add(new Citation());
             eag.getControl().getConventionDeclaration().add(conventionDeclaration);
-            reloadTabbedPanel(new EagControlPanel(eag, tabbedPane, eag2012Frame, model).buildEditorPanel(errors), 0);
+            reloadTabbedPanel(new EagControlPanel(eag, tabbedPane, eag2012Frame, model, labels).buildEditorPanel(errors), 0);
         }
     }
 
@@ -191,7 +192,7 @@ public class EagControlPanel extends EagPanels {
                 super.saveFile(eag.getControl().getRecordId().getValue());
                 closeFrame();
             } catch (Eag2012FormException e) {
-                reloadTabbedPanel(new EagControlPanel(eag, tabbedPane, eag2012Frame, model).buildEditorPanel(errors), 0);
+                reloadTabbedPanel(new EagControlPanel(eag, tabbedPane, eag2012Frame, model, labels).buildEditorPanel(errors), 0);
             }
         }
     }
@@ -209,16 +210,16 @@ public class EagControlPanel extends EagPanels {
                 super.updateEagObject();
 
                 if(isNextTab) {
-                    reloadTabbedPanel(new EagRelationsPanel(eag, tabbedPane, eag2012Frame, model).buildEditorPanel(errors), 6);
+                    reloadTabbedPanel(new EagRelationsPanel(eag, tabbedPane, eag2012Frame, model, labels).buildEditorPanel(errors), 6);
                     tabbedPane.setEnabledAt(6, true);
                     tabbedPane.setEnabledAt(5, false);
                 } else {
-                    reloadTabbedPanel(new EagDescriptionPanel(eag, tabbedPane, eag2012Frame, model).buildEditorPanel(errors), 4);
+                    reloadTabbedPanel(new EagDescriptionPanel(eag, tabbedPane, eag2012Frame, model, labels).buildEditorPanel(errors), 4);
                     tabbedPane.setEnabledAt(4, true);
                     tabbedPane.setEnabledAt(5, false);
                 }
             } catch (Eag2012FormException e) {
-                reloadTabbedPanel(new EagControlPanel(eag, tabbedPane, eag2012Frame, model).buildEditorPanel(errors), 5);
+                reloadTabbedPanel(new EagControlPanel(eag, tabbedPane, eag2012Frame, model, labels).buildEditorPanel(errors), 5);
             }
         }
     }

@@ -60,8 +60,8 @@ public class EagInstitutionPanel extends EagPanels {
 
     private boolean isNew;
 
-    public EagInstitutionPanel(Eag eag, JTabbedPane tabbedPane, JFrame eag2012Frame, ProfileListModel model, boolean isNew) {
-        super(eag, tabbedPane, eag2012Frame, model);
+    public EagInstitutionPanel(Eag eag, JTabbedPane tabbedPane, JFrame eag2012Frame, ProfileListModel model, boolean isNew, ResourceBundle labels) {
+        super(eag, tabbedPane, eag2012Frame, model, labels);
         this.isNew = isNew;
     }
 
@@ -426,7 +426,7 @@ public class EagInstitutionPanel extends EagPanels {
                 super.saveFile(eag.getControl().getRecordId().getValue());
                 closeFrame();
             } catch (Eag2012FormException e) {
-                reloadTabbedPanel(new EagInstitutionPanel(eag, tabbedPane, eag2012Frame, model, isNew).buildEditorPanel(errors), 0);
+                reloadTabbedPanel(new EagInstitutionPanel(eag, tabbedPane, eag2012Frame, model, isNew, labels).buildEditorPanel(errors), 0);
             }
         }
     }
@@ -444,14 +444,14 @@ public class EagInstitutionPanel extends EagPanels {
                 if(model == null)
                     LOG.info("The model is null, we can not add the EAG to the list...");
 
-                reloadTabbedPanel(new EagIdentityPanel(eag, tabbedPane, eag2012Frame, model).buildEditorPanel(errors), 1);
+                reloadTabbedPanel(new EagIdentityPanel(eag, tabbedPane, eag2012Frame, model, labels).buildEditorPanel(errors), 1);
                 tabbedPane.setEnabledAt(1, true);
                 tabbedPane.setEnabledAt(0, false);
             } catch (Eag2012FormException e) {
                 if(model == null)
                     LOG.info("The model is null, we can not add the EAG to the list...");
 
-                reloadTabbedPanel(new EagInstitutionPanel(eag, tabbedPane, eag2012Frame, model, isNew).buildEditorPanel(errors), 0);
+                reloadTabbedPanel(new EagInstitutionPanel(eag, tabbedPane, eag2012Frame, model, isNew, labels).buildEditorPanel(errors), 0);
             }
         }
     }
@@ -471,7 +471,7 @@ public class EagInstitutionPanel extends EagPanels {
 //                }
             }
             eag.getControl().getOtherRecordId().add(new OtherRecordId());
-            reloadTabbedPanel(new EagInstitutionPanel(eag, tabbedPane, eag2012Frame, model, isNew).buildEditorPanel(errors), 0);
+            reloadTabbedPanel(new EagInstitutionPanel(eag, tabbedPane, eag2012Frame, model, isNew, labels).buildEditorPanel(errors), 0);
         }
 
     }
@@ -498,7 +498,7 @@ public class EagInstitutionPanel extends EagPanels {
             location.setMunicipalityPostalcode(new MunicipalityPostalcode());
 
             eag.getArchguide().getDesc().getRepositories().getRepository().get(0).getLocation().add(location);
-            reloadTabbedPanel(new EagInstitutionPanel(eag, tabbedPane, eag2012Frame, model, isNew).buildEditorPanel(errors), 0);
+            reloadTabbedPanel(new EagInstitutionPanel(eag, tabbedPane, eag2012Frame, model, isNew, labels).buildEditorPanel(errors), 0);
         }
 
     }
@@ -514,6 +514,15 @@ public class EagInstitutionPanel extends EagPanels {
 
             boolean hasChanged = false;
 
+            if(StringUtils.isNotEmpty(personTf.getText())) {
+                LOG.info("not empty");
+                MaintenanceEvent event = eag.getControl().getMaintenanceHistory().getMaintenanceEvent().get(eag.getControl().getMaintenanceHistory().getMaintenanceEvent().size() - 1);
+                eag.getControl().getMaintenanceHistory().getMaintenanceEvent().remove(event);
+                event.getAgent().setContent(personTf.getText());
+                eag.getControl().getMaintenanceHistory().getMaintenanceEvent().add(event);
+            } else {
+                LOG.info("empty");
+            }
 
             if(StringUtils.isEmpty(countryCodeTf.getText())) {
                 errors.add("countryCodeTf");

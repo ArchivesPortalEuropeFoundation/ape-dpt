@@ -41,7 +41,7 @@ public final class Utilities {
 
     public final static ImageIcon icon = new ImageIcon(Utilities.class.getResource("/ape_logo.png"), "APE Logo");
     
-    public final static String[] SYSTEM_FILES = {XSL_BEFORE_NAME, XSL_DEFAULT_NAME, XML_LANGUAGES_NAME, "changeNS.xsl", "frontmatter.xsl", "import.xsl", "levels.xsl"};
+    public final static String[] SYSTEM_FILES = {XSL_BEFORE_NAME, XSL_DEFAULT_NAME, XML_LANGUAGES_NAME, "changeNS.xsl", "frontmatter.xsl", "import.xsl", "levels.xsl", "eag2eag2012.xsl"};
     public final static String[] FILES_NOT_SHOWN = {XSL_BEFORE_NAME, "frontmatter.xsl", "import.xsl", "levels.xsl"};
 
 //    public static final Color FLASHING_RED_COLOR = new Color(255, 30, 30);

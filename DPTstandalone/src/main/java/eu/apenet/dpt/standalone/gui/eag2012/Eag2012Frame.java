@@ -16,6 +16,7 @@ import java.awt.*;
 import java.io.File;
 import java.io.InputStream;
 import java.net.URL;
+import java.util.ResourceBundle;
 
 /**
  * User: Yoann Moranville
@@ -28,8 +29,9 @@ public class Eag2012Frame extends JFrame {
     private JTabbedPane tabbedPane;
     private Dimension dimension;
     private ProfileListModel model;
+    private ResourceBundle labels;
 
-    public Eag2012Frame(File eagFile, boolean isEag2012, Dimension dimension, ProfileListModel model) {
+    public Eag2012Frame(File eagFile, boolean isEag2012, Dimension dimension, ProfileListModel model, ResourceBundle labels) {
         if(!isEag2012) {
             try {
                 InputStream is = FileUtils.openInputStream(eagFile);
@@ -44,10 +46,11 @@ public class Eag2012Frame extends JFrame {
         }
         this.dimension = dimension;
         this.model = model;
+        this.labels = labels;
         createFrame(eagFile, false);
     }
 
-    public Eag2012Frame(Dimension dimension, ProfileListModel model) {
+    public Eag2012Frame(Dimension dimension, ProfileListModel model, ResourceBundle labels) {
 //        URL emptyEAGFileURL = getClass().getResource("/EAG_XML_XSL/Blank_EAG_2012.xml");
         InputStream emptyEAGFileStream = getClass().getResourceAsStream("/EAG_XML_XSL/Blank_EAG_2012.xml");
 
@@ -55,6 +58,7 @@ public class Eag2012Frame extends JFrame {
 
         this.dimension = dimension;
         this.model = model;
+        this.labels = labels;
         createFrame(emptyEAGFileStream, true);
     }
 
@@ -110,7 +114,7 @@ public class Eag2012Frame extends JFrame {
 
 
     protected JComponent buildInstitutionPanel(Eag eag, boolean isNew) {
-        JScrollPane jScrollPane = new JScrollPane(new EagInstitutionPanel(eag, tabbedPane, this, model, isNew).buildEditorPanel(null));
+        JScrollPane jScrollPane = new JScrollPane(new EagInstitutionPanel(eag, tabbedPane, this, model, isNew, labels).buildEditorPanel(null));
         jScrollPane.getVerticalScrollBar().setUnitIncrement(20);
         return jScrollPane;
     }

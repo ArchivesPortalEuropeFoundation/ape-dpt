@@ -14,6 +14,7 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.ResourceBundle;
 
 /**
  * User: Yoann Moranville
@@ -44,8 +45,8 @@ public class EagContactPanel extends EagPanels {
 
     private JComboBox continentCombo = new JComboBox(continents);
 
-    public EagContactPanel(Eag eag, JTabbedPane tabbedPane, JFrame eag2012Frame, ProfileListModel model) {
-        super(eag, tabbedPane, eag2012Frame, model);
+    public EagContactPanel(Eag eag, JTabbedPane tabbedPane, JFrame eag2012Frame, ProfileListModel model, ResourceBundle labels) {
+        super(eag, tabbedPane, eag2012Frame, model, labels);
     }
 
     @Override
@@ -350,7 +351,7 @@ public class EagContactPanel extends EagPanels {
                 super.saveFile(eag.getControl().getRecordId().getValue());
                 closeFrame();
             } catch (Eag2012FormException e) {
-                reloadTabbedPanel(new EagContactPanel(eag, tabbedPane, eag2012Frame, model).buildEditorPanel(errors), 0);
+                reloadTabbedPanel(new EagContactPanel(eag, tabbedPane, eag2012Frame, model, labels).buildEditorPanel(errors), 0);
             }
         }
     }
@@ -368,16 +369,16 @@ public class EagContactPanel extends EagPanels {
                 super.updateEagObject();
 
                 if(isNextTab) {
-                    reloadTabbedPanel(new EagAccessAndServicesPanel(eag, tabbedPane, eag2012Frame, model).buildEditorPanel(errors), 3);
+                    reloadTabbedPanel(new EagAccessAndServicesPanel(eag, tabbedPane, eag2012Frame, model, labels).buildEditorPanel(errors), 3);
                     tabbedPane.setEnabledAt(3, true);
                     tabbedPane.setEnabledAt(2, false);
                 } else {
-                    reloadTabbedPanel(new EagIdentityPanel(eag, tabbedPane, eag2012Frame, model).buildEditorPanel(errors), 1);
+                    reloadTabbedPanel(new EagIdentityPanel(eag, tabbedPane, eag2012Frame, model, labels).buildEditorPanel(errors), 1);
                     tabbedPane.setEnabledAt(1, true);
                     tabbedPane.setEnabledAt(2, false);
                 }
             } catch (Eag2012FormException e) {
-                reloadTabbedPanel(new EagContactPanel(eag, tabbedPane, eag2012Frame, model).buildEditorPanel(errors), 2);
+                reloadTabbedPanel(new EagContactPanel(eag, tabbedPane, eag2012Frame, model, labels).buildEditorPanel(errors), 2);
             }
         }
     }
@@ -402,7 +403,7 @@ public class EagContactPanel extends EagPanels {
             location.setMunicipalityPostalcode(new MunicipalityPostalcode());
 
             eag.getArchguide().getDesc().getRepositories().getRepository().get(0).getLocation().add(location);
-            reloadTabbedPanel(new EagContactPanel(eag, tabbedPane, eag2012Frame, model).buildEditorPanel(errors), 2);
+            reloadTabbedPanel(new EagContactPanel(eag, tabbedPane, eag2012Frame, model, labels).buildEditorPanel(errors), 2);
         }
     }
     public class AddTelephoneAction extends UpdateEagObject {
@@ -420,7 +421,7 @@ public class EagContactPanel extends EagPanels {
             Repository repository = eag.getArchguide().getDesc().getRepositories().getRepository().get(0);
             repository.getTelephone().add(new Telephone());
 
-            reloadTabbedPanel(new EagContactPanel(eag, tabbedPane, eag2012Frame, model).buildEditorPanel(errors), 2);
+            reloadTabbedPanel(new EagContactPanel(eag, tabbedPane, eag2012Frame, model, labels).buildEditorPanel(errors), 2);
         }
     }
     public class AddFaxAction extends UpdateEagObject {
@@ -438,7 +439,7 @@ public class EagContactPanel extends EagPanels {
             Repository repository = eag.getArchguide().getDesc().getRepositories().getRepository().get(0);
             repository.getFax().add(new Fax());
 
-            reloadTabbedPanel(new EagContactPanel(eag, tabbedPane, eag2012Frame, model).buildEditorPanel(errors), 2);
+            reloadTabbedPanel(new EagContactPanel(eag, tabbedPane, eag2012Frame, model, labels).buildEditorPanel(errors), 2);
         }
     }
     public class AddEmailAction extends UpdateEagObject {
@@ -456,7 +457,7 @@ public class EagContactPanel extends EagPanels {
             Repository repository = eag.getArchguide().getDesc().getRepositories().getRepository().get(0);
             repository.getEmail().add(new Email());
 
-            reloadTabbedPanel(new EagContactPanel(eag, tabbedPane, eag2012Frame, model).buildEditorPanel(errors), 2);
+            reloadTabbedPanel(new EagContactPanel(eag, tabbedPane, eag2012Frame, model, labels).buildEditorPanel(errors), 2);
         }
     }
     public class AddWebpageAction extends UpdateEagObject {
@@ -474,7 +475,7 @@ public class EagContactPanel extends EagPanels {
             Repository repository = eag.getArchguide().getDesc().getRepositories().getRepository().get(0);
             repository.getWebpage().add(new Webpage());
 
-            reloadTabbedPanel(new EagContactPanel(eag, tabbedPane, eag2012Frame, model).buildEditorPanel(errors), 2);
+            reloadTabbedPanel(new EagContactPanel(eag, tabbedPane, eag2012Frame, model, labels).buildEditorPanel(errors), 2);
         }
     }
 

@@ -548,7 +548,7 @@ public class DataPreparationToolGUI extends JFrame {
                 eagFileChooser.setCurrentDirectory(new File(retrieveFromDb.retrieveOpenLocation()));
                 if (eagFileChooser.showOpenDialog(getParent()) == JFileChooser.APPROVE_OPTION) {
                     File eagFile = eagFileChooser.getSelectedFile();
-                    new Eag2012Frame(eagFile, false, getContentPane().getSize(), (ProfileListModel) getList().getModel());
+                    new Eag2012Frame(eagFile, false, getContentPane().getSize(), (ProfileListModel) getList().getModel(), labels);
                 }
             }
         });
@@ -560,13 +560,13 @@ public class DataPreparationToolGUI extends JFrame {
                 eagFileChooser.setCurrentDirectory(new File(retrieveFromDb.retrieveOpenLocation()));
                 if (eagFileChooser.showOpenDialog(getParent()) == JFileChooser.APPROVE_OPTION) {
                     File eagFile = eagFileChooser.getSelectedFile();
-                    new Eag2012Frame(eagFile, true, getContentPane().getSize(), (ProfileListModel) getList().getModel());
+                    new Eag2012Frame(eagFile, true, getContentPane().getSize(), (ProfileListModel) getList().getModel(), labels);
                 }
             }
         });
         createEag2012FromScratch.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                new Eag2012Frame(getContentPane().getSize(), (ProfileListModel) getList().getModel());
+                new Eag2012Frame(getContentPane().getSize(), (ProfileListModel) getList().getModel(), labels);
             }
         });
         digitalObjectTypeItem.addActionListener(new ActionListener() {

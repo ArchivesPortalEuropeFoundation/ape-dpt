@@ -8,6 +8,7 @@ import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.List;
+import java.util.ResourceBundle;
 
 /**
  * User: Yoann Moranville
@@ -45,13 +46,14 @@ public abstract class EagPanels {
     protected Eag eag;
     protected JFrame eag2012Frame;
     protected ProfileListModel model;
-    protected SpecialTemporaryResourceBundle labels = new SpecialTemporaryResourceBundle();
+    protected ResourceBundle labels;
 
-    public EagPanels(Eag eag, JTabbedPane tabbedPane, JFrame eag2012Frame, ProfileListModel model) {
+    public EagPanels(Eag eag, JTabbedPane tabbedPane, JFrame eag2012Frame, ProfileListModel model, ResourceBundle labels) {
         this.eag2012Frame = eag2012Frame;
         this.eag = eag;
         this.tabbedPane = tabbedPane;
         this.model = model;
+        this.labels = labels;
     }
 
     protected void closeFrame() {
@@ -70,12 +72,6 @@ public abstract class EagPanels {
     }
 
     protected abstract JComponent buildEditorPanel(List<String> errors);
-
-    public class SpecialTemporaryResourceBundle {
-        public String getString(String s) {
-            return s.replace("eag2012.", "");
-        }
-    }
 
     protected class ExitBtnAction implements ActionListener {
         public void actionPerformed(ActionEvent actionEvent) {

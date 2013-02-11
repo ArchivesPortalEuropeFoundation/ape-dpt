@@ -13,6 +13,7 @@ import java.awt.event.ActionEvent;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.ResourceBundle;
 
 /**
  * User: Yoann Moranville
@@ -66,8 +67,8 @@ public class EagAccessAndServicesPanel extends EagPanels {
     private List<TextFieldWithLanguage> toursAndSessionsTfs;
     private List<TextFieldWithLanguage> otherServicesTfs;
 
-    public EagAccessAndServicesPanel(Eag eag, JTabbedPane tabbedPane, JFrame eag2012Frame, ProfileListModel model) {
-        super(eag, tabbedPane, eag2012Frame, model);
+    public EagAccessAndServicesPanel(Eag eag, JTabbedPane tabbedPane, JFrame eag2012Frame, ProfileListModel model, ResourceBundle labels) {
+        super(eag, tabbedPane, eag2012Frame, model, labels);
     }
 
     @Override
@@ -134,7 +135,7 @@ public class EagAccessAndServicesPanel extends EagPanels {
             builder.add(textFieldWithLanguage.getLanguageBox(), cc.xy(7, rowNb));
             setNextRow();
 
-            builder.addLabel(labels.getString("eag2012.linkLabel"), cc.xy(1, rowNb));
+            builder.addLabel(labels.getString("eag2012.linkTitleLabel"), cc.xy(1, rowNb));
             builder.add(textFieldWithLanguage.getExtraField(),                                            cc.xy (3, rowNb));
             setNextRow();
         }
@@ -183,7 +184,7 @@ public class EagAccessAndServicesPanel extends EagPanels {
             builder.add(textFieldWithLanguage.getLanguageBox(),                   cc.xy(7, rowNb));
             setNextRow();
 
-            builder.addLabel(labels.getString("eag2012.linkLabel"), cc.xy(1, rowNb));
+            builder.addLabel(labels.getString("eag2012.linkTitleLabel"), cc.xy(1, rowNb));
             builder.add(textFieldWithLanguage.getExtraField(),                                            cc.xy (3, rowNb));
             setNextRow();
         }
@@ -229,26 +230,26 @@ public class EagAccessAndServicesPanel extends EagPanels {
         } else {
             telephoneSearchroomTf = new JTextField(searchroom.getContact().getTelephone().get(0).getContent());
         }
-        builder.addLabel(labels.getString("eag2012.telephone"),    cc.xy (1, rowNb));
+        builder.addLabel(labels.getString("eag2012.telephoneLabel"),    cc.xy (1, rowNb));
         builder.add(telephoneSearchroomTf, cc.xy(3, rowNb));
         setNextRow();
 
         if(searchroom.getContact().getEmail().size() == 0)
             searchroom.getContact().getEmail().add(new Email());
-        builder.addLabel(labels.getString("eag2012.email"),    cc.xy (1, rowNb));
+        builder.addLabel(labels.getString("eag2012.emailLabel"),    cc.xy (1, rowNb));
         emailSearchroomTf = new JTextField(searchroom.getContact().getEmail().get(0).getHref());
         builder.add(emailSearchroomTf,    cc.xy (3, rowNb));
-        builder.addLabel(labels.getString("eag2012.emailTitle"),    cc.xy (5, rowNb));
+        builder.addLabel(labels.getString("eag2012.linkTitleLabel"),    cc.xy (5, rowNb));
         emailTitleSearchroomTf = new JTextField(searchroom.getContact().getEmail().get(0).getContent());
         builder.add(emailTitleSearchroomTf,    cc.xy (7, rowNb));
         setNextRow();
 
         if(searchroom.getWebpage().size() == 0)
             searchroom.getWebpage().add(new Webpage());
-        builder.addLabel(labels.getString("eag2012.webpage"),    cc.xy (1, rowNb));
+        builder.addLabel(labels.getString("eag2012.webpageLabel"),    cc.xy (1, rowNb));
         webpageSearchroomTf = new JTextField(searchroom.getWebpage().get(0).getHref());
         builder.add(webpageSearchroomTf,    cc.xy (3, rowNb));
-        builder.addLabel(labels.getString("eag2012.webpageTitle"),    cc.xy (5, rowNb));
+        builder.addLabel(labels.getString("eag2012.linkTitleLabel"),    cc.xy (5, rowNb));
         webpageTitleSearchroomTf = new JTextField(searchroom.getWebpage().get(0).getContent());
         builder.add(webpageTitleSearchroomTf,    cc.xy (7, rowNb));
         setNextRow();
@@ -311,7 +312,7 @@ public class EagAccessAndServicesPanel extends EagPanels {
             builder.add(textFieldWithLanguage.getLanguageBox(), cc.xy(7, rowNb));
             setNextRow();
 
-            builder.addLabel(labels.getString("eag2012.linkLabel"), cc.xy(1, rowNb));
+            builder.addLabel(labels.getString("eag2012.linkTitleLabel"), cc.xy(1, rowNb));
             builder.add(textFieldWithLanguage.getExtraField(),                                            cc.xy (3, rowNb));
             setNextRow();
         }
@@ -332,7 +333,7 @@ public class EagAccessAndServicesPanel extends EagPanels {
             builder.add(textFieldWithLanguage.getLanguageBox(), cc.xy(7, rowNb));
             setNextRow();
 
-            builder.addLabel(labels.getString("eag2012.linkLabel"), cc.xy(1, rowNb));
+            builder.addLabel(labels.getString("eag2012.linkTitleLabel"), cc.xy(1, rowNb));
             builder.add(textFieldWithLanguage.getExtraField(),                                            cc.xy (3, rowNb));
             setNextRow();
         }
@@ -384,26 +385,26 @@ public class EagAccessAndServicesPanel extends EagPanels {
         } else {
             telephoneLibraryTf = new JTextField(library.getContact().getTelephone().get(0).getContent());
         }
-        builder.addLabel(labels.getString("eag2012.telephone"),    cc.xy (1, rowNb));
+        builder.addLabel(labels.getString("eag2012.telephoneLabel"),    cc.xy (1, rowNb));
         builder.add(telephoneLibraryTf, cc.xy(3, rowNb));
         setNextRow();
 
         if(library.getContact().getEmail().size() == 0)
             library.getContact().getEmail().add(new Email());
-        builder.addLabel(labels.getString("eag2012.email"),    cc.xy (1, rowNb));
+        builder.addLabel(labels.getString("eag2012.emailLabel"),    cc.xy (1, rowNb));
         emailLibraryTf = new JTextField(library.getContact().getEmail().get(0).getHref());
         builder.add(emailLibraryTf,    cc.xy (3, rowNb));
-        builder.addLabel(labels.getString("eag2012.emailTitle"),    cc.xy (5, rowNb));
+        builder.addLabel(labels.getString("eag2012.linkTitleLabel"),    cc.xy (5, rowNb));
         emailTitleLibraryTf = new JTextField(library.getContact().getEmail().get(0).getContent());
         builder.add(emailTitleLibraryTf,    cc.xy (7, rowNb));
         setNextRow();
 
         if(library.getWebpage().size() == 0)
             library.getWebpage().add(new Webpage());
-        builder.addLabel(labels.getString("eag2012.webpage"),    cc.xy (1, rowNb));
+        builder.addLabel(labels.getString("eag2012.webpageLabel"),    cc.xy (1, rowNb));
         webpageLibraryTf = new JTextField(library.getWebpage().get(0).getHref());
         builder.add(webpageLibraryTf,    cc.xy (3, rowNb));
-        builder.addLabel(labels.getString("eag2012.webpageTitle"),    cc.xy (5, rowNb));
+        builder.addLabel(labels.getString("eag2012.linkTitleLabel"),    cc.xy (5, rowNb));
         webpageTitleLibraryTf = new JTextField(library.getWebpage().get(0).getContent());
         builder.add(webpageTitleLibraryTf,    cc.xy (7, rowNb));
         setNextRow();
@@ -439,7 +440,7 @@ public class EagAccessAndServicesPanel extends EagPanels {
             repository.getServices().setInternetAccess(internetAccess);
         }
         InternetAccess internetAccess = repository.getServices().getInternetAccess();
-        builder.addLabel(labels.getString("eag2012.description"),    cc.xy (1, rowNb));
+        builder.addLabel(labels.getString("eag2012.descriptionLabel"),    cc.xy (1, rowNb));
         internetAccessDescTf = new TextFieldWithLanguage(internetAccess.getDescriptiveNote().getP().get(0).getContent(), internetAccess.getDescriptiveNote().getLang());
         builder.add(internetAccessDescTf.getTextField(), cc.xy(3, rowNb));
         builder.addLabel(labels.getString("eag2012.language"), cc.xy(5, rowNb));
@@ -467,26 +468,26 @@ public class EagAccessAndServicesPanel extends EagPanels {
         } else {
             telephoneRestorationlabTf = new JTextField(restorationlab.getContact().getTelephone().get(0).getContent());
         }
-        builder.addLabel(labels.getString("eag2012.telephone"),    cc.xy (1, rowNb));
+        builder.addLabel(labels.getString("eag2012.telephoneLabel"),    cc.xy (1, rowNb));
         builder.add(telephoneRestorationlabTf, cc.xy(3, rowNb));
         setNextRow();
 
         if(restorationlab.getContact().getEmail().size() == 0)
             restorationlab.getContact().getEmail().add(new Email());
-        builder.addLabel(labels.getString("eag2012.email"),    cc.xy (1, rowNb));
+        builder.addLabel(labels.getString("eag2012.emailLabel"),    cc.xy (1, rowNb));
         emailRestorationlabTf = new JTextField(restorationlab.getContact().getEmail().get(0).getHref());
         builder.add(emailRestorationlabTf,    cc.xy (3, rowNb));
-        builder.addLabel(labels.getString("eag2012.emailTitle"),    cc.xy (5, rowNb));
+        builder.addLabel(labels.getString("eag2012.linkTitleLabel"),    cc.xy (5, rowNb));
         emailTitleRestorationlabTf = new JTextField(restorationlab.getContact().getEmail().get(0).getContent());
         builder.add(emailTitleRestorationlabTf,    cc.xy (7, rowNb));
         setNextRow();
 
         if(restorationlab.getWebpage().size() == 0)
             restorationlab.getWebpage().add(new Webpage());
-        builder.addLabel(labels.getString("eag2012.webpage"),    cc.xy (1, rowNb));
+        builder.addLabel(labels.getString("eag2012.webpageLabel"),    cc.xy (1, rowNb));
         webpageRestorationlabTf = new JTextField(restorationlab.getWebpage().get(0).getHref());
         builder.add(webpageRestorationlabTf,    cc.xy (3, rowNb));
-        builder.addLabel(labels.getString("eag2012.webpageTitle"),    cc.xy (5, rowNb));
+        builder.addLabel(labels.getString("eag2012.linkTitleLabel"),    cc.xy (5, rowNb));
         webpageTitleRestorationlabTf = new JTextField(restorationlab.getWebpage().get(0).getContent());
         builder.add(webpageTitleRestorationlabTf,    cc.xy (7, rowNb));
         setNextRow();
@@ -508,26 +509,26 @@ public class EagAccessAndServicesPanel extends EagPanels {
         } else {
             telephoneReproductionServiceTf = new JTextField(reproductionser.getContact().getTelephone().get(0).getContent());
         }
-        builder.addLabel(labels.getString("eag2012.telephone"),    cc.xy (1, rowNb));
+        builder.addLabel(labels.getString("eag2012.telephoneLabel"),    cc.xy (1, rowNb));
         builder.add(telephoneReproductionServiceTf, cc.xy(3, rowNb));
         setNextRow();
 
         if(reproductionser.getContact().getEmail().size() == 0)
             reproductionser.getContact().getEmail().add(new Email());
-        builder.addLabel(labels.getString("eag2012.email"),    cc.xy (1, rowNb));
+        builder.addLabel(labels.getString("eag2012.emailLabel"),    cc.xy (1, rowNb));
         emailReproductionServiceTf = new JTextField(reproductionser.getContact().getEmail().get(0).getHref());
         builder.add(emailReproductionServiceTf,    cc.xy (3, rowNb));
-        builder.addLabel(labels.getString("eag2012.emailTitle"),    cc.xy (5, rowNb));
+        builder.addLabel(labels.getString("eag2012.linkTitleLabel"),    cc.xy (5, rowNb));
         emailTitleReproductionServiceTf = new JTextField(reproductionser.getContact().getEmail().get(0).getContent());
         builder.add(emailTitleReproductionServiceTf,    cc.xy (7, rowNb));
         setNextRow();
 
         if(reproductionser.getWebpage().size() == 0)
             reproductionser.getWebpage().add(new Webpage());
-        builder.addLabel(labels.getString("eag2012.webpage"),    cc.xy (1, rowNb));
+        builder.addLabel(labels.getString("eag2012.webpageLabel"),    cc.xy (1, rowNb));
         webpageReproductionServiceTf = new JTextField(reproductionser.getWebpage().get(0).getHref());
         builder.add(webpageReproductionServiceTf,    cc.xy (3, rowNb));
-        builder.addLabel(labels.getString("eag2012.webpageTitle"),    cc.xy (5, rowNb));
+        builder.addLabel(labels.getString("eag2012.linkTitleLabel"),    cc.xy (5, rowNb));
         webpageTitleReproductionServiceTf = new JTextField(reproductionser.getWebpage().get(0).getContent());
         builder.add(webpageTitleReproductionServiceTf,    cc.xy (7, rowNb));
         setNextRow();
@@ -611,9 +612,9 @@ public class EagAccessAndServicesPanel extends EagPanels {
             builder.add(exhibitionTf.getLanguageBox(),                     cc.xy (7, rowNb));
             setNextRow();
 
-            builder.addLabel(labels.getString("eag2012.webpage"), cc.xy(1, rowNb));
+            builder.addLabel(labels.getString("eag2012.webpageLabel"), cc.xy(1, rowNb));
             builder.add(exhibitionTf.getExtraField(),                                            cc.xy (3, rowNb));
-            builder.addLabel(labels.getString("eag2012.webpageTitle"), cc.xy(5, rowNb));
+            builder.addLabel(labels.getString("eag2012.linkTitleLabel"), cc.xy(5, rowNb));
             builder.add(exhibitionTf.getSecondExtraField(),                                            cc.xy (7, rowNb));
             setNextRow();
         }
@@ -640,9 +641,9 @@ public class EagAccessAndServicesPanel extends EagPanels {
             builder.addLabel(labels.getString("eag2012.language"), cc.xy(5, rowNb));
             builder.add(textFieldWithLanguage.getLanguageBox(),                     cc.xy (7, rowNb));
             setNextRow();
-            builder.addLabel(labels.getString("eag2012.webpage"), cc.xy(1, rowNb));
+            builder.addLabel(labels.getString("eag2012.webpageLabel"), cc.xy(1, rowNb));
             builder.add(textFieldWithLanguage.getExtraField(),                                            cc.xy (3, rowNb));
-            builder.addLabel(labels.getString("eag2012.webpageTitle"), cc.xy(5, rowNb));
+            builder.addLabel(labels.getString("eag2012.linkTitleLabel"), cc.xy(5, rowNb));
             builder.add(textFieldWithLanguage.getSecondExtraField(),                                            cc.xy (7, rowNb));
             setNextRow();
         }
@@ -669,9 +670,9 @@ public class EagAccessAndServicesPanel extends EagPanels {
             builder.addLabel(labels.getString("eag2012.language"), cc.xy(5, rowNb));
             builder.add(otherServicesTf.getLanguageBox(),                     cc.xy (7, rowNb));
             setNextRow();
-            builder.addLabel(labels.getString("eag2012.webpage"), cc.xy(1, rowNb));
+            builder.addLabel(labels.getString("eag2012.webpageLabel"), cc.xy(1, rowNb));
             builder.add(otherServicesTf.getExtraField(),                                            cc.xy (3, rowNb));
-            builder.addLabel(labels.getString("eag2012.webpageTitle"), cc.xy(5, rowNb));
+            builder.addLabel(labels.getString("eag2012.linkTitleLabel"), cc.xy(5, rowNb));
             builder.add(otherServicesTf.getSecondExtraField(),                                            cc.xy (7, rowNb));
             setNextRow();
         }
@@ -715,7 +716,7 @@ public class EagAccessAndServicesPanel extends EagPanels {
             } catch (Eag2012FormException e) {
             }
             eag.getArchguide().getDesc().getRepositories().getRepository().get(0).getDirections().add(new Directions());
-            reloadTabbedPanel(new EagAccessAndServicesPanel(eag, tabbedPane, eag2012Frame, model).buildEditorPanel(errors), 0);
+            reloadTabbedPanel(new EagAccessAndServicesPanel(eag, tabbedPane, eag2012Frame, model, labels).buildEditorPanel(errors), 0);
         }
     }
     public class AddRestaccessBtnAction extends UpdateEagObject {
@@ -730,7 +731,7 @@ public class EagAccessAndServicesPanel extends EagPanels {
             } catch (Eag2012FormException e) {
             }
             eag.getArchguide().getDesc().getRepositories().getRepository().get(0).getAccess().getRestaccess().add(new Restaccess());
-            reloadTabbedPanel(new EagAccessAndServicesPanel(eag, tabbedPane, eag2012Frame, model).buildEditorPanel(errors), 0);
+            reloadTabbedPanel(new EagAccessAndServicesPanel(eag, tabbedPane, eag2012Frame, model, labels).buildEditorPanel(errors), 0);
         }
     }
     public class AddAccessibilityBtnAction extends UpdateEagObject {
@@ -745,7 +746,7 @@ public class EagAccessAndServicesPanel extends EagPanels {
             } catch (Eag2012FormException e) {
             }
             eag.getArchguide().getDesc().getRepositories().getRepository().get(0).getAccessibility().add(new Accessibility());
-            reloadTabbedPanel(new EagAccessAndServicesPanel(eag, tabbedPane, eag2012Frame, model).buildEditorPanel(errors), 0);
+            reloadTabbedPanel(new EagAccessAndServicesPanel(eag, tabbedPane, eag2012Frame, model, labels).buildEditorPanel(errors), 0);
         }
     }
     public class AddDescriptionBtnAction extends UpdateEagObject {
@@ -762,7 +763,7 @@ public class EagAccessAndServicesPanel extends EagPanels {
             DescriptiveNote descriptiveNote = new DescriptiveNote();
             descriptiveNote.setP(new ArrayList<P>(){{add(new P());}});
             eag.getArchguide().getDesc().getRepositories().getRepository().get(0).getServices().getSearchroom().getComputerPlaces().setDescriptiveNote(descriptiveNote);
-            reloadTabbedPanel(new EagAccessAndServicesPanel(eag, tabbedPane, eag2012Frame, model).buildEditorPanel(errors), 0);
+            reloadTabbedPanel(new EagAccessAndServicesPanel(eag, tabbedPane, eag2012Frame, model, labels).buildEditorPanel(errors), 0);
         }
     }
     public class AddReadersticketBtnAction extends UpdateEagObject {
@@ -777,7 +778,7 @@ public class EagAccessAndServicesPanel extends EagPanels {
             } catch (Eag2012FormException e) {
             }
             eag.getArchguide().getDesc().getRepositories().getRepository().get(0).getServices().getSearchroom().getReadersTicket().add(new ReadersTicket());
-            reloadTabbedPanel(new EagAccessAndServicesPanel(eag, tabbedPane, eag2012Frame, model).buildEditorPanel(errors), 0);
+            reloadTabbedPanel(new EagAccessAndServicesPanel(eag, tabbedPane, eag2012Frame, model, labels).buildEditorPanel(errors), 0);
         }
     }
     public class AddAdvancedordersBtnAction extends UpdateEagObject {
@@ -792,7 +793,7 @@ public class EagAccessAndServicesPanel extends EagPanels {
             } catch (Eag2012FormException e) {
             }
             eag.getArchguide().getDesc().getRepositories().getRepository().get(0).getServices().getSearchroom().getAdvancedOrders().add(new AdvancedOrders());
-            reloadTabbedPanel(new EagAccessAndServicesPanel(eag, tabbedPane, eag2012Frame, model).buildEditorPanel(errors), 0);
+            reloadTabbedPanel(new EagAccessAndServicesPanel(eag, tabbedPane, eag2012Frame, model, labels).buildEditorPanel(errors), 0);
         }
     }
     public class AddResearchservicesBtnAction extends UpdateEagObject {
@@ -807,7 +808,7 @@ public class EagAccessAndServicesPanel extends EagPanels {
             } catch (Eag2012FormException e) {
             }
             eag.getArchguide().getDesc().getRepositories().getRepository().get(0).getServices().getSearchroom().getResearchServices().add(new ResearchServices());
-            reloadTabbedPanel(new EagAccessAndServicesPanel(eag, tabbedPane, eag2012Frame, model).buildEditorPanel(errors), 0);
+            reloadTabbedPanel(new EagAccessAndServicesPanel(eag, tabbedPane, eag2012Frame, model, labels).buildEditorPanel(errors), 0);
         }
     }
     public class AddExhibitionsBtnAction extends UpdateEagObject {
@@ -822,7 +823,7 @@ public class EagAccessAndServicesPanel extends EagPanels {
             } catch (Eag2012FormException e) {
             }
             eag.getArchguide().getDesc().getRepositories().getRepository().get(0).getServices().getRecreationalServices().getExhibition().add(new Exhibition());
-            reloadTabbedPanel(new EagAccessAndServicesPanel(eag, tabbedPane, eag2012Frame, model).buildEditorPanel(errors), 0);
+            reloadTabbedPanel(new EagAccessAndServicesPanel(eag, tabbedPane, eag2012Frame, model, labels).buildEditorPanel(errors), 0);
         }
     }
     public class AddToursSessionsBtnAction extends UpdateEagObject {
@@ -837,7 +838,7 @@ public class EagAccessAndServicesPanel extends EagPanels {
             } catch (Eag2012FormException e) {
             }
             eag.getArchguide().getDesc().getRepositories().getRepository().get(0).getServices().getRecreationalServices().getToursSessions().add(new ToursSessions());
-            reloadTabbedPanel(new EagAccessAndServicesPanel(eag, tabbedPane, eag2012Frame, model).buildEditorPanel(errors), 0);
+            reloadTabbedPanel(new EagAccessAndServicesPanel(eag, tabbedPane, eag2012Frame, model, labels).buildEditorPanel(errors), 0);
         }
     }
     public class AddOtherServicesBtnAction extends UpdateEagObject {
@@ -852,7 +853,7 @@ public class EagAccessAndServicesPanel extends EagPanels {
             } catch (Eag2012FormException e) {
             }
             eag.getArchguide().getDesc().getRepositories().getRepository().get(0).getServices().getRecreationalServices().getOtherServices().add(new OtherServices());
-            reloadTabbedPanel(new EagAccessAndServicesPanel(eag, tabbedPane, eag2012Frame, model).buildEditorPanel(errors), 0);
+            reloadTabbedPanel(new EagAccessAndServicesPanel(eag, tabbedPane, eag2012Frame, model, labels).buildEditorPanel(errors), 0);
         }
     }
 
@@ -869,7 +870,7 @@ public class EagAccessAndServicesPanel extends EagPanels {
                 super.saveFile(eag.getControl().getRecordId().getValue());
                 closeFrame();
             } catch (Eag2012FormException e) {
-                reloadTabbedPanel(new EagAccessAndServicesPanel(eag, tabbedPane, eag2012Frame, model).buildEditorPanel(errors), 0);
+                reloadTabbedPanel(new EagAccessAndServicesPanel(eag, tabbedPane, eag2012Frame, model, labels).buildEditorPanel(errors), 0);
             }
         }
     }
@@ -887,16 +888,16 @@ public class EagAccessAndServicesPanel extends EagPanels {
                 super.updateEagObject();
 
                 if(isNextTab) {
-                    reloadTabbedPanel(new EagDescriptionPanel(eag, tabbedPane, eag2012Frame, model).buildEditorPanel(errors), 4);
+                    reloadTabbedPanel(new EagDescriptionPanel(eag, tabbedPane, eag2012Frame, model, labels).buildEditorPanel(errors), 4);
                     tabbedPane.setEnabledAt(4, true);
                     tabbedPane.setEnabledAt(3, false);
                 } else {
-                    reloadTabbedPanel(new EagContactPanel(eag, tabbedPane, eag2012Frame, model).buildEditorPanel(errors), 2);
+                    reloadTabbedPanel(new EagContactPanel(eag, tabbedPane, eag2012Frame, model, labels).buildEditorPanel(errors), 2);
                     tabbedPane.setEnabledAt(2, true);
                     tabbedPane.setEnabledAt(3, false);
                 }
             } catch (Eag2012FormException e) {
-                reloadTabbedPanel(new EagAccessAndServicesPanel(eag, tabbedPane, eag2012Frame, model).buildEditorPanel(errors), 3);
+                reloadTabbedPanel(new EagAccessAndServicesPanel(eag, tabbedPane, eag2012Frame, model, labels).buildEditorPanel(errors), 3);
             }
         }
     }

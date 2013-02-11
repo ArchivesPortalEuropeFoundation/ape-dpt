@@ -38,8 +38,8 @@ public class EagIdentityPanel extends EagPanels {
     "Specialised non-governmental archives and archives of other cultural (heritage) institutions"};
     private JComboBox typeInstitutionCombo = new JComboBox(typeInstitution);
 
-    public EagIdentityPanel(Eag eag, JTabbedPane tabbedPane, JFrame eag2012Frame, ProfileListModel model) {
-        super(eag, tabbedPane, eag2012Frame, model);
+    public EagIdentityPanel(Eag eag, JTabbedPane tabbedPane, JFrame eag2012Frame, ProfileListModel model, ResourceBundle labels) {
+        super(eag, tabbedPane, eag2012Frame, model, labels);
     }
 
     /**
@@ -219,7 +219,7 @@ public class EagIdentityPanel extends EagPanels {
                 super.saveFile(eag.getControl().getRecordId().getValue());
                 closeFrame();
             } catch (Eag2012FormException e) {
-                reloadTabbedPanel(new EagIdentityPanel(eag, tabbedPane, eag2012Frame, model).buildEditorPanel(errors), 0);
+                reloadTabbedPanel(new EagIdentityPanel(eag, tabbedPane, eag2012Frame, model, labels).buildEditorPanel(errors), 0);
             }
         }
     }
@@ -236,7 +236,7 @@ public class EagIdentityPanel extends EagPanels {
 
             }
             eag.getArchguide().getIdentity().getAutform().add(new Autform());
-            reloadTabbedPanel(new EagIdentityPanel(eag, tabbedPane, eag2012Frame, model).buildEditorPanel(errors), 1);
+            reloadTabbedPanel(new EagIdentityPanel(eag, tabbedPane, eag2012Frame, model, labels).buildEditorPanel(errors), 1);
         }
     }
     public class AddParallelNameInstitutionAction extends UpdateEagObject {
@@ -251,7 +251,7 @@ public class EagIdentityPanel extends EagPanels {
 
             }
             eag.getArchguide().getIdentity().getParform().add(new Parform());
-            reloadTabbedPanel(new EagIdentityPanel(eag, tabbedPane, eag2012Frame, model).buildEditorPanel(errors), 1);
+            reloadTabbedPanel(new EagIdentityPanel(eag, tabbedPane, eag2012Frame, model, labels).buildEditorPanel(errors), 1);
         }
     }
     public class AddNonpreNameInstitutionAction extends UpdateEagObject {
@@ -268,7 +268,7 @@ public class EagIdentityPanel extends EagPanels {
             Nonpreform nonpreform = new Nonpreform();
             nonpreform.getContent().add(new UseDates());
             eag.getArchguide().getIdentity().getNonpreform().add(nonpreform);
-            reloadTabbedPanel(new EagIdentityPanel(eag, tabbedPane, eag2012Frame, model).buildEditorPanel(errors), 1);
+            reloadTabbedPanel(new EagIdentityPanel(eag, tabbedPane, eag2012Frame, model, labels).buildEditorPanel(errors), 1);
         }
     }
 
@@ -285,16 +285,16 @@ public class EagIdentityPanel extends EagPanels {
                 super.updateEagObject();
 
                 if(isNextTab) {
-                    reloadTabbedPanel(new EagContactPanel(eag, tabbedPane, eag2012Frame, model).buildEditorPanel(errors), 2);
+                    reloadTabbedPanel(new EagContactPanel(eag, tabbedPane, eag2012Frame, model, labels).buildEditorPanel(errors), 2);
                     tabbedPane.setEnabledAt(2, true);
                     tabbedPane.setEnabledAt(1, false);
                 } else {
-                    reloadTabbedPanel(new EagInstitutionPanel(eag, tabbedPane, eag2012Frame, model, false).buildEditorPanel(errors), 0);
+                    reloadTabbedPanel(new EagInstitutionPanel(eag, tabbedPane, eag2012Frame, model, false, labels).buildEditorPanel(errors), 0);
                     tabbedPane.setEnabledAt(0, true);
                     tabbedPane.setEnabledAt(1, false);
                 }
             } catch (Eag2012FormException e) {
-                reloadTabbedPanel(new EagIdentityPanel(eag, tabbedPane, eag2012Frame, model).buildEditorPanel(errors), 1);
+                reloadTabbedPanel(new EagIdentityPanel(eag, tabbedPane, eag2012Frame, model, labels).buildEditorPanel(errors), 1);
             }
         }
     }

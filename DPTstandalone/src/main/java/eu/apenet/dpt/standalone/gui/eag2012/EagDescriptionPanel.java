@@ -12,6 +12,7 @@ import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.ResourceBundle;
 
 /**
  * User: Yoann Moranville
@@ -34,8 +35,8 @@ public class EagDescriptionPanel extends EagPanels {
     private JTextField rangeToTf;
     private JTextField extentTf;
 
-    public EagDescriptionPanel(Eag eag, JTabbedPane tabbedPane, JFrame eag2012Frame, ProfileListModel model) {
-        super(eag, tabbedPane, eag2012Frame, model);
+    public EagDescriptionPanel(Eag eag, JTabbedPane tabbedPane, JFrame eag2012Frame, ProfileListModel model, ResourceBundle labels) {
+        super(eag, tabbedPane, eag2012Frame, model, labels);
     }
 
     @Override
@@ -110,7 +111,7 @@ public class EagDescriptionPanel extends EagPanels {
         setNextRow();
         builder.addLabel(labels.getString("eag2012.ruleRepositorySuppression"), cc.xy(1, rowNb));
         builder.add(repositorySuppressionTf.getTextField(), cc.xy(3, rowNb));
-        builder.addLabel(labels.getString("eag2012.langauge"), cc.xy(5, rowNb));
+        builder.addLabel(labels.getString("eag2012.language"), cc.xy(5, rowNb));
         builder.add(repositorySuppressionTf.getLanguageBox(), cc.xy(7, rowNb));
         setNextRow();
 
@@ -261,7 +262,7 @@ public class EagDescriptionPanel extends EagPanels {
             } catch (Eag2012FormException e) {
             }
             eag.getArchguide().getDesc().getRepositories().getRepository().get(0).getAdminhierarchy().getAdminunit().add(new Adminunit());
-            reloadTabbedPanel(new EagDescriptionPanel(eag, tabbedPane, eag2012Frame, model).buildEditorPanel(errors), 0);
+            reloadTabbedPanel(new EagDescriptionPanel(eag, tabbedPane, eag2012Frame, model, labels).buildEditorPanel(errors), 0);
         }
     }
 
@@ -277,7 +278,7 @@ public class EagDescriptionPanel extends EagPanels {
                 super.saveFile(eag.getControl().getRecordId().getValue());
                 closeFrame();
             } catch (Eag2012FormException e) {
-                reloadTabbedPanel(new EagDescriptionPanel(eag, tabbedPane, eag2012Frame, model).buildEditorPanel(errors), 0);
+                reloadTabbedPanel(new EagDescriptionPanel(eag, tabbedPane, eag2012Frame, model, labels).buildEditorPanel(errors), 0);
             }
         }
     }
@@ -295,16 +296,16 @@ public class EagDescriptionPanel extends EagPanels {
                 super.updateEagObject();
 
                 if(isNextTab) {
-                    reloadTabbedPanel(new EagControlPanel(eag, tabbedPane, eag2012Frame, model).buildEditorPanel(errors), 5);
+                    reloadTabbedPanel(new EagControlPanel(eag, tabbedPane, eag2012Frame, model, labels).buildEditorPanel(errors), 5);
                     tabbedPane.setEnabledAt(5, true);
                     tabbedPane.setEnabledAt(4, false);
                 } else {
-                    reloadTabbedPanel(new EagAccessAndServicesPanel(eag, tabbedPane, eag2012Frame, model).buildEditorPanel(errors), 3);
+                    reloadTabbedPanel(new EagAccessAndServicesPanel(eag, tabbedPane, eag2012Frame, model, labels).buildEditorPanel(errors), 3);
                     tabbedPane.setEnabledAt(3, true);
                     tabbedPane.setEnabledAt(4, false);
                 }
             } catch (Eag2012FormException e) {
-                reloadTabbedPanel(new EagDescriptionPanel(eag, tabbedPane, eag2012Frame, model).buildEditorPanel(errors), 4);
+                reloadTabbedPanel(new EagDescriptionPanel(eag, tabbedPane, eag2012Frame, model, labels).buildEditorPanel(errors), 4);
             }
         }
     }
