@@ -644,7 +644,7 @@ public class EagContactPanel extends EagPanels {
                         if(StringUtils.isNotEmpty(fieldTitle.getText()))
                             webpage.setContent(fieldTitle.getText());
                         else
-                            webpage.setContent("Visit website");
+                            webpage.setContent("Go to our homepage");
                         repository.getWebpage().add(webpage);
                         hasChanged = true;
                     }

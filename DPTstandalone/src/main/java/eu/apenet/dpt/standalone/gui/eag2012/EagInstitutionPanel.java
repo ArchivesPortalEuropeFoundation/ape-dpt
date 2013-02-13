@@ -311,6 +311,8 @@ public class EagInstitutionPanel extends EagPanels {
             builder.addLabel(labels.getString("eag2012.continentLabel") + "*",    cc.xy (1, rowNb));
             if(Arrays.asList(continents).contains(repository.getGeogarea().getValue())){
                 continentCombo.setSelectedItem(repository.getGeogarea().getValue());
+            } else {
+                continentCombo.setSelectedItem("Europe");
             }
             builder.add(continentCombo, cc.xy (3, rowNb));
             setNextRow();
@@ -709,7 +711,7 @@ public class EagInstitutionPanel extends EagPanels {
                         if(StringUtils.isNotEmpty(webpageTitleTf.getText()) && !webpageTitleTf.getText().equals(repository.getWebpage().get(0).getContent())) {
                             repository.getWebpage().get(0).setContent(webpageTitleTf.getText());
                         } else if(StringUtils.isBlank(repository.getWebpage().get(0).getContent())) {
-                            repository.getWebpage().get(0).setContent("Visit website");
+                            repository.getWebpage().get(0).setContent("Go to our homepage");
                         }
                     } else {
                         errors.add("webpageTf");
