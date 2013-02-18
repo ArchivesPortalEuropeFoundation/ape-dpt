@@ -101,6 +101,17 @@ public class DBUtil {
         }
     }
 
+    public void createXsdTable() {
+        String query = "CREATE TABLE xsd_addition (ID INTEGER NOT NULL PRIMARY KEY GENERATED ALWAYS AS IDENTITY(START WITH 1, INCREMENT BY 1), TITLE VARCHAR(64), VALUE VARCHAR(256), ISSYSTEM INTEGER, ISXSD11 INTEGER, FILETYPE VARCHAR(64))";
+        Statement statement;
+        try{
+         statement = dbConnection.createStatement();
+         statement.execute(query);
+        } catch (SQLException e){
+            e.printStackTrace();
+        }
+    }
+
     public void dropTable(String tableName){
         String query = "DROP TABLE " + tableName;
         try {

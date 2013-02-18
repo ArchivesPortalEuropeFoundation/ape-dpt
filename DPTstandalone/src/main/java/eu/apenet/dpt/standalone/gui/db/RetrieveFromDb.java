@@ -94,17 +94,22 @@ public class RetrieveFromDb {
 
     public List<XsdObject> retrieveAdditionalXsds() {
         ResultSet set = selectAllFromTable(DBUtil.DBNames.TABLE_XSD.getName());
-        List<XsdObject> list = new ArrayList<XsdObject>();
-        XsdObject xsdEntry;
-        try {
-            while (set.next()) {
-                xsdEntry = new XsdObject(set.getInt(DBUtil.DBNames.COLUMN_PRIMARY_ID.getName()), set.getString(DBUtil.DBNames.COLUMN_TITLE.getName()), set.getString(DBUtil.DBNames.COLUMN_VALUE.getName()), set.getInt(DBUtil.DBNames.COLUMN_ISXSD11.getName()), set.getInt(DBUtil.DBNames.COLUMN_ISSYSTEM.getName()), set.getString(DBUtil.DBNames.COLUMN_FILETYPE.getName()));
-                list.add(xsdEntry);
+        if(set == null) {
+            dbUtil.createXsdTable();
+            return new ArrayList<XsdObject>();
+        } else {
+            List<XsdObject> list = new ArrayList<XsdObject>();
+            XsdObject xsdEntry;
+            try {
+                while (set.next()) {
+                    xsdEntry = new XsdObject(set.getInt(DBUtil.DBNames.COLUMN_PRIMARY_ID.getName()), set.getString(DBUtil.DBNames.COLUMN_TITLE.getName()), set.getString(DBUtil.DBNames.COLUMN_VALUE.getName()), set.getInt(DBUtil.DBNames.COLUMN_ISXSD11.getName()), set.getInt(DBUtil.DBNames.COLUMN_ISSYSTEM.getName()), set.getString(DBUtil.DBNames.COLUMN_FILETYPE.getName()));
+                    list.add(xsdEntry);
+                }
+            } catch (SQLException e) {
+                LOG.error("Error retrieving the XSDs from the database", e);
             }
-        } catch (SQLException e) {
-            LOG.error("Error retrieving the XSDs from the database", e);
+            return list;
         }
-        return list;
     }
 
     public boolean saveNewAdditionalXsd(String name, String location, boolean isSystem, boolean isXsd11, FileInstance.FileType fileType) {
