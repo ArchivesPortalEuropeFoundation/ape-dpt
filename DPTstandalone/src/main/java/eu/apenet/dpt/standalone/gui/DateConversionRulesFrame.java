@@ -18,10 +18,16 @@ import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JButton;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.event.CellEditorListener;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.TableModelEvent;
+import javax.swing.event.TableModelListener;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.DefaultTableModel;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -63,12 +69,23 @@ public class DateConversionRulesFrame extends JFrame {
         columnNames.add(labels.getString("dateConversion.valueRead"));
         columnNames.add(labels.getString("dateConversion.valueConverted"));
 
-        DefaultTableModel dm = new DefaultTableModel(loadDataFromFile(FILENAME), columnNames);
+        final DefaultTableModel dm = new DefaultTableModel(loadDataFromFile(FILENAME), columnNames);
+        dm.addTableModelListener(new TableModelListener() {
+            public void tableChanged(TableModelEvent e) {
+                if (ruleTable.getEditingRow() == ruleTable.getRowCount() - 1) {
+                    dm.addRow(new Vector());
+                }
+            }
+        });
+
         ruleTable = new JTable(dm);
 
         JButton saveButton = new JButton(labels.getString("saveBtn"));
         saveButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
+                if (ruleTable.isEditing()) {
+                    ruleTable.getCellEditor().stopCellEditing();
+                }
                 Vector data = ((DefaultTableModel) ruleTable.getModel()).getDataVector();
                 saveDataToFile(data, FILENAME);
             }
@@ -84,7 +101,20 @@ public class DateConversionRulesFrame extends JFrame {
         JButton downloadButton = new JButton(labels.getString("downloadBtn"));
         downloadButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                throw new UnsupportedOperationException("Not supported yet.");
+                Vector data = ((DefaultTableModel) ruleTable.getModel()).getDataVector();
+                File currentLocation = new File(retrieveFromDb.retrieveOpenLocation());
+                JFileChooser fileChooser = new JFileChooser(currentLocation);
+                fileChooser.setDialogType(JFileChooser.SAVE_DIALOG);
+                fileChooser.setFileFilter(new FileNameExtensionFilter("XML file", "xml"));
+                int returnedVal = fileChooser.showSaveDialog(getParent());
+
+                if (returnedVal == JFileChooser.APPROVE_OPTION) {
+                    String fileName = fileChooser.getSelectedFile().toString();
+                    if (!fileName.endsWith(".xml")) {
+                        fileName = fileName + ".xml";
+                    }
+                    saveDataToFile(data, fileName);
+                }
             }
         });
 
@@ -101,10 +131,14 @@ public class DateConversionRulesFrame extends JFrame {
 
     private Vector loadDataFromFile(String xmlFile) {
         Vector result = new Vector();
+        File file = new File(xmlFile);
         try {
+            if (!file.exists()) {
+                saveDataToFile(result, xmlFile);
+            }
             DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
             DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
-            Document doc = docBuilder.parse(xmlFile);
+            Document doc = docBuilder.parse(file);
 
             Element root = doc.getDocumentElement();
             NodeList dateNodes = root.getElementsByTagName("date");
@@ -118,6 +152,7 @@ public class DateConversionRulesFrame extends JFrame {
                 }
                 result.add(row);
             }
+            result.add(new Vector());
         } catch (SAXException ex) {
             Logger.getLogger(DateConversionRulesFrame.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IOException ex) {
@@ -139,16 +174,18 @@ public class DateConversionRulesFrame extends JFrame {
             doc.appendChild(root);
 
             for (int i = 0; i < data.size(); i++) {
-                Element dataElement = doc.createElement("data");
-                root.appendChild(dataElement);
-
                 Vector row = (Vector) data.get(i);
-                Element valueRead = doc.createElement("valueread");
-                valueRead.appendChild(doc.createTextNode((String) row.get(0)));
-                Element valueConverted = doc.createElement("valueconverted");
-                valueConverted.appendChild(doc.createTextNode((String) row.get(1)));
-                dataElement.appendChild(valueRead);
-                dataElement.appendChild(valueConverted);
+                if (row.get(0) != "" && row.get(1) != "" && row.get(0) != null) {
+                    Element dataElement = doc.createElement("date");
+                    root.appendChild(dataElement);
+
+                    Element valueRead = doc.createElement("valueread");
+                    valueRead.appendChild(doc.createTextNode((String) row.get(0)));
+                    Element valueConverted = doc.createElement("valueconverted");
+                    valueConverted.appendChild(doc.createTextNode((String) row.get(1)));
+                    dataElement.appendChild(valueRead);
+                    dataElement.appendChild(valueConverted);
+                }
             }
 
             TransformerFactory transformerFactory = TransformerFactory.newInstance();
@@ -172,7 +209,6 @@ public class DateConversionRulesFrame extends JFrame {
 
                 // get the content in bytes
                 String xmlString = result.getWriter().toString();
-                System.out.println(xmlString);
                 byte[] contentInBytes = xmlString.getBytes();
 
                 fop.write(contentInBytes);
