@@ -5,6 +5,7 @@
 package eu.apenet.dpt.standalone.gui;
 
 import eu.apenet.dpt.standalone.gui.db.RetrieveFromDb;
+import eu.apenet.dpt.utils.util.extendxsl.DateNormalization;
 import java.awt.BorderLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
@@ -17,14 +18,15 @@ import java.util.ResourceBundle;
 import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
-import javax.swing.event.CellEditorListener;
-import javax.swing.event.ChangeEvent;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 import javax.swing.filechooser.FileNameExtensionFilter;
@@ -34,7 +36,6 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
@@ -54,7 +55,8 @@ public class DateConversionRulesFrame extends JFrame {
     private ResourceBundle labels;
     private RetrieveFromDb retrieveFromDb;
     private final String FILENAME = "xsl/system/dateconversion.xml";
-    JTable ruleTable;
+    private JTable ruleTable;
+    private DefaultTableModel dm;
 
     public DateConversionRulesFrame(ResourceBundle labels, RetrieveFromDb retrieveFromDb) {
         this.labels = labels;
@@ -68,12 +70,16 @@ public class DateConversionRulesFrame extends JFrame {
         Vector columnNames = new Vector();
         columnNames.add(labels.getString("dateConversion.valueRead"));
         columnNames.add(labels.getString("dateConversion.valueConverted"));
-
-        final DefaultTableModel dm = new DefaultTableModel(loadDataFromFile(FILENAME), columnNames);
+        dm = new DefaultTableModel(loadDataFromFile(FILENAME), columnNames);
         dm.addTableModelListener(new TableModelListener() {
             public void tableChanged(TableModelEvent e) {
                 if (ruleTable.getEditingRow() == ruleTable.getRowCount() - 1) {
                     dm.addRow(new Vector());
+                }
+                if (ruleTable.getEditingColumn() == 1) {
+                    if (!isCorrectDateFormat((String) dm.getValueAt(ruleTable.getEditingRow(), 1))) {
+                        createOptionPaneForIsoDate(ruleTable.getEditingRow(), 1);
+                    }
                 }
             }
         });
@@ -94,6 +100,7 @@ public class DateConversionRulesFrame extends JFrame {
         JButton cancelButton = new JButton(labels.getString("cancelBtn"));
         cancelButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
+                //TODO: Ask for unsaved changes
                 dispose();
             }
         });
@@ -101,6 +108,9 @@ public class DateConversionRulesFrame extends JFrame {
         JButton downloadButton = new JButton(labels.getString("downloadBtn"));
         downloadButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
+                if (ruleTable.isEditing()) {
+                    ruleTable.getCellEditor().stopCellEditing();
+                }
                 Vector data = ((DefaultTableModel) ruleTable.getModel()).getDataVector();
                 File currentLocation = new File(retrieveFromDb.retrieveOpenLocation());
                 JFileChooser fileChooser = new JFileChooser(currentLocation);
@@ -114,6 +124,8 @@ public class DateConversionRulesFrame extends JFrame {
                         fileName = fileName + ".xml";
                     }
                     saveDataToFile(data, fileName);
+                    //additionally save data to standard file
+                    saveDataToFile(data, FILENAME);
                 }
             }
         });
@@ -164,7 +176,6 @@ public class DateConversionRulesFrame extends JFrame {
     }
 
     private void saveDataToFile(Vector data, String xmlFile) {
-        System.out.println("Button 'save' has been pushed");
         try {
             DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
             DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
@@ -214,9 +225,6 @@ public class DateConversionRulesFrame extends JFrame {
                 fop.write(contentInBytes);
                 fop.flush();
                 fop.close();
-
-                System.out.println("Done");
-
             } catch (IOException e) {
                 e.printStackTrace();
             } finally {
@@ -233,6 +241,37 @@ public class DateConversionRulesFrame extends JFrame {
             Logger.getLogger(DateConversionRulesFrame.class.getName()).log(Level.SEVERE, null, ex);
         } catch (ParserConfigurationException ex) {
             Logger.getLogger(DateConversionRulesFrame.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    private boolean isCorrectDateFormat(String date) {
+        Pattern isoDatePattern = Pattern.compile("(\\-?(0|1|2)([0-9]{3})(((01|02|03|04|05|06|07|08|09|10|11|12)((0[1-9])|((1|2)[0-9])|(3[0-1])))|\\-((01|02|03|04|05|06|07|08|09|10|11|12)(\\-((0[1-9])|((1|2)[0-9])|(3[0-1])))?))?)(/\\-?(0|1|2)([0-9]{3})(((01|02|03|04|05|06|07|08|09|10|11|12)((0[1-9])|((1|2)[0-9])|(3[0-1])))|\\-((01|02|03|04|05|06|07|08|09|10|11|12)(\\-((0[1-9])|((1|2)[0-9])|(3[0-1])))?))?)?");
+        Matcher matcher_correct_simple = isoDatePattern.matcher(date);
+        if (matcher_correct_simple.matches()) {
+            //We need a second check for YYYYMMDD and YYYYMMDD/YYYYMMDD which passes above
+            if (!Pattern.compile("([0-9]{8})").matcher(date).matches() && !Pattern.compile("([0-9]{8})/([0-9]{8})").matcher(date).matches()) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private void createOptionPaneForIsoDate(int row, int column) {
+        DateNormalization dateNormalization = new DateNormalization();
+        String currentResult = (String) dm.getValueAt(row, column);
+        String explanation = "'" + currentResult + "' " + labels.getString("dateConversion.notValidDate") + "\n" + labels.getString("dateConversion.enterCorrectIsoDate") + "\n" + labels.getString("dateConversion.validValues");
+        int i = 0;
+        String result;
+        do {
+            result = (String) JOptionPane.showInputDialog(getContentPane(), explanation, labels.getString("chooseRepositoryCode"), JOptionPane.QUESTION_MESSAGE, Utilities.icon, null, null);
+            if (result == null) {
+                break;
+            }
+            i++;
+        } while (dateNormalization.checkForNormalAttribute(result) == null);
+        if (result != null) {
+            dm.setValueAt(result, row, column);
+            dm.fireTableCellUpdated(row, column);
         }
     }
 }
