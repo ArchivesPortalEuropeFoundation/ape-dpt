@@ -9,8 +9,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.util.Vector;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;

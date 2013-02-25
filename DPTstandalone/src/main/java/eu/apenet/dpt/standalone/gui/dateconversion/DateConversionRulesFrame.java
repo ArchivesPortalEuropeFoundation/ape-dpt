@@ -43,6 +43,7 @@ public class DateConversionRulesFrame extends JFrame {
     private DefaultTableModel dm;
 
     public DateConversionRulesFrame(ResourceBundle labels, RetrieveFromDb retrieveFromDb) {
+        xmlFilehandler = new DateConversionXMLFilehandler();
         this.labels = labels;
         this.retrieveFromDb = retrieveFromDb;
         createDataConversionRulesList();
