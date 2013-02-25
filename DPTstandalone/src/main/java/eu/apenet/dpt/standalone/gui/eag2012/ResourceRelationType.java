@@ -10,8 +10,8 @@ import java.util.Arrays;
  * @author Yoann Moranville
  */
 public class ResourceRelationType {
-    private static final String[] resourceRelations = {"......."};
-    private static final String[] institutionRelations = {"......."};
+    private static final String[] resourceRelations = {"creatorOf", "subjectOf", "other"};
+    private static final String[] institutionRelations = {"hierarchical-child", "hierarchical-parent", "temporal-earlier", "temporal-later", "associative"};
 
     private JComboBox typeRelations;
     private JTextField website;
