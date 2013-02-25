@@ -114,7 +114,7 @@ public class Eag2012Frame extends JFrame {
 
 
     protected JComponent buildInstitutionPanel(Eag eag, boolean isNew) {
-        JScrollPane jScrollPane = new JScrollPane(new EagInstitutionPanel(eag, tabbedPane, this, model, isNew, labels).buildEditorPanel(null));
+        JScrollPane jScrollPane = new JScrollPane(new EagInstitutionPanel(eag, tabbedPane, this, model, isNew, true, labels).buildEditorPanel(null));
         jScrollPane.getVerticalScrollBar().setUnitIncrement(20);
         return jScrollPane;
     }

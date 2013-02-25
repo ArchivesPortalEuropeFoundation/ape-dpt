@@ -68,7 +68,7 @@ public class EagControlPanel extends EagPanels {
         setNextRow();
 
         builder.addLabel(labels.getString("eag2012.identifierInstitution") + "*", cc.xy(1, rowNb));
-        JTextField identifierRespInstitTf = new JTextField(eag.getControl().getMaintenanceAgency().getAgencyCode().getContent());
+        JTextField identifierRespInstitTf = new JTextField(eag.getControl().getRecordId().getValue());
         identifierRespInstitTf.setEnabled(false);
         builder.add(identifierRespInstitTf, cc.xy(3, rowNb));
         setNextRow();

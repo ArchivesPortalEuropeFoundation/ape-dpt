@@ -50,7 +50,6 @@ public class EagRelationsPanel extends EagPanels {
 
         rowNb = 1;
 
-        //todo here
         Relations relations = eag.getRelations();
 
         builder.addSeparator(labels.getString("eag2012.resourceRelations"), cc.xyw(1, rowNb, 7));

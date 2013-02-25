@@ -169,6 +169,11 @@ public class EagIdentityPanel extends EagPanels {
                     builder.add(textFieldWithDate.getToDateField(),                                            cc.xy (7, rowNb));
                     setNextRow();
                 }
+                if(StringUtils.isBlank(dateStr) && StringUtils.isBlank(fromDateStr) && StringUtils.isBlank(toDateStr)) {
+                    builder.addLabel(labels.getString("eag2012.dateLabel"),    cc.xy (1, rowNb));
+                    builder.add(textFieldWithDate.getDateField(), cc.xy (3, rowNb));
+                    setNextRow();
+                }
             }
         }
         JButton addNewNonpreNameInstitutionBtn = new ButtonEag(labels.getString("eag2012.addOtherNonpreNameInstitution"));
@@ -289,7 +294,7 @@ public class EagIdentityPanel extends EagPanels {
                     tabbedPane.setEnabledAt(2, true);
                     tabbedPane.setEnabledAt(1, false);
                 } else {
-                    reloadTabbedPanel(new EagInstitutionPanel(eag, tabbedPane, eag2012Frame, model, false, labels).buildEditorPanel(errors), 0);
+                    reloadTabbedPanel(new EagInstitutionPanel(eag, tabbedPane, eag2012Frame, model, false, false, labels).buildEditorPanel(errors), 0);
                     tabbedPane.setEnabledAt(0, true);
                     tabbedPane.setEnabledAt(1, false);
                 }
