@@ -160,7 +160,9 @@ public class EagDescriptionPanel extends EagPanels {
 
         if(repository.getBuildinginfo().getRepositorarea() == null) {
             Repositorarea repositorarea = new Repositorarea();
-            repositorarea.setNum(new Num());
+            Num num = new Num();
+            num.setUnit("linearmetre");
+            repositorarea.setNum(num);
             repository.getBuildinginfo().setRepositorarea(repositorarea);
         }
         builder.addLabel(labels.getString("eag2012.repositoryArea"), cc.xy(1, rowNb));
@@ -170,7 +172,9 @@ public class EagDescriptionPanel extends EagPanels {
 
         if(repository.getBuildinginfo().getLengthshelf() == null) {
             Lengthshelf lengthshelf = new Lengthshelf();
-            lengthshelf.setNum(new Num());
+            Num num = new Num();
+            num.setUnit("linearmetre");
+            lengthshelf.setNum(num);
             repository.getBuildinginfo().setLengthshelf(lengthshelf);
         }
         builder.addLabel(labels.getString("eag2012.lengthShelf"), cc.xy(1, rowNb));
@@ -193,7 +197,9 @@ public class EagDescriptionPanel extends EagPanels {
         }
         if(repository.getHoldings().getExtent() == null) {
             Extent extent = new Extent();
-            extent.setNum(new Num());
+            Num num = new Num();
+            num.setUnit("linearmetre");
+            extent.setNum(num);
             repository.getHoldings().setExtent(extent);
         }
         if(repository.getHoldings().getDate() == null) {

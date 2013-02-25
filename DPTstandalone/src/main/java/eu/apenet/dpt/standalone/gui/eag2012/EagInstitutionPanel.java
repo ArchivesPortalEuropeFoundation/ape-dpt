@@ -775,6 +775,7 @@ public class EagInstitutionPanel extends EagPanels {
                 Searchroom searchroom = repository.getServices().getSearchroom();
                 if(StringUtils.isNotEmpty(workplacesSearchroomTf.getText())) {
                     Num num = new Num();
+                    num.setUnit("site");
                     num.setContent(workplacesSearchroomTf.getText());
                     searchroom.getWorkPlaces().setNum(num);
                 } else {

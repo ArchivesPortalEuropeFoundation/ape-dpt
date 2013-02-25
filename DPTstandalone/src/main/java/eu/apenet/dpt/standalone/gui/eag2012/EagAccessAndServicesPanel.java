@@ -271,7 +271,9 @@ public class EagAccessAndServicesPanel extends EagPanels {
 
         if(searchroom.getComputerPlaces() == null) {
             ComputerPlaces computerPlaces = new ComputerPlaces();
-            computerPlaces.setNum(new Num());
+            Num num = new Num();
+            num.setUnit("site");
+            computerPlaces.setNum(num);
             searchroom.setComputerPlaces(computerPlaces);
         }
         builder.addLabel(labels.getString("eag2012.computerplaces"),    cc.xy (1, rowNb));
@@ -284,7 +286,9 @@ public class EagAccessAndServicesPanel extends EagPanels {
 
         if(searchroom.getMicrofilmPlaces() == null) {
             MicrofilmPlaces microfilmPlaces = new MicrofilmPlaces();
-            microfilmPlaces.setNum(new Num());
+            Num num = new Num();
+            num.setUnit("site");
+            microfilmPlaces.setNum(num);
             searchroom.setMicrofilmPlaces(microfilmPlaces);
         }
         if(searchroom.getPhotographAllowance() == null) {
@@ -411,12 +415,16 @@ public class EagAccessAndServicesPanel extends EagPanels {
 
         if(library.getMonographicpub() == null) {
             Monographicpub monographicpub = new Monographicpub();
-            monographicpub.setNum(new Num());
+            Num num = new Num();
+            num.setUnit("site");
+            monographicpub.setNum(num);
             library.setMonographicpub(monographicpub);
         }
         if(library.getSerialpub() == null) {
             Serialpub serialpub = new Serialpub();
-            serialpub.setNum(new Num());
+            Num num = new Num();
+            num.setUnit("site");
+            serialpub.setNum(num);
             library.setSerialpub(serialpub);
         }
         builder.addLabel(labels.getString("eag2012.monographicPub"),    cc.xy (1, rowNb));
@@ -1018,6 +1026,7 @@ public class EagAccessAndServicesPanel extends EagPanels {
 
                 if(StringUtils.isNotEmpty(workplacesSearchroomTf.getText())) {
                     Num num = new Num();
+                    num.setUnit("site");
                     num.setContent(workplacesSearchroomTf.getText());
                     searchroom.getWorkPlaces().setNum(num);
                 } else {
@@ -1026,12 +1035,14 @@ public class EagAccessAndServicesPanel extends EagPanels {
 
                 if(StringUtils.isNotEmpty(computerplacesSearchroomTf.getText())) {
                     Num num = new Num();
+                    num.setUnit("site");
                     num.setContent(computerplacesSearchroomTf.getText());
                     searchroom.getComputerPlaces().setNum(num);
                 }
 
                 if(StringUtils.isNotEmpty(microfilmplacesSearchroomTf.getText())) {
                     Num num = new Num();
+                    num.setUnit("site");
                     num.setContent(microfilmplacesSearchroomTf.getText());
                     searchroom.getMicrofilmPlaces().setNum(num);
                 }
@@ -1103,11 +1114,13 @@ public class EagAccessAndServicesPanel extends EagPanels {
                 }
                 if(StringUtils.isNotEmpty(monographicPubLibraryTf.getText())) {
                     Num num = new Num();
+                    num.setUnit("site");
                     num.setContent(monographicPubLibraryTf.getText());
                     library.getMonographicpub().setNum(num);
                 }
                 if(StringUtils.isNotEmpty(serialPubLibraryTf.getText())) {
                     Num num = new Num();
+                    num.setUnit("site");
                     num.setContent(serialPubLibraryTf.getText());
                     library.getSerialpub().setNum(num);
                 }

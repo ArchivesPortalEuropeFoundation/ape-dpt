@@ -218,16 +218,16 @@ public class EagRelationsPanel extends EagPanels {
 
             boolean hasChanged = false;
 
-            boolean error = true;
+            boolean error = false;
             for(ResourceRelationType resourceRelationType : resourceRelationTypes) {
+                error = true;
                 if(StringUtils.isNotEmpty(resourceRelationType.getWebsiteValue())) {
                     error = false;
                     break;
                 }
             }
-            if(error || resourceRelationTypes.size() == 0) {
+            if(error)
                 errors.add("resourceRelationTypes");
-            }
             if(!error) {
                 eag.getRelations().getResourceRelation().clear();
                 for(ResourceRelationType resourceRelationType : resourceRelationTypes) {
@@ -251,16 +251,16 @@ public class EagRelationsPanel extends EagPanels {
                 }
             }
 
-            error = true;
+            error = false;
             for(ResourceRelationType resourceRelationType : institutionRelationTypes) {
+                error = true;
                 if(StringUtils.isNotEmpty(resourceRelationType.getWebsiteValue())) {
                     error = false;
                     break;
                 }
             }
-            if(error || institutionRelationTypes.size() == 0) {
+            if(error)
                 errors.add("institutionRelationTypes");
-            }
             if(!error) {
                 eag.getRelations().getEagRelation().clear();
                 for(ResourceRelationType resourceRelationType : institutionRelationTypes) {
