@@ -1,6 +1,6 @@
 package eu.apenet.dpt.utils.util.extendxsl;
 
-import eu.apenet.dpt.standalone.gui.dateconversion.DateConversionXMLFilehandler;
+import eu.apenet.dpt.utils.util.DateConversionXMLFilehandler;
 import net.sf.saxon.expr.XPathContext;
 import net.sf.saxon.lib.ExtensionFunctionCall;
 import net.sf.saxon.lib.ExtensionFunctionDefinition;
@@ -127,16 +127,13 @@ public class DateNormalization extends ExtensionFunctionDefinition {
     public String normalizeDate(String date) {
         DateConversionXMLFilehandler fileHandler = new DateConversionXMLFilehandler();
         String fromXmlDateFile = fileHandler.findsEntry(date);
-        if (fromXmlDateFile != null) {
+        if (fromXmlDateFile != null)
             return fromXmlDateFile;
-        }
 
-        if (date.contains("9999")) {
+        if (date.contains("9999"))
             date = date.replace("9999", "2999");
-        }
-        if (date.contains("3000")) {
+        if (date.contains("3000"))
             date = date.replace("3000", "2999");
-        }
 
         //log.info("Trying to normalize: " + date);
         try {
@@ -149,35 +146,29 @@ public class DateNormalization extends ExtensionFunctionDefinition {
             }
 
             Matcher matcher_dd_mm_yyyy = PATTERN_DD_MM_YYYY.matcher(date);
-            if (matcher_dd_mm_yyyy.matches()) {
+            if (matcher_dd_mm_yyyy.matches())
                 return matcher_dd_mm_yyyy.group(3) + "-" + matcher_dd_mm_yyyy.group(2) + "-" + matcher_dd_mm_yyyy.group(1);
-            }
-
+  
             Matcher matcher_yyyy_mm = PATTERN_YYYYMM.matcher(date);
-            if (matcher_yyyy_mm.matches()) {
+            if (matcher_yyyy_mm.matches()) 
                 return matcher_yyyy_mm.group(1) + matcher_yyyy_mm.group(2) + "-" + matcher_yyyy_mm.group(3);
-            }
-
+            
             Matcher matcher_yyyy_mm_dd = PATTERN_YYYY_MM_DD.matcher(date);
-            if (matcher_yyyy_mm_dd.matches()) {
+            if (matcher_yyyy_mm_dd.matches()) 
                 return matcher_yyyy_mm_dd.group(1) + "-" + matcher_yyyy_mm_dd.group(2) + "-" + matcher_yyyy_mm_dd.group(3);
-            }
-
+            
             Matcher matcher_dd_mm_yyyy_timespan = PATTERN_DD_MM_YYYY_TIMESPAN.matcher(date);
-            if (matcher_dd_mm_yyyy_timespan.matches()) {
+            if (matcher_dd_mm_yyyy_timespan.matches()) 
                 return matcher_dd_mm_yyyy_timespan.group(3) + "-" + matcher_dd_mm_yyyy_timespan.group(2) + "-" + matcher_dd_mm_yyyy_timespan.group(1) + "/" + matcher_dd_mm_yyyy_timespan.group(7) + "-" + matcher_dd_mm_yyyy_timespan.group(6) + "-" + matcher_dd_mm_yyyy_timespan.group(5);
-            }
-
+            
             Matcher matcher_d_m_yyyy_timespan = PATTERN_D_M_YYYY_TIMESPAN.matcher(date);
-            if (matcher_d_m_yyyy_timespan.matches()) {
+            if (matcher_d_m_yyyy_timespan.matches()) 
                 return matcher_d_m_yyyy_timespan.group(3) + "-" + "0" + matcher_d_m_yyyy_timespan.group(2) + "-" + "0" + matcher_d_m_yyyy_timespan.group(1) + "/" + matcher_d_m_yyyy_timespan.group(7) + "-" + "0" + matcher_d_m_yyyy_timespan.group(6) + "-" + "0" + matcher_d_m_yyyy_timespan.group(5);
-            }
-
+            
             Matcher matcher_yyyy_mm_dd_timespan = PATTERN_YYYY_MM_DD_TIMESPAN.matcher(date);
-            if (matcher_yyyy_mm_dd_timespan.matches()) {
+            if (matcher_yyyy_mm_dd_timespan.matches()) 
                 return matcher_yyyy_mm_dd_timespan.group(1) + "-" + matcher_yyyy_mm_dd_timespan.group(2) + "-" + matcher_yyyy_mm_dd_timespan.group(3) + "/" + matcher_yyyy_mm_dd_timespan.group(5) + "-" + matcher_yyyy_mm_dd_timespan.group(6) + "-" + matcher_yyyy_mm_dd_timespan.group(7);
-            }
-
+            
             Matcher matcher_yyyymmdd = PATTERN_YYYYMMDD.matcher(date);
             if (matcher_yyyymmdd.matches()) {
                 if (Integer.parseInt(matcher_yyyymmdd.group(1)) > 1000) { //If it is smaller than 1000, it probably means it is wrong
@@ -193,25 +184,21 @@ public class DateNormalization extends ExtensionFunctionDefinition {
             }
 
             Matcher matcher_ddmmyyyy = PATTERN_DDMMYYYY.matcher(date);
-            if (matcher_ddmmyyyy.matches()) {
+            if (matcher_ddmmyyyy.matches()) 
                 return matcher_ddmmyyyy.group(7) + "-" + matcher_ddmmyyyy.group(6) + "-" + matcher_ddmmyyyy.group(1);
-            }
-
+            
             Matcher matcher_ddmmyyyy_timespan = PATTERN_DDMMYYYY_TIMESPAN.matcher(date);
-            if (matcher_ddmmyyyy_timespan.matches()) {
+            if (matcher_ddmmyyyy_timespan.matches()) 
                 return matcher_ddmmyyyy_timespan.group(7) + "-" + matcher_ddmmyyyy_timespan.group(6) + "-" + matcher_ddmmyyyy_timespan.group(1) + "/" + matcher_ddmmyyyy_timespan.group(16) + "-" + matcher_ddmmyyyy_timespan.group(15) + "-" + matcher_ddmmyyyy_timespan.group(10);
-            }
-
+            
             Matcher matcher_yyyy_yyyy = PATTERN_YYYY_YYYY.matcher(date);
-            if (matcher_yyyy_yyyy.matches()) {
+            if (matcher_yyyy_yyyy.matches()) 
                 return matcher_yyyy_yyyy.group(1) + "/" + matcher_yyyy_yyyy.group(4);
-            }
-
+            
             Matcher matcher_yyyy_yyyy_yyyy = PATTERN_YYYY_YYYY_YYYY.matcher(date);
-            if (matcher_yyyy_yyyy_yyyy.matches()) {
+            if (matcher_yyyy_yyyy_yyyy.matches()) 
                 return matcher_yyyy_yyyy_yyyy.group(1) + "/" + matcher_yyyy_yyyy_yyyy.group(7);
-            }
-
+            
             return findNormalizationProcess(date);
         } catch (Exception e) {
             throw new RuntimeException(e);
@@ -221,45 +208,37 @@ public class DateNormalization extends ExtensionFunctionDefinition {
     private String findNormalizationProcess(String date) {
         try {
             Matcher matcher_1 = PATTERN_1.matcher(date);
-            if (matcher_1.matches()) {
+            if (matcher_1.matches()) 
                 return matcher_1.group(3) + "-" + matcher_1.group(2) + "-" + matcher_1.group(1) + "/" + matcher_1.group(6) + "-" + matcher_1.group(5) + "-" + matcher_1.group(4);
-            }
-
+            
             Matcher matcher_3 = PATTERN_3.matcher(date);
-            if (matcher_3.matches()) {
+            if (matcher_3.matches()) 
                 return matcher_3.group(3) + "-" + "0" + matcher_3.group(2) + "-" + "0" + matcher_3.group(1) + "/" + matcher_3.group(6) + "-" + "0" + matcher_3.group(5) + "-" + "0" + matcher_3.group(4);
-            }
-
+            
             Matcher matcher_2 = PATTERN_2.matcher(date);
-            if (matcher_2.matches()) {
+            if (matcher_2.matches()) 
                 return matcher_2.group(1) + "/" + matcher_2.group(3);
-            }
-
+            
             Matcher matcher_4 = PATTERN_4.matcher(date);
-            if (matcher_4.matches()) {
+            if (matcher_4.matches()) 
                 return "0000/" + matcher_4.group(2);
-            }
-
+            
             Matcher matcher_5 = PATTERN_5.matcher(date);
-            if (matcher_5.matches()) {
+            if (matcher_5.matches()) 
                 return matcher_5.group(2) + "/2999";
-            }
-
+            
             Matcher matcher_6 = PATTERN_6.matcher(date);
-            if (matcher_6.matches()) {
+            if (matcher_6.matches()) 
                 return matcher_6.group(2);
-            }
-
+            
             Matcher matcher_7 = PATTERN_7.matcher(date);
-            if (matcher_7.matches()) {
+            if (matcher_7.matches()) 
                 return (Integer.parseInt(matcher_7.group(1)) - 1) + "00/" + matcher_7.group(1) + "00";
-            }
-
+            
             Matcher matcher_8 = PATTERN_8.matcher(date);
-            if (matcher_8.matches()) {
+            if (matcher_8.matches()) 
                 return (Integer.parseInt(matcher_8.group(1)) - 1) + "00/" + matcher_8.group(4) + "00";
-            }
-
+            
             return null;
         } catch (Exception e) {
             throw new RuntimeException(e);
@@ -267,21 +246,18 @@ public class DateNormalization extends ExtensionFunctionDefinition {
     }
 
     public String checkForMainagencycode(String mainagencycode) {
-        if (mainagencycode.contains("Ö")) {
+        if (mainagencycode.contains("Ö")) 
             mainagencycode = mainagencycode.replace("Ö", "O");
-        }
         Matcher matcher = PATTERN_MAINAGENCYCODE.matcher(mainagencycode);
-        if (matcher.matches()) {
+        if (matcher.matches()) 
             return mainagencycode;
-        }
         return null;
     }
 
     public String checkForCountrycode(String countrycode) {
         Matcher matcher = PATTERN_COUNTRYCODE.matcher(countrycode);
-        if (matcher.matches()) {
+        if (matcher.matches()) 
             return countrycode;
-        }
         return null;
     }
 
