@@ -50,6 +50,7 @@ public class EagInstitutionPanel extends EagPanels {
     private JTextField closingTimesTf;
     private JTextField refInstitutionHoldingsGuideTf;
     private JTextField refInstitutionHoldingsGuideTitleTf;
+    private JTextField workplacesSearchroomTf;
 
     private boolean isNew;
     private boolean isStartOfForm;
@@ -385,6 +386,22 @@ public class EagInstitutionPanel extends EagPanels {
             builder.add(refInstitutionHoldingsGuideTf, cc.xy(3, rowNb));
             builder.addLabel(labels.getString("eag2012.linkTitleLabel"),             cc.xy (5, rowNb));
             builder.add(refInstitutionHoldingsGuideTitleTf, cc.xy(7, rowNb));
+            setNextRow();
+
+            Searchroom searchroom = repository.getServices().getSearchroom();
+            if(searchroom.getWorkPlaces() == null)
+                searchroom.setWorkPlaces(new WorkPlaces());
+            builder.addLabel(labels.getString("eag2012.workplaces") + "*",    cc.xy (1, rowNb));
+            try {
+                workplacesSearchroomTf = new JTextField(searchroom.getWorkPlaces().getNum().getContent());
+            } catch (NullPointerException npe) {
+                workplacesSearchroomTf = new JTextField();
+            }
+            builder.add(workplacesSearchroomTf,    cc.xy (3, rowNb));
+            if(errors.contains("workplacesSearchroomTf")) {
+                setNextRow();
+                builder.add(createErrorLabel(labels.getString("eag2012.errors.workplaces")),          cc.xy (1, rowNb));
+            }
             setNextRow();
         }
 
@@ -754,6 +771,16 @@ public class EagInstitutionPanel extends EagPanels {
                         }
                     }
                 }
+
+                Searchroom searchroom = repository.getServices().getSearchroom();
+                if(StringUtils.isNotEmpty(workplacesSearchroomTf.getText())) {
+                    Num num = new Num();
+                    num.setContent(workplacesSearchroomTf.getText());
+                    searchroom.getWorkPlaces().setNum(num);
+                } else {
+                    errors.add("workplacesSearchroomTf");
+                }
+
             }
 
             if(!errors.isEmpty()) {
