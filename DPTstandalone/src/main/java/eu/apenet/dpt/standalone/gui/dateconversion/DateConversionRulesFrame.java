@@ -2,8 +2,9 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package eu.apenet.dpt.standalone.gui;
+package eu.apenet.dpt.standalone.gui.dateconversion;
 
+import eu.apenet.dpt.standalone.gui.Utilities;
 import eu.apenet.dpt.standalone.gui.db.RetrieveFromDb;
 import eu.apenet.dpt.utils.util.extendxsl.DateNormalization;
 import java.awt.BorderLayout;
@@ -11,13 +12,8 @@ import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.StringWriter;
 import java.util.ResourceBundle;
 import java.util.Vector;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.swing.JButton;
@@ -31,20 +27,6 @@ import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.DefaultTableModel;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.OutputKeys;
-import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerException;
-import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.dom.DOMSource;
-import javax.xml.transform.stream.StreamResult;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
-import org.xml.sax.SAXException;
 
 /**
  *
@@ -54,7 +36,8 @@ public class DateConversionRulesFrame extends JFrame {
 
     private ResourceBundle labels;
     private RetrieveFromDb retrieveFromDb;
-    private final String FILENAME = "xsl/system/dateconversion.xml";
+    private DateConversionXMLFilehandler xmlFilehandler;
+    private final String FILENAME = Utilities.SYSTEM_DIR + "dateconversion.xml";
     private JTable ruleTable;
     private DefaultTableModel dm;
 
@@ -65,12 +48,12 @@ public class DateConversionRulesFrame extends JFrame {
     }
 
     private void createDataConversionRulesList() {
-        super.setTitle(labels.getString("dateConversionListTitle"));
+    super.setTitle(labels.getString("dateConversionListTitle"));
 
         Vector columnNames = new Vector();
         columnNames.add(labels.getString("dateConversion.valueRead"));
         columnNames.add(labels.getString("dateConversion.valueConverted"));
-        dm = new DefaultTableModel(loadDataFromFile(FILENAME), columnNames);
+        dm = new DefaultTableModel(xmlFilehandler.loadDataFromFile(FILENAME), columnNames);
         dm.addTableModelListener(new TableModelListener() {
             public void tableChanged(TableModelEvent e) {
                 if (ruleTable.getEditingRow() == ruleTable.getRowCount() - 1) {
@@ -93,7 +76,7 @@ public class DateConversionRulesFrame extends JFrame {
                     ruleTable.getCellEditor().stopCellEditing();
                 }
                 Vector data = ((DefaultTableModel) ruleTable.getModel()).getDataVector();
-                saveDataToFile(data, FILENAME);
+                xmlFilehandler.saveDataToFile(data, FILENAME);
             }
         });
 
@@ -123,9 +106,9 @@ public class DateConversionRulesFrame extends JFrame {
                     if (!fileName.endsWith(".xml")) {
                         fileName = fileName + ".xml";
                     }
-                    saveDataToFile(data, fileName);
+                    xmlFilehandler.saveDataToFile(data, fileName);
                     //additionally save data to standard file
-                    saveDataToFile(data, FILENAME);
+                    xmlFilehandler.saveDataToFile(data, FILENAME);
                 }
             }
         });
@@ -139,109 +122,6 @@ public class DateConversionRulesFrame extends JFrame {
         pane.add(new JScrollPane(ruleTable), BorderLayout.PAGE_START);
         pane.add(buttonPanel, BorderLayout.PAGE_END);
         add(pane);
-    }
-
-    private Vector loadDataFromFile(String xmlFile) {
-        Vector result = new Vector();
-        File file = new File(xmlFile);
-        try {
-            if (!file.exists()) {
-                saveDataToFile(result, xmlFile);
-            }
-            DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
-            DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
-            Document doc = docBuilder.parse(file);
-
-            Element root = doc.getDocumentElement();
-            NodeList dateNodes = root.getElementsByTagName("date");
-            for (int i = 0; i < dateNodes.getLength(); i++) {
-                Node node = dateNodes.item(i);
-                Vector row = new Vector();
-                if (node.getNodeType() == Node.ELEMENT_NODE) {
-                    Element element = (Element) node;
-                    row.add(element.getElementsByTagName("valueread").item(0).getTextContent());
-                    row.add(element.getElementsByTagName("valueconverted").item(0).getTextContent());
-                }
-                result.add(row);
-            }
-            result.add(new Vector());
-        } catch (SAXException ex) {
-            Logger.getLogger(DateConversionRulesFrame.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (IOException ex) {
-            Logger.getLogger(DateConversionRulesFrame.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (ParserConfigurationException ex) {
-            Logger.getLogger(DateConversionRulesFrame.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return result;
-    }
-
-    private void saveDataToFile(Vector data, String xmlFile) {
-        try {
-            DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
-            DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
-            Document doc = docBuilder.newDocument();
-
-            Element root = doc.createElement("datelist");
-            doc.appendChild(root);
-
-            for (int i = 0; i < data.size(); i++) {
-                Vector row = (Vector) data.get(i);
-                if (row.get(0) != "" && row.get(1) != "" && row.get(0) != null) {
-                    Element dataElement = doc.createElement("date");
-                    root.appendChild(dataElement);
-
-                    Element valueRead = doc.createElement("valueread");
-                    valueRead.appendChild(doc.createTextNode((String) row.get(0)));
-                    Element valueConverted = doc.createElement("valueconverted");
-                    valueConverted.appendChild(doc.createTextNode((String) row.get(1)));
-                    dataElement.appendChild(valueRead);
-                    dataElement.appendChild(valueConverted);
-                }
-            }
-
-            TransformerFactory transformerFactory = TransformerFactory.newInstance();
-            Transformer transformer = transformerFactory.newTransformer();
-            DOMSource source = new DOMSource(doc);
-            StreamResult result = new StreamResult(new StringWriter());//new StreamResult(System.out);//
-            transformer.setOutputProperty(OutputKeys.INDENT, "yes");
-            transformer.transform(source, result);
-
-            //writing to file
-            FileOutputStream fop = null;
-            File file;
-            try {
-                file = new File(xmlFile);
-                fop = new FileOutputStream(file);
-
-                // if file doesnt exists, then create it
-                if (!file.exists()) {
-                    file.createNewFile();
-                }
-
-                // get the content in bytes
-                String xmlString = result.getWriter().toString();
-                byte[] contentInBytes = xmlString.getBytes();
-
-                fop.write(contentInBytes);
-                fop.flush();
-                fop.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            } finally {
-                try {
-                    if (fop != null) {
-                        fop.close();
-                    }
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-
-        } catch (TransformerException ex) {
-            Logger.getLogger(DateConversionRulesFrame.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (ParserConfigurationException ex) {
-            Logger.getLogger(DateConversionRulesFrame.class.getName()).log(Level.SEVERE, null, ex);
-        }
     }
 
     private boolean isCorrectDateFormat(String date) {
