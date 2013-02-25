@@ -7,8 +7,7 @@ import org.apache.log4j.Logger;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.List;
-import java.util.ResourceBundle;
+import java.util.*;
 
 /**
  * User: Yoann Moranville
@@ -22,6 +21,8 @@ public abstract class EagPanels {
     private static final int NB_ROWS = 150;
     private static final String EDITOR_ROW = "p, 3dlu, ";
     protected static String EDITOR_ROW_SPEC;
+    protected static String[] languages;
+    protected static String[] languagesDisplay;
     static {
         String temp = "";
         for(int i = 0; i < NB_ROWS; i++) {
@@ -29,9 +30,25 @@ public abstract class EagPanels {
         }
         temp += "p";
         EDITOR_ROW_SPEC = temp;
+
+        String[] isoLanguages = Locale.getISOLanguages();
+        Map<String, String> languagesTemp = new LinkedHashMap<String, String>(isoLanguages.length);
+        LinkedList<String> languagesList = new LinkedList<String>();
+        for(String isoLanguage : isoLanguages)
+            languagesTemp.put(new Locale(isoLanguage).getISO3Language(), isoLanguage);//DisplayLanguage(Locale.ENGLISH), isoLanguage);
+
+        List<String> tempList = new LinkedList<String>(languagesTemp.keySet());
+        Collections.sort(tempList, String.CASE_INSENSITIVE_ORDER);
+
+        for(String tempLanguage : tempList)
+            languagesList.add(tempLanguage);
+
+        languages = languagesList.toArray(new String[]{});
+
+        languagesList.add("---");
+        languagesDisplay = languagesList.toArray(new String[]{});
     }
 
-    protected final String[] languages = {"---", "eng", "fre"};
     protected final String[] continents = {"Africa", "Antarctica", "Asia", "Australia", "Europe", "North America", "South America"};
     protected final String[] yesOrNo = {"yes", "no"};
     protected final String[] photographAllowance = {"depending on the material", "no", "yes", "yes (without flash)"};

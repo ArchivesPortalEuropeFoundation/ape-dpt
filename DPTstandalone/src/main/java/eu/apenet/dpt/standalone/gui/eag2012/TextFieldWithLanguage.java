@@ -19,14 +19,16 @@ public class TextFieldWithLanguage {
     private JTextField extraField;
     private JTextField secondExtraField;
     private JComboBox languageBox;
-    private static final String[] languages = {"eng", "fre"};
-    private static final String[] languagesDisplay = {"---", "eng", "fre"};
+    private static final String[] languages = EagPanels.languages;
+    private static final String[] languagesDisplay = EagPanels.languagesDisplay;
 
     public TextFieldWithLanguage(String text, String language, String extraText, String secondExtraText) {
         textField = new JTextField(text);
         languageBox = new JComboBox(languagesDisplay);
         if(Arrays.asList(languages).contains(language))
             languageBox.setSelectedItem(language);
+        else
+            languageBox.setSelectedItem("---");
         extraField = new JTextField(extraText);
         secondExtraField = new JTextField(secondExtraText);
     }

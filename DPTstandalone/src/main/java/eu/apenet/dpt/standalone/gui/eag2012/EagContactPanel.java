@@ -294,7 +294,11 @@ public class EagContactPanel extends EagPanels {
         i = 0;
         for(Webpage webpage : repository.getWebpage()) {
             JTextField webpageTf = new JTextField(webpage.getHref());
-            JTextField webpageTitleTf = new JTextField(webpage.getContent());
+            JTextField webpageTitleTf;
+            if(!StringUtils.isBlank(repository.getWebpage().get(0).getContent()))
+                webpageTitleTf = new JTextField(webpage.getContent());
+            else
+                webpageTitleTf = new JTextField("Go to our homepage");
             webpageTfs.add(webpageTf);
             webpageTitleTfs.add(webpageTitleTf);
             if(i == 0) {

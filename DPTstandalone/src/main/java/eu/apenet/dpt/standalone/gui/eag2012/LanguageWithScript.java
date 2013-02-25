@@ -13,8 +13,8 @@ public class LanguageWithScript {
 
     private JComboBox languageBox;
     private JComboBox scriptBox;
-    private static final String[] languages = {"eng", "fre"};
-    private static final String[] languagesDisplay = {"---", "eng", "fre"};
+    private static final String[] languages = EagPanels.languages;
+    private static final String[] languagesDisplay = EagPanels.languagesDisplay;
 
     private static final String[] scripts = {"Latn"};
     private static final String[] scriptsDisplay = {"---", "Latn"};
@@ -23,7 +23,8 @@ public class LanguageWithScript {
         languageBox = new JComboBox(languagesDisplay);
         if(Arrays.asList(languages).contains(language))
             languageBox.setSelectedItem(language);
-
+        else
+            languageBox.setSelectedItem("---");
         scriptBox = new JComboBox(scriptsDisplay);
         if(Arrays.asList(scripts).contains(script))
             scriptBox.setSelectedItem(script);

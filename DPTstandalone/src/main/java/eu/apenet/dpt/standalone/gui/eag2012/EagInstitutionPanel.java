@@ -54,10 +54,6 @@ public class EagInstitutionPanel extends EagPanels {
     private JTextField refInstitutionHoldingsGuideTf;
     private JTextField refInstitutionHoldingsGuideTitleTf;
 
-    private JComboBox languageBoxStreet = new JComboBox(languages);
-    private JComboBox languageBoxCity = new JComboBox(languages);
-    private JComboBox languageBoxCountry = new JComboBox(languages);
-
     private boolean isNew;
 
     public EagInstitutionPanel(Eag eag, JTabbedPane tabbedPane, JFrame eag2012Frame, ProfileListModel model, boolean isNew, ResourceBundle labels) {
@@ -341,7 +337,10 @@ public class EagInstitutionPanel extends EagPanels {
             builder.addLabel(labels.getString("eag2012.webpageLabel") + "*",    cc.xy (1, rowNb));
             if(repository.getWebpage().size() > 0) {
                 webpageTf = new JTextField(repository.getWebpage().get(0).getHref());
-                webpageTitleTf = new JTextField(repository.getWebpage().get(0).getContent());
+                if(!StringUtils.isBlank(repository.getWebpage().get(0).getContent()))
+                    webpageTitleTf = new JTextField(repository.getWebpage().get(0).getContent());
+                else
+                    webpageTitleTf = new JTextField("Go to our homepage");
             } else {
                 webpageTf = new JTextField();
                 webpageTitleTf = new JTextField();
