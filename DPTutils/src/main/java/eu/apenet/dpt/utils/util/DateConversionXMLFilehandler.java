@@ -117,10 +117,10 @@ public class DateConversionXMLFilehandler {
     
     public String findsEntry(String input){
         Vector data = loadDataFromFile("xsl/system/dateconversion.xml");
-        for(int i = 0; i < data.size(); i++){
-            if(input.equals(((Vector) data.get(i)).get(0))){
-                return (String) ((Vector) data.get(i)).get(1);
-            }
+        for (Object aData : data) {
+            if (((Vector) aData).size() != 0)
+                if (input.equals(((Vector) aData).get(0)))
+                    return (String) ((Vector) aData).get(1);
         }
         return null;
     }

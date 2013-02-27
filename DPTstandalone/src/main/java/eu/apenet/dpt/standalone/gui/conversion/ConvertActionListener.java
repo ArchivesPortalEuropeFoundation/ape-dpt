@@ -163,13 +163,7 @@ public class ConvertActionListener implements ActionListener {
                 fileInstance.setConversionErrors(xslMessages.toString());
                 fileInstance.setCurrentLocation(Utilities.TEMP_DIR + "temp_" + file.getName());
                 fileInstance.setIsConverted();
-            } catch (Exception ex){
-                if(ex instanceof SaxonApiException)
-                    LOG.info(xslMessages.toString());
-                apePanel.getApeTabbedPane().setConversionErrorText(labels.getString("conversionException") + "\n\n-------------\n" + ex.getMessage());
-                fileInstance.setConversionErrors(labels.getString("conversionException") + "\n\n-------------\n" + ex.getMessage());
-                LOG.error("Error when converting a file", ex);
-            } finally {
+
                 if(xslMessages.toString().equals("")) {
                     apePanel.getApeTabbedPane().checkFlashingTab(APETabbedPane.TAB_CONVERSION, Utilities.FLASHING_GREEN_COLOR);
                     fileInstance.setConversionErrors("No excluded elements");
@@ -177,6 +171,15 @@ public class ConvertActionListener implements ActionListener {
                 } else
                     apePanel.getApeTabbedPane().checkFlashingTab(APETabbedPane.TAB_CONVERSION, Utilities.FLASHING_RED_COLOR);
                 dataPreparationToolGUI.enableValidationBtns();
+                dataPreparationToolGUI.enableSaveBtn();
+            } catch (Exception ex){
+                if(ex instanceof SaxonApiException)
+                    LOG.info(xslMessages.toString());
+                apePanel.getApeTabbedPane().setConversionErrorText(labels.getString("conversionException") + "\n\n-------------\n" + ex.getMessage());
+                fileInstance.setConversionErrors(labels.getString("conversionException") + "\n\n-------------\n" + ex.getMessage());
+                apePanel.getApeTabbedPane().checkFlashingTab(APETabbedPane.TAB_CONVERSION, Utilities.FLASHING_RED_COLOR);
+                LOG.error("Error when converting a file", ex);
+            } finally {
                 dataPreparationToolGUI.enableRadioButtons();
                 summaryWorking.stop();
                 if(counterThread != null)
@@ -190,7 +193,6 @@ public class ConvertActionListener implements ActionListener {
                     progressFrame.dispose();
                 }
                 dataPreparationToolGUI.setResultAreaText(labels.getString("conversionFinished"));
-                dataPreparationToolGUI.enableSaveBtn();
             }
         }
     }
