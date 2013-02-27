@@ -900,9 +900,9 @@ public class DataPreparationToolGUI extends JFrame {
                 FileInstance fileInstance = fileInstances.get(key);
                 fileInstance.setValidationSchema(e.getActionCommand());
 
-                if (fileInstance.getValidationSchema().equals(Xsd_enum.XSD_EAG_SCHEMA) || fileInstance.getValidationSchema().equals(Xsd_enum.XSD_EAG_2012_SCHEMA)) {
+                if (fileInstance.getValidationSchema().equals(Utilities.getXsdObjectFromPath(Xsd_enum.XSD_EAG_SCHEMA.getPath())) || fileInstance.getValidationSchema().equals(Utilities.getXsdObjectFromPath(Xsd_enum.XSD_EAG_2012_SCHEMA.getPath()))) {
                     fileInstance.setFileType(FileInstance.FileType.EAG);
-                } else if (fileInstance.getValidationSchema().equals(Xsd_enum.XSD_EAC_SCHEMA)) {
+                } else if (fileInstance.getValidationSchema().equals(Utilities.getXsdObjectFromPath(Xsd_enum.XSD_EAC_SCHEMA.getPath()))) {
                     fileInstance.setFileType(FileInstance.FileType.EAC_CPF);
                 }
 
