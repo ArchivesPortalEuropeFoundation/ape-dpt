@@ -69,7 +69,7 @@ public class ConvertActionListener implements ActionListener {
 
         String eadid = "";
         boolean doTransformation = true;
-        if(fileInstance.getValidationSchema().equals(Xsd_enum.XSD_APE_SCHEMA) || fileInstance.getValidationSchema().equals(Xsd_enum.XSD1_0_APE_SCHEMA) || fileInstance.getValidationSchema().equals(Xsd_enum.XSD_EAD_SCHEMA)){
+        if(fileInstance.getValidationSchema().equals(Utilities.getXsdObjectFromPath(Xsd_enum.XSD_APE_SCHEMA.getPath())) || fileInstance.getValidationSchema().equals(Utilities.getXsdObjectFromPath(Xsd_enum.XSD1_0_APE_SCHEMA.getPath())) || fileInstance.getValidationSchema().equals(Utilities.getXsdObjectFromPath(Xsd_enum.XSD_EAD_SCHEMA.getPath()))){
             StaxTransformationTool staxTransformationTool = new StaxTransformationTool(file);
             staxTransformationTool.run();
             LOG.debug("file has eadid? " + staxTransformationTool.isFileWithEadid());

@@ -91,6 +91,7 @@
 										<copy verbose="true" file="../xsl/system/before.xsl" todir="target/production/xsl/system/" />
 										<copy verbose="true" file="../xsl/system/languages.xml" todir="target/production/xsl/system/" />
 										<copy verbose="true" file="../xsl/system/eag2eag2012.xsl" todir="target/production/xsl/system/" />
+										<copy verbose="true" file="../xsl/system/dateconversion.xml" todir="target/production/xsl/system/" />
 										<copy file="target/APE_data_preparation_tool-jar-with-dependencies.jar" todir="target/production/" verbose="true" />
 										<zip destfile="target/APE_data_preparation_tool_${project.version}.zip" basedir="target/production/" />
 										<delete dir="target/production/" />
