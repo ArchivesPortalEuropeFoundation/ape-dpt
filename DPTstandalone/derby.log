@@ -1,0 +1,13 @@
+----------------------------------------------------------------
+Thu Feb 28 16:51:33 CET 2013:
+Booting Derby version The Apache Software Foundation - Apache Derby - 10.8.3.0 - (1405108): instance a816c00e-013d-2180-5e77-000005d84bb0 
+on database directory C:\Users\papp\apeDptWorkspace\trunk\DPTstandalone\apeoptions  with class loader sun.misc.Launcher$AppClassLoader@2f26f304 
+Loaded from file:/C:/Users/papp/.m2/repository/org/apache/derby/derby/10.8.3.0/derby-10.8.3.0.jar
+java.vendor=Oracle Corporation
+java.runtime.version=1.7.0_11-b21
+user.dir=C:\Users\papp\apeDptWorkspace\trunk\DPTstandalone
+os.name=Windows Server 2008 R2
+os.arch=amd64
+os.version=6.1
+derby.system.home=xsl
+Database Class Loader started - derby.database.classpath=''
