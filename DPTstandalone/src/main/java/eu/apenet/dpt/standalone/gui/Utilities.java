@@ -137,7 +137,6 @@ public final class Utilities {
         List<File> list = new ArrayList<File>();
         List<String> xsltNotShown = Arrays.asList(Utilities.FILES_NOT_SHOWN);
         File temp = new File(Utilities.SYSTEM_DIR);
-        Logger.getLogger(Utilities.class).info(temp.getAbsolutePath());
         for(File file : new File(Utilities.SYSTEM_DIR).listFiles()) {
             if((file.getName().endsWith("xsl") || file.getName().endsWith("xslt")) && !xsltNotShown.contains(file.getName()) && XsltChecker.isXsltFile(file)){
                 list.add(file);
