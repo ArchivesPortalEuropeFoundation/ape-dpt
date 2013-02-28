@@ -121,7 +121,7 @@
     <xsl:template match="emph" mode="#all">
         <xsl:choose>
             <xsl:when test="parent::bibref or parent::extref" />
-            <xsl:when test="parent::corpname or parent::origination or parent::physfacet or parent::persname or parent::head or parent::titleproper or parent::unittitle"> <!--unittitle here is a hack - better fix it in the display xsl of portal/dashboard-->
+            <xsl:when test="parent::corpname or parent::origination or parent::physfacet or parent::persname or parent::head or parent::titleproper or parent::unitdate or parent::unittitle"> <!--unittitle here is a hack - better fix it in the display xsl of portal/dashboard-->
                 <xsl:value-of select="normalize-space(.)"/>
             </xsl:when>
             <xsl:when test="@render='bold' or @render='italic'">
@@ -619,7 +619,7 @@
     </xsl:template>
 
     <xsl:template match="frontmatter" mode="copy">
-        <xsl:if test="not(//eadid/@countrycode='fr')">
+        <xsl:if test="not($countrycode='FR')">
             <xsl:call-template name="excludeElement" />
         </xsl:if>
     </xsl:template>
@@ -1749,10 +1749,12 @@
     <!-- copy fonds intermediate: scopecontent[not(@*)] -->
     <xsl:template match="scopecontent[not(@encodinganalog='preface' or @encodinganalog='Vorwort')]" mode="copy fonds intermediate lowest">
         <xsl:if test="count(child::*) != 0 or normalize-space(text()) != ''">
-            <scopecontent encodinganalog="summary">
-                <xsl:apply-templates select="node()[not(name()='arrangement' or name()='scopecontent')]" mode="#current"/>
-                <xsl:apply-templates select="scopecontent" mode="nested"/>
-            </scopecontent>
+            <xsl:if test="not(count(child::*) eq 1 and child::arrangement)">
+                <scopecontent encodinganalog="summary">
+                    <xsl:apply-templates select="node()[not(name()='arrangement' or name()='scopecontent')]" mode="#current"/>
+                    <xsl:apply-templates select="scopecontent" mode="nested"/>
+                </scopecontent>
+            </xsl:if>
             <xsl:apply-templates select="arrangement" mode="#current" />
         </xsl:if>
     </xsl:template>
@@ -2749,22 +2751,22 @@
                 </xsl:when>
                 <xsl:when test="@level='otherlevel'">
                     <xsl:choose>
-                        <xsl:when test="@otherlevel='filegrp' or @otherlevel=' filegrp' or @otherlevel='filegroup' or @otherlevel='file' or @otherlevel='subseries' or @otherlevel='subsubseries' or @otherlevel='sous-serie' or @otherlevel='sous-sous-serie' or @otherlevel='sous-sous-sous-serie' or @otherlevel='subsubsubseries' or @otherlevel='subsubsusbseries' or @otherlevel='subsubsubsubseries' or @otherlevel='sous-sous-série' or @otherlevel='sous-sous-sous-série' or @otherlevel='partie-de-subgp' or @otherlevel='partie-de-subgrp' or @otherlevel='partie-de-sbgrp' or @otherlevel='subsubsubsubsubseries'">
+                        <xsl:when test="@otherlevel='filegrp' or @otherlevel=' filegrp' or @otherlevel='filegroup' or @otherlevel='file' or @otherlevel='subseries' or @otherlevel='subsubseries' or @otherlevel='sous-serie' or @otherlevel='sous-sous-serie' or @otherlevel='sous-sous-sous-serie' or @otherlevel='sous-sous-sous-sous-série' or @otherlevel='subsubsubseries' or @otherlevel='subsubsusbseries' or @otherlevel='subsubsubsubseries' or @otherlevel='sous-sous-série' or @otherlevel='sous-sous-sous-série' or @otherlevel='partie-de-subgp' or @otherlevel='partie-de-subgrp' or @otherlevel='partie-de-sbgrp' or @otherlevel='subsubsubsubsubseries' or @otherlevel='sous-série' or @otherlevel='sous-dossiers'">
                             <xsl:value-of select="'subseries'"/>
                         </xsl:when>
                         <xsl:when test="((@otherlevel='groupe-de-fonds' or @otherlevel='groupe_de_fonds') and not(parent::c[not(@level) or @level='file' or @otherlevel='groupe-de-fonds' or @otherlevel='groupe_de_fonds'])) or @otherlevel='SF' or @otherlevel='sous-fonds' or @otherlevel='sous-sous-fonds'">
                             <xsl:value-of select="'fonds'"/>
                         </xsl:when>
-                        <xsl:when test="@otherlevel='groupe-de-fonds-et-de-collections' or @otherlevel='groupe-de-series' or @otherlevel='groupe-de-fonds-et-de-sous-fonds' or @otherlevel='SC' or @otherlevel='SSC' or @otherlevel='SSSC' or @otherlevel='SR' or @otherlevel='SSR' or @otherlevel='SSSR' or @otherlevel='partie-de-fonds' or @otherlevel='partie-de-sous-fonds' or @otherlevel='sous-collection'">
+                        <xsl:when test="@otherlevel='groupe-de-fonds-et-de-collections' or @otherlevel='groupe-de-series' or @otherlevel='groupe-de-fonds-et-de-sous-fonds' or @otherlevel='SC' or @otherlevel='SSC' or @otherlevel='SSSC' or @otherlevel='SR' or @otherlevel='SSR' or @otherlevel='SSSR' or @otherlevel='partie-de-fonds' or @otherlevel='partie-de-sous-fonds' or @otherlevel='sous-collection' or @otherlevel='article'">
                             <xsl:value-of select="'series'"/>
                         </xsl:when>
                         <xsl:when test="@otherlevel='sous-sous-serie-organique' or @otherlevel='DC' or ((@otherlevel='groupe-de-fonds' or @otherlevel='groupe_de_fonds') and parent::c[not(@level) or @otherlevel='groupe-de-fonds' or @otherlevel='groupe_de_fonds'])">
                             <xsl:value-of select="'series'"/>
                         </xsl:when>
-                        <xsl:when test="@otherlevel='UI' or @otherlevel='volym' or @otherlevel='karta' or (@otherlevel='sous-dossier' and child::c[@otherlevel='sous-sous-dossier'])">
+                        <xsl:when test="@otherlevel='UI' or @otherlevel='volym' or @otherlevel='karta' or (@otherlevel='sous-dossier' and (child::c[@otherlevel='sous-sous-dossier'] or child::dsc/child::c[@level='item'])) or @otherlevel='sous-sous-dossier_factice' or @otherlevel='sous-sous-groupe' or @otherlevel='groupe-de-pièces' or @otherlevel='piece'">
                             <xsl:value-of select="'file'"/>
                         </xsl:when>
-                        <xsl:when test="@otherlevel='D' or ((@otherlevel='groupe-de-fonds' or @otherlevel='groupe_de_fonds') and parent::c[@level='file']) or @otherlevel='partie-de-pièce' or @otherlevel='partie-de-dossier' or @otherlevel='sous-dossier' or @otherlevel='sous-sous-dossier'">
+                        <xsl:when test="@otherlevel='D' or ((@otherlevel='groupe-de-fonds' or @otherlevel='groupe_de_fonds') and parent::c[@level='file']) or @otherlevel='partie-de-pièce' or @otherlevel='partie-de-dossier' or @otherlevel='sous-dossier' or @otherlevel='sous-sous-dossier' or @otherlevel='ss_ss_fonds'">
                             <xsl:value-of select="'item'"/>
                         </xsl:when>
                         <xsl:when test="@otherlevel='subfile'">
