@@ -55,7 +55,14 @@ import eu.apenet.dpt.utils.util.extendxsl.DateNormalization;
 public class DataPreparationToolGUI extends JFrame {
 
     private final static Logger LOG = Logger.getLogger(DataPreparationToolGUI.class);
-    public static final String VERSION_NB = "1.2.0-SNAPSHOT";
+    public static final String VERSION_NB;
+    static {
+        if(StringUtils.isEmpty(DataPreparationToolGUI.class.getPackage().getImplementationVersion()))
+            VERSION_NB = "DEV-VERSION";
+        else
+            VERSION_NB = DataPreparationToolGUI.class.getPackage().getImplementationVersion();
+    }
+
     private static final String[] LANGUAGES_OF_TOOL = {"en", "fr", "de", "el", "nl", "hu", "xx"};
     private ResourceBundle labels;
     /**

@@ -1,9 +1,6 @@
 package eu.apenet.dpt.standalone.gui.batch;
 
-import eu.apenet.dpt.standalone.gui.DataPreparationToolGUI;
-import eu.apenet.dpt.standalone.gui.FileInstance;
-import eu.apenet.dpt.standalone.gui.SummaryWorking;
-import eu.apenet.dpt.standalone.gui.Utilities;
+import eu.apenet.dpt.standalone.gui.*;
 import eu.apenet.dpt.standalone.gui.XsdAddition.XsdObject;
 import eu.apenet.dpt.standalone.gui.adhoc.EadidQueryComponent;
 import eu.apenet.dpt.standalone.gui.conversion.CounterThread;
@@ -13,6 +10,7 @@ import eu.apenet.dpt.utils.service.DocumentValidation;
 import eu.apenet.dpt.utils.service.TransformationTool;
 import eu.apenet.dpt.utils.service.stax.StaxTransformationTool;
 import eu.apenet.dpt.utils.util.CountCLevels;
+import eu.apenet.dpt.utils.util.XmlChecker;
 import eu.apenet.dpt.utils.util.extendxsl.CounterCLevelCall;
 import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
@@ -80,116 +78,127 @@ public class ConvertAndValidateActionListener extends ApexActionListener {
 
                     FileInstance fileInstance = dataPreparationToolGUI.getFileInstances().get(file.getName());
 
-                    JProgressBar progressBar = null;
-
-                    String eadid = "";
-                    boolean doTransformation = true;
-                    StaxTransformationTool staxTransformationTool = new StaxTransformationTool(file);
-                    staxTransformationTool.run();
-                    LOG.debug("file has eadid? " + staxTransformationTool.isFileWithEadid());
-                    if(!staxTransformationTool.isFileWithEadid()) {
-                        EadidQueryComponent eadidQueryComponent;
-                        if(staxTransformationTool.getUnitid() != null && !staxTransformationTool.getUnitid().equals("")){
-                            eadidQueryComponent = new EadidQueryComponent(staxTransformationTool.getUnitid());
-                        } else {
-                            eadidQueryComponent = new EadidQueryComponent(labels);
+                    if(!fileInstance.isXml()) {
+                        fileInstance.setXml(XmlChecker.isXmlParseable(file) == null);
+                        if(!fileInstance.isXml()) {
+                            fileInstance.setConversionErrors(labels.getString("conversion.error.fileNotXml"));
+                            dataPreparationToolGUI.enableSaveBtn();
+                            dataPreparationToolGUI.enableRadioButtons();
                         }
-                        int result = JOptionPane.showConfirmDialog(parent, eadidQueryComponent.getMainPanel(), labels.getString("enterEADID"), JOptionPane.OK_CANCEL_OPTION);
-                        while (eadidQueryComponent.getEntryEadid() == null || eadidQueryComponent.getEntryEadid().equals("")){
-                            result = JOptionPane.showConfirmDialog(parent, eadidQueryComponent.getMainPanel(), labels.getString("enterEADID"), JOptionPane.OK_CANCEL_OPTION);
-                        }
-                        if(result == JOptionPane.OK_OPTION)
-                            eadid = eadidQueryComponent.getEntryEadid();
-                        else if(result == JOptionPane.CANCEL_OPTION)
-                            doTransformation = false;
                     }
-                    if(doTransformation){
-                        Thread threadProgress = null;
-                        CounterThread counterThread = null;
-                        CounterCLevelCall counterCLevelCall = null;
-                        int counterMax = 0;
-                        if(fileInstance.getConversionScriptName().equals(Utilities.XSL_DEFAULT_NAME)){
-                            progressBar = progressFrame.getProgressBarSingle();
-                            progressBar.setVisible(true);
-                            progressFrame.setTitle(labels.getString("progressTrans") + " - " + file.getName());
-                            CountCLevels countCLevels = new CountCLevels();
-                            counterMax = countCLevels.countOneFile(file);
-                            if(counterMax > 0){
-                                counterCLevelCall = new CounterCLevelCall();
-                                counterCLevelCall.initializeCounter(counterMax);
-                                counterThread = new CounterThread(counterCLevelCall, progressBar, counterMax);
-                                threadProgress = new Thread(counterThread);
-                                threadProgress.setName(CounterThread.class.toString());
-                                threadProgress.start();
+
+                    if(fileInstance.isXml()) {
+                        JProgressBar progressBar = null;
+
+                        String eadid = "";
+                        boolean doTransformation = true;
+                        StaxTransformationTool staxTransformationTool = new StaxTransformationTool(file);
+                        staxTransformationTool.run();
+                        LOG.debug("file has eadid? " + staxTransformationTool.isFileWithEadid());
+                        if(!staxTransformationTool.isFileWithEadid()) {
+                            EadidQueryComponent eadidQueryComponent;
+                            if(staxTransformationTool.getUnitid() != null && !staxTransformationTool.getUnitid().equals("")){
+                                eadidQueryComponent = new EadidQueryComponent(staxTransformationTool.getUnitid());
+                            } else {
+                                eadidQueryComponent = new EadidQueryComponent(labels);
                             }
+                            int result = JOptionPane.showConfirmDialog(parent, eadidQueryComponent.getMainPanel(), labels.getString("enterEADID"), JOptionPane.OK_CANCEL_OPTION);
+                            while (eadidQueryComponent.getEntryEadid() == null || eadidQueryComponent.getEntryEadid().equals("")){
+                                result = JOptionPane.showConfirmDialog(parent, eadidQueryComponent.getMainPanel(), labels.getString("enterEADID"), JOptionPane.OK_CANCEL_OPTION);
+                            }
+                            if(result == JOptionPane.OK_OPTION)
+                                eadid = eadidQueryComponent.getEntryEadid();
+                            else if(result == JOptionPane.CANCEL_OPTION)
+                                doTransformation = false;
                         }
-                        try {
-                            try {
-                                File xslFile = new File(fileInstance.getConversionScriptPath());
-
-                                File outputFile = new File(Utilities.TEMP_DIR + "temp_"+file.getName());
-                                outputFile.deleteOnExit();
-                                StringWriter xslMessages;
-                                HashMap<String, String> parameters = dataPreparationToolGUI.getParams();
-                                parameters.put("eadidmissing", eadid);
-
-                                if(fileInstance.getConversionScriptName().equals(Utilities.XSL_DEFAULT_NAME)){
-                                    File outputFile_temp = new File(Utilities.TEMP_DIR + ".temp_"+file.getName());
-                                    TransformationTool.createTransformation(FileUtils.openInputStream(file), outputFile_temp, FileUtils.openInputStream(Utilities.BEFORE_XSL_FILE), null, true, true, null, true, null);
-
-                                    xslMessages = TransformationTool.createTransformation(FileUtils.openInputStream(outputFile_temp), outputFile, FileUtils.openInputStream(xslFile), parameters, true, true, null, true, counterCLevelCall);
-                                    outputFile_temp.delete();
-                                } else {
-                                    xslMessages = TransformationTool.createTransformation(FileUtils.openInputStream(file), outputFile, FileUtils.openInputStream(xslFile), parameters, true, true, null, true, null);
+                        if(doTransformation){
+                            Thread threadProgress = null;
+                            CounterThread counterThread = null;
+                            CounterCLevelCall counterCLevelCall = null;
+                            int counterMax = 0;
+                            if(fileInstance.getConversionScriptName().equals(Utilities.XSL_DEFAULT_NAME)){
+                                progressBar = progressFrame.getProgressBarSingle();
+                                progressBar.setVisible(true);
+                                progressFrame.setTitle(labels.getString("progressTrans") + " - " + file.getName());
+                                CountCLevels countCLevels = new CountCLevels();
+                                counterMax = countCLevels.countOneFile(file);
+                                if(counterMax > 0){
+                                    counterCLevelCall = new CounterCLevelCall();
+                                    counterCLevelCall.initializeCounter(counterMax);
+                                    counterThread = new CounterThread(counterCLevelCall, progressBar, counterMax);
+                                    threadProgress = new Thread(counterThread);
+                                    threadProgress.setName(CounterThread.class.toString());
+                                    threadProgress.start();
                                 }
-                                fileInstance.setConversionErrors(xslMessages.toString());
-                                fileInstance.setCurrentLocation(Utilities.TEMP_DIR + "temp_" + file.getName());
-                                fileInstance.setIsConverted();
-                                fileInstance.setLastOperation(FileInstance.Operation.CONVERT);
-                                if(!continueLoop)
-                                    break;
-
-                            } catch (Exception e) {
-                                fileInstance.setConversionErrors(labels.getString("conversionException") + "\n\n-------------\n" + e.getMessage());
-                                throw new Exception("Error when converting " + file.getName(), e);
                             }
-
-                            if(threadProgress != null){
-                                counterThread.stop();
-                                threadProgress.interrupt();
-                            }
-                            if(counterMax > 0)
-                                progressBar.setValue(counterMax);
-                            progressBar.setIndeterminate(true);
-
                             try {
-                                InputStream is = FileUtils.openInputStream(new File(fileInstance.getCurrentLocation()));
-                                dataPreparationToolGUI.setResultAreaText(labels.getString("validating")+ " " + file.getName() + " (" + currentFileNumberBatch + "/" + numberOfFiles + ")");
-                                XsdObject xsdObject = fileInstance.getValidationSchema();
+                                try {
+                                    File xslFile = new File(fileInstance.getConversionScriptPath());
 
-                                List<SAXParseException> exceptions = DocumentValidation.xmlValidation(is, Utilities.getUrlPathXsd(xsdObject), xsdObject.isXsd11());
-                                if (exceptions == null || exceptions.isEmpty()){
-                                    fileInstance.setValid(true);
-                                    fileInstance.setValidationErrors(labels.getString("validationSuccess"));
-                                } else {
-                                    String errors = Utilities.stringFromList(exceptions);
-                                    fileInstance.setValidationErrors(errors);
+                                    File outputFile = new File(Utilities.TEMP_DIR + "temp_"+file.getName());
+                                    outputFile.deleteOnExit();
+                                    StringWriter xslMessages;
+                                    HashMap<String, String> parameters = dataPreparationToolGUI.getParams();
+                                    parameters.put("eadidmissing", eadid);
+
+                                    if(fileInstance.getConversionScriptName().equals(Utilities.XSL_DEFAULT_NAME)){
+                                        File outputFile_temp = new File(Utilities.TEMP_DIR + ".temp_"+file.getName());
+                                        TransformationTool.createTransformation(FileUtils.openInputStream(file), outputFile_temp, FileUtils.openInputStream(Utilities.BEFORE_XSL_FILE), null, true, true, null, true, null);
+
+                                        xslMessages = TransformationTool.createTransformation(FileUtils.openInputStream(outputFile_temp), outputFile, FileUtils.openInputStream(xslFile), parameters, true, true, null, true, counterCLevelCall);
+                                        outputFile_temp.delete();
+                                    } else {
+                                        xslMessages = TransformationTool.createTransformation(FileUtils.openInputStream(file), outputFile, FileUtils.openInputStream(xslFile), parameters, true, true, null, true, null);
+                                    }
+                                    fileInstance.setConversionErrors(xslMessages.toString());
+                                    fileInstance.setCurrentLocation(Utilities.TEMP_DIR + "temp_" + file.getName());
+                                    fileInstance.setIsConverted();
+                                    fileInstance.setLastOperation(FileInstance.Operation.CONVERT);
+                                    if(!continueLoop)
+                                        break;
+
+                                } catch (Exception e) {
+                                    fileInstance.setConversionErrors(labels.getString("conversionException") + "\n\n-------------\n" + e.getMessage());
+                                    throw new Exception("Error when converting " + file.getName(), e);
+                                }
+
+                                if(threadProgress != null){
+                                    counterThread.stop();
+                                    threadProgress.interrupt();
+                                }
+                                if(counterMax > 0)
+                                    progressBar.setValue(counterMax);
+                                progressBar.setIndeterminate(true);
+
+                                try {
+                                    InputStream is = FileUtils.openInputStream(new File(fileInstance.getCurrentLocation()));
+                                    dataPreparationToolGUI.setResultAreaText(labels.getString("validating")+ " " + file.getName() + " (" + currentFileNumberBatch + "/" + numberOfFiles + ")");
+                                    XsdObject xsdObject = fileInstance.getValidationSchema();
+
+                                    List<SAXParseException> exceptions = DocumentValidation.xmlValidation(is, Utilities.getUrlPathXsd(xsdObject), xsdObject.isXsd11());
+                                    if (exceptions == null || exceptions.isEmpty()){
+                                        fileInstance.setValid(true);
+                                        fileInstance.setValidationErrors(labels.getString("validationSuccess"));
+                                    } else {
+                                        String errors = Utilities.stringFromList(exceptions);
+                                        fileInstance.setValidationErrors(errors);
+                                        fileInstance.setValid(false);
+                                    }
+                                    fileInstance.setLastOperation(FileInstance.Operation.VALIDATE);
+                                } catch (Exception ex){
                                     fileInstance.setValid(false);
+                                    fileInstance.setValidationErrors(labels.getString("validationException") + "\n\n-------------\n" + ex.getMessage());
+                                    throw new Exception("Error when validating", ex);
                                 }
-                                fileInstance.setLastOperation(FileInstance.Operation.VALIDATE);
-                            } catch (Exception ex){
-                                fileInstance.setValid(false);
-                                fileInstance.setValidationErrors(labels.getString("validationException") + "\n\n-------------\n" + ex.getMessage());
-                                throw new Exception("Error when validating", ex);
+                            } catch (Exception e) {
+                                LOG.error("Error when converting and validating", e);
+                            } finally {
+                                summaryWorking.stop();
+                                threadRunner.interrupt();
+                                dataPreparationToolGUI.getList().repaint();
+                                if(progressBar != null)
+                                    progressBar.setVisible(false);
                             }
-                        } catch (Exception e) {
-                            LOG.error("Error when converting and validating", e);
-                        } finally {
-                            summaryWorking.stop();
-                            threadRunner.interrupt();
-                            dataPreparationToolGUI.getList().repaint();
-                            if(progressBar != null)
-                                progressBar.setVisible(false);
                         }
                     }
                 }
