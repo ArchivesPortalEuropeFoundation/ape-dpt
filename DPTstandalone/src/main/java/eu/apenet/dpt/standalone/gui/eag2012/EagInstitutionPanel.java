@@ -388,6 +388,10 @@ public class EagInstitutionPanel extends EagPanels {
             builder.add(refInstitutionHoldingsGuideTitleTf, cc.xy(7, rowNb));
             setNextRow();
 
+            if(repository.getServices() == null) {
+                repository.setServices(new Services());
+                repository.getServices().setSearchroom(new Searchroom());
+            }
             Searchroom searchroom = repository.getServices().getSearchroom();
             if(searchroom.getWorkPlaces() == null)
                 searchroom.setWorkPlaces(new WorkPlaces());
