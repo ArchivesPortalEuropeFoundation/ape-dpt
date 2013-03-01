@@ -39,6 +39,10 @@ import org.w3c.dom.NodeList;
 public class EseOptionsPanel extends JPanel {
 
     private static final Logger LOG = Logger.getLogger(EseOptionsPanel.class);
+    private static final String TEXT = "TEXT";
+    private static final String IMAGE = "IMAGE";
+    private static final String VIDEO = "VIDEO";
+    private static final String SOUND = "SOUND";
     private static final String YES = "yes";
     private static final String NO = "no";
     private static final String PROVIDE = "provide";
@@ -138,6 +142,7 @@ public class EseOptionsPanel extends JPanel {
         radioButton = new JRadioButton("TEXT");
         if(currentRoleType.equals("TEXT"))
             radioButton.setSelected(true);
+        radioButton.setActionCommand(TEXT);
         typeGroup.add(radioButton);
         panel.add(radioButton);
 
@@ -145,6 +150,7 @@ public class EseOptionsPanel extends JPanel {
         radioButton = new JRadioButton("IMAGE");
         if(currentRoleType.equals("IMAGE"))
             radioButton.setSelected(true);
+        radioButton.setActionCommand(IMAGE);
         typeGroup.add(radioButton);
         panel.add(radioButton);
 
@@ -152,6 +158,7 @@ public class EseOptionsPanel extends JPanel {
         radioButton = new JRadioButton("VIDEO");
         if(currentRoleType.equals("VIDEO"))
             radioButton.setSelected(true);
+        radioButton.setActionCommand(VIDEO);
         typeGroup.add(radioButton);
         panel.add(radioButton);
 
@@ -159,6 +166,7 @@ public class EseOptionsPanel extends JPanel {
         radioButton = new JRadioButton("SOUND");
         if(currentRoleType.equals("SOUND"))
             radioButton.setSelected(true);
+        radioButton.setActionCommand(SOUND);
         typeGroup.add(radioButton);
         panel.add(radioButton);
 
@@ -477,6 +485,11 @@ public class EseOptionsPanel extends JPanel {
             throw new Exception("licenseGroup is null");
         } else if (!isRadioBtnChecked(licenseGroup)) {
             throw new Exception("licenseGroup is not checked");
+        }
+
+        if (typeGroup.getSelection().getActionCommand().equals(TEXT)){
+            if(inheritLanguageGroup.getSelection().getActionCommand().equals(NO))
+                throw new Exception("selected type requires language inheritance");
         }
     }
 
