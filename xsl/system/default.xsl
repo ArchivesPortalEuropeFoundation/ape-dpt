@@ -840,10 +840,7 @@
     <!-- copy fonds intermediate lowest: did/note -->
     <xsl:template match="did/note" name="note" mode="copy fonds intermediate lowest">
         <xsl:if test="count(child::*) != 0 or normalize-space(text()) != ''">
-            <note>
-                <xsl:if test="@encodinganalog !=''">
-                    <xsl:attribute name="encodinganalog" select="@encodinganalog"/>
-                </xsl:if>
+            <note encodinganalog="3.6.1">
                 <xsl:if test="@label!=''">
                     <xsl:attribute name="label" select="@label"/>
                 </xsl:if>
