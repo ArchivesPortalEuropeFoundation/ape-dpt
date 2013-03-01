@@ -69,7 +69,7 @@ public class RetrieveFromDb {
     }
 
     public String retrieveDefaultSaveFolder() {
-        return retrieve(DBUtil.OptionKeys.OPTION_SAVE_FOLDER.getName(), new File(Utilities.LOG_DIR).getAbsolutePath() + "/"); //Default should be user's home directory???
+        return retrieve(DBUtil.OptionKeys.OPTION_SAVE_FOLDER.getName(), new File(Utilities.LOG_DIR).getAbsolutePath() + File.separator); //Default should be user's home directory???
     }
 
     public void saveDefaultSaveFolder(String location) {
