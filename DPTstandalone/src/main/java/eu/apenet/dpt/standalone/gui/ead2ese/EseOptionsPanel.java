@@ -19,10 +19,17 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.text.MessageFormat;
 import java.util.*;
 import java.util.List;
+import java.util.logging.Level;
+import javax.xml.parsers.ParserConfigurationException;
+import org.w3c.dom.Document;
+import org.w3c.dom.NamedNodeMap;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 /**
  * User: Yoann Moranville Date: 17/11/2011
@@ -32,6 +39,10 @@ import java.util.List;
 public class EseOptionsPanel extends JPanel {
 
     private static final Logger LOG = Logger.getLogger(EseOptionsPanel.class);
+    private static final String TEXT = "TEXT";
+    private static final String IMAGE = "IMAGE";
+    private static final String VIDEO = "VIDEO";
+    private static final String SOUND = "SOUND";
     private static final String YES = "yes";
     private static final String NO = "no";
     private static final String PROVIDE = "provide";
@@ -48,6 +59,7 @@ public class EseOptionsPanel extends JPanel {
     private static final String EUROPEANA_RIGHTS_RESTRICTED = "Restricted access";
     private static final String EUROPEANA_RIGHTS_UNKNOWN = "Unknown";
     private ResourceBundle labels;
+    private RetrieveFromDb retrieveFromDb;
     private Map<String, FileInstance> fileInstances;
     private List<File> selectedIndices;
     private JFrame parent;
@@ -62,15 +74,17 @@ public class EseOptionsPanel extends JPanel {
     private JComboBox europeanaRightsComboBox;
     private JTextArea contextTextArea;
     private JTextArea dataProviderTextArea;
+    private JTextArea providerTextArea;
     private JComboBox languageComboBox;
     private JTextArea additionalRightsTextArea;
     private Map<String, String> languages;
     private static final Border BLACK_LINE = BorderFactory.createLineBorder(Color.BLACK);
     private static final Border GREY_LINE = BorderFactory.createLineBorder(Color.GRAY);
-
+    
     public EseOptionsPanel(ResourceBundle labels, Object[] selectedIndices, JFrame parent, APETabbedPane apeTabbedPane, Map<String, FileInstance> fileInstances) {
         super(new BorderLayout());
         this.labels = labels;
+        this.retrieveFromDb = retrieveFromDb = new RetrieveFromDb();
         this.parent = parent;
         this.selectedIndices = setIndices(selectedIndices);
         this.apeTabbedPane = apeTabbedPane;
@@ -79,11 +93,11 @@ public class EseOptionsPanel extends JPanel {
     }
 
     public void createOptionPanel() {
-        JPanel creativeCommonsPanel = new CreativeCommonsPanel();
-        JPanel europeanaRightsPanel = new EuropeanaRightsPanel();
+        JPanel creativeCommonsPanel = new EseOptionsPanel.CreativeCommonsPanel();
+        JPanel europeanaRightsPanel = new EseOptionsPanel.EuropeanaRightsPanel();
         JPanel emptyPanel = new JPanel();
 
-        JPanel formPanel = new JPanel(new GridLayout(8, 1));
+        JPanel formPanel = new JPanel(new GridLayout(10, 1));
 
         JPanel extraLicenseCardLayoutPanel = new JPanel(new CardLayout());
         extraLicenseCardLayoutPanel.add(creativeCommonsPanel, CREATIVE_COMMONS);
@@ -93,8 +107,14 @@ public class EseOptionsPanel extends JPanel {
         cardLayout.show(extraLicenseCardLayoutPanel, EMPTY_PANEL);
 
 
-        JPanel panel = new JPanel(new GridLayout(1, 3));
-        panel.add(new Label(labels.getString("ese.dataProvider") + ":"));
+        JPanel panel = new JPanel(new GridLayout(1, 1));
+        panel.add(new Label(labels.getString("ese.mandatoryFieldsInfo")));
+        panel.add(new Label(""));
+        panel.setBorder(BLACK_LINE);
+        formPanel.add(panel);
+
+        panel = new JPanel(new GridLayout(1, 3));
+        panel.add(new Label(labels.getString("ese.dataProvider") + ":" + "*"));
         dataProviderTextArea = new JTextArea();
         JScrollPane dptaScrollPane = new JScrollPane(dataProviderTextArea);
         dptaScrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
@@ -103,35 +123,58 @@ public class EseOptionsPanel extends JPanel {
         panel.setBorder(BLACK_LINE);
         formPanel.add(panel);
 
+        panel = new JPanel(new GridLayout(1, 3));
+        panel.add(new Label(labels.getString("ese.provider") + ":" + "*"));
+        providerTextArea = new JTextArea();
+        JScrollPane ptaScrollPane = new JScrollPane(providerTextArea);
+        ptaScrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+        panel.add(ptaScrollPane);
+        panel.add(new Label(""));
+        panel.setBorder(BLACK_LINE);
+        formPanel.add(panel);
+
         panel = new JPanel(new GridLayout(4, 3));
         typeGroup = new ButtonGroup();
         JRadioButton radioButton;
 
-        panel.add(new Label(labels.getString("ese.type") + ":"));
+        panel.add(new Label(labels.getString("ese.type") + ":" + "*"));
+        String currentRoleType = determineRoleType();
         radioButton = new JRadioButton("TEXT");
+        if(currentRoleType.equals("TEXT"))
+            radioButton.setSelected(true);
+        radioButton.setActionCommand(TEXT);
         typeGroup.add(radioButton);
         panel.add(radioButton);
 
         panel.add(new JLabel(""));
         radioButton = new JRadioButton("IMAGE");
+        if(currentRoleType.equals("IMAGE"))
+            radioButton.setSelected(true);
+        radioButton.setActionCommand(IMAGE);
         typeGroup.add(radioButton);
         panel.add(radioButton);
 
         panel.add(new JLabel(""));
         radioButton = new JRadioButton("VIDEO");
+        if(currentRoleType.equals("VIDEO"))
+            radioButton.setSelected(true);
+        radioButton.setActionCommand(VIDEO);
         typeGroup.add(radioButton);
         panel.add(radioButton);
 
         panel.add(new JLabel(""));
         radioButton = new JRadioButton("SOUND");
+        if(currentRoleType.equals("SOUND"))
+            radioButton.setSelected(true);
+        radioButton.setActionCommand(SOUND);
         typeGroup.add(radioButton);
         panel.add(radioButton);
-
+        
         panel.setBorder(GREY_LINE);
         formPanel.add(panel);
 
         panel = new JPanel(new GridLayout(1, 3));
-        panel.add(new Label(labels.getString("ese.hierarchyPrefix") + ":"));
+        panel.add(new Label(labels.getString("ese.hierarchyPrefix") + ":" + "*"));
         contextTextArea = new JTextArea(labels.getString("ese.hierarchyPrefixDefault") + ":");
         JScrollPane ctaScrollPane = new JScrollPane(contextTextArea);
         ctaScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
@@ -142,14 +185,14 @@ public class EseOptionsPanel extends JPanel {
         formPanel.add(panel);
 
         panel = new JPanel(new GridLayout(2, 3));
-        panel.add(new Label(labels.getString("ese.inheritParent") + ":"));
+        panel.add(new Label(labels.getString("ese.inheritParent") + ":" + "*"));
         inheritParentGroup = new ButtonGroup();
         radioButton = new JRadioButton(labels.getString("ese.yes"));
         radioButton.setActionCommand(YES);
         inheritParentGroup.add(radioButton);
         panel.add(radioButton);
         panel.add(new JLabel(""));
-        radioButton = new JRadioButton(labels.getString("ese.no"));
+        radioButton = new JRadioButton(labels.getString("ese.no"), true);
         radioButton.setActionCommand(NO);
         inheritParentGroup.add(radioButton);
         panel.add(radioButton);
@@ -157,14 +200,14 @@ public class EseOptionsPanel extends JPanel {
         formPanel.add(panel);
 
         panel = new JPanel(new GridLayout(2, 3));
-        panel.add(new Label(labels.getString("ese.inheritOrigination") + ":"));
+        panel.add(new Label(labels.getString("ese.inheritOrigination") + ":" + "*"));
         inheritOriginationGroup = new ButtonGroup();
         radioButton = new JRadioButton(labels.getString("ese.yes"));
         radioButton.setActionCommand(YES);
         inheritOriginationGroup.add(radioButton);
         panel.add(radioButton);
         panel.add(new JLabel(""));
-        radioButton = new JRadioButton(labels.getString("ese.no"));
+        radioButton = new JRadioButton(labels.getString("ese.no"), true);
         radioButton.setActionCommand(NO);
         inheritOriginationGroup.add(radioButton);
         panel.add(radioButton);
@@ -172,7 +215,7 @@ public class EseOptionsPanel extends JPanel {
         formPanel.add(panel);
 
         panel = new JPanel(new GridLayout(3, 3));
-        panel.add(new Label(labels.getString("ese.inheritLanguage") + ":"));
+        panel.add(new Label(labels.getString("ese.inheritLanguage") + ":" + "*"));
         inheritLanguageGroup = new ButtonGroup();
         radioButton = new JRadioButton(labels.getString("ese.yes"));
         radioButton.setActionCommand(YES);
@@ -180,7 +223,7 @@ public class EseOptionsPanel extends JPanel {
         panel.add(radioButton);
         panel.add(new JLabel(""));
         panel.add(new JLabel(""));
-        radioButton = new JRadioButton(labels.getString("ese.no"));
+        radioButton = new JRadioButton(labels.getString("ese.no"), true);
         radioButton.setActionCommand(NO);
         inheritLanguageGroup.add(radioButton);
         panel.add(radioButton);
@@ -198,29 +241,29 @@ public class EseOptionsPanel extends JPanel {
 
         JPanel mainLicensePanel = new JPanel(new BorderLayout());
         panel = new JPanel(new GridLayout(4, 2));
-        panel.add(new Label(labels.getString("ese.specifyLicense") + ":"));
+        panel.add(new Label(labels.getString("ese.specifyLicense") + ":" + "*"));
         licenseGroup = new ButtonGroup();
         radioButton = new JRadioButton("Creative Commons");
         radioButton.setActionCommand(CREATIVE_COMMONS);
-        radioButton.addActionListener(new ChangePanelActionListener(extraLicenseCardLayoutPanel));
+        radioButton.addActionListener(new EseOptionsPanel.ChangePanelActionListener(extraLicenseCardLayoutPanel));
         licenseGroup.add(radioButton);
         panel.add(radioButton);
         panel.add(new JLabel(""));
         radioButton = new JRadioButton("Creative Commons CC0");
         radioButton.setActionCommand(CREATIVE_COMMONS_CC0);
-        radioButton.addActionListener(new ChangePanelActionListener(extraLicenseCardLayoutPanel));
+        radioButton.addActionListener(new EseOptionsPanel.ChangePanelActionListener(extraLicenseCardLayoutPanel));
         licenseGroup.add(radioButton);
         panel.add(radioButton);
         panel.add(new JLabel(""));
         radioButton = new JRadioButton("Creative Commons Public Domain Mark");
         radioButton.setActionCommand(CREATIVE_COMMONS_PUBLIC_DOMAIN_MARK);
-        radioButton.addActionListener(new ChangePanelActionListener(extraLicenseCardLayoutPanel));
+        radioButton.addActionListener(new EseOptionsPanel.ChangePanelActionListener(extraLicenseCardLayoutPanel));
         licenseGroup.add(radioButton);
         panel.add(radioButton);
         panel.add(new JLabel(""));
         radioButton = new JRadioButton("Europeana rights statements");
         radioButton.setActionCommand(EUROPEANA_RIGHTS_STATEMENTS);
-        radioButton.addActionListener(new ChangePanelActionListener(extraLicenseCardLayoutPanel));
+        radioButton.addActionListener(new EseOptionsPanel.ChangePanelActionListener(extraLicenseCardLayoutPanel));
         licenseGroup.add(radioButton);
         panel.add(radioButton);
         mainLicensePanel.add(panel, BorderLayout.WEST);
@@ -242,7 +285,7 @@ public class EseOptionsPanel extends JPanel {
         JButton createEseBtn = new JButton(labels.getString("ese.createEseBtn"));
         JButton cancelBtn = new JButton(labels.getString("ese.cancelBtn"));
 
-        createEseBtn.addActionListener(new CreateEseActionListener());
+        createEseBtn.addActionListener(new EseOptionsPanel.CreateEseActionListener());
         cancelBtn.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 close();
@@ -360,7 +403,7 @@ public class EseOptionsPanel extends JPanel {
 
     private String getCorrectRights(String type) {
         if (type.equals(CREATIVE_COMMONS)) {
-            CreativeCommonsType creativeCommonsType = new CreativeCommonsType();
+            EseOptionsPanel.CreativeCommonsType creativeCommonsType = new EseOptionsPanel.CreativeCommonsType();
             Enumeration<AbstractButton> enumeration = creativeCommonsBtnGrp.getElements();
             while (enumeration.hasMoreElements()) {
                 AbstractButton btn = enumeration.nextElement();
@@ -369,8 +412,8 @@ public class EseOptionsPanel extends JPanel {
                 }
             }
             String urlType = creativeCommonsType.getUrlType();
-            CreativeCommons creativeCommons = CreativeCommons.getCreativeCommonsByCountryName(creativeCommonsComboBox.getSelectedItem().toString());
-            String url = CreativeCommons.constructUrl(creativeCommons);
+            EseOptionsPanel.CreativeCommons creativeCommons = EseOptionsPanel.CreativeCommons.getCreativeCommonsByCountryName(creativeCommonsComboBox.getSelectedItem().toString());
+            String url = EseOptionsPanel.CreativeCommons.constructUrl(creativeCommons);
             return MessageFormat.format(url, urlType);
         } else if (type.equals(EUROPEANA_RIGHTS_STATEMENTS)) {
             String europeanaRights = europeanaRightsComboBox.getSelectedItem().toString();
@@ -434,13 +477,50 @@ public class EseOptionsPanel extends JPanel {
             throw new Exception("dataProviderTextField is empty");
         }
 
+        if (StringUtils.isEmpty(dataProviderTextArea.getText())) {
+            throw new Exception("dataProviderTextField is empty");
+        }
+
         if (licenseGroup == null) {
             throw new Exception("licenseGroup is null");
         } else if (!isRadioBtnChecked(licenseGroup)) {
             throw new Exception("licenseGroup is not checked");
         }
+        
+        if (typeGroup.getSelection().getActionCommand().equals(TEXT)){
+            if(inheritLanguageGroup.getSelection().getActionCommand().equals(NO))
+                throw new Exception("selected type requires language inheritance");
+        }
     }
 
+    private String determineRoleType(){
+        String storedRoleType = retrieveFromDb.retrieveRoleType();
+        if(!storedRoleType.equals("UNSPECIFIED") && storedRoleType != null)
+            return storedRoleType;
+        try {
+            Document doc = XMLUtil.convertXMLToDocument(new FileInputStream(selectedIndices.get(0)));
+            NodeList nodelist = doc.getElementsByTagName("dao");
+            int counter = 0;
+            do{
+                Node node = nodelist.item(counter);
+                NamedNodeMap attributes = node.getAttributes();
+                for (int i = 0; i < attributes.getLength(); i++) {
+                    Node attribute = attributes.getNamedItem("xlink:role");
+                    if(attribute != null)
+                        return attribute.getTextContent();
+                }
+                counter++;
+            }while(counter < nodelist.getLength());
+        } catch (SAXException ex) {
+            java.util.logging.Logger.getLogger(EseOptionsPanel.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            java.util.logging.Logger.getLogger(EseOptionsPanel.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (ParserConfigurationException ex) {
+            java.util.logging.Logger.getLogger(EseOptionsPanel.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
+    }
+    
     public class ChangePanelActionListener implements ActionListener {
 
         private JPanel extraLicenseCardLayoutPanel;
@@ -473,7 +553,7 @@ public class EseOptionsPanel extends JPanel {
                 }
                 EseConfig config = fillConfig();
                 for (File selectedIndexFile : selectedIndices) {
-                    SwingUtilities.invokeLater(new TransformEse(config, selectedIndexFile));
+                    SwingUtilities.invokeLater(new EseOptionsPanel.TransformEse(config, selectedIndexFile));
                     apeTabbedPane.appendEseConversionErrorText(MessageFormat.format(labels.getString("ese.convertedAndSaved"), selectedIndexFile.getAbsolutePath()) + "\n");
                 }
                 apeTabbedPane.checkFlashingTab(APETabbedPane.TAB_ESE, Utilities.FLASHING_RED_COLOR);
@@ -547,7 +627,7 @@ public class EseOptionsPanel extends JPanel {
             checkBox = new JCheckBox(CREATIVE_COMMONS_REQUIRE_SHARE_ALIKE);
             add(checkBox);
             creativeCommonsBtnGrp.add(checkBox);
-            creativeCommonsComboBox = new JComboBox(CreativeCommons.getCountryNames().toArray());
+            creativeCommonsComboBox = new JComboBox(EseOptionsPanel.CreativeCommons.getCountryNames().toArray());
             add(creativeCommonsComboBox);
         }
     }
@@ -581,7 +661,7 @@ public class EseOptionsPanel extends JPanel {
             this.version = version;
         }
 
-        public static String constructUrl(CreativeCommons creativeCommons) {
+        public static String constructUrl(EseOptionsPanel.CreativeCommons creativeCommons) {
             if (StringUtils.isNotEmpty(creativeCommons.countryCode)) {
                 return URL_START + creativeCommons.version + URL_SEP + creativeCommons.countryCode + URL_SEP;
             }
@@ -590,14 +670,14 @@ public class EseOptionsPanel extends JPanel {
 
         public static List<String> getCountryNames() {
             List<String> countries = new ArrayList<String>();
-            for (CreativeCommons creativeCommons : CreativeCommons.values()) {
+            for (EseOptionsPanel.CreativeCommons creativeCommons : EseOptionsPanel.CreativeCommons.values()) {
                 countries.add(creativeCommons.countryName);
             }
             return countries;
         }
 
-        public static CreativeCommons getCreativeCommonsByCountryName(String countryName) {
-            for (CreativeCommons creativeCommons : CreativeCommons.values()) {
+        public static EseOptionsPanel.CreativeCommons getCreativeCommonsByCountryName(String countryName) {
+            for (EseOptionsPanel.CreativeCommons creativeCommons : EseOptionsPanel.CreativeCommons.values()) {
                 if (creativeCommons.countryName.equals(countryName)) {
                     return creativeCommons;
                 }

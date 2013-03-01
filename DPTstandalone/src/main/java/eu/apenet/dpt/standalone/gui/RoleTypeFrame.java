@@ -34,7 +34,7 @@ public class RoleTypeFrame extends JFrame {
         final String textType = "TEXT";
         final String imageType = "IMAGE";
         final String videoType = "VIDEO";
-        final String audioType = "AUDIO";
+        final String audioType = "SOUND";
         final String unspecifiedType = "UNSPECIFIED";
 
         final JCheckBox useExistingCheckBox = new JCheckBox(labels.getString("useExistingIfFound"));
@@ -50,7 +50,7 @@ public class RoleTypeFrame extends JFrame {
         radioButtons[2] = new JRadioButton(MessageFormat.format(labels.getString("type"), "VIDEO"));
         radioButtons[2].setActionCommand(videoType);
 
-        radioButtons[3] = new JRadioButton(MessageFormat.format(labels.getString("type"), "AUDIO"));
+        radioButtons[3] = new JRadioButton(MessageFormat.format(labels.getString("type"), "SOUND"));
         radioButtons[3].setActionCommand(audioType);
 
         radioButtons[4] = new JRadioButton(MessageFormat.format(labels.getString("type"), "UNSPECIFIED"));

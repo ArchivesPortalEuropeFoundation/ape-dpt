@@ -52,14 +52,15 @@ public class DateConversionRulesFrame extends JFrame {
     private void createDataConversionRulesList() {
     super.setTitle(labels.getString("dateConversionListTitle"));
 
-        Vector columnNames = new Vector();
+        Vector<String> columnNames = new Vector<String>();
         columnNames.add(labels.getString("dateConversion.valueRead"));
         columnNames.add(labels.getString("dateConversion.valueConverted"));
         dm = new DefaultTableModel(xmlFilehandler.loadDataFromFile(FILENAME), columnNames);
+        dm.addRow(new Vector<String>());
         dm.addTableModelListener(new TableModelListener() {
             public void tableChanged(TableModelEvent e) {
                 if (ruleTable.getEditingRow() == ruleTable.getRowCount() - 1) {
-                    dm.addRow(new Vector());
+                    dm.addRow(new Vector<String>());
                 }
                 if (ruleTable.getEditingColumn() == 1) {
                     if (!isCorrectDateFormat((String) dm.getValueAt(ruleTable.getEditingRow(), 1))) {
@@ -77,7 +78,7 @@ public class DateConversionRulesFrame extends JFrame {
                 if (ruleTable.isEditing()) {
                     ruleTable.getCellEditor().stopCellEditing();
                 }
-                Vector data = ((DefaultTableModel) ruleTable.getModel()).getDataVector();
+                Vector<Vector<String>> data = ((DefaultTableModel) ruleTable.getModel()).getDataVector();
                 xmlFilehandler.saveDataToFile(data, FILENAME);
             }
         });
@@ -96,7 +97,7 @@ public class DateConversionRulesFrame extends JFrame {
                 if (ruleTable.isEditing()) {
                     ruleTable.getCellEditor().stopCellEditing();
                 }
-                Vector data = ((DefaultTableModel) ruleTable.getModel()).getDataVector();
+                Vector<Vector<String>> data = ((DefaultTableModel) ruleTable.getModel()).getDataVector();
                 File currentLocation = new File(retrieveFromDb.retrieveOpenLocation());
                 JFileChooser fileChooser = new JFileChooser(currentLocation);
                 fileChooser.setDialogType(JFileChooser.SAVE_DIALOG);
