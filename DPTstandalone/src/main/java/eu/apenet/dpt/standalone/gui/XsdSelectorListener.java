@@ -20,8 +20,8 @@ public class XsdSelectorListener implements ActionListener {
     }
 
     public void actionPerformed(ActionEvent e){
-        if(dataPreparationToolGUI.getList().getSelectedValue() != null){
-            FileInstance fileInstance = dataPreparationToolGUI.getFileInstances().get(((File)dataPreparationToolGUI.getList().getSelectedValue()).getName());
+        if(dataPreparationToolGUI.getXmlEadList().getSelectedValue() != null){
+            FileInstance fileInstance = dataPreparationToolGUI.getFileInstances().get(((File)dataPreparationToolGUI.getXmlEadList().getSelectedValue()).getName());
             fileInstance.setValidationSchema(e.getActionCommand());
             if(fileInstance.getValidationSchema().equals(Utilities.getXsdObjectFromPath(Xsd_enum.XSD_EAG_SCHEMA.getPath())) || fileInstance.getValidationSchema().equals(Utilities.getXsdObjectFromPath(Xsd_enum.XSD_EAG_2012_SCHEMA.getPath())))
                 fileInstance.setFileType(FileInstance.FileType.EAG);

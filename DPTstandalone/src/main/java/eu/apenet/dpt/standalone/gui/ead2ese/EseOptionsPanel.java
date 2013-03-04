@@ -27,6 +27,7 @@ import java.util.List;
 import java.util.logging.Level;
 import javax.xml.parsers.ParserConfigurationException;
 import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -116,6 +117,9 @@ public class EseOptionsPanel extends JPanel {
         panel = new JPanel(new GridLayout(1, 3));
         panel.add(new Label(labels.getString("ese.dataProvider") + ":" + "*"));
         dataProviderTextArea = new JTextArea();
+        String repository = determineRepository();
+        if(repository != null)
+            dataProviderTextArea.setText(repository);
         JScrollPane dptaScrollPane = new JScrollPane(dataProviderTextArea);
         dptaScrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
         panel.add(dptaScrollPane);
@@ -520,6 +524,27 @@ public class EseOptionsPanel extends JPanel {
         }
         return null;
     }
+    
+    private String determineRepository(){
+        try {
+            Document doc = XMLUtil.convertXMLToDocument(new FileInputStream(selectedIndices.get(0)));
+            NodeList nodelist = doc.getElementsByTagName("repository");
+            int counter = 0;
+            do{
+                Node node = nodelist.item(counter);
+                    if(node instanceof Element)
+                        return ((Element) node).getTextContent();
+                counter++;
+            }while(counter < nodelist.getLength());
+        } catch (SAXException ex) {
+            java.util.logging.Logger.getLogger(EseOptionsPanel.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            java.util.logging.Logger.getLogger(EseOptionsPanel.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (ParserConfigurationException ex) {
+            java.util.logging.Logger.getLogger(EseOptionsPanel.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
+    }
 
     public class ChangePanelActionListener implements ActionListener {
 
@@ -555,6 +580,7 @@ public class EseOptionsPanel extends JPanel {
                 for (File selectedIndexFile : selectedIndices) {
                     SwingUtilities.invokeLater(new TransformEse(config, selectedIndexFile));
                     apeTabbedPane.appendEseConversionErrorText(MessageFormat.format(labels.getString("ese.convertedAndSaved"), selectedIndexFile.getAbsolutePath()) + "\n");
+                    
                 }
                 apeTabbedPane.checkFlashingTab(APETabbedPane.TAB_ESE, Utilities.FLASHING_RED_COLOR);
                 close();
@@ -591,6 +617,7 @@ public class EseOptionsPanel extends JPanel {
                 if (analyzeESEXML(outputFile) == 0) {
                     apeTabbedPane.appendEseConversionErrorText(labels.getString("ese.fileEmpty"));
                 }
+                
             } catch (Exception e) {
                 LOG.error("Error when converting file into ESE", e);
             }

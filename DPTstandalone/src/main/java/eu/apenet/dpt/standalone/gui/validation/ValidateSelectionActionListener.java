@@ -47,7 +47,7 @@ public class ValidateSelectionActionListener extends ApexActionListener {
         dataPreparationToolGUI.disableAllBtnAndItems();
         dataPreparationToolGUI.disableRadioButtons();
         dataPreparationToolGUI.getAPEPanel().setFilename("");
-        final Object[] objects = dataPreparationToolGUI.getList().getSelectedValues();
+        final Object[] objects = dataPreparationToolGUI.getXmlEadList().getSelectedValues();
         final ApexActionListener apexActionListener = this;
         new Thread(new Runnable(){
             public void run(){
@@ -70,7 +70,7 @@ public class ValidateSelectionActionListener extends ApexActionListener {
                     threadRunner.start();
                     dataPreparationToolGUI.getAPEPanel().getApeTabbedPane().disableConversionBtn();
                     dataPreparationToolGUI.getAPEPanel().getApeTabbedPane().disableValidationBtn();
-                    dataPreparationToolGUI.getList().setEnabled(false);
+                    dataPreparationToolGUI.getXmlEadList().setEnabled(false);
 
                     Map<String, FileInstance> fileInstances = dataPreparationToolGUI.getFileInstances();
                     FileInstance fileInstance = fileInstances.get(file.getName());
@@ -108,7 +108,7 @@ public class ValidateSelectionActionListener extends ApexActionListener {
                         } finally {
                             summaryWorking.stop();
                             threadRunner.interrupt();
-                            dataPreparationToolGUI.getList().repaint();
+                            dataPreparationToolGUI.getXmlEadList().repaint();
                         }
                     }
                 }
@@ -116,7 +116,7 @@ public class ValidateSelectionActionListener extends ApexActionListener {
                     progressFrame.stop();
                 }
                 dataPreparationToolGUI.getFinalAct().run();
-                dataPreparationToolGUI.getList().clearSelection();
+                dataPreparationToolGUI.getXmlEadList().clearSelection();
                 if(continueLoop)
                     dataPreparationToolGUI.setResultAreaText(labels.getString("finished"));
                 else

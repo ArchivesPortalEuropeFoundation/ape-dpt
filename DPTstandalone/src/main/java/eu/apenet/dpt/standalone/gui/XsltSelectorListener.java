@@ -21,7 +21,7 @@ public class XsltSelectorListener implements ActionListener {
     }
 
     public void actionPerformed(ActionEvent e) {
-        JList list = dataPreparationToolGUI.getList();
+        JList list = dataPreparationToolGUI.getXmlEadList();
         if(list.getSelectedValue() != null){
             FileInstance fileInstance = dataPreparationToolGUI.getFileInstances().get(((File)list.getSelectedValue()).getName());
             fileInstance.setConversionScriptName(e.getActionCommand());
