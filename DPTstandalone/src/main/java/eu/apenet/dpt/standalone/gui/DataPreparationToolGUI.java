@@ -747,10 +747,10 @@ public class DataPreparationToolGUI extends JFrame {
     private JPanel createWest() {
         JPanel fileLists = new JPanel(new GridLayout(0, 1));
         JPanel xmlEadListPanel = new JPanel(new BorderLayout());
-        xmlEadListPanel.add(new Label(labels.getString("xmlEadFiles")), BorderLayout.NORTH);
         xmlEadList.setCellRenderer(new IconListCellRenderer(fileInstances));
         xmlEadList.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
         xmlEadListPanel.add(new JScrollPane(xmlEadList, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER), BorderLayout.CENTER);
+        xmlEadListPanel.add(new Label(labels.getString("xmlEadFiles")), BorderLayout.SOUTH);
         JPanel eseListPanel = new JPanel(new BorderLayout());
         eseListPanel.add(new Label(labels.getString("eseFiles")), BorderLayout.NORTH);
         eseList.setCellRenderer(new IconListCellRenderer(fileInstances));
