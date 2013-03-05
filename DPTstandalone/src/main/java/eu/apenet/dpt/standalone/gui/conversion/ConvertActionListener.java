@@ -60,8 +60,6 @@ public class ConvertActionListener implements ActionListener {
                 return;
             }
         }
-        apePanel.getApeTabbedPane().setConversionErrorText(labels.getString("conversionBegun"));
-        fileInstance.setLastOperation(FileInstance.Operation.CONVERT);
 
         boolean isDefaultTransformation = false;
         if(fileInstance.getConversionScriptName().equals(Utilities.XSL_DEFAULT_NAME))
@@ -102,7 +100,12 @@ public class ConvertActionListener implements ActionListener {
 
         if(doTransformation) {
 //            SwingUtilities.invokeLater(new ConvertRunner(file, fileInstance, eadid, isDefaultTransformation));
+            apePanel.getApeTabbedPane().setConversionErrorText(labels.getString("conversionBegun"));
+            fileInstance.setLastOperation(FileInstance.Operation.CONVERT);
             new Thread(new ConvertRunner(file, fileInstance, eadid, isDefaultTransformation)).start();
+        } else {
+            dataPreparationToolGUI.enableSaveBtn();
+            dataPreparationToolGUI.enableRadioButtons();
         }
     }
 
