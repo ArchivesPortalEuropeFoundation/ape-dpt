@@ -522,7 +522,7 @@ public class EseOptionsPanel extends JPanel {
         } catch (ParserConfigurationException ex) {
             java.util.logging.Logger.getLogger(EseOptionsPanel.class.getName()).log(Level.SEVERE, null, ex);
         }
-        return null;
+        return "";
     }
     
     private String determineRepository(){
