@@ -159,6 +159,10 @@ public class APETabbedPane extends JTabbedPane {
         this.repaint();
     }
 
+    public DataPreparationToolGUI getDataPreparationToolGUI() {
+        return dataPreparationToolGUI;
+    }
+
     public void appendEseConversionErrorText(String text) {
         eseConversionErrors.append(text);
     }

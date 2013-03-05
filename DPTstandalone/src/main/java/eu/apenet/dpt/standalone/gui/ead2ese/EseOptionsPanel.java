@@ -580,7 +580,7 @@ public class EseOptionsPanel extends JPanel {
                 for (File selectedIndexFile : selectedIndices) {
                     SwingUtilities.invokeLater(new TransformEse(config, selectedIndexFile));
                     apeTabbedPane.appendEseConversionErrorText(MessageFormat.format(labels.getString("ese.convertedAndSaved"), selectedIndexFile.getAbsolutePath()) + "\n");
-                    
+
                 }
                 apeTabbedPane.checkFlashingTab(APETabbedPane.TAB_ESE, Utilities.FLASHING_RED_COLOR);
                 close();
@@ -616,8 +616,11 @@ public class EseOptionsPanel extends JPanel {
                 config.getTransformerXML2XML().transform(new File(loc), outputFile);
                 if (analyzeESEXML(outputFile) == 0) {
                     apeTabbedPane.appendEseConversionErrorText(labels.getString("ese.fileEmpty"));
+                } else {
+                    fileInstance.setEseLocation(outputFile.getAbsolutePath());
+                    if(StringUtils.isNotEmpty(fileInstance.getEseLocation()))
+                        apeTabbedPane.getDataPreparationToolGUI().addEseFileToList(new File(fileInstance.getEseLocation()));
                 }
-                
             } catch (Exception e) {
                 LOG.error("Error when converting file into ESE", e);
             }
