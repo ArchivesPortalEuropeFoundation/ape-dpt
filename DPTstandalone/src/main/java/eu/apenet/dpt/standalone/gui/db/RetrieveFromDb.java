@@ -3,7 +3,7 @@ package eu.apenet.dpt.standalone.gui.db;
 import eu.apenet.dpt.standalone.gui.BareBonesBrowserLaunch;
 import eu.apenet.dpt.standalone.gui.FileInstance;
 import eu.apenet.dpt.standalone.gui.Utilities;
-import eu.apenet.dpt.standalone.gui.XsdAddition.XsdObject;
+import eu.apenet.dpt.standalone.gui.xsdAddition.XsdObject;
 import org.apache.log4j.Logger;
 
 import javax.swing.*;

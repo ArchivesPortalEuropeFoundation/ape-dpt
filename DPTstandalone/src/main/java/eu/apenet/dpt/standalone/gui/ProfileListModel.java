@@ -1,7 +1,6 @@
 package eu.apenet.dpt.standalone.gui;
 
-import eu.apenet.dpt.standalone.gui.XsdAddition.XsdObject;
-import eu.apenet.dpt.utils.util.Xsd_enum;
+import eu.apenet.dpt.standalone.gui.xsdAddition.XsdObject;
 
 import javax.swing.*;
 import java.io.File;

@@ -1,10 +1,9 @@
 package eu.apenet.dpt.standalone.gui.validation;
 
 import eu.apenet.dpt.standalone.gui.*;
-import eu.apenet.dpt.standalone.gui.XsdAddition.XsdObject;
+import eu.apenet.dpt.standalone.gui.xsdAddition.XsdObject;
 import eu.apenet.dpt.utils.service.DocumentValidation;
 import eu.apenet.dpt.utils.util.XmlChecker;
-import eu.apenet.dpt.utils.util.Xsd_enum;
 import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
 import org.jdesktop.swingx.treetable.TreeTableModel;
@@ -21,7 +20,6 @@ import java.io.File;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.List;
-import java.util.Map;
 import java.util.ResourceBundle;
 
 /**

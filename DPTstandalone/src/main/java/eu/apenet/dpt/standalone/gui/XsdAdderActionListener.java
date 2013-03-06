@@ -1,10 +1,9 @@
 package eu.apenet.dpt.standalone.gui;
 
-import eu.apenet.dpt.standalone.gui.XsdAddition.XsdInfoQueryComponent;
+import eu.apenet.dpt.standalone.gui.xsdAddition.XsdInfoQueryComponent;
 import eu.apenet.dpt.standalone.gui.db.RetrieveFromDb;
 import eu.apenet.dpt.utils.util.XsdChecker;
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
 import javax.swing.*;
