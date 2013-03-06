@@ -28,7 +28,6 @@ public class TreeDragSource implements DragSourceListener, DragGestureListener {
   JTree sourceTree;
 
   public TreeDragSource(JTree tree, int actions) {
-      LOG.info("TreeDragSource constructor");
     sourceTree = tree;
     source = new DragSource();
     recognizer = source.createDefaultDragGestureRecognizer(sourceTree,
@@ -39,7 +38,6 @@ public class TreeDragSource implements DragSourceListener, DragGestureListener {
    * Drag Gesture Handler
    */
   public void dragGestureRecognized(DragGestureEvent dge) {
-      LOG.info("TreeDragSource dragGestureRecogized");
     TreePath path = sourceTree.getSelectionPath();
     if ((path == null) || (path.getPathCount() <= 1)) {
         LOG.info("empty?");
