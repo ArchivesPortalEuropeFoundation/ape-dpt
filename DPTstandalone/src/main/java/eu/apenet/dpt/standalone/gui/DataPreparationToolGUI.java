@@ -114,8 +114,7 @@ public class DataPreparationToolGUI extends JFrame {
     private JList xmlEadList;
     private ProfileListModel eseListModel;
     private JList eseList;
-    
-    //    private JButton abort = new JButton("");
+
     private JLabel progressLabel = new JLabel("", JLabel.CENTER);
     private JLabel resultArea = new JLabel();
     private JTable eagFormTable;
@@ -349,7 +348,6 @@ public class DataPreparationToolGUI extends JFrame {
         convertAndValidateBtn.setText(labels.getString("convertAndValidate"));
         createHGBtn.setText(labels.getString("createHG"));
         progressLabel.setText(labels.getString("chooseFile"));
-//        abort.setText(labels.getString("abort"));
         deleteFileItem.setText(labels.getString("removeFile"));
 
         windowMenu.setText(labels.getString("windows"));
@@ -359,7 +357,7 @@ public class DataPreparationToolGUI extends JFrame {
         eseConversionWindowItem.setText(labels.getString("eseConversion"));
         editionWindowItem.setText(labels.getString("edition"));
 
-        helpMenu.setText(labels.getString("help"));
+        helpMenu.setText(labels.getString("about"));
         internetApexItem.setText(labels.getString("projectWebsite"));
 
         validateSelectionBtn.setText(labels.getString("validateSelected"));
@@ -784,8 +782,6 @@ public class DataPreparationToolGUI extends JFrame {
         createHGBtn.setPreferredSize(new Dimension(-1, 40));
         createHGBtn.setEnabled(false);
         p.add(createHGBtn);
-//        abort.setEnabled(false);
-//        p.add(abort);
         return p;
     }
 
@@ -826,7 +822,6 @@ public class DataPreparationToolGUI extends JFrame {
             validateSelectionBtn.setEnabled(false);
             convertEseSelectionBtn.setEnabled(false);
             createHGBtn.setEnabled(false);
-//            abort.setEnabled(false);
             xmlEadList.setEnabled(true);
         }
     };
@@ -1221,12 +1216,6 @@ public class DataPreparationToolGUI extends JFrame {
         convertEseSelectionBtn.setEnabled(false);
     }
 
-//    public void enableAbortBtn() {
-//        abort.setEnabled(true);
-//    }
-//    public void disableAbortBtn() {
-//        abort.setEnabled(false);
-//    }
     public void enableSaveBtn() {
         saveSelectedItem.setEnabled(true);
     }
