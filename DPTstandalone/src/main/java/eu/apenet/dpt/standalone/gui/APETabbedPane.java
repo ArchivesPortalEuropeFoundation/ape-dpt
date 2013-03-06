@@ -1,5 +1,6 @@
 package eu.apenet.dpt.standalone.gui;
 
+import eu.apenet.dpt.standalone.gui.validation.DownloadReportActionListener;
 import eu.apenet.dpt.standalone.gui.xsdAddition.XsdObject;
 import eu.apenet.dpt.standalone.gui.conversion.ConvertActionListener;
 import eu.apenet.dpt.standalone.gui.db.RetrieveFromDb;
@@ -58,6 +59,7 @@ public class APETabbedPane extends JTabbedPane {
     private JButton validateBtn;
     private JButton convertEseBtn;
     private JButton convertEdmBtn;
+    private JButton reportBtn;
 
     private JPanel xsltPanel;
     private JPanel xsdPanel;
@@ -94,9 +96,19 @@ public class APETabbedPane extends JTabbedPane {
 
     private void create() {
         validationErrors = new JTextArea();
+        reportBtn = new JButton();
+        JPanel validationPanel = new JPanel(new BorderLayout());
+        JPanel buttonPanel = new JPanel(new GridLayout(1, 5));
+        buttonPanel.add(new JLabel(""));
+        buttonPanel.add(new JLabel(""));
+        buttonPanel.add(reportBtn);
+        buttonPanel.add(new JLabel(""));
+        buttonPanel.add(new JLabel(""));
+        validationPanel.add(buttonPanel, BorderLayout.NORTH);
+        validationPanel.add(validationErrors, BorderLayout.CENTER);
         conversionErrors = new JTextArea();
         eseConversionErrors = new JTextArea();
-        validationPane = new JScrollPane(validationErrors);
+        validationPane = new JScrollPane(validationPanel);
         conversionPane = new JScrollPane(conversionErrors);
         eseConversionPane = new JScrollPane(eseConversionErrors);
         editionPane = new JScrollPane();
@@ -138,6 +150,10 @@ public class APETabbedPane extends JTabbedPane {
         validateBtn.addActionListener(new ValidateActionListener(labels, dataPreparationToolGUI, this));
         validateBtn.setPreferredSize(DEFAULT_BTN_DIMENSION);
         validateBtn.setEnabled(false);
+
+        reportBtn.addActionListener(new DownloadReportActionListener(dataPreparationToolGUI));
+        reportBtn.setPreferredSize(DEFAULT_BTN_DIMENSION);
+        reportBtn.setEnabled(false);
     }
 
     public void changeBackgroundColor(int tab, Color color) {
@@ -200,6 +216,12 @@ public class APETabbedPane extends JTabbedPane {
     public void disableConversionEdmBtn() {
         convertEdmBtn.setEnabled(false);
     }
+    public void enableReportBtn() {
+        reportBtn.setEnabled(true);
+    }
+    public void disableReportBtn() {
+        reportBtn.setEnabled(false);
+    }
 
     public void changeLanguage(ResourceBundle labels) {
         setTitleAt(TAB_CONVERSION, labels.getString("conversion"));
@@ -212,6 +234,7 @@ public class APETabbedPane extends JTabbedPane {
         validateBtn.setText(labels.getString("validate"));
         convertEseBtn.setText(labels.getString("summary.convertEse.button"));
         convertEdmBtn.setText(labels.getString("summary.convertEdm.button"));
+        reportBtn.setText("Download report of XML QUALITY");
     }
 
     public void setValidationBtnText(String text) {

@@ -3,7 +3,9 @@ package eu.apenet.dpt.standalone.gui.validation;
 import eu.apenet.dpt.standalone.gui.*;
 import eu.apenet.dpt.standalone.gui.xsdAddition.XsdObject;
 import eu.apenet.dpt.utils.service.DocumentValidation;
+import eu.apenet.dpt.utils.service.TransformationTool;
 import eu.apenet.dpt.utils.util.XmlChecker;
+import eu.apenet.dpt.utils.util.extendxsl.XmlQualityCheckerCall;
 import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
 import org.jdesktop.swingx.treetable.TreeTableModel;
@@ -18,8 +20,11 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.InputStream;
+import java.io.StringWriter;
 import java.net.URL;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.ResourceBundle;
 
 /**
@@ -81,6 +86,7 @@ public class ValidateActionListener implements ActionListener {
                 List<SAXParseException> exceptions;
                 XsdObject xsdObject = fileInstance.getValidationSchema();
                 URL schemaPath = Utilities.getUrlPathXsd(xsdObject);
+                InputStream is2;
                 if(dataPreparationToolGUI.getTree() != null && dataPreparationToolGUI.getTree().getTreeTableModel() != null && fileInstance.getLastOperation().equals(FileInstance.Operation.CREATE_TREE)){
                     TreeTableModel treeTableModel = dataPreparationToolGUI.getTree().getTreeTableModel();
                     Document document = (Document)treeTableModel.getRoot();
@@ -92,23 +98,49 @@ public class ValidateActionListener implements ActionListener {
                         output.setOutputProperty("{http://xml.apache.org/xslt}indent-amount","2");
 
                         output.transform(new DOMSource(document.getFirstChild()), new StreamResult(file2));
+                        is2 = FileUtils.openInputStream(file2);
                         exceptions = DocumentValidation.xmlValidation(FileUtils.openInputStream(file2), schemaPath, xsdObject.isXsd11());
                     } catch (Exception ex){
                         LOG.error("Error when taking the XML tree and validating it", ex);
                         throw new RuntimeException(ex);
                     }
-                } else if(!fileInstance.isConverted())
+                } else if(!fileInstance.isConverted()) {
+                    is2 = FileUtils.openInputStream(file);
                     exceptions = DocumentValidation.xmlValidation(FileUtils.openInputStream(file), schemaPath, xsdObject.isXsd11());
-                else {
-                    InputStream is = FileUtils.openInputStream(new File(fileInstance.getCurrentLocation()));
-                    exceptions = DocumentValidation.xmlValidation(is, schemaPath, xsdObject.isXsd11());
+                } else {
+                    is2 = FileUtils.openInputStream(new File(fileInstance.getCurrentLocation()));
+                    exceptions = DocumentValidation.xmlValidation(FileUtils.openInputStream(new File(fileInstance.getCurrentLocation())), schemaPath, xsdObject.isXsd11());
                 }
                 if (exceptions == null || exceptions.isEmpty()){
-                    apeTabbedPane.setValidationErrorText(labels.getString("validationSuccess"));
-                    apeTabbedPane.checkFlashingTab(APETabbedPane.TAB_VALIDATION, Utilities.FLASHING_GREEN_COLOR);
                     fileInstance.setValid(true);
-                    if(xsdObject.getFileType().equals(FileInstance.FileType.EAD))
+                    fileInstance.setValidationErrors(labels.getString("validationSuccess"));
+                    if(xsdObject.getFileType().equals(FileInstance.FileType.EAD)) {
                         dataPreparationToolGUI.enableEseConversionBtn();
+                        //Do a XML Quality check
+                        InputStream xslIs = ValidateActionListener.class.getResourceAsStream("/xmlQuality/xmlQuality.xsl");
+                        XmlQualityCheckerCall xmlQualityCheckerCall = new XmlQualityCheckerCall();
+                        TransformationTool.createTransformation(is2, null, xslIs, null, true, true, null, false, xmlQualityCheckerCall);
+
+                        StringWriter writer = new StringWriter();
+                        writer.append("\n");
+                        writer.append("\n");
+                        writer.append("----- XML QUALITY -----");
+                        writer.append("\n");
+                        writer.append("Unittitle problems: ");
+                        writer.append(Integer.toString(xmlQualityCheckerCall.getCounterUnittitle()));
+                        writer.append("\n");
+                        writer.append("Unitdate problems: ");
+                        writer.append(Integer.toString(xmlQualityCheckerCall.getCounterUnitdate()));
+                        writer.append("\n");
+                        writer.append("DAO problems: ");
+                        writer.append(Integer.toString(xmlQualityCheckerCall.getCounterDao()));
+                        fileInstance.setValidationErrors(fileInstance.getValidationErrors() + writer.toString());
+
+                        fileInstance.setXmlQualityErrors(createXmlQualityErrors(xmlQualityCheckerCall));
+                        apeTabbedPane.enableReportBtn();
+                    }
+                    apeTabbedPane.setValidationErrorText(fileInstance.getValidationErrors());
+                    apeTabbedPane.checkFlashingTab(APETabbedPane.TAB_VALIDATION, Utilities.FLASHING_GREEN_COLOR);
                 } else {
                     if(!fileInstance.isConverted())
                         dataPreparationToolGUI.enableConversionBtns();
@@ -134,6 +166,14 @@ public class ValidateActionListener implements ActionListener {
                 dataPreparationToolGUI.getXmlEadList().repaint();
                 dataPreparationToolGUI.enableRadioButtons();
             }
+        }
+
+        private Map<String, List<String>> createXmlQualityErrors(XmlQualityCheckerCall xmlQualityCheckerCall) {
+            Map<String, List<String>> map = new HashMap<String, List<String>>();
+            map.put("unittitle", xmlQualityCheckerCall.getIdsUnittitle());
+            map.put("unitdate", xmlQualityCheckerCall.getIdsUnitdate());
+            map.put("dao", xmlQualityCheckerCall.getIdsDao());
+            return map;
         }
     }
 }
