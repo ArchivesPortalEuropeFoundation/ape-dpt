@@ -23,6 +23,9 @@ public class EseConfig implements Serializable {
 	private boolean inheritElementsFromFileLevel;
 	private boolean inheritOrigination;
 	private boolean inheritLanguage;
+        private boolean inheritCustodhist;
+        private boolean inheritAltformavailHead;
+        private boolean inheritControlaccess;
 	private String contextInformationPrefix;
 	private String rights;
 	private String rightsAdditionalInformation;
@@ -88,6 +91,30 @@ public class EseConfig implements Serializable {
 	public void setInheritLanguage(boolean inheritLanguage) {
 		this.inheritLanguage = inheritLanguage;
 	}
+
+        public boolean isInheritCustodhist() {
+                return inheritCustodhist;
+        }
+
+        public void setInheritCustodhist(boolean inheritCustodhist) {
+                this.inheritCustodhist = inheritCustodhist;
+        }
+
+    public boolean isInheritAltformavailHead() {
+        return inheritAltformavailHead;
+    }
+
+    public void setInheritAltformavailHead(boolean inheritAltformavailHead) {
+        this.inheritAltformavailHead = inheritAltformavailHead;
+    }
+
+    public boolean isInheritControlaccess() {
+        return inheritControlaccess;
+    }
+
+    public void setInheritControlaccess(boolean inheritControlaccess) {
+        this.inheritControlaccess = inheritControlaccess;
+    }
 
 	public String getContextInformationPrefix() {
 		if (StringUtils.isNotBlank(contextInformationPrefix)) {
@@ -186,6 +213,9 @@ public class EseConfig implements Serializable {
 					getString(new Boolean(isInheritElementsFromFileLevel()).toString()));
 			properties.put("inheritOrigination", getString(new Boolean(isInheritOrigination()).toString()));
 			properties.put("inheritLanguage", getString(new Boolean(isInheritLanguage()).toString()));
+			properties.put("inheritCustodhist", getString(new Boolean(isInheritCustodhist()).toString()));
+			properties.put("inheritAltformavailHead", getString(new Boolean(isInheritAltformavailHead()).toString()));
+			properties.put("inheritControlaccess", getString(new Boolean(isInheritControlaccess()).toString()));
 			properties.put("contextInformationPrefix", getString(getContextInformationPrefix()));
 		}
 		return properties;
