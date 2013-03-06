@@ -59,10 +59,14 @@ public class XsltAdderActionListener implements ActionListener {
 
     private boolean saveXslt(File file){
         try{
+            if(new File(Utilities.CONFIG_DIR + file.getName()).exists())
+                throw new Exception("XSL file already exists");
             FileUtils.copyFile(file, new File(Utilities.CONFIG_DIR + file.getName()));
             return true;
         } catch (IOException e){
             LOG.error("Moving file " + file.getAbsolutePath() + " failed", e);
+            return false;
+        } catch (Exception e) {
             return false;
         }
     }
