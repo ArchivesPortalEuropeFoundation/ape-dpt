@@ -621,6 +621,7 @@ public class DataPreparationToolGUI extends JFrame {
                     JOptionPane.showMessageDialog(getContentPane(), MessageFormat.format(labels.getString("fileInOutput"), defaultOutputDirectory) + ".", labels.getString("fileSaved"), JOptionPane.INFORMATION_MESSAGE, Utilities.icon);
                 else
                     JOptionPane.showMessageDialog(getContentPane(), MessageFormat.format(labels.getString("filesInOutput"), defaultOutputDirectory) + ".", labels.getString("fileSaved"), JOptionPane.INFORMATION_MESSAGE, Utilities.icon);
+                xmlEadList.updateUI();
             }
         });
         sendFilesWebDAV.addActionListener(new ActionListener() {
