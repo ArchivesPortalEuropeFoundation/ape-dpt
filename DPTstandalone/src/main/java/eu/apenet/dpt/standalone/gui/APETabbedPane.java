@@ -347,6 +347,7 @@ public class APETabbedPane extends JTabbedPane {
      * @return A JComponent containing the tree if it exists, or an error message if not
      */
     public JComponent createEditionTree(File file) {
+        labels = dataPreparationToolGUI.getLabels();
         if(file == null){
             return createMsgEditionTree(labels.getString("noTreeBuild") + "...");
         }
