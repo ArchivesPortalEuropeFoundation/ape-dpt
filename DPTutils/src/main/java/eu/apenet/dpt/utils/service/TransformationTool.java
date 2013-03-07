@@ -137,8 +137,10 @@ public class TransformationTool {
             long start = System.currentTimeMillis();
             transformer.transform();
             long end = System.currentTimeMillis();
-            outputStream.close();
-            inputFileStream.close();
+            if(outputStream != null)
+                outputStream.close();
+            if(inputFileStream != null)
+                inputFileStream.close();
 
             LOG.trace("Time elapsed for transformation: " + (end-start) + "ms");
             return xslMessages;

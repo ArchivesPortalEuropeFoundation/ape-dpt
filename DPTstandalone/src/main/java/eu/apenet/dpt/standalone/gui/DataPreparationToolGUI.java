@@ -301,14 +301,14 @@ public class DataPreparationToolGUI extends JFrame {
         createHGBtn.addActionListener(createHgListener);
         createHGBtn.setEnabled(false);
 
-        validateItem.addActionListener(new ValidateActionListener(labels, this, apePanel.getApeTabbedPane()));
-        convertItem.addActionListener(new ConvertActionListener(getContentPane(), labels, this, apePanel));
+        validateItem.addActionListener(new ValidateActionListener(this, apePanel.getApeTabbedPane()));
+        convertItem.addActionListener(new ConvertActionListener(getContentPane(), this, apePanel));
 
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         getContentPane().add(createWest(), BorderLayout.WEST);
 
-        convertAndValidateBtn.addActionListener(new ConvertAndValidateActionListener(labels, this, getContentPane()));
-        validateSelectionBtn.addActionListener(new ValidateSelectionActionListener(labels, this, getContentPane()));
+        convertAndValidateBtn.addActionListener(new ConvertAndValidateActionListener(this, getContentPane()));
+        validateSelectionBtn.addActionListener(new ValidateSelectionActionListener(this, getContentPane()));
         convertEseSelectionBtn.addActionListener(new ConvertEseActionListener(labels, this, apePanel));
 
         wireUp();
@@ -507,7 +507,8 @@ public class DataPreparationToolGUI extends JFrame {
                 eagFileChooser.setCurrentDirectory(new File(retrieveFromDb.retrieveOpenLocation()));
                 if (eagFileChooser.showOpenDialog(getParent()) == JFileChooser.APPROVE_OPTION) {
                     File eagFile = eagFileChooser.getSelectedFile();
-                    new Eag2012Frame(eagFile, false, getContentPane().getSize(), (ProfileListModel) getXmlEadList().getModel(), labels);
+                    if(!Eag2012Frame.isUsed())
+                        new Eag2012Frame(eagFile, false, getContentPane().getSize(), (ProfileListModel) getXmlEadList().getModel(), labels);
                 }
             }
         });
@@ -519,13 +520,15 @@ public class DataPreparationToolGUI extends JFrame {
                 eagFileChooser.setCurrentDirectory(new File(retrieveFromDb.retrieveOpenLocation()));
                 if (eagFileChooser.showOpenDialog(getParent()) == JFileChooser.APPROVE_OPTION) {
                     File eagFile = eagFileChooser.getSelectedFile();
-                    new Eag2012Frame(eagFile, true, getContentPane().getSize(), (ProfileListModel) getXmlEadList().getModel(), labels);
+                    if(!Eag2012Frame.isUsed())
+                        new Eag2012Frame(eagFile, true, getContentPane().getSize(), (ProfileListModel) getXmlEadList().getModel(), labels);
                 }
             }
         });
         createEag2012FromScratch.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                new Eag2012Frame(getContentPane().getSize(), (ProfileListModel) getXmlEadList().getModel(), labels);
+                if(!Eag2012Frame.isUsed())
+                    new Eag2012Frame(getContentPane().getSize(), (ProfileListModel) getXmlEadList().getModel(), labels);
             }
         });
         digitalObjectTypeItem.addActionListener(new ActionListener() {
@@ -803,6 +806,10 @@ public class DataPreparationToolGUI extends JFrame {
 
     public DateNormalization getDateNormalization() {
         return dateNormalization;
+    }
+
+    public ResourceBundle getLabels() {
+        return labels;
     }
 
     public List<String> getLevelList() {

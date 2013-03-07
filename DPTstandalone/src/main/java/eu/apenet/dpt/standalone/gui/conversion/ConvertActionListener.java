@@ -36,9 +36,8 @@ public class ConvertActionListener implements ActionListener {
     private DataPreparationToolGUI dataPreparationToolGUI;
     private APEPanel apePanel;
 
-    public ConvertActionListener(Component parent, ResourceBundle labels, DataPreparationToolGUI dataPreparationToolGUI, APEPanel apePanel) {
+    public ConvertActionListener(Component parent, DataPreparationToolGUI dataPreparationToolGUI, APEPanel apePanel) {
         this.parent = parent;
-        this.labels = labels;
         this.dataPreparationToolGUI = dataPreparationToolGUI;
         this.apePanel = apePanel;
     }
@@ -123,6 +122,7 @@ public class ConvertActionListener implements ActionListener {
         }
 
         public void run() {
+            labels = dataPreparationToolGUI.getLabels();
             CounterCLevelCall counterCLevelCall = null;
             Thread threadProgress = null;
             CounterThread counterThread = null;
@@ -169,8 +169,8 @@ public class ConvertActionListener implements ActionListener {
 
                 if(xslMessages.toString().equals("")) {
                     apePanel.getApeTabbedPane().checkFlashingTab(APETabbedPane.TAB_CONVERSION, Utilities.FLASHING_GREEN_COLOR);
-                    fileInstance.setConversionErrors("No excluded elements");
-                    apePanel.getApeTabbedPane().setConversionErrorText("No excluded elements");
+                    fileInstance.setConversionErrors(labels.getString("conversion.noExcludedElements"));
+                    apePanel.getApeTabbedPane().setConversionErrorText(fileInstance.getConversionErrors());
                 } else
                     apePanel.getApeTabbedPane().checkFlashingTab(APETabbedPane.TAB_CONVERSION, Utilities.FLASHING_RED_COLOR);
                 dataPreparationToolGUI.enableValidationBtns();

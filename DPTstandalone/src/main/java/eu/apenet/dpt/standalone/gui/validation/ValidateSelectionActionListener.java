@@ -34,13 +34,13 @@ public class ValidateSelectionActionListener extends ApexActionListener {
     private Component parent;
     private boolean continueLoop;
 
-    public ValidateSelectionActionListener(ResourceBundle labels, DataPreparationToolGUI dataPreparationToolGUI, Component parent) {
-        this.labels = labels;
+    public ValidateSelectionActionListener(DataPreparationToolGUI dataPreparationToolGUI, Component parent) {
         this.dataPreparationToolGUI = dataPreparationToolGUI;
         this.parent = parent;
     }
 
     public void actionPerformed(ActionEvent e){
+        labels = dataPreparationToolGUI.getLabels();
         continueLoop = true;
         dataPreparationToolGUI.disableAllBtnAndItems();
         dataPreparationToolGUI.disableRadioButtons();

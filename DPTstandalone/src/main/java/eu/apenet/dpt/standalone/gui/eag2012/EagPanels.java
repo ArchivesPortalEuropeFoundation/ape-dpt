@@ -92,6 +92,7 @@ public abstract class EagPanels {
 
     protected class ExitBtnAction implements ActionListener {
         public void actionPerformed(ActionEvent actionEvent) {
+            Eag2012Frame.inUse(false);
             closeFrame();
         }
     }

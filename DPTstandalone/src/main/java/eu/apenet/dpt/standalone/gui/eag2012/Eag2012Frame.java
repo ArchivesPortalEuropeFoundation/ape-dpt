@@ -13,6 +13,8 @@ import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 import java.awt.*;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.io.File;
 import java.io.InputStream;
 import java.net.URL;
@@ -30,6 +32,7 @@ public class Eag2012Frame extends JFrame {
     private Dimension dimension;
     private ProfileListModel model;
     private ResourceBundle labels;
+    private static boolean used;
 
     public Eag2012Frame(File eagFile, boolean isEag2012, Dimension dimension, ProfileListModel model, ResourceBundle labels) {
         if(!isEag2012) {
@@ -71,6 +74,12 @@ public class Eag2012Frame extends JFrame {
     }
 
     public void createFrame(InputStream eagStream, boolean isNew) {
+        inUse(true);
+        addWindowListener(new WindowAdapter() {
+            public void windowClosing(WindowEvent e) {
+                inUse(false);
+            }
+        });
         Eag eag = null;
         try {
             JAXBContext jaxbContext = JAXBContext.newInstance(Eag.class);
@@ -117,5 +126,15 @@ public class Eag2012Frame extends JFrame {
         JScrollPane jScrollPane = new JScrollPane(new EagInstitutionPanel(eag, tabbedPane, this, model, isNew, true, labels).buildEditorPanel(null));
         jScrollPane.getVerticalScrollBar().setUnitIncrement(20);
         return jScrollPane;
+    }
+
+    public static void inUse(boolean used) {
+        LOG.info(used);
+        Eag2012Frame.used = used;
+    }
+
+    public static boolean isUsed() {
+        LOG.info(used);
+        return used;
     }
 }

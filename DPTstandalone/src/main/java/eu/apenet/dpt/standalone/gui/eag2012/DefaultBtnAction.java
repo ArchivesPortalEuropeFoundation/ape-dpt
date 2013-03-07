@@ -46,6 +46,7 @@ public abstract class DefaultBtnAction implements ActionListener {
     }
 
     protected void saveFile(String id) {
+        Eag2012Frame.inUse(false);
         try {
             if(model == null)
                 throw new Eag2012FormException("The model is null, we can not add the EAG to the list...");
