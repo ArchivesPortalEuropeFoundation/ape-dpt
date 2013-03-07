@@ -40,6 +40,7 @@ public class ConvertActionListener implements ActionListener {
         this.parent = parent;
         this.dataPreparationToolGUI = dataPreparationToolGUI;
         this.apePanel = apePanel;
+        this.labels = dataPreparationToolGUI.getLabels();
     }
 
     public void actionPerformed(ActionEvent e) {
@@ -122,7 +123,6 @@ public class ConvertActionListener implements ActionListener {
         }
 
         public void run() {
-            labels = dataPreparationToolGUI.getLabels();
             CounterCLevelCall counterCLevelCall = null;
             Thread threadProgress = null;
             CounterThread counterThread = null;
