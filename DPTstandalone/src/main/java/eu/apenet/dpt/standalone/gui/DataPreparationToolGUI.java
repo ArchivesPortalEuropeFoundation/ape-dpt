@@ -558,7 +558,7 @@ public class DataPreparationToolGUI extends JFrame {
             public void actionPerformed(ActionEvent actionEvent) {
                 JFrame dateConversionRulesFrame = new DateConversionRulesFrame(labels, retrieveFromDb);
 
-                dateConversionRulesFrame.setPreferredSize(new Dimension(getContentPane().getWidth() * 3 / 8, getContentPane().getHeight() * 5 / 8));
+                dateConversionRulesFrame.setPreferredSize(new Dimension(getContentPane().getWidth() * 3 / 8, getContentPane().getHeight() * 7 / 8));
                 dateConversionRulesFrame.setLocation(getContentPane().getWidth() / 8, getContentPane().getHeight() / 8);
 
                 dateConversionRulesFrame.pack();
