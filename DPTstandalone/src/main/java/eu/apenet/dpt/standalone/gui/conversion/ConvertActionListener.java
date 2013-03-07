@@ -123,6 +123,7 @@ public class ConvertActionListener implements ActionListener {
         }
 
         public void run() {
+            labels = dataPreparationToolGUI.getLabels();
             CounterCLevelCall counterCLevelCall = null;
             Thread threadProgress = null;
             CounterThread counterThread = null;

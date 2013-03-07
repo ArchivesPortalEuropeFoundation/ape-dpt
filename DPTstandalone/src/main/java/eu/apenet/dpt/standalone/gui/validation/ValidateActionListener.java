@@ -48,13 +48,11 @@ public class ValidateActionListener implements ActionListener {
 
 
     public void actionPerformed(ActionEvent e) {
-        System.out.println(apeTabbedPane.toString());
         apeTabbedPane.setValidationErrorText(labels.getString("validationBegun"));
         dataPreparationToolGUI.disableAllBtnAndItems();
         dataPreparationToolGUI.disableRadioButtons();
 
         File file = (File) dataPreparationToolGUI.getXmlEadList().getSelectedValue();
-//        SwingUtilities.invokeLater(new ValidateRunner(file));
         new Thread(new ValidateRunner(file)).start();
     }
 
@@ -66,6 +64,7 @@ public class ValidateActionListener implements ActionListener {
         }
 
         public void run() {
+            labels = dataPreparationToolGUI.getLabels();
             SummaryWorking summaryWorking = new SummaryWorking(dataPreparationToolGUI.getResultArea());
             Thread threadRunner = new Thread(summaryWorking);
             FileInstance fileInstance = dataPreparationToolGUI.getFileInstances().get(file.getName());
