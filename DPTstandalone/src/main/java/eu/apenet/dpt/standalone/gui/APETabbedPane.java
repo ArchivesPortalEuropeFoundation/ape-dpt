@@ -143,7 +143,7 @@ public class APETabbedPane extends JTabbedPane {
         convertEseBtn.setPreferredSize(DEFAULT_BTN_DIMENSION);
         convertEseBtn.setEnabled(false);
 
-//        convertEdmBtn.addActionListener();
+        convertEdmBtn.addActionListener(new ConvertEdmActionListener(parent, dataPreparationToolGUI, apePanel));
         convertEdmBtn.setPreferredSize(DEFAULT_BTN_DIMENSION);
         convertEdmBtn.setEnabled(false);
 
@@ -570,4 +570,17 @@ public class APETabbedPane extends JTabbedPane {
             return res;
         }
     }
+
+    public JButton getConvertBtn() {
+        return convertBtn;
+    }
+
+    public JButton getValidateBtn() {
+        return validateBtn;
+    }
+
+    public JButton getConvertEseBtn() {
+        return convertEseBtn;
+    }
+
 }

@@ -220,6 +220,25 @@ public class DataPreparationToolGUI extends JFrame {
         eseList.setCellRenderer(new IconListCellRenderer(fileInstances));
         eseList.setDragEnabled(true);
         
+        eseList.addFocusListener(new FocusListener() {
+            public void focusGained(FocusEvent focusEvent) {
+                apePanel.getApeTabbedPane().getConvertBtn().setEnabled(false);
+                apePanel.getApeTabbedPane().getValidateBtn().setEnabled(false);
+                apePanel.getApeTabbedPane().getConvertEseBtn().setEnabled(false);
+                if(eseList.getModel().getSize() != 0){
+                    xmlEadList.getSelectionModel().clearSelection();
+                    apePanel.getApeTabbedPane().enableConversionEdmBtn();
+                }
+            }
+
+            public void focusLost(FocusEvent focusEvent) {
+                if(eseList.getModel().getSize() != 0){
+                    eseList.getSelectionModel().clearSelection();
+                }
+                apePanel.getApeTabbedPane().disableConversionEdmBtn();
+            }
+        });
+        
         eseList.setTransferHandler(new ListTransferHandler());
         
         eseList.setDropTarget(new DropTarget(eseList, new ListDropTargetListener(eseList, from)));
@@ -1219,8 +1238,12 @@ public class DataPreparationToolGUI extends JFrame {
         apePanel.getApeTabbedPane().enableConversionEseBtn();
     }
 
-    public void disableConversionEseBtn() {
+    public void disableEseConversionBtn() {
         convertEseSelectionBtn.setEnabled(false);
+    }
+
+    public void enableEdmConversionBtn() {
+        apePanel.getApeTabbedPane().enableConversionEdmBtn();
     }
 
     public void enableSaveBtn() {
