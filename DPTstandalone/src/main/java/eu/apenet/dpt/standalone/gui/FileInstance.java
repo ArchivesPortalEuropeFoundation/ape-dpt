@@ -18,6 +18,7 @@ public class FileInstance {
     private String originalPath;
     private boolean isValid;
     private boolean isConverted;
+    private boolean isEse;
     private String validationErrors;
     private String conversionErrors;
     private String currentLocation;
@@ -36,6 +37,7 @@ public class FileInstance {
         this.originalPath = file.getPath();
         this.isValid = false;
         this.isConverted = false;
+        this.isEse = false;
         this.validationErrors = "";
         this.conversionErrors = "";
         this.currentLocation = "";
@@ -72,6 +74,14 @@ public class FileInstance {
 
     public void setIsConverted() {
         isConverted = true;
+    }
+
+    public boolean isEse() {
+        return isEse;
+    }
+
+    public void setIsEse() {
+        isEse = true;
     }
 
     public String getValidationErrors() {
@@ -175,6 +185,7 @@ public class FileInstance {
         EAD("apeEAD"),
         EAG("EAG"),
         EAC_CPF("APE_CPF"),
+        ESE("apeESE"),
         OTHER("Other");
 
         private String filePrefix;

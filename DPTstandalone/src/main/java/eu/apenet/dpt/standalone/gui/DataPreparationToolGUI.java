@@ -1,6 +1,21 @@
 package eu.apenet.dpt.standalone.gui;
 
+import eu.apenet.dpt.standalone.gui.adhoc.FileNameComparator;
+import eu.apenet.dpt.standalone.gui.batch.ConvertAndValidateActionListener;
+import eu.apenet.dpt.standalone.gui.conversion.ConvertActionListener;
+import eu.apenet.dpt.standalone.gui.databaseChecker.DatabaseCheckerActionListener;
 import eu.apenet.dpt.standalone.gui.dateconversion.DateConversionRulesFrame;
+import eu.apenet.dpt.standalone.gui.db.RetrieveFromDb;
+import eu.apenet.dpt.standalone.gui.ead2ese.ConvertEseActionListener;
+import eu.apenet.dpt.standalone.gui.eag2012.Eag2012Frame;
+import eu.apenet.dpt.standalone.gui.edition.CheckList;
+import eu.apenet.dpt.standalone.gui.hgcreation.*;
+import eu.apenet.dpt.standalone.gui.validation.ValidateActionListener;
+import eu.apenet.dpt.standalone.gui.validation.ValidateSelectionActionListener;
+import eu.apenet.dpt.standalone.gui.xsdAddition.XsdObject;
+import eu.apenet.dpt.utils.util.XmlChecker;
+import eu.apenet.dpt.utils.util.Xsd_enum;
+import eu.apenet.dpt.utils.util.extendxsl.DateNormalization;
 import java.awt.*;
 import java.awt.dnd.DropTarget;
 import java.awt.event.*;
@@ -9,7 +24,6 @@ import java.io.IOException;
 import java.text.MessageFormat;
 import java.util.*;
 import java.util.List;
-
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
@@ -17,19 +31,6 @@ import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
-
-import eu.apenet.dpt.standalone.gui.xsdAddition.XsdObject;
-import eu.apenet.dpt.standalone.gui.batch.ConvertAndValidateActionListener;
-import eu.apenet.dpt.standalone.gui.conversion.ConvertActionListener;
-import eu.apenet.dpt.standalone.gui.databaseChecker.DatabaseCheckerActionListener;
-import eu.apenet.dpt.standalone.gui.db.RetrieveFromDb;
-import eu.apenet.dpt.standalone.gui.ead2ese.ConvertEseActionListener;
-import eu.apenet.dpt.standalone.gui.eag2012.Eag2012Frame;
-import eu.apenet.dpt.standalone.gui.hgcreation.*;
-import eu.apenet.dpt.standalone.gui.validation.ValidateActionListener;
-
-import eu.apenet.dpt.standalone.gui.validation.ValidateSelectionActionListener;
-import eu.apenet.dpt.utils.util.XmlChecker;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Level;
@@ -39,11 +40,6 @@ import org.jdesktop.swingx.JXTreeTable;
 import org.jdesktop.swingx.error.ErrorInfo;
 import org.jdesktop.swingx.treetable.TreeTableModel;
 import org.w3c.dom.*;
-
-import eu.apenet.dpt.standalone.gui.adhoc.FileNameComparator;
-import eu.apenet.dpt.standalone.gui.edition.CheckList;
-import eu.apenet.dpt.utils.util.Xsd_enum;
-import eu.apenet.dpt.utils.util.extendxsl.DateNormalization;
 
 /**
  * User: Yoann Date: Apr 19, 2010 Time: 8:07:25 PM
@@ -220,30 +216,31 @@ public class DataPreparationToolGUI extends JFrame {
         eseList.setCellRenderer(new IconListCellRenderer(fileInstances));
         eseList.setDragEnabled(true);
         
-        eseList.addFocusListener(new FocusListener() {
-            public void focusGained(FocusEvent focusEvent) {
-                apePanel.getApeTabbedPane().getConvertBtn().setEnabled(false);
-                apePanel.getApeTabbedPane().getValidateBtn().setEnabled(false);
-                apePanel.getApeTabbedPane().getConvertEseBtn().setEnabled(false);
-                if(eseList.getModel().getSize() != 0){
-                    xmlEadList.getSelectionModel().clearSelection();
-                    apePanel.getApeTabbedPane().enableConversionEdmBtn();
-                }
-            }
-
-            public void focusLost(FocusEvent focusEvent) {
-                if(eseList.getModel().getSize() != 0){
-                    eseList.getSelectionModel().clearSelection();
-                }
-                apePanel.getApeTabbedPane().disableConversionEdmBtn();
-            }
-        });
-        
         eseList.setTransferHandler(new ListTransferHandler());
         
         eseList.setDropTarget(new DropTarget(eseList, new ListDropTargetListener(eseList, from)));
         eseListModel.setList(eseList);
 
+//        eseList.addFocusListener(new FocusListener() {
+//            public void focusGained(FocusEvent focusEvent) {
+//                apePanel.getApeTabbedPane().getConvertBtn().setEnabled(false);
+//                apePanel.getApeTabbedPane().getValidateBtn().setEnabled(false);
+//                apePanel.getApeTabbedPane().getConvertEseBtn().setEnabled(false);
+//                if(eseList.getModel().getSize() != 0){
+//                    xmlEadList.getSelectionModel().clearSelection();
+//                    apePanel.getApeTabbedPane().enableConversionEdmBtn();
+//                }
+//            }
+//
+//            public void focusLost(FocusEvent focusEvent) {
+//                if(eseList.getModel().getSize() != 0){
+//                    eseList.getSelectionModel().clearSelection();
+//                }
+//              apePanel.getApeTabbedPane().disableConversionEdmBtn();
+//          }
+//        });
+        
+        
         JMenuBar menuBar = new JMenuBar();
         menuBar.add(fileMenu);
         menuBar.add(optionMenu);
@@ -787,6 +784,7 @@ public class DataPreparationToolGUI extends JFrame {
         if(eseListModel.existsFile(file))
             eseListModel.removeFile(file);
         eseListModel.addFile(file);
+        enableEdmConversionBtn();
     }
 
     private JPanel createSouthWest() {
@@ -1216,6 +1214,7 @@ public class DataPreparationToolGUI extends JFrame {
     }
 
     public void disableAllBtnAndItems() {
+        apePanel.getApeTabbedPane().disableConversionEdmBtn();
         apePanel.getApeTabbedPane().disableConversionEseBtn();
         apePanel.getApeTabbedPane().disableConversionBtn();
         apePanel.getApeTabbedPane().disableValidationBtn();
