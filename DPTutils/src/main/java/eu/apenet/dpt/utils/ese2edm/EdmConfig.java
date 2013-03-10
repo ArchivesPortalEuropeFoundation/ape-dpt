@@ -25,6 +25,7 @@ public class EdmConfig implements Serializable {
         Properties properties = new Properties();
         if (transformerXML2XML == null) {
             transformerXML2XML = new XMLTransformer("/ese2edm/ese2edm.xslt", properties);
+            // transformerXML2XML = new XMLTransformer("/ese2edm/ese2edm_try.xslt", properties);
         }
         return transformerXML2XML;
     }

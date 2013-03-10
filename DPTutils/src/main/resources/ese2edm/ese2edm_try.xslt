@@ -12,69 +12,77 @@
                 xmlns:dc="http://purl.org/dc/elements/1.1/"
                 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                	xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-                xsi:schemaLocation="http://www.w3.org/1999/02/22-rdf-syntax-ns# EDM.xsd"
+                xsi:schemaLocation="http://www.w3.org/1999/02/22-rdf-syntax-ns#EDM.xsd"
+                xpath-default-namespace="urn:isbn:1-931666-22-9"
                 xmlns:fn="http://www.w3.org/2005/xpath-functions"
                 exclude-result-prefixes="fn">
-    <xsl:output method="xml" indent="yes" />
-    <!-- Root node-->
-    <xsl:template match="/">
-        <rdf:RDF>
-            <xsl:call-template name="record">
-                <xsl:with-param name="recordnode" select="/metadata/record"/>
-            </xsl:call-template>
-        </rdf:RDF>
-    </xsl:template>
-    
-    <!-- metadata/record, aka all records -->
-    <xsl:template name="record">
-        <xsl:param name="recordnode"/>
-        <xsl:call-template name="providedCHO"> 
-            <xsl:with-param name="recordnode" select="$recordnode"/>
-        </xsl:call-template>
-        <xsl:call-template name="webResource"> 
-            <xsl:with-param name="recordnode" select="$recordnode"/>
-        </xsl:call-template>
-        <xsl:call-template name="aggregation"> 
-            <xsl:with-param name="recordnode" select="$recordnode"/>
-        </xsl:call-template>
-    </xsl:template>
-    
-    <!-- sub-templates for the respective EDM parts -->
-    <xsl:template name="providedCHO">
-        <xsl:param name="recordnode"/>
-        <edm:providedCHO>
-            <jedi>jedi1</jedi>
-            <xsl:value-of select="fn:name()"/>
-            <jedi>jedi2</jedi>
-            <xsl:value-of select="fn:local-name()"/>
-            <jedi>jedi3</jedi>
-            <xsl:value-of select="fn:namespace-uri()"/>
-            <jedi>jedi4</jedi>
-            <xsl:value-of select="fn:name(fn:root())"/>
-            <jedi>jedi5</jedi>
-            <xsl:for-each select='identifier'>
-                <yada>yada</yada>
-            </xsl:for-each>
-        </edm:providedCHO>
-    </xsl:template>
+<xsl:output method="xml" encoding="UTF-8" indent="yes" />
 
-    <xsl:template name="webResource">
-        <xsl:param name="recordnode"/>
-        <edm:webResource>
-        </edm:webResource>    
-    </xsl:template>
-
-    <xsl:template name="aggregation">
-        <xsl:param name="recordnode"/>
-        <ore:aggregation>
-        </ore:aggregation>
-    </xsl:template>
+<xsl:template match="/">
+    <rdf:RDF>
+        <xsl:copy-of select="/"/>
+    </rdf:RDF>
+    <rdf:RDF>
+        <xsl:copy-of select="."/>
+    </rdf:RDF>
+    <rdf:RDF>
+        <xsl:copy-of select="metadata"/>
+    </rdf:RDF>
+    <xsl:for-each select="./child::node()/child::node()/child::node()">
+        <xsl:element name="myElement">
+            <xsl:value-of select="name()"/>
+        </xsl:element>
+    </xsl:for-each>
+    <rdf:RDF>
+        <xsl:apply-templates select="//record"/>
+    </rdf:RDF>
+</xsl:template>
     
-    <!-- templates used within metadata/record -->
-    <xsl:template name="dc:identifier">
-        <dc:identifier>
-            <xsl:value-of select="."/>
-        </dc:identifier>
-    </xsl:template>
+<xsl:template match="record">
+    <edm:providedCHO>
+        <xsl:apply-templates select="dc:identifier"/>
+        <xsl:apply-templates select="dc:publisher"/>
+    </edm:providedCHO>
+    <xsl:call-template name="providedCHO"> 
+    </xsl:call-template>
+    <xsl:call-template name="webResource"> 
+    </xsl:call-template>
+    <xsl:call-template name="aggregation"> 
+    </xsl:call-template>
+</xsl:template>
+    
+<xsl:template name="providedCHO">
+    <edm:providedCHO>
+        <xsl:apply-templates select="dc:identifier"/>
+        <xsl:apply-templates select="dc:publisher"/>
+    </edm:providedCHO>
+</xsl:template>
+<xsl:template name="webResource">
+    <edm:webResource>
+    </edm:webResource>
+</xsl:template>
+<xsl:template name="aggregation">
+    <ore:aggregation>
+    </ore:aggregation>
+</xsl:template>
+
+<xsl:template match="dc:identifier">
+    <dc:identifier>
+        <xsl:value-of select="."/>
+    </dc:identifier>
+</xsl:template>
+<xsl:template match="dc:publisher">
+    <dc:publisher>
+        <xsl:value-of select="."/>
+    </dc:publisher>
+</xsl:template>
+    <!--
+    
+    <xsl:template match="*[not(*)]">
+        <xsl:value-of select="local-name()" />
+        <xsl:text> </xsl:text>
+        <xsl:value-of select="normalize-space(.)" />
+        <xsl:text>&#10;&#13;</xsl:text>
+    </xsl:template>-->
     
 </xsl:stylesheet>
