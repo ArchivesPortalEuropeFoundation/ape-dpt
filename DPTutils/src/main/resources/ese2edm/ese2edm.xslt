@@ -22,8 +22,8 @@ Authors: Bernhard Haslhofer (University of Vienna), Antoine Isaac (VU Amsterdam)
  	xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
  	xmlns:foaf="http://xmlns.com/foaf/0.1/"
  	xmlns:xhtml="http://www.w3.org/1999/xhtml/vocab#"
- 	xmlns:str="http://exslt.org/strings"
-	version="1.0">
+     xpath-default-namespace="http://www.europeana.eu/schemas/ese/"
+	version="2.0">
 	
 	<xsl:output method="xml" encoding="UTF-8" indent="yes"/>
 
@@ -96,21 +96,21 @@ Authors: Bernhard Haslhofer (University of Vienna), Antoine Isaac (VU Amsterdam)
 			<xsl:for-each select="ese:isShownAt">
 				<edm:isShownAt>
 					<xsl:attribute name="rdf:resource">
-						<xsl:value-of select="str:encode-uri(., false())"/>
+						<xsl:value-of select="."/>
 					</xsl:attribute>
 				</edm:isShownAt>
 			</xsl:for-each>
 			<xsl:for-each select="ese:isShownBy">
 				<edm:isShownBy>
 					<xsl:attribute name="rdf:resource">
-						<xsl:value-of select="str:encode-uri(., false())"/>
+						<xsl:value-of select="."/>
 					</xsl:attribute>
 				</edm:isShownBy>
 			</xsl:for-each>
 			<xsl:for-each select="ese:object">
 				<edm:object>
 					<xsl:attribute name="rdf:resource">
-						<xsl:value-of select="str:encode-uri(., false())"/>
+						<xsl:value-of select="."/>
 					</xsl:attribute>
 				</edm:object>
 			</xsl:for-each>
@@ -123,7 +123,7 @@ Authors: Bernhard Haslhofer (University of Vienna), Antoine Isaac (VU Amsterdam)
 			<xsl:for-each select="ese:rights">
 				<edm:rights>
 					<xsl:attribute name="rdf:resource">
-						<xsl:value-of select="str:encode-uri(., false())"/>
+						<xsl:value-of select="."/>
 					</xsl:attribute>
 				</edm:rights>
 			</xsl:for-each>
@@ -190,7 +190,7 @@ Authors: Bernhard Haslhofer (University of Vienna), Antoine Isaac (VU Amsterdam)
 			<xsl:for-each select="ese:object">
 			  <xsl:if test='../ese:type'>
 			    <xsl:variable name="ese_type"><xsl:value-of select="../ese:type"/></xsl:variable>
-			    <xsl:variable name="thumbnail_uri" select="concat('http://europeanastatic.eu/api/image?uri=',str:encode-uri(., true()),'&amp;size=FULL_DOC&amp;type=',$ese_type)"/>			 
+			    <xsl:variable name="thumbnail_uri" select="concat('http://europeanastatic.eu/api/image?uri=',.,'&amp;size=FULL_DOC&amp;type=',$ese_type)"/>
 				<edm:hasView>
 					<xsl:attribute name="rdf:resource">
 						<xsl:copy-of select="$thumbnail_uri"/>
