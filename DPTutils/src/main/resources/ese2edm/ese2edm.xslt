@@ -65,66 +65,6 @@
 		</xsl:for-each>
             </skos:Concept>
             
-            <!-- Provider aggregation -->
-            <ore:Aggregation>
-                <xsl:attribute name="rdf:about">
-                </xsl:attribute>
-                <edm:aggregatedCHO>
-                    <xsl:attribute name="rdf:resource">
-                        <xsl:value-of select="dc:identifier"/>
-                    </xsl:attribute>
-                </edm:aggregatedCHO>
-                <xsl:for-each select="dc:source">
-                    <edm:dataProvider>
-                        <xsl:value-of select="."/>
-                    </edm:dataProvider>
-                </xsl:for-each>
-                <xsl:for-each select="europeana:dataProvider">
-                    <edm:dataProvider>
-                        <xsl:value-of select="."/>
-                    </edm:dataProvider>
-                </xsl:for-each>
-                <xsl:for-each select="europeana:isShownBy">
-                    <edm:isShownBy>
-                        <xsl:attribute name="rdf:resource">
-                            <xsl:value-of select="."/>
-                        </xsl:attribute>
-                    </edm:isShownBy>
-                </xsl:for-each>
-                <xsl:for-each select="europeana:object">
-                    <edm:isShownAt>
-                        <xsl:value-of select="."/>
-                    </edm:isShownAt>
-                    <edm:object>
-                        <xsl:value-of select="."/>
-                    </edm:object>
-                </xsl:for-each>
-                <xsl:for-each select="europeana:provider">
-                    <edm:provider>
-                        <xsl:value-of select="."/>
-                    </edm:provider>
-                </xsl:for-each>
-                <xsl:for-each select="dc:rights">
-                    <dc:rights>
-                        <xsl:value-of select="."/>
-                    </dc:rights>
-                </xsl:for-each>
-                <xsl:for-each select="europeana:rights">
-                    <edm:rights>
-                        <xsl:attribute name="rdf:resource">
-                            <xsl:value-of select="."/>
-                        </xsl:attribute>
-                    </edm:rights>
-                </xsl:for-each>
-                <xsl:for-each select="europeana:unstored">
-                    <edm:unstored>
-                        <xsl:value-of select="."/>
-                    </edm:unstored>
-                </xsl:for-each>
-            </ore:Aggregation>
-        </xsl:template>
-
-	
 	<!-- a named template, which can be called for mapping all other properties 
 		TODO:
 			- improve this and simply match for previously unmatched nodes
@@ -336,10 +276,16 @@
 			</xsl:call-template>
 		</xsl:for-each>		
 		
-                <xsl:for-each select="europeana:type">
+                <xsl:for-each select="europeana:provider">
                     <edm:provider>
                         <xsl:value-of select="."/>
                     </edm:provider>
+                </xsl:for-each>
+                
+                <xsl:for-each select="europeana:type">
+                    <edm:type>
+                        <xsl:value-of select="."/>
+                    </edm:type>
 		</xsl:for-each>		
 
 	</xsl:template>
