@@ -40,16 +40,46 @@ public class DownloadReportActionListener implements ActionListener {
         }
     }
 
-    private String getStringFromMap(Map<String, List<String>> map) {
+    private String getStringFromMap(Map<String, Map<String, Boolean>> map) {
+        ResourceBundle labels = dataPreparationToolGUI.getLabels();
         StringBuilder builder = new StringBuilder();
+
+        builder.append("----- ");
+        builder.append(labels.getString("dataquality.title"));
+        builder.append(" -----");
+        builder.append("\n");
+        builder.append(labels.getString("dataquality.missing.unittitle"));
+        builder.append(" ");
+        builder.append(Integer.toString(map.get("unittitle").size()));
+        builder.append("\n");
+        builder.append(labels.getString("dataquality.missing.unitdate"));
+        builder.append(" ");
+        builder.append(Integer.toString(map.get("unitdate").size()));
+        builder.append("\n");
+        builder.append(labels.getString("dataquality.missing.dao"));
+        builder.append(" ");
+        builder.append(Integer.toString(map.get("dao").size()));
+
+        builder.append("\n");
+        builder.append("\n");
+
         for(String key : map.keySet()) {
             if(map.get(key).size() > 0) {
-                builder.append("--- IDs with ");
-                builder.append(key);
-                builder.append(" problems ---");
+                if(key.equals("unittitle")) {
+                    builder.append("--- ").append(labels.getString("dataquality.report.unittitle")).append(" ---");
+                } else if(key.equals("unitdate")) {
+                    builder.append("--- ").append(labels.getString("dataquality.report.unitdate")).append(" ---");
+                } else if(key.equals("dao")) {
+                    builder.append("--- ").append(labels.getString("dataquality.report.dao")).append(" ---");
+                }
                 builder.append("\n");
-                for(String value : map.get(key)) {
-                    builder.append(value);
+                for(String id : map.get(key).keySet()) {
+                    builder.append(id);
+                    if(!map.get(key).get(id)) {
+                        builder.append(" (");
+                        builder.append(labels.getString("dataquality.report.idxml"));
+                        builder.append(")");
+                    }
                     builder.append("\n");
                 }
             }

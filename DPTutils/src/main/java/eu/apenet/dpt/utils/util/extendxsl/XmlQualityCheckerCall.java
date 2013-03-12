@@ -8,6 +8,7 @@ import net.sf.saxon.om.SequenceIterator;
 import net.sf.saxon.trans.XPathException;
 import net.sf.saxon.tree.iter.SingletonIterator;
 import net.sf.saxon.value.*;
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
@@ -15,6 +16,7 @@ import org.w3c.dom.NodeList;
 
 import javax.xml.xpath.*;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -30,9 +32,9 @@ public class XmlQualityCheckerCall extends ExtensionFunctionCall {
     private int counterUnitdate = 0;
     private int counterDao = 0;
 
-    private List<String> idsUnittitle = new ArrayList<String>();
-    private List<String> idsUnitdate = new ArrayList<String>();
-    private List<String> idsDao = new ArrayList<String>();
+    private Map<String, Boolean> idsUnittitle = new HashMap<String, Boolean>();
+    private Map<String, Boolean> idsUnitdate = new HashMap<String, Boolean>();
+    private Map<String, Boolean> idsDao = new HashMap<String, Boolean>();
 
     public SequenceIterator call(SequenceIterator[] arguments, XPathContext context) throws XPathException {
         NodeInfo nodeInfo = (NodeInfo) arguments[0].next();
@@ -41,6 +43,7 @@ public class XmlQualityCheckerCall extends ExtensionFunctionCall {
         boolean wasInside;
 
         String id = "";
+        String unitid = "";
         NamedNodeMap cAttributes = nodeOverNodeInfo.getParentNode().getAttributes();
         for(int i = 0; i < cAttributes.getLength(); i++) {
             if(cAttributes.item(i).getLocalName() != null && cAttributes.item(i).getLocalName().equals("id")) {
@@ -49,6 +52,20 @@ public class XmlQualityCheckerCall extends ExtensionFunctionCall {
         }
 
         NodeList nodes = nodeOverNodeInfo.getChildNodes();
+        for(int i = 0; i < nodes.getLength(); i++) {
+            Node node = nodes.item(i);
+            if(node.getLocalName() != null && node.getLocalName().equals("unitid")) {
+                NamedNodeMap nodeMap = node.getAttributes();
+                for(int j = 0; j < nodeMap.getLength(); j++) {
+                    Node attributes = nodeMap.item(j);
+                    if(attributes.getLocalName().equals("type") && attributes.getTextContent().equals("call number")) {
+                        unitid = node.getTextContent();
+                    }
+                }
+            }
+        }
+
+        nodes = nodeOverNodeInfo.getChildNodes();
         hasError = true;
         for(int i = 0; i < nodes.getLength(); i++) {
             if(nodes.item(i).getLocalName() != null && nodes.item(i).getLocalName().equals("unittitle")) {
@@ -58,7 +75,10 @@ public class XmlQualityCheckerCall extends ExtensionFunctionCall {
         }
         if(hasError) {
             counterUnittitle++;
-            idsUnittitle.add(id);
+            if(StringUtils.isNotBlank(unitid))
+                idsUnittitle.put(unitid, true);
+            else
+                idsUnittitle.put(id, false);
         }
 
         nodes = nodeOverNodeInfo.getChildNodes();
@@ -79,7 +99,10 @@ public class XmlQualityCheckerCall extends ExtensionFunctionCall {
         }
         if(wasInside && hasError) {
             counterUnitdate++;
-            idsUnitdate.add(id);
+            if(StringUtils.isNotBlank(unitid))
+                idsUnitdate.put(unitid, true);
+            else
+                idsUnitdate.put(id, false);
         }
 
         nodes = nodeOverNodeInfo.getChildNodes();
@@ -100,7 +123,10 @@ public class XmlQualityCheckerCall extends ExtensionFunctionCall {
         }
         if(wasInside && hasError) {
             counterDao++;
-            idsDao.add(id);
+            if(StringUtils.isNotBlank(unitid))
+                idsDao.put(unitid, true);
+            else
+                idsDao.put(id, false);
         }
 
         return SingletonIterator.makeIterator(new StringValue(""));
@@ -118,15 +144,15 @@ public class XmlQualityCheckerCall extends ExtensionFunctionCall {
         return counterDao;
     }
 
-    public List<String> getIdsUnittitle() {
+    public Map<String, Boolean> getIdsUnittitle() {
         return idsUnittitle;
     }
 
-    public List<String> getIdsUnitdate() {
+    public Map<String, Boolean> getIdsUnitdate() {
         return idsUnitdate;
     }
 
-    public List<String> getIdsDao() {
+    public Map<String, Boolean> getIdsDao() {
         return idsDao;
     }
 }

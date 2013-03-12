@@ -124,15 +124,20 @@ public class ValidateActionListener implements ActionListener {
                         StringWriter writer = new StringWriter();
                         writer.append("\n");
                         writer.append("\n");
-                        writer.append("----- XML QUALITY -----");
+                        writer.append("----- ");
+                        writer.append(labels.getString("dataquality.title"));
+                        writer.append(" -----");
                         writer.append("\n");
-                        writer.append("Unittitle problems: ");
+                        writer.append(labels.getString("dataquality.missing.unittitle"));
+                        writer.append(" ");
                         writer.append(Integer.toString(xmlQualityCheckerCall.getCounterUnittitle()));
                         writer.append("\n");
-                        writer.append("Unitdate problems: ");
+                        writer.append(labels.getString("dataquality.missing.unitdate"));
+                        writer.append(" ");
                         writer.append(Integer.toString(xmlQualityCheckerCall.getCounterUnitdate()));
                         writer.append("\n");
-                        writer.append("DAO problems: ");
+                        writer.append(labels.getString("dataquality.missing.dao"));
+                        writer.append(" ");
                         writer.append(Integer.toString(xmlQualityCheckerCall.getCounterDao()));
                         fileInstance.setValidationErrors(fileInstance.getValidationErrors() + writer.toString());
 
@@ -168,8 +173,8 @@ public class ValidateActionListener implements ActionListener {
             }
         }
 
-        private Map<String, List<String>> createXmlQualityErrors(XmlQualityCheckerCall xmlQualityCheckerCall) {
-            Map<String, List<String>> map = new HashMap<String, List<String>>();
+        private Map<String, Map<String, Boolean>> createXmlQualityErrors(XmlQualityCheckerCall xmlQualityCheckerCall) {
+            Map<String, Map<String, Boolean>> map = new HashMap<String, Map<String, Boolean>>();
             map.put("unittitle", xmlQualityCheckerCall.getIdsUnittitle());
             map.put("unitdate", xmlQualityCheckerCall.getIdsUnitdate());
             map.put("dao", xmlQualityCheckerCall.getIdsDao());

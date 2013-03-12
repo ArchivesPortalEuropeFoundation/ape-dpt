@@ -27,7 +27,7 @@ public class FileInstance {
     private FileType fileType;
     private Operation lastOperation;
     private boolean isXml;
-    Map<String, List<String>> xmlQualityErrors;
+    Map<String, Map<String, Boolean>> xmlQualityErrors;
 
     public FileInstance(File file, boolean checkXml) {
         if(checkXml && !isXml) //todo: not sure about this !isXml
@@ -163,11 +163,11 @@ public class FileInstance {
         this.eseLocation = eseLocation;
     }
 
-    public Map<String, List<String>> getXmlQualityErrors() {
+    public Map<String, Map<String, Boolean>> getXmlQualityErrors() {
         return xmlQualityErrors;
     }
 
-    public void setXmlQualityErrors(Map<String, List<String>> xmlQualityErrors) {
+    public void setXmlQualityErrors(Map<String, Map<String, Boolean>> xmlQualityErrors) {
         this.xmlQualityErrors = xmlQualityErrors;
     }
 
