@@ -597,15 +597,16 @@ http://purl.org/dc/terms/ http://www.dublincore.org/schemas/xmls/qdc/dcterms.xsd
 </xsl:template>
 <xsl:template name="generaterelation">
 	<xsl:param name="node"/>
+        <xsl:variable name="eadid" select="/ead/eadheader/eadid/@identifier"/>
 			<xsl:choose>
 				<xsl:when test=' "dsc" eq fn:string(fn:node-name($node))'>
 					<xsl:variable name="archdesc" select="$node/parent::node()"/>
-					<xsl:value-of select="normalize-space(/ead/eadheader/filedesc/titlestmt/titleproper[1])"/><xsl:text> >> </xsl:text><xsl:value-of select="$archdesc/did/unittitle"/>
+					<xsl:value-of select="$eadid"/><xsl:text> </xsl:text><xsl:value-of select="normalize-space(/ead/eadheader/filedesc/titlestmt/titleproper[1])"/><xsl:text> >> </xsl:text><xsl:value-of select="$eadid"/><xsl:text>_</xsl:text><xsl:value-of select="fn:replace(normalize-space($archdesc/did/unitid), '[\n\t\r ]', '')"/><xsl:text> </xsl:text><xsl:value-of select="$archdesc/did/unittitle"/>
 				</xsl:when>	
 				<xsl:otherwise>
 					<xsl:call-template name="generaterelation">
 					    <xsl:with-param name="node" select="$node/parent::node()"/>
-					</xsl:call-template><xsl:text> >> </xsl:text><xsl:value-of select="normalize-space($node/did/unittitle[1])"/>
+					</xsl:call-template><xsl:text> >> </xsl:text><xsl:value-of select="$eadid"/><xsl:text>_</xsl:text><xsl:value-of select="$node/@id"/><xsl:text> </xsl:text><xsl:value-of select="normalize-space($node/did/unittitle[1])"/>
 				</xsl:otherwise>
 			</xsl:choose>				
 
