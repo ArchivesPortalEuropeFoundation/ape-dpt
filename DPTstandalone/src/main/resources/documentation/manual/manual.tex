@@ -26,11 +26,11 @@
 		{\huge\textbf{APE Data Preparation Tool}}
 	\end{center}
 	\begin{center}
-		{\Large APE DPT v1.1.1}
+		{\Large APE DPT v1.2.1}
 	\end{center}
 		\vspace{\stretch{2}}
 		\begin{tabular}{l l}
-			Document name: & APE\_data\_preparation\_tool\_1.1.1.pdf \\
+			Document name: & APE\_data\_preparation\_tool\_1.2.1.pdf \\
 			Publish date: & \today \\
 			Dissemination level: & Public \\
 			WP allocation: & APEnet WP4 - APEx WP5 \\
@@ -46,11 +46,11 @@
 \newcommand{\hitem}[1]{\hspace{3cm}\subsection{#1}}
 
 \section{Installation and launch of the tool}
-The tool is distributed as a ZIP archive file, which name is \textit{APE\_data\_preparation\_tool\_X.Y.Z.zip} where \textit{X.Y.Z} is the version number (currently 1.1.1). The last version is downloadable at this address:\\
+The tool is distributed as a ZIP archive file, which name is \textit{APE\_data\_preparation\_tool\_X.Y.Z.zip} where \textit{X.Y.Z} is the version number (please see on the title page to retrieve the version). The last version is downloadable at this address:\\
 \textit{http:\/\/www.apenet.eu\/index.php?option=com\_content\&view=article\&id=94\&Itemid=150}\\
 Requirements in order to use the standalone tool:
 \begin{itemize}
-	\item Have Java JDK 5 (1.5) installed on your computer, or a more recent Java version. You can verify by launching the console (Windows) or terminal (UNIX) and typing \textit{java -version}.
+	\item Have Java 6 (1.6) installed on your computer, or a more recent Java version. You can verify by launching the console (Windows) or terminal (UNIX) and typing \textit{java -version}.
 \end{itemize}
 Please do the following once you have the ZIP archive:
 \begin{itemize}
@@ -72,7 +72,7 @@ Please do the following once you have the ZIP archive:
 \end{itemize}
 
 \section{Overview of the main window and its options}
-In the main window, you will see 5 menus at the top (\textit{File}, \textit{Options}, \textit{Actions}, \textit{Windows} and \textit{Help}), an empty list on the left side of the window with 5 buttons at the bottom (\textit{Convert and validate selected}, \textit{Validate all selected}, \textit{ESE batch conversion}, \textit{Create Holdings Guide} and \textit{Abort}), 5 tabs at the top of the right side of the window (\textit{Summary}, \textit{Validation}, \textit{Conversion}, \textit{ESE conversion} and \textit{Edition}) and finally the main part the middle of the screen with 3 buttons and 2 radio button lists (\textit{Convert}, \textit{Validate}, \textit{Convert to ESE}, \textit{XSLT} and \textit{XSD}). Note that this main part changes when selecting the different tabs.
+In the main window, you will see 5 menus at the top (\textit{File}, \textit{Options}, \textit{Actions}, \textit{Windows} and \textit{Help}), 2 empty lists on the left side of the window with 5 buttons at the bottom (\textit{Convert and validate selected}, \textit{Validate all selected}, \textit{Europeana batch conversion} and\textit{Create holdings guide}), 5 tabs at the top of the right side of the window (\textit{Summary}, \textit{Validation}, \textit{Conversion}, \textit{Europeana conversion} and \textit{Edition}) and finally the main part the middle of the screen with 4 buttons and 2 radio button lists (\textit{Convert}, \textit{Validate}, \textit{Convert to ESE}, \textit{Convert to EDM}, \textit{Stylesheets} and \textit{Schemas}). Note that this main part changes when selecting the different tabs.
 
 \subsection{The menus}
 
@@ -81,35 +81,47 @@ You have 4 items in the File menu:
 \begin{itemize}
 	\item Select file or directory (shortcut: Ctrl+O or Cmd+O):\\
 		\hspace*{10pt} This is where you can open your files or directory to be able to use them in the tool. You have the possibility to select one file, one directory or more files. If you select a
-directory, it will import all the files located in this directory. Once you have done your selection, the files will appear in the list on the left side of the window and are ready to be used.
-	\item Save APE EAD file (shortcut: Ctrl+S or Cmd+S):\\
-		\hspace*{10pt} Once a file has been transformed and validated, it can be saved. The saved files will be saved in the output directory. The names changes if the file has been correctly validated or not. If the file has been validated, its saved name will be \textit{APE\_EAD\_\{original\_name\}.xml}, if not it becomes \textit{NOT\_APE\_EAD\_\{original\_name\}.xml}
-	\item Save all APE EAD files:\\
-		\hspace*{10pt} Same as above, it will save the file, but it will save all the files that are in the list. The name policy stays the same. Can be very useful when converting and validating many files at once.
+directory, it will import all the files located in this directory. Once you have done your selection, the files will appear in the top list on the left side of the window and are ready to be used.
+	\item Create EAG 2012:\\
+		\hspace*{10pt} Here, 3 options are possible in a sub menu:
+		\begin{itemize}
+			\item Select an existing EAG (0.2) file
+			\item Select an existing EAG (2012) file
+			\item Create a new EAG 2012 file
+		\end{itemize}
+		\hspace*{10pt} We will discuss those options in details in the EAG 2012 creation section.
+	\item Save selected APE files (shortcut: Ctrl+S or Cmd+S):\\
+		\hspace*{10pt} Once a file has been transformed and validated, it can be saved. The saved files will be saved in the output directory by default, unless you specified your own directory where you would like to have all saved files. The names changes if the file has been correctly validated or not. If the file has been validated, its saved name will be \textit{apeEAD\_\{original\_name\}.xml}, if not it becomes \textit{NOT\_apeEAD\_\{original\_name\}.xml}. You can either save a single file or a multiple files using this command.
 	\item Quit:\\
 		\hspace*{10pt} Closes the program.
 \end{itemize}
 
 \subsubsection{Options}
-You have 8 items in the Options menu:
+You have 11 items in the Options menu:
 \begin{itemize}
-	\item Global identifier:\\
-		\hspace*{10pt} Here you can change your global identifier, the one you had to enter at the first launch of the tool.
-	\item Country Code:\\
+	\item Country code:\\
 		\hspace*{10pt} Here you can change your country code, the one you had to enter at the first launch of the tool.
-	\item Use your stylesheet:\\
-		\hspace*{10pt} This tool allows you to use your own stylesheet (XSLT) in order to do your conversions alone. This option opens a dialog box where you can select a stylesheet and will copy it in the xsl directory of the tool. Please note that some help is available online to create your own stylesheet (menu \textit{Help} > \textit{XSLT Guidelines}).
-	\item Languages:\\
-		\hspace*{10pt} The tool is available in a few languages, so far only English, French and German are available. The tool will open in the language of your operating system if it is one of French or German and if not found will rollback to English.
-	\item Create EAG:\\
-		\hspace*{10pt} You can use the tool to create a simple EAG file. Just input the asked information and an EAG will be created and you will be able to use it in the system.
-	\item Optional default role type:\\
-		\hspace*{10pt} You can select the role type that would be used in your conversions into APE EAD, there are 5 different roles. The default one is UNSPECIFIED. And the other 4 values are IMAGE, VIDEO, TEXT and SOUND. Those values are reported inside your APE EAD XML file after you convert them. The role type chosen will then be available inside your APE EAD XML file within each DAO elements as attribute @xlink:role.\\
+	\item Repository code:\\
+		\hspace*{10pt} Here you can change your global identifier, the one you had to enter at the first launch of the tool.
+	\item Checks when loading files:\\
+		\hspace*{10pt} 
+	\item Digital object type:\\
+		\hspace*{10pt} You can select the role type that would be used in your conversions into apeEAD, there are 5 different roles. The default one is UNSPECIFIED. And the other 4 values are IMAGE, VIDEO, TEXT and SOUND. Those values are reported inside your APE EAD XML file after you convert them. The role type chosen will then be available inside your apeEAD XML file within each DAO elements as attribute @xlink:role.\\
 Note: Converting the file and then choosing a role type will \textit{NOT} change the role type inside the newly created file. A new conversion is needed.
-	\item Default XSL to use:\\
+	\item Default folder for saved files:\\
+		\hspace*{10pt} 
+	\item Use own stylesheet:\\
+		\hspace*{10pt} This tool allows you to use your own stylesheet (XSLT) in order to do your conversions alone. This option opens a dialog box where you can select a stylesheet and will copy it in the xsl directory of the tool. Please note that some help is available online to create your own stylesheet (menu \textit{Help} > \textit{XSLT Guidelines}).
+	\item Use own schema:\\
+		\hspace*{10pt} 
+	\item Choose default stylesheet:\\
 		\hspace*{10pt} By default the stylesheet selected for newly imported files is the default stylesheet, you can use this option if you wish to use another default stylesheet.
-	\item Default XSD to use:\\
-		\hspace*{10pt} By default the system sets the data type to APE EAD files, you can change this by using this option.
+	\item Choose default schema:\\
+		\hspace*{10pt} By default the system sets the data type to apeEAD files, you can change this by using this option.
+	\item Languages:\\
+		\hspace*{10pt} The tool is available in a few languages, so far only English, French, German, Greek, Dutch and Hungarian are available. The tool will open in the language of your operating system if it is one of the above list and if not found will rollback to English.
+	\item List of date conversion rules:\\
+		\hspace*{10pt} 
 \end{itemize}
 
 \subsubsection{Actions}
@@ -126,42 +138,40 @@ You have 5 items in the Windows menu:
 	\item Summary (shortcut: Ctrl+1 or Cmd+1)
 	\item Validation (shortcut: Ctrl+2 or Cmd+2)
 	\item Conversion (shortcut: Ctrl+3 or Cmd+3)
-	\item ESE conversion (shortcut: Ctrl+4 or Cmd+4)
+	\item Europeana conversion (shortcut: Ctrl+4 or Cmd+4)
 	\item Edition (shortcut: Ctrl+5 or Cmd+5)
 \end{itemize}
 In order to change a selected tab, you can either click on them or select your tab in this menu.
 
-\subsubsection{Help}
-You have 3 items in the Help menu:
+\subsubsection{About}
+You have 2 items in the Help menu:
 \begin{itemize}
-	\item XSLT Guidelines:\\
-		\hspace*{10pt} This option will open a page on your browser (you need an internet connection) where a list of checks to do on your stylesheet are explained.
 	\item Visit project website:\\
-		\hspace*{10pt} This option will open a page on your browser (you need an internet connection) and you will access the APEnet project website (www.apenet.eu).
-	\item APE DPT v1.1.1:\\
+		\hspace*{10pt} This option will open a page on your browser (you need an internet connection) and you will access the APEnet project website (www.apex-project.eu).
+	\item APE DPT v1.2.1:\\
 		\hspace*{10pt} Not a clickable option, it is just in order to know which version you are working with. We will see in a future chapter (see \textit{Chapter 3. Update of the tool}) that an automatic check is done at the opening of the program to see if a new version is available.
 \end{itemize}
 
-\subsection{The list}
-On the left side of the window there is an empty list until you populate it by opening files or directories. The list will contain all the files that you selected (see 2.1.1). By clicking on a name, you select it, this in order to use it. You can validate and convert it.\\
+\subsection{The lists}
+On the left side of the window there are 2 empty lists until you populate them by opening files or directories, or by creating ESE files for the second list. The top list will contain all the files that you selected (see 2.1.1). By clicking on a name, you select it, this in order to use it. You can validate and convert it.\\
 \newline
 You can also use your mouse right click to have the possibility to remove a file from the list.\\
 \newline
-Under the list you have 5 buttons that are de-activated by default. In order to activate the first, second or third one, you need to select more than 1 file in the list. If you click on the \textit{Convert and validate selected} button while having 5 files selected in the list, the tool will convert and validate all 5 files. You can stop the program when you want by pressing the \textit{Abort} button, but please note that after pressing the \textit{Abort} button, the tool will finish that last operation before stopping the rest. On the main part of the windows, you will see the progression and status of the operations.\\
+Under the list you have 4 buttons that are de-activated by default. In order to activate the first, second or third one, you need to select more than 1 file in the list. If you click on the \textit{Convert and validate selected} button while having 5 files selected in the list, the tool will convert and validate all 5 files. You can stop the program when you want by pressing the \textit{Abort} button, but please note that after pressing the \textit{Abort} button, the tool will finish that last operation before stopping the rest. You will be prompted with a progression bar and status of the operations.\\
 \newline
 The fourth button is used to create a holdings guide from a list of finding aids. The tool will ask you for some information before proceeding with the creation of the holdings guide in APE EAD / XML.\\
 All finding aids without eadid text field will be discarded from the holdings guide. An error message will be shown to the user.\\
 \newline
-When a file has been validated, its color changes in the list display.
+When a file has been validated, its color changes in the list display - a valid file becomes green, a non valid file becomes red.
 
 \subsection{The tabs}
-You have 5 tabs, each has a purpose, the first and main one is \textit{Summary}, this is where you can apply operations to your XML file. When a file is selected on the list, you can, from this tab, convert the file, pass it to the validator or convert it to ESE. Also you have the possibility to choose the stylesheet to be used for the conversion Ð of course only if you installed your own stylesheet (see \textit{chapter 2.1.2 Options - Use your stylesheet}). Under those buttons and radio buttons, there is a part of the window where the status of the current transformation or validation is displayed.\\
+You have 5 tabs, each has a purpose, the first and main one is \textit{Summary}, this is where you can apply operations to your XML file. When a file is selected on the list, you can, from this tab, convert the file, pass it to the validator or convert it to ESE. Also you have the possibility to choose the stylesheet to be used for the conversion Ð of course only if you installed your own stylesheet (see \textit{chapter 2.1.2 Options - Use your stylesheet}). The same goes for the schemas. Under those buttons and radio buttons, there is a part of the window where the status of the current transformation or validation is displayed.\\
 \newline
 The second tab is \textit{Validation} and here you will find the results of a validation for the selected file. It can either contain a sentence saying the validation succeeded or the list of all the errors the validation found.\\
 \newline
-The third tab is \textit{Conversion} and here is displayed information on the transformation. For example, it will tell you all the elements of your original file that have not been transformed in the resulting APE EAD file.\\
+The third tab is \textit{Conversion} and here is displayed information on the transformation. For example, it will tell you all the elements of your original file that have not been transformed in the resulting apeEAD file.\\
 \newline
-The fourth tab is \textit{ESE conversion} and here is displayed information on the ESE conversions. Files that are transformed into ESE are automatically saved in the output directory. Their names stay the same with an additional "-ese" before the file extension.\\
+The fourth tab is \textit{Europeana conversion} and here is displayed information on the ESE/EDM conversions. Files that are transformed into ESE/EDM are automatically saved in the output directory. Their names stay the same with an additional "-ese" before the file extension. They will also be displayed in the second list of files.\\
 \newline
 The last tab is \textit{Edition} and here you can see the XML tree of your selected document. There you can find elements that can be edited. Note, however that you can not edit all the elements. Certain elements only can be edited, such as:
 \begin{itemize}
@@ -179,7 +189,7 @@ The last tab is \textit{Edition} and here you can see the XML tree of your selec
 Please note that after editing your file, you should validate it and save it.
 
 \section{EAD to ESE conversion}
-The EAD to ESE conversion can only happen after a file has been successfully validated against an APE EAD schema. Once the file is valid, a button is available in the summary tab to convert your APE EAD file into ESE. After selecting this action, you will be prompted with a form that you need to fill in, this form contains mandatory options. The only optional entry is about the "additional rights information". In the data provider entry, please write the name of your institution.
+The EAD to ESE conversion can only happen after a file has been successfully validated against an apeEAD schema. Once the file is valid, a button is available in the summary tab to convert your apeEAD file into ESE. After selecting this action, you will be prompted with a form that you need to fill in, this form contains mandatory options. The only optional entry is about the "additional rights information". In the data provider entry, please write the name of your institution.
 
 \section{Update of the tool}
 A semi-automatic update is available in the tool from the version 0.8. Semi-automatic because it requires the user to download the new version and install it.\\
@@ -189,7 +199,7 @@ At the launch of the tool, it will check on the internet if a new version is ava
 Please note that downloading the the tool will also get the last version of the default stylesheet where additions might have been made.\\
 
 \section{Troubleshooting}
-If problems were to be found, please write us an email via http://www.archivesportaleurope.eu/Portal/contact.action\\
+If problems were to be found, please write us an email via https://www.archivesportaleurope.net/Dashboard/contact.action\\
 \newline
 If the tool contain bugs or you suspect it does, please do the following before sending an email:
 \begin{itemize}

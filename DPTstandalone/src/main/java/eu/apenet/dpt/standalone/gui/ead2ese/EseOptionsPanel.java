@@ -369,6 +369,9 @@ public class EseOptionsPanel extends JPanel {
             AbstractButton btn = enumeration.nextElement();
             if (btn.isSelected() && btn.getActionCommand().equals(YES)) {
                 config.setInheritOrigination(true);
+                config.setInheritCustodhist(true);
+                config.setInheritAltformavailHead(true);
+                config.setInheritControlaccess(true);
             }
         }
 
@@ -390,6 +393,7 @@ public class EseOptionsPanel extends JPanel {
         }
 
         config.setDataProvider(dataProviderTextArea.getText());
+        config.setProvider(providerTextArea.getText());
 
         enumeration = licenseGroup.getElements();
         while (enumeration.hasMoreElements()) {
