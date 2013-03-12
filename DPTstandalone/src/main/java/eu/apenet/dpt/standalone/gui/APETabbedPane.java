@@ -291,7 +291,7 @@ public class APETabbedPane extends JTabbedPane {
         JRadioButton radioButton;
         for(File xsltFile : Utilities.getXsltFiles()){
             radioButton = new JRadioButton(xsltFile.getName());
-            if(xsltFile.getName().equals(Utilities.XSL_DEFAULT_NAME))
+            if(xsltFile.getName().equals(retrieveFromDb.retrieveDefaultXsl()))
                 radioButton.setSelected(true);
             radioButton.addActionListener(new XsltSelectorListener(dataPreparationToolGUI));
             dataPreparationToolGUI.getGroupXslt().add(radioButton);
@@ -307,7 +307,7 @@ public class APETabbedPane extends JTabbedPane {
         JRadioButton radioButton;
         for(Xsd_enum xsdEnum : Xsd_enum.values()){
             radioButton = new JRadioButton(xsdEnum.getReadableName());
-            if(xsdEnum.equals(Xsd_enum.XSD_APE_SCHEMA))
+            if(xsdEnum.getReadableName().equals(retrieveFromDb.retrieveDefaultXsd()))
                 radioButton.setSelected(true);
             radioButton.addActionListener(new XsdSelectorListener(dataPreparationToolGUI));
             dataPreparationToolGUI.getGroupXsd().add(radioButton);
