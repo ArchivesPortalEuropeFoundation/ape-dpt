@@ -43,6 +43,7 @@ public class ValidateActionListener implements ActionListener {
     public ValidateActionListener(DataPreparationToolGUI dataPreparationToolGUI, APETabbedPane apeTabbedPane) {
         this.dataPreparationToolGUI = dataPreparationToolGUI;
         this.apeTabbedPane = apeTabbedPane;
+        this.labels = dataPreparationToolGUI.getLabels();
     }
 
 
@@ -52,7 +53,6 @@ public class ValidateActionListener implements ActionListener {
         dataPreparationToolGUI.disableRadioButtons();
 
         File file = (File) dataPreparationToolGUI.getXmlEadList().getSelectedValue();
-//        SwingUtilities.invokeLater(new ValidateRunner(file));
         new Thread(new ValidateRunner(file)).start();
     }
 
