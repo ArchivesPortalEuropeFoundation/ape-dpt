@@ -38,13 +38,13 @@ public class ConvertAndValidateActionListener extends ApexActionListener {
     private ResourceBundle labels;
     private Component parent;
 
-    public ConvertAndValidateActionListener(ResourceBundle labels, DataPreparationToolGUI dataPreparationToolGUI, Component parent) {
-        this.labels = labels;
+    public ConvertAndValidateActionListener(DataPreparationToolGUI dataPreparationToolGUI, Component parent) {
         this.dataPreparationToolGUI = dataPreparationToolGUI;
         this.parent = parent;
     }
 
     public void actionPerformed(ActionEvent event) {
+        labels = dataPreparationToolGUI.getLabels();
         continueLoop = true;
         dataPreparationToolGUI.disableAllBtnAndItems();
         dataPreparationToolGUI.disableRadioButtons();
@@ -154,7 +154,7 @@ public class ConvertAndValidateActionListener extends ApexActionListener {
                                     fileInstance.setIsConverted();
                                     fileInstance.setLastOperation(FileInstance.Operation.CONVERT);
                                     if(xslMessages.toString().equals(""))
-                                        fileInstance.setConversionErrors("No excluded elements");
+                                        fileInstance.setConversionErrors(labels.getString("conversion.noExcludedElements"));
 
                                     if(!continueLoop)
                                         break;

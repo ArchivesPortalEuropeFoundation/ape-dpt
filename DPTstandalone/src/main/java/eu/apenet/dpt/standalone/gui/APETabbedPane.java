@@ -135,7 +135,7 @@ public class APETabbedPane extends JTabbedPane {
         eseConversionErrors.setLineWrap(true);
         eseConversionErrors.setWrapStyleWord(true);
 
-        convertBtn.addActionListener(new ConvertActionListener(parent, labels, dataPreparationToolGUI, apePanel));
+        convertBtn.addActionListener(new ConvertActionListener(parent, dataPreparationToolGUI, apePanel));
         convertBtn.setPreferredSize(DEFAULT_BTN_DIMENSION);
         convertBtn.setEnabled(false);
 
@@ -147,7 +147,7 @@ public class APETabbedPane extends JTabbedPane {
         convertEdmBtn.setPreferredSize(DEFAULT_BTN_DIMENSION);
         convertEdmBtn.setEnabled(false);
 
-        validateBtn.addActionListener(new ValidateActionListener(labels, dataPreparationToolGUI, this));
+        validateBtn.addActionListener(new ValidateActionListener(dataPreparationToolGUI, this));
         validateBtn.setPreferredSize(DEFAULT_BTN_DIMENSION);
         validateBtn.setEnabled(false);
 

@@ -40,8 +40,7 @@ public class ValidateActionListener implements ActionListener {
     private DataPreparationToolGUI dataPreparationToolGUI;
     private APETabbedPane apeTabbedPane;
 
-    public ValidateActionListener(ResourceBundle labels, DataPreparationToolGUI dataPreparationToolGUI, APETabbedPane apeTabbedPane) {
-        this.labels = labels;
+    public ValidateActionListener(DataPreparationToolGUI dataPreparationToolGUI, APETabbedPane apeTabbedPane) {
         this.dataPreparationToolGUI = dataPreparationToolGUI;
         this.apeTabbedPane = apeTabbedPane;
     }
@@ -65,6 +64,7 @@ public class ValidateActionListener implements ActionListener {
         }
 
         public void run() {
+            labels = dataPreparationToolGUI.getLabels();
             SummaryWorking summaryWorking = new SummaryWorking(dataPreparationToolGUI.getResultArea());
             Thread threadRunner = new Thread(summaryWorking);
             FileInstance fileInstance = dataPreparationToolGUI.getFileInstances().get(file.getName());
