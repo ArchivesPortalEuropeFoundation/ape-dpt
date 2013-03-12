@@ -999,8 +999,10 @@ public class DataPreparationToolGUI extends JFrame {
             FileInstance fileInstance = fileInstances.get(text);
             if (fileInstance.isValid()) {
                 apeTabbedPane.setValidationErrorText(labels.getString("validationSuccess"));
+                apeTabbedPane.enableReportBtn();
             } else {
                 apeTabbedPane.setValidationErrorText(fileInstance.getValidationErrors());
+                apeTabbedPane.disableReportBtn();
             }
             apeTabbedPane.setConversionErrorText(fileInstance.getConversionErrors());
             if (fileInstance.isConverted()) {

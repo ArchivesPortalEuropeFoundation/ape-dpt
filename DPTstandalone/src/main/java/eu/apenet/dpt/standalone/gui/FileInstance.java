@@ -4,6 +4,8 @@ import eu.apenet.dpt.standalone.gui.xsdAddition.XsdObject;
 import eu.apenet.dpt.utils.util.XmlChecker;
 
 import java.io.File;
+import java.util.List;
+import java.util.Map;
 
 /**
  * User: Yoann Moranville
@@ -25,6 +27,7 @@ public class FileInstance {
     private FileType fileType;
     private Operation lastOperation;
     private boolean isXml;
+    Map<String, List<String>> xmlQualityErrors;
 
     public FileInstance(File file, boolean checkXml) {
         if(checkXml && !isXml) //todo: not sure about this !isXml
@@ -158,6 +161,14 @@ public class FileInstance {
 
     public void setEseLocation(String eseLocation) {
         this.eseLocation = eseLocation;
+    }
+
+    public Map<String, List<String>> getXmlQualityErrors() {
+        return xmlQualityErrors;
+    }
+
+    public void setXmlQualityErrors(Map<String, List<String>> xmlQualityErrors) {
+        this.xmlQualityErrors = xmlQualityErrors;
     }
 
     public enum FileType{

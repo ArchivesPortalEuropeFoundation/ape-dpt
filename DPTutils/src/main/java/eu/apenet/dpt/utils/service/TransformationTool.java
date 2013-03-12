@@ -12,11 +12,13 @@ import java.util.HashMap;
 import java.util.Map;
 
 import net.sf.saxon.event.Receiver;
+import net.sf.saxon.lib.ExtensionFunctionCall;
 import net.sf.saxon.s9api.*;
 import net.sf.saxon.serialize.Emitter;
 import net.sf.saxon.serialize.MessageEmitter;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.io.output.NullOutputStream;
 import org.apache.log4j.Logger;
 import org.xml.sax.*;
 import org.xml.sax.helpers.XMLReaderFactory;
@@ -38,17 +40,17 @@ public class TransformationTool {
     	return createTransformation(inputFileStream, outputFile, xslFile, parameters, outputIsFile, forWebApp, provider, isXsd11, new CounterCLevelCall());
     }
     
-    public static StringWriter createTransformation(InputStream inputFileStream, File outputFile, InputStream xslFile, Map<String, String> parameters, boolean outputIsFile, boolean forWebApp, String provider, boolean isXsd11, CounterCLevelCall counterCLevelCall) throws SAXException {
+    public static StringWriter createTransformation(InputStream inputFileStream, File outputFile, InputStream xslFile, Map<String, String> parameters, boolean outputIsFile, boolean forWebApp, String provider, boolean isXsd11, ExtensionFunctionCall extensionFunctionCall) throws SAXException {
         Source xsltSource = new StreamSource(xslFile);
-        return createTransformation(inputFileStream, outputFile, xsltSource, parameters, outputIsFile, forWebApp, provider, isXsd11, counterCLevelCall);
+        return createTransformation(inputFileStream, outputFile, xsltSource, parameters, outputIsFile, forWebApp, provider, isXsd11, extensionFunctionCall);
     }
 
-    public static StringWriter createTransformation(InputStream inputFileStream, File outputFile, File xslFile, Map<String, String> parameters, boolean outputIsFile, boolean forWebApp, String provider, boolean isXsd11, CounterCLevelCall counterCLevelCall) throws SAXException {
+    public static StringWriter createTransformation(InputStream inputFileStream, File outputFile, File xslFile, Map<String, String> parameters, boolean outputIsFile, boolean forWebApp, String provider, boolean isXsd11, ExtensionFunctionCall extensionFunctionCall) throws SAXException {
         Source xsltSource = new StreamSource(xslFile);
-        return createTransformation(inputFileStream, outputFile, xsltSource, parameters, outputIsFile, forWebApp, provider, isXsd11, counterCLevelCall);
+        return createTransformation(inputFileStream, outputFile, xsltSource, parameters, outputIsFile, forWebApp, provider, isXsd11, extensionFunctionCall);
     }
 
-    public static StringWriter createTransformation(InputStream inputFileStream, File outputFile, Source xsltSource, Map<String, String> parameters, boolean outputIsFile, boolean forWebApp, String provider, boolean isXsd11, CounterCLevelCall counterCLevelCall) throws SAXException {
+    public static StringWriter createTransformation(InputStream inputFileStream, File outputFile, Source xsltSource, Map<String, String> parameters, boolean outputIsFile, boolean forWebApp, String provider, boolean isXsd11, ExtensionFunctionCall extensionFunctionCall) throws SAXException {
         try {
             XMLReader saxParser =  XMLReaderFactory.createXMLReader();
             saxParser.setEntityResolver(new DiscardDtdEntityResolver());
@@ -56,7 +58,6 @@ public class TransformationTool {
             DateNormalization dateNormalization = new DateNormalization();
             Oai2EadNormalization oai2EadNormalization = new Oai2EadNormalization();
             FlagSet flagSet = new FlagSet();
-            XmlQualityChecker xmlQualityChecker = new XmlQualityChecker();
 
             InputSource is = new InputSource(inputFileStream);
             SAXSource xmlSource = new SAXSource(saxParser, is);
@@ -65,30 +66,34 @@ public class TransformationTool {
             processor.registerExtensionFunction(dateNormalization);
             processor.registerExtensionFunction(oai2EadNormalization);
             processor.registerExtensionFunction(flagSet);
-            processor.registerExtensionFunction(xmlQualityChecker);
 
-            if(counterCLevelCall == null)
-                counterCLevelCall = new CounterCLevelCall();
-            CounterCLevel counterCLevel = new CounterCLevel(counterCLevelCall);
-            processor.registerExtensionFunction(counterCLevel);
+            if(extensionFunctionCall == null || extensionFunctionCall instanceof CounterCLevelCall) {
+                if(extensionFunctionCall == null)
+                    extensionFunctionCall = new CounterCLevelCall();
+                CounterCLevel counterCLevel = new CounterCLevel((CounterCLevelCall)extensionFunctionCall);
+                processor.registerExtensionFunction(counterCLevel);
+            } else if(extensionFunctionCall instanceof XmlQualityCheckerCall) {
+                XmlQualityChecker xmlQualityChecker = new XmlQualityChecker((XmlQualityCheckerCall)extensionFunctionCall);
+                processor.registerExtensionFunction(xmlQualityChecker);
+            }
 
             XsltCompiler compiler = processor.newXsltCompiler();
 
             compiler.setErrorListener(
-                new ErrorListener() {
-                    public void warning(TransformerException e) throws TransformerException {
-                        logError(e);
+                    new ErrorListener() {
+                        public void warning(TransformerException e) throws TransformerException {
+                            logError(e);
+                        }
+                        public void error(TransformerException e) throws TransformerException {
+                            logError(e);
+                        }
+                        public void fatalError(TransformerException e) throws TransformerException {
+                            logError(e);
+                        }
+                        public void logError(TransformerException e) {
+                            LOG.error("Error: " + e.getMessageAndLocation());
+                        }
                     }
-                    public void error(TransformerException e) throws TransformerException {
-                        logError(e);
-                    }
-                    public void fatalError(TransformerException e) throws TransformerException {
-                        logError(e);
-                    }
-                    public void logError(TransformerException e) {
-                        LOG.error("Error: " + e.getMessageAndLocation());
-                    }
-                }
             );
 
             XsltExecutable executable = compiler.compile(xsltSource);
@@ -96,12 +101,20 @@ public class TransformationTool {
 
             transformer.setSource(xmlSource);
 
-            FileOutputStream outputStream = new FileOutputStream(outputFile);
-            OutputStreamWriter writer = new OutputStreamWriter(outputStream, CHARACTER_SET);
+            FileOutputStream outputStream = null;
+            if(outputFile != null) {
+                outputStream = new FileOutputStream(outputFile);
+                OutputStreamWriter writer = new OutputStreamWriter(outputStream, CHARACTER_SET);
+                Serializer serializer = new Serializer();
+                serializer.setOutputWriter(writer);
+                transformer.setDestination(serializer);
+            } else {
+                OutputStream writer = new NullOutputStream();
+                Serializer serializer = new Serializer();
+                serializer.setOutputStream(writer);
+                transformer.setDestination(serializer);
+            }
 
-            Serializer serializer = new Serializer();
-            serializer.setOutputWriter(writer);
-            transformer.setDestination(serializer);
             if(parameters == null)
                 parameters = new HashMap<String, String>();
             parameters.put("provider", provider);
