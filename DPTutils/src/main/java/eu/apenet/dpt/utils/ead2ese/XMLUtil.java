@@ -14,6 +14,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
+import eu.apenet.dpt.utils.util.APEXmlCatalogResolver;
 import javanet.staxutils.IndentingXMLStreamWriter;
 
 import javax.xml.XMLConstants;
@@ -106,6 +107,7 @@ public class XMLUtil {
 	
 	private static Schema getSchema(List<URL> schemaURLs) throws SAXException {
 		SchemaFactory schemaFactory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
+        schemaFactory.setResourceResolver(new APEXmlCatalogResolver());
 		List<StreamSource> schemaSources = new ArrayList<StreamSource>();
 		for (URL schemaURL : schemaURLs) {
 			schemaSources.add(new StreamSource(schemaURL.toExternalForm()));
