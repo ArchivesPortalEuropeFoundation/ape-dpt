@@ -114,10 +114,13 @@ public class DataPreparationToolGUI extends JFrame {
     /**
      * List of files (model)
      */
-    private ProfileListModel model;
+    private ProfileListModel xmlEadListModel;
+    private JList xmlEadList;
+    private ProfileListModel eseListModel;
+    private JList eseList;
+    
+    //    private JButton abort = new JButton("");
     private JLabel progressLabel = new JLabel("", JLabel.CENTER);
-//    private JButton abort = new JButton("");
-    private JList list;
     private JLabel resultArea = new JLabel();
     private JTable eagFormTable;
     private ButtonGroup groupXslt = new ButtonGroup();
@@ -207,71 +210,25 @@ public class DataPreparationToolGUI extends JFrame {
 
         getContentPane().add(apePanel);
 
-        model = new ProfileListModel(fileInstances, this);
-        list = new JList(model);
-        list.setCellRenderer(new IconListCellRenderer(fileInstances));
-        list.setDragEnabled(true);
+        xmlEadListModel = new ProfileListModel(fileInstances, this);
+        xmlEadList = new JList(xmlEadListModel);
+        xmlEadList.setCellRenderer(new IconListCellRenderer(fileInstances));
+        xmlEadList.setDragEnabled(true);
 
-        list.setTransferHandler(new ListTransferHandler());
+        xmlEadList.setTransferHandler(new ListTransferHandler());
 
-        list.setDropTarget(new DropTarget(list, new DropTargetListener() {
-            private void updateLine(Point pt) {
-                if (list.locationToIndex(pt) < 0) {
-                    list.clearSelection();
-                }
-                list.repaint();
-            }
-
-            public void dragEnter(DropTargetDragEvent dropTargetDragEvent) {
-                Point location = dropTargetDragEvent.getLocation();
-                from = location;
-                updateLine(location);
-            }
-
-            public void dragOver(DropTargetDragEvent dropTargetDragEvent) {
-                Point location = dropTargetDragEvent.getLocation();
-                updateLine(location);
-            }
-
-            public void dropActionChanged(DropTargetDragEvent dropTargetDragEvent) {
-            }
-
-            private void resetGlassPane() {
-                list.repaint();
-            }
-
-            public void dragExit(DropTargetEvent dropTargetEvent) {
-                resetGlassPane();
-            }
-
-            public void drop(DropTargetDropEvent dropTargetDropEvent) {
-                resetGlassPane();
-
-                Point p = list.getMousePosition();
-
-                int dstRow = list.locationToIndex(p);
-
-                int srcRow = list.locationToIndex(from);
-                ProfileListModel m = (ProfileListModel) list.getModel();
-
-                if (dstRow < 0) {
-                    dstRow = 0;
-                }
-                if (dstRow > m.getSize() - 1) {
-                    dstRow = m.getSize() - 1;
-                }
-
-                m.insertElementAt((File) m.getElementAt(srcRow), dstRow);
-                if (dstRow <= srcRow) {
-                    m.removeElementAt(srcRow + 1);
-                    list.setSelectedIndex(dstRow);
-                } else {
-                    m.removeElementAt(srcRow);
-                    list.setSelectedIndex(dstRow - 1);
-                }
-            }
-        }));
-        model.setList(list);
+        xmlEadList.setDropTarget(new DropTarget(xmlEadList, new ListDropTargetListener(xmlEadList, from)));
+        xmlEadListModel.setList(xmlEadList);
+        
+        eseListModel = new ProfileListModel(fileInstances, this);
+        eseList = new JList(eseListModel);
+        eseList.setCellRenderer(new IconListCellRenderer(fileInstances));
+        eseList.setDragEnabled(true);
+        
+        eseList.setTransferHandler(new ListTransferHandler());
+        
+        eseList.setDropTarget(new DropTarget(eseList, new ListDropTargetListener(eseList, from)));
+        eseListModel.setList(eseList);
 
         JMenuBar menuBar = new JMenuBar();
         menuBar.add(fileMenu);
@@ -345,7 +302,7 @@ public class DataPreparationToolGUI extends JFrame {
 
         apePanel.setFilename("");
 
-        createHgListener = new CreateHGListener(retrieveFromDb, labels, getContentPane(), fileInstances, list, this);
+        createHgListener = new CreateHGListener(retrieveFromDb, labels, getContentPane(), fileInstances, xmlEadList, this);
         createHGBtn.addActionListener(createHgListener);
         createHGBtn.setEnabled(false);
 
@@ -421,10 +378,10 @@ public class DataPreparationToolGUI extends JFrame {
 
         DataPreparationToolGUI.super.setTitle(labels.getString("title"));
 
-        if (list.getSelectedValue() == null) {
+        if (xmlEadList.getSelectedValue() == null) {
             apePanel.setFilename("");
         } else {
-            apePanel.setFilename(((File) list.getSelectedValue()).getName());
+            apePanel.setFilename(((File) xmlEadList.getSelectedValue()).getName());
         }
 
         apePanel.getApeTabbedPane().setValidationBtnText(labels.getString("validate"));
@@ -520,12 +477,12 @@ public class DataPreparationToolGUI extends JFrame {
                                 Arrays.sort(fileArray, new FileNameComparator());
                                 for (File children : fileArray) {
                                     if (isCorrect(children)) {
-                                        model.addFile(children);
+                                        xmlEadListModel.addFile(children);
                                     }
                                 }
                             } else {
                                 if (isCorrect(file)) {
-                                    model.addFile(file);
+                                    xmlEadListModel.addFile(file);
                                 }
                             }
                         }
@@ -556,7 +513,7 @@ public class DataPreparationToolGUI extends JFrame {
                 eagFileChooser.setCurrentDirectory(new File(retrieveFromDb.retrieveOpenLocation()));
                 if (eagFileChooser.showOpenDialog(getParent()) == JFileChooser.APPROVE_OPTION) {
                     File eagFile = eagFileChooser.getSelectedFile();
-                    new Eag2012Frame(eagFile, false, getContentPane().getSize(), (ProfileListModel) getList().getModel(), labels);
+                    new Eag2012Frame(eagFile, false, getContentPane().getSize(), (ProfileListModel) getXmlEadList().getModel(), labels);
                 }
             }
         });
@@ -568,13 +525,13 @@ public class DataPreparationToolGUI extends JFrame {
                 eagFileChooser.setCurrentDirectory(new File(retrieveFromDb.retrieveOpenLocation()));
                 if (eagFileChooser.showOpenDialog(getParent()) == JFileChooser.APPROVE_OPTION) {
                     File eagFile = eagFileChooser.getSelectedFile();
-                    new Eag2012Frame(eagFile, true, getContentPane().getSize(), (ProfileListModel) getList().getModel(), labels);
+                    new Eag2012Frame(eagFile, true, getContentPane().getSize(), (ProfileListModel) getXmlEadList().getModel(), labels);
                 }
             }
         });
         createEag2012FromScratch.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                new Eag2012Frame(getContentPane().getSize(), (ProfileListModel) getList().getModel(), labels);
+                new Eag2012Frame(getContentPane().getSize(), (ProfileListModel) getXmlEadList().getModel(), labels);
             }
         });
         digitalObjectTypeItem.addActionListener(new ActionListener() {
@@ -618,8 +575,8 @@ public class DataPreparationToolGUI extends JFrame {
         saveSelectedItem.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 String defaultOutputDirectory = retrieveFromDb.retrieveDefaultSaveFolder();
-                boolean isMultipleFiles = list.getSelectedIndices().length > 1;
-                for (Object selectedValue : list.getSelectedValues()) {
+                boolean isMultipleFiles = xmlEadList.getSelectedIndices().length > 1;
+                for (Object selectedValue : xmlEadList.getSelectedValues()) {
                     String filename = ((File)selectedValue).getName();
                     FileInstance fileInstance = fileInstances.get(filename);
                     String filePrefix = fileInstance.getFileType().getFilePrefix();
@@ -656,7 +613,7 @@ public class DataPreparationToolGUI extends JFrame {
                     } else {
                         try {
                             File newFile = new File(defaultOutputDirectory + filePrefix + "_" + filename);
-                            FileUtils.copyFile((File) list.getSelectedValue(), new File(defaultOutputDirectory + filePrefix + "_" + filename));
+                            FileUtils.copyFile((File) xmlEadList.getSelectedValue(), new File(defaultOutputDirectory + filePrefix + "_" + filename));
                             fileInstance.setLastOperation(FileInstance.Operation.SAVE);
                             fileInstance.setCurrentLocation(newFile.getAbsolutePath());
                         } catch (IOException ioe) {
@@ -684,22 +641,22 @@ public class DataPreparationToolGUI extends JFrame {
         xsdItem.addActionListener(new XsdAdderActionListener(this, labels, retrieveFromDb));
         if(Utilities.isDev)
             databaseItem.addActionListener(new DatabaseCheckerActionListener(retrieveFromDb, getContentPane()));
-        list.addMouseListener(new MouseAdapter() {
+        xmlEadList.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
                 if (e.getButton() == MouseEvent.BUTTON3) {
-                    if (list.getSelectedValues().length == 1) {
-                        final int indexToErase = list.locationToIndex(e.getPoint());
-                        list.setSelectedIndex(indexToErase);
+                    if (xmlEadList.getSelectedValues().length == 1) {
+                        final int indexToErase = xmlEadList.locationToIndex(e.getPoint());
+                        xmlEadList.setSelectedIndex(indexToErase);
                     }
                     JPopupMenu popup = new JPopupMenu();
                     deleteFileItem.addActionListener(new ActionListener() {
                         public void actionPerformed(ActionEvent e) {
                             try {
-                                if (list.getSelectedValues().length > 1) {
-                                    model.removeFiles(list.getSelectedValues());
+                                if (xmlEadList.getSelectedValues().length > 1) {
+                                    xmlEadListModel.removeFiles(xmlEadList.getSelectedValues());
                                 } else {
-                                    model.removeFile((File) list.getSelectedValue());
+                                    xmlEadListModel.removeFile((File) xmlEadList.getSelectedValue());
                                 }
                             } catch (Exception ex) {
                                 createErrorOrWarningPanel(ex, true, labels.getString("errorRemovingFileFromList"), getContentPane());
@@ -713,11 +670,11 @@ public class DataPreparationToolGUI extends JFrame {
                 }
             }
         });
-        list.addListSelectionListener(new ListSelectionListener() {
+        xmlEadList.addListSelectionListener(new ListSelectionListener() {
             public void valueChanged(ListSelectionEvent e) {
                 if(!e.getValueIsAdjusting()) {
-                    if (list.getSelectedValues() != null && list.getSelectedValues().length != 0) {
-                        if (list.getSelectedValues().length > 1) {
+                    if (xmlEadList.getSelectedValues() != null && xmlEadList.getSelectedValues().length != 0) {
+                        if (xmlEadList.getSelectedValues().length > 1) {
                             convertAndValidateBtn.setEnabled(true);
                             validateSelectionBtn.setEnabled(true);
                             convertEseSelectionBtn.setEnabled(true);
@@ -727,9 +684,9 @@ public class DataPreparationToolGUI extends JFrame {
                             convertAndValidateBtn.setEnabled(false);
                             validateSelectionBtn.setEnabled(false);
                             convertEseSelectionBtn.setEnabled(false);
-                            changeInfoInGUI(((File) list.getSelectedValue()).getName());
+                            changeInfoInGUI(((File) xmlEadList.getSelectedValue()).getName());
                             if (apePanel.getApeTabbedPane().getSelectedIndex() == APETabbedPane.TAB_EDITION)
-                                apePanel.getApeTabbedPane().createEditionTree(((File) list.getSelectedValue()));
+                                apePanel.getApeTabbedPane().createEditionTree(((File) xmlEadList.getSelectedValue()));
                             apePanel.getApeTabbedPane().changeBackgroundColor(APETabbedPane.TAB_CONVERSION, Utilities.TAB_COLOR);
                             apePanel.getApeTabbedPane().changeBackgroundColor(APETabbedPane.TAB_VALIDATION, Utilities.TAB_COLOR);
                         }
@@ -760,8 +717,8 @@ public class DataPreparationToolGUI extends JFrame {
 
     private void checkHoldingsGuideButton() {
         boolean first = true;
-        for (int i = 0; i < list.getSelectedValues().length; i++) {
-            FileInstance fileInstance = fileInstances.get(((File) list.getSelectedValues()[i]).getName());
+        for (int i = 0; i < xmlEadList.getSelectedValues().length; i++) {
+            FileInstance fileInstance = fileInstances.get(((File) xmlEadList.getSelectedValues()[i]).getName());
             if (fileInstance.getValidationSchema().getFileType().equals(FileInstance.FileType.EAD) && fileInstance.isValid()) {
                 if(!first) {
                     createHGBtn.setEnabled(true);
@@ -788,11 +745,23 @@ public class DataPreparationToolGUI extends JFrame {
     }
 
     private JPanel createWest() {
-        list.setCellRenderer(new IconListCellRenderer(fileInstances));
-        list.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
+        JPanel fileLists = new JPanel(new GridLayout(0, 1));
+        JPanel xmlEadListPanel = new JPanel(new BorderLayout());
+        xmlEadList.setCellRenderer(new IconListCellRenderer(fileInstances));
+        xmlEadList.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
+        xmlEadListPanel.add(new JScrollPane(xmlEadList, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER), BorderLayout.CENTER);
+        xmlEadListPanel.add(new Label(labels.getString("xmlEadFiles")), BorderLayout.SOUTH);
+        JPanel eseListPanel = new JPanel(new BorderLayout());
+        eseListPanel.add(new Label(labels.getString("eseFiles")), BorderLayout.NORTH);
+        eseList.setCellRenderer(new IconListCellRenderer(fileInstances));
+        eseList.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
+        eseListPanel.add(new JScrollPane(eseList, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER), BorderLayout.CENTER);
+        eseListPanel.setEnabled(false);
+        fileLists.add(xmlEadListPanel);
+        fileLists.add(eseListPanel);
         JPanel p = new JPanel(new BorderLayout());
         p.setPreferredSize(new Dimension(200, 100));
-        p.add(new JScrollPane(list, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER), BorderLayout.CENTER);
+        p.add(fileLists);
         p.add(createSouthWest(), BorderLayout.SOUTH);
         return p;
     }
@@ -855,7 +824,7 @@ public class DataPreparationToolGUI extends JFrame {
             convertEseSelectionBtn.setEnabled(false);
             createHGBtn.setEnabled(false);
 //            abort.setEnabled(false);
-            list.setEnabled(true);
+            xmlEadList.setEnabled(true);
         }
     };
 
@@ -1208,8 +1177,12 @@ public class DataPreparationToolGUI extends JFrame {
         return resultArea;
     }
 
-    public JList getList() {
-        return list;
+    public JList getXmlEadList() {
+        return xmlEadList;
+    }
+
+    public JList getEseList() {
+        return eseList;
     }
 
     public Map<String, FileInstance> getFileInstances() {

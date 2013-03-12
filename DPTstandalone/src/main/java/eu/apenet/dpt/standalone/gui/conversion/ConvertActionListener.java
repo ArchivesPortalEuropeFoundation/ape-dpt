@@ -45,7 +45,7 @@ public class ConvertActionListener implements ActionListener {
 
     public void actionPerformed(ActionEvent e) {
         Map<String, FileInstance> fileInstances = dataPreparationToolGUI.getFileInstances();
-        JList list = dataPreparationToolGUI.getList();
+        JList list = dataPreparationToolGUI.getXmlEadList();
         dataPreparationToolGUI.disableAllBtnAndItems();
         dataPreparationToolGUI.disableRadioButtons();
         File file = (File)list.getSelectedValue();

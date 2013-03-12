@@ -49,7 +49,7 @@ public class ValidateActionListener implements ActionListener {
         dataPreparationToolGUI.disableAllBtnAndItems();
         dataPreparationToolGUI.disableRadioButtons();
 
-        File file = (File) dataPreparationToolGUI.getList().getSelectedValue();
+        File file = (File) dataPreparationToolGUI.getXmlEadList().getSelectedValue();
 //        SwingUtilities.invokeLater(new ValidateRunner(file));
         new Thread(new ValidateRunner(file)).start();
     }
@@ -133,7 +133,7 @@ public class ValidateActionListener implements ActionListener {
                 threadRunner.interrupt();
                 dataPreparationToolGUI.setResultAreaText(labels.getString("validationFinished"));
                 fileInstance.setLastOperation(FileInstance.Operation.VALIDATE);
-                dataPreparationToolGUI.getList().repaint();
+                dataPreparationToolGUI.getXmlEadList().repaint();
                 dataPreparationToolGUI.enableRadioButtons();
             }
         }

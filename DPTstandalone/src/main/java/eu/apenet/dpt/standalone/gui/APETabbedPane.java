@@ -395,8 +395,8 @@ public class APETabbedPane extends JTabbedPane {
             else if(apeTabbedPane.getSelectedIndex() == TAB_ESE)
                 changeBackgroundColor(TAB_ESE, Utilities.TAB_COLOR);
             else if(apeTabbedPane.getSelectedIndex() == TAB_EDITION){
-                if(dataPreparationToolGUI.getList().getSelectedValue() != null){
-                    createEditionTree((File)dataPreparationToolGUI.getList().getSelectedValue());
+                if(dataPreparationToolGUI.getXmlEadList().getSelectedValue() != null){
+                    createEditionTree((File)dataPreparationToolGUI.getXmlEadList().getSelectedValue());
                     if(tree != null)
                         tree.addMouseListener(new MouseListener(){
                             public void mouseReleased(MouseEvent e){
