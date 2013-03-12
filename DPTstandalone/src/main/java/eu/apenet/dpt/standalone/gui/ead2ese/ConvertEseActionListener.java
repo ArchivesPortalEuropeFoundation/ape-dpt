@@ -29,7 +29,7 @@ public class ConvertEseActionListener implements ActionListener {
 
     public void actionPerformed(ActionEvent e) {
         apePanel.getApeTabbedPane().disableConversionEseBtn();
-        dataPreparationToolGUI.disableConversionEseBtn();
+        dataPreparationToolGUI.disableEseConversionBtn();
 
         JFrame eseOptionFrame = new JFrame(labels.getString("ese.eseOptionFrame"));
         eseOptionFrame.add(new EseOptionsPanel(labels, dataPreparationToolGUI.getXmlEadList().getSelectedValues(), eseOptionFrame, apePanel.getApeTabbedPane(), dataPreparationToolGUI.getFileInstances()));
