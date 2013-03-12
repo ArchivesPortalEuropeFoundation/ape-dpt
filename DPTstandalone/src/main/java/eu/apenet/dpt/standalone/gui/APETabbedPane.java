@@ -1,6 +1,6 @@
 package eu.apenet.dpt.standalone.gui;
 
-import eu.apenet.dpt.standalone.gui.XsdAddition.XsdObject;
+import eu.apenet.dpt.standalone.gui.xsdAddition.XsdObject;
 import eu.apenet.dpt.standalone.gui.conversion.ConvertActionListener;
 import eu.apenet.dpt.standalone.gui.db.RetrieveFromDb;
 import eu.apenet.dpt.standalone.gui.ead2ese.ConvertEseActionListener;

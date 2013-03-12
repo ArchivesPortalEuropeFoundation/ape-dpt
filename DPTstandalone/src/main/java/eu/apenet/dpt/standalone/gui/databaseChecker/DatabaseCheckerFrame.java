@@ -1,6 +1,6 @@
 package eu.apenet.dpt.standalone.gui.databaseChecker;
 
-import eu.apenet.dpt.standalone.gui.XsdAddition.XsdObject;
+import eu.apenet.dpt.standalone.gui.xsdAddition.XsdObject;
 import eu.apenet.dpt.standalone.gui.db.DBUtil;
 import eu.apenet.dpt.standalone.gui.db.RetrieveFromDb;
 import org.apache.log4j.Logger;

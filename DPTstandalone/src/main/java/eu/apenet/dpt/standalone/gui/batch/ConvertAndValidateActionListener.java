@@ -1,7 +1,7 @@
 package eu.apenet.dpt.standalone.gui.batch;
 
 import eu.apenet.dpt.standalone.gui.*;
-import eu.apenet.dpt.standalone.gui.XsdAddition.XsdObject;
+import eu.apenet.dpt.standalone.gui.xsdAddition.XsdObject;
 import eu.apenet.dpt.standalone.gui.adhoc.EadidQueryComponent;
 import eu.apenet.dpt.standalone.gui.conversion.CounterThread;
 import eu.apenet.dpt.standalone.gui.progress.ApexActionListener;
@@ -19,7 +19,6 @@ import org.xml.sax.SAXParseException;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.InputStream;
 import java.io.StringWriter;
