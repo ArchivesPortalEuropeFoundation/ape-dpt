@@ -20,6 +20,7 @@ public class FileInstance {
     private String validationErrors;
     private String conversionErrors;
     private String currentLocation;
+    private String eseLocation;
     private String conversionScriptName;
     private XsdObject validationSchema;
     private FileType fileType;
@@ -36,6 +37,7 @@ public class FileInstance {
         this.validationErrors = "";
         this.conversionErrors = "";
         this.currentLocation = "";
+        this.eseLocation = "";
         this.conversionScriptName = Utilities.getDefaultXsl();
         this.validationSchema = Utilities.getDefaultXsd();
         this.fileType = FileType.EAD;
@@ -149,6 +151,14 @@ public class FileInstance {
 
     public void setXml(boolean xml) {
         isXml = xml;
+    }
+
+    public String getEseLocation() {
+        return eseLocation;
+    }
+
+    public void setEseLocation(String eseLocation) {
+        this.eseLocation = eseLocation;
     }
 
     public enum FileType{

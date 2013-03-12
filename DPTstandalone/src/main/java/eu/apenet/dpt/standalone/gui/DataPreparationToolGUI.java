@@ -766,6 +766,12 @@ public class DataPreparationToolGUI extends JFrame {
         return p;
     }
 
+    public void addEseFileToList(File file) {
+        if(eseListModel.existsFile(file))
+            eseListModel.removeFile(file);
+        eseListModel.addFile(file);
+    }
+
     private JPanel createSouthWest() {
         JPanel p = new JPanel(new GridLayout(0, 1));
         p.add(progressLabel);
