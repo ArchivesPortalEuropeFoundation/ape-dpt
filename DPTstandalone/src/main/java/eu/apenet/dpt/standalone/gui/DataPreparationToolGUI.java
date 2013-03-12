@@ -875,7 +875,7 @@ public class DataPreparationToolGUI extends JFrame {
         JRadioButtonMenuItem jRadioButtonMenuItem;
         for (Xsd_enum xsdEnum : Xsd_enum.values()) {
             jRadioButtonMenuItem = new JRadioButtonMenuItem(xsdEnum.getReadableName());
-            if (xsdEnum.equals(Xsd_enum.XSD_APE_SCHEMA)) {
+            if (xsdEnum.getReadableName().equals(retrieveFromDb.retrieveDefaultXsd())) {
                 jRadioButtonMenuItem.setSelected(true);
             }
             jRadioButtonMenuItem.addActionListener(new XsdSelectActionListener());
@@ -884,6 +884,9 @@ public class DataPreparationToolGUI extends JFrame {
         }
         for (XsdObject additionalXsd : retrieveFromDb.retrieveAdditionalXsds()) {
             jRadioButtonMenuItem = new JRadioButtonMenuItem(additionalXsd.getName());
+            if (additionalXsd.getName().equals(retrieveFromDb.retrieveDefaultXsd())) {
+                jRadioButtonMenuItem.setSelected(true);
+            }
             jRadioButtonMenuItem.addActionListener(new XsdSelectActionListener());
             group.add(jRadioButtonMenuItem);
             defaultXsdSelectionSubmenu.add(jRadioButtonMenuItem);
@@ -893,7 +896,7 @@ public class DataPreparationToolGUI extends JFrame {
     private class XsdSelectActionListener implements ActionListener {
 
         public void actionPerformed(ActionEvent e) {
-            Utilities.setDefaultXsd(e.getActionCommand());
+            retrieveFromDb.saveDefaultXsd(e.getActionCommand());
             for (String key : fileInstances.keySet()) {
                 FileInstance fileInstance = fileInstances.get(key);
                 fileInstance.setValidationSchema(e.getActionCommand());
@@ -914,7 +917,7 @@ public class DataPreparationToolGUI extends JFrame {
         JRadioButtonMenuItem jRadioButtonMenuItem;
         for (File xsltFile : Utilities.getXsltFiles()) {
             jRadioButtonMenuItem = new JRadioButtonMenuItem(xsltFile.getName());
-            if (xsltFile.getName().equals(Utilities.XSL_DEFAULT_NAME)) {
+            if (xsltFile.getName().equals(retrieveFromDb.retrieveDefaultXsl())) {
                 jRadioButtonMenuItem.setSelected(true);
             }
             jRadioButtonMenuItem.addActionListener(new XslSelectActionListener());
@@ -926,7 +929,7 @@ public class DataPreparationToolGUI extends JFrame {
     private class XslSelectActionListener implements ActionListener {
 
         public void actionPerformed(ActionEvent e) {
-            Utilities.setDefaultXsl(e.getActionCommand());
+            retrieveFromDb.saveDefaultXsl(e.getActionCommand());
             for (String key : fileInstances.keySet()) {
                 FileInstance fileInstance = fileInstances.get(key);
                 fileInstance.setConversionScriptName(e.getActionCommand());

@@ -77,6 +77,24 @@ public class RetrieveFromDb {
         dbUtil.doSqlQuery(query, null);
     }
 
+    public String retrieveDefaultXsl() {
+        return retrieve(DBUtil.OptionKeys.OPTION_DEFAULT_XSL.getName(), "default.xsl");
+    }
+
+    public void saveDefaultXsl(String nameXsl) {
+        String query = DBUtil.createUpdateQuery(DBUtil.DBNames.TABLE_OPTIONS.getName(), DBUtil.DBNames.COLUMN_VALUE.getName(), nameXsl, DBUtil.OptionKeys.OPTION_DEFAULT_XSL.getName());
+        dbUtil.doSqlQuery(query, null);
+    }
+
+    public String retrieveDefaultXsd() {
+        return retrieve(DBUtil.OptionKeys.OPTION_DEFAULT_XSD.getName(), "apeEAD.xsd");
+    }
+
+    public void saveDefaultXsd(String nameXsd) {
+        String query = DBUtil.createUpdateQuery(DBUtil.DBNames.TABLE_OPTIONS.getName(), DBUtil.DBNames.COLUMN_VALUE.getName(), nameXsd, DBUtil.OptionKeys.OPTION_DEFAULT_XSD.getName());
+        dbUtil.doSqlQuery(query, null);
+    }
+
     public void saveOrUpdateRoleType(String roleType, boolean useExistingValue) {
         String query = DBUtil.createUpdateQuery(DBUtil.DBNames.TABLE_OPTIONS.getName(), DBUtil.DBNames.COLUMN_VALUE.getName(), roleType, DBUtil.OptionKeys.OPTION_ROLETYPE.getName());
         dbUtil.doSqlQuery(query, null);

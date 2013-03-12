@@ -85,17 +85,11 @@ public class EagControlPanel extends EagPanels {
         int i = 0;
         languageWithScriptTfs = new ArrayList<LanguageWithScript>(eag.getControl().getLanguageDeclarations().getLanguageDeclaration().size());
         for(LanguageDeclaration languageDeclaration : eag.getControl().getLanguageDeclarations().getLanguageDeclaration()) {
-            if(i == 0)
-                builder.addLabel(labels.getString("eag2012.language") + "*",    cc.xy (1, rowNb));
-            else
-                builder.addLabel(labels.getString("eag2012.language"),    cc.xy (1, rowNb));
+            builder.addLabel(labels.getString("eag2012.language"),    cc.xy (1, rowNb));
             LanguageWithScript languageWithScript = new LanguageWithScript(languageDeclaration.getLanguage().getLanguageCode(), languageDeclaration.getScript().getScriptCode());
             languageWithScriptTfs.add(languageWithScript);
             builder.add(languageWithScript.getLanguageBox(),                     cc.xy (3, rowNb));
-            if(i++ == 0)
-                builder.addLabel(labels.getString("eag2012.script") + "*",    cc.xy (5, rowNb));
-            else
-                builder.addLabel(labels.getString("eag2012.script"),    cc.xy (5, rowNb));
+            builder.addLabel(labels.getString("eag2012.script"),    cc.xy (5, rowNb));
             builder.add(languageWithScript.getScriptBox(), cc.xy(7, rowNb));
             setNextRow();
         }
@@ -237,16 +231,9 @@ public class EagControlPanel extends EagPanels {
             boolean hasChanged = false;
 
             //todo here
-            boolean error = true;
-            for(LanguageWithScript languageWithScript : languageWithScriptTfs) {
-                if(StringUtils.isNotEmpty(languageWithScript.getLanguage())) {
-                    error = false;
-                    break;
-                }
-            }
-            if(error)
-                errors.add("languageWithScriptTfs");
-            else {
+            if(languageWithScriptTfs.size() == 0 || (languageWithScriptTfs.size() == 1 && StringUtils.isEmpty(languageWithScriptTfs.get(0).getLanguage()))) {
+                eag.getControl().setLanguageDeclarations(null);
+            } else {
                 eag.getControl().getLanguageDeclarations().getLanguageDeclaration().clear();
                 for(LanguageWithScript languageWithScript : languageWithScriptTfs) {
                     if(StringUtils.isNotEmpty(languageWithScript.getLanguage())) {
@@ -262,7 +249,6 @@ public class EagControlPanel extends EagPanels {
                         eag.getControl().getLanguageDeclarations().getLanguageDeclaration().add(languageDeclaration);
                     }
                 }
-
             }
 
             if(rulesConventionTfs.size() > 0) {

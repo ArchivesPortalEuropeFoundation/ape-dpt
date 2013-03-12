@@ -339,8 +339,8 @@ public class CreateHGListener implements ActionListener {
 
             final JFrame editLevelFrame = new JFrame(labels.getString("edit"));
             editLevelFrame.setAlwaysOnTop(true);
-            editLevelFrame.setPreferredSize(new Dimension(parent.getWidth() * 3/4, parent.getHeight() * 3/4)); //getContentPane
-            editLevelFrame.setLocation((parent.getWidth() - parent.getWidth() * 3/4)/2, (parent.getHeight() - parent.getHeight() * 3/4)/2);
+            editLevelFrame.setPreferredSize(new Dimension(parent.getWidth() /2, parent.getHeight() /2)); //getContentPane
+            editLevelFrame.setLocation((parent.getWidth() - parent.getWidth() /2)/2, (parent.getHeight() - parent.getHeight() /2)/2);
 
             JPanel editLevelAllPanel = (JPanel)editLevelFrame.getContentPane();
             editLevelAllPanel.setLayout(new BorderLayout());
@@ -365,14 +365,16 @@ public class CreateHGListener implements ActionListener {
             JLabel descLevel = new JLabel(labels.getString("description") + " [scopecontent]: ");
             descLevel.setHorizontalAlignment(SwingConstants.LEFT);
 
-            final JTextField descLevelText = new JTextField(obj.getDescription());
+            final JTextArea descLevelText = new JTextArea(obj.getDescription());
+            JScrollPane descLevelScrollPane = new JScrollPane(descLevelText);
+            descLevelScrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 
             editLevelMainPanel.add(idLevel);
             editLevelMainPanel.add(idLevelText);
             editLevelMainPanel.add(nameLevel);
             editLevelMainPanel.add(nameLevelText);
             editLevelMainPanel.add(descLevel);
-            editLevelMainPanel.add(descLevelText);
+            editLevelMainPanel.add(descLevelScrollPane);
 
             saveButton.addActionListener(new ActionListener(){
                 public void actionPerformed(ActionEvent e) {

@@ -1,5 +1,6 @@
 package eu.apenet.dpt.standalone.gui;
 
+import eu.apenet.dpt.standalone.gui.db.RetrieveFromDb;
 import eu.apenet.dpt.standalone.gui.xsdAddition.XsdObject;
 
 import javax.swing.*;
@@ -40,14 +41,16 @@ public class ProfileListModel extends AbstractListModel {
     }
 
     public void addFile(File file){
-        FileInstance fileInstance = new FileInstance(file);
+        RetrieveFromDb retrieveFromDb = new RetrieveFromDb();
+        FileInstance fileInstance = new FileInstance(file, retrieveFromDb.retrieveDefaultXsl(), retrieveFromDb.retrieveDefaultXsd());
         fileInstances.put(file.getName(), fileInstance);
         listFiles.add(file);
         fireIntervalAdded(this, 1, 1);
     }
 
     public void addFile(File file, XsdObject xsdObject, FileInstance.FileType fileType){
-        FileInstance fileInstance = new FileInstance(file);
+        RetrieveFromDb retrieveFromDb = new RetrieveFromDb();
+        FileInstance fileInstance = new FileInstance(file, retrieveFromDb.retrieveDefaultXsl(), retrieveFromDb.retrieveDefaultXsd());
         fileInstance.setValidationSchema(xsdObject);
         fileInstance.setFileType(fileType);
         fileInstances.put(file.getName(), fileInstance);
