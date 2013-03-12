@@ -893,7 +893,7 @@ public class DataPreparationToolGUI extends JFrame {
     private class XsdSelectActionListener implements ActionListener {
 
         public void actionPerformed(ActionEvent e) {
-            Utilities.setDefaultXsd(e.getActionCommand());
+            retrieveFromDb.saveDefaultXsd(e.getActionCommand());
             for (String key : fileInstances.keySet()) {
                 FileInstance fileInstance = fileInstances.get(key);
                 fileInstance.setValidationSchema(e.getActionCommand());
@@ -926,7 +926,7 @@ public class DataPreparationToolGUI extends JFrame {
     private class XslSelectActionListener implements ActionListener {
 
         public void actionPerformed(ActionEvent e) {
-            Utilities.setDefaultXsl(e.getActionCommand());
+            retrieveFromDb.saveDefaultXsl(e.getActionCommand());
             for (String key : fileInstances.keySet()) {
                 FileInstance fileInstance = fileInstances.get(key);
                 fileInstance.setConversionScriptName(e.getActionCommand());

@@ -73,40 +73,19 @@ public final class Utilities {
             result.append("l.").append(exception.getLineNumber()).append(", ").append("c.").append(exception.getColumnNumber()).append(": ").append(exception.getMessage()).append("\n");
         return result.toString();
     }
-    
-    private static String defaultXsl;
-    public static void setDefaultXsl(String defaultXsl){
-        Utilities.defaultXsl = defaultXsl;
-    }
-    public static String getDefaultXsl(){
-        if(StringUtils.isBlank(defaultXsl))
-            return XSL_DEFAULT_NAME;
-        return defaultXsl;
-    }
-
-    private static XsdObject defaultXsd;
-    public static void setDefaultXsd(String defaultXsdString) {
-        for (XsdObject xsd : xsdList) {
-            if(xsd.getName().equals(defaultXsdString)) {
-                Utilities.defaultXsd = xsd;
-                break;
-            }
-        }
-    }
-    public static XsdObject getDefaultXsd(){
-        if(defaultXsd == null) {
-            for(XsdObject xsdObject : getXsdList()) {
-                if(xsdObject.getPath().equals("apeEAD.xsd")) {
-                    return xsdObject;
-                }
-            }
-        }
-        return defaultXsd;
-    }
 
     public static XsdObject getXsdObjectFromPath(String xsdPath) {
         for(XsdObject xsdObject : getXsdList()) {
             if(xsdObject.getPath().equals(xsdPath)) {
+                return xsdObject;
+            }
+        }
+        return null;
+    }
+
+    public static XsdObject getXsdObjectFromName(String xsdName) {
+        for(XsdObject xsdObject : getXsdList()) {
+            if(xsdObject.getName().equals(xsdName)) {
                 return xsdObject;
             }
         }

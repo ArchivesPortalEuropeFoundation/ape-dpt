@@ -49,7 +49,9 @@ public class DBUtil {
         OPTION_UPDATEDATE("lastUpdateCheck"),
         OPTION_CHECKS_LOADING_FILES("checksLoadingFiles"),
         OPTION_OPEN_LOCATION("openLocation"),
-        OPTION_SAVE_FOLDER("savedFolder");
+        OPTION_SAVE_FOLDER("savedFolder"),
+        OPTION_DEFAULT_XSL("defaultXsl"),
+        OPTION_DEFAULT_XSD("defaultXsd");
 
         private String name;
         OptionKeys(String name){

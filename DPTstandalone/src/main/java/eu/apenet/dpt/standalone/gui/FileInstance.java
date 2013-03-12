@@ -30,8 +30,8 @@ public class FileInstance {
     private boolean isXml;
     Map<String, Map<String, Boolean>> xmlQualityErrors;
 
-    public FileInstance(File file, boolean checkXml) {
-        if(checkXml && !isXml) //todo: not sure about this !isXml
+    public FileInstance(File file, boolean checkXml, String defaultXsl, String defaultXsd) {
+        if(checkXml && !isXml)
             this.isXml = XmlChecker.isXmlParseable(file) == null;
         this.name = file.getName();
         this.originalPath = file.getPath();
@@ -42,14 +42,18 @@ public class FileInstance {
         this.conversionErrors = "";
         this.currentLocation = "";
         this.eseLocation = "";
-        this.conversionScriptName = Utilities.getDefaultXsl();
-        this.validationSchema = Utilities.getDefaultXsd();
+        this.conversionScriptName = defaultXsl;
+        this.validationSchema = Utilities.getXsdObjectFromName(defaultXsd);
         this.fileType = FileType.EAD;
         this.lastOperation = Operation.NONE;
     }
 
-    public FileInstance(File file) {
-        this(file, false);
+//    public FileInstance(File file) {
+//        this(file, false);
+//    }
+
+    public FileInstance(File file, String defaultXsl, String defaultXsd) {
+        this(file, false, defaultXsl, defaultXsd);
     }
 
     public String getName() {
