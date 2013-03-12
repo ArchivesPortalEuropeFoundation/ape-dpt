@@ -64,7 +64,8 @@
                     </dcterms:alternative>
 		</xsl:for-each>
             </skos:Concept>
-            
+        </xsl:template>
+        
 	<!-- a named template, which can be called for mapping all other properties 
 		TODO:
 			- improve this and simply match for previously unmatched nodes
