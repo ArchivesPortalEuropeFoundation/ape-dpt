@@ -218,69 +218,45 @@ public class EagRelationsPanel extends EagPanels {
 
             boolean hasChanged = false;
 
-            boolean error = false;
+            eag.getRelations().getResourceRelation().clear();
             for(ResourceRelationType resourceRelationType : resourceRelationTypes) {
-                error = true;
                 if(StringUtils.isNotEmpty(resourceRelationType.getWebsiteValue())) {
-                    error = false;
-                    break;
-                }
-            }
-            if(error)
-                errors.add("resourceRelationTypes");
-            if(!error) {
-                eag.getRelations().getResourceRelation().clear();
-                for(ResourceRelationType resourceRelationType : resourceRelationTypes) {
-                    if(StringUtils.isNotEmpty(resourceRelationType.getWebsiteValue())) {
-                        ResourceRelation resourceRelation = new ResourceRelation();
-                        resourceRelation.setResourceRelationType(resourceRelationType.getTypeRelationsValue());
-                        resourceRelation.setHref(resourceRelationType.getWebsiteValue());
-                        if(resourceRelation.getRelationEntry() == null)
-                            resourceRelation.setRelationEntry(new RelationEntry());
-                        resourceRelation.getRelationEntry().setContent(resourceRelationType.getTitleAndIdValue());
-                        if(resourceRelation.getDescriptiveNote() == null)
-                            resourceRelation.setDescriptiveNote(new DescriptiveNote());
-                        if(resourceRelation.getDescriptiveNote().getP().size() == 0)
-                            resourceRelation.getDescriptiveNote().getP().add(new P());
-                        resourceRelation.getDescriptiveNote().getP().get(0).setContent(resourceRelationType.getDescriptionValue());
-                        resourceRelation.getDescriptiveNote().getP().get(0).setLang(resourceRelationType.getDescriptionLanguage());
+                    ResourceRelation resourceRelation = new ResourceRelation();
+                    resourceRelation.setResourceRelationType(resourceRelationType.getTypeRelationsValue());
+                    resourceRelation.setHref(resourceRelationType.getWebsiteValue());
+                    if(resourceRelation.getRelationEntry() == null)
+                        resourceRelation.setRelationEntry(new RelationEntry());
+                    resourceRelation.getRelationEntry().setContent(resourceRelationType.getTitleAndIdValue());
+                    if(resourceRelation.getDescriptiveNote() == null)
+                        resourceRelation.setDescriptiveNote(new DescriptiveNote());
+                    if(resourceRelation.getDescriptiveNote().getP().size() == 0)
+                        resourceRelation.getDescriptiveNote().getP().add(new P());
+                    resourceRelation.getDescriptiveNote().getP().get(0).setContent(resourceRelationType.getDescriptionValue());
+                    resourceRelation.getDescriptiveNote().getP().get(0).setLang(resourceRelationType.getDescriptionLanguage());
 
-                        eag.getRelations().getResourceRelation().add(resourceRelation);
-                        hasChanged = true;
-                    }
+                    eag.getRelations().getResourceRelation().add(resourceRelation);
+                    hasChanged = true;
                 }
             }
 
-            error = false;
+            eag.getRelations().getEagRelation().clear();
             for(ResourceRelationType resourceRelationType : institutionRelationTypes) {
-                error = true;
                 if(StringUtils.isNotEmpty(resourceRelationType.getWebsiteValue())) {
-                    error = false;
-                    break;
-                }
-            }
-            if(error)
-                errors.add("institutionRelationTypes");
-            if(!error) {
-                eag.getRelations().getEagRelation().clear();
-                for(ResourceRelationType resourceRelationType : institutionRelationTypes) {
-                    if(StringUtils.isNotEmpty(resourceRelationType.getWebsiteValue())) {
-                        EagRelation eagRelation = new EagRelation();
-                        eagRelation.setEagRelationType(resourceRelationType.getTypeRelationsValue());
-                        eagRelation.setHref(resourceRelationType.getWebsiteValue());
-                        RelationEntry relationEntry = new RelationEntry();
-                        relationEntry.setContent(resourceRelationType.getTitleAndIdValue());
-                        eagRelation.getRelationEntry().add(relationEntry);
-                        if(eagRelation.getDescriptiveNote() == null)
-                            eagRelation.setDescriptiveNote(new DescriptiveNote());
-                        if(eagRelation.getDescriptiveNote().getP().size() == 0)
-                            eagRelation.getDescriptiveNote().getP().add(new P());
-                        eagRelation.getDescriptiveNote().getP().get(0).setContent(resourceRelationType.getDescriptionValue());
-                        eagRelation.getDescriptiveNote().getP().get(0).setLang(resourceRelationType.getDescriptionLanguage());
+                    EagRelation eagRelation = new EagRelation();
+                    eagRelation.setEagRelationType(resourceRelationType.getTypeRelationsValue());
+                    eagRelation.setHref(resourceRelationType.getWebsiteValue());
+                    RelationEntry relationEntry = new RelationEntry();
+                    relationEntry.setContent(resourceRelationType.getTitleAndIdValue());
+                    eagRelation.getRelationEntry().add(relationEntry);
+                    if(eagRelation.getDescriptiveNote() == null)
+                        eagRelation.setDescriptiveNote(new DescriptiveNote());
+                    if(eagRelation.getDescriptiveNote().getP().size() == 0)
+                        eagRelation.getDescriptiveNote().getP().add(new P());
+                    eagRelation.getDescriptiveNote().getP().get(0).setContent(resourceRelationType.getDescriptionValue());
+                    eagRelation.getDescriptiveNote().getP().get(0).setLang(resourceRelationType.getDescriptionLanguage());
 
-                        eag.getRelations().getEagRelation().add(eagRelation);
-                        hasChanged = true;
-                    }
+                    eag.getRelations().getEagRelation().add(eagRelation);
+                    hasChanged = true;
                 }
             }
 
