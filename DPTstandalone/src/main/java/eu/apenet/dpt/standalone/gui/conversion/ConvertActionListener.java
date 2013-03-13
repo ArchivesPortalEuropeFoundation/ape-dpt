@@ -106,6 +106,8 @@ public class ConvertActionListener implements ActionListener {
         } else {
             dataPreparationToolGUI.enableSaveBtn();
             dataPreparationToolGUI.enableRadioButtons();
+            dataPreparationToolGUI.enableValidationBtns();
+            dataPreparationToolGUI.enableConversionBtns();
         }
     }
 
@@ -169,8 +171,11 @@ public class ConvertActionListener implements ActionListener {
                 fileInstance.setIsConverted();
 
                 if(xslMessages.toString().equals("")) {
+                    if(fileInstance.getConversionScriptName().equals(Utilities.XSL_DEFAULT_NAME))
+                        fileInstance.setConversionErrors(labels.getString("conversion.noExcludedElements"));
+                    else
+                        fileInstance.setConversionErrors(labels.getString("conversion.finished"));
                     apePanel.getApeTabbedPane().checkFlashingTab(APETabbedPane.TAB_CONVERSION, Utilities.FLASHING_GREEN_COLOR);
-                    fileInstance.setConversionErrors(labels.getString("conversion.noExcludedElements"));
                     apePanel.getApeTabbedPane().setConversionErrorText(fileInstance.getConversionErrors());
                 } else
                     apePanel.getApeTabbedPane().checkFlashingTab(APETabbedPane.TAB_CONVERSION, Utilities.FLASHING_RED_COLOR);

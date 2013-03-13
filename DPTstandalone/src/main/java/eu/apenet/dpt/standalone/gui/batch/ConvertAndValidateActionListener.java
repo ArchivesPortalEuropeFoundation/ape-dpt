@@ -154,8 +154,12 @@ public class ConvertAndValidateActionListener extends ApexActionListener {
                                     fileInstance.setCurrentLocation(Utilities.TEMP_DIR + "temp_" + file.getName());
                                     fileInstance.setIsConverted();
                                     fileInstance.setLastOperation(FileInstance.Operation.CONVERT);
-                                    if(xslMessages.toString().equals(""))
-                                        fileInstance.setConversionErrors(labels.getString("conversion.noExcludedElements"));
+                                    if(xslMessages.toString().equals("")) {
+                                        if(fileInstance.getConversionScriptName().equals(Utilities.XSL_DEFAULT_NAME))
+                                            fileInstance.setConversionErrors(labels.getString("conversion.noExcludedElements"));
+                                        else
+                                            fileInstance.setConversionErrors(labels.getString("conversion.finished"));
+                                    }
 
                                     if(!continueLoop)
                                         break;
