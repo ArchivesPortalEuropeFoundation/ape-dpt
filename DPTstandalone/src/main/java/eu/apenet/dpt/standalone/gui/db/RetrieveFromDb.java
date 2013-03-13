@@ -162,17 +162,14 @@ public class RetrieveFromDb {
         boolean doCheckUpdate = false;
         try {
             Date lastUpdate = dateFormatYYYYMMDD.parse(date);
-            //Milliseconds between both dates
             long difference = today.getTime() - lastUpdate.getTime();
-
-            long twoWeeksInMilliseconds = 14 * 24 * 60 * 60 * 1000;
-
-            if((twoWeeksInMilliseconds - difference) < 0){
-                LOG.info("We do a check for updates - it has been more than 2 weeks since the last one.");
+            long oneWeeksInMilliseconds = 7 * 24 * 60 * 60 * 1000;
+            if((oneWeeksInMilliseconds - difference) < 0){
+                LOG.info("We do a check for updates - it has been more than 1 week since the last one.");
                 doCheckUpdate = true;
                 String query = DBUtil.createUpdateQuery(DBUtil.DBNames.TABLE_OPTIONS.getName(), DBUtil.DBNames.COLUMN_VALUE.getName(), dateFormatYYYYMMDD.format(today), DBUtil.OptionKeys.OPTION_UPDATEDATE.getName());
                 dbUtil.doSqlQuery(query, null);
-                LOG.info("We just updated the database with the date of today - next check in 2 weeks.");
+                LOG.info("We just updated the database with the date of today - next check in 1 week.");
             } else {
                 LOG.info("We do not do a check for updates");
             }
@@ -186,14 +183,12 @@ public class RetrieveFromDb {
                 URL url = new URL("http://www.archivesportaleurope.net/Portal/dptupate/version?versionNb=" + versionNb);
                 HttpURLConnection connection = (HttpURLConnection) url.openConnection();
                 if(connection.getResponseCode() == 200){
-                    //There is a new version
                     LOG.info("New version available...");
                     if(JOptionPane.showConfirmDialog(contentPane, textNewAvailableVersion) == 0){
-                        BareBonesBrowserLaunch.openURL("http://www.apenet.eu/index.php?option=com_content&view=article&id=94&Itemid=150&lang=en");
+                        BareBonesBrowserLaunch.openURL("http://dpt.archivesportaleurope.net/APE_data_preparation_tool_" + versionNb + ".zip");
                         System.exit(0);
                     }
                 }
-//                LOG.info(connection.getResponseCode());
             } catch (Exception e) {
                 LOG.error("Error to connect for checking the new version (probably no internet connection)", e);
             }
