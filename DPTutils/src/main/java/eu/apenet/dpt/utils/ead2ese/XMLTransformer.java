@@ -15,11 +15,14 @@ import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMResult;
+import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
+import org.w3c.dom.Document;
 
 /**
  *
@@ -61,6 +64,20 @@ public class XMLTransformer {
     
     public void transform(String relativeFilename, File inputFile, File outputFile) throws TransformerException {
         transform(inputFile, outputFile);
+    }
+
+    public void transform(File inputFile, Document outputFile) throws TransformerException {
+        reset();
+        Source inputSource = new StreamSource(inputFile);
+        Result outputSource = new DOMResult(outputFile);
+        transformer.transform(inputSource, outputSource);
+    }
+
+        public void transform(Document inputFile, File outputFile) throws TransformerException {
+        reset();
+        Source inputSource = new DOMSource(inputFile);
+        Result outputSource = new StreamResult(outputFile);
+        transformer.transform(inputSource, outputSource);
     }
 
     private void reset() throws TransformerConfigurationException {
