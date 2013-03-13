@@ -1226,6 +1226,20 @@ public class DataPreparationToolGUI extends JFrame {
         validateItem.setEnabled(false);
     }
 
+    public void disableAllBatchBtns() {
+        convertAndValidateBtn.setEnabled(false);
+        createHGBtn.setEnabled(false);
+        validateSelectionBtn.setEnabled(false);
+        convertEseSelectionBtn.setEnabled(false);
+    }
+
+    public void enableAllBatchBtns() {
+        convertAndValidateBtn.setEnabled(true);
+        createHGBtn.setEnabled(true);
+        validateSelectionBtn.setEnabled(true);
+        convertEseSelectionBtn.setEnabled(true);
+    }
+
     public void enableValidationBtns() {
         apePanel.getApeTabbedPane().enableValidationBtn();
         validateItem.setEnabled(true);
