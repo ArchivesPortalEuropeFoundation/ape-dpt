@@ -45,9 +45,8 @@ public class Repositorid {
     @XmlJavaTypeAdapter(CollapsedStringAdapter.class)
     @XmlSchemaType(name = "NMTOKEN")
     protected String countrycode;
-    @XmlAttribute(name = "repositorycode")
-    @XmlJavaTypeAdapter(CollapsedStringAdapter.class)
-    @XmlSchemaType(name = "NMTOKEN")
+    @XmlAttribute(name = "repositorycode", namespace = "http://www.archivesportaleurope.net/Portal/profiles/eag_2012/")
+    @XmlSchemaType(name = "anySimpleType")
     protected String repositorycode;
 
     /**
