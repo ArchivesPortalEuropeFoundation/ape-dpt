@@ -111,7 +111,7 @@ public class ValidateActionListener implements ActionListener {
                     is2 = FileUtils.openInputStream(new File(fileInstance.getCurrentLocation()));
                     exceptions = DocumentValidation.xmlValidation(FileUtils.openInputStream(new File(fileInstance.getCurrentLocation())), schemaPath, xsdObject.isXsd11());
                 }
-                if (exceptions == null || exceptions.isEmpty()){
+                if (exceptions.isEmpty()){
                     fileInstance.setValid(true);
                     fileInstance.setValidationErrors(labels.getString("validationSuccess"));
                     if(xsdObject.getFileType().equals(FileInstance.FileType.EAD)) {
