@@ -18,8 +18,10 @@
                 version="2.0">
 <xsl:output method="xml" encoding="UTF-8" indent="yes"/>
 
-    <xsl:template match="skos:Concept[position() = 1]" priority="3">
-        <xsl:for-each-group select="/rdf:RDF/skos:Concept" group-by="@rdf:about">
+    <!--<xsl:template match="skos:Concept[position() = 1]" priority="3">-->
+    <xsl:template match="rdf:RDF">
+        <rdf:RDF>
+        <xsl:for-each-group select="./skos:Concept" group-by="@rdf:about">
             <skos:Concept>
                 <xsl:attribute name="rdf:about" select="current-group()[1]/@rdf:about"/>
                 <xsl:copy-of select="current-group()[1]/dc:title"/>
@@ -29,29 +31,33 @@
             </skos:Concept>
         </xsl:for-each-group>
         <xsl:apply-templates />
+        </rdf:RDF>
     </xsl:template>
 
     <xsl:template match="skos:Concept" priority="2"/>
     <xsl:template match="skos:Concept//*" priority="2"/>
 
-    <xsl:template match="node()|@*">
-      <xsl:copy>
-        <xsl:apply-templates select="node()|@*"/>
-      </xsl:copy>
-    </xsl:template>
-
-        <xsl:template match="edm:ProvidedCHO" priority="2">
-            <edm:ProvidedCHO>
-                <xsl:copy-of select="*"/>
-                <xsl:variable name="identifier" select="dc:identifier"/>
-                <xsl:for-each-group select="/rdf:RDF/skos:Concept" group-by="@rdf:about">
-                    <xsl:for-each-group select="current-group()" group-by="if(dcterms:hasPart/text()) then dcterms:hasPart/text() else 'nothing'">
-                        <xsl:if test="current-group()[1]/dcterms:hasPart = $identifier">
-                            <dcterms:isPartOf><xsl:value-of select="current-group()[1]/@rdf:about" /></dcterms:isPartOf>
-                        </xsl:if>
-                        </xsl:for-each-group>
+    <xsl:template match="edm:ProvidedCHO" priority="3">
+        <edm:ProvidedCHO>
+            <xsl:copy-of select="*"/>
+            <xsl:variable name="identifier" select="dc:identifier"/>
+            <xsl:for-each-group select="/rdf:RDF/skos:Concept" group-by="@rdf:about">
+                <xsl:for-each-group select="current-group()" group-by="if(dcterms:hasPart/text()) then dcterms:hasPart/text() else 'nothing'">
+                    <xsl:if test="current-group()[1]/dcterms:hasPart = $identifier">
+                        <dcterms:isPartOf>
+                            <xsl:value-of select="current-group()[1]/@rdf:about" />
+                        </dcterms:isPartOf>
+                    </xsl:if>
                 </xsl:for-each-group>
-            </edm:ProvidedCHO>
+            </xsl:for-each-group>
+        </edm:ProvidedCHO>
+    </xsl:template>
+    
+    <xsl:template match="edm:ProvidedCHO" priority="2"/>
+    <xsl:template match="edm:ProvidedCHO//*" priority="2"/>
+
+    <xsl:template match="edm:WebResource">
+        <xsl:copy-of select="."/>
     </xsl:template>
     
 </xsl:stylesheet>
