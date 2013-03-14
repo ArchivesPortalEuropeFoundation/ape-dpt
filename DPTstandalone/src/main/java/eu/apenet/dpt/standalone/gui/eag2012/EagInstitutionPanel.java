@@ -9,9 +9,10 @@ import eu.apenet.dpt.standalone.gui.eag2012.data.*;
 import org.apache.commons.lang.StringUtils;
 
 import javax.swing.*;
-import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.Date;
@@ -25,13 +26,10 @@ import java.util.List;
  */
 public class EagInstitutionPanel extends EagPanels {
 
-    /**
-     * Below will be all the different NON REPEATABLE form elements
-     */
     private JTextField personTf;
     private JTextField countryCodeTf;
-    private JTextField identifierTf;
-    private List<JTextField> otherIdTfs;
+    private JTextField idUsedInApeTf;
+    private List<TextFieldWithCheckbox> otherRecordIdTfs;
     private List<TextFieldWithLanguage> nameInstitutionTfs;
     private List<TextFieldWithLanguage> parallelNameTfs;
     private TextFieldWithLanguage streetTf;
@@ -91,7 +89,7 @@ public class EagInstitutionPanel extends EagPanels {
         setNextRow();
         builder.addLabel(labels.getString("eag2012.personResponsibleLabel"),    cc.xy (1, rowNb));
 
-        if(isStartOfForm) {
+        if(isStartOfForm) {    //todo: ALL OF THIS should actually be in the save function, here just a check on whether something exists or not.
             if(eag.getControl().getMaintenanceHistory() == null)
                 eag.getControl().setMaintenanceHistory(new MaintenanceHistory());
             MaintenanceEvent maintenanceEvent = new MaintenanceEvent();
@@ -100,7 +98,7 @@ public class EagInstitutionPanel extends EagPanels {
             maintenanceEvent.setAgentType(agentType);
             EventDateTime eventDateTime = new EventDateTime();
             Date date = new Date();
-            SimpleDateFormat format = new SimpleDateFormat("yyyy.MM.dd");
+            SimpleDateFormat format = new SimpleDateFormat("dd.MM.yyyy");
             SimpleDateFormat formatStandard = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
             eventDateTime.setContent(format.format(date));
             eventDateTime.setStandardDateTime(formatStandard.format(date));
@@ -129,33 +127,41 @@ public class EagInstitutionPanel extends EagPanels {
         builder.add(countryCodeTf, cc.xy(3, rowNb));
         setNextRow();
         if(errors.contains("countryCodeTf")) {
-            builder.add(createErrorLabel(labels.getString("eag2012.errors.countryCode")),          cc.xy (1, rowNb));
-            setNextRow();
-        }
-        builder.addLabel(labels.getString("eag2012.identifierInstitutionLabel") + "*",cc.xy (1, rowNb));
-        identifierTf = new JTextField(eag.getControl().getRecordId().getValue());
-        builder.add(identifierTf,                                           cc.xy (3, rowNb));
-        setNextRow();
-        if(errors.contains("identifierTf")) {
-            builder.add(createErrorLabel(labels.getString("eag2012.errors.identifierEmpty")),          cc.xy (1, rowNb));
+            builder.add(createErrorLabel(labels.getString("eag2012.errors.countryCode")),          cc.xy(1, rowNb));
             setNextRow();
         }
 
-        otherIdTfs = new ArrayList<JTextField>(eag.getControl().getOtherRecordId().size());
+        //Important: Needs to be instantiated before...
+        idUsedInApeTf = new JTextField(eag.getControl().getRecordId().getValue());
+
+        otherRecordIdTfs = new ArrayList<TextFieldWithCheckbox>(eag.getControl().getOtherRecordId().size());
+        int nbOtherRecordIds = 0;
         for(OtherRecordId otherRecordId : eag.getControl().getOtherRecordId()) {
-            JTextField otherIdTf = new JTextField(otherRecordId.getValue());
-            otherIdTfs.add(otherIdTf);
-            builder.addLabel(labels.getString("eag2012.idUsedInApeLabel"),      cc.xy (5, rowNb));
-            builder.add(otherIdTf,               cc.xy (7, rowNb));
+            TextFieldWithCheckbox textFieldWithCheckbox = new TextFieldWithCheckbox(otherRecordId.getValue(), otherRecordId.getLocalType());
+            otherRecordIdTfs.add(textFieldWithCheckbox);
+            if(nbOtherRecordIds++ == 0)
+                builder.addLabel(labels.getString("eag2012.identifierInstitutionLabel") + "*",      cc.xy (1, rowNb));
+            else
+                builder.addLabel(labels.getString("eag2012.identifierInstitutionLabel"), cc.xy(1, rowNb));
+            builder.add(textFieldWithCheckbox.getTextField(),               cc.xy (3, rowNb));
+            textFieldWithCheckbox.getTextField().addKeyListener(new CheckKeyListener(textFieldWithCheckbox));
+            builder.add(textFieldWithCheckbox.getIsilOrNotCombo(),               cc.xy (7, rowNb));
+            textFieldWithCheckbox.getIsilOrNotCombo().addActionListener(new ComboboxActionListener(textFieldWithCheckbox));
             setNextRow();
         }
-        if(errors.contains("otherIdTfs")) {
-            builder.add(createErrorLabel(labels.getString("eag2012.errors.otherId")),          cc.xy (5, rowNb));
+        if(errors.contains("otherRecordIdTfs")) {
+            builder.add(createErrorLabel(labels.getString("eag2012.errors.otherId")),          cc.xy (1, rowNb));
             setNextRow();
         }
+
         JButton addNewOtherIdentifierBtn = new ButtonEag(labels.getString("eag2012.addOtherIdentifier"));
         addNewOtherIdentifierBtn.addActionListener(new AddOtherIdentifierAction(eag, tabbedPane, model));
-        builder.add(addNewOtherIdentifierBtn, cc.xy(7, rowNb));
+        builder.add(addNewOtherIdentifierBtn, cc.xy(3, rowNb));
+
+        builder.addLabel(labels.getString("eag2012.idUsedInApeLabel"), cc.xy (5, rowNb));
+        idUsedInApeTf.setEnabled(false);
+        idUsedInApeTf.setEditable(false);
+        builder.add(idUsedInApeTf,                                           cc.xy (7, rowNb));
         setNextRow();
 
         if(eag.getArchguide().getIdentity().getAutform().size() == 0)
@@ -535,34 +541,26 @@ public class EagInstitutionPanel extends EagPanels {
                 isNew = false;
             }
 
-            if(StringUtils.isEmpty(countryCodeTf.getText())) {
+            if(StringUtils.isEmpty(countryCodeTf.getText()) || !Eag2012ValidFields.isCountryCodeCorrect(countryCodeTf.getText())) {
                 errors.add("countryCodeTf");
             } else if(notEqual(countryCodeTf.getText(), eag.getArchguide().getIdentity().getRepositorid().getCountrycode())) {
-                if(Eag2012ValidFields.isCountryCodeCorrect(countryCodeTf.getText())) {
-                    eag.getArchguide().getIdentity().getRepositorid().setCountrycode(countryCodeTf.getText());
-                    hasChanged = true;
-                } else {
-                    errors.add("countryCodeTf");
-                }
-            }
-            if(StringUtils.isEmpty(identifierTf.getText())) {
-                errors.add("identifierTf");
-            } else if(notEqual(identifierTf.getText(), eag.getControl().getRecordId().getValue())) {
-                eag.getControl().getRecordId().setValue(identifierTf.getText());
+                eag.getArchguide().getIdentity().getRepositorid().setCountrycode(countryCodeTf.getText());
                 hasChanged = true;
             }
-            if(otherIdTfs.size() > 0) {
+
+            if(notEqual(idUsedInApeTf.getText(), eag.getControl().getRecordId().getValue())) {
+                eag.getControl().getRecordId().setValue(idUsedInApeTf.getText());
+                hasChanged = true;
+            }
+            if(otherRecordIdTfs.size() > 0) {
                 eag.getControl().getOtherRecordId().clear();
-                for(JTextField field : otherIdTfs) {
-                    if(StringUtils.isNotEmpty(field.getText())) {
-                        if(Eag2012ValidFields.isRepositoryCodeCorrect(field.getText())) {
-                            OtherRecordId otherRecordId = new OtherRecordId();
-                            otherRecordId.setValue(field.getText());
-                            eag.getControl().getOtherRecordId().add(otherRecordId);
-                            hasChanged = true;
-                        } else {
-                            errors.add("otherIdTfs");
-                        }
+                for(TextFieldWithCheckbox textFieldWithCheckbox : otherRecordIdTfs) {
+                    if(StringUtils.isNotEmpty(textFieldWithCheckbox.getTextFieldValue())) {
+                        OtherRecordId otherRecordId = new OtherRecordId();
+                        otherRecordId.setValue(textFieldWithCheckbox.getTextFieldValue());
+                        otherRecordId.setLocalType(textFieldWithCheckbox.getisilOrNotComboValue());
+                        eag.getControl().getOtherRecordId().add(otherRecordId);
+                        hasChanged = true;
                     }
                 }
             }
@@ -791,6 +789,46 @@ public class EagInstitutionPanel extends EagPanels {
             if(!errors.isEmpty()) {
                 throw new Eag2012FormException("Errors in validation of EAG 2012");
             }
+        }
+    }
+
+    public class ComboboxActionListener implements ActionListener {
+        private TextFieldWithCheckbox textFieldWithCheckbox;
+
+        public ComboboxActionListener(TextFieldWithCheckbox textFieldWithCheckbox) {
+            this.textFieldWithCheckbox = textFieldWithCheckbox;
+        }
+
+        public void actionPerformed(ActionEvent actionEvent) {
+            if(textFieldWithCheckbox.getisilOrNotComboValue().equals("ISIL")) {
+                int counter = 0;
+                for(TextFieldWithCheckbox textFieldWithCheckbox1 : otherRecordIdTfs) {
+                    if(textFieldWithCheckbox1.getisilOrNotComboValue().equals("ISIL")) {
+                        counter++;
+                    }
+                }
+                if(counter > 1)
+                    textFieldWithCheckbox.getIsilOrNotCombo().setSelectedItem("notISIL");
+            }
+            idUsedInApeTf.setText(TextChanger.getNewText(otherRecordIdTfs, countryCodeTf.getText()));
+        }
+    }
+
+    public class CheckKeyListener implements KeyListener {
+        private TextFieldWithCheckbox textFieldWithCheckbox;
+
+        public CheckKeyListener(TextFieldWithCheckbox textFieldWithCheckbox) {
+            this.textFieldWithCheckbox = textFieldWithCheckbox;
+        }
+
+        public void keyTyped(KeyEvent keyEvent) {
+        }
+
+        public void keyPressed(KeyEvent keyEvent) {
+        }
+
+        public void keyReleased(KeyEvent keyEvent) {
+            idUsedInApeTf.setText(TextChanger.getNewText(otherRecordIdTfs, countryCodeTf.getText()));
         }
     }
 }
