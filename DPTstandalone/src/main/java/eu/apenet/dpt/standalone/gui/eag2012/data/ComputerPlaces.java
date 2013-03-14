@@ -26,7 +26,7 @@ import javax.xml.bind.annotation.XmlType;
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
  *       &lt;sequence>
  *         &lt;element ref="{http://www.archivesportaleurope.eu/profiles/eag/}num"/>
- *         &lt;element ref="{http://www.archivesportaleurope.eu/profiles/eag/}descriptiveNote"/>
+ *         &lt;element ref="{http://www.archivesportaleurope.eu/profiles/eag/}descriptiveNote" minOccurs="0"/>
  *       &lt;/sequence>
  *     &lt;/restriction>
  *   &lt;/complexContent>
@@ -45,7 +45,6 @@ public class ComputerPlaces {
 
     @XmlElement(required = true)
     protected Num num;
-    @XmlElement(required = true)
     protected DescriptiveNote descriptiveNote;
 
     /**
