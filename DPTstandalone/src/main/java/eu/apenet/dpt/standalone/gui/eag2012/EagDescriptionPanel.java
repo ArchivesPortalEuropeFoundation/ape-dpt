@@ -348,10 +348,12 @@ public class EagDescriptionPanel extends EagPanels {
                     repository.getRepositorsup().getDate().setContent(repositorySuppressionTf.getExtraValue());
                 }
 
+                int counterUnitAdministrativeStructureTfs = 0;
                 if(unitAdministrativeStructureTfs.size() > 0) {
                     repository.getAdminhierarchy().getAdminunit().clear();
                     for(TextFieldWithLanguage textFieldWithLanguage : unitAdministrativeStructureTfs) {
                         if(StringUtils.isNotEmpty(textFieldWithLanguage.getTextValue())) {
+                            counterUnitAdministrativeStructureTfs++;
                             Adminunit adminunit = new Adminunit();
                             adminunit.setContent(textFieldWithLanguage.getTextValue());
                             adminunit.setLang(textFieldWithLanguage.getLanguage());
@@ -359,6 +361,8 @@ public class EagDescriptionPanel extends EagPanels {
                         }
                     }
                 }
+                if(counterUnitAdministrativeStructureTfs == 0 && repository.getAdminhierarchy() != null)
+                    repository.setAdminhierarchy(null);
 
                 if(StringUtils.isNotEmpty(buildingTf.getTextValue())) {
                     repository.getBuildinginfo().getBuilding().getDescriptiveNote().getP().get(0).setContent(buildingTf.getTextValue());
