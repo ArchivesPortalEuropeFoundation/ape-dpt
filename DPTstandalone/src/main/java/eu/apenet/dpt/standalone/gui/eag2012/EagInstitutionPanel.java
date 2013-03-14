@@ -131,9 +131,6 @@ public class EagInstitutionPanel extends EagPanels {
             setNextRow();
         }
 
-        //Important: Needs to be instantiated before...
-        idUsedInApeTf = new JTextField(eag.getControl().getRecordId().getValue());
-
         otherRecordIdTfs = new ArrayList<TextFieldWithCheckbox>(eag.getControl().getOtherRecordId().size());
         int nbOtherRecordIds = 0;
         for(OtherRecordId otherRecordId : eag.getControl().getOtherRecordId()) {
@@ -159,6 +156,10 @@ public class EagInstitutionPanel extends EagPanels {
         builder.add(addNewOtherIdentifierBtn, cc.xy(3, rowNb));
 
         builder.addLabel(labels.getString("eag2012.idUsedInApeLabel"), cc.xy (5, rowNb));
+        if(Eag2012ValidFields.isRepositoryCodeCorrect(eag.getControl().getRecordId().getValue()))
+            idUsedInApeTf = new JTextField(eag.getControl().getRecordId().getValue());
+        else
+            idUsedInApeTf = new JTextField(TextChanger.getNewText(otherRecordIdTfs, countryCodeTf.getText()));
         idUsedInApeTf.setEnabled(false);
         idUsedInApeTf.setEditable(false);
         builder.add(idUsedInApeTf,                                           cc.xy (7, rowNb));
