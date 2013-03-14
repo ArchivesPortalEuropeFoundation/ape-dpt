@@ -696,6 +696,8 @@ public class EagInstitutionPanel extends EagPanels {
                 if(repository.getTelephone().size() > 0) {
                     if(StringUtils.isNotEmpty(telephoneTf.getText()) && !telephoneTf.getText().equals(repository.getTelephone().get(0).getContent())) {
                         repository.getTelephone().get(0).setContent(telephoneTf.getText());
+                    } else if(StringUtils.isEmpty(telephoneTf.getText())) {
+                        repository.getTelephone().remove(0);
                     }
                 }
 
@@ -710,6 +712,9 @@ public class EagInstitutionPanel extends EagPanels {
                     } else if(StringUtils.isBlank(repository.getEmail().get(0).getContent())) {
                         repository.getEmail().get(0).setContent("Send an email");
                         hasChanged = true;
+                    }
+                    if(StringUtils.isEmpty(emailTf.getText())) {
+                        repository.getEmail().remove(0);
                     }
                 }
 
@@ -772,6 +777,9 @@ public class EagInstitutionPanel extends EagPanels {
                             eag.getRelations().getResourceRelation().get(0).getDescriptiveNote().getP().get(0).setContent(refInstitutionHoldingsGuideTitleTf.getText());
                             hasChanged = true;
                         }
+                    }
+                    if(StringUtils.isEmpty(refInstitutionHoldingsGuideTf.getText())) {
+                        eag.getRelations().getResourceRelation().remove(0);
                     }
                 }
 
