@@ -27,8 +27,8 @@ import javax.xml.bind.annotation.XmlType;
  *   &lt;complexContent>
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
  *       &lt;sequence>
- *         &lt;element ref="{http://www.archivesportaleurope.eu/profiles/eag/}repositorid"/>
- *         &lt;element ref="{http://www.archivesportaleurope.eu/profiles/eag/}otherRepositorId"/>
+ *         &lt;element ref="{http://www.archivesportaleurope.eu/profiles/eag/}repositorid" minOccurs="0"/>
+ *         &lt;element ref="{http://www.archivesportaleurope.eu/profiles/eag/}otherRepositorId" minOccurs="0"/>
  *         &lt;element ref="{http://www.archivesportaleurope.eu/profiles/eag/}autform" maxOccurs="unbounded"/>
  *         &lt;element ref="{http://www.archivesportaleurope.eu/profiles/eag/}parform" maxOccurs="unbounded" minOccurs="0"/>
  *         &lt;element ref="{http://www.archivesportaleurope.eu/profiles/eag/}nonpreform" maxOccurs="unbounded" minOccurs="0"/>
@@ -53,9 +53,7 @@ import javax.xml.bind.annotation.XmlType;
 @XmlRootElement(name = "identity")
 public class Identity {
 
-    @XmlElement(required = true)
     protected Repositorid repositorid;
-    @XmlElement(required = true)
     protected OtherRepositorId otherRepositorId;
     @XmlElement(required = true)
     protected List<Autform> autform;

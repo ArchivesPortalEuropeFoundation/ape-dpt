@@ -28,7 +28,7 @@ import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
  *   &lt;complexContent>
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
  *       &lt;attribute name="countrycode" use="required" type="{http://www.w3.org/2001/XMLSchema}NMTOKEN" />
- *       &lt;attribute name="repositorycode" use="required" type="{http://www.w3.org/2001/XMLSchema}NMTOKEN" />
+ *       &lt;attribute name="repositorycode" type="{http://www.w3.org/2001/XMLSchema}NMTOKEN" />
  *     &lt;/restriction>
  *   &lt;/complexContent>
  * &lt;/complexType>
@@ -45,7 +45,7 @@ public class Repositorid {
     @XmlJavaTypeAdapter(CollapsedStringAdapter.class)
     @XmlSchemaType(name = "NMTOKEN")
     protected String countrycode;
-    @XmlAttribute(name = "repositorycode", required = true)
+    @XmlAttribute(name = "repositorycode")
     @XmlJavaTypeAdapter(CollapsedStringAdapter.class)
     @XmlSchemaType(name = "NMTOKEN")
     protected String repositorycode;
