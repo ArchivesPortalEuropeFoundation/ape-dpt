@@ -18,64 +18,22 @@
                 version="2.0">
 <xsl:output method="xml" encoding="UTF-8" indent="yes"/>
 
-	<!-- template matching the root node and create the RDF start tag -->
+	<!-- template matching the root node and creating the RDF start tag -->
 	<xsl:template match="/">
             <rdf:RDF>
-                <xsl:call-template name="setup"></xsl:call-template>
-	  	<xsl:apply-templates/>
+                <xsl:apply-templates select="metadata/record"/>
             </rdf:RDF>
-        </xsl:template>
-	
-        <!-- template for creating the basic setup of the file -->
-        <xsl:template name="setup">
-            <!-- variable for retrieving the original EAD structure of the first record; this will be used to set up a base structure -->
-            <xsl:variable name="firstRecordStructure" select="metadata/record[1]/dcterms:alternative" />
-            <!-- variables for id and name of the EAD -->
-            <xsl:variable name="eadid" select="fn:substring-before(fn:substring-after($firstRecordStructure,': '),' ')"/>
-            <xsl:variable name="eadTitle" select="fn:substring-before(fn:substring-after(fn:substring-after($firstRecordStructure,': '),' '),' >> ')"/>
-            <!-- variable for unprocessed remainder of dcterms:alternative -->
-            <xsl:variable name="remainingLine" select="fn:substring-after($firstRecordStructure,' >> ')"/>
-            <!-- Create edm:ProvidedCHO as base class from which all other providedCHOs can be accessed -->
-            <edm:ProvidedCHO>
-                <xsl:attribute name="rdf:about">
-                    <xsl:value-of select="$eadid"/>
-                </xsl:attribute>
-                <dc:identifier>
-                    <xsl:value-of select="$eadid"/>
-                </dc:identifier>
-		<xsl:for-each select="$firstRecordStructure/../dc:publisher">
-                    <dc:publisher>
-                        <xsl:value-of select="."/>
-                    </dc:publisher>
-		</xsl:for-each>
-		<xsl:for-each select="$firstRecordStructure/../dcterms:issued">
-                    <dcterms:issued>
-                        <xsl:value-of select="."/>
-                    </dcterms:issued>
-		</xsl:for-each>
-                <dc:title>
-                    <xsl:value-of select="$eadTitle"/>
-                </dc:title>
-                <xsl:if test='$remainingLine != ""'>
-                    <xsl:call-template name="generatePart">
-                        <xsl:with-param name="inputLine" select="$remainingLine"/>
-                    </xsl:call-template>
-                </xsl:if>
-            </edm:ProvidedCHO>
-            <xsl:call-template name="generateWebResource">
-                <xsl:with-param name="objectUrl" select="$firstRecordStructure/../europeana:isShownAt"/>
-            </xsl:call-template>
-            <xsl:apply-templates select="metadata/record"/>
         </xsl:template>
         
 	<!-- template matching a single ESE XML record -->
-	<xsl:template match="metadata/record">
-            <xsl:variable name="recordStructure" select="fn:substring-after(./dcterms:alternative,' >> ')" />
-            
-            <xsl:call-template name="generateSkos">
-                <xsl:with-param name="inputLine" select="$recordStructure" />
-            </xsl:call-template>
-
+	<xsl:template match="metadata/record">            
+            <!-- Generate structure tree of original EAD within skos:Concept objects -->
+            <xsl:if test='dcterms:alternative'>
+                <xsl:call-template name="generateSkos">
+                    <xsl:with-param name="inputLine" select="fn:substring-after(dcterms:alternative, ': ')" />
+                </xsl:call-template>
+            </xsl:if>
+                
             <!-- Provided Cultural Heritage Object -->
             <edm:ProvidedCHO>
                 <xsl:attribute name="rdf:about">
@@ -98,7 +56,7 @@
             <dcterms:hasPart><xsl:value-of select="$id"/></dcterms:hasPart>
         </xsl:template>
 
-        <!-- this template generates/edits a skos:Content instance -->
+        <!-- this template generates/edits a skos:Content instances -->
         <xsl:template name="generateSkos">
             <!--Parameter and variables-->
             <xsl:param name="inputLine"/>
@@ -106,36 +64,37 @@
             <xsl:variable name="levelTitle">
                 <xsl:choose>
                     <xsl:when test="fn:contains($inputLine, ' >> ')">
-                         <xsl:value-of select="fn:substring-before(fn:substring-after($inputLine,' '),' >> ')"/>
+                         <xsl:value-of select='fn:substring-before(fn:substring-after($inputLine," ")," >> ")'></xsl:value-of>                             
                     </xsl:when>
                     <xsl:otherwise>
-                         <xsl:value-of select="fn:substring-after($inputLine,' ')"/>                        
+                         <xsl:value-of select="fn:substring-after($inputLine,' ')"/>
                     </xsl:otherwise>
                 </xsl:choose>
             </xsl:variable>
-            <xsl:variable name="remainingLine" select="fn:substring-after($inputLine,' >> ')"/>
+            <xsl:variable name="remainingLine" select='fn:substring-after($inputLine," >> ")'></xsl:variable>
             <!-- Actual content processing starts here -->
                 <skos:Concept>
                 <xsl:attribute name="rdf:about">
                     <xsl:value-of select="$levelId"/>
                 </xsl:attribute>
+                <remainingLine><xsl:value-of select="$remainingLine"/><xsl:text>|</xsl:text></remainingLine>
                 <dc:title><xsl:value-of select="$levelTitle"/></dc:title>
                 <xsl:choose>
                     <xsl:when test='$remainingLine != ""'>
                         <xsl:call-template name="generatePart">
                             <xsl:with-param name="inputLine" select="$remainingLine"/>
-                        </xsl:call-template>                    
+                        </xsl:call-template>
                     </xsl:when>
                     <xsl:otherwise>
-                        <dcterms:hasPart><xsl:value-of select="./dc:identifier"/></dcterms:hasPart>
+                        <dcterms:hasPart><xsl:text></xsl:text><xsl:value-of select="dc:identifier"/></dcterms:hasPart>
                     </xsl:otherwise>
                 </xsl:choose>
             </skos:Concept>
-            <xsl:if test='$remainingLine != ""'>
+<!--            <xsl:if test='$remainingLine != ""'>
                 <xsl:call-template name="generateSkos">
                     <xsl:with-param name="inputLine" select="$remainingLine"/>
                 </xsl:call-template>
-            </xsl:if>
+            </xsl:if>-->
         </xsl:template>
 		
         <!-- this template generates a edm:WebResource entry -->
@@ -373,6 +332,12 @@
 			</xsl:call-template>
 		</xsl:for-each>		
 		
+                <xsl:for-each select="europeana:dataProvider">
+                    <edm:dataProvider>
+                        <xsl:value-of select="."/>
+                    </edm:dataProvider>
+                </xsl:for-each>
+                
                 <xsl:for-each select="europeana:provider">
                     <edm:provider>
                         <xsl:value-of select="."/>
