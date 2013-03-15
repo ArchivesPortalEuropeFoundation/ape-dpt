@@ -337,6 +337,12 @@
                     </edm:dataProvider>
                 </xsl:for-each>
                 
+                <xsl:for-each select="europeana:object">
+                    <edm:isShownAt>
+                        <xsl:value-of select="."/>
+                    </edm:isShownAt>
+                </xsl:for-each>
+                
                 <xsl:for-each select="europeana:provider">
                     <edm:provider>
                         <xsl:value-of select="."/>
