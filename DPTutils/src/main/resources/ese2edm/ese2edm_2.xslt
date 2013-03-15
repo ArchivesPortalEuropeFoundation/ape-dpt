@@ -57,6 +57,8 @@
     <xsl:template match="edm:WebResource">
         <xsl:copy-of select="."/>
     </xsl:template>
+    
+    <xsl:template match="skos:Concept"/>
 
     <!--
     1) generate result tree
