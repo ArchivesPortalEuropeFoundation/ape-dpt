@@ -106,6 +106,7 @@ public class ConvertEdmActionListener implements ActionListener {
 		Document intermediateDoc = docBuilder.newDocument();
                 File outputFile = new File(xmlOutputFilename);
                 EdmConfig config = new EdmConfig(false);
+//                config.getTransformerXML2XML().transform(new File(loc), outputFile);
                 config.getTransformerXML2XML().transform(new File(loc), intermediateDoc);
                 System.out.println("intermediateDoc root: " + intermediateDoc.getDocumentElement().getNodeName());
                 config.setTransferToFileOutput(true);
