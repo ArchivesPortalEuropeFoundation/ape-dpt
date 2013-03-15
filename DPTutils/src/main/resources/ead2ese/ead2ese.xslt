@@ -656,42 +656,55 @@ http://purl.org/dc/terms/ http://www.dublincore.org/schemas/xmls/qdc/dcterms.xsd
 	<xsl:for-each select="$originations">
             <xsl:choose>
                 <xsl:when test='./@label="pre"'>
-                    <dcterms:provenance>
-                        <xsl:call-template name="generateOriginationContent">
-                            <xsl:with-param name="node" select="."/>
-                        </xsl:call-template>
-                    </dcterms:provenance>
-                </xsl:when>
-                <xsl:otherwise>
-                    <dc:creator>
-                        <xsl:call-template name="generateOriginationContent">
-                            <xsl:with-param name="node" select="."/>
-                        </xsl:call-template>
-                    </dc:creator>
-                </xsl:otherwise>
-            </xsl:choose>
-	</xsl:for-each>	
-</xsl:template>
-<xsl:template name='generateOriginationContent'>
-	<xsl:param name="node"/>
-		<xsl:for-each select="$node/persname">
-			<xsl:value-of select="$node"/>
-		</xsl:for-each>
-		<xsl:for-each select="$node/corpname">
-			<xsl:value-of select="$node"/>
-		</xsl:for-each>	
-		<xsl:for-each select="$node/famname">
-			<xsl:value-of select="$node"/>
-		</xsl:for-each>	
-		<xsl:for-each select="$node/name">
-			<xsl:value-of select="$node"/>
-		</xsl:for-each>	
-		<xsl:for-each select="$node/text()">
-			<xsl:variable name="text"><xsl:value-of select="fn:replace(normalize-space($node), '[\n\t\r]', '')"/></xsl:variable>
+                    <xsl:element name="dcterms:provenance">
+                        <xsl:for-each select="./persname">
+                            <xsl:value-of select="."/>
+                        </xsl:for-each>
+                        <xsl:for-each select="./corpname">
+                            <xsl:value-of select="."/>
+                        </xsl:for-each>
+                        <xsl:for-each select="./famname">
+                            <xsl:value-of select="."/>
+                        </xsl:for-each>
+                        <xsl:for-each select="./name">
+                            <xsl:value-of select="."/>
+                        </xsl:for-each>
+                        <xsl:for-each select="./text()">
+                            <xsl:variable name="text">
+                                <xsl:value-of select="fn:replace(normalize-space(.), '[\n\t\r]', '')"/>
+                            </xsl:variable>
 			<xsl:if test="fn:string-length($text) > 0">
 				<xsl:value-of select="$text"/>
 			</xsl:if>
-		</xsl:for-each>
+                        </xsl:for-each>
+                    </xsl:element>
+                </xsl:when>
+                <xsl:otherwise>
+                    <xsl:element name="dc:creator">
+                        <xsl:for-each select="./persname">
+                            <xsl:value-of select="."/>
+                        </xsl:for-each>
+                        <xsl:for-each select="./corpname">
+                            <xsl:value-of select="."/>
+                        </xsl:for-each>
+                        <xsl:for-each select="./famname">
+                            <xsl:value-of select="."/>
+                        </xsl:for-each>
+                        <xsl:for-each select="./name">
+                            <xsl:value-of select="."/>
+                        </xsl:for-each>
+                        <xsl:for-each select="./text()">
+                            <xsl:variable name="text">
+                                <xsl:value-of select="fn:replace(normalize-space(.), '[\n\t\r]', '')"/>
+                            </xsl:variable>
+			<xsl:if test="fn:string-length($text) > 0">
+				<xsl:value-of select="$text"/>
+			</xsl:if>
+                        </xsl:for-each>
+                    </xsl:element>
+                </xsl:otherwise>
+            </xsl:choose>
+        </xsl:for-each>
 </xsl:template>
 <xsl:template name='custodhist'>
     <xsl:param name="custodhists"/>
