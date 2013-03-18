@@ -183,7 +183,7 @@ public class ConvertAndValidateActionListener extends ApexActionListener {
                                     XsdObject xsdObject = fileInstance.getValidationSchema();
 
                                     List<SAXParseException> exceptions = DocumentValidation.xmlValidation(is, Utilities.getUrlPathXsd(xsdObject), xsdObject.isXsd11());
-                                    if (exceptions.isEmpty()){
+                                    if (exceptions == null || exceptions.isEmpty()){
                                         fileInstance.setValid(true);
                                         fileInstance.setValidationErrors(labels.getString("validationSuccess"));
                                     } else {

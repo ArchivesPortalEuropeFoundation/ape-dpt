@@ -91,7 +91,7 @@ public class ValidateSelectionActionListener extends ApexActionListener {
                             } else {
                                 exceptions = DocumentValidation.xmlValidation(FileUtils.openInputStream(file), Utilities.getUrlPathXsd(xsdObject), xsdObject.isXsd11());
                             }
-                            if (exceptions.isEmpty() || exceptions == null){
+                            if (exceptions == null || exceptions.isEmpty()){
                                 fileInstance.setValid(true);
                                 fileInstance.setValidationErrors(labels.getString("validationSuccess"));
                             } else {
