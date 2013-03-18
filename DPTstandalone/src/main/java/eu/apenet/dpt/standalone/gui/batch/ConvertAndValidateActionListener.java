@@ -152,7 +152,7 @@ public class ConvertAndValidateActionListener extends ApexActionListener {
                                     }
                                     fileInstance.setConversionErrors(xslMessages.toString());
                                     fileInstance.setCurrentLocation(Utilities.TEMP_DIR + "temp_" + file.getName());
-                                    fileInstance.setIsConverted();
+                                    fileInstance.setConverted();
                                     fileInstance.setLastOperation(FileInstance.Operation.CONVERT);
                                     if(xslMessages.toString().equals("")) {
                                         if(fileInstance.getConversionScriptName().equals(Utilities.XSL_DEFAULT_NAME))

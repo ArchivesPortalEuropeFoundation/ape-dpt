@@ -641,6 +641,7 @@ public class DataPreparationToolGUI extends JFrame {
             public void valueChanged(ListSelectionEvent e) {
                 if(!e.getValueIsAdjusting()) {
                     if (xmlEadList.getSelectedValues() != null && xmlEadList.getSelectedValues().length != 0) {
+                        eseList.clearSelection();
                         if (xmlEadList.getSelectedValues().length > 1) {
                             convertAndValidateBtn.setEnabled(true);
                             validateSelectionBtn.setEnabled(true);
@@ -673,6 +674,7 @@ public class DataPreparationToolGUI extends JFrame {
             public void valueChanged(ListSelectionEvent e) {
                 if(!e.getValueIsAdjusting()) {
                     if (eseList.getSelectedValues() != null && eseList.getSelectedValues().length != 0) {
+                        xmlEadList.clearSelection();
                         if (eseList.getSelectedValues().length > 1) {
                             convertAndValidateBtn.setEnabled(false);
                             validateSelectionBtn.setEnabled(false);
@@ -1050,6 +1052,19 @@ public class DataPreparationToolGUI extends JFrame {
             }
             if (fileInstance.isValid()) {
                 validateItem.setEnabled(false);
+                apeTabbedPane.disableValidationBtn();
+                saveSelectedItem.setEnabled(true);
+                if (fileInstance.getValidationSchema().getFileType().equals(FileInstance.FileType.EAD))
+                    apeTabbedPane.enableConversionEseBtn();
+            } else {
+                validateItem.setEnabled(true);
+                apeTabbedPane.enableValidationBtn();
+                apeTabbedPane.disableConversionEseBtn();
+                saveSelectedItem.setEnabled(true);
+            }
+            if (fileInstance.isEse()) {
+                validateItem.setEnabled(false);
+                apeTabbedPane.disableConversionBtn();
                 apeTabbedPane.disableValidationBtn();
                 saveSelectedItem.setEnabled(true);
                 if (fileInstance.getValidationSchema().getFileType().equals(FileInstance.FileType.EAD))

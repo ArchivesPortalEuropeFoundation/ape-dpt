@@ -76,7 +76,7 @@ public class FileInstance {
         return isConverted;
     }
 
-    public void setIsConverted() {
+    public void setConverted() {
         isConverted = true;
     }
 
@@ -84,7 +84,7 @@ public class FileInstance {
         return isEse;
     }
 
-    public void setIsEse() {
+    public void setEse() {
         isEse = true;
     }
 
