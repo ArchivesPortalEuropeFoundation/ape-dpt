@@ -110,7 +110,8 @@ public class DataPreparationToolGUI extends JFrame {
     private JList xmlEadList;
     private ProfileListModel eseListModel;
     private JList eseList;
-
+    private JLabel xmlEadListLabel;
+    
     private JLabel progressLabel = new JLabel("", JLabel.CENTER);
     private JLabel resultArea = new JLabel();
     private JTable eagFormTable;
@@ -755,10 +756,11 @@ public class DataPreparationToolGUI extends JFrame {
         JPanel xmlEadListPanel = new JPanel(new BorderLayout());
         xmlEadList.setCellRenderer(new IconListCellRenderer(fileInstances));
         xmlEadList.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
+        xmlEadListLabel = new JLabel(labels.getString("xmlEadFiles"));
         xmlEadListPanel.add(new JScrollPane(xmlEadList, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER), BorderLayout.CENTER);
-        xmlEadListPanel.add(new Label(labels.getString("xmlEadFiles")), BorderLayout.SOUTH);
+        xmlEadListPanel.add(xmlEadListLabel, BorderLayout.NORTH);
         JPanel eseListPanel = new JPanel(new BorderLayout());
-        eseListPanel.add(new Label(labels.getString("eseFiles")), BorderLayout.NORTH);
+        eseListPanel.add(new JLabel(labels.getString("eseFiles")), BorderLayout.NORTH);
         eseList.setCellRenderer(new IconListCellRenderer(fileInstances));
         eseList.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
 //        eseList.addFocusListener(new FocusListener() {
@@ -1279,6 +1281,10 @@ public class DataPreparationToolGUI extends JFrame {
         enableConversionBtns();
         enableValidationBtns();
         apePanel.getApeTabbedPane().enableConversionEseBtn();
+    }
+
+    public JLabel getXmlEadListLabel() {
+        return xmlEadListLabel;
     }
 
     private class LanguageActionListener implements ActionListener {

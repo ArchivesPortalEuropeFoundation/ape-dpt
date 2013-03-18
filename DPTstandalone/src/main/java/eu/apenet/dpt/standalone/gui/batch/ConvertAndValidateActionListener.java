@@ -202,6 +202,7 @@ public class ConvertAndValidateActionListener extends ApexActionListener {
                             } finally {
                                 summaryWorking.stop();
                                 threadRunner.interrupt();
+                                dataPreparationToolGUI.getXmlEadListLabel().repaint();
                                 dataPreparationToolGUI.getXmlEadList().repaint();
                                 if(progressBar != null)
                                     progressBar.setVisible(false);
