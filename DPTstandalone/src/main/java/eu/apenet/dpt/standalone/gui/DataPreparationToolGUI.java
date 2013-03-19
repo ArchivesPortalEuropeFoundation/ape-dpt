@@ -9,6 +9,7 @@ import eu.apenet.dpt.standalone.gui.db.RetrieveFromDb;
 import eu.apenet.dpt.standalone.gui.ead2ese.ConvertEseActionListener;
 import eu.apenet.dpt.standalone.gui.eag2012.Eag2012Frame;
 import eu.apenet.dpt.standalone.gui.edition.CheckList;
+import eu.apenet.dpt.standalone.gui.edition.PopupMouseListener;
 import eu.apenet.dpt.standalone.gui.hgcreation.*;
 import eu.apenet.dpt.standalone.gui.validation.ValidateActionListener;
 import eu.apenet.dpt.standalone.gui.validation.ValidateSelectionActionListener;
@@ -653,8 +654,11 @@ public class DataPreparationToolGUI extends JFrame {
                             validateSelectionBtn.setEnabled(false);
                             convertEseSelectionBtn.setEnabled(false);
                             changeInfoInGUI(((File) xmlEadList.getSelectedValue()).getName());
-                            if (apePanel.getApeTabbedPane().getSelectedIndex() == APETabbedPane.TAB_EDITION)
+                            if (apePanel.getApeTabbedPane().getSelectedIndex() == APETabbedPane.TAB_EDITION) {
                                 apePanel.getApeTabbedPane().createEditionTree(((File) xmlEadList.getSelectedValue()));
+                                if(tree != null)
+                                    tree.addMouseListener(new PopupMouseListener(tree, getDataPreparationToolGUI(), getContentPane()));
+                            }
                             apePanel.getApeTabbedPane().changeBackgroundColor(APETabbedPane.TAB_CONVERSION, Utilities.TAB_COLOR);
                             apePanel.getApeTabbedPane().changeBackgroundColor(APETabbedPane.TAB_VALIDATION, Utilities.TAB_COLOR);
                         }
@@ -737,6 +741,10 @@ public class DataPreparationToolGUI extends JFrame {
             }
         }
         createHGBtn.setEnabled(false);
+    }
+
+    public DataPreparationToolGUI getDataPreparationToolGUI() {
+        return this;
     }
 
     public static void createErrorOrWarningPanel(Throwable e, boolean isError, String message, Component owner) {
