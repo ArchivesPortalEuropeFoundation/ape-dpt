@@ -1,4 +1,4 @@
-package eu.apenet.dpt.standalone.gui.xsdAddition;
+package eu.apenet.dpt.standalone.gui.xsdaddition;
 
 import eu.apenet.dpt.standalone.gui.FileInstance;
 

@@ -1,7 +1,7 @@
 package eu.apenet.dpt.standalone.gui;
 
 import eu.apenet.dpt.standalone.gui.db.RetrieveFromDb;
-import eu.apenet.dpt.standalone.gui.xsdAddition.XsdObject;
+import eu.apenet.dpt.standalone.gui.xsdaddition.XsdObject;
 
 import javax.swing.*;
 import java.io.File;

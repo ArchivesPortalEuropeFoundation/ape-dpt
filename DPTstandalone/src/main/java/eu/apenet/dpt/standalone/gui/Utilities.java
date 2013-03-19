@@ -1,6 +1,6 @@
 package eu.apenet.dpt.standalone.gui;
 
-import eu.apenet.dpt.standalone.gui.xsdAddition.XsdObject;
+import eu.apenet.dpt.standalone.gui.xsdaddition.XsdObject;
 import eu.apenet.dpt.utils.service.DocumentValidation;
 import eu.apenet.dpt.utils.util.XsltChecker;
 import org.apache.commons.lang.StringUtils;

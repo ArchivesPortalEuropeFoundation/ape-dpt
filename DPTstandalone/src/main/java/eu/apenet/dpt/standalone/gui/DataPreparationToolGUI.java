@@ -12,7 +12,7 @@ import eu.apenet.dpt.standalone.gui.edition.CheckList;
 import eu.apenet.dpt.standalone.gui.hgcreation.*;
 import eu.apenet.dpt.standalone.gui.validation.ValidateActionListener;
 import eu.apenet.dpt.standalone.gui.validation.ValidateSelectionActionListener;
-import eu.apenet.dpt.standalone.gui.xsdAddition.XsdObject;
+import eu.apenet.dpt.standalone.gui.xsdaddition.XsdObject;
 import eu.apenet.dpt.utils.util.XmlChecker;
 import eu.apenet.dpt.utils.util.Xsd_enum;
 import eu.apenet.dpt.utils.util.extendxsl.DateNormalization;
