@@ -18,11 +18,16 @@ public final class EseFileUtils {
 	private static final String UNDERSCORE = "_";
 	private static final String OUTPUT_HTML_DIR_NAME = "ESE-HTML";
 	private static final String OUTPUT_XML_DIR_NAME = "ESE";
+	private static final String OUTPUT_EDM_XML_DIR_NAME = "EDM";
 	private static final String OUTPUT_DIR_NAME = "EUROPEANA";
 
 	public static final String SEPARATOR = "/";
 
-	public static File getOutputXMLDir(String repoDirPath, String countryISOname, int aiId) {
+	public static File getOutputEDMDir(String repoDirPath, String countryISOname, int aiId) {
+		String path = repoDirPath + SEPARATOR + getRelativeEADDirPath(countryISOname, aiId) + SEPARATOR + OUTPUT_DIR_NAME + SEPARATOR + OUTPUT_EDM_XML_DIR_NAME;
+		return new File(path);
+	}
+	public static File getOutputESEDir(String repoDirPath, String countryISOname, int aiId) {
 		String path = repoDirPath + SEPARATOR + getRelativeEADDirPath(countryISOname, aiId) + SEPARATOR + OUTPUT_DIR_NAME + SEPARATOR + OUTPUT_XML_DIR_NAME;
 		return new File(path);
 	}
