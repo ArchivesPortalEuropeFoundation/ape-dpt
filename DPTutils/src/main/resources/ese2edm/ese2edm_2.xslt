@@ -16,25 +16,28 @@
                 xmlns:xlink="http://www.w3.org/1999/xlink"
                 exclude-result-prefixes="xlink fn"
                 version="2.0">
-<xsl:output method="xml" encoding="UTF-8" indent="yes"/>
+    <xsl:output method="xml" encoding="UTF-8" indent="yes"/>
 
-<xsl:template match="/">
-    <xsl:apply-templates />
-</xsl:template>
+    <!--Parameters, values coming from Java code-->
+    <xsl:param name="oai_pmh_location"></xsl:param>
+
+    <xsl:template match="/">
+        <xsl:apply-templates />
+    </xsl:template>
 
     <!--<xsl:template match="skos:Concept[position() = 1]" priority="3">-->
     <xsl:template match="rdf:RDF">
         <rdf:RDF>
-        <xsl:for-each-group select="./skos:Concept" group-by="@rdf:about">
-            <skos:Concept>
-                <xsl:attribute name="rdf:about" select="current-group()[1]/@rdf:about"/>
-                <xsl:copy-of select="current-group()[1]/dc:title"/>
-                <xsl:for-each-group select="current-group()" group-by="if(dcterms:hasPart/text()) then dcterms:hasPart/text() else 'nothing'">
-                    <xsl:copy-of select="current-group()[1]/dcterms:hasPart" />
-                </xsl:for-each-group>
-            </skos:Concept>
-        </xsl:for-each-group>
-        <xsl:apply-templates />
+            <xsl:for-each-group select="./skos:Concept" group-by="@rdf:about">
+                <skos:Concept>
+                    <xsl:attribute name="rdf:about" select="current-group()[1]/@rdf:about"/>
+                    <xsl:copy-of select="current-group()[1]/dc:title"/>
+                    <xsl:for-each-group select="current-group()" group-by="if(dcterms:hasPart/text()) then dcterms:hasPart/text() else 'nothing'">
+                        <xsl:copy-of select="current-group()[1]/dcterms:hasPart" />
+                    </xsl:for-each-group>
+                </skos:Concept>
+            </xsl:for-each-group>
+            <xsl:apply-templates />
         </rdf:RDF>
     </xsl:template>
 
