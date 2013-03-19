@@ -368,7 +368,7 @@ public class EseOptionsPanel extends JPanel {
             if (btn.isSelected() && btn.getActionCommand().equals(YES)) {
                 config.setInheritOrigination(true);
                 config.setInheritCustodhist(true);
-                config.setInheritAltformavailHead(true);
+                config.setInheritAltformavail(true);
                 config.setInheritControlaccess(true);
             }
         }
@@ -483,8 +483,8 @@ public class EseOptionsPanel extends JPanel {
             throw new Exception("dataProviderTextField is empty");
         }
 
-        if (StringUtils.isEmpty(dataProviderTextArea.getText())) {
-            throw new Exception("dataProviderTextField is empty");
+        if (StringUtils.isEmpty(providerTextArea.getText())) {
+            throw new Exception("providerTextField is empty");
         }
 
         if (licenseGroup == null) {
