@@ -11,6 +11,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
+import java.text.MessageFormat;
 import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
@@ -48,15 +49,15 @@ public class DownloadReportActionListener implements ActionListener {
         builder.append(labels.getString("dataquality.title"));
         builder.append(" -----");
         builder.append("\n");
-        builder.append(labels.getString("dataquality.missing.unittitle"));
+        builder.append(MessageFormat.format(labels.getString("dataquality.missing.unittitle"), "(unittitle)"));
         builder.append(" ");
         builder.append(Integer.toString(map.get("unittitle").size()));
         builder.append("\n");
-        builder.append(labels.getString("dataquality.missing.unitdate"));
+        builder.append(MessageFormat.format(labels.getString("dataquality.missing.unitdate"), "(unitdate@normal)"));
         builder.append(" ");
         builder.append(Integer.toString(map.get("unitdate").size()));
         builder.append("\n");
-        builder.append(labels.getString("dataquality.missing.dao"));
+        builder.append(MessageFormat.format(labels.getString("dataquality.missing.dao"), "(dao@xlink:role)"));
         builder.append(" ");
         builder.append(Integer.toString(map.get("dao").size()));
 
@@ -66,11 +67,11 @@ public class DownloadReportActionListener implements ActionListener {
         for(String key : map.keySet()) {
             if(map.get(key).size() > 0) {
                 if(key.equals("unittitle")) {
-                    builder.append("--- ").append(labels.getString("dataquality.report.unittitle")).append(" ---");
+                    builder.append("--- ").append(MessageFormat.format(labels.getString("dataquality.report.unittitle"), "(unittitle)")).append(" ---");
                 } else if(key.equals("unitdate")) {
-                    builder.append("--- ").append(labels.getString("dataquality.report.unitdate")).append(" ---");
+                    builder.append("--- ").append(MessageFormat.format(labels.getString("dataquality.report.unitdate"), "(unitdate@normal)")).append(" ---");
                 } else if(key.equals("dao")) {
-                    builder.append("--- ").append(labels.getString("dataquality.report.dao")).append(" ---");
+                    builder.append("--- ").append(MessageFormat.format(labels.getString("dataquality.report.dao"), "(dao@xlink:role)")).append(" ---");
                 }
                 builder.append("\n");
                 for(String id : map.get(key).keySet()) {
