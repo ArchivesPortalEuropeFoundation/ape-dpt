@@ -19,6 +19,7 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -118,8 +119,13 @@ public class DateConversionXMLFilehandler {
         return result;
     }
     
-    public String findsEntry(String input){
-        Vector data = loadDataFromFile("xsl/system/dateconversion.xml");
+    public String findsEntry(String input, String baseURI){
+        String filePath = "/dateconversion.xml";
+        if(StringUtils.isBlank(baseURI))
+            filePath = "xsl/system" + filePath;
+        else
+            filePath = baseURI + filePath;
+        Vector data = loadDataFromFile(filePath);
         for (Object aData : data) {
             if (((Vector) aData).size() != 0)
                 if (input.equals(((Vector) aData).get(0)))
