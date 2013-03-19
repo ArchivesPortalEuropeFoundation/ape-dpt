@@ -18,6 +18,8 @@ import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
+
+import org.apache.log4j.Logger;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -29,6 +31,7 @@ import org.xml.sax.SAXException;
  * @author papp
  */
 public class DateConversionXMLFilehandler {
+    private static final Logger LOG = Logger.getLogger(DateConversionXMLFilehandler.class);
 
     public void saveDataToFile(Vector data, String xmlFile) {
         try {
@@ -70,7 +73,7 @@ public class DateConversionXMLFilehandler {
                 fop.flush();
                 fop.close();
             } catch (IOException e) {
-                e.printStackTrace();
+                LOG.error("We could not use the date conversion XML file, most likely it was not found, cause: " + e.getMessage());
             } finally {
                 try {
                     if (fop != null) {
