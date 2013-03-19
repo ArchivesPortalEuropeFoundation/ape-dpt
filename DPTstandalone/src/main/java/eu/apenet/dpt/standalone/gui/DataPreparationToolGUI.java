@@ -3,7 +3,7 @@ package eu.apenet.dpt.standalone.gui;
 import eu.apenet.dpt.standalone.gui.adhoc.FileNameComparator;
 import eu.apenet.dpt.standalone.gui.batch.ConvertAndValidateActionListener;
 import eu.apenet.dpt.standalone.gui.conversion.ConvertActionListener;
-import eu.apenet.dpt.standalone.gui.databaseChecker.DatabaseCheckerActionListener;
+import eu.apenet.dpt.standalone.gui.databasechecker.DatabaseCheckerActionListener;
 import eu.apenet.dpt.standalone.gui.dateconversion.DateConversionRulesFrame;
 import eu.apenet.dpt.standalone.gui.db.RetrieveFromDb;
 import eu.apenet.dpt.standalone.gui.ead2ese.ConvertEseActionListener;
