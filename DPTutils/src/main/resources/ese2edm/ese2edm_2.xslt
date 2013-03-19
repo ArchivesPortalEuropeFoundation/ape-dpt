@@ -5,7 +5,6 @@
                 xmlns:edm="http://www.europeana.eu/schemas/edm/"
                 xmlns:enrichment="http://www.europeana.eu/schemas/edm/enrichment"
                 xmlns:europeana="http://www.europeana.eu/schemas/ese/"
-                xmlns:oai="http://www.openarchives.org/OAI/2.0/"
                 xmlns:ore="http://www.openarchives.org/ore/terms/"
                 xmlns:owl="http://www.w3.org/2002/07/owl#"
                 xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
