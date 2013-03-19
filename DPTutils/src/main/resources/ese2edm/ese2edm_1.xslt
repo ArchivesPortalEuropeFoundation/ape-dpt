@@ -19,7 +19,7 @@
     <xsl:output method="xml" encoding="UTF-8" indent="yes"/>
 
     <!--Parameters, values coming from Java code-->
-    <xsl:param name="oai_pmh_location"></xsl:param>
+    <xsl:param name="edm_identifier"></xsl:param>
 
     <!-- template matching the root node and creating the RDF start tag -->
     <xsl:template match="/">

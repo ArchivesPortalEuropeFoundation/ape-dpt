@@ -17,7 +17,7 @@ public class EdmConfig implements Serializable {
     private static final long serialVersionUID = -3232731426711003838L;
     private XMLTransformer transformerXML2XML;
     
-    private String oaiPmhLocation;
+    private String edmIdentifier;
     private Properties properties;
 
     private boolean transferToFileOutput;
@@ -38,12 +38,12 @@ public class EdmConfig implements Serializable {
         return transformerXML2XML;
     }
 
-    public String getOaiPmhLocation() {
-        return oaiPmhLocation;
+    public String getEdmIdentifier() {
+        return edmIdentifier;
     }
 
-    public void setOaiPmhLocation(String oaiPmhLocation) {
-        this.oaiPmhLocation = oaiPmhLocation;
+    public void setEdmIdentifier(String edmIdentifier) {
+        this.edmIdentifier = edmIdentifier;
     }
 
     public boolean isTransferToFileOutput() {
@@ -53,16 +53,16 @@ public class EdmConfig implements Serializable {
     public void setTransferToFileOutput(boolean transferToFileOutput) {
         this.transferToFileOutput = transferToFileOutput;
         if (transferToFileOutput) {
-            transformerXML2XML = new XMLTransformer("/ese2edm/ese2edm_2.xslt", properties);
+            transformerXML2XML = new XMLTransformer("/ese2edm/ese2edm_2.xslt", getProperties());
         } else {
-            transformerXML2XML = new XMLTransformer("/ese2edm/ese2edm_1.xslt", properties);
+            transformerXML2XML = new XMLTransformer("/ese2edm/ese2edm_1.xslt", getProperties());
         }
     }
 
     public Properties getProperties() {
         if (properties == null) {
 			properties = new Properties();
-			properties.put("oai_pmh_location", getString(getOaiPmhLocation()));
+			properties.put("oai_pmh_location", getString(getEdmIdentifier()));
         }
         return properties;
     }
