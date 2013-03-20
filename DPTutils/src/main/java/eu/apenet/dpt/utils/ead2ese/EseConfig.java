@@ -24,7 +24,7 @@ public class EseConfig implements Serializable {
 	private boolean inheritOrigination;
 	private boolean inheritLanguage;
         private boolean inheritCustodhist;
-        private boolean inheritAltformavailHead;
+        private boolean inheritAltformavail;
         private boolean inheritControlaccess;
 	private String contextInformationPrefix;
 	private String rights;
@@ -100,12 +100,12 @@ public class EseConfig implements Serializable {
                 this.inheritCustodhist = inheritCustodhist;
         }
 
-    public boolean isInheritAltformavailHead() {
-        return inheritAltformavailHead;
+    public boolean isInheritAltformavail() {
+        return inheritAltformavail;
     }
 
-    public void setInheritAltformavailHead(boolean inheritAltformavailHead) {
-        this.inheritAltformavailHead = inheritAltformavailHead;
+    public void setInheritAltformavail(boolean inheritAltformavail) {
+        this.inheritAltformavail = inheritAltformavail;
     }
 
     public boolean isInheritControlaccess() {
@@ -214,7 +214,7 @@ public class EseConfig implements Serializable {
 			properties.put("inheritOrigination", getString(new Boolean(isInheritOrigination()).toString()));
 			properties.put("inheritLanguage", getString(new Boolean(isInheritLanguage()).toString()));
 			properties.put("inheritCustodhist", getString(new Boolean(isInheritCustodhist()).toString()));
-			properties.put("inheritAltformavailHead", getString(new Boolean(isInheritAltformavailHead()).toString()));
+			properties.put("inheritAltformavailHead", getString(new Boolean(isInheritAltformavail()).toString()));
 			properties.put("inheritControlaccess", getString(new Boolean(isInheritControlaccess()).toString()));
 			properties.put("contextInformationPrefix", getString(getContextInformationPrefix()));
 		}
