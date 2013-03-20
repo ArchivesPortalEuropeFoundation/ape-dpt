@@ -216,7 +216,11 @@ public class EagInstitutionPanel extends EagPanels {
                 }
                 setNextRow();
 
-                builder.addLabel(labels.getString("eag2012.streetLabel") + "*",    cc.xy (1, rowNb));
+                String mandatoryStar = "*";
+                if(isPostal)
+                    mandatoryStar = "";
+
+                builder.addLabel(labels.getString("eag2012.streetLabel") + mandatoryStar,    cc.xy (1, rowNb));
                 if(StringUtils.isNotEmpty(location.getStreet().getContent())) {
                     if(!isPostal)
                         streetTf = new TextFieldWithLanguage(location.getStreet().getContent(), location.getStreet().getLang());
@@ -243,7 +247,7 @@ public class EagInstitutionPanel extends EagPanels {
                 }
                 setNextRow();
 
-                builder.addLabel(labels.getString("eag2012.cityTownLabel") + "*",    cc.xy (1, rowNb));
+                builder.addLabel(labels.getString("eag2012.cityTownLabel") + mandatoryStar,    cc.xy (1, rowNb));
                 if(StringUtils.isNotEmpty(location.getMunicipalityPostalcode().getContent())) {
                     if(!isPostal)
                         cityTf = new TextFieldWithLanguage(location.getMunicipalityPostalcode().getContent(), location.getMunicipalityPostalcode().getLang());
@@ -604,11 +608,6 @@ public class EagInstitutionPanel extends EagPanels {
                 Repository repository = eag.getArchguide().getDesc().getRepositories().getRepository().get(0);
                 if(repository.getLocation().size() > 0) { //todo: Same reason as earlier
                     Location location = repository.getLocation().get(0);
-//                    if(!StringUtils.isEmpty(location.getLocalType()) && !location.getLocalType().equals("visitors address")) {
-//                        if(repository.getLocation().size() > 1) {
-//                            location = repository.getLocation().get(1);
-//                        }
-//                    }
                     location.setLocalType("visitors address");
                     if(StringUtils.isNotEmpty(streetTf.getTextValue())) {
                         if(!streetTf.getTextValue().equals(location.getStreet().getContent())) {

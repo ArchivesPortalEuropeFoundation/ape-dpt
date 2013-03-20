@@ -88,13 +88,21 @@ public class EagContactPanel extends EagPanels {
             }
             setNextRow();
 
-            builder.addLabel(labels.getString("eag2012.streetLabel") + "*",    cc.xy (1, rowNb));
+            String mandatoryStar = "*";
+            if(isPostal)
+                mandatoryStar = "";
+
+            builder.addLabel(labels.getString("eag2012.streetLabel") + mandatoryStar,    cc.xy (1, rowNb));
             if(StringUtils.isNotEmpty(location.getStreet().getContent())) {
-                streetTf = new TextFieldWithLanguage(location.getStreet().getContent(), location.getStreet().getLang());
-                streetPTf = new TextFieldWithLanguage(location.getStreet().getContent(), location.getStreet().getLang());
+                if(!isPostal)
+                    streetTf = new TextFieldWithLanguage(location.getStreet().getContent(), location.getStreet().getLang());
+                else
+                    streetPTf = new TextFieldWithLanguage(location.getStreet().getContent(), location.getStreet().getLang());
             } else {
-                streetTf = new TextFieldWithLanguage("", "");
-                streetPTf = new TextFieldWithLanguage("", "");
+                if(!isPostal)
+                    streetTf = new TextFieldWithLanguage("", "");
+                else
+                    streetPTf = new TextFieldWithLanguage("", "");
             }
             if(!isPostal) {
                 builder.add(streetTf.getTextField(),                               cc.xy (3, rowNb));
@@ -106,18 +114,22 @@ public class EagContactPanel extends EagPanels {
                 }
             } else {
                 builder.add(streetPTf.getTextField(),                               cc.xy (3, rowNb));
-                builder.addLabel(labels.getString("eag2012.language"), cc.xy (5, rowNb));
-                builder.add(streetTf.getLanguageBox(),                               cc.xy (7, rowNb));
+                builder.addLabel(labels.getString("eag2012.language"),    cc.xy (5, rowNb));
+                builder.add(streetPTf.getLanguageBox(),                               cc.xy (7, rowNb));
             }
             setNextRow();
 
-            builder.addLabel(labels.getString("eag2012.cityTownLabel") + "*",    cc.xy (1, rowNb));
+            builder.addLabel(labels.getString("eag2012.cityTownLabel") + mandatoryStar,    cc.xy (1, rowNb));
             if(StringUtils.isNotEmpty(location.getMunicipalityPostalcode().getContent())) {
-                cityTf = new TextFieldWithLanguage(location.getMunicipalityPostalcode().getContent(), location.getMunicipalityPostalcode().getLang());
-                cityPTf = new TextFieldWithLanguage(location.getMunicipalityPostalcode().getContent(), location.getMunicipalityPostalcode().getLang());
+                if(!isPostal)
+                    cityTf = new TextFieldWithLanguage(location.getMunicipalityPostalcode().getContent(), location.getMunicipalityPostalcode().getLang());
+                else
+                    cityPTf = new TextFieldWithLanguage(location.getMunicipalityPostalcode().getContent(), location.getMunicipalityPostalcode().getLang());
             } else {
-                cityTf = new TextFieldWithLanguage("", "");
-                cityPTf = new TextFieldWithLanguage("", "");
+                if(!isPostal)
+                    cityTf = new TextFieldWithLanguage("" , "");
+                else
+                    cityPTf = new TextFieldWithLanguage("", "");
             }
             if(!isPostal) {
                 builder.add(cityTf.getTextField(),                               cc.xy (3, rowNb));
@@ -170,11 +182,11 @@ public class EagContactPanel extends EagPanels {
                 setNextRow();
 
                 builder.addLabel(labels.getString("eag2012.countryLabel") + "*",    cc.xy (1, rowNb));
-                if(StringUtils.isNotEmpty(location.getCountry().getContent())) {
+                if(StringUtils.isNotEmpty(location.getCountry().getContent()))
                     countryTf = new TextFieldWithLanguage(location.getCountry().getContent(), location.getCountry().getLang());
-                } else {
+                else
                     countryTf = new TextFieldWithLanguage("", "");
-                }
+
                 builder.add(countryTf.getTextField(), cc.xy (3, rowNb));
                 builder.addLabel(labels.getString("eag2012.language"), cc.xy (5, rowNb));
                 builder.add(countryTf.getLanguageBox(),                               cc.xy (7, rowNb));
@@ -490,11 +502,6 @@ public class EagContactPanel extends EagPanels {
                 Repository repository = eag.getArchguide().getDesc().getRepositories().getRepository().get(0);
                 if(repository.getLocation().size() > 0) {
                     Location location = repository.getLocation().get(0);
-//                    if(!StringUtils.isEmpty(location.getLocalType()) && !location.getLocalType().equals("visitors address")) {
-//                        if(repository.getLocation().size() > 1) {
-//                            location = repository.getLocation().get(1);
-//                        }
-//                    }
                     location.setLocalType("visitors address");
                     if(StringUtils.isNotEmpty(streetTf.getTextValue())) {
                         if(!streetTf.getTextValue().equals(location.getStreet().getContent())) {
