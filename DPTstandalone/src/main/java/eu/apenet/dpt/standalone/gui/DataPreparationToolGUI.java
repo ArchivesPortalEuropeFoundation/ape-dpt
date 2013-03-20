@@ -572,7 +572,8 @@ public class DataPreparationToolGUI extends JFrame {
                 String defaultOutputDirectory = retrieveFromDb.retrieveDefaultSaveFolder();
                 boolean isMultipleFiles = xmlEadList.getSelectedIndices().length > 1;
                 for (Object selectedValue : xmlEadList.getSelectedValues()) {
-                    String filename = ((File)selectedValue).getName();
+                    File selectedFile = (File)selectedValue;
+                    String filename = selectedFile.getName();
                     FileInstance fileInstance = fileInstances.get(filename);
                     String filePrefix = fileInstance.getFileType().getFilePrefix();
 
@@ -601,14 +602,18 @@ public class DataPreparationToolGUI extends JFrame {
                             createErrorOrWarningPanel(ex, true, labels.getString("errorSavingTreeXML"), getContentPane());
                         }
                     } else if (fileInstance.isConverted()) {
-                        File newFile = new File(defaultOutputDirectory + filePrefix + "_" + filename);
-                        (new File(fileInstance.getCurrentLocation())).renameTo(newFile);
-                        fileInstance.setLastOperation(FileInstance.Operation.SAVE);
-                        fileInstance.setCurrentLocation(newFile.getAbsolutePath());
+                        try {
+                            File newFile = new File(defaultOutputDirectory + filePrefix + "_" + filename);
+                            FileUtils.copyFile(new File(fileInstance.getCurrentLocation()), newFile);
+                            fileInstance.setLastOperation(FileInstance.Operation.SAVE);
+                            fileInstance.setCurrentLocation(newFile.getAbsolutePath());
+                        } catch (IOException ioe) {
+                            LOG.error("Error when saving file", ioe);
+                        }
                     } else {
                         try {
                             File newFile = new File(defaultOutputDirectory + filePrefix + "_" + filename);
-                            FileUtils.copyFile((File) xmlEadList.getSelectedValue(), new File(defaultOutputDirectory + filePrefix + "_" + filename));
+                            FileUtils.copyFile(selectedFile, newFile);
                             fileInstance.setLastOperation(FileInstance.Operation.SAVE);
                             fileInstance.setCurrentLocation(newFile.getAbsolutePath());
                         } catch (IOException ioe) {
