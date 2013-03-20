@@ -121,9 +121,11 @@ public class EseOptionsPanel extends JPanel {
         panel = new JPanel(new GridLayout(1, 3));
         panel.add(new Label(labels.getString("ese.dataProvider") + ":" + "*"));
         dataProviderTextArea = new JTextArea();
+        dataProviderTextArea.setLineWrap(true);
+        dataProviderTextArea.setWrapStyleWord(true);
         String repository = determineRepository();
         JScrollPane dptaScrollPane = new JScrollPane(dataProviderTextArea);
-        dptaScrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+        dptaScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
         panel.add(dptaScrollPane);
         JPanel panel2 = new JPanel(new GridLayout(2, 1));
         archdescCheckbox = new JCheckBox(labels.getString("ese.mappingFromArchdesc") + " /ead/archdesc/did/repository", true);
@@ -144,8 +146,10 @@ public class EseOptionsPanel extends JPanel {
         panel = new JPanel(new GridLayout(1, 3));
         panel.add(new Label(labels.getString("ese.provider") + ":" + "*"));
         providerTextArea = new JTextArea();
+        providerTextArea.setLineWrap(true);
+        providerTextArea.setWrapStyleWord(true);
         JScrollPane ptaScrollPane = new JScrollPane(providerTextArea);
-        ptaScrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+        ptaScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
         panel.add(ptaScrollPane);
         panel.add(new Label(""));
         panel.setBorder(BLACK_LINE);
@@ -194,9 +198,10 @@ public class EseOptionsPanel extends JPanel {
         panel = new JPanel(new GridLayout(1, 3));
         panel.add(new Label(labels.getString("ese.hierarchyPrefix") + ":" + "*"));
         contextTextArea = new JTextArea(labels.getString("ese.hierarchyPrefixDefault") + ":");
+        contextTextArea.setLineWrap(true);
+        contextTextArea.setWrapStyleWord(true);
         JScrollPane ctaScrollPane = new JScrollPane(contextTextArea);
         ctaScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
-        ctaScrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
         panel.add(ctaScrollPane);
         panel.add(new Label(""));
         panel.setBorder(BLACK_LINE);
@@ -293,10 +298,10 @@ public class EseOptionsPanel extends JPanel {
         panel = new JPanel(new GridLayout(1, 1));
         panel.add(new Label(labels.getString("ese.specifyAdditionalRightsInfo") + ":"));
         additionalRightsTextArea = new JTextArea();
+        additionalRightsTextArea.setLineWrap(true);
+        additionalRightsTextArea.setWrapStyleWord(true);
         JScrollPane artaScrollPane = new JScrollPane(additionalRightsTextArea);
-        artaScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
-        artaScrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-        panel.add(artaScrollPane);
+        artaScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);        panel.add(artaScrollPane);
         panel.setBorder(GREY_LINE);
         formPanel.add(panel);
 
