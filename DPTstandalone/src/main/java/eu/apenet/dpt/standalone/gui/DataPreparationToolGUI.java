@@ -1095,6 +1095,7 @@ public class DataPreparationToolGUI extends JFrame {
             apeTabbedPane.setValidationErrorText("");
             apeTabbedPane.setConversionErrorText("");
             apeTabbedPane.setEseConversionErrorText("");
+            apeTabbedPane.createEditionTree(null);
         }
     }
 

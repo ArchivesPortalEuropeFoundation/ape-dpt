@@ -120,7 +120,7 @@ public class APETabbedPane extends JTabbedPane {
     }
 
     private void initialize() {
-        editionPane.setViewportView(createEditionTree(null));
+        createEditionTree(null);
 
         validationErrors.setEditable(false);
         validationErrors.setLineWrap(true);
@@ -346,7 +346,8 @@ public class APETabbedPane extends JTabbedPane {
     public JComponent createEditionTree(File file) {
         labels = dataPreparationToolGUI.getLabels();
         if(file == null){
-            return createMsgEditionTree(labels.getString("noTreeBuild") + "...");
+            editionPane.setViewportView(createMsgEditionTree(labels.getString("noTreeBuild") + "..."));
+            return null;
         }
         FileInstance fileInstance = dataPreparationToolGUI.getFileInstances().get(file.getName());
         if(tree != null && ((XMLTreeTableModel)tree.getTreeTableModel()).getName().equals(file.getName()) && fileInstance.getLastOperation().equals(FileInstance.Operation.CREATE_TREE))
