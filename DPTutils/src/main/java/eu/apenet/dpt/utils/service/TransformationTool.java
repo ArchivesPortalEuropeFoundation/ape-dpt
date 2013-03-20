@@ -30,15 +30,6 @@ import org.xml.sax.helpers.XMLReaderFactory;
 public class TransformationTool {
     private static final Logger LOG = Logger.getLogger(TransformationTool.class);
     private static final String CHARACTER_SET = "UTF-8";
-
-    @Deprecated
-    public static StringWriter createTransformation(InputStream inputFileStream, File outputFile, String xslString, Map<String, String> parameters, boolean outputIsFile, boolean forWebApp, String provider, boolean isXsd11, String... baseURI) throws SAXException, IOException {
-    	return createTransformation(inputFileStream, outputFile, xslString, parameters, outputIsFile, forWebApp, provider, isXsd11, new CounterCLevelCall(), baseURI);
-    }
-
-    public static StringWriter createTransformation(InputStream inputFileStream, File outputFile, InputStream xslFile, Map<String, String> parameters, boolean outputIsFile, boolean forWebApp, String provider, boolean isXsd11, String... baseURI) throws SAXException {
-    	return createTransformation(inputFileStream, outputFile, xslFile, parameters, outputIsFile, forWebApp, provider, isXsd11, new CounterCLevelCall(), baseURI);
-    }
     
     public static StringWriter createTransformation(InputStream inputFileStream, File outputFile, InputStream xslFile, Map<String, String> parameters, boolean outputIsFile, boolean forWebApp, String provider, boolean isXsd11, ExtensionFunctionCall extensionFunctionCall, String... baseURI) throws SAXException {
         Source xsltSource = new StreamSource(xslFile);
@@ -150,11 +141,6 @@ public class TransformationTool {
         } catch (Exception e){
             throw new RuntimeException(e);
         }
-    }
-
-    @Deprecated
-    public static StringWriter createTransformation(InputStream inputFileStream, File outputFile, String xslString, Map<String, String> parameters, boolean outputIsFile, boolean forWebApp, String provider, boolean isXsd11, CounterCLevelCall counterCLevelCall, String... baseURI) throws SAXException, IOException {
-        return createTransformation(inputFileStream, outputFile, IOUtils.toInputStream(xslString, CHARACTER_SET), parameters, outputIsFile, forWebApp, provider, isXsd11, counterCLevelCall, baseURI);
     }
 
     private static XsltTransformer insertParameters(XsltTransformer transformer, Map<String, String> parameters){
