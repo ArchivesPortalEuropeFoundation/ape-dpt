@@ -525,17 +525,19 @@ public class EseOptionsPanel extends JPanel {
         try {
             Document doc = XMLUtil.convertXMLToDocument(new FileInputStream(selectedIndices.get(0)));
             NodeList nodelist = doc.getElementsByTagName("dao");
-            int counter = 0;
-            do{
-                Node node = nodelist.item(counter);
-                NamedNodeMap attributes = node.getAttributes();
-                for (int i = 0; i < attributes.getLength(); i++) {
-                    Node attribute = attributes.getNamedItem("xlink:role");
-                    if(attribute != null)
-                        return attribute.getTextContent();
-                }
-                counter++;
-            }while(counter < nodelist.getLength());
+            if (nodelist.getLength() != 0){
+                int counter = 0;
+                do{
+                    Node node = nodelist.item(counter);
+                    NamedNodeMap attributes = node.getAttributes();
+                    for (int i = 0; i < attributes.getLength(); i++) {
+                        Node attribute = attributes.getNamedItem("xlink:role");
+                        if(attribute != null)
+                            return attribute.getTextContent();
+                    }
+                    counter++;
+                }while(counter < nodelist.getLength());
+            }
         } catch (SAXException ex) {
             java.util.logging.Logger.getLogger(EseOptionsPanel.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IOException ex) {
@@ -638,7 +640,7 @@ public class EseOptionsPanel extends JPanel {
                 }
                 File outputFile = new File(xmlOutputFilename);
                 config.getTransformerXML2XML().transform(new File(loc), outputFile);
-                if (analyzeESEXML(outputFile) == 0) {
+                if (analyzeESEXML(outputFile) <= 1) {
                     apeTabbedPane.appendEseConversionErrorText(labels.getString("ese.fileEmpty"));
                 } else {
                     fileInstance.setEseLocation(outputFile.getAbsolutePath());
@@ -658,7 +660,8 @@ public class EseOptionsPanel extends JPanel {
             // count number of records
             parser.parse(xmlReader, null);
             int numberOfRecords = recordParser.getNumberOfRecords();
-            if (numberOfRecords == 0) {
+            System.out.println(numberOfRecords);
+            if (numberOfRecords <= 1) {
                 outputFile.delete();
             } else {
                 XMLUtil.validateESE(outputFile);
