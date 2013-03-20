@@ -368,8 +368,10 @@ public class CreateHGListener implements ActionListener {
             descLevel.setHorizontalAlignment(SwingConstants.LEFT);
 
             final JTextArea descLevelText = new JTextArea(obj.getDescription());
+            descLevelText.setLineWrap(true);
+            descLevelText.setWrapStyleWord(true);
             JScrollPane descLevelScrollPane = new JScrollPane(descLevelText);
-            descLevelScrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+            descLevelScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
 
             editLevelMainPanel.add(idLevel);
             editLevelMainPanel.add(idLevelText);
