@@ -18,6 +18,8 @@ import javax.xml.transform.TransformerException;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -59,6 +61,7 @@ public class EseOptionsPanel extends JPanel {
     private static final String EUROPEANA_RIGHTS_PAID = "Paid access";
     private static final String EUROPEANA_RIGHTS_RESTRICTED = "Restricted access";
     private static final String EUROPEANA_RIGHTS_UNKNOWN = "Unknown";
+    private String archdescRepository = null;
     private ResourceBundle labels;
     private RetrieveFromDb retrieveFromDb;
     private Map<String, FileInstance> fileInstances;
@@ -78,6 +81,7 @@ public class EseOptionsPanel extends JPanel {
     private JTextArea providerTextArea;
     private JComboBox languageComboBox;
     private JTextArea additionalRightsTextArea;
+    private JCheckBox archdescCheckbox;
     private Map<String, String> languages;
     private static final Border BLACK_LINE = BorderFactory.createLineBorder(Color.BLACK);
     private static final Border GREY_LINE = BorderFactory.createLineBorder(Color.GRAY);
@@ -118,12 +122,22 @@ public class EseOptionsPanel extends JPanel {
         panel.add(new Label(labels.getString("ese.dataProvider") + ":" + "*"));
         dataProviderTextArea = new JTextArea();
         String repository = determineRepository();
-        if(repository != null)
-            dataProviderTextArea.setText(repository);
         JScrollPane dptaScrollPane = new JScrollPane(dataProviderTextArea);
         dptaScrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
         panel.add(dptaScrollPane);
-        panel.add(new Label(""));
+        JPanel panel2 = new JPanel(new GridLayout(2, 1));
+        archdescCheckbox = new JCheckBox(labels.getString("ese.mappingFromArchdesc") + " /ead/archdesc/did/repository", true);
+        archdescCheckbox.addItemListener(new CheckboxItemListener());
+        panel2.add(archdescCheckbox);
+        panel2.add(new JLabel(labels.getString("ese.archdescValue") + ": "+ archdescRepository));
+        panel2.setVisible(false);
+        panel.add(panel2);
+        if(repository != null)
+            dataProviderTextArea.setText(repository);
+        else if(archdescRepository != null){
+            panel2.setVisible(true);
+            dataProviderTextArea.setText(archdescRepository);
+        }
         panel.setBorder(BLACK_LINE);
         formPanel.add(panel);
 
@@ -535,7 +549,9 @@ public class EseOptionsPanel extends JPanel {
             do{
                 Node node = nodelist.item(counter);
                     if(node instanceof Element)
-                        return ((Element) node).getTextContent();
+                        if(((Element) node).getParentNode().getParentNode().getNodeName().equals("archdesc"))
+                            archdescRepository = ((Element) node).getTextContent();
+                        else return ((Element) node).getTextContent();
                 counter++;
             }while(counter < nodelist.getLength());
         } catch (SAXException ex) {
@@ -776,5 +792,15 @@ public class EseOptionsPanel extends JPanel {
                 return "by-nd";
             }
         }
+    }
+    
+    private class CheckboxItemListener implements ItemListener{
+
+        public void itemStateChanged(ItemEvent e) {
+            if (e.getStateChange() == ItemEvent.DESELECTED)
+                dataProviderTextArea.setText("");
+            if (e.getStateChange() == ItemEvent.SELECTED)
+                dataProviderTextArea.setText(archdescRepository);
+        }      
     }
 }
