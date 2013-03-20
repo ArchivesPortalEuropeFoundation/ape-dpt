@@ -589,15 +589,18 @@ public class DataPreparationToolGUI extends JFrame {
                         Document document = (Document) treeTableModel.getRoot();
                         try {
                             File file2 = new File(defaultOutputDirectory + filePrefix + "_" + filename);
+                            File filetemp = new File(Utilities.TEMP_DIR + "temp_" + filename);
                             TransformerFactory tf = TransformerFactory.newInstance();
                             Transformer output = tf.newTransformer();
                             output.setOutputProperty(javax.xml.transform.OutputKeys.INDENT, "yes");
                             output.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "2");
 
-                            output.transform(new DOMSource(document.getFirstChild()), new StreamResult(file2));
+                            DOMSource domSource = new DOMSource(document.getFirstChild());
+                            output.transform(domSource, new StreamResult(filetemp));
+                            output.transform(domSource, new StreamResult(file2));
 
                             fileInstance.setLastOperation(FileInstance.Operation.SAVE);
-                            fileInstance.setCurrentLocation(file2.getAbsolutePath());
+                            fileInstance.setCurrentLocation(filetemp.getAbsolutePath());
                         } catch (Exception ex) {
                             createErrorOrWarningPanel(ex, true, labels.getString("errorSavingTreeXML"), getContentPane());
                         }
@@ -606,7 +609,7 @@ public class DataPreparationToolGUI extends JFrame {
                             File newFile = new File(defaultOutputDirectory + filePrefix + "_" + filename);
                             FileUtils.copyFile(new File(fileInstance.getCurrentLocation()), newFile);
                             fileInstance.setLastOperation(FileInstance.Operation.SAVE);
-                            fileInstance.setCurrentLocation(newFile.getAbsolutePath());
+//                            fileInstance.setCurrentLocation(newFile.getAbsolutePath());
                         } catch (IOException ioe) {
                             LOG.error("Error when saving file", ioe);
                         }
@@ -615,7 +618,7 @@ public class DataPreparationToolGUI extends JFrame {
                             File newFile = new File(defaultOutputDirectory + filePrefix + "_" + filename);
                             FileUtils.copyFile(selectedFile, newFile);
                             fileInstance.setLastOperation(FileInstance.Operation.SAVE);
-                            fileInstance.setCurrentLocation(newFile.getAbsolutePath());
+//                            fileInstance.setCurrentLocation(newFile.getAbsolutePath());
                         } catch (IOException ioe) {
                             LOG.error("Error when saving file", ioe);
                         }
