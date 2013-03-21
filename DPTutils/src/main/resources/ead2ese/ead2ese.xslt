@@ -235,6 +235,7 @@ http://purl.org/dc/terms/ http://www.dublincore.org/schemas/xmls/qdc/dcterms.xsd
                                             <xsl:value-of select='$cnode/scopecontent[@encodinganalog="summary"]/head'/>
                                             <xsl:text>: </xsl:text>
                                             <xsl:value-of select='$cnode/scopecontent[@encodinganalog="summary"]/p'/>
+                                            <xsl:text> </xsl:text>
                                         </xsl:when>
                                         <xsl:otherwise>
                                             <xsl:if test='$cnode/scopecontent[@encodinganalog="summary"]/head'>
@@ -243,6 +244,7 @@ http://purl.org/dc/terms/ http://www.dublincore.org/schemas/xmls/qdc/dcterms.xsd
                                             </xsl:if>
                                             <xsl:if test='$cnode/scopecontent[@encodinganalog="summary"]/p'>
                                                 <xsl:value-of select='$cnode/scopecontent[@encodinganalog="summary"]/p'/>
+                                                <xsl:text> </xsl:text>
                                             </xsl:if>
                                         </xsl:otherwise>
                                     </xsl:choose>
@@ -448,6 +450,7 @@ http://purl.org/dc/terms/ http://www.dublincore.org/schemas/xmls/qdc/dcterms.xsd
                                             <xsl:value-of select='$cnode/scopecontent[@encodinganalog="summary"]/head'/>
                                             <xsl:text>: </xsl:text>
                                             <xsl:value-of select='$cnode/scopecontent[@encodinganalog="summary"]/p'/>
+                                            <xsl:text> </xsl:text>
                                         </xsl:when>
                                         <xsl:otherwise>
                                             <xsl:if test='$cnode/scopecontent[@encodinganalog="summary"]/head'>
@@ -456,6 +459,7 @@ http://purl.org/dc/terms/ http://www.dublincore.org/schemas/xmls/qdc/dcterms.xsd
                                             </xsl:if>
                                             <xsl:if test='$cnode/scopecontent[@encodinganalog="summary"]/p'>
                                                 <xsl:value-of select='$cnode/scopecontent[@encodinganalog="summary"]/p'/>
+                                                <xsl:text> </xsl:text>
                                             </xsl:if>
                                         </xsl:otherwise>
                                     </xsl:choose>
@@ -655,6 +659,7 @@ http://purl.org/dc/terms/ http://www.dublincore.org/schemas/xmls/qdc/dcterms.xsd
                                             <xsl:value-of select='$cnode/bioghist/head'/>
                                             <xsl:text>: </xsl:text>
                                             <xsl:value-of select='$cnode/bioghist/p'/>
+                                            <xsl:text> </xsl:text>
                                         </xsl:when>
                                         <xsl:otherwise>
                                             <xsl:if test='$cnode/bioghist/head'>
@@ -663,6 +668,7 @@ http://purl.org/dc/terms/ http://www.dublincore.org/schemas/xmls/qdc/dcterms.xsd
                                             </xsl:if>
                                             <xsl:if test='$cnode/bioghist/p'>
                                                 <xsl:value-of select='$cnode/bioghist/p'/>
+                                                <xsl:text> </xsl:text>
                                             </xsl:if>
                                         </xsl:otherwise>
                                     </xsl:choose>
@@ -689,6 +695,7 @@ http://purl.org/dc/terms/ http://www.dublincore.org/schemas/xmls/qdc/dcterms.xsd
                                             <xsl:value-of select='$cnode/phystech/head'/>
                                             <xsl:text>: </xsl:text>
                                             <xsl:value-of select='$cnode/phystech/p'/>
+                                            <xsl:text> </xsl:text>
                                         </xsl:when>
                                         <xsl:otherwise>
                                             <xsl:if test='$cnode/phystech/head'>
@@ -697,6 +704,7 @@ http://purl.org/dc/terms/ http://www.dublincore.org/schemas/xmls/qdc/dcterms.xsd
                                             </xsl:if>
                                             <xsl:if test='$cnode/phystech/p'>
                                                 <xsl:value-of select='$cnode/phystech/p'/>
+                                                <xsl:text> </xsl:text>
                                             </xsl:if>
                                         </xsl:otherwise>
                                     </xsl:choose>
@@ -731,6 +739,7 @@ http://purl.org/dc/terms/ http://www.dublincore.org/schemas/xmls/qdc/dcterms.xsd
                                         <xsl:value-of select='$cnode/bioghist/head'/>
                                         <xsl:text>: </xsl:text>
                                         <xsl:value-of select='$cnode/bioghist/p'/>
+                                        <xsl:text> </xsl:text>
                                     </xsl:when>
                                     <xsl:otherwise>
                                         <xsl:if test='$cnode/bioghist/head'>
@@ -739,6 +748,7 @@ http://purl.org/dc/terms/ http://www.dublincore.org/schemas/xmls/qdc/dcterms.xsd
                                         </xsl:if>
                                         <xsl:if test='$cnode/bioghist/p'>
                                             <xsl:value-of select='$cnode/bioghist/p'/>
+                                            <xsl:text> </xsl:text>
                                         </xsl:if>
                                     </xsl:otherwise>
                                 </xsl:choose>
@@ -751,6 +761,7 @@ http://purl.org/dc/terms/ http://www.dublincore.org/schemas/xmls/qdc/dcterms.xsd
                                         <xsl:value-of select='$cnode/phystech/head'/>
                                         <xsl:text>: </xsl:text>
                                         <xsl:value-of select='$cnode/phystech/p'/>
+                                        <xsl:text> </xsl:text>
                                     </xsl:when>
                                     <xsl:otherwise>
                                         <xsl:if test='$cnode/phystech/head'>
@@ -759,6 +770,7 @@ http://purl.org/dc/terms/ http://www.dublincore.org/schemas/xmls/qdc/dcterms.xsd
                                         </xsl:if>
                                         <xsl:if test='$cnode/phystech/p'>
                                             <xsl:value-of select='$cnode/phystech/p'/>
+                                            <xsl:text> </xsl:text>
                                         </xsl:if>
                                     </xsl:otherwise>
                                 </xsl:choose>
@@ -968,6 +980,7 @@ http://purl.org/dc/terms/ http://www.dublincore.org/schemas/xmls/qdc/dcterms.xsd
                         <xsl:value-of select='./head'/>
                         <xsl:text>: </xsl:text>
                         <xsl:value-of select='./p'/>
+                        <xsl:text> </xsl:text>
                     </xsl:when>
                     <xsl:otherwise>
                         <xsl:if test='./head'>
@@ -976,6 +989,7 @@ http://purl.org/dc/terms/ http://www.dublincore.org/schemas/xmls/qdc/dcterms.xsd
                         </xsl:if>
                         <xsl:if test='./p'>
                             <xsl:value-of select='./p'/>
+                            <xsl:text> </xsl:text>
                         </xsl:if>
                     </xsl:otherwise>
                 </xsl:choose>
@@ -1068,6 +1082,7 @@ http://purl.org/dc/terms/ http://www.dublincore.org/schemas/xmls/qdc/dcterms.xsd
                         <xsl:value-of select='./head'/>
                         <xsl:text>: </xsl:text>
                         <xsl:value-of select='./p'/>
+                        <xsl:text> </xsl:text>
                     </xsl:when>
                     <xsl:otherwise>
                         <xsl:if test='./head'>
@@ -1076,6 +1091,7 @@ http://purl.org/dc/terms/ http://www.dublincore.org/schemas/xmls/qdc/dcterms.xsd
                         </xsl:if>
                         <xsl:if test='./p'>
                             <xsl:value-of select='./p'/>
+                            <xsl:text> </xsl:text>
                         </xsl:if>
                     </xsl:otherwise>
                 </xsl:choose>
@@ -1161,6 +1177,7 @@ http://purl.org/dc/terms/ http://www.dublincore.org/schemas/xmls/qdc/dcterms.xsd
                             <xsl:value-of select='./head'/>
                             <xsl:text>: </xsl:text>
                             <xsl:value-of select='./p'/>
+                            <xsl:text> </xsl:text>
                         </xsl:when>
                         <xsl:otherwise>
                             <xsl:if test='./head'>
@@ -1169,6 +1186,7 @@ http://purl.org/dc/terms/ http://www.dublincore.org/schemas/xmls/qdc/dcterms.xsd
                             </xsl:if>
                             <xsl:if test='./p'>
                                 <xsl:value-of select='./p'/>
+                                <xsl:text> </xsl:text>
                             </xsl:if>
                         </xsl:otherwise>
                     </xsl:choose>
