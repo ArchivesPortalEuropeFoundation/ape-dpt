@@ -556,9 +556,14 @@ public class EseOptionsPanel extends JPanel {
             do{
                 Node node = nodelist.item(counter);
                     if(node instanceof Element)
-                        if(((Element) node).getParentNode().getParentNode().getNodeName().equals("archdesc"))
-                            archdescRepository = ((Element) node).getTextContent();
-                        else return ((Element) node).getTextContent();
+                        if(((Element) node).getParentNode().getParentNode().getNodeName().equals("archdesc")){
+                            ((Element) node).normalize();
+                            archdescRepository = ((Element) node).getTextContent().trim();
+                        }
+                        else {
+                            ((Element) node).normalize();
+                            return ((Element) node).getTextContent().trim();
+                        }
                 counter++;
             }while(counter < nodelist.getLength());
         } catch (SAXException ex) {
