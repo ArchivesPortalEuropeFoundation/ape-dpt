@@ -29,11 +29,7 @@ public class EdmConfig implements Serializable {
 
     public XMLTransformer getTransformerXML2XML() {
         if (transformerXML2XML == null) {
-            if (transferToFileOutput) {
-                transformerXML2XML = new XMLTransformer("/ese2edm/ese2edm_2.xslt", getProperties());
-            } else {
-                transformerXML2XML = new XMLTransformer("/ese2edm/ese2edm_1.xslt", getProperties());
-            }
+            transformerXML2XML = new XMLTransformer("/ese2edm/ese2edm_1.xslt", getProperties());
         }
         return transformerXML2XML;
     }
@@ -52,11 +48,7 @@ public class EdmConfig implements Serializable {
 
     public void setTransferToFileOutput(boolean transferToFileOutput) {
         this.transferToFileOutput = transferToFileOutput;
-        if (transferToFileOutput) {
-            transformerXML2XML = new XMLTransformer("/ese2edm/ese2edm_2.xslt", getProperties());
-        } else {
             transformerXML2XML = new XMLTransformer("/ese2edm/ese2edm_1.xslt", getProperties());
-        }
     }
 
     public Properties getProperties() {

@@ -23,28 +23,13 @@
 
     <!-- template matching the root node and creating the RDF start tag -->
     <xsl:template match="/">
-        <rdf:RDF xsi:schemaLocation="http://purl.org/dc/elements/1.1/ http://dublincore.org/schemas/xmls/qdc/dc.xsd
-        http://purl.org/dc/terms/ http://dublincore.org/schemas/xmls/qdc/dcterms.xsd
-        http://www.europeana.eu/schemas/edm/ http://www.europeana.eu/schemas/edm/EDM-EXTERNAL-MAIN.xsd
-        http://www.europeana.eu/schemas/edm/enrichment http://www.europeana.eu/schemas/edm/ENRICHMENT.xsd
-        http://www.europeana.eu/schemas/ese/ http://www.europeana.eu/schemas/ese/ESE-V3.4.xsd
-        http://www.openarchives.org/ore/terms/ http://www.europeana.eu/schemas/edm/ORE.xsd
-        http://www.w3.org/2002/07/owl# http://www.europeana.eu/schemas/edm/OWL.xsd
-        http://www.w3.org/1999/02/22-rdf-syntax-ns# http://www.europeana.eu/schemas/edm/RDF.xsd
-        http://www.w3.org/2004/02/skos/core# http://www.europeana.eu/schemas/edm/SKOS.xsd
-        http://www.w3.org/2003/01/geo/wgs84_pos# http://www.europeana.eu/schemas/edm/WGS84.xsd">               
+        <rdf:RDF xsi:schemaLocation="http://www.w3.org/1999/02/22-rdf-syntax-ns# http://www.europeana.eu/schemas/edm/EDM.xsd">
             <xsl:apply-templates select="metadata/record"/>
         </rdf:RDF>
     </xsl:template>
         
     <!-- template matching a single ESE XML record -->
     <xsl:template match="metadata/record">            
-        <!-- Generate structure tree of original EAD within skos:Concept objects -->
-        <xsl:if test='dcterms:alternative'>
-            <xsl:call-template name="generateSkos">
-                <xsl:with-param name="inputLine" select="fn:substring-after(dcterms:alternative, ': ')" />
-            </xsl:call-template>
-        </xsl:if>
                 
         <!-- Provided Cultural Heritage Object -->
         <edm:ProvidedCHO>
@@ -56,73 +41,9 @@
         </edm:ProvidedCHO>
 
         <!-- Web Resource information -->
-        <xsl:call-template name="generateWebResource">
-            <xsl:with-param name="objectUrl">
-                <xsl:value-of select="europeana:isShownAt"/>
-            </xsl:with-param>
-        </xsl:call-template>
-    </xsl:template>
-        
-    <!-- this template generates a hasPart property -->
-    <xsl:template name="generatePart">
-        <xsl:param name="inputLine"/>
-        <xsl:variable name="id" select="fn:substring-before($inputLine,' ')"/>
-        <dcterms:hasPart>
-            <xsl:value-of select="$id"/>
-        </dcterms:hasPart>
-    </xsl:template>
-
-    <!-- this template generates/edits a skos:Content instances -->
-    <xsl:template name="generateSkos">
-        <!--Parameter and variables-->
-        <xsl:param name="inputLine"/>
-        <xsl:variable name="levelId" select="fn:substring-before($inputLine,' ')"/>
-        <xsl:variable name="levelTitle">
-            <xsl:choose>
-                <xsl:when test="fn:contains($inputLine, ' >> ')">
-                    <xsl:value-of select='fn:substring-before(fn:substring-after($inputLine," ")," >> ")'></xsl:value-of>                             
-                </xsl:when>
-                <xsl:otherwise>
-                    <xsl:value-of select="fn:substring-after($inputLine,' ')"/>
-                </xsl:otherwise>
-            </xsl:choose>
-        </xsl:variable>
-        <xsl:variable name="remainingLine" select='fn:substring-after($inputLine," >> ")'></xsl:variable>
-        <!-- Actual content processing starts here -->
-        <skos:Concept>
-            <xsl:attribute name="rdf:about">
-                <xsl:value-of select="$levelId"/>
-            </xsl:attribute>
-            <dc:title>
-                <xsl:value-of select="$levelTitle"/>
-            </dc:title>
-            <xsl:choose>
-                <xsl:when test='$remainingLine != ""'>
-                    <xsl:call-template name="generatePart">
-                        <xsl:with-param name="inputLine" select="$remainingLine"/>
-                    </xsl:call-template>
-                </xsl:when>
-                <xsl:otherwise>
-                    <dcterms:hasPart>
-                        <xsl:text></xsl:text>
-                        <xsl:value-of select="dc:identifier"/>
-                    </dcterms:hasPart>
-                </xsl:otherwise>
-            </xsl:choose>
-        </skos:Concept>
-        <xsl:if test='$remainingLine != ""'>
-            <xsl:call-template name="generateSkos">
-                <xsl:with-param name="inputLine" select="$remainingLine"/>
-            </xsl:call-template>
-        </xsl:if>
-    </xsl:template>
-		
-    <!-- this template generates a edm:WebResource entry -->
-    <xsl:template name="generateWebResource">
-        <xsl:param name="objectUrl"/>
         <edm:WebResource>
             <xsl:attribute name="rdf:about">
-                <xsl:value-of select="$objectUrl"/>
+                <xsl:value-of select="europeana:isShownAt"/>
             </xsl:attribute>
             <xsl:for-each select="dc:rights">
                 <dc:rights>
@@ -139,6 +60,73 @@
                 </edm:rights>
             </xsl:for-each>
         </edm:WebResource>
+    
+        <!-- Simple Knowledge Organization System -> Concept -->
+        <skos:Concept>
+            <xsl:for-each select="dcterms:alternative">
+                <dcterms:alternative>
+                    <xsl:value-of select="."/>
+                </dcterms:alternative>
+            </xsl:for-each>
+        </skos:Concept>
+            
+        <!-- Provider aggregation -->
+        <ore:Aggregation>
+            <xsl:attribute name="rdf:about">
+            </xsl:attribute>
+            <edm:aggregatedCHO>
+                <xsl:attribute name="rdf:resource">
+                    <xsl:value-of select="dc:identifier"/>
+                </xsl:attribute>
+            </edm:aggregatedCHO>
+            <xsl:for-each select="dc:source">
+                <edm:dataProvider>
+                    <xsl:value-of select="."/>
+                </edm:dataProvider>
+            </xsl:for-each>
+            <xsl:for-each select="europeana:dataProvider">
+                <edm:dataProvider>
+                    <xsl:value-of select="."/>
+                </edm:dataProvider>
+            </xsl:for-each>
+            <xsl:for-each select="europeana:isShownBy">
+                <edm:isShownBy>
+                    <xsl:attribute name="rdf:resource">
+                        <xsl:value-of select="."/>
+                    </xsl:attribute>
+                </edm:isShownBy>
+            </xsl:for-each>
+            <xsl:for-each select="europeana:object">
+                <edm:isShownAt>
+                    <xsl:value-of select="."/>
+                </edm:isShownAt>
+                <edm:object>
+                    <xsl:value-of select="."/>
+                </edm:object>
+            </xsl:for-each>
+            <xsl:for-each select="europeana:provider">
+                <edm:provider>
+                    <xsl:value-of select="."/>
+                </edm:provider>
+            </xsl:for-each>
+            <xsl:for-each select="dc:rights">
+                <dc:rights>
+                    <xsl:value-of select="."/>
+                </dc:rights>
+            </xsl:for-each>
+            <xsl:for-each select="europeana:rights">
+                <edm:rights>
+                    <xsl:attribute name="rdf:resource">
+                        <xsl:value-of select="."/>
+                    </xsl:attribute>
+                </edm:rights>
+            </xsl:for-each>
+            <xsl:for-each select="europeana:unstored">
+                <edm:unstored>
+                    <xsl:value-of select="."/>
+                </edm:unstored>
+            </xsl:for-each>
+        </ore:Aggregation>
     </xsl:template>
         
     <!-- a named template, which can be called for mapping all other properties 
@@ -352,30 +340,14 @@
             </xsl:call-template>
         </xsl:for-each>		
 		
-        <xsl:for-each select="europeana:dataProvider">
-            <edm:dataProvider>
-                <xsl:value-of select="."/>
-            </edm:dataProvider>
-        </xsl:for-each>
-                
-        <xsl:for-each select="europeana:object">
-            <edm:isShownAt>
-                <xsl:value-of select="."/>
-            </edm:isShownAt>
-        </xsl:for-each>
-                
-        <xsl:for-each select="europeana:provider">
-            <edm:provider>
-                <xsl:value-of select="."/>
-            </edm:provider>
-        </xsl:for-each>
-                
         <xsl:for-each select="europeana:type">
             <edm:type>
                 <xsl:value-of select="."/>
             </edm:type>
         </xsl:for-each>		
+
     </xsl:template>
+	
 	
     <!-- this template creates an output property with a given name and copies all attributes from the context node -->
     <xsl:template name="create_property">
