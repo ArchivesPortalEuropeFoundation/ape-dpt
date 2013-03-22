@@ -44,13 +44,13 @@ public class TransformEdm implements Runnable {
             DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
             Document intermediateDoc = docBuilder.newDocument();
             File outputFile = new File(xmlOutputFilename);
-            EdmConfig config = new EdmConfig(false);
-//                config.getTransformerXML2XML().transform(new File(loc), outputFile);
+            EdmConfig config = new EdmConfig(true);
+                config.getTransformerXML2XML().transform(new File(loc), outputFile);
 //                File outputFile_temp = new File(Utilities.TEMP_DIR + ".temp_"+selectedIndex.getName());
-            config.getTransformerXML2XML().transform(new File(loc), intermediateDoc);
+//            config.getTransformerXML2XML().transform(new File(loc), intermediateDoc);
 //                System.out.println("intermediateDoc root: " + intermediateDoc.getDocumentElement().getNodeName());
-            config.setTransferToFileOutput(true);
-            config.getTransformerXML2XML().transform(intermediateDoc, outputFile);
+//            config.setTransferToFileOutput(true);
+//            config.getTransformerXML2XML().transform(intermediateDoc, outputFile);
         } catch (Exception e) {
             LOG.error("Error when converting file "+ selectedIndex.getName() +" into EDM", e);
         }
