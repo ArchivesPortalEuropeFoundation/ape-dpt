@@ -183,29 +183,21 @@ http://purl.org/dc/terms/ http://www.dublincore.org/schemas/xmls/qdc/dcterms.xsd
                     <xsl:apply-templates select="$didnode/unitid"/>
                 </dc:identifier>
                 <xsl:if test='/ead/archdesc/did/repository'>
-                    <xsl:variable name="sourceText">
-                        <xsl:value-of select="/ead/archdesc/did/repository/text()"/>
-                    </xsl:variable>
-                    <dc:source>
-                        <xsl:value-of select="fn:replace(normalize-space($sourceText), '[\n\t\r ]', ' ')"/>
-                    </dc:source>
+                    <xsl:apply-templates select='/ead/archdesc/did/repository'/>
                 </xsl:if>
                 <xsl:if test='/ead/eadheader/filedesc/publicationstmt/publisher'>
-                    <dc:publisher>
-                        <xsl:value-of select="/ead/eadheader/filedesc/publicationstmt/publisher/text()"/>
-                    </dc:publisher>
+                    <xsl:apply-templates select='/ead/eadheader/filedesc/publicationstmt/publisher'/>
                 </xsl:if>
                 <xsl:if test='/ead/eadheader/filedesc/publicationstmt/date'>
-                    <dcterms:issued>
-                        <xsl:value-of select="/ead/eadheader/filedesc/publicationstmt/date/text()"/>
-                    </dcterms:issued>
+                    <xsl:apply-templates select='/ead/eadheader/filedesc/publicationstmt/date'/>
                 </xsl:if>
                 <xsl:choose>
                     <xsl:when test="$inheritFromParent">
                         <xsl:variable name="parentdidnode" select="$parentcnode/did"/>
                         <xsl:variable name="parentofparentcnode" select="$parentcnode/parent::node()"/>
                         <dc:title>
-                            <xsl:value-of select="$parentcnode/did/unittitle[1]"/> >> <xsl:value-of select="$didnode/unittitle"/>
+                            <xsl:value-of select="$parentcnode/did/unittitle[1]"/> >> 
+                            <xsl:value-of select="$didnode/unittitle"/>
                         </dc:title>
                         <dcterms:alternative>
                             <xsl:value-of select="$contextInformationPrefix"/>
@@ -229,38 +221,10 @@ http://purl.org/dc/terms/ http://www.dublincore.org/schemas/xmls/qdc/dcterms.xsd
                         </xsl:choose>
                         <xsl:choose>
                             <xsl:when test='$cnode/scopecontent[@encodinganalog="summary"]'>
-                                <dc:description>
-                                    <xsl:choose>
-                                        <xsl:when test='$cnode/scopecontent[@encodinganalog="summary"]/head and $cnode/scopecontent[@encodinganalog="summary"]/p'>
-                                            <xsl:value-of select='$cnode/scopecontent[@encodinganalog="summary"]/head'/>
-                                            <xsl:text>: </xsl:text>
-                                            <xsl:value-of select='$cnode/scopecontent[@encodinganalog="summary"]/p'/>
-                                            <xsl:text> </xsl:text>
-                                        </xsl:when>
-                                        <xsl:otherwise>
-                                            <xsl:if test='$cnode/scopecontent[@encodinganalog="summary"]/head'>
-                                                <xsl:value-of select='$cnode/scopecontent[@encodinganalog="summary"]/head'/>
-                                                <xsl:text> </xsl:text>
-                                            </xsl:if>
-                                            <xsl:if test='$cnode/scopecontent[@encodinganalog="summary"]/p'>
-                                                <xsl:value-of select='$cnode/scopecontent[@encodinganalog="summary"]/p'/>
-                                                <xsl:text> </xsl:text>
-                                            </xsl:if>
-                                        </xsl:otherwise>
-                                    </xsl:choose>
-                                </dc:description>
+                                <xsl:apply-templates select='$cnode/scopecontent[@encodinganalog="summary"]' />
                             </xsl:when>
                             <xsl:otherwise>
-                                <xsl:if test='$parentcnode/scopecontent[@encodinganalog="summary"]/head'>
-                                    <dc:description>
-                                        <xsl:value-of select='$parentcnode/scopecontent[@encodinganalog="summary"]/head'/>
-                                    </dc:description>
-                                </xsl:if>
-                                <xsl:if test='$parentcnode/scopecontent[@encodinganalog="summary"]/p'>
-                                    <dc:description>
-                                        <xsl:value-of select='$parentcnode/scopecontent[@encodinganalog="summary"]/p'/>
-                                    </dc:description>
-                                </xsl:if>
+                                <xsl:apply-templates select='$parentcnode/scopecontent[@encodinganalog="summary"]' />
                             </xsl:otherwise>
                         </xsl:choose>
                         <xsl:choose>
@@ -321,15 +285,11 @@ http://purl.org/dc/terms/ http://www.dublincore.org/schemas/xmls/qdc/dcterms.xsd
                         </xsl:choose>
                         <xsl:choose>
                             <xsl:when test='$cnode/bibliography/bibref'>
-                                <dc:relation>
-                                    <xsl:value-of select="$cnode/bibliography/bibref/text()"/> 
-                                </dc:relation>
+                                <xsl:apply-templates select="$cnode/bibliography/bibref"/>
                             </xsl:when>
                             <xsl:otherwise>
                                 <xsl:if test='$parentcnode/bibliography/bibref'>
-                                    <dc:relation>
-                                        <xsl:value-of select="$parentcnode/bibliography/bibref/text()"/> 
-                                    </dc:relation>
+                                    <xsl:apply-templates select="$parentcnode/bibliography/bibref"/>
                                 </xsl:if>
                             </xsl:otherwise>
                         </xsl:choose>	
@@ -444,38 +404,10 @@ http://purl.org/dc/terms/ http://www.dublincore.org/schemas/xmls/qdc/dcterms.xsd
                         </xsl:if>
                         <xsl:choose>
                             <xsl:when test='$cnode/scopecontent[@encodinganalog="summary"]'>
-                                <dc:description>
-                                    <xsl:choose>
-                                        <xsl:when test='$cnode/scopecontent[@encodinganalog="summary"]/head and $cnode/scopecontent[@encodinganalog="summary"]/p'>
-                                            <xsl:value-of select='$cnode/scopecontent[@encodinganalog="summary"]/head'/>
-                                            <xsl:text>: </xsl:text>
-                                            <xsl:value-of select='$cnode/scopecontent[@encodinganalog="summary"]/p'/>
-                                            <xsl:text> </xsl:text>
-                                        </xsl:when>
-                                        <xsl:otherwise>
-                                            <xsl:if test='$cnode/scopecontent[@encodinganalog="summary"]/head'>
-                                                <xsl:value-of select='$cnode/scopecontent[@encodinganalog="summary"]/head'/>
-                                                <xsl:text> </xsl:text>
-                                            </xsl:if>
-                                            <xsl:if test='$cnode/scopecontent[@encodinganalog="summary"]/p'>
-                                                <xsl:value-of select='$cnode/scopecontent[@encodinganalog="summary"]/p'/>
-                                                <xsl:text> </xsl:text>
-                                            </xsl:if>
-                                        </xsl:otherwise>
-                                    </xsl:choose>
-                                </dc:description>
+                                <xsl:apply-templates select='$cnode/scopecontent[@encodinganalog="summary"]'/>
                             </xsl:when>
                             <xsl:otherwise>
-                                <xsl:if test='$parentcnode/scopecontent[@encodinganalog="summary"]/head'>
-                                    <dc:description>
-                                        <xsl:value-of select='$parentcnode/scopecontent[@encodinganalog="summary"]/head'/>
-                                    </dc:description>
-                                </xsl:if>
-                                <xsl:if test='$parentcnode/scopecontent[@encodinganalog="summary"]/p'>
-                                    <dc:description>
-                                        <xsl:value-of select='$parentcnode/scopecontent[@encodinganalog="summary"]/p'/>
-                                    </dc:description>
-                                </xsl:if>
+                                <xsl:apply-templates select='$parentcnode/scopecontent[@encodinganalog="summary"]'/>
                             </xsl:otherwise>
                         </xsl:choose>
                         <xsl:if test="$didnode/physdesc/physfacet">
@@ -499,9 +431,7 @@ http://purl.org/dc/terms/ http://www.dublincore.org/schemas/xmls/qdc/dcterms.xsd
                             </dcterms:extent>
                         </xsl:if>
                         <xsl:if test="$cnode/bibliography/bibref">
-                            <dc:relation>
-                                <xsl:value-of select="$cnode/bibliography/bibref/text()"/> 
-                            </dc:relation>
+                            <xsl:apply-templates select="$cnode/bibliography/bibref"/>
                         </xsl:if>
                         <xsl:choose>
                             <xsl:when test="$didnode/origination">
@@ -626,16 +556,6 @@ http://purl.org/dc/terms/ http://www.dublincore.org/schemas/xmls/qdc/dcterms.xsd
                 <xsl:choose>
                     <xsl:when test="$inheritFromParent">
                         <xsl:variable name="parentofparentcnode" select="$parentcnode/parent::node()"/>
-                        <!--<xsl:choose>
-                            <xsl:when test='$cnode/controlaccess/geogname'>
-                                <xsl:apply-templates select="$cnode/controlaccess/geogname"/>
-                            </xsl:when>
-                            <xsl:otherwise>
-                                <xsl:if test='$parentofparentcnode/controlaccess/geogname'>
-                                    <xsl:apply-templates select="$parentofparentcnode/controlaccess/geogname"/>
-                                </xsl:if>
-                            </xsl:otherwise>
-                        </xsl:choose>-->		
                         <xsl:choose>
                             <xsl:when test='$cnode/index/indexentry/geogname'>
                                 <xsl:apply-templates select="$cnode/index/indexentry/geogname"/>
@@ -653,79 +573,26 @@ http://purl.org/dc/terms/ http://www.dublincore.org/schemas/xmls/qdc/dcterms.xsd
                         </xsl:if>
                         <xsl:choose>
                             <xsl:when test='$cnode/bioghist'>
-                                <europeana:unstored>
-                                    <xsl:choose>
-                                        <xsl:when test='$cnode/bioghist/head and $cnode/bioghist/p'>
-                                            <xsl:value-of select='$cnode/bioghist/head'/>
-                                            <xsl:text>: </xsl:text>
-                                            <xsl:value-of select='$cnode/bioghist/p'/>
-                                            <xsl:text> </xsl:text>
-                                        </xsl:when>
-                                        <xsl:otherwise>
-                                            <xsl:if test='$cnode/bioghist/head'>
-                                                <xsl:value-of select='$cnode/bioghist/head'/>
-                                                <xsl:text> </xsl:text>
-                                            </xsl:if>
-                                            <xsl:if test='$cnode/bioghist/p'>
-                                                <xsl:value-of select='$cnode/bioghist/p'/>
-                                                <xsl:text> </xsl:text>
-                                            </xsl:if>
-                                        </xsl:otherwise>
-                                    </xsl:choose>
-                                </europeana:unstored>
+                                <xsl:apply-templates select='$cnode/bioghist' />
                             </xsl:when>
                             <xsl:otherwise>
                                 <xsl:if test='$parentofparentcnode/bioghist/head'>
-                                    <europeana:unstored>
-                                        <xsl:value-of select='$parentofparentcnode/bioghist/head'/>
-                                    </europeana:unstored>
-                                </xsl:if>
-                                <xsl:if test='$parentofparentcnode/bioghist/p'>
-                                    <europeana:unstored>
-                                        <xsl:value-of select='$parentofparentcnode/bioghist/p'/>
-                                    </europeana:unstored>
+                                    <xsl:apply-templates select='$parentofparentcnode/bioghist' />
                                 </xsl:if>
                             </xsl:otherwise>
                         </xsl:choose>
                         <xsl:choose>
                             <xsl:when test='$cnode/phystech'>
-                                <europeana:unstored>
-                                    <xsl:choose>
-                                        <xsl:when test='$cnode/phystech/head and $cnode/phystech/p'>
-                                            <xsl:value-of select='$cnode/phystech/head'/>
-                                            <xsl:text>: </xsl:text>
-                                            <xsl:value-of select='$cnode/phystech/p'/>
-                                            <xsl:text> </xsl:text>
-                                        </xsl:when>
-                                        <xsl:otherwise>
-                                            <xsl:if test='$cnode/phystech/head'>
-                                                <xsl:value-of select='$cnode/phystech/head'/>
-                                                <xsl:text> </xsl:text>
-                                            </xsl:if>
-                                            <xsl:if test='$cnode/phystech/p'>
-                                                <xsl:value-of select='$cnode/phystech/p'/>
-                                                <xsl:text> </xsl:text>
-                                            </xsl:if>
-                                        </xsl:otherwise>
-                                    </xsl:choose>
-                                </europeana:unstored>
+                                <xsl:apply-templates select='$cnode/phystech' />
                             </xsl:when>
                             <xsl:otherwise>
                                 <xsl:if test='$parentofparentcnode/phystech/head'>
-                                    <europeana:unstored>
-                                        <xsl:value-of select='$parentofparentcnode/phystech/head'/>
-                                    </europeana:unstored>
-                                </xsl:if>
-                                <xsl:if test='$parentofparentcnode/phystech/p'>
-                                    <europeana:unstored>
-                                        <xsl:value-of select='$parentofparentcnode/phystech/p'/>
-                                    </europeana:unstored>
+                                    <xsl:apply-templates select='$parentofparentcnode/phystech' />
                                 </xsl:if>
                             </xsl:otherwise>
                         </xsl:choose>																																			
                     </xsl:when>
                     <xsl:otherwise>
-                        <!--<xsl:apply-templates select="$cnode/controlaccess/geogname"/>-->
                         <xsl:apply-templates select="$cnode/index/indexentry/geogname"/>
                         <xsl:if test="$dc_rights">
                             <dc:rights>
@@ -733,48 +600,10 @@ http://purl.org/dc/terms/ http://www.dublincore.org/schemas/xmls/qdc/dcterms.xsd
                             </dc:rights>
                         </xsl:if>						
                         <xsl:if test='$cnode/bioghist'>
-                            <europeana:unstored>
-                                <xsl:choose>
-                                    <xsl:when test='$cnode/bioghist/head and $cnode/bioghist/p'>
-                                        <xsl:value-of select='$cnode/bioghist/head'/>
-                                        <xsl:text>: </xsl:text>
-                                        <xsl:value-of select='$cnode/bioghist/p'/>
-                                        <xsl:text> </xsl:text>
-                                    </xsl:when>
-                                    <xsl:otherwise>
-                                        <xsl:if test='$cnode/bioghist/head'>
-                                            <xsl:value-of select='$cnode/bioghist/head'/>
-                                            <xsl:text> </xsl:text>
-                                        </xsl:if>
-                                        <xsl:if test='$cnode/bioghist/p'>
-                                            <xsl:value-of select='$cnode/bioghist/p'/>
-                                            <xsl:text> </xsl:text>
-                                        </xsl:if>
-                                    </xsl:otherwise>
-                                </xsl:choose>
-                            </europeana:unstored>
+                            <xsl:apply-templates select='$cnode/bioghist' />
                         </xsl:if>
                         <xsl:if test='$cnode/phystech'>
-                            <europeana:unstored>
-                                <xsl:choose>
-                                    <xsl:when test='$cnode/phystech/head and $cnode/phystech/p'>
-                                        <xsl:value-of select='$cnode/phystech/head'/>
-                                        <xsl:text>: </xsl:text>
-                                        <xsl:value-of select='$cnode/phystech/p'/>
-                                        <xsl:text> </xsl:text>
-                                    </xsl:when>
-                                    <xsl:otherwise>
-                                        <xsl:if test='$cnode/phystech/head'>
-                                            <xsl:value-of select='$cnode/phystech/head'/>
-                                            <xsl:text> </xsl:text>
-                                        </xsl:if>
-                                        <xsl:if test='$cnode/phystech/p'>
-                                            <xsl:value-of select='$cnode/phystech/p'/>
-                                            <xsl:text> </xsl:text>
-                                        </xsl:if>
-                                    </xsl:otherwise>
-                                </xsl:choose>
-                            </europeana:unstored>
+                            <xsl:apply-templates select='$cnode/phystech' />
                         </xsl:if>					
                     </xsl:otherwise>
                 </xsl:choose>			
@@ -869,33 +698,23 @@ http://purl.org/dc/terms/ http://www.dublincore.org/schemas/xmls/qdc/dcterms.xsd
         <xsl:choose>
             <xsl:when test=' "dsc" eq fn:string(fn:node-name($node))'>
                 <xsl:variable name="archdesc" select="$node/parent::node()"/>
-                <xsl:value-of select="$eadid"/>
-                <xsl:text> </xsl:text>
-                <xsl:value-of select="normalize-space(/ead/eadheader/filedesc/titlestmt/titleproper[1])"/>
+                <xsl:apply-templates select="/ead/eadheader/filedesc/titlestmt/titleproper[1]" mode="generaterelation"/>
                 <xsl:text> >> </xsl:text>
-                <xsl:value-of select="$eadid"/>
-                <xsl:text>_</xsl:text>
-                <xsl:value-of select="fn:replace(normalize-space($archdesc/did/unitid), '[\n\t\r ]', '')"/>
-                <xsl:text> </xsl:text>
-                <xsl:value-of select="$archdesc/did/unittitle"/>
+                <xsl:apply-templates select="$archdesc/did/unittitle" mode="generaterelation"/>
             </xsl:when>	
             <xsl:otherwise>
                 <xsl:call-template name="generaterelation">
                     <xsl:with-param name="node" select="$node/parent::node()"/>
                 </xsl:call-template>
                 <xsl:text> >> </xsl:text>
-                <xsl:value-of select="$eadid"/>
-                <xsl:text>_</xsl:text>
-                <xsl:value-of select="$node/@id"/>
-                <xsl:text> </xsl:text>
-                <xsl:value-of select="normalize-space($node/did/unittitle[1])"/>
+                <xsl:apply-templates select="$node/did/unittitle[1]" mode="generaterelation"/>
             </xsl:otherwise>
         </xsl:choose>				
 
     </xsl:template>
     <xsl:template match='unitid'>
         <xsl:if test='@type="call number"'>
-            <xsl:value-of select="."/>
+            <xsl:value-of select="fn:replace(normalize-space(.), '[\n\t\r]', '')"/>
         </xsl:if>		
     </xsl:template>
     <xsl:template name='language'>
@@ -974,25 +793,11 @@ http://purl.org/dc/terms/ http://www.dublincore.org/schemas/xmls/qdc/dcterms.xsd
     <xsl:template name='custodhist'>
         <xsl:param name="custodhists"/>
         <xsl:for-each select="$custodhists">
+            <xsl:variable name="content">
+                <xsl:apply-templates />
+            </xsl:variable>
             <dcterms:provenance>
-                <xsl:choose>
-                    <xsl:when test='./head and ./p'>
-                        <xsl:value-of select='./head'/>
-                        <xsl:text>: </xsl:text>
-                        <xsl:value-of select='./p'/>
-                        <xsl:text> </xsl:text>
-                    </xsl:when>
-                    <xsl:otherwise>
-                        <xsl:if test='./head'>
-                            <xsl:value-of select='./head'/>
-                            <xsl:text> </xsl:text>
-                        </xsl:if>
-                        <xsl:if test='./p'>
-                            <xsl:value-of select='./p'/>
-                            <xsl:text> </xsl:text>
-                        </xsl:if>
-                    </xsl:otherwise>
-                </xsl:choose>
+                <xsl:value-of select="fn:replace(normalize-space($content), '[\n\t\r]', '')"/>
             </dcterms:provenance>
         </xsl:for-each>
     </xsl:template>
@@ -1031,7 +836,9 @@ http://purl.org/dc/terms/ http://www.dublincore.org/schemas/xmls/qdc/dcterms.xsd
                     </xsl:when>
                     <xsl:otherwise>
                         <xsl:if test='fn:string-length(normalize-space(.)) > 0'>
-                            <xsl:variable name="notNormalizedDate">NOT_NORMALIZED_DATE:<xsl:value-of select="normalize-space(.)"/></xsl:variable>
+                            <xsl:variable name="notNormalizedDate">NOT_NORMALIZED_DATE:
+                                <xsl:value-of select="normalize-space(.)"/>
+                            </xsl:variable>
                             <xsl:message>
                                 <xsl:value-of select="$notNormalizedDate"/>
                             </xsl:message>
@@ -1076,25 +883,11 @@ http://purl.org/dc/terms/ http://www.dublincore.org/schemas/xmls/qdc/dcterms.xsd
     <xsl:template name="altformavail">
         <xsl:param name="altformavails"/>
         <xsl:for-each select="$altformavails">
+            <xsl:variable name="content">
+                <xsl:apply-templates />
+            </xsl:variable>
             <dcterms:hasFormat>
-                <xsl:choose>
-                    <xsl:when test='./head and ./p'>
-                        <xsl:value-of select='./head'/>
-                        <xsl:text>: </xsl:text>
-                        <xsl:value-of select='./p'/>
-                        <xsl:text> </xsl:text>
-                    </xsl:when>
-                    <xsl:otherwise>
-                        <xsl:if test='./head'>
-                            <xsl:value-of select='./head'/>
-                            <xsl:text> </xsl:text>
-                        </xsl:if>
-                        <xsl:if test='./p'>
-                            <xsl:value-of select='./p'/>
-                            <xsl:text> </xsl:text>
-                        </xsl:if>
-                    </xsl:otherwise>
-                </xsl:choose>
+                <xsl:value-of select="fn:replace(normalize-space($content), '[\n\t\r]', '')"/>
             </dcterms:hasFormat>
         </xsl:for-each>
     </xsl:template>
@@ -1133,71 +926,35 @@ http://purl.org/dc/terms/ http://www.dublincore.org/schemas/xmls/qdc/dcterms.xsd
             </xsl:for-each>
         </xsl:for-each>
     </xsl:template>
-    <xsl:template match="lb">
-        <xsl:text> </xsl:text>
-    </xsl:template>
-    <xsl:template match="emph">
-        <xsl:text> </xsl:text>
-    </xsl:template>
+    
     <xsl:template name="generateRecordForEad">
         <record>
             <dc:identifier>
                 <xsl:value-of select="/ead/eadheader/eadid/@identifier"/>
             </dc:identifier>
             <xsl:if test='/ead/archdesc/did/repository'>
-                <xsl:variable name="sourceText">
-                    <xsl:value-of select="/ead/archdesc/did/repository/text()"/>
-                </xsl:variable>
-                <dc:source>
-                    <xsl:value-of select="fn:replace(normalize-space($sourceText), '[\n\t\r ]', ' ')"/>
-                </dc:source>
+                <xsl:apply-templates select='/ead/archdesc/did/repository'/>
             </xsl:if>
             <xsl:if test='/ead/eadheader/filedesc/publicationstmt/publisher'>
-                <dc:publisher>
-                    <xsl:value-of select="/ead/eadheader/filedesc/publicationstmt/publisher/text()"/>
-                </dc:publisher>
+                <xsl:apply-templates select='/ead/eadheader/filedesc/publicationstmt/publisher'/>
             </xsl:if>
             <xsl:if test='/ead/eadheader/filedesc/publicationstmt/date'>
-                <dcterms:issued>
-                    <xsl:value-of select="/ead/eadheader/filedesc/publicationstmt/date"/>
-                </dcterms:issued>
+                <xsl:apply-templates select='/ead/eadheader/filedesc/publicationstmt/date'/>
             </xsl:if>
-            <xsl:if test='/ead/eadheader/filedesc/titlestmt/titleproper/text()'>
-                <dc:title>
-                    <xsl:value-of select="/ead/eadheader/filedesc/titlestmt/titleproper/text()"/>
-                </dc:title>
+            <xsl:if test='/ead/eadheader/filedesc/titlestmt/titleproper'>
+                <xsl:apply-templates select='/ead/eadheader/filedesc/titlestmt/titleproper'/>
             </xsl:if>
             <xsl:if test='/ead/archdesc/did/unitdate'>
                 <xsl:apply-templates select="/ead/archdesc/did/unitdate"/>
             </xsl:if>
-            <xsl:for-each select='/ead/archdesc/scopecontent[@encodinganalog="summary"]'>
-                <dc:description>
-                    <xsl:choose>
-                        <xsl:when test='./head and ./p'>
-                            <xsl:value-of select='./head'/>
-                            <xsl:text>: </xsl:text>
-                            <xsl:value-of select='./p'/>
-                            <xsl:text> </xsl:text>
-                        </xsl:when>
-                        <xsl:otherwise>
-                            <xsl:if test='./head'>
-                                <xsl:value-of select='./head'/>
-                                <xsl:text> </xsl:text>
-                            </xsl:if>
-                            <xsl:if test='./p'>
-                                <xsl:value-of select='./p'/>
-                                <xsl:text> </xsl:text>
-                            </xsl:if>
-                        </xsl:otherwise>
-                    </xsl:choose>
-                </dc:description>
-            </xsl:for-each>
+            <xsl:apply-templates select='/ead/archdesc/scopecontent[@encodinganalog="summary"]'/>
             <xsl:if test='/ead/archdesc/custodhist'>
                 <xsl:call-template name="custodhist">
                     <xsl:with-param name="custodhists" select="/ead/archdesc/custodhist" />
                 </xsl:call-template>
             </xsl:if>
             <dc:type>TEXT</dc:type>
+            <dc:language>en</dc:language>
             <europeana:provider>
                 <xsl:value-of select="$europeana_provider"/>
             </europeana:provider>
@@ -1222,4 +979,93 @@ http://purl.org/dc/terms/ http://www.dublincore.org/schemas/xmls/qdc/dcterms.xsd
             </europeana:isShownAt>
         </record>
     </xsl:template>
+
+    <xsl:template match="repository">
+        <xsl:variable name='content'>
+            <xsl:apply-templates mode="all-but-address"/>
+        </xsl:variable>
+        <dc:source>
+            <xsl:value-of select="fn:replace(normalize-space($content), '[\n\t\r ]', '')"/>
+        </dc:source>
+    </xsl:template>
+    <xsl:template match='publisher'>
+        <xsl:variable name="publisherContent">
+            <xsl:value-of select="node()"/>
+        </xsl:variable>
+        <dc:publisher>
+            <xsl:value-of select="fn:replace(normalize-space($publisherContent), '[\n\t\r]', '')"/>
+        </dc:publisher>
+    </xsl:template>
+    <xsl:template match='date'>
+        <xsl:variable name="dateContent">
+            <xsl:value-of select="node()"/>
+        </xsl:variable>
+        <dcterms:issued>
+            <xsl:value-of select="fn:replace(normalize-space($dateContent), '[\n\t\r]', '')"/>
+        </dcterms:issued>
+    </xsl:template>
+    <xsl:template match='titleproper'>
+        <xsl:variable name="content">
+            <xsl:apply-templates />
+        </xsl:variable>
+        <dc:title>
+            <xsl:value-of select="fn:replace(normalize-space($content), '[\n\t\r]', '')"/>
+        </dc:title>
+    </xsl:template>
+    <xsl:template mode="generaterelation" match="titleproper|unittitle">
+        <xsl:variable name="content">
+            <xsl:apply-templates />
+        </xsl:variable>
+        <xsl:value-of select="fn:replace(normalize-space($content), '[\n\t\r]', '')"/>
+    </xsl:template>
+    <xsl:template match='scopecontent'>
+        <xsl:variable name="content">
+            <xsl:apply-templates />
+        </xsl:variable>
+        <dc:description>
+            <xsl:value-of select="fn:replace(normalize-space($content), '[\n\t\r]', '')"/>
+        </dc:description>
+    </xsl:template>
+    <xsl:template match='bioghist|phystech'>
+        <xsl:variable name="content">
+            <xsl:apply-templates />
+        </xsl:variable>
+        <europeana:unstored>
+            <xsl:value-of select="fn:replace(normalize-space($content), '[\n\t\r]', '')"/>
+        </europeana:unstored>
+    </xsl:template>
+    <xsl:template match='bibref'>
+        <xsl:variable name="bibrefContent">
+            <xsl:apply-templates mode="bibref-only-nodecontent"/>
+        </xsl:variable>
+        <dc:relation>
+            <xsl:value-of select="fn:replace(normalize-space($bibrefContent), '[\n\t\r]', '')"/>
+        </dc:relation>
+    </xsl:template>
+    <xsl:template match="head">
+        <xsl:value-of select="node()"/>
+        <xsl:text>: </xsl:text>
+    </xsl:template>
+    <xsl:template match="p">
+        <xsl:variable name='content'>
+            <xsl:apply-templates />
+        </xsl:variable>
+        <p>
+            <xsl:value-of select="fn:replace(normalize-space($content), '[\n\t\r]', ' ')"/>
+        </p>
+    </xsl:template>
+    <xsl:template match="lb">
+        <xsl:text> </xsl:text>
+    </xsl:template>
+    <xsl:template match="emph|abbr|expan|extref">
+        <xsl:text> </xsl:text>
+        <xsl:value-of select="node()"/>
+        <xsl:text> </xsl:text>
+    </xsl:template>
+    <!-- Empty templates for elements that should not be processed -->
+    <xsl:template mode="all-but-address" match="address"/>
+    <xsl:template mode="bibref-only-nodecontent" match="name|title|imprint"/>
+    <xsl:template match="list" />
+    <xsl:template match="table" />
+    
 </xsl:stylesheet>
