@@ -21,7 +21,11 @@
     <!--Parameters, values coming from Java code-->
     <xsl:param name="edm_identifier"></xsl:param>
     <xsl:param name="prefix_url"></xsl:param>
-
+    <xsl:param name="repository_code"></xsl:param>
+    <xsl:param name="xml_type_name"></xsl:param>
+    
+    <!--Variable for identifying the eadid, stored at /metadata/record[1]/dc:identifier-->
+    <xsl:variable name="eadid" select="/metadata/record[1]/dc:identifier" />
     <!-- template matching the root node and creating the RDF start tag -->
     <xsl:template match="/">
         <rdf:RDF xsi:schemaLocation="http://www.w3.org/1999/02/22-rdf-syntax-ns# http://www.europeana.eu/schemas/edm/EDM.xsd">
@@ -31,46 +35,7 @@
         
     <!-- template matching a single ESE XML record -->
     <xsl:template match="metadata/record">            
-                
-        <!-- Provided Cultural Heritage Object -->
-        <edm:ProvidedCHO>
-            <xsl:attribute name="rdf:about">
-                <xsl:value-of select="dc:identifier"/>
-            </xsl:attribute>
-            <!-- deal with "other" corresponding properties -->
-            <xsl:call-template name="mapChoProperties"/>
-        </edm:ProvidedCHO>
-
-        <!-- Web Resource information -->
-        <edm:WebResource>
-            <xsl:attribute name="rdf:about">
-                <xsl:value-of select="europeana:isShownAt"/>
-            </xsl:attribute>
-            <xsl:for-each select="dc:rights">
-                <dc:rights>
-                    <xsl:attribute name="rdf:resource">
-                        <xsl:value-of select="."/>
-                    </xsl:attribute>
-                </dc:rights>
-            </xsl:for-each>
-            <xsl:for-each select="europeana:rights">
-                <edm:rights>
-                    <xsl:attribute name="rdf:resource">
-                        <xsl:value-of select="."/>
-                    </xsl:attribute>
-                </edm:rights>
-            </xsl:for-each>
-        </edm:WebResource>
-    
-        <!-- Simple Knowledge Organization System -> Concept -->
-        <skos:Concept>
-            <xsl:for-each select="dcterms:alternative">
-                <dcterms:alternative>
-                    <xsl:value-of select="."/>
-                </dcterms:alternative>
-            </xsl:for-each>
-        </skos:Concept>
-            
+        
         <!-- Provider aggregation -->
         <ore:Aggregation>
             <xsl:attribute name="rdf:about">
@@ -128,7 +93,75 @@
                 </edm:unstored>
             </xsl:for-each>
         </ore:Aggregation>
-    </xsl:template>
+    
+        <!-- Provided Cultural Heritage Object -->
+        <edm:ProvidedCHO>
+            <xsl:attribute name="rdf:about">
+                <xsl:value-of select="dc:identifier"/>
+            </xsl:attribute>
+            <!-- deal with "other" corresponding properties -->
+            <xsl:call-template name="mapChoProperties"/>
+            <xsl:if test='position() > 1'>
+                <dcterms:isPartOf>
+                    <xsl:value-of select="$eadid"/>
+                </dcterms:isPartOf>
+            </xsl:if>
+            <!--<xsl:if test='preceding-sibling::metadata/record[1]/dcterms:alternative eq dcterms:alternative'>
+                <edm:isNextInSequence>
+                    <xsl:value-of select="preceding-sibling::/metadata/record[1]/dc:identifier" />
+                </edm:isNextInSequence>
+            </xsl:if>-->
+            <yada-1>
+                <xsl:value-of select="preceding-sibling::./dc:identifier" />
+            </yada-1>
+            <yada>
+                <xsl:value-of select="dc:identifier" />
+            </yada>
+        </edm:ProvidedCHO>
+
+        <!-- Web Resource information -->
+        <edm:WebResource>
+            <xsl:attribute name="rdf:about">
+                <xsl:choose>
+                    <xsl:when test='europeana:isShownAt'>
+                        <xsl:value-of select="europeana:isShownAt"/>
+                    </xsl:when>
+                    <xsl:otherwise>
+                        <xsl:value-of select="europeana:object"/>
+                    </xsl:otherwise>
+                </xsl:choose>
+            </xsl:attribute>
+            <xsl:for-each select="europeana:object">
+                <edm:isShownAt>
+                    <xsl:value-of select="."/>
+                </edm:isShownAt>
+            </xsl:for-each>            
+            <xsl:for-each select="dc:rights">
+                <dc:rights>
+                    <xsl:attribute name="rdf:resource">
+                        <xsl:value-of select="."/>
+                    </xsl:attribute>
+                </dc:rights>
+            </xsl:for-each>
+            <xsl:for-each select="europeana:rights">
+                <edm:rights>
+                    <xsl:attribute name="rdf:resource">
+                        <xsl:value-of select="."/>
+                    </xsl:attribute>
+                </edm:rights>
+            </xsl:for-each>
+        </edm:WebResource>
+    
+        <!-- Simple Knowledge Organization System -> Concept -->
+        <skos:Concept>
+            <xsl:for-each select="dcterms:alternative">
+                <skos:prefLabel>
+                    <xsl:value-of select="."/>
+                </skos:prefLabel>
+            </xsl:for-each>
+        </skos:Concept>
+            
+        </xsl:template>
         
     <!-- a named template, which can be called for mapping all other properties 
             TODO:
@@ -137,29 +170,29 @@
     -->
     <xsl:template name="mapChoProperties">
 
-        <xsl:for-each select="dc:contributor">
+        <xsl:for-each select="dc:identifier">
             <xsl:call-template name="create_property">
-                <xsl:with-param name="tgt_property">dc:contributor</xsl:with-param>
+                <xsl:with-param name="tgt_property">dc:identifier</xsl:with-param>
             </xsl:call-template>
         </xsl:for-each>		
 		
-        <xsl:for-each select="dc:coverage">
+        <xsl:for-each select="dc:publisher">
             <xsl:call-template name="create_property">
-                <xsl:with-param name="tgt_property">dc:coverage</xsl:with-param>
+                <xsl:with-param name="tgt_property">dc:publisher</xsl:with-param>
+            </xsl:call-template>
+        </xsl:for-each>		
+
+        <xsl:for-each select="dcterms:issued">
+            <xsl:call-template name="create_property">
+                <xsl:with-param name="tgt_property">dcterms:issued</xsl:with-param>
+            </xsl:call-template>
+        </xsl:for-each>		
+
+        <xsl:for-each select="dc:title">
+            <xsl:call-template name="create_property">
+                <xsl:with-param name="tgt_property">dc:title</xsl:with-param>
             </xsl:call-template>
         </xsl:for-each>
-		
-        <xsl:for-each select="dc:creator">
-            <xsl:call-template name="create_property">
-                <xsl:with-param name="tgt_property">dc:creator</xsl:with-param>
-            </xsl:call-template>
-        </xsl:for-each>		
-		
-        <xsl:for-each select="dc:date">
-            <xsl:call-template name="create_property">
-                <xsl:with-param name="tgt_property">dc:date</xsl:with-param>
-            </xsl:call-template>
-        </xsl:for-each>		
 		
         <xsl:for-each select="dc:description">
             <xsl:call-template name="create_property">
@@ -173,48 +206,80 @@
             </xsl:call-template>
         </xsl:for-each>
 		
-        <xsl:for-each select="dc:identifier">
+        <xsl:for-each select="dcterms:extent">
             <xsl:call-template name="create_property">
-                <xsl:with-param name="tgt_property">dc:identifier</xsl:with-param>
+                <xsl:with-param name="tgt_property">dcterms:extent</xsl:with-param>
             </xsl:call-template>
-        </xsl:for-each>		
+        </xsl:for-each>
 		
-        <xsl:for-each select="dc:language">
-            <xsl:call-template name="create_property">
-                <xsl:with-param name="tgt_property">dc:language</xsl:with-param>
-            </xsl:call-template>
-        </xsl:for-each>		
-
-        <xsl:for-each select="dc:publisher">
-            <xsl:call-template name="create_property">
-                <xsl:with-param name="tgt_property">dc:publisher</xsl:with-param>
-            </xsl:call-template>
-        </xsl:for-each>		
-
         <xsl:for-each select="dc:relation">
             <xsl:call-template name="create_property">
                 <xsl:with-param name="tgt_property">dc:relation</xsl:with-param>
             </xsl:call-template>
         </xsl:for-each>		
 
+        <xsl:for-each select="dc:creator">
+            <xsl:call-template name="create_property">
+                <xsl:with-param name="tgt_property">dc:creator</xsl:with-param>
+            </xsl:call-template>
+        </xsl:for-each>		
+		
+        <xsl:for-each select="dcterms:provenance">
+            <xsl:call-template name="create_property">
+                <xsl:with-param name="tgt_property">dcterms:provenance</xsl:with-param>
+            </xsl:call-template>
+        </xsl:for-each>		
+
+        <xsl:for-each select="dc:date">
+            <xsl:call-template name="create_property">
+                <xsl:with-param name="tgt_property">dc:date</xsl:with-param>
+            </xsl:call-template>
+        </xsl:for-each>		
+		
+        <xsl:for-each select="dcterms:hasFormat">
+            <xsl:call-template name="create_property">
+                <xsl:with-param name="tgt_property">dcterms:hasFormat</xsl:with-param>
+            </xsl:call-template>
+        </xsl:for-each>		
+
+        <xsl:for-each select="dc:coverage">
+            <xsl:call-template name="create_property">
+                <xsl:with-param name="tgt_property">dc:coverage</xsl:with-param>
+            </xsl:call-template>
+        </xsl:for-each>
+		
+        <xsl:for-each select="dcterms:spatial">
+            <xsl:call-template name="create_property">
+                <xsl:with-param name="tgt_property">dcterms:spatial</xsl:with-param>
+            </xsl:call-template>
+        </xsl:for-each>
+		
         <xsl:for-each select="dc:subject">
             <xsl:call-template name="create_property">
                 <xsl:with-param name="tgt_property">dc:subject</xsl:with-param>
             </xsl:call-template>
         </xsl:for-each>		
 
-        <xsl:for-each select="dc:title">
+        <xsl:for-each select="dc:language">
             <xsl:call-template name="create_property">
-                <xsl:with-param name="tgt_property">dc:title</xsl:with-param>
+                <xsl:with-param name="tgt_property">dc:language</xsl:with-param>
             </xsl:call-template>
-        </xsl:for-each>
-		
+        </xsl:for-each>		
+
         <xsl:for-each select="dc:type">
             <xsl:call-template name="create_property">
                 <xsl:with-param name="tgt_property">dc:type</xsl:with-param>
             </xsl:call-template>
         </xsl:for-each>		
-
+<!-- ================================================================================
+   ITEMS BELOW THIS LINE ARE NOT USED IN apeESE, BUT KEPT FOR POSSIBLE FUTURE CHANGES
+================================================================================= -->
+        <xsl:for-each select="dc:contributor">
+            <xsl:call-template name="create_property">
+                <xsl:with-param name="tgt_property">dc:contributor</xsl:with-param>
+            </xsl:call-template>
+        </xsl:for-each>		
+		
         <xsl:for-each select="dcterms:conformsTo">
             <xsl:call-template name="create_property">
                 <xsl:with-param name="tgt_property">dcterms:conformsTo</xsl:with-param>
@@ -227,18 +292,6 @@
             </xsl:call-template>
         </xsl:for-each>		
 		
-        <xsl:for-each select="dcterms:extent">
-            <xsl:call-template name="create_property">
-                <xsl:with-param name="tgt_property">dcterms:extent</xsl:with-param>
-            </xsl:call-template>
-        </xsl:for-each>
-		
-        <xsl:for-each select="dcterms:hasFormat">
-            <xsl:call-template name="create_property">
-                <xsl:with-param name="tgt_property">dcterms:hasFormat</xsl:with-param>
-            </xsl:call-template>
-        </xsl:for-each>		
-
         <xsl:for-each select="dcterms:hasPart">
             <xsl:call-template name="create_property">
                 <xsl:with-param name="tgt_property">dcterms:hasPart</xsl:with-param>
@@ -287,24 +340,12 @@
             </xsl:call-template>
         </xsl:for-each>
 
-        <xsl:for-each select="dcterms:issued">
-            <xsl:call-template name="create_property">
-                <xsl:with-param name="tgt_property">dcterms:issued</xsl:with-param>
-            </xsl:call-template>
-        </xsl:for-each>		
-
         <xsl:for-each select="dcterms:medium">
             <xsl:call-template name="create_property">
                 <xsl:with-param name="tgt_property">dcterms:medium</xsl:with-param>
             </xsl:call-template>
         </xsl:for-each>		
 		
-        <xsl:for-each select="dcterms:provenance">
-            <xsl:call-template name="create_property">
-                <xsl:with-param name="tgt_property">dcterms:provenance</xsl:with-param>
-            </xsl:call-template>
-        </xsl:for-each>		
-
         <xsl:for-each select="dcterms:references">
             <xsl:call-template name="create_property">
                 <xsl:with-param name="tgt_property">dcterms:references</xsl:with-param>
@@ -323,12 +364,6 @@
             </xsl:call-template>
         </xsl:for-each>		
 
-        <xsl:for-each select="dcterms:spatial">
-            <xsl:call-template name="create_property">
-                <xsl:with-param name="tgt_property">dcterms:spatial</xsl:with-param>
-            </xsl:call-template>
-        </xsl:for-each>
-		
         <xsl:for-each select="dcterms:tableOfContents">
             <xsl:call-template name="create_property">
                 <xsl:with-param name="tgt_property">dcterms:tableOfContents</xsl:with-param>

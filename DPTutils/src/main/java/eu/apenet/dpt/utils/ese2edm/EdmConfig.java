@@ -19,6 +19,8 @@ public class EdmConfig implements Serializable {
     
     private String edmIdentifier;
     private String prefixUrl;
+    private String repositoryCode;
+    private String xmlTypeName;
     private Properties properties;
 
     private boolean transferToFileOutput;
@@ -51,6 +53,22 @@ public class EdmConfig implements Serializable {
         this.prefixUrl = prefixUrl;
     }
 
+    public String getRepositoryCode() {
+        return repositoryCode;
+    }
+
+    public void setRepositoryCode(String repositoryCode) {
+        this.repositoryCode = repositoryCode;
+    }
+
+    public String getXmlTypeName() {
+        return xmlTypeName;
+    }
+
+    public void setXmlTypeName(String xmlTypeName) {
+        this.xmlTypeName = xmlTypeName;
+    }
+
     public boolean isTransferToFileOutput() {
         return transferToFileOutput;
     }
@@ -63,7 +81,10 @@ public class EdmConfig implements Serializable {
     public Properties getProperties() {
         if (properties == null) {
 			properties = new Properties();
-			properties.put("oai_pmh_location", getString(getEdmIdentifier()));
+			properties.put("edm_identifier", getString(getEdmIdentifier()));
+			properties.put("prefix_url", getString(getPrefixUrl()));
+			properties.put("repository_code", getString(getRepositoryCode()));
+			properties.put("xml_type_name", getString(getXmlTypeName()));
         }
         return properties;
     }
