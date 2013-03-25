@@ -18,6 +18,7 @@ public class EdmConfig implements Serializable {
     private XMLTransformer transformerXML2XML;
     
     private String edmIdentifier;
+    private String prefixUrl;
     private Properties properties;
 
     private boolean transferToFileOutput;
@@ -40,6 +41,14 @@ public class EdmConfig implements Serializable {
 
     public void setEdmIdentifier(String edmIdentifier) {
         this.edmIdentifier = edmIdentifier;
+    }
+
+    public String getPrefixUrl() {
+        return prefixUrl;
+    }
+
+    public void setPrefixUrl(String prefixUrl) {
+        this.prefixUrl = prefixUrl;
     }
 
     public boolean isTransferToFileOutput() {

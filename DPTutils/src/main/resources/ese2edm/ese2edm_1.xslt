@@ -20,6 +20,7 @@
 
     <!--Parameters, values coming from Java code-->
     <xsl:param name="edm_identifier"></xsl:param>
+    <xsl:param name="prefix_url"></xsl:param>
 
     <!-- template matching the root node and creating the RDF start tag -->
     <xsl:template match="/">
