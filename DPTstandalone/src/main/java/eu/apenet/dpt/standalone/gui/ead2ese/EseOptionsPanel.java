@@ -728,7 +728,6 @@ public class EseOptionsPanel extends JPanel {
             // count number of records
             parser.parse(xmlReader, null);
             int numberOfRecords = recordParser.getNumberOfRecords();
-            System.out.println(numberOfRecords);
             if (numberOfRecords <= 1) {
                 outputFile.delete();
             } else {

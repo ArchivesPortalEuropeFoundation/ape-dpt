@@ -64,8 +64,9 @@ public class ConvertEdmActionListener implements ActionListener {
         }
 
         apePanel.getApeTabbedPane().appendEseConversionErrorText(labels.getString("edm.conversionEdmStarted") + "\n");
+        EdmConfig config = fillConfig();
         try {
-            SwingUtilities.invokeLater(new TransformEdm(file, dataPreparationToolGUI));
+            SwingUtilities.invokeLater(new TransformEdm(config, file, dataPreparationToolGUI));
             apePanel.getApeTabbedPane().appendEseConversionErrorText(MessageFormat.format(labels.getString("edm.convertedAndSaved"), file.getAbsolutePath()) + "\n");
             apePanel.getApeTabbedPane().checkFlashingTab(APETabbedPane.TAB_ESE, Utilities.FLASHING_GREEN_COLOR);
         } catch (Exception ex) {
@@ -75,5 +76,21 @@ public class ConvertEdmActionListener implements ActionListener {
             dataPreparationToolGUI.enableRadioButtons();
         }
         dataPreparationToolGUI.enableRadioButtons();
+    }
+    
+    public EdmConfig fillConfig(){
+        EdmConfig config = new EdmConfig(true);
+        
+        //EDM identifier used for OAI-PMH; not needed for DPT purposes, so set to empty string
+        config.setEdmIdentifier("");
+        
+        //prefixUrl, repositoryCode and xmlTypeName used for EDM element id generation;
+        //repositoryCode is taken from the tool while the other two have fixed values.
+        
+        config.setPrefixUrl("http://www.archivesportaleurope.net/web/guest/ead-display/-/ead/fp");
+        config.setRepositoryCode(dataPreparationToolGUI.getRepositoryCodeIdentifier());
+        config.setXmlTypeName("fa");
+        
+        return config;
     }
 }

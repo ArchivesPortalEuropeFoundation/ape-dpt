@@ -7,6 +7,7 @@ import eu.apenet.dpt.standalone.gui.FileInstance;
 import eu.apenet.dpt.standalone.gui.Utilities;
 import eu.apenet.dpt.standalone.gui.ese2edm.ConvertEdmActionListener;
 import eu.apenet.dpt.standalone.gui.ese2edm.TransformEdm;
+import eu.apenet.dpt.utils.ese2edm.EdmConfig;
 import eu.apenet.dpt.utils.util.XmlChecker;
 
 import javax.swing.*;
@@ -44,6 +45,7 @@ public class ConvertEseActionListener implements ActionListener {
         if (!dataPreparationToolGUI.getXmlEadList().isSelectionEmpty() && !dataPreparationToolGUI.getEseList().isSelectionEmpty()) {
             JOptionPane.showMessageDialog(dataPreparationToolGUI, "You have selected several files in different processing status. Please make sure that you have selected either all apeEAD files only or all ESE files only.");
         } else {
+            // Conversion from EAD to ESE in the if-statement, conversion from ESE to EDM in the else-statement
             if (!dataPreparationToolGUI.getXmlEadList().isSelectionEmpty()) {
                 JFrame eseOptionFrame = new JFrame(labels.getString("ese.eseOptionFrame"));
                 eseOptionFrame.add(new EseOptionsPanel(labels, dataPreparationToolGUI.getXmlEadList().getSelectedValues(), eseOptionFrame, apePanel.getApeTabbedPane(), dataPreparationToolGUI.getFileInstances()));
@@ -77,8 +79,10 @@ public class ConvertEseActionListener implements ActionListener {
                     }
 
                     if (fileInstance.isXml()) {
+                        ConvertEdmActionListener edmListener = new ConvertEdmActionListener(apePanel, dataPreparationToolGUI, apePanel);
+                        EdmConfig edmConfig = edmListener.fillConfig();
                         try {
-                            SwingUtilities.invokeLater(new TransformEdm(file, dataPreparationToolGUI));
+                            SwingUtilities.invokeLater(new TransformEdm(edmConfig, file, dataPreparationToolGUI));
                             apePanel.getApeTabbedPane().appendEseConversionErrorText(MessageFormat.format(labels.getString("edm.convertedAndSaved"), file.getAbsolutePath()) + "\n");
                             apePanel.getApeTabbedPane().checkFlashingTab(APETabbedPane.TAB_ESE, Utilities.FLASHING_GREEN_COLOR);
                         } catch (Exception ex) {

@@ -6,10 +6,10 @@ import eu.apenet.dpt.standalone.gui.db.RetrieveFromDb;
 import eu.apenet.dpt.utils.ese2edm.EdmConfig;
 import java.io.File;
 import java.util.Map;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
+//import javax.xml.parsers.DocumentBuilder;
+//import javax.xml.parsers.DocumentBuilderFactory;
 import org.apache.log4j.Logger;
-import org.w3c.dom.Document;
+//import org.w3c.dom.Document;
 
 /**
  *
@@ -17,13 +17,13 @@ import org.w3c.dom.Document;
  */
 public class TransformEdm implements Runnable {
 
+    private EdmConfig edmConfig;
     private File selectedIndex;
     private Map<String, FileInstance> fileInstances;
-    
     private static final Logger LOG = Logger.getLogger(TransformEdm.class);
 
-
-    public TransformEdm(File file, DataPreparationToolGUI dataPreparationToolGUI) {
+    public TransformEdm(EdmConfig edmConfig, File file, DataPreparationToolGUI dataPreparationToolGUI) {
+        this.edmConfig = edmConfig;
         this.selectedIndex = file;
         this.fileInstances = dataPreparationToolGUI.getFileInstances();
     }
@@ -40,19 +40,18 @@ public class TransformEdm implements Runnable {
             } else {
                 loc = fileInstance.getOriginalPath();
             }
-            DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
-            DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
-            Document intermediateDoc = docBuilder.newDocument();
+//            DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
+//            DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
+//           Document intermediateDoc = docBuilder.newDocument();
             File outputFile = new File(xmlOutputFilename);
-            EdmConfig config = new EdmConfig(true);
-                config.getTransformerXML2XML().transform(new File(loc), outputFile);
+            edmConfig.getTransformerXML2XML().transform(new File(loc), outputFile);
 //                File outputFile_temp = new File(Utilities.TEMP_DIR + ".temp_"+selectedIndex.getName());
 //            config.getTransformerXML2XML().transform(new File(loc), intermediateDoc);
 //                System.out.println("intermediateDoc root: " + intermediateDoc.getDocumentElement().getNodeName());
 //            config.setTransferToFileOutput(true);
 //            config.getTransformerXML2XML().transform(intermediateDoc, outputFile);
         } catch (Exception e) {
-            LOG.error("Error when converting file "+ selectedIndex.getName() +" into EDM", e);
+            LOG.error("Error when converting file " + selectedIndex.getName() + " into EDM", e);
         }
     }
 }
