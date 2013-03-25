@@ -106,17 +106,11 @@
                     <xsl:value-of select="$eadid"/>
                 </dcterms:isPartOf>
             </xsl:if>
-            <!--<xsl:if test='preceding-sibling::metadata/record[1]/dcterms:alternative eq dcterms:alternative'>
+            <xsl:if test='preceding-sibling::record[1]/dcterms:alternative eq dcterms:alternative'>
                 <edm:isNextInSequence>
-                    <xsl:value-of select="preceding-sibling::/metadata/record[1]/dc:identifier" />
+                    <xsl:value-of select="preceding-sibling::record[1]/dc:identifier" />
                 </edm:isNextInSequence>
-            </xsl:if>-->
-            <yada-1>
-                <xsl:value-of select="preceding-sibling::./dc:identifier" />
-            </yada-1>
-            <yada>
-                <xsl:value-of select="dc:identifier" />
-            </yada>
+            </xsl:if>
         </edm:ProvidedCHO>
 
         <!-- Web Resource information -->
