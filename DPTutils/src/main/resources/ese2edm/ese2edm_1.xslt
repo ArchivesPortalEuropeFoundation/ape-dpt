@@ -24,8 +24,11 @@
     <xsl:param name="repository_code"></xsl:param>
     <xsl:param name="xml_type_name"></xsl:param>
     
-    <!--Variable for identifying the eadid, stored at /metadata/record[1]/dc:identifier-->
+    <!--variable for identifying the eadid, stored at /metadata/record[1]/dc:identifier-->
     <xsl:variable name="eadid" select="/metadata/record[1]/dc:identifier" />
+    <!--variable for base path of document identifiers-->
+    <xsl:variable name="id_base" select="concat($prefix_url, '/' , $repository_code, '/', $xml_type_name, '/', $eadid)" />
+    
     <!-- template matching the root node and creating the RDF start tag -->
     <xsl:template match="/">
         <rdf:RDF xsi:schemaLocation="http://www.w3.org/1999/02/22-rdf-syntax-ns# http://www.europeana.eu/schemas/edm/EDM.xsd">
@@ -39,6 +42,7 @@
         <!-- Provider aggregation -->
         <ore:Aggregation>
             <xsl:attribute name="rdf:about">
+                <xsl:value-of select="dc:identifier"/>
             </xsl:attribute>
             <edm:aggregatedCHO>
                 <xsl:attribute name="rdf:resource">
@@ -155,7 +159,7 @@
             </xsl:for-each>
         </skos:Concept>
             
-        </xsl:template>
+    </xsl:template>
         
     <!-- a named template, which can be called for mapping all other properties 
             TODO:
@@ -265,9 +269,9 @@
                 <xsl:with-param name="tgt_property">dc:type</xsl:with-param>
             </xsl:call-template>
         </xsl:for-each>		
-<!-- ================================================================================
-   ITEMS BELOW THIS LINE ARE NOT USED IN apeESE, BUT KEPT FOR POSSIBLE FUTURE CHANGES
-================================================================================= -->
+        <!-- ================================================================================
+           ITEMS BELOW THIS LINE ARE NOT USED IN apeESE, BUT KEPT FOR POSSIBLE FUTURE CHANGES
+        ================================================================================= -->
         <xsl:for-each select="dc:contributor">
             <xsl:call-template name="create_property">
                 <xsl:with-param name="tgt_property">dc:contributor</xsl:with-param>
