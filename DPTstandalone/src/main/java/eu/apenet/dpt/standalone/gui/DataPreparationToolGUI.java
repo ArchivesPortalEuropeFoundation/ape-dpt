@@ -1281,6 +1281,13 @@ public class DataPreparationToolGUI extends JFrame {
         validateItem.setEnabled(false);
     }
 
+    public void disableEditionTab() {
+        apePanel.getApeTabbedPane().setEnabledAt(4, false);
+    }
+    public void enableEditionTab() {
+        apePanel.getApeTabbedPane().setEnabledAt(4, true);
+    }
+
     public void disableAllBatchBtns() {
         convertAndValidateBtn.setEnabled(false);
         createHGBtn.setEnabled(false);

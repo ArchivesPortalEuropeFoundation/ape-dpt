@@ -47,6 +47,7 @@ public class ConvertActionListener implements ActionListener {
         Map<String, FileInstance> fileInstances = dataPreparationToolGUI.getFileInstances();
         JList list = dataPreparationToolGUI.getXmlEadList();
         dataPreparationToolGUI.disableAllBtnAndItems();
+        dataPreparationToolGUI.disableEditionTab();
         dataPreparationToolGUI.disableRadioButtons();
         File file = (File)list.getSelectedValue();
         FileInstance fileInstance = fileInstances.get(file.getName());
@@ -57,6 +58,7 @@ public class ConvertActionListener implements ActionListener {
                 apePanel.getApeTabbedPane().checkFlashingTab(APETabbedPane.TAB_CONVERSION, Utilities.FLASHING_RED_COLOR);
                 dataPreparationToolGUI.enableSaveBtn();
                 dataPreparationToolGUI.enableRadioButtons();
+                dataPreparationToolGUI.enableEditionTab();
                 return;
             }
         }
@@ -108,6 +110,7 @@ public class ConvertActionListener implements ActionListener {
             dataPreparationToolGUI.enableRadioButtons();
             dataPreparationToolGUI.enableValidationBtns();
             dataPreparationToolGUI.enableConversionBtns();
+            dataPreparationToolGUI.enableEditionTab();
         }
     }
 
@@ -190,6 +193,7 @@ public class ConvertActionListener implements ActionListener {
                 LOG.error("Error when converting a file", ex);
             } finally {
                 dataPreparationToolGUI.enableRadioButtons();
+                dataPreparationToolGUI.enableEditionTab();
                 summaryWorking.stop();
                 if(counterThread != null)
                     counterThread.stop();

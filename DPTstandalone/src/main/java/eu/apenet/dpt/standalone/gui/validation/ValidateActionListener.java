@@ -51,6 +51,7 @@ public class ValidateActionListener implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         apeTabbedPane.setValidationErrorText(labels.getString("validationBegun"));
         dataPreparationToolGUI.disableAllBtnAndItems();
+        dataPreparationToolGUI.disableEditionTab();
         dataPreparationToolGUI.disableRadioButtons();
 
         File file = (File) dataPreparationToolGUI.getXmlEadList().getSelectedValue();
@@ -77,6 +78,7 @@ public class ValidateActionListener implements ActionListener {
                     dataPreparationToolGUI.setResultAreaText(labels.getString("validation.error.fileNotXml"));
                     dataPreparationToolGUI.enableSaveBtn();
                     dataPreparationToolGUI.enableRadioButtons();
+                    dataPreparationToolGUI.enableEditionTab();
                     return;
                 }
             }
@@ -171,6 +173,7 @@ public class ValidateActionListener implements ActionListener {
                 fileInstance.setLastOperation(FileInstance.Operation.VALIDATE);
                 dataPreparationToolGUI.getXmlEadList().repaint();
                 dataPreparationToolGUI.enableRadioButtons();
+                dataPreparationToolGUI.enableEditionTab();
             }
         }
 
