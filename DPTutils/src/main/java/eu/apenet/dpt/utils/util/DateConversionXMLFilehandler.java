@@ -106,12 +106,12 @@ public class DateConversionXMLFilehandler {
                 Vector row = new Vector();
                 if (node.getNodeType() == Node.ELEMENT_NODE) {
                     Element element = (Element) node;
-                    row.add(element.getElementsByTagName("valueread").item(0).getTextContent());
-                    row.add(element.getElementsByTagName("valueconverted").item(0).getTextContent());
+                    row.add(element.getElementsByTagName("valueread").item(0).getTextContent().trim());
+                    row.add(element.getElementsByTagName("valueconverted").item(0).getTextContent().trim());
                 }
+                if(!row.isEmpty() && !row.elementAt(0).equals("") && !row.elementAt(1).equals(""))
                 result.add(row);
             }
-            result.add(new Vector());
         } catch (SAXException ex) {
         } catch (IOException ex) {
         } catch (ParserConfigurationException ex) {
