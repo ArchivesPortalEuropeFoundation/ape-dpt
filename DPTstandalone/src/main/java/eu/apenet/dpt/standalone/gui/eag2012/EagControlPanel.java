@@ -79,9 +79,14 @@ public class EagControlPanel extends EagPanels {
         addLanguagesBtn.addActionListener(new AddLanguagesBtnAction(eag, tabbedPane, model));
         setNextRow();
 
-
-        if(eag.getControl().getLanguageDeclarations().getLanguageDeclaration().size() == 0)
-            eag.getControl().getLanguageDeclarations().getLanguageDeclaration().add(new LanguageDeclaration());
+        if(eag.getControl().getLanguageDeclarations() == null)
+            eag.getControl().setLanguageDeclarations(new LanguageDeclarations());
+        if(eag.getControl().getLanguageDeclarations().getLanguageDeclaration().size() == 0) {
+            LanguageDeclaration languageDeclaration = new LanguageDeclaration();
+            languageDeclaration.setLanguage(new Language());
+            languageDeclaration.setScript(new Script());
+            eag.getControl().getLanguageDeclarations().getLanguageDeclaration().add(languageDeclaration);
+        }
         int i = 0;
         languageWithScriptTfs = new ArrayList<LanguageWithScript>(eag.getControl().getLanguageDeclarations().getLanguageDeclaration().size());
         for(LanguageDeclaration languageDeclaration : eag.getControl().getLanguageDeclarations().getLanguageDeclaration()) {
