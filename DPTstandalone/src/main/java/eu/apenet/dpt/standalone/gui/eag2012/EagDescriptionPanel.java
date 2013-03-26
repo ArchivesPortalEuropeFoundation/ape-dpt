@@ -396,6 +396,8 @@ public class EagDescriptionPanel extends EagPanels {
                     } else {
                         repository.getHoldings().setDateRange(null);
                     }
+                } else {
+                    repository.setHoldings(null);
                 }
 
             }
