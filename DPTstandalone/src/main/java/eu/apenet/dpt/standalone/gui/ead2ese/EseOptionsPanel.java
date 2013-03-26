@@ -166,6 +166,7 @@ public class EseOptionsPanel extends JPanel {
         panel.add(new Label(labels.getString("ese.type") + ":" + "*"));
         String currentRoleType = determineDaoInformation()[0];
         radioButton = new JRadioButton("TEXT");
+        System.out.println(currentRoleType);
         if (currentRoleType.equals("TEXT")) {
             radioButton.setSelected(true);
         }
@@ -530,12 +531,16 @@ public class EseOptionsPanel extends JPanel {
 
     private String[] determineDaoInformation() {
         String[] result = new String[3];
-        String roleType = null;
-        String repository = null;
+        String roleType = "";
+        String repository = "";
         String languageCode = null;
 
         try {
-            Document doc = XMLUtil.convertXMLToDocument(new FileInputStream(selectedIndices.get(0)));
+            File index = selectedIndices.get(0);
+            FileInstance fileInstance = fileInstances.get(index.getName());
+            System.out.println(fileInstance.isConverted() + " " + fileInstance.isValid());
+            System.out.println(fileInstance.getCurrentLocation());
+            Document doc = XMLUtil.convertXMLToDocument(new FileInputStream(new File(fileInstance.getCurrentLocation())));
             NodeList nodelist = doc.getElementsByTagName("dao");
             if (nodelist.getLength() != 0) {
                 int counter = 0;
