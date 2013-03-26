@@ -2,6 +2,8 @@ package eu.apenet.dpt.standalone.gui.ead2ese;
 
 import eu.apenet.dpt.standalone.gui.*;
 import eu.apenet.dpt.standalone.gui.db.RetrieveFromDb;
+import eu.apenet.dpt.standalone.gui.progress.ApexActionListener;
+import eu.apenet.dpt.standalone.gui.progress.ProgressFrame;
 import eu.apenet.dpt.utils.ead2ese.EseConfig;
 import eu.apenet.dpt.utils.ead2ese.XMLUtil;
 import eu.apenet.dpt.utils.ead2ese.stax.ESEParser;
@@ -85,15 +87,17 @@ public class EseOptionsPanel extends JPanel {
     private Map<String, String> languages;
     private static final Border BLACK_LINE = BorderFactory.createLineBorder(Color.BLACK);
     private static final Border GREY_LINE = BorderFactory.createLineBorder(Color.GRAY);
+    private DataPreparationToolGUI dataPreparationToolGUI;
 
-    public EseOptionsPanel(ResourceBundle labels, Object[] selectedIndices, JFrame parent, APETabbedPane apeTabbedPane, Map<String, FileInstance> fileInstances) {
+    public EseOptionsPanel(ResourceBundle labels, DataPreparationToolGUI dataPreparationToolGUI, JFrame parent, APETabbedPane apeTabbedPane) {
         super(new BorderLayout());
         this.labels = labels;
         this.retrieveFromDb = retrieveFromDb = new RetrieveFromDb();
         this.parent = parent;
-        this.selectedIndices = setIndices(selectedIndices);
+        this.dataPreparationToolGUI = dataPreparationToolGUI;
+        this.selectedIndices = setIndices(dataPreparationToolGUI.getXmlEadList().getSelectedValues());
         this.apeTabbedPane = apeTabbedPane;
-        this.fileInstances = fileInstances;
+        this.fileInstances = dataPreparationToolGUI.getFileInstances();
         createOptionPanel();
     }
 
@@ -656,30 +660,67 @@ public class EseOptionsPanel extends JPanel {
         }
     }
 
-    public class CreateEseActionListener implements ActionListener {
+    public class CreateEseActionListener extends ApexActionListener {
 
         public void actionPerformed(ActionEvent e) {
 //            dataPreparationToolGUI.disableAllBtnAndItems(); //todo: FIX!
-            apeTabbedPane.setEseConversionErrorText(labels.getString("ese.conversionEseStarted") + "\n");
-            try {
-                try {
-                    checkIfAllFilled();
-                } catch (Exception ex1) {
-                    DataPreparationToolGUI.createErrorOrWarningPanel(ex1, false, labels.getString("ese.formNotFilledError"), parent);
-                    throw ex1;
-                }
-                EseConfig config = fillConfig();
-                for (File selectedIndexFile : selectedIndices) {
-                    SwingUtilities.invokeLater(new TransformEse(config, selectedIndexFile));
-                    apeTabbedPane.appendEseConversionErrorText(MessageFormat.format(labels.getString("ese.convertedAndSaved"), selectedIndexFile.getAbsolutePath(), retrieveFromDb.retrieveDefaultSaveFolder()) + "\n");
+            continueLoop = true;
+        final ApexActionListener apexActionListener = this;
+        new Thread(new Runnable(){
+            public void run(){
+                int numberOfFiles = selectedIndices.size();
+                int currentFileNumberBatch = 0;
+                ProgressFrame progressFrame = new ProgressFrame(labels, parent, true, true, apexActionListener);
 
+                ProgressFrame.ApeProgressBar progressBar = progressFrame.getProgressBarBatch();
+                for(Object oneFile : selectedIndices){
+                    if(!continueLoop)
+                        break;
+                    
+                    File file = (File)oneFile;
+                    apeTabbedPane.setEseConversionErrorText(labels.getString("ese.conversionEseStarted") + "\n");
+                    SummaryWorking summaryWorking = new SummaryWorking(dataPreparationToolGUI.getResultArea(), progressBar);
+                    summaryWorking.setTotalNumberFiles(numberOfFiles);
+                    summaryWorking.setCurrentFileNumberBatch(currentFileNumberBatch);
+                    Thread threadRunner = new Thread(summaryWorking);
+                    threadRunner.setName(SummaryWorking.class.toString());
+                    threadRunner.start();
+                    
+                    try {
+                        try {
+                            checkIfAllFilled();
+                        } catch (Exception ex1) {
+                            DataPreparationToolGUI.createErrorOrWarningPanel(ex1, false, labels.getString("ese.formNotFilledError"), parent);
+                            throw ex1;
+                        }
+                        EseConfig config = fillConfig();
+                        for (File selectedIndexFile : selectedIndices) {
+                            SwingUtilities.invokeLater(new TransformEse(config, selectedIndexFile));
+                            apeTabbedPane.appendEseConversionErrorText(MessageFormat.format(labels.getString("ese.convertedAndSaved"), selectedIndexFile.getAbsolutePath(), retrieveFromDb.retrieveDefaultSaveFolder()) + "\n");
+                        }
+                        apeTabbedPane.checkFlashingTab(APETabbedPane.TAB_ESE, Utilities.FLASHING_GREEN_COLOR);
+                        close();
+                    } catch (Exception ex) {
+                        LOG.error(ex);
+                        apeTabbedPane.checkFlashingTab(APETabbedPane.TAB_ESE, Utilities.FLASHING_RED_COLOR);
+                    } finally {
+                        summaryWorking.stop();
+                        threadRunner.interrupt();
+                    }
                 }
-                apeTabbedPane.checkFlashingTab(APETabbedPane.TAB_ESE, Utilities.FLASHING_GREEN_COLOR);
-                close();
-            } catch (Exception ex) {
-                LOG.error(ex);
-                apeTabbedPane.checkFlashingTab(APETabbedPane.TAB_ESE, Utilities.FLASHING_RED_COLOR);
+                if(progressFrame != null){
+                    progressFrame.stop();
+                }
+                dataPreparationToolGUI.getFinalAct().run();
+                dataPreparationToolGUI.getXmlEadList().clearSelection();
+                if(continueLoop)
+                    dataPreparationToolGUI.setResultAreaText(labels.getString("finished"));
+                else
+                    dataPreparationToolGUI.setResultAreaText(labels.getString("aborted"));
+                dataPreparationToolGUI.enableSaveBtn();
+                dataPreparationToolGUI.enableRadioButtons();
             }
+        }).start();
         }
     }
 
