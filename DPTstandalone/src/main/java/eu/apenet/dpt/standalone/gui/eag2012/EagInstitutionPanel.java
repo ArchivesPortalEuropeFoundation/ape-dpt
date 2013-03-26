@@ -86,7 +86,6 @@ public class EagInstitutionPanel extends EagPanels {
         builder.addSeparator(labels.getString("eag2012.YourInstitution"), cc.xyw(1, rowNb, 7));
         setNextRow();
         builder.addLabel(labels.getString("eag2012.personResponsibleLabel"),    cc.xy (1, rowNb));
-        LOG.info("1. " + Eag2012Frame.isStartOfForm());
         if(Eag2012Frame.isStartOfForm()) {
             personTf = new JTextField("");
         } else {
@@ -513,7 +512,6 @@ public class EagInstitutionPanel extends EagPanels {
             boolean hasChanged = false;
 
             if(StringUtils.isNotEmpty(personTf.getText())) {
-                LOG.info("2. " + Eag2012Frame.isStartOfForm() + " - " + personTf.getText());
                 if(Eag2012Frame.isStartOfForm()) {
                     Eag2012Frame.setStartOfForm(false);
                     MaintenanceEvent maintenanceEvent;
@@ -530,8 +528,6 @@ public class EagInstitutionPanel extends EagPanels {
                     Date date = new Date();
                     SimpleDateFormat format = new SimpleDateFormat("dd.MM.yyyy");
                     SimpleDateFormat formatStandard = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
-                    LOG.info(format.format(date));
-                    LOG.info(formatStandard.format(date));
                     eventDateTime.setContent(format.format(date));
                     eventDateTime.setStandardDateTime(formatStandard.format(date));
                     maintenanceEvent.setEventDateTime(eventDateTime);
@@ -547,7 +543,6 @@ public class EagInstitutionPanel extends EagPanels {
                     eag.getControl().getMaintenanceHistory().getMaintenanceEvent().add(maintenanceEvent);
                     isNew = false;
                 } else {
-                    LOG.info("Gosh");
                     MaintenanceEvent event = eag.getControl().getMaintenanceHistory().getMaintenanceEvent().get(eag.getControl().getMaintenanceHistory().getMaintenanceEvent().size() - 1);
                     eag.getControl().getMaintenanceHistory().getMaintenanceEvent().remove(event);
                     event.getAgent().setContent(personTf.getText());
