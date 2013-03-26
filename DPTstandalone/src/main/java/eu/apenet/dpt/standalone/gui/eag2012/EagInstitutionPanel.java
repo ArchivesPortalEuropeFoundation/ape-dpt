@@ -757,13 +757,9 @@ public class EagInstitutionPanel extends EagPanels {
                 }
 
                 if(repository.getAccessibility().size() == 0) {
-                    repository.setAccessibility(new ArrayList<Accessibility>(1));
                     repository.getAccessibility().add(new Accessibility());
                 }
-                if(!facilitiesForDisabledCombo.getSelectedItem().equals(repository.getAccessibility().get(0).getQuestion())) {
-                    repository.getAccessibility().get(0).setQuestion(facilitiesForDisabledCombo.getSelectedItem().toString());
-                    hasChanged = true;
-                }
+                repository.getAccessibility().get(0).setQuestion(facilitiesForDisabledCombo.getSelectedItem().toString());
 
                 if(eag.getRelations().getResourceRelation().size() > 0) {
                     if(StringUtils.isNotEmpty(refInstitutionHoldingsGuideTf.getText()) && !refInstitutionHoldingsGuideTf.getText().equals(eag.getRelations().getResourceRelation().get(0).getHref())) {
