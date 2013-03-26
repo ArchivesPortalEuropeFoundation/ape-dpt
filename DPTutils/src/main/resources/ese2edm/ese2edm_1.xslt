@@ -49,12 +49,7 @@
                     <xsl:value-of select="dc:identifier"/>
                 </xsl:attribute>
             </edm:aggregatedCHO>
-            <xsl:for-each select="dc:source">
-                <edm:dataProvider>
-                    <xsl:value-of select="."/>
-                </edm:dataProvider>
-            </xsl:for-each>
-            <xsl:for-each select="europeana:dataProvider">
+            <xsl:for-each select='europeana:dataProvider'>
                 <edm:dataProvider>
                     <xsl:value-of select="."/>
                 </edm:dataProvider>
@@ -68,10 +63,14 @@
             </xsl:for-each>
             <xsl:for-each select="europeana:object">
                 <edm:isShownAt>
-                    <xsl:value-of select="."/>
+                    <xsl:attribute name="rdf:resource">
+                        <xsl:value-of select="."/>
+                    </xsl:attribute>
                 </edm:isShownAt>
                 <edm:object>
-                    <xsl:value-of select="."/>
+                    <xsl:attribute name="rdf:resource">
+                        <xsl:value-of select="."/>
+                    </xsl:attribute>
                 </edm:object>
             </xsl:for-each>
             <xsl:for-each select="europeana:provider">
@@ -112,7 +111,9 @@
             </xsl:if>
             <xsl:if test='preceding-sibling::record[1]/dcterms:alternative eq dcterms:alternative'>
                 <edm:isNextInSequence>
-                    <xsl:value-of select="preceding-sibling::record[1]/dc:identifier" />
+                    <xsl:attribute name="rdf:resource">
+                        <xsl:value-of select="preceding-sibling::record[1]/dc:identifier" />
+                    </xsl:attribute>
                 </edm:isNextInSequence>
             </xsl:if>
         </edm:ProvidedCHO>
@@ -121,19 +122,14 @@
         <edm:WebResource>
             <xsl:attribute name="rdf:about">
                 <xsl:choose>
-                    <xsl:when test='europeana:isShownAt'>
-                        <xsl:value-of select="europeana:isShownAt"/>
+                    <xsl:when test='/metadata/record[1]'>
+                        <xsl:value-of select="concat($prefix_url, '/', $repository_code, '/', $xml_type_name, '/', $eadid )"/>
                     </xsl:when>
                     <xsl:otherwise>
-                        <xsl:value-of select="europeana:object"/>
+                        <xsl:value-of select="europeana:isShownAt"/>
                     </xsl:otherwise>
                 </xsl:choose>
             </xsl:attribute>
-            <xsl:for-each select="europeana:object">
-                <edm:isShownAt>
-                    <xsl:value-of select="."/>
-                </edm:isShownAt>
-            </xsl:for-each>            
             <xsl:for-each select="dc:rights">
                 <dc:rights>
                     <xsl:attribute name="rdf:resource">
@@ -152,6 +148,9 @@
     
         <!-- Simple Knowledge Organization System -> Concept -->
         <skos:Concept>
+            <xsl:attribute name="rdf:about">
+                <xsl:value-of select="dc:identifier"/>
+            </xsl:attribute>
             <xsl:for-each select="dcterms:alternative">
                 <skos:prefLabel>
                     <xsl:value-of select="."/>
