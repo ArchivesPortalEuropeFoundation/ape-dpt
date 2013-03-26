@@ -27,7 +27,6 @@ public class EdmConfig implements Serializable {
     
     public EdmConfig(boolean transferToFileOutput) {
         this.transferToFileOutput = transferToFileOutput;
-        this.properties = new Properties();
     }
 
     public XMLTransformer getTransformerXML2XML() {
