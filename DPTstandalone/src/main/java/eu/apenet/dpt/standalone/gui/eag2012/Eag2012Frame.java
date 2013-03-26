@@ -33,6 +33,7 @@ public class Eag2012Frame extends JFrame {
     private ProfileListModel model;
     private ResourceBundle labels;
     private static boolean used;
+    private static boolean startOfForm;
 
     public Eag2012Frame(File eagFile, boolean isEag2012, Dimension dimension, ProfileListModel model, ResourceBundle labels) {
         if(!isEag2012) {
@@ -122,7 +123,8 @@ public class Eag2012Frame extends JFrame {
 
 
     protected JComponent buildInstitutionPanel(Eag eag, boolean isNew) {
-        JScrollPane jScrollPane = new JScrollPane(new EagInstitutionPanel(eag, tabbedPane, this, model, isNew, true, labels).buildEditorPanel(null));
+        Eag2012Frame.setStartOfForm(true);
+        JScrollPane jScrollPane = new JScrollPane(new EagInstitutionPanel(eag, tabbedPane, this, model, isNew, labels).buildEditorPanel(null));
         jScrollPane.getVerticalScrollBar().setUnitIncrement(20);
         return jScrollPane;
     }
@@ -133,5 +135,13 @@ public class Eag2012Frame extends JFrame {
 
     public static boolean isUsed() {
         return used;
+    }
+
+    public static void setStartOfForm(boolean startOfForm) {
+        Eag2012Frame.startOfForm = startOfForm;
+    }
+
+    public static boolean isStartOfForm() {
+        return startOfForm;
     }
 }

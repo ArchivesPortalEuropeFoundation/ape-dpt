@@ -16,12 +16,6 @@
                 <eventType>created</eventType>
             </maintenanceEvent>
         </maintenanceHistory>
-        <languageDeclarations>
-            <languageDeclaration>
-                <language languageCode=""></language>
-                <script scriptCode="Latn"></script>
-            </languageDeclaration>
-        </languageDeclarations>
         <conventionDeclaration>
             <abbreviation>EAG</abbreviation>
             <citation xml:lang="eng">EAG (Encoded Archival Guide) 2012</citation>

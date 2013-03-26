@@ -51,12 +51,10 @@ public class EagInstitutionPanel extends EagPanels {
     private JTextField workplacesSearchroomTf;
 
     private boolean isNew;
-    private boolean isStartOfForm;
 
-    public EagInstitutionPanel(Eag eag, JTabbedPane tabbedPane, JFrame eag2012Frame, ProfileListModel model, boolean isNew, boolean isStartOfForm, ResourceBundle labels) {
+    public EagInstitutionPanel(Eag eag, JTabbedPane tabbedPane, JFrame eag2012Frame, ProfileListModel model, boolean isNew, ResourceBundle labels) {
         super(eag, tabbedPane, eag2012Frame, model, labels);
         this.isNew = isNew;
-        this.isStartOfForm = isStartOfForm;
     }
 
     /**
@@ -88,33 +86,9 @@ public class EagInstitutionPanel extends EagPanels {
         builder.addSeparator(labels.getString("eag2012.YourInstitution"), cc.xyw(1, rowNb, 7));
         setNextRow();
         builder.addLabel(labels.getString("eag2012.personResponsibleLabel"),    cc.xy (1, rowNb));
-
-        if(isStartOfForm) {    //todo: ALL OF THIS should actually be in the save function, here just a check on whether something exists or not.
-            if(eag.getControl().getMaintenanceHistory() == null)
-                eag.getControl().setMaintenanceHistory(new MaintenanceHistory());
-            MaintenanceEvent maintenanceEvent = new MaintenanceEvent();
-            AgentType agentType = new AgentType();
-            agentType.setValue("human");
-            maintenanceEvent.setAgentType(agentType);
-            EventDateTime eventDateTime = new EventDateTime();
-            Date date = new Date();
-            SimpleDateFormat format = new SimpleDateFormat("dd.MM.yyyy");
-            SimpleDateFormat formatStandard = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
-            eventDateTime.setContent(format.format(date));
-            eventDateTime.setStandardDateTime(formatStandard.format(date));
-            maintenanceEvent.setEventDateTime(eventDateTime);
-            EventType eventType = new EventType();
-            if(isNew)
-                eventType.setValue("created");
-            else
-                eventType.setValue("updated");
-            maintenanceEvent.setEventType(eventType);
-            eag.getControl().getMaintenanceHistory().getMaintenanceEvent().add(maintenanceEvent);
-            int sizeEvents = eag.getControl().getMaintenanceHistory().getMaintenanceEvent().size();
-            MaintenanceEvent event = eag.getControl().getMaintenanceHistory().getMaintenanceEvent().get(sizeEvents - 1);
-            event.setAgent(new Agent());
-            personTf = new JTextField(event.getAgent().getContent());
-            isStartOfForm = false;
+        LOG.info("1. " + Eag2012Frame.isStartOfForm());
+        if(Eag2012Frame.isStartOfForm()) {
+            personTf = new JTextField("");
         } else {
             int sizeEvents = eag.getControl().getMaintenanceHistory().getMaintenanceEvent().size();
             MaintenanceEvent event = eag.getControl().getMaintenanceHistory().getMaintenanceEvent().get(sizeEvents - 1);
@@ -450,7 +424,7 @@ public class EagInstitutionPanel extends EagPanels {
                 super.saveFile(eag.getControl().getRecordId().getValue());
                 closeFrame();
             } catch (Eag2012FormException e) {
-                reloadTabbedPanel(new EagInstitutionPanel(eag, tabbedPane, eag2012Frame, model, isNew, isStartOfForm, labels).buildEditorPanel(errors), 0);
+                reloadTabbedPanel(new EagInstitutionPanel(eag, tabbedPane, eag2012Frame, model, isNew, labels).buildEditorPanel(errors), 0);
             }
         }
     }
@@ -475,7 +449,7 @@ public class EagInstitutionPanel extends EagPanels {
                 if(model == null)
                     LOG.info("The model is null, we can not add the EAG to the list...");
 
-                reloadTabbedPanel(new EagInstitutionPanel(eag, tabbedPane, eag2012Frame, model, isNew, isStartOfForm, labels).buildEditorPanel(errors), 0);
+                reloadTabbedPanel(new EagInstitutionPanel(eag, tabbedPane, eag2012Frame, model, isNew, labels).buildEditorPanel(errors), 0);
             }
         }
     }
@@ -495,7 +469,7 @@ public class EagInstitutionPanel extends EagPanels {
 //                }
             }
             eag.getControl().getOtherRecordId().add(new OtherRecordId());
-            reloadTabbedPanel(new EagInstitutionPanel(eag, tabbedPane, eag2012Frame, model, isNew, isStartOfForm, labels).buildEditorPanel(errors), 0);
+            reloadTabbedPanel(new EagInstitutionPanel(eag, tabbedPane, eag2012Frame, model, isNew, labels).buildEditorPanel(errors), 0);
         }
 
     }
@@ -522,7 +496,7 @@ public class EagInstitutionPanel extends EagPanels {
             location.setMunicipalityPostalcode(new MunicipalityPostalcode());
 
             eag.getArchguide().getDesc().getRepositories().getRepository().get(0).getLocation().add(location);
-            reloadTabbedPanel(new EagInstitutionPanel(eag, tabbedPane, eag2012Frame, model, isNew, isStartOfForm, labels).buildEditorPanel(errors), 0);
+            reloadTabbedPanel(new EagInstitutionPanel(eag, tabbedPane, eag2012Frame, model, isNew, labels).buildEditorPanel(errors), 0);
         }
 
     }
@@ -539,11 +513,47 @@ public class EagInstitutionPanel extends EagPanels {
             boolean hasChanged = false;
 
             if(StringUtils.isNotEmpty(personTf.getText())) {
-                MaintenanceEvent event = eag.getControl().getMaintenanceHistory().getMaintenanceEvent().get(eag.getControl().getMaintenanceHistory().getMaintenanceEvent().size() - 1);
-                eag.getControl().getMaintenanceHistory().getMaintenanceEvent().remove(event);
-                event.getAgent().setContent(personTf.getText());
-                eag.getControl().getMaintenanceHistory().getMaintenanceEvent().add(event);
-                isNew = false;
+                LOG.info("2. " + Eag2012Frame.isStartOfForm() + " - " + personTf.getText());
+                if(Eag2012Frame.isStartOfForm()) {
+                    Eag2012Frame.setStartOfForm(false);
+                    MaintenanceEvent maintenanceEvent;
+                    if(eag.getControl().getMaintenanceHistory().getMaintenanceEvent().size() == 0) {
+                        maintenanceEvent = new MaintenanceEvent();
+                    } else {
+                        maintenanceEvent = eag.getControl().getMaintenanceHistory().getMaintenanceEvent().get(0);
+                        eag.getControl().getMaintenanceHistory().getMaintenanceEvent().remove(maintenanceEvent);
+                    }
+                    AgentType agentType = new AgentType();
+                    agentType.setValue("human");
+                    maintenanceEvent.setAgentType(agentType);
+                    EventDateTime eventDateTime = new EventDateTime();
+                    Date date = new Date();
+                    SimpleDateFormat format = new SimpleDateFormat("dd.MM.yyyy");
+                    SimpleDateFormat formatStandard = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+                    LOG.info(format.format(date));
+                    LOG.info(formatStandard.format(date));
+                    eventDateTime.setContent(format.format(date));
+                    eventDateTime.setStandardDateTime(formatStandard.format(date));
+                    maintenanceEvent.setEventDateTime(eventDateTime);
+                    EventType eventType = new EventType();
+                    if(isNew)
+                        eventType.setValue("created");
+                    else
+                        eventType.setValue("updated");
+                    maintenanceEvent.setEventType(eventType);
+                    Agent agent = new Agent();
+                    agent.setContent(personTf.getText());
+                    maintenanceEvent.setAgent(agent);
+                    eag.getControl().getMaintenanceHistory().getMaintenanceEvent().add(maintenanceEvent);
+                    isNew = false;
+                } else {
+                    LOG.info("Gosh");
+                    MaintenanceEvent event = eag.getControl().getMaintenanceHistory().getMaintenanceEvent().get(eag.getControl().getMaintenanceHistory().getMaintenanceEvent().size() - 1);
+                    eag.getControl().getMaintenanceHistory().getMaintenanceEvent().remove(event);
+                    event.getAgent().setContent(personTf.getText());
+                    eag.getControl().getMaintenanceHistory().getMaintenanceEvent().add(event);
+                    isNew = false;
+                }
             }
 
             if(StringUtils.isEmpty(countryCodeTf.getText()) || !Eag2012ValidFields.isCountryCodeCorrect(countryCodeTf.getText())) {
