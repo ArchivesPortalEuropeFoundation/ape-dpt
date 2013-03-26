@@ -671,7 +671,7 @@ public class EseOptionsPanel extends JPanel {
                 EseConfig config = fillConfig();
                 for (File selectedIndexFile : selectedIndices) {
                     SwingUtilities.invokeLater(new TransformEse(config, selectedIndexFile));
-                    apeTabbedPane.appendEseConversionErrorText(MessageFormat.format(labels.getString("ese.convertedAndSaved"), selectedIndexFile.getAbsolutePath()) + "\n");
+                    apeTabbedPane.appendEseConversionErrorText(MessageFormat.format(labels.getString("ese.convertedAndSaved"), selectedIndexFile.getAbsolutePath(), retrieveFromDb.retrieveDefaultSaveFolder()) + "\n");
 
                 }
                 apeTabbedPane.checkFlashingTab(APETabbedPane.TAB_ESE, Utilities.FLASHING_GREEN_COLOR);
