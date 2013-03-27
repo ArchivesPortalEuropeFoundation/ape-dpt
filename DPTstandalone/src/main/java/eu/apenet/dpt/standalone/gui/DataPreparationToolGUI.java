@@ -672,6 +672,7 @@ public class DataPreparationToolGUI extends JFrame {
                             }
                             apePanel.getApeTabbedPane().changeBackgroundColor(APETabbedPane.TAB_CONVERSION, Utilities.TAB_COLOR);
                             apePanel.getApeTabbedPane().changeBackgroundColor(APETabbedPane.TAB_VALIDATION, Utilities.TAB_COLOR);
+                            apePanel.getApeTabbedPane().changeBackgroundColor(APETabbedPane.TAB_ESE, Utilities.TAB_COLOR);
                         }
                         checkHoldingsGuideButton();
                     } else {
