@@ -42,7 +42,7 @@ public class ConvertEdmActionListener implements ActionListener {
     public ConvertEdmActionListener(Component parent, DataPreparationToolGUI dataPreparationToolGUI, APEPanel apePanel) {
         this.parent = parent;
         this.dataPreparationToolGUI = dataPreparationToolGUI;
-        this.retrieveFromDb = retrieveFromDb = new RetrieveFromDb();
+        this.retrieveFromDb = new RetrieveFromDb();
         this.apePanel = apePanel;
         this.labels = dataPreparationToolGUI.getLabels();
     }

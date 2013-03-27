@@ -39,7 +39,7 @@ public class ConvertEseActionListener extends ApexActionListener {
     public ConvertEseActionListener(ResourceBundle labels, DataPreparationToolGUI dataPreparationToolGUI, APEPanel apePanel) {
         this.labels = labels;
         this.dataPreparationToolGUI = dataPreparationToolGUI;
-        this.retrieveFromDb = retrieveFromDb = new RetrieveFromDb();
+        this.retrieveFromDb = new RetrieveFromDb();
         this.apePanel = apePanel;
     }
 
