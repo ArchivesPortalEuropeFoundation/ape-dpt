@@ -128,6 +128,7 @@ public class EseOptionsPanel extends JPanel {
         dataProviderTextArea.setLineWrap(true);
         dataProviderTextArea.setWrapStyleWord(true);
         String repository = determineDaoInformation()[1];
+        System.out.println("repository: \"" + repository + "\"");
         JScrollPane dptaScrollPane = new JScrollPane(dataProviderTextArea);
         dptaScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
         panel.add(dptaScrollPane);
@@ -136,11 +137,12 @@ public class EseOptionsPanel extends JPanel {
         archdescCheckbox.addItemListener(new CheckboxItemListener());
         panel2.add(archdescCheckbox);
         panel2.add(new JLabel(labels.getString("ese.archdescValue") + ": " + archdescRepository));
+        System.out.println("archdescRepo: \"" + archdescRepository + "\"");
         panel2.setVisible(false);
         panel.add(panel2);
-        if (repository != null) {
+        if (repository != null && !repository.equals("")) {
             dataProviderTextArea.setText(repository);
-        } else if (archdescRepository != null) {
+        } else {
             panel2.setVisible(true);
             dataProviderTextArea.setText(archdescRepository);
         }
@@ -166,7 +168,6 @@ public class EseOptionsPanel extends JPanel {
         panel.add(new Label(labels.getString("ese.type") + ":" + "*"));
         String currentRoleType = determineDaoInformation()[0];
         radioButton = new JRadioButton("TEXT");
-        System.out.println(currentRoleType);
         if (currentRoleType.equals("TEXT")) {
             radioButton.setSelected(true);
         }
@@ -538,8 +539,6 @@ public class EseOptionsPanel extends JPanel {
         try {
             File index = selectedIndices.get(0);
             FileInstance fileInstance = fileInstances.get(index.getName());
-            System.out.println(fileInstance.isConverted() + " " + fileInstance.isValid());
-            System.out.println(fileInstance.getCurrentLocation());
             Document doc = XMLUtil.convertXMLToDocument(new FileInputStream(new File(fileInstance.getCurrentLocation())));
             NodeList nodelist = doc.getElementsByTagName("dao");
             if (nodelist.getLength() != 0) {
@@ -601,28 +600,25 @@ public class EseOptionsPanel extends JPanel {
                         }
                         return ((Element) repositoryNode).getTextContent().substring(0, index);
                     }
-                }
-                if (((Element) repositoryNode).getParentNode().getParentNode().getNodeName().equals("archdesc")) {
-                    int index = 0;
-                    while (index < ((Element) repositoryNode).getTextContent().length()) {
-                        if (((Element) repositoryNode).getTextContent().charAt(index) >= ' ') {
-                            index++;
-                        } else {
-                            break;
+
+                    if (((Element) repositoryNode).getParentNode().getParentNode().getNodeName().equals("archdesc")) {
+                        int index = 0;
+                        while (index < ((Element) repositoryNode).getTextContent().length()) {
+                            if (((Element) repositoryNode).getTextContent().charAt(index) >= ' ') {
+                                index++;
+                            } else {
+                                break;
+                            }
                         }
-                    }
-                    if (archdescRepository != null) {
-                        archdescRepository = ((Element) repositoryNode).getTextContent().substring(0, index);
+                        if (archdescRepository == null) {
+                            archdescRepository = ((Element) repositoryNode).getTextContent().substring(0, index);
+                        }
                     }
                 }
                 counter++;
             } while (counter < repositories.getLength());
         }
-        if (archdescRepository != null) {
-            return archdescRepository;
-        } else {
-            return result;
-        }
+        return result;
     }
 
     private String determineLanguageCode(Node daoNode, Document doc) {
@@ -637,8 +633,9 @@ public class EseOptionsPanel extends JPanel {
                     NamedNodeMap attributes = languageNode.getAttributes();
                     for (int i = 0; i < attributes.getLength(); i++) {
                         Node attribute = attributes.item(i);
-                        if (attribute != null)
+                        if (attribute != null) {
                             return attribute.getTextContent();
+                        }
                     }
                 }
                 counter++;
@@ -670,62 +667,64 @@ public class EseOptionsPanel extends JPanel {
         public void actionPerformed(ActionEvent e) {
 //            dataPreparationToolGUI.disableAllBtnAndItems(); //todo: FIX!
             continueLoop = true;
-        final ApexActionListener apexActionListener = this;
-        new Thread(new Runnable(){
-            public void run(){
-                int numberOfFiles = selectedIndices.size();
-                int currentFileNumberBatch = 0;
-                ProgressFrame progressFrame = new ProgressFrame(labels, parent, true, true, apexActionListener);
+            final ApexActionListener apexActionListener = this;
+            new Thread(new Runnable() {
+                public void run() {
+                    int numberOfFiles = selectedIndices.size();
+                    int currentFileNumberBatch = 0;
+                    ProgressFrame progressFrame = new ProgressFrame(labels, parent, true, true, apexActionListener);
 
-                ProgressFrame.ApeProgressBar progressBar = progressFrame.getProgressBarBatch();
-                for(Object oneFile : selectedIndices){
-                    if(!continueLoop)
-                        break;
-                    
-                    File file = (File)oneFile;
-                    apeTabbedPane.setEseConversionErrorText(labels.getString("ese.conversionEseStarted") + "\n");
-                    SummaryWorking summaryWorking = new SummaryWorking(dataPreparationToolGUI.getResultArea(), progressBar);
-                    summaryWorking.setTotalNumberFiles(numberOfFiles);
-                    summaryWorking.setCurrentFileNumberBatch(currentFileNumberBatch);
-                    Thread threadRunner = new Thread(summaryWorking);
-                    threadRunner.setName(SummaryWorking.class.toString());
-                    threadRunner.start();
-                    
-                    try {
+                    ProgressFrame.ApeProgressBar progressBar = progressFrame.getProgressBarBatch();
+                    for (Object oneFile : selectedIndices) {
+                        if (!continueLoop) {
+                            break;
+                        }
+
+                        File file = (File) oneFile;
+                        apeTabbedPane.setEseConversionErrorText(labels.getString("ese.conversionEseStarted") + "\n");
+                        SummaryWorking summaryWorking = new SummaryWorking(dataPreparationToolGUI.getResultArea(), progressBar);
+                        summaryWorking.setTotalNumberFiles(numberOfFiles);
+                        summaryWorking.setCurrentFileNumberBatch(currentFileNumberBatch);
+                        Thread threadRunner = new Thread(summaryWorking);
+                        threadRunner.setName(SummaryWorking.class.toString());
+                        threadRunner.start();
+
                         try {
-                            checkIfAllFilled();
-                        } catch (Exception ex1) {
-                            DataPreparationToolGUI.createErrorOrWarningPanel(ex1, false, labels.getString("ese.formNotFilledError"), parent);
-                            throw ex1;
+                            try {
+                                checkIfAllFilled();
+                            } catch (Exception ex1) {
+                                DataPreparationToolGUI.createErrorOrWarningPanel(ex1, false, labels.getString("ese.formNotFilledError"), parent);
+                                throw ex1;
+                            }
+                            EseConfig config = fillConfig();
+                            for (File selectedIndexFile : selectedIndices) {
+                                SwingUtilities.invokeLater(new TransformEse(config, selectedIndexFile));
+                                apeTabbedPane.appendEseConversionErrorText(MessageFormat.format(labels.getString("ese.convertedAndSaved"), selectedIndexFile.getAbsolutePath(), retrieveFromDb.retrieveDefaultSaveFolder()) + "\n");
+                            }
+                            apeTabbedPane.checkFlashingTab(APETabbedPane.TAB_ESE, Utilities.FLASHING_GREEN_COLOR);
+                            close();
+                        } catch (Exception ex) {
+                            LOG.error(ex);
+                            apeTabbedPane.checkFlashingTab(APETabbedPane.TAB_ESE, Utilities.FLASHING_RED_COLOR);
+                        } finally {
+                            summaryWorking.stop();
+                            threadRunner.interrupt();
                         }
-                        EseConfig config = fillConfig();
-                        for (File selectedIndexFile : selectedIndices) {
-                            SwingUtilities.invokeLater(new TransformEse(config, selectedIndexFile));
-                            apeTabbedPane.appendEseConversionErrorText(MessageFormat.format(labels.getString("ese.convertedAndSaved"), selectedIndexFile.getAbsolutePath(), retrieveFromDb.retrieveDefaultSaveFolder()) + "\n");
-                        }
-                        apeTabbedPane.checkFlashingTab(APETabbedPane.TAB_ESE, Utilities.FLASHING_GREEN_COLOR);
-                        close();
-                    } catch (Exception ex) {
-                        LOG.error(ex);
-                        apeTabbedPane.checkFlashingTab(APETabbedPane.TAB_ESE, Utilities.FLASHING_RED_COLOR);
-                    } finally {
-                        summaryWorking.stop();
-                        threadRunner.interrupt();
                     }
+                    if (progressFrame != null) {
+                        progressFrame.stop();
+                    }
+                    dataPreparationToolGUI.getFinalAct().run();
+                    dataPreparationToolGUI.getXmlEadList().clearSelection();
+                    if (continueLoop) {
+                        dataPreparationToolGUI.setResultAreaText(labels.getString("finished"));
+                    } else {
+                        dataPreparationToolGUI.setResultAreaText(labels.getString("aborted"));
+                    }
+                    dataPreparationToolGUI.enableSaveBtn();
+                    dataPreparationToolGUI.enableRadioButtons();
                 }
-                if(progressFrame != null){
-                    progressFrame.stop();
-                }
-                dataPreparationToolGUI.getFinalAct().run();
-                dataPreparationToolGUI.getXmlEadList().clearSelection();
-                if(continueLoop)
-                    dataPreparationToolGUI.setResultAreaText(labels.getString("finished"));
-                else
-                    dataPreparationToolGUI.setResultAreaText(labels.getString("aborted"));
-                dataPreparationToolGUI.enableSaveBtn();
-                dataPreparationToolGUI.enableRadioButtons();
-            }
-        }).start();
+            }).start();
         }
     }
 
