@@ -6,6 +6,7 @@ import eu.apenet.dpt.standalone.gui.DataPreparationToolGUI;
 import eu.apenet.dpt.standalone.gui.FileInstance;
 import eu.apenet.dpt.standalone.gui.SummaryWorking;
 import eu.apenet.dpt.standalone.gui.Utilities;
+import eu.apenet.dpt.standalone.gui.db.RetrieveFromDb;
 import eu.apenet.dpt.standalone.gui.ese2edm.ConvertEdmActionListener;
 import eu.apenet.dpt.standalone.gui.ese2edm.TransformEdm;
 import eu.apenet.dpt.standalone.gui.progress.ApexActionListener;
@@ -32,11 +33,13 @@ public class ConvertEseActionListener extends ApexActionListener {
     private final static Logger LOG = Logger.getLogger(ConvertEseActionListener.class);
     private DataPreparationToolGUI dataPreparationToolGUI;
     private ResourceBundle labels;
+    private RetrieveFromDb retrieveFromDb;
     private APEPanel apePanel;
 
     public ConvertEseActionListener(ResourceBundle labels, DataPreparationToolGUI dataPreparationToolGUI, APEPanel apePanel) {
         this.labels = labels;
         this.dataPreparationToolGUI = dataPreparationToolGUI;
+        this.retrieveFromDb = retrieveFromDb = new RetrieveFromDb();
         this.apePanel = apePanel;
     }
 
@@ -97,7 +100,7 @@ public class ConvertEseActionListener extends ApexActionListener {
                                 EdmConfig edmConfig = edmListener.fillConfig();
                                 try {
                                     SwingUtilities.invokeLater(new TransformEdm(edmConfig, file, dataPreparationToolGUI));
-                                    apePanel.getApeTabbedPane().appendEseConversionErrorText(MessageFormat.format(labels.getString("edm.convertedAndSaved"), file.getAbsolutePath()) + "\n");
+                                    apePanel.getApeTabbedPane().appendEseConversionErrorText(MessageFormat.format(labels.getString("edm.convertedAndSaved"), file.getAbsolutePath(), retrieveFromDb.retrieveDefaultSaveFolder()) + "\n");
                                     apePanel.getApeTabbedPane().checkFlashingTab(APETabbedPane.TAB_ESE, Utilities.FLASHING_GREEN_COLOR);
                                 } catch (Exception ex) {
                                     LOG.error(ex);

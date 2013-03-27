@@ -36,11 +36,13 @@ public class ConvertEdmActionListener implements ActionListener {
     private Component parent;
     private ResourceBundle labels;
     private DataPreparationToolGUI dataPreparationToolGUI;
+    private RetrieveFromDb retrieveFromDb;
     private APEPanel apePanel;
 
     public ConvertEdmActionListener(Component parent, DataPreparationToolGUI dataPreparationToolGUI, APEPanel apePanel) {
         this.parent = parent;
         this.dataPreparationToolGUI = dataPreparationToolGUI;
+        this.retrieveFromDb = retrieveFromDb = new RetrieveFromDb();
         this.apePanel = apePanel;
         this.labels = dataPreparationToolGUI.getLabels();
     }
@@ -67,7 +69,7 @@ public class ConvertEdmActionListener implements ActionListener {
         EdmConfig config = fillConfig();
         try {
             SwingUtilities.invokeLater(new TransformEdm(config, file, dataPreparationToolGUI));
-            apePanel.getApeTabbedPane().appendEseConversionErrorText(MessageFormat.format(labels.getString("edm.convertedAndSaved"), file.getAbsolutePath()) + "\n");
+            apePanel.getApeTabbedPane().appendEseConversionErrorText(MessageFormat.format(labels.getString("edm.convertedAndSaved"), file.getAbsolutePath(), retrieveFromDb.retrieveDefaultSaveFolder()) + "\n");
             apePanel.getApeTabbedPane().checkFlashingTab(APETabbedPane.TAB_ESE, Utilities.FLASHING_GREEN_COLOR);
         } catch (Exception ex) {
             LOG.error(ex);
