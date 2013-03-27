@@ -21,6 +21,7 @@ public class FileInstance {
     private boolean isEse;
     private String validationErrors;
     private String conversionErrors;
+    private String europeanaConversionErrors;
     private String currentLocation;
     private String eseLocation;
     private String conversionScriptName;
@@ -40,6 +41,7 @@ public class FileInstance {
         this.isEse = false;
         this.validationErrors = "";
         this.conversionErrors = "";
+        this.europeanaConversionErrors = "";
         this.currentLocation = "";
         this.eseLocation = "";
         this.conversionScriptName = defaultXsl;
@@ -102,6 +104,14 @@ public class FileInstance {
 
     public void setConversionErrors(String conversionErrors) {
         this.conversionErrors = conversionErrors;
+    }
+
+    public String getEuropeanaConversionErrors() {
+        return europeanaConversionErrors;
+    }
+
+    public void setEuropeanaConversionErrors(String europeanaConversionErrors) {
+        this.europeanaConversionErrors = europeanaConversionErrors;
     }
 
     public String getCurrentLocation() {
