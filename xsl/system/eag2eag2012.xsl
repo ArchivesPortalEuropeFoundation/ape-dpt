@@ -341,7 +341,17 @@
                     <xsl:apply-templates select="*:repositorhist, *:repositorfound, *:repositorsup"/>
                     <xsl:apply-templates select="*:buildinginfo, *:adminhierarchy"/>
                     <xsl:apply-templates select="*:extent"/>
-                    <xsl:apply-templates select="*:timetable, *:access, *:buildinginfo/*:handicapped"/>
+                    <xsl:if test="not(*:timetable)">
+                        <timetable><opening/></timetable>
+                    </xsl:if>
+                    <xsl:apply-templates select="*:access"/>
+                    <xsl:if test="not(*:access)">
+                        <access question="no"/>
+                    </xsl:if>
+                    <xsl:apply-templates select="*:buildinginfo/*:handicapped"/>
+                    <xsl:if test="not(*:buildinginfo/*:handicapped)">
+                        <accessibility question="no"/>
+                    </xsl:if>
                     <xsl:call-template name="services">
                         <xsl:with-param name="searchroom" select="*:buildinginfo/*:searchroom"/>
                         <xsl:with-param name="techservices" select="*:techservices"/>
@@ -627,8 +637,10 @@
                 </workPlaces>
             </searchroom>
             <xsl:if test="exists($techservices/*:library/*:monographicpub or $techservices/*:library/*:serialpub)">
-                <library>
-                    <xsl:attribute name="question" select="$techservices/*:library/@question"/>
+                <library question="no">
+                    <xsl:if test="$techservices/*:library/@question">
+                        <xsl:attribute name="question" select="$techservices/*:library/@question"/>
+                    </xsl:if>
                     <xsl:if test="exists($techservices/*:library/*:monographicpub)">
                         <monographicpub>
                             <num>
@@ -654,9 +666,11 @@
                         <xsl:attribute name="question" select="$techservices/*:restorationlab/@question"/>
                     </restorationlab>
                 </xsl:if>
-                <reproductionser>
+                <reproductionser question="no">
                     <xsl:variable name="reprod" select="$techservices/*:reproductionser"/>
-                    <xsl:attribute name="question" select="$reprod/@question"/>
+                    <xsl:if test="$reprod/@question">
+                        <xsl:attribute name="question" select="$reprod/@question"/>
+                    </xsl:if>
                     <xsl:if test="exists($reprod/*:microformser)">
                         <microformser>
                             <xsl:attribute name="question" select="$reprod/*:microformser/@question"/>
