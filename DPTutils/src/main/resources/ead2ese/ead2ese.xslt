@@ -933,7 +933,7 @@ http://purl.org/dc/terms/ http://www.dublincore.org/schemas/xmls/qdc/dcterms.xsd
                 <xsl:value-of select="/ead/eadheader/eadid/@identifier"/>
             </dc:identifier>
             <xsl:if test='/ead/archdesc/did/repository'>
-                <xsl:apply-templates select='/ead/archdesc/did/repository'/>
+                <xsl:apply-templates select='/ead/archdesc/did/repository' mode="archdesc" />
             </xsl:if>
             <xsl:if test='/ead/eadheader/filedesc/publicationstmt/publisher'>
                 <xsl:apply-templates select='/ead/eadheader/filedesc/publicationstmt/publisher'/>
@@ -954,7 +954,18 @@ http://purl.org/dc/terms/ http://www.dublincore.org/schemas/xmls/qdc/dcterms.xsd
                 </xsl:call-template>
             </xsl:if>
             <dc:type>TEXT</dc:type>
-            <dc:language>en</dc:language>
+            <xsl:choose>
+                <xsl:when test='/ead/archdesc/did/langmaterial'>
+                    <xsl:call-template name="language">
+                        <xsl:with-param name="langmaterials" select='/ead/archdesc/did/langmaterial' />
+                    </xsl:call-template>
+                </xsl:when>
+                <xsl:otherwise>
+                    <dc:language>
+                        <xsl:text>unknown</xsl:text>
+                    </dc:language>
+                </xsl:otherwise>
+            </xsl:choose>
             <europeana:provider>
                 <xsl:value-of select="$europeana_provider"/>
             </europeana:provider>
@@ -981,13 +992,30 @@ http://purl.org/dc/terms/ http://www.dublincore.org/schemas/xmls/qdc/dcterms.xsd
     </xsl:template>
 
     <xsl:template match="repository">
-        <xsl:variable name='content'>
-            <xsl:apply-templates mode="all-but-address"/>
-        </xsl:variable>
         <dc:source>
+            <xsl:choose>
+                <xsl:when test="$europeana_dataprovider">
+                    <xsl:value-of select="$europeana_dataprovider"/>
+                </xsl:when>
+                <xsl:otherwise>
+                    <xsl:variable name='content'>
+                        <xsl:apply-templates mode="all-but-address"/>
+                    </xsl:variable>
+                    <xsl:value-of select="fn:replace(normalize-space($content), '[\n\t\r ]', '')"/>
+                </xsl:otherwise>
+            </xsl:choose>
+        </dc:source>
+    </xsl:template>
+    
+    <xsl:template match="repository" mode="archdesc">
+        <dc:source>
+            <xsl:variable name='content'>
+                <xsl:apply-templates mode="all-but-address"/>
+            </xsl:variable>
             <xsl:value-of select="fn:replace(normalize-space($content), '[\n\t\r ]', '')"/>
         </dc:source>
     </xsl:template>
+    
     <xsl:template match='publisher'>
         <xsl:variable name="publisherContent">
             <xsl:value-of select="node()"/>
