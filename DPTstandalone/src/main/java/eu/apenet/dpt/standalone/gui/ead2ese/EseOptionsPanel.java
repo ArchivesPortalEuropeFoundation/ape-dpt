@@ -129,7 +129,6 @@ public class EseOptionsPanel extends JPanel {
         dataProviderTextArea.setLineWrap(true);
         dataProviderTextArea.setWrapStyleWord(true);
         String repository = determineDaoInformation()[1];
-        System.out.println("repository: \"" + repository + "\"");
         JScrollPane dptaScrollPane = new JScrollPane(dataProviderTextArea);
         dptaScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
         panel.add(dptaScrollPane);
@@ -138,7 +137,6 @@ public class EseOptionsPanel extends JPanel {
         archdescCheckbox.addItemListener(new CheckboxItemListener());
         panel2.add(archdescCheckbox);
         panel2.add(new JLabel(labels.getString("ese.archdescValue") + ": " + archdescRepository));
-        System.out.println("archdescRepo: \"" + archdescRepository + "\"");
         panel2.setVisible(false);
         panel.add(panel2);
         if (repository != null && !repository.equals("")) {
@@ -207,7 +205,7 @@ public class EseOptionsPanel extends JPanel {
         formPanel.add(panel);
 
         panel = new JPanel(new GridLayout(1, 3));
-        panel.add(new Label(labels.getString("ese.hierarchyPrefix") + ":" + "*"));
+        panel.add(new Label(labels.getString("ese.hierarchyPrefix") + ":"));
         contextTextArea = new JTextArea(labels.getString("ese.hierarchyPrefixDefault") + ":");
         contextTextArea.setLineWrap(true);
         contextTextArea.setWrapStyleWord(true);
