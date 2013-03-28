@@ -1095,22 +1095,25 @@ public class EagAccessAndServicesPanel extends EagPanels {
                     }
                 }
 
-
+                boolean libraryExists = false;
                 Library library = repository.getServices().getLibrary();
                 if(StringUtils.isNotEmpty(telephoneLibraryTf.getText())) {
                     library.getContact().getTelephone().get(0).setContent(telephoneLibraryTf.getText());
+                    libraryExists = true;
                 }
                 if(StringUtils.isNotEmpty(emailLibraryTf.getText())) {
                     library.getContact().getEmail().get(0).setHref(emailLibraryTf.getText());
                     if(StringUtils.isNotEmpty(emailTitleLibraryTf.getText())) {
                         library.getContact().getEmail().get(0).setContent(emailTitleLibraryTf.getText());
                     }
+                    libraryExists = true;
                 }
                 if(StringUtils.isNotEmpty(webpageLibraryTf.getText())) {
                     library.getWebpage().get(0).setHref(webpageLibraryTf.getText());
                     if(StringUtils.isNotEmpty(webpageTitleLibraryTf.getText())) {
                         library.getWebpage().get(0).setContent(webpageTitleLibraryTf.getText());
                     }
+                    libraryExists = true;
                 }
                 if(StringUtils.isNotEmpty(monographicPubLibraryTf.getText())) {
                     Num num = new Num();
@@ -1123,56 +1126,79 @@ public class EagAccessAndServicesPanel extends EagPanels {
                     num.setUnit("site");
                     num.setContent(serialPubLibraryTf.getText());
                     library.getSerialpub().setNum(num);
+                    libraryExists = true;
+                }
+                library.setQuestion("yes");
+                if(!libraryExists) {
+                    repository.getServices().setLibrary(null);
                 }
 
 
                 if(StringUtils.isNotEmpty(internetAccessDescTf.getTextValue())) {
                     repository.getServices().getInternetAccess().getDescriptiveNote().getP().get(0).setContent(internetAccessDescTf.getTextValue());
                     repository.getServices().getInternetAccess().getDescriptiveNote().setLang(internetAccessDescTf.getLanguage());
+                    repository.getServices().getInternetAccess().setQuestion("yes");
+                } else {
+                    repository.getServices().setInternetAccess(null);
                 }
 
                 Techservices techservices = repository.getServices().getTechservices();
                 Restorationlab restorationlab = techservices.getRestorationlab();
+                boolean restorationLabExists = false;
                 if(StringUtils.isNotEmpty(telephoneRestorationlabTf.getText())) {
                     restorationlab.getContact().getTelephone().get(0).setContent(telephoneRestorationlabTf.getText());
+                    restorationLabExists = true;
                 }
                 if(StringUtils.isNotEmpty(emailRestorationlabTf.getText())) {
                     restorationlab.getContact().getEmail().get(0).setHref(emailRestorationlabTf.getText());
                     if(StringUtils.isNotEmpty(emailTitleRestorationlabTf.getText())) {
                         restorationlab.getContact().getEmail().get(0).setContent(emailTitleRestorationlabTf.getText());
                     }
+                    restorationLabExists = true;
                 }
                 if(StringUtils.isNotEmpty(webpageRestorationlabTf.getText())) {
                     restorationlab.getWebpage().get(0).setHref(webpageRestorationlabTf.getText());
                     if(StringUtils.isNotEmpty(webpageTitleRestorationlabTf.getText())) {
                         restorationlab.getWebpage().get(0).setContent(webpageTitleRestorationlabTf.getText());
                     }
+                    restorationLabExists = true;
                 }
+                restorationlab.setQuestion("yes");
 
+                if(!restorationLabExists)
+                    techservices.setRestorationlab(null);
 
 
                 Reproductionser reproductionser = techservices.getReproductionser();
+                boolean contactExists = false;
                 if(StringUtils.isNotEmpty(telephoneReproductionServiceTf.getText())) {
                     reproductionser.getContact().getTelephone().get(0).setContent(telephoneReproductionServiceTf.getText());
+                    contactExists = true;
                 }
                 if(StringUtils.isNotEmpty(emailReproductionServiceTf.getText())) {
                     reproductionser.getContact().getEmail().get(0).setHref(emailReproductionServiceTf.getText());
                     if(StringUtils.isNotEmpty(emailTitleReproductionServiceTf.getText())) {
                         reproductionser.getContact().getEmail().get(0).setContent(emailTitleReproductionServiceTf.getText());
                     }
+                    contactExists = true;
                 }
+                if(!contactExists)
+                    reproductionser.setContact(null);
+
                 if(StringUtils.isNotEmpty(webpageReproductionServiceTf.getText())) {
                     reproductionser.getWebpage().get(0).setHref(webpageReproductionServiceTf.getText());
                     if(StringUtils.isNotEmpty(webpageTitleReproductionServiceTf.getText())) {
                         reproductionser.getWebpage().get(0).setContent(webpageTitleReproductionServiceTf.getText());
                     }
+                } else {
+                    reproductionser.getWebpage().clear();
                 }
 
                 reproductionser.getMicroformser().setQuestion((String)microformServicesCombo.getSelectedItem());
                 reproductionser.getPhotographser().setQuestion((String)photographServicesCombo.getSelectedItem());
                 reproductionser.getDigitalser().setQuestion((String)digitalServicesCombo.getSelectedItem());
                 reproductionser.getPhotocopyser().setQuestion((String)photocopyServicesCombo.getSelectedItem());
-
+                reproductionser.setQuestion("yes");
 
 
                 RecreationalServices recreationalServices = repository.getServices().getRecreationalServices();

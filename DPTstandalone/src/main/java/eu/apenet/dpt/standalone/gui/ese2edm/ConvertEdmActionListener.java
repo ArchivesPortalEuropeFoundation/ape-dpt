@@ -64,8 +64,9 @@ public class ConvertEdmActionListener implements ActionListener {
         }
 
         apePanel.getApeTabbedPane().appendEseConversionErrorText(labels.getString("edm.conversionEdmStarted") + "\n");
+        EdmConfig config = fillConfig();
         try {
-            SwingUtilities.invokeLater(new TransformEdm(file));
+            SwingUtilities.invokeLater(new TransformEdm(config, file, dataPreparationToolGUI));
             apePanel.getApeTabbedPane().appendEseConversionErrorText(MessageFormat.format(labels.getString("edm.convertedAndSaved"), file.getAbsolutePath()) + "\n");
             apePanel.getApeTabbedPane().checkFlashingTab(APETabbedPane.TAB_ESE, Utilities.FLASHING_GREEN_COLOR);
         } catch (Exception ex) {
@@ -76,43 +77,20 @@ public class ConvertEdmActionListener implements ActionListener {
         }
         dataPreparationToolGUI.enableRadioButtons();
     }
-
-    private class TransformEdm implements Runnable {
-
-        private File selectedIndex;
-        private Map<String, FileInstance> fileInstances;
-
-        private TransformEdm(File file) {
-            this.selectedIndex = file;
-            this.fileInstances = dataPreparationToolGUI.getFileInstances();
-        }
-
-        public void run() {
-            try {
-                RetrieveFromDb retrieveFromDb = new RetrieveFromDb();
-                int lastIndex = selectedIndex.getName().lastIndexOf('.');
-                String xmlOutputFilename = retrieveFromDb.retrieveDefaultSaveFolder() + selectedIndex.getName().substring(0, lastIndex - 4) + "-edm" + selectedIndex.getName().substring(lastIndex);
-                FileInstance fileInstance = fileInstances.get(selectedIndex.getName());
-                String loc;
-                if (fileInstance.isEse()) {
-                    loc = fileInstance.getCurrentLocation();
-                } else {
-                    loc = fileInstance.getOriginalPath();
-                }
-                DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
-		DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
-		Document intermediateDoc = docBuilder.newDocument();
-                File outputFile = new File(xmlOutputFilename);
-                EdmConfig config = new EdmConfig(false);
-//                config.getTransformerXML2XML().transform(new File(loc), outputFile);
-//                File outputFile_temp = new File(Utilities.TEMP_DIR + ".temp_"+selectedIndex.getName());
-                config.getTransformerXML2XML().transform(new File(loc), intermediateDoc);
-//                System.out.println("intermediateDoc root: " + intermediateDoc.getDocumentElement().getNodeName());
-                config.setTransferToFileOutput(true);
-                config.getTransformerXML2XML().transform(intermediateDoc, outputFile);
-            } catch (Exception e) {
-                LOG.error("Error when converting file into EDM", e);
-            }
-        }
+    
+    public EdmConfig fillConfig(){
+        EdmConfig config = new EdmConfig(true);
+        
+        //EDM identifier used for OAI-PMH; not needed for DPT purposes, so set to empty string
+        config.setEdmIdentifier("");
+        
+        //prefixUrl, repositoryCode and xmlTypeName used for EDM element id generation;
+        //repositoryCode is taken from the tool while the other two have fixed values.
+        
+        config.setPrefixUrl("http://www.archivesportaleurope.net/web/guest/ead-display/-/ead/fp");
+        config.setRepositoryCode(dataPreparationToolGUI.getRepositoryCodeIdentifier());
+        config.setXmlTypeName("fa");
+        
+        return config;
     }
 }

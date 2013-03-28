@@ -41,6 +41,7 @@ public class DateConversionRulesFrame extends JFrame {
     private final String FILENAME = Utilities.SYSTEM_DIR + "dateconversion.xml";
     private JTable ruleTable;
     private DefaultTableModel dm;
+    private DefaultTableModel oldModel;
 
     public DateConversionRulesFrame(ResourceBundle labels, RetrieveFromDb retrieveFromDb) {
         xmlFilehandler = new DateConversionXMLFilehandler();
@@ -71,6 +72,8 @@ public class DateConversionRulesFrame extends JFrame {
         });
 
         ruleTable = new JTable(dm);
+        oldModel = new DefaultTableModel(xmlFilehandler.loadDataFromFile(FILENAME), columnNames);
+
 
         JButton saveButton = new JButton(labels.getString("saveBtn"));
         saveButton.addActionListener(new ActionListener() {
@@ -79,15 +82,37 @@ public class DateConversionRulesFrame extends JFrame {
                     ruleTable.getCellEditor().stopCellEditing();
                 }
                 Vector<Vector<String>> data = ((DefaultTableModel) ruleTable.getModel()).getDataVector();
+                for (int i = 0; i < data.size() - 1; i++) {
+                    Vector<String> vector = data.elementAt(i);
+                    if (vector.elementAt(1) != null && !isCorrectDateFormat((String) vector.elementAt(1))) {
+                        createOptionPaneForIsoDate(i, 1);
+                    }
+                }
                 xmlFilehandler.saveDataToFile(data, FILENAME);
             }
         });
 
         JButton cancelButton = new JButton(labels.getString("cancelBtn"));
         cancelButton.addActionListener(new ActionListener() {
+            // boolean cancel = true;
+
             public void actionPerformed(ActionEvent e) {
-                //TODO: Ask for unsaved changes
-                dispose();
+                /*System.out.println(Boolean.toString(oldModel.getRowCount() == (ruleTable.getModel().getRowCount() - 1)) + "<<" + oldModel.getRowCount() + ", " + (ruleTable.getModel().getRowCount() - 1));
+                if (oldModel.getRowCount() != ruleTable.getModel().getRowCount() - 1) {
+                    cancel = showUnsavedChangesDialog();
+                } else {
+                    for (int i = 0; i < (ruleTable.getModel().getRowCount() - 1); i++) {
+                        for (int j = 0; j <= 1; j++) {
+                            System.out.println(oldModel.getValueAt(i, j) == ruleTable.getModel().getValueAt(i, j) + " >> " + oldModel.getValueAt(i, j) + ", " + ruleTable.getModel().getValueAt(i, j));
+                            if (oldModel.getValueAt(i, j) != ruleTable.getModel().getValueAt(i, j)) {
+                                cancel = showUnsavedChangesDialog();
+                            }
+                        }
+                    }
+                }
+                if (cancel) {*/
+                    dispose();
+              //  }
             }
         });
 
@@ -146,15 +171,20 @@ public class DateConversionRulesFrame extends JFrame {
         int i = 0;
         String result;
         do {
-            result = (String) JOptionPane.showInputDialog(getContentPane(), explanation, labels.getString("chooseRepositoryCode"), JOptionPane.QUESTION_MESSAGE, Utilities.icon, null, null);
-            if (result == null) {
-                break;
-            }
+            result = (String) JOptionPane.showInputDialog(getContentPane(), explanation, labels.getString("dateConversion.header"), JOptionPane.QUESTION_MESSAGE, Utilities.icon, null, null);
             i++;
         } while (dateNormalization.checkForNormalAttribute(result) == null);
         if (result != null) {
             dm.setValueAt(result, row, column);
             dm.fireTableCellUpdated(row, column);
         }
+    }
+
+    private boolean showUnsavedChangesDialog() {
+        int result = JOptionPane.showConfirmDialog(this, "You have unsaved changes. Cancel anyway?", "Unsaved changes", JOptionPane.YES_NO_OPTION);
+        if (result == JOptionPane.YES_OPTION) {
+            return true;
+        }
+        return false;
     }
 }

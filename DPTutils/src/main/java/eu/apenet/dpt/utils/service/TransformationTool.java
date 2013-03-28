@@ -30,32 +30,23 @@ import org.xml.sax.helpers.XMLReaderFactory;
 public class TransformationTool {
     private static final Logger LOG = Logger.getLogger(TransformationTool.class);
     private static final String CHARACTER_SET = "UTF-8";
-
-    @Deprecated
-    public static StringWriter createTransformation(InputStream inputFileStream, File outputFile, String xslString, Map<String, String> parameters, boolean outputIsFile, boolean forWebApp, String provider, boolean isXsd11) throws SAXException, IOException {
-    	return createTransformation(inputFileStream, outputFile, xslString, parameters, outputIsFile, forWebApp, provider, isXsd11, new CounterCLevelCall());
-    }
-
-    public static StringWriter createTransformation(InputStream inputFileStream, File outputFile, InputStream xslFile, Map<String, String> parameters, boolean outputIsFile, boolean forWebApp, String provider, boolean isXsd11) throws SAXException {
-    	return createTransformation(inputFileStream, outputFile, xslFile, parameters, outputIsFile, forWebApp, provider, isXsd11, new CounterCLevelCall());
-    }
     
-    public static StringWriter createTransformation(InputStream inputFileStream, File outputFile, InputStream xslFile, Map<String, String> parameters, boolean outputIsFile, boolean forWebApp, String provider, boolean isXsd11, ExtensionFunctionCall extensionFunctionCall) throws SAXException {
+    public static StringWriter createTransformation(InputStream inputFileStream, File outputFile, InputStream xslFile, Map<String, String> parameters, boolean outputIsFile, boolean forWebApp, String provider, boolean isXsd11, ExtensionFunctionCall extensionFunctionCall, String... baseURI) throws SAXException {
         Source xsltSource = new StreamSource(xslFile);
-        return createTransformation(inputFileStream, outputFile, xsltSource, parameters, outputIsFile, forWebApp, provider, isXsd11, extensionFunctionCall);
+        return createTransformation(inputFileStream, outputFile, xsltSource, parameters, outputIsFile, forWebApp, provider, isXsd11, extensionFunctionCall, baseURI);
     }
 
-    public static StringWriter createTransformation(InputStream inputFileStream, File outputFile, File xslFile, Map<String, String> parameters, boolean outputIsFile, boolean forWebApp, String provider, boolean isXsd11, ExtensionFunctionCall extensionFunctionCall) throws SAXException {
+    public static StringWriter createTransformation(InputStream inputFileStream, File outputFile, File xslFile, Map<String, String> parameters, boolean outputIsFile, boolean forWebApp, String provider, boolean isXsd11, ExtensionFunctionCall extensionFunctionCall, String... baseURI) throws SAXException {
         Source xsltSource = new StreamSource(xslFile);
-        return createTransformation(inputFileStream, outputFile, xsltSource, parameters, outputIsFile, forWebApp, provider, isXsd11, extensionFunctionCall);
+        return createTransformation(inputFileStream, outputFile, xsltSource, parameters, outputIsFile, forWebApp, provider, isXsd11, extensionFunctionCall, baseURI);
     }
 
-    public static StringWriter createTransformation(InputStream inputFileStream, File outputFile, Source xsltSource, Map<String, String> parameters, boolean outputIsFile, boolean forWebApp, String provider, boolean isXsd11, ExtensionFunctionCall extensionFunctionCall) throws SAXException {
+    public static StringWriter createTransformation(InputStream inputFileStream, File outputFile, Source xsltSource, Map<String, String> parameters, boolean outputIsFile, boolean forWebApp, String provider, boolean isXsd11, ExtensionFunctionCall extensionFunctionCall, String... baseURI) throws SAXException {
         try {
             XMLReader saxParser =  XMLReaderFactory.createXMLReader();
             saxParser.setEntityResolver(new DiscardDtdEntityResolver());
 
-            DateNormalization dateNormalization = new DateNormalization();
+            DateNormalization dateNormalization = new DateNormalization(baseURI);
             Oai2EadNormalization oai2EadNormalization = new Oai2EadNormalization();
             FlagSet flagSet = new FlagSet();
 
@@ -152,11 +143,6 @@ public class TransformationTool {
         }
     }
 
-    @Deprecated
-    public static StringWriter createTransformation(InputStream inputFileStream, File outputFile, String xslString, Map<String, String> parameters, boolean outputIsFile, boolean forWebApp, String provider, boolean isXsd11, CounterCLevelCall counterCLevelCall) throws SAXException, IOException {
-        return createTransformation(inputFileStream, outputFile, IOUtils.toInputStream(xslString, CHARACTER_SET), parameters, outputIsFile, forWebApp, provider, isXsd11, counterCLevelCall);
-    }
-
     private static XsltTransformer insertParameters(XsltTransformer transformer, Map<String, String> parameters){
         if(parameters != null){
             for(String parameter : parameters.keySet()){
@@ -165,17 +151,5 @@ public class TransformationTool {
         }
         //transformer.setParameter("loclanguage", "languages.xml");
         return transformer;
-    }
-
-    public static File modifyDefaultXslFile(String xslDirPath, String xslFilePath) throws IOException, SAXException {
-        File xslFile = new File(xslFilePath);
-        File xslMergedFile = new File(xslDirPath + "merged.xsl");
-        File xslMergerFile = new File(xslDirPath + "changeIncludes.xsl");
-        if(!xslMergedFile.exists() || FileUtils.isFileOlder(xslMergedFile, xslFile)) {
-            Map<String, String> params = new HashMap<String, String>();
-            params.put("mainPath", xslDirPath);
-            TransformationTool.createTransformation(FileUtils.openInputStream(xslFile), xslMergedFile, xslMergerFile, params, true, true, null, true, null);
-        }
-        return xslMergedFile;
     }
 }

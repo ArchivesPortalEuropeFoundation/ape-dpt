@@ -396,8 +396,12 @@ public class EagDescriptionPanel extends EagPanels {
                     } else {
                         repository.getHoldings().setDateRange(null);
                     }
+                } else {
+                    repository.setHoldings(null);
                 }
-
+                Accessibility accessibility = new Accessibility();
+                accessibility.setQuestion("yes");
+                repository.getAccessibility().add(accessibility);
             }
 
             if(!errors.isEmpty()) {

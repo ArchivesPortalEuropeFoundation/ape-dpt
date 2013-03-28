@@ -22,6 +22,7 @@ import java.io.File;
 import java.io.InputStream;
 import java.io.StringWriter;
 import java.net.URL;
+import java.text.MessageFormat;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -50,6 +51,7 @@ public class ValidateActionListener implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         apeTabbedPane.setValidationErrorText(labels.getString("validationBegun"));
         dataPreparationToolGUI.disableAllBtnAndItems();
+        dataPreparationToolGUI.disableEditionTab();
         dataPreparationToolGUI.disableRadioButtons();
 
         File file = (File) dataPreparationToolGUI.getXmlEadList().getSelectedValue();
@@ -76,6 +78,7 @@ public class ValidateActionListener implements ActionListener {
                     dataPreparationToolGUI.setResultAreaText(labels.getString("validation.error.fileNotXml"));
                     dataPreparationToolGUI.enableSaveBtn();
                     dataPreparationToolGUI.enableRadioButtons();
+                    dataPreparationToolGUI.enableEditionTab();
                     return;
                 }
             }
@@ -112,6 +115,8 @@ public class ValidateActionListener implements ActionListener {
                     exceptions = DocumentValidation.xmlValidation(FileUtils.openInputStream(new File(fileInstance.getCurrentLocation())), schemaPath, xsdObject.isXsd11());
                 }
                 if (exceptions == null || exceptions.isEmpty()){
+                    if(fileInstance.getCurrentLocation() == null || fileInstance.getCurrentLocation().equals(""))
+                        fileInstance.setCurrentLocation(file.getAbsolutePath());
                     fileInstance.setValid(true);
                     fileInstance.setValidationErrors(labels.getString("validationSuccess"));
                     if(xsdObject.getFileType().equals(FileInstance.FileType.EAD)) {
@@ -128,15 +133,15 @@ public class ValidateActionListener implements ActionListener {
                         writer.append(labels.getString("dataquality.title"));
                         writer.append(" -----");
                         writer.append("\n");
-                        writer.append(labels.getString("dataquality.missing.unittitle"));
+                        writer.append(MessageFormat.format(labels.getString("dataquality.missing.unittitle"), "(unittitle)"));
                         writer.append(" ");
                         writer.append(Integer.toString(xmlQualityCheckerCall.getCounterUnittitle()));
                         writer.append("\n");
-                        writer.append(labels.getString("dataquality.missing.unitdate"));
+                        writer.append(MessageFormat.format(labels.getString("dataquality.missing.unitdate"), "(unitdate@normal)"));
                         writer.append(" ");
                         writer.append(Integer.toString(xmlQualityCheckerCall.getCounterUnitdate()));
                         writer.append("\n");
-                        writer.append(labels.getString("dataquality.missing.dao"));
+                        writer.append(MessageFormat.format(labels.getString("dataquality.missing.dao"), "(dao@xlink:role)"));
                         writer.append(" ");
                         writer.append(Integer.toString(xmlQualityCheckerCall.getCounterDao()));
                         fileInstance.setValidationErrors(fileInstance.getValidationErrors() + writer.toString());
@@ -170,6 +175,7 @@ public class ValidateActionListener implements ActionListener {
                 fileInstance.setLastOperation(FileInstance.Operation.VALIDATE);
                 dataPreparationToolGUI.getXmlEadList().repaint();
                 dataPreparationToolGUI.enableRadioButtons();
+                dataPreparationToolGUI.enableEditionTab();
             }
         }
 

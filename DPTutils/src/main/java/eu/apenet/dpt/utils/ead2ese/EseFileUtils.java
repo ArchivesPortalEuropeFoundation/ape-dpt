@@ -37,8 +37,8 @@ public final class EseFileUtils {
 		return new File(path);
 	}
 
-	public static String getRelativeESEFilePath(String countryISOname, int aiId, String eseFilePath) {
-		return getRelativeEADDirPath(countryISOname, aiId) + SEPARATOR + OUTPUT_DIR_NAME + SEPARATOR + OUTPUT_XML_DIR_NAME + SEPARATOR + eseFilePath;
+	public static String getRelativeEDMFilePath(String countryISOname, int aiId, String eseFilePath) {
+		return getRelativeEADDirPath(countryISOname, aiId) + SEPARATOR + OUTPUT_DIR_NAME + SEPARATOR + OUTPUT_EDM_XML_DIR_NAME + SEPARATOR + eseFilePath;
 	}
 
 	public static String getRelativeESEHTMLFilePath(String countryISOname, int aiId, String eseFilePath) {

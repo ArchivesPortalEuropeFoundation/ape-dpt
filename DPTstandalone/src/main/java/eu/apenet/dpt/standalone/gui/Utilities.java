@@ -3,7 +3,6 @@ package eu.apenet.dpt.standalone.gui;
 import eu.apenet.dpt.standalone.gui.xsdaddition.XsdObject;
 import eu.apenet.dpt.utils.service.DocumentValidation;
 import eu.apenet.dpt.utils.util.XsltChecker;
-import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.xml.sax.SAXParseException;
 
@@ -97,7 +96,7 @@ public final class Utilities {
         if(xsdObject.isSystem())
             return DocumentValidation.class.getResource("/" + xsdObject.getPath());
         else
-            return new URL("file://" + new File(CONFIG_DIR + xsdObject.getPath()).getAbsolutePath());
+            return new File(CONFIG_DIR + xsdObject.getPath()).toURI().toURL(); //to test on UNIX system
     }
 
     public static List<XsdObject> getXsdList() {

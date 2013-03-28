@@ -47,6 +47,7 @@ public class ConvertAndValidateActionListener extends ApexActionListener {
         labels = dataPreparationToolGUI.getLabels();
         continueLoop = true;
         dataPreparationToolGUI.disableAllBtnAndItems();
+        dataPreparationToolGUI.disableEditionTab();
         dataPreparationToolGUI.disableRadioButtons();
         dataPreparationToolGUI.disableAllBatchBtns();
         dataPreparationToolGUI.getAPEPanel().setFilename("");
@@ -84,6 +85,7 @@ public class ConvertAndValidateActionListener extends ApexActionListener {
                             fileInstance.setConversionErrors(labels.getString("conversion.error.fileNotXml"));
                             dataPreparationToolGUI.enableSaveBtn();
                             dataPreparationToolGUI.enableRadioButtons();
+                            dataPreparationToolGUI.enableEditionTab();
                         }
                     }
 
@@ -221,6 +223,7 @@ public class ConvertAndValidateActionListener extends ApexActionListener {
                     dataPreparationToolGUI.setResultAreaText(labels.getString("aborted"));
                 dataPreparationToolGUI.enableSaveBtn();
                 dataPreparationToolGUI.enableRadioButtons();
+                dataPreparationToolGUI.enableEditionTab();
             }
         }).start();
     }

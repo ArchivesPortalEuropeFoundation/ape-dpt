@@ -4,6 +4,7 @@ import eu.apenet.dpt.standalone.gui.xsdaddition.XsdInfoQueryComponent;
 import eu.apenet.dpt.standalone.gui.db.RetrieveFromDb;
 import eu.apenet.dpt.utils.util.XsdChecker;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
 import javax.swing.*;
@@ -41,21 +42,23 @@ public class XsdAdderActionListener implements ActionListener {
         if(xsdChooser.showOpenDialog(parent) == JFileChooser.APPROVE_OPTION){
             File file = xsdChooser.getSelectedFile();
             if(isXSD(file)){
-                //todo: Ask user to provide a readable name for this schema
                 XsdInfoQueryComponent xsdInfoQueryComponent = new XsdInfoQueryComponent(labels, file.getName());
 
                 int result = JOptionPane.showConfirmDialog(parent, xsdInfoQueryComponent, "title", JOptionPane.OK_CANCEL_OPTION);
                 if(result == JOptionPane.OK_OPTION) {
-                    LOG.info("Ok");
-                    if(saveXsd(file, xsdInfoQueryComponent.getName(), false, xsdInfoQueryComponent.getXsdVersion(), xsdInfoQueryComponent.getFileType())) {
-                        JRadioButton newButton = new JRadioButton(file.getName());
-                        newButton.addActionListener(new XsdSelectorListener(dataPreparationToolGUI));
-                        dataPreparationToolGUI.getGroupXsd().add(newButton);
-                        dataPreparationToolGUI.getAPEPanel().getApeTabbedPane().addToXsdPanel(newButton);
-                        dataPreparationToolGUI.getAPEPanel().getApeTabbedPane().addToXsdPanel(Box.createRigidArea(new Dimension(0, 10)));
-                        JOptionPane.showMessageDialog(parent, labels.getString("xsdSaved")+".", labels.getString("fileSaved"), JOptionPane.INFORMATION_MESSAGE, Utilities.icon);
-                    } else {
+                    if(StringUtils.isEmpty(xsdInfoQueryComponent.getName())) {
                         errorMessage();
+                    } else {
+                        if(saveXsd(file, xsdInfoQueryComponent.getName(), false, xsdInfoQueryComponent.getXsdVersion(), xsdInfoQueryComponent.getFileType())) {
+                            JRadioButton newButton = new JRadioButton(xsdInfoQueryComponent.getName());
+                            newButton.addActionListener(new XsdSelectorListener(dataPreparationToolGUI));
+                            dataPreparationToolGUI.getGroupXsd().add(newButton);
+                            dataPreparationToolGUI.getAPEPanel().getApeTabbedPane().addToXsdPanel(newButton);
+                            dataPreparationToolGUI.getAPEPanel().getApeTabbedPane().addToXsdPanel(Box.createRigidArea(new Dimension(0, 10)));
+                            JOptionPane.showMessageDialog(parent, labels.getString("xsdSaved")+".", labels.getString("fileSaved"), JOptionPane.INFORMATION_MESSAGE, Utilities.icon);
+                        } else {
+                            errorMessage();
+                        }
                     }
                 }
             } else {

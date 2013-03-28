@@ -30,7 +30,7 @@ public class DateNormalizationTest {
         DateNormalization dateNormalization = new DateNormalization();
         int errors = 0;
         for (String date : dateMap.keySet()){
-            String newdate = dateNormalization.normalizeDate(date);
+            String newdate = dateNormalization.normalizeDate(date, "");
             if(!dateMap.get(date).equals(newdate)){
                 errors++;
                 System.out.println("--> failed");

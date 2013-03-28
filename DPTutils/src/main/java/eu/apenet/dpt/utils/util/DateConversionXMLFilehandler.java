@@ -18,6 +18,9 @@ import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
+
+import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -29,6 +32,7 @@ import org.xml.sax.SAXException;
  * @author papp
  */
 public class DateConversionXMLFilehandler {
+    private static final Logger LOG = Logger.getLogger(DateConversionXMLFilehandler.class);
 
     public void saveDataToFile(Vector data, String xmlFile) {
         try {
@@ -70,7 +74,7 @@ public class DateConversionXMLFilehandler {
                 fop.flush();
                 fop.close();
             } catch (IOException e) {
-                e.printStackTrace();
+                LOG.error("We could not use the date conversion XML file, most likely it was not found, cause: " + e.getMessage());
             } finally {
                 try {
                     if (fop != null) {
@@ -102,12 +106,12 @@ public class DateConversionXMLFilehandler {
                 Vector row = new Vector();
                 if (node.getNodeType() == Node.ELEMENT_NODE) {
                     Element element = (Element) node;
-                    row.add(element.getElementsByTagName("valueread").item(0).getTextContent());
-                    row.add(element.getElementsByTagName("valueconverted").item(0).getTextContent());
+                    row.add(element.getElementsByTagName("valueread").item(0).getTextContent().trim());
+                    row.add(element.getElementsByTagName("valueconverted").item(0).getTextContent().trim());
                 }
+                if(!row.isEmpty() && !row.elementAt(0).equals("") && !row.elementAt(1).equals(""))
                 result.add(row);
             }
-            result.add(new Vector());
         } catch (SAXException ex) {
         } catch (IOException ex) {
         } catch (ParserConfigurationException ex) {
@@ -115,8 +119,13 @@ public class DateConversionXMLFilehandler {
         return result;
     }
     
-    public String findsEntry(String input){
-        Vector data = loadDataFromFile("xsl/system/dateconversion.xml");
+    public String findsEntry(String input, String baseURI){
+        String filePath = "/dateconversion.xml";
+        if(StringUtils.isBlank(baseURI))
+            filePath = "xsl/system" + filePath;
+        else
+            filePath = baseURI + filePath;
+        Vector data = loadDataFromFile(filePath);
         for (Object aData : data) {
             if (((Vector) aData).size() != 0)
                 if (input.equals(((Vector) aData).get(0)))
