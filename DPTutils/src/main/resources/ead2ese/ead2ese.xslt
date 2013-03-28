@@ -1025,12 +1025,56 @@ http://purl.org/dc/terms/ http://www.dublincore.org/schemas/xmls/qdc/dcterms.xsd
         </dc:publisher>
     </xsl:template>
     <xsl:template match='date'>
-        <xsl:variable name="dateContent">
-            <xsl:value-of select="node()"/>
-        </xsl:variable>
-        <dcterms:issued>
-            <xsl:value-of select="fn:replace(normalize-space($dateContent), '[\n\t\r]', '')"/>
-        </dcterms:issued>
+        <xsl:choose>
+            <xsl:when test='$useISODates="true"'>
+                <xsl:choose>
+                    <xsl:when test='./@era="ce" and ./@normal'> 
+                        <xsl:analyze-string select="./@normal" 
+                                            regex="(\d\d\d\d(-\d\d(-\d\d)?)?)(/(\d\d\d\d(-\d\d(-\d\d)?)?))?">
+                            <xsl:matching-substring>
+                                <xsl:variable name="startdate">
+                                    <xsl:value-of select="regex-group(1)"/>
+                                </xsl:variable>
+                                <xsl:variable name="enddate">
+                                    <xsl:value-of select="regex-group(5)"/>
+                                </xsl:variable>
+                                <dcterms:issued>
+                                    <xsl:if test="fn:string-length($startdate) > 0">
+                                        <xsl:value-of select="$startdate"/>
+                                    </xsl:if>
+                                    <xsl:if test="fn:string-length($startdate) > 0 and fn:string-length($enddate) > 0">
+                                        <xsl:text> - </xsl:text>
+                                    </xsl:if>
+                                    <xsl:if test="fn:string-length($enddate) > 0">
+                                        <xsl:value-of select="$enddate"/>
+                                    </xsl:if>	
+                                </dcterms:issued>
+                            </xsl:matching-substring>    
+                        </xsl:analyze-string>		
+                    </xsl:when>
+                    <xsl:otherwise>
+                        <xsl:if test='fn:string-length(normalize-space(.)) > 0'>
+                            <xsl:variable name="notNormalizedDate">NOT_NORMALIZED_DATE:
+                                <xsl:value-of select="normalize-space(.)"/>
+                            </xsl:variable>
+                            <xsl:message>
+                                <xsl:value-of select="$notNormalizedDate"/>
+                            </xsl:message>
+                            <dcterms:issued>
+                                <xsl:value-of select="$notNormalizedDate"/>
+                            </dcterms:issued>
+                        </xsl:if>	
+                    </xsl:otherwise>
+                </xsl:choose> 		
+            </xsl:when>
+            <xsl:otherwise>
+                <xsl:if test='fn:string-length(normalize-space(.)) > 0'>
+                    <dcterms:issued>
+                        <xsl:value-of select="normalize-space(.)"/>
+                    </dcterms:issued>
+                </xsl:if>	
+            </xsl:otherwise>
+        </xsl:choose>
     </xsl:template>
     <xsl:template match='titleproper'>
         <xsl:variable name="content">
