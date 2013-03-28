@@ -86,7 +86,7 @@ public class CreateHGListener implements ActionListener {
 
         for(Object selectedValue : list.getSelectedValues()){
             FileInstance currentFileInstance =  originalFileInstances.get(((File)selectedValue).getName());
-            ((ProfileListModel)listFilesForHG.getModel()).addFileInstance(currentFileInstance, (File)selectedValue);  //todo: Fuck things up!
+            ((ProfileListModel)listFilesForHG.getModel()).addFileInstance(currentFileInstance, (File)selectedValue);
         }
 
         listFilesForHG.setCellRenderer(new IconListCellRenderer(fileInstances));
