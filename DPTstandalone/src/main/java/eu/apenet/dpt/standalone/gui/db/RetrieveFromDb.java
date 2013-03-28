@@ -87,7 +87,7 @@ public class RetrieveFromDb {
     }
 
     public String retrieveDefaultXsd() {
-        return retrieve(DBUtil.OptionKeys.OPTION_DEFAULT_XSD.getName(), "apeEAD.xsd");
+        return retrieve(DBUtil.OptionKeys.OPTION_DEFAULT_XSD.getName(), "apeEAD");
     }
 
     public void saveDefaultXsd(String nameXsd) {

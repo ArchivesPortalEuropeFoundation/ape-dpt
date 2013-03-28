@@ -48,6 +48,7 @@ public class ConvertAndValidateActionListener extends ApexActionListener {
         continueLoop = true;
         dataPreparationToolGUI.disableAllBtnAndItems();
         dataPreparationToolGUI.disableRadioButtons();
+        dataPreparationToolGUI.disableAllBatchBtns();
         dataPreparationToolGUI.getAPEPanel().setFilename("");
         final Object[] objects = dataPreparationToolGUI.getXmlEadList().getSelectedValues();
         final ApexActionListener apexActionListener = this;
