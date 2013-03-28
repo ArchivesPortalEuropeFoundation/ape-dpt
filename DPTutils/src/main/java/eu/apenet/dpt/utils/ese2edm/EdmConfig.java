@@ -17,16 +17,35 @@ public class EdmConfig implements Serializable {
     private static final long serialVersionUID = -3232731426711003838L;
     private XMLTransformer transformerXML2XML;
     private XMLTransformer transformerXML2HTML;
+    private boolean transferToFileOutput;
+    private Properties properties;
 
-    public EdmConfig() {
+    public EdmConfig(boolean transferToFileOutput) {
+        this.transferToFileOutput = transferToFileOutput;
+        this.properties = new Properties();
     }
 
     public XMLTransformer getTransformerXML2XML() {
-        Properties properties = new Properties();
         if (transformerXML2XML == null) {
-            transformerXML2XML = new XMLTransformer("/ese2edm/ese2edm.xslt", properties);
-            // transformerXML2XML = new XMLTransformer("/ese2edm/ese2edm_try.xslt", properties);
+            if (transferToFileOutput) {
+                transformerXML2XML = new XMLTransformer("/ese2edm/ese2edm_2.xslt", properties);
+            } else {
+                transformerXML2XML = new XMLTransformer("/ese2edm/ese2edm_1.xslt", properties);
+            }
         }
         return transformerXML2XML;
+    }
+
+    public boolean isTransferToFileOutput() {
+        return transferToFileOutput;
+    }
+
+    public void setTransferToFileOutput(boolean transferToFileOutput) {
+        this.transferToFileOutput = transferToFileOutput;
+        if (transferToFileOutput) {
+            transformerXML2XML = new XMLTransformer("/ese2edm/ese2edm_2.xslt", properties);
+        } else {
+            transformerXML2XML = new XMLTransformer("/ese2edm/ese2edm_1.xslt", properties);
+        }
     }
 }
