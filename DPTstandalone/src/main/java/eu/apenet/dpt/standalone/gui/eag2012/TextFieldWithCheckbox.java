@@ -13,15 +13,15 @@ public class TextFieldWithCheckbox {
     private JTextField textField;
     private JComboBox isilOrNotCombo;
 
-    private static final String[] ISIL_NOT_ISIL = {"ISIL", "notISIL"};
+    private static final String[] YES_OR_NO = {"yes", "no"};
 
     public TextFieldWithCheckbox(String text, String isilOrNot) {
         textField = new JTextField(text);
-        isilOrNotCombo = new JComboBox(ISIL_NOT_ISIL);
-        if(Arrays.asList(ISIL_NOT_ISIL).contains(isilOrNot))
+        isilOrNotCombo = new JComboBox(YES_OR_NO);
+        if(Arrays.asList(YES_OR_NO).contains(isilOrNot))
             isilOrNotCombo.setSelectedItem(isilOrNot);
         else
-            isilOrNotCombo.setSelectedItem("notISIL");
+            isilOrNotCombo.setSelectedItem("no");
     }
 
     public JTextField getTextField() {

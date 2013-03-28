@@ -69,14 +69,14 @@ public class EagIdentityPanel extends EagPanels {
         rowNb = 1;
         builder.addLabel(labels.getString("eag2012.countryCodeLabel") + "*",    cc.xy (1, rowNb));
         builder.addLabel(eag.getArchguide().getIdentity().getRepositorid().getCountrycode(), cc.xy(3, rowNb));
-        setNextRow();
-        builder.addLabel(labels.getString("eag2012.identifierInstitutionLabel") + "*",    cc.xy (1, rowNb));
-        builder.addLabel(eag.getControl().getRecordId().getValue(), cc.xy(3, rowNb));
+
+        builder.addLabel(labels.getString("eag2012.idUsedInApeLabel"),      cc.xy (5, rowNb));
+        builder.addLabel(eag.getControl().getRecordId().getValue(), cc.xy(7, rowNb));
         setNextRow();
 
         for(OtherRecordId otherRecordId : eag.getControl().getOtherRecordId()) {
-            builder.addLabel(labels.getString("eag2012.idUsedInApeLabel"),      cc.xy (5, rowNb));
-            builder.addLabel(otherRecordId.getValue(), cc.xy(7, rowNb));
+            builder.addLabel(labels.getString("eag2012.identifierInstitutionLabel"),    cc.xy (1, rowNb));
+            builder.addLabel(otherRecordId.getValue(), cc.xy(3, rowNb));
             setNextRow();
         }
 

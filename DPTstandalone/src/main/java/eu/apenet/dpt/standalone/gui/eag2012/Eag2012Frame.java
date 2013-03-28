@@ -105,19 +105,19 @@ public class Eag2012Frame extends JFrame {
         tabbedPane = new JTabbedPane();
         tabbedPane.putClientProperty("jgoodies.noContentBorder", Boolean.TRUE);
 
-        tabbedPane.add("eag2012.yourInstitutionTab",  buildInstitutionPanel(eag, isNew));
+        tabbedPane.add(labels.getString("eag2012.yourInstitutionTab"),  buildInstitutionPanel(eag, isNew));
 
-        tabbedPane.add("eag2012.identityTab",  null);
+        tabbedPane.add(labels.getString("eag2012.identityTab"),  null);
         tabbedPane.setEnabledAt(1, false);
-        tabbedPane.add("eag2012.contactTab", null);
+        tabbedPane.add(labels.getString("eag2012.contactTab"), null);
         tabbedPane.setEnabledAt(2, false);
-        tabbedPane.add("eag2012.accessAndServicesTab", null);
+        tabbedPane.add(labels.getString("eag2012.accessAndServicesTab"), null);
         tabbedPane.setEnabledAt(3, false);
-        tabbedPane.add("eag2012.descriptionTab", null);
+        tabbedPane.add(labels.getString("eag2012.descriptionTab"), null);
         tabbedPane.setEnabledAt(4, false);
-        tabbedPane.add("eag2012.controlTab", null);
+        tabbedPane.add(labels.getString("eag2012.controlTab"), null);
         tabbedPane.setEnabledAt(5, false);
-        tabbedPane.add("eag2012.relationsTab", null);
+        tabbedPane.add(labels.getString("eag2012.relationsTab"), null);
         tabbedPane.setEnabledAt(6, false);
     }
 

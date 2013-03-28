@@ -114,6 +114,7 @@ public class EagInstitutionPanel extends EagPanels {
             else
                 builder.addLabel(labels.getString("eag2012.identifierInstitutionLabel"), cc.xy(1, rowNb));
             builder.add(textFieldWithCheckbox.getTextField(),               cc.xy (3, rowNb));
+            builder.addLabel(labels.getString("eag2012.isThisISILLabel"),               cc.xy (5, rowNb));
             textFieldWithCheckbox.getTextField().addKeyListener(new CheckKeyListener(textFieldWithCheckbox));
             builder.add(textFieldWithCheckbox.getIsilOrNotCombo(),               cc.xy (7, rowNb));
             textFieldWithCheckbox.getIsilOrNotCombo().addActionListener(new ComboboxActionListener(textFieldWithCheckbox));
@@ -809,15 +810,15 @@ public class EagInstitutionPanel extends EagPanels {
         }
 
         public void actionPerformed(ActionEvent actionEvent) {
-            if(textFieldWithCheckbox.getisilOrNotComboValue().equals("ISIL")) {
+            if(textFieldWithCheckbox.getisilOrNotComboValue().equals("yes")) {
                 int counter = 0;
                 for(TextFieldWithCheckbox textFieldWithCheckbox1 : otherRecordIdTfs) {
-                    if(textFieldWithCheckbox1.getisilOrNotComboValue().equals("ISIL")) {
+                    if(textFieldWithCheckbox1.getisilOrNotComboValue().equals("yes")) {
                         counter++;
                     }
                 }
                 if(counter > 1)
-                    textFieldWithCheckbox.getIsilOrNotCombo().setSelectedItem("notISIL");
+                    textFieldWithCheckbox.getIsilOrNotCombo().setSelectedItem("no");
             }
             idUsedInApeTf.setText(TextChanger.getNewText(otherRecordIdTfs, countryCodeTf.getText()));
         }
