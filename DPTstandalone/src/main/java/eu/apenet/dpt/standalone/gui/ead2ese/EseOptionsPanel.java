@@ -92,7 +92,7 @@ public class EseOptionsPanel extends JPanel {
     public EseOptionsPanel(ResourceBundle labels, DataPreparationToolGUI dataPreparationToolGUI, JFrame parent, APETabbedPane apeTabbedPane) {
         super(new BorderLayout());
         this.labels = labels;
-        this.retrieveFromDb = retrieveFromDb = new RetrieveFromDb();
+        this.retrieveFromDb = new RetrieveFromDb();
         this.parent = parent;
         this.dataPreparationToolGUI = dataPreparationToolGUI;
         this.selectedIndices = setIndices(dataPreparationToolGUI.getXmlEadList().getSelectedValues());
@@ -102,6 +102,7 @@ public class EseOptionsPanel extends JPanel {
     }
 
     public void createOptionPanel() {
+        labels = dataPreparationToolGUI.getLabels();
         JPanel creativeCommonsPanel = new CreativeCommonsPanel();
         JPanel europeanaRightsPanel = new EuropeanaRightsPanel();
         JPanel emptyPanel = new JPanel();
@@ -205,7 +206,7 @@ public class EseOptionsPanel extends JPanel {
         formPanel.add(panel);
 
         panel = new JPanel(new GridLayout(1, 3));
-        panel.add(new Label(labels.getString("ese.hierarchyPrefix") + ":" + "*"));
+        panel.add(new Label(labels.getString("ese.hierarchyPrefix") + ":"));
         contextTextArea = new JTextArea(labels.getString("ese.hierarchyPrefixDefault") + ":");
         contextTextArea.setLineWrap(true);
         contextTextArea.setWrapStyleWord(true);

@@ -13,6 +13,9 @@ import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.text.MessageFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.ResourceBundle;
 import java.util.Vector;
 import java.util.regex.Matcher;
@@ -20,6 +23,7 @@ import java.util.regex.Pattern;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -40,6 +44,7 @@ public class DateConversionRulesFrame extends JFrame {
     private DateConversionXMLFilehandler xmlFilehandler;
     private final String FILENAME = Utilities.SYSTEM_DIR + "dateconversion.xml";
     private JTable ruleTable;
+    private JLabel saveMessage;
     private DefaultTableModel dm;
     private DefaultTableModel oldModel;
 
@@ -89,11 +94,12 @@ public class DateConversionRulesFrame extends JFrame {
                     }
                 }
                 xmlFilehandler.saveDataToFile(data, FILENAME);
+                saveMessage.setText(MessageFormat.format(labels.getString("dateConversion.saveMsg"), new SimpleDateFormat("HH:mm:ss").format(Calendar.getInstance().getTime())));
             }
         });
 
-        JButton cancelButton = new JButton(labels.getString("cancelBtn"));
-        cancelButton.addActionListener(new ActionListener() {
+        JButton closeButton = new JButton(labels.getString("quit"));
+        closeButton.addActionListener(new ActionListener() {
             // boolean cancel = true;
 
             public void actionPerformed(ActionEvent e) {
@@ -137,17 +143,23 @@ public class DateConversionRulesFrame extends JFrame {
                     xmlFilehandler.saveDataToFile(data, fileName);
                     //additionally save data to standard file
                     xmlFilehandler.saveDataToFile(data, FILENAME);
+                    saveMessage.setText(MessageFormat.format(labels.getString("dateConversion.saveMsg"), new SimpleDateFormat("HH:mm:ss").format(Calendar.getInstance().getTime())));
                 }
             }
         });
 
+        JPanel contentPanel = new JPanel(new BorderLayout());
+        contentPanel.add(new JScrollPane(ruleTable));
+        saveMessage = new JLabel();
+        contentPanel.add(saveMessage, BorderLayout.SOUTH);
+        
         JPanel buttonPanel = new JPanel(new GridLayout(1, 3));
         buttonPanel.add(saveButton);
-        buttonPanel.add(cancelButton);
+        buttonPanel.add(closeButton);
         buttonPanel.add(downloadButton);
 
         JPanel pane = new JPanel(new BorderLayout());
-        pane.add(new JScrollPane(ruleTable), BorderLayout.PAGE_START);
+        pane.add(contentPanel, BorderLayout.PAGE_START);
         pane.add(buttonPanel, BorderLayout.PAGE_END);
         add(pane);
     }

@@ -42,7 +42,7 @@
         <!-- Provider aggregation -->
         <ore:Aggregation>
             <xsl:attribute name="rdf:about">
-                <xsl:value-of select="dc:identifier"/>
+                <xsl:value-of select="europeana:isShownAt"/>
             </xsl:attribute>
             <edm:aggregatedCHO>
                 <xsl:attribute name="rdf:resource">
@@ -122,7 +122,7 @@
         <edm:WebResource>
             <xsl:attribute name="rdf:about">
                 <xsl:choose>
-                    <xsl:when test='/metadata/record[1]'>
+                    <xsl:when test='position() = 1'>
                         <xsl:value-of select="concat($prefix_url, '/', $repository_code, '/', $xml_type_name, '/', $eadid )"/>
                     </xsl:when>
                     <xsl:otherwise>
@@ -147,16 +147,18 @@
         </edm:WebResource>
     
         <!-- Simple Knowledge Organization System -> Concept -->
-        <skos:Concept>
-            <xsl:attribute name="rdf:about">
-                <xsl:value-of select="dc:identifier"/>
-            </xsl:attribute>
-            <xsl:for-each select="dcterms:alternative">
-                <skos:prefLabel>
-                    <xsl:value-of select="."/>
-                </skos:prefLabel>
-            </xsl:for-each>
-        </skos:Concept>
+        <xsl:if test='node()/dcterms:alternative'>
+            <skos:Concept>
+                <xsl:attribute name="rdf:about">
+                    <xsl:value-of select="dc:identifier"/>
+                </xsl:attribute>
+                <xsl:for-each select="dcterms:alternative">
+                    <skos:prefLabel>
+                        <xsl:value-of select="."/>
+                    </skos:prefLabel>
+                </xsl:for-each>
+            </skos:Concept>
+        </xsl:if>
             
     </xsl:template>
         
