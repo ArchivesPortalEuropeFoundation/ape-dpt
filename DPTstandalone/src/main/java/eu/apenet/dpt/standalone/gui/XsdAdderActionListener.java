@@ -1,6 +1,6 @@
 package eu.apenet.dpt.standalone.gui;
 
-import eu.apenet.dpt.standalone.gui.xsdAddition.XsdInfoQueryComponent;
+import eu.apenet.dpt.standalone.gui.xsdaddition.XsdInfoQueryComponent;
 import eu.apenet.dpt.standalone.gui.db.RetrieveFromDb;
 import eu.apenet.dpt.utils.util.XsdChecker;
 import org.apache.commons.io.FileUtils;

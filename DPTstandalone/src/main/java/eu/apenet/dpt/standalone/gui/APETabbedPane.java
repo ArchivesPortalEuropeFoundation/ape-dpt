@@ -10,7 +10,7 @@ import eu.apenet.dpt.standalone.gui.edition.XMLTreeTableRenderer;
 import eu.apenet.dpt.standalone.gui.ese2edm.ConvertEdmActionListener;
 import eu.apenet.dpt.standalone.gui.validation.DownloadReportActionListener;
 import eu.apenet.dpt.standalone.gui.validation.ValidateActionListener;
-import eu.apenet.dpt.standalone.gui.xsdAddition.XsdObject;
+import eu.apenet.dpt.standalone.gui.xsdaddition.XsdObject;
 import eu.apenet.dpt.utils.util.DOMUtil;
 import eu.apenet.dpt.utils.util.Xsd_enum;
 import java.awt.*;

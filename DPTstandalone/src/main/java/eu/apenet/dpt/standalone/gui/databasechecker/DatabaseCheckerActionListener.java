@@ -1,4 +1,4 @@
-package eu.apenet.dpt.standalone.gui.databaseChecker;
+package eu.apenet.dpt.standalone.gui.databasechecker;
 
 import eu.apenet.dpt.standalone.gui.db.RetrieveFromDb;
 
