@@ -46,8 +46,6 @@ public class ConvertEdmActionListener implements ActionListener {
     }
 
     public void actionPerformed(ActionEvent e) {
-        dataPreparationToolGUI.disableAllBtnAndItems();
-
         Map<String, FileInstance> fileInstances = dataPreparationToolGUI.getFileInstances();
         JList list = dataPreparationToolGUI.getEseList();
         dataPreparationToolGUI.disableAllBtnAndItems();
@@ -107,8 +105,9 @@ public class ConvertEdmActionListener implements ActionListener {
                 File outputFile = new File(xmlOutputFilename);
                 EdmConfig config = new EdmConfig(false);
 //                config.getTransformerXML2XML().transform(new File(loc), outputFile);
+//                File outputFile_temp = new File(Utilities.TEMP_DIR + ".temp_"+selectedIndex.getName());
                 config.getTransformerXML2XML().transform(new File(loc), intermediateDoc);
-                System.out.println("intermediateDoc root: " + intermediateDoc.getDocumentElement().getNodeName());
+//                System.out.println("intermediateDoc root: " + intermediateDoc.getDocumentElement().getNodeName());
                 config.setTransferToFileOutput(true);
                 config.getTransformerXML2XML().transform(intermediateDoc, outputFile);
             } catch (Exception e) {

@@ -221,26 +221,6 @@ public class DataPreparationToolGUI extends JFrame {
         eseList.setDropTarget(new DropTarget(eseList, new ListDropTargetListener(eseList, from)));
         eseListModel.setList(eseList);
 
-//        eseList.addFocusListener(new FocusListener() {
-//            public void focusGained(FocusEvent focusEvent) {
-//                apePanel.getApeTabbedPane().getConvertBtn().setEnabled(false);
-//                apePanel.getApeTabbedPane().getValidateBtn().setEnabled(false);
-//                apePanel.getApeTabbedPane().getConvertEseBtn().setEnabled(false);
-//                if(eseList.getModel().getSize() != 0){
-//                    xmlEadList.getSelectionModel().clearSelection();
-//                    apePanel.getApeTabbedPane().enableConversionEdmBtn();
-//                }
-//            }
-//
-//            public void focusLost(FocusEvent focusEvent) {
-//                if(eseList.getModel().getSize() != 0){
-//                    eseList.getSelectionModel().clearSelection();
-//                }
-//              apePanel.getApeTabbedPane().disableConversionEdmBtn();
-//          }
-//        });
-        
-        
         JMenuBar menuBar = new JMenuBar();
         menuBar.add(fileMenu);
         menuBar.add(optionMenu);
@@ -655,35 +635,7 @@ public class DataPreparationToolGUI extends JFrame {
         xsdItem.addActionListener(new XsdAdderActionListener(this, labels, retrieveFromDb));
         if(Utilities.isDev)
             databaseItem.addActionListener(new DatabaseCheckerActionListener(retrieveFromDb, getContentPane()));
-        xmlEadList.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                if (e.getButton() == MouseEvent.BUTTON3) {
-                    if (xmlEadList.getSelectedValues().length == 1) {
-                        final int indexToErase = xmlEadList.locationToIndex(e.getPoint());
-                        xmlEadList.setSelectedIndex(indexToErase);
-                    }
-                    JPopupMenu popup = new JPopupMenu();
-                    deleteFileItem.addActionListener(new ActionListener() {
-                        public void actionPerformed(ActionEvent e) {
-                            try {
-                                if (xmlEadList.getSelectedValues().length > 1) {
-                                    xmlEadListModel.removeFiles(xmlEadList.getSelectedValues());
-                                } else {
-                                    xmlEadListModel.removeFile((File) xmlEadList.getSelectedValue());
-                                }
-                            } catch (Exception ex) {
-                                createErrorOrWarningPanel(ex, true, labels.getString("errorRemovingFileFromList"), getContentPane());
-                            } finally {
-                                deleteFileItem.removeActionListener(this);
-                            }
-                        }
-                    });
-                    popup.add(deleteFileItem);
-                    popup.show(e.getComponent(), e.getX(), e.getY());
-                }
-            }
-        });
+        xmlEadList.addMouseListener(new ListMouseAdapter(xmlEadList, xmlEadListModel, deleteFileItem, this));
         xmlEadList.addListSelectionListener(new ListSelectionListener() {
             public void valueChanged(ListSelectionEvent e) {
                 if(!e.getValueIsAdjusting()) {
@@ -715,7 +667,47 @@ public class DataPreparationToolGUI extends JFrame {
                 }
             }
         });
-
+        eseList.addMouseListener(new ListMouseAdapter(eseList, eseListModel, deleteFileItem, this));
+        eseList.addListSelectionListener(new ListSelectionListener() {
+            public void valueChanged(ListSelectionEvent e) {
+                if(!e.getValueIsAdjusting()) {
+                    if (eseList.getSelectedValues() != null && eseList.getSelectedValues().length != 0) {
+                        if (eseList.getSelectedValues().length > 1) {
+                            convertAndValidateBtn.setEnabled(false);
+                            validateSelectionBtn.setEnabled(false);
+                            convertEseSelectionBtn.setEnabled(true);
+                            disableAllBtnAndItems();
+                            changeInfoInGUI("");
+                        } else {
+                            apePanel.getApeTabbedPane().disableConversionBtn();
+                            apePanel.getApeTabbedPane().disableValidationBtn();
+                            apePanel.getApeTabbedPane().disableConversionEseBtn();
+                            apePanel.getApeTabbedPane().enableConversionEdmBtn();
+                            convertAndValidateBtn.setEnabled(false);
+                            validateSelectionBtn.setEnabled(false);
+                            convertEseSelectionBtn.setEnabled(false);
+                            changeInfoInGUI(((File) eseList.getSelectedValue()).getName());
+                            if (apePanel.getApeTabbedPane().getSelectedIndex() == APETabbedPane.TAB_EDITION)
+                                apePanel.getApeTabbedPane().createEditionTree(((File) eseList.getSelectedValue()));
+                            apePanel.getApeTabbedPane().changeBackgroundColor(APETabbedPane.TAB_CONVERSION, Utilities.TAB_COLOR);
+                            apePanel.getApeTabbedPane().changeBackgroundColor(APETabbedPane.TAB_VALIDATION, Utilities.TAB_COLOR);
+                        }
+                        checkHoldingsGuideButton();
+                    } else {
+                        apePanel.getApeTabbedPane().disableConversionBtn();
+                        apePanel.getApeTabbedPane().disableValidationBtn();
+                        apePanel.getApeTabbedPane().disableConversionEseBtn();
+                        apePanel.getApeTabbedPane().disableConversionEdmBtn();
+                        convertAndValidateBtn.setEnabled(false);
+                        validateSelectionBtn.setEnabled(false);
+                        convertEseSelectionBtn.setEnabled(false);
+                        createHGBtn.setEnabled(false);
+                        changeInfoInGUI("");
+                    }
+                }
+            }
+        });
+        
         summaryWindowItem.addActionListener(new TabItemActionListener(apePanel, APETabbedPane.TAB_SUMMARY));
         validationWindowItem.addActionListener(new TabItemActionListener(apePanel, APETabbedPane.TAB_VALIDATION));
         conversionWindowItem.addActionListener(new TabItemActionListener(apePanel, APETabbedPane.TAB_CONVERSION));
@@ -729,7 +721,7 @@ public class DataPreparationToolGUI extends JFrame {
         });
     }
 
-    private void checkHoldingsGuideButton() {
+    protected void checkHoldingsGuideButton() {
         boolean first = true;
         for (int i = 0; i < xmlEadList.getSelectedValues().length; i++) {
             FileInstance fileInstance = fileInstances.get(((File) xmlEadList.getSelectedValues()[i]).getName());
@@ -769,6 +761,24 @@ public class DataPreparationToolGUI extends JFrame {
         eseListPanel.add(new Label(labels.getString("eseFiles")), BorderLayout.NORTH);
         eseList.setCellRenderer(new IconListCellRenderer(fileInstances));
         eseList.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
+//        eseList.addFocusListener(new FocusListener() {
+//            public void focusGained(FocusEvent focusEvent) {
+//                apePanel.getApeTabbedPane().getConvertBtn().setEnabled(false);
+//                apePanel.getApeTabbedPane().getValidateBtn().setEnabled(false);
+//                apePanel.getApeTabbedPane().getConvertEseBtn().setEnabled(false);
+//                if(eseList.getModel().getSize() != 0){
+//                    xmlEadList.getSelectionModel().clearSelection();
+//                    apePanel.getApeTabbedPane().enableConversionEdmBtn();
+//                }
+//            }
+//
+//            public void focusLost(FocusEvent focusEvent) {
+//                if(eseList.getModel().getSize() != 0){
+//                    eseList.getSelectionModel().clearSelection();
+//                }
+//              apePanel.getApeTabbedPane().disableConversionEdmBtn();
+//          }
+//        });
         eseListPanel.add(new JScrollPane(eseList, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER), BorderLayout.CENTER);
         eseListPanel.setEnabled(false);
         fileLists.add(xmlEadListPanel);
@@ -784,7 +794,6 @@ public class DataPreparationToolGUI extends JFrame {
         if(eseListModel.existsFile(file))
             eseListModel.removeFile(file);
         eseListModel.addFile(file);
-        enableEdmConversionBtn();
     }
 
     private JPanel createSouthWest() {
@@ -1013,7 +1022,7 @@ public class DataPreparationToolGUI extends JFrame {
         return retrieveFromDb.retrieveCurrentLoadingChecks().equals("YES");
     }
 
-    private void changeInfoInGUI(String text) {
+    protected void changeInfoInGUI(String text) {
         APETabbedPane apeTabbedPane = apePanel.getApeTabbedPane();
         resultArea.setText("");
         apePanel.setFilename(text);
@@ -1281,4 +1290,6 @@ public class DataPreparationToolGUI extends JFrame {
             changeAllTextLg();
         }
     }
+    
+    
 }
