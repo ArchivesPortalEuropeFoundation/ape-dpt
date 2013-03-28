@@ -48,6 +48,12 @@ public class ProfileListModel extends AbstractListModel {
         fireIntervalAdded(this, 1, 1);
     }
 
+    public void addFileInstance(FileInstance fileInstanceToAdd, File fileToAdd) {
+        fileInstances.put(fileInstanceToAdd.getName(), fileInstanceToAdd);
+        listFiles.add(fileToAdd);
+        fireIntervalAdded(this, 1, 1);
+    }
+
     public void addFile(File file, XsdObject xsdObject, FileInstance.FileType fileType){
         RetrieveFromDb retrieveFromDb = new RetrieveFromDb();
         FileInstance fileInstance = new FileInstance(file, retrieveFromDb.retrieveDefaultXsl(), retrieveFromDb.retrieveDefaultXsd());

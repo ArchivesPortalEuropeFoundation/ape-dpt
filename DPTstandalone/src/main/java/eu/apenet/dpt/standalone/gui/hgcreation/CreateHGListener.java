@@ -17,10 +17,8 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.io.*;
-import java.util.LinkedList;
+import java.util.*;
 import java.util.List;
-import java.util.Map;
-import java.util.ResourceBundle;
 
 /**
  * User: Yoann Moranville
@@ -37,17 +35,19 @@ public class CreateHGListener implements ActionListener {
     private JTree holdingsGuideTree;
     private JList listFilesForHG;
     private Map<String, FileInstance> fileInstances;
+    private Map<String, FileInstance> originalFileInstances;
     private JList list;
     private DataPreparationToolGUI dataPreparationToolGUI;
     private JButton buttonGoDown;
     private JButton buttonGoUp;
     private JFrame createHGFrame;
 
-    public CreateHGListener(RetrieveFromDb retrieveFromDb, ResourceBundle labels, Component parent, Map<String, FileInstance> fileInstances, JList list, DataPreparationToolGUI dataPreparationToolGUI) {
+    public CreateHGListener(RetrieveFromDb retrieveFromDb, ResourceBundle labels, Component parent, Map<String, FileInstance> originalFileInstances, JList list, DataPreparationToolGUI dataPreparationToolGUI) {
         this.retrieveFromDb = retrieveFromDb;
         this.labels = labels;
         this.parent = parent;
-        this.fileInstances = fileInstances;
+        this.fileInstances = new HashMap<String, FileInstance>();
+        this.originalFileInstances = originalFileInstances;
         this.list = list;
         this.dataPreparationToolGUI = dataPreparationToolGUI;
         holdingsGuideTree = new JTree();
@@ -85,7 +85,8 @@ public class CreateHGListener implements ActionListener {
         paneListFilesHG.setPreferredSize(new Dimension(parent.getWidth()/4, parent.getHeight())); //getContentPane
 
         for(Object selectedValue : list.getSelectedValues()){
-            ((ProfileListModel)listFilesForHG.getModel()).addFile((File)selectedValue);
+            FileInstance currentFileInstance =  originalFileInstances.get(((File)selectedValue).getName());
+            ((ProfileListModel)listFilesForHG.getModel()).addFileInstance(currentFileInstance, (File)selectedValue);  //todo: Fuck things up!
         }
 
         listFilesForHG.setCellRenderer(new IconListCellRenderer(fileInstances));
@@ -206,10 +207,10 @@ public class CreateHGListener implements ActionListener {
                         if(model.existsFile(hgFile))
                             model.removeFile(hgFile);
                         model.addFile(hgFile);
-                        fileInstances.get(hgFile.getName()).setCurrentLocation(hgFile.getPath());
-                        fileInstances.get(hgFile.getName()).setLastOperation(FileInstance.Operation.CONVERT);
-                        fileInstances.get(hgFile.getName()).setConverted();
-                        fileInstances.get(hgFile.getName()).setFileType(FileInstance.FileType.EAD);
+                        originalFileInstances.get(hgFile.getName()).setCurrentLocation(hgFile.getPath());
+                        originalFileInstances.get(hgFile.getName()).setLastOperation(FileInstance.Operation.CONVERT);
+                        originalFileInstances.get(hgFile.getName()).setConverted();
+                        originalFileInstances.get(hgFile.getName()).setFileType(FileInstance.FileType.EAD);
 //                        list.clearSelection();
 
                         summaryWorking.stop();
