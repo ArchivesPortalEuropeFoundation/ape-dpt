@@ -77,7 +77,6 @@
                 <xsl:attribute name="rdf:about">
                     <xsl:value-of select="$levelId"/>
                 </xsl:attribute>
-                <remainingLine><xsl:value-of select="$remainingLine"/><xsl:text>|</xsl:text></remainingLine>
                 <dc:title><xsl:value-of select="$levelTitle"/></dc:title>
                 <xsl:choose>
                     <xsl:when test='$remainingLine != ""'>
@@ -90,11 +89,11 @@
                     </xsl:otherwise>
                 </xsl:choose>
             </skos:Concept>
-<!--            <xsl:if test='$remainingLine != ""'>
+            <xsl:if test='$remainingLine != ""'>
                 <xsl:call-template name="generateSkos">
                     <xsl:with-param name="inputLine" select="$remainingLine"/>
                 </xsl:call-template>
-            </xsl:if>-->
+            </xsl:if>
         </xsl:template>
 		
         <!-- this template generates a edm:WebResource entry -->
@@ -336,6 +335,12 @@
                     <edm:dataProvider>
                         <xsl:value-of select="."/>
                     </edm:dataProvider>
+                </xsl:for-each>
+                
+                <xsl:for-each select="europeana:object">
+                    <edm:isShownAt>
+                        <xsl:value-of select="."/>
+                    </edm:isShownAt>
                 </xsl:for-each>
                 
                 <xsl:for-each select="europeana:provider">

@@ -26,8 +26,52 @@ import java.util.ArrayList;
  * Date: 16 dec. 2009
  */
 public class DocumentValidation {
-    private static final Logger LOG = Logger.getLogger(DocumentValidation.class);
+ 
+	private static final Logger LOG = Logger.getLogger(DocumentValidation.class);
 
+	   public static List<SAXParseException> xmlValidation(InputStream in, Xsd_enum schemaToUse) throws SAXException {
+	        ErrorHandler  errorHandler = new ErrorHandler();
+	        try {
+	            List<URL> schemaURLs = new ArrayList<URL>();
+	            boolean isXsd11 = false;
+	            if(schemaToUse.equals(Xsd_enum.XSD_APE_SCHEMA)){
+	                System.setProperty("javax.xml.validation.SchemaFactory:http://www.w3.org/XML/XMLSchema/v1.1", "org.apache.xerces.jaxp.validation.XMLSchema11Factory");
+	                isXsd11 = true;
+	            }
+	            schemaURLs.add(DocumentValidation.class.getResource("/" + schemaToUse.getPath()));
+	            schemaURLs.add(DocumentValidation.class.getResource("/xlink.xsd"));
+	            Schema schema = getSchema(schemaURLs, isXsd11);
+
+	            XMLReader saxParser = XMLReaderFactory.createXMLReader();
+
+	            saxParser.setEntityResolver(new DiscardDtdEntityResolver());
+	            ValidatorHandler vHandler = schema.newValidatorHandler();
+	            vHandler.setErrorHandler(errorHandler);
+	            saxParser.setContentHandler(vHandler);
+	            saxParser.parse(new InputSource(in));
+
+	            if (!errorHandler.exceptions.isEmpty()) {
+	                return errorHandler.exceptions;
+	            }
+	            return null;
+	        } catch (SAXException e) {
+	            LOG.error("Problem validating file " + e);
+	            throw new SAXException(e);
+	        } catch (IOException e) {
+	            LOG.error("Problem reading file while validating " + e);
+	            throw new RuntimeException(e);
+	        }
+	    }
+
+	    public static List<SAXParseException> xmlValidation(File file, Xsd_enum schemaToUse) throws SAXException, IOException {
+	        return xmlValidation(FileUtils.openInputStream(file), schemaToUse);
+	    }
+
+	    public static List<SAXParseException> xmlValidation(String filePath, Xsd_enum schemaToUse) throws SAXException, IOException {
+	        return xmlValidation(new File(filePath), schemaToUse);
+	    }
+
+	
     /* @param in The actual InputStream of the XML file
      * @param isApeFormat Is true if the XML data has to be validated against our schema, false if it just has to be validated against EAD 2002.
      * @param schemaToUse Is the schema contained in an enum.
