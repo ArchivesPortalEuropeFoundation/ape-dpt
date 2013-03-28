@@ -940,7 +940,7 @@
         <xs:complexType>
             <xs:sequence>
                 <xs:element ref="num"/>
-                <xs:element ref="descriptiveNote"/>
+                <xs:element ref="descriptiveNote" minOccurs="0"/>
             </xs:sequence>
         </xs:complexType>
     </xs:element>
