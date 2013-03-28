@@ -226,6 +226,9 @@ public class EagContactPanel extends EagPanels {
             JTextField telephoneTf = new JTextField();
             telephoneTfs.add(telephoneTf);
             builder.add(telephoneTf, cc.xy (3, rowNb));
+            JButton addTelephoneBtn = new ButtonEag(labels.getString("eag2012.addTelephoneNumbers"));
+            addTelephoneBtn.addActionListener(new AddTelephoneAction(eag, tabbedPane, model));
+            builder.add(addTelephoneBtn, cc.xy(5, rowNb));
             setNextRow();
         }
 
@@ -247,6 +250,9 @@ public class EagContactPanel extends EagPanels {
             JTextField faxTf = new JTextField();
             faxTfs.add(faxTf);
             builder.add(faxTf, cc.xy (3, rowNb));
+            JButton addFaxBtn = new ButtonEag(labels.getString("eag2012.addFaxNumbers"));
+            addFaxBtn.addActionListener(new AddFaxAction(eag, tabbedPane, model));
+            builder.add(addFaxBtn, cc.xy(5, rowNb));
             setNextRow();
         }
 

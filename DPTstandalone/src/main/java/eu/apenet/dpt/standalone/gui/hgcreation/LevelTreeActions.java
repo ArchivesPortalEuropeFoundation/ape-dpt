@@ -123,59 +123,62 @@ public class LevelTreeActions {
         return archdesc;
     }
 
-    private Element createTree(Document doc, TreeModel model, Object node, HashMap<String, String> paramMap) {
+    private Node createTree(Document doc, TreeModel model, Object node, HashMap<String, String> paramMap) {
         CLevelTreeObject obj = (CLevelTreeObject)((DefaultMutableTreeNode)node).getUserObject();
-        Element el = doc.createElement("c");
-        el.setAttribute("level", "series");
 
-        Element did = doc.createElement("did");
-        if(!obj.getId().equals("")){
-            Element unitid = doc.createElement("unitid");
-            unitid.setAttribute("encodinganalog", "3.1.1");
-            unitid.setTextContent(obj.getId());
-            did.appendChild(unitid);
-        }
-        Element title = doc.createElement("unittitle");
-        title.setAttribute("encodinganalog", "3.1.2");
-        title.setTextContent(obj.getName());
-        did.appendChild(title);
-        el.appendChild(did);
+        if(obj.isFile()) {
+            File file = obj.getFile();
+            try {
+                File outputFileTmp = new File(Utilities.TEMP_DIR + ".temp_HG.xml");
 
-        if(!obj.getDescription().equals("")){
-            Element scopecontent = doc.createElement("scopecontent");
-            scopecontent.setAttribute("encodinganalog", "summary");
-            Element pElt = doc.createElement("p");
-            pElt.setTextContent(obj.getDescription());
-            scopecontent.appendChild(pElt);
-            el.appendChild(scopecontent);
-        }
-        for(int i=0;i<model.getChildCount(node);i++){
-            Object child = model.getChild(node, i);
-            if(((CLevelTreeObject)((DefaultMutableTreeNode)child).getUserObject()).isFile()) {
-                File file = ((CLevelTreeObject)((DefaultMutableTreeNode)child).getUserObject()).getFile();
-                try {
-                    File outputFileTmp = new File(Utilities.TEMP_DIR + ".temp_HG.xml");
-
-                    StringWriter xslMessages = TransformationTool.createTransformation(fileUtil.readFileAsInputStream(file), outputFileTmp, TransformationTool.class.getResourceAsStream("/xsl/fa2hg.xsl"), paramMap, true, true, null, true, null);
-                    List<String> filesWithoutEadid = new ArrayList<String>();
-                    if(xslMessages != null && xslMessages.toString().contains("NO_EADID_IN_FILE")){
-                        filesWithoutEadid.add(file.getName());
-                    } else {
-                        Node fileLevel = stringToNode(doc, fileUtil.readFileAsInputStream(outputFileTmp));
-                        el.appendChild(fileLevel);
-                    }
-
-                    outputFileTmp.delete();
-
-                } catch (Exception e){
-                    LOG.error("Could not create HG part for file: " + file.getName(), e);
-//                    createErrorOrWarningPanel(e, true, "Could not create HG");
+                StringWriter xslMessages = TransformationTool.createTransformation(fileUtil.readFileAsInputStream(file), outputFileTmp, TransformationTool.class.getResourceAsStream("/xsl/fa2hg.xsl"), paramMap, true, true, null, true, null);
+                List<String> filesWithoutEadid = new ArrayList<String>();
+                if(xslMessages != null && xslMessages.toString().contains("NO_EADID_IN_FILE")){
+                    filesWithoutEadid.add(file.getName());
+                } else {
+                    Node fileLevel = stringToNode(doc, fileUtil.readFileAsInputStream(outputFileTmp));
+                    return fileLevel;
+//                    el.getParentNode().appendChild(fileLevel);
                 }
-            } else {
+
+                outputFileTmp.delete();
+
+            } catch (Exception e){
+                LOG.error("Could not create HG part for file: " + file.getName(), e);
+//                    createErrorOrWarningPanel(e, true, "Could not create HG");
+            }
+        } else {
+            Element el = doc.createElement("c");
+            el.setAttribute("level", "series");
+
+            Element did = doc.createElement("did");
+            if(!obj.getId().equals("")){
+                Element unitid = doc.createElement("unitid");
+                unitid.setAttribute("encodinganalog", "3.1.1");
+                unitid.setTextContent(obj.getId());
+                did.appendChild(unitid);
+            }
+            Element title = doc.createElement("unittitle");
+            title.setAttribute("encodinganalog", "3.1.2");
+            title.setTextContent(obj.getName());
+            did.appendChild(title);
+            el.appendChild(did);
+
+            if(!obj.getDescription().equals("")){
+                Element scopecontent = doc.createElement("scopecontent");
+                scopecontent.setAttribute("encodinganalog", "summary");
+                Element pElt = doc.createElement("p");
+                pElt.setTextContent(obj.getDescription());
+                scopecontent.appendChild(pElt);
+                el.appendChild(scopecontent);
+            }
+            for(int i=0;i<model.getChildCount(node);i++) {
+                Object child = model.getChild(node, i);
                 el.appendChild(createTree(doc,model,child, paramMap));
             }
+            return el;
         }
-        return el;
+        return null;
     }
 
     private Node stringToNode(Document originalDoc, InputStream inputStream) throws Exception {
