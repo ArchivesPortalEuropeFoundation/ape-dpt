@@ -10,28 +10,21 @@ import eu.apenet.dpt.standalone.gui.DataPreparationToolGUI;
 import eu.apenet.dpt.standalone.gui.FileInstance;
 import eu.apenet.dpt.standalone.gui.Utilities;
 import eu.apenet.dpt.standalone.gui.db.RetrieveFromDb;
-import eu.apenet.dpt.standalone.gui.ead2ese.EseOptionsPanel;
-import eu.apenet.dpt.utils.ead2ese.XMLTransformer;
-import eu.apenet.dpt.utils.ead2ese.XMLUtil;
-import eu.apenet.dpt.utils.ead2ese.stax.ESEParser;
-import eu.apenet.dpt.utils.ead2ese.stax.RecordParser;
 import eu.apenet.dpt.utils.ese2edm.EdmConfig;
 import eu.apenet.dpt.utils.util.XmlChecker;
 import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
-import java.io.IOException;
 import java.text.MessageFormat;
 import java.util.Map;
 import java.util.ResourceBundle;
 import javax.swing.JList;
 import javax.swing.SwingUtilities;
-import javax.xml.stream.XMLStreamException;
-import javax.xml.stream.XMLStreamReader;
-import org.apache.commons.lang.StringUtils;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
 import org.apache.log4j.Logger;
-import org.xml.sax.SAXException;
+import org.w3c.dom.Document;
 
 /**
  *
@@ -108,9 +101,15 @@ public class ConvertEdmActionListener implements ActionListener {
                 } else {
                     loc = fileInstance.getOriginalPath();
                 }
+                DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
+		DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
+		Document intermediateDoc = docBuilder.newDocument();
                 File outputFile = new File(xmlOutputFilename);
-                EdmConfig config = new EdmConfig();
-                config.getTransformerXML2XML().transform(new File(loc), outputFile);
+                EdmConfig config = new EdmConfig(false);
+                config.getTransformerXML2XML().transform(new File(loc), intermediateDoc);
+                System.out.println("intermediateDoc root: " + intermediateDoc.getDocumentElement().getNodeName());
+                config.setTransferToFileOutput(true);
+                config.getTransformerXML2XML().transform(intermediateDoc, outputFile);
             } catch (Exception e) {
                 LOG.error("Error when converting file into EDM", e);
             }
