@@ -208,7 +208,7 @@ public class CreateHGListener implements ActionListener {
                         model.addFile(hgFile);
                         fileInstances.get(hgFile.getName()).setCurrentLocation(hgFile.getPath());
                         fileInstances.get(hgFile.getName()).setLastOperation(FileInstance.Operation.CONVERT);
-                        fileInstances.get(hgFile.getName()).setIsConverted();
+                        fileInstances.get(hgFile.getName()).setConverted();
                         fileInstances.get(hgFile.getName()).setFileType(FileInstance.FileType.EAD);
 //                        list.clearSelection();
 

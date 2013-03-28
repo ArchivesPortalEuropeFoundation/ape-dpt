@@ -168,7 +168,7 @@ public class ConvertActionListener implements ActionListener {
                 apePanel.getApeTabbedPane().setConversionErrorText(xslMessages.toString());
                 fileInstance.setConversionErrors(xslMessages.toString());
                 fileInstance.setCurrentLocation(Utilities.TEMP_DIR + "temp_" + file.getName());
-                fileInstance.setIsConverted();
+                fileInstance.setConverted();
 
                 if(xslMessages.toString().equals("")) {
                     if(fileInstance.getConversionScriptName().equals(Utilities.XSL_DEFAULT_NAME))

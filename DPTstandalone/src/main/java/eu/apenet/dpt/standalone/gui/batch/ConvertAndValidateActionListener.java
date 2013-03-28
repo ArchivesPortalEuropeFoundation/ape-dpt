@@ -152,7 +152,7 @@ public class ConvertAndValidateActionListener extends ApexActionListener {
                                     }
                                     fileInstance.setConversionErrors(xslMessages.toString());
                                     fileInstance.setCurrentLocation(Utilities.TEMP_DIR + "temp_" + file.getName());
-                                    fileInstance.setIsConverted();
+                                    fileInstance.setConverted();
                                     fileInstance.setLastOperation(FileInstance.Operation.CONVERT);
                                     if(xslMessages.toString().equals("")) {
                                         if(fileInstance.getConversionScriptName().equals(Utilities.XSL_DEFAULT_NAME))
@@ -183,7 +183,7 @@ public class ConvertAndValidateActionListener extends ApexActionListener {
                                     XsdObject xsdObject = fileInstance.getValidationSchema();
 
                                     List<SAXParseException> exceptions = DocumentValidation.xmlValidation(is, Utilities.getUrlPathXsd(xsdObject), xsdObject.isXsd11());
-                                    if (exceptions.isEmpty()){
+                                    if (exceptions == null || exceptions.isEmpty()){
                                         fileInstance.setValid(true);
                                         fileInstance.setValidationErrors(labels.getString("validationSuccess"));
                                     } else {
@@ -202,6 +202,7 @@ public class ConvertAndValidateActionListener extends ApexActionListener {
                             } finally {
                                 summaryWorking.stop();
                                 threadRunner.interrupt();
+                                dataPreparationToolGUI.getXmlEadListLabel().repaint();
                                 dataPreparationToolGUI.getXmlEadList().repaint();
                                 if(progressBar != null)
                                     progressBar.setVisible(false);

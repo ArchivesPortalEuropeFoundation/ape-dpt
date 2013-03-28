@@ -110,7 +110,8 @@ public class DataPreparationToolGUI extends JFrame {
     private JList xmlEadList;
     private ProfileListModel eseListModel;
     private JList eseList;
-
+    private JLabel xmlEadListLabel;
+    
     private JLabel progressLabel = new JLabel("", JLabel.CENTER);
     private JLabel resultArea = new JLabel();
     private JTable eagFormTable;
@@ -640,6 +641,7 @@ public class DataPreparationToolGUI extends JFrame {
             public void valueChanged(ListSelectionEvent e) {
                 if(!e.getValueIsAdjusting()) {
                     if (xmlEadList.getSelectedValues() != null && xmlEadList.getSelectedValues().length != 0) {
+                        eseList.clearSelection();
                         if (xmlEadList.getSelectedValues().length > 1) {
                             convertAndValidateBtn.setEnabled(true);
                             validateSelectionBtn.setEnabled(true);
@@ -672,6 +674,7 @@ public class DataPreparationToolGUI extends JFrame {
             public void valueChanged(ListSelectionEvent e) {
                 if(!e.getValueIsAdjusting()) {
                     if (eseList.getSelectedValues() != null && eseList.getSelectedValues().length != 0) {
+                        xmlEadList.clearSelection();
                         if (eseList.getSelectedValues().length > 1) {
                             convertAndValidateBtn.setEnabled(false);
                             validateSelectionBtn.setEnabled(false);
@@ -755,10 +758,11 @@ public class DataPreparationToolGUI extends JFrame {
         JPanel xmlEadListPanel = new JPanel(new BorderLayout());
         xmlEadList.setCellRenderer(new IconListCellRenderer(fileInstances));
         xmlEadList.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
+        xmlEadListLabel = new JLabel(labels.getString("xmlEadFiles"));
         xmlEadListPanel.add(new JScrollPane(xmlEadList, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER), BorderLayout.CENTER);
-        xmlEadListPanel.add(new Label(labels.getString("xmlEadFiles")), BorderLayout.SOUTH);
+        xmlEadListPanel.add(xmlEadListLabel, BorderLayout.NORTH);
         JPanel eseListPanel = new JPanel(new BorderLayout());
-        eseListPanel.add(new Label(labels.getString("eseFiles")), BorderLayout.NORTH);
+        eseListPanel.add(new JLabel(labels.getString("eseFiles")), BorderLayout.NORTH);
         eseList.setCellRenderer(new IconListCellRenderer(fileInstances));
         eseList.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
 //        eseList.addFocusListener(new FocusListener() {
@@ -1058,6 +1062,19 @@ public class DataPreparationToolGUI extends JFrame {
                 apeTabbedPane.disableConversionEseBtn();
                 saveSelectedItem.setEnabled(true);
             }
+            if (fileInstance.isEse()) {
+                validateItem.setEnabled(false);
+                apeTabbedPane.disableConversionBtn();
+                apeTabbedPane.disableValidationBtn();
+                saveSelectedItem.setEnabled(true);
+                if (fileInstance.getValidationSchema().getFileType().equals(FileInstance.FileType.EAD))
+                    apeTabbedPane.enableConversionEseBtn();
+            } else {
+                validateItem.setEnabled(true);
+                apeTabbedPane.enableValidationBtn();
+                apeTabbedPane.disableConversionEseBtn();
+                saveSelectedItem.setEnabled(true);
+            }
 
             refreshButtons(fileInstance, Utilities.XSLT_GROUP);
             refreshButtons(fileInstance, Utilities.XSD_GROUP);
@@ -1279,6 +1296,10 @@ public class DataPreparationToolGUI extends JFrame {
         enableConversionBtns();
         enableValidationBtns();
         apePanel.getApeTabbedPane().enableConversionEseBtn();
+    }
+
+    public JLabel getXmlEadListLabel() {
+        return xmlEadListLabel;
     }
 
     private class LanguageActionListener implements ActionListener {
