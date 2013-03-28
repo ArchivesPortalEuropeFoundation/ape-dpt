@@ -234,7 +234,7 @@ public class APETabbedPane extends JTabbedPane {
         validateBtn.setText(labels.getString("validate"));
         convertEseBtn.setText(labels.getString("summary.convertEse.button"));
         convertEdmBtn.setText(labels.getString("summary.convertEdm.button"));
-        reportBtn.setText("Download report of XML QUALITY");
+        reportBtn.setText(labels.getString("dataquality.report.download"));
     }
 
     public void setValidationBtnText(String text) {
