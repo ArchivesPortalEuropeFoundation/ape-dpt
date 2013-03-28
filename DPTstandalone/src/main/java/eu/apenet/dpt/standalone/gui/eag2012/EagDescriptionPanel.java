@@ -382,13 +382,19 @@ public class EagDescriptionPanel extends EagPanels {
                     repository.getHoldings().getDescriptiveNote().setLang(archivalAndOthersTf.getLanguage());
                     if(StringUtils.isNotEmpty(extentTf.getText())) {
                         repository.getHoldings().getExtent().getNum().setContent(extentTf.getText());
+                    } else {
+                        repository.getHoldings().setExtent(null);
                     }
                     if(StringUtils.isNotEmpty(dateHoldingsTf.getText())) {
                         repository.getHoldings().getDate().setContent(dateHoldingsTf.getText());
+                    } else {
+                        repository.getHoldings().setDate(null);
                     }
                     if(StringUtils.isNotEmpty(rangeFromTf.getText()) && StringUtils.isNotEmpty(rangeToTf.getText())) {
                         repository.getHoldings().getDateRange().getFromDate().setContent(rangeFromTf.getText());
                         repository.getHoldings().getDateRange().getToDate().setContent(rangeToTf.getText());
+                    } else {
+                        repository.getHoldings().setDateRange(null);
                     }
                 }
 
