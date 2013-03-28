@@ -751,18 +751,19 @@ public class DataPreparationToolGUI extends JFrame {
     }
 
     protected void checkHoldingsGuideButton() {
-        boolean first = true;
+        boolean isOnlyValidFiles = true;
         for (int i = 0; i < xmlEadList.getSelectedValues().length; i++) {
             FileInstance fileInstance = fileInstances.get(((File) xmlEadList.getSelectedValues()[i]).getName());
-            if (fileInstance.getValidationSchema().getFileType().equals(FileInstance.FileType.EAD) && fileInstance.isValid()) {
-                if(!first) {
-                    createHGBtn.setEnabled(true);
-                    return;
-                }
-                first = false;
+            if (fileInstance.getValidationSchema().getFileType().equals(FileInstance.FileType.EAD) && !fileInstance.isValid()) {
+                isOnlyValidFiles = false;
+                break;
             }
         }
-        createHGBtn.setEnabled(false);
+        if(xmlEadList.getSelectedValues().length > 1 && isOnlyValidFiles) {
+            createHGBtn.setEnabled(true);
+        } else {
+            createHGBtn.setEnabled(false);
+        }
     }
 
     public DataPreparationToolGUI getDataPreparationToolGUI() {
