@@ -18,6 +18,10 @@
                 version="2.0">
 <xsl:output method="xml" encoding="UTF-8" indent="yes"/>
 
+<xsl:template match="/">
+    <xsl:apply-templates />
+</xsl:template>
+
     <!--<xsl:template match="skos:Concept[position() = 1]" priority="3">-->
     <xsl:template match="rdf:RDF">
         <rdf:RDF>
@@ -34,12 +38,9 @@
         </rdf:RDF>
     </xsl:template>
 
-    <xsl:template match="skos:Concept" priority="2"/>
-    <xsl:template match="skos:Concept//*" priority="2"/>
-
-    <xsl:template match="edm:ProvidedCHO" priority="3">
+    <xsl:template match="edm:ProvidedCHO">
         <edm:ProvidedCHO>
-            <xsl:copy-of select="*"/>
+            <xsl:copy-of select="./*"/>
             <xsl:variable name="identifier" select="dc:identifier"/>
             <xsl:for-each-group select="/rdf:RDF/skos:Concept" group-by="@rdf:about">
                 <xsl:for-each-group select="current-group()" group-by="if(dcterms:hasPart/text()) then dcterms:hasPart/text() else 'nothing'">
@@ -53,11 +54,16 @@
         </edm:ProvidedCHO>
     </xsl:template>
     
-    <xsl:template match="edm:ProvidedCHO" priority="2"/>
-    <xsl:template match="edm:ProvidedCHO//*" priority="2"/>
-
     <xsl:template match="edm:WebResource">
         <xsl:copy-of select="."/>
     </xsl:template>
+
+    <!--
+    1) generate result tree
+    2) check each skos:Concept for hasPart-values not beginning with eadid
+    3) if more than 2 such values exist in the respective skos:Concept, add
+       <dcterms:isNextInSequence>Value2</dcterms:isNExtInSequence>
+       to respective edm:ProvidedCHO
+    -->
     
 </xsl:stylesheet>

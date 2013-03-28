@@ -23,6 +23,7 @@ http://purl.org/dc/terms/ http://www.dublincore.org/schemas/xmls/qdc/dcterms.xsd
 </metadata>
 </xsl:template>
 <xsl:template match="archdesc">
+  <xsl:call-template name="generateRecordForEad" />
   <xsl:apply-templates select="dsc">
    	<xsl:with-param name="inheritedOriginations">
                     <xsl:if test="./did/origination">
@@ -38,7 +39,7 @@ http://purl.org/dc/terms/ http://www.dublincore.org/schemas/xmls/qdc/dcterms.xsd
 			</xsl:call-template>	
    		</xsl:if>    	
    	</xsl:with-param>
-   	<xsl:with-param name="inheritedCustodhists">
+<!--   	<xsl:with-param name="inheritedCustodhists">
    		<xsl:if test="./custodhist">
    			<xsl:call-template name="custodhist">
                             <xsl:with-param name="custodhists" select="./custodhist"></xsl:with-param>
@@ -58,21 +59,21 @@ http://purl.org/dc/terms/ http://www.dublincore.org/schemas/xmls/qdc/dcterms.xsd
 				<xsl:with-param name="controlaccesses" select="./controlaccess"></xsl:with-param>
 			</xsl:call-template>
    		</xsl:if>    	
-   	</xsl:with-param>
+   	</xsl:with-param>-->
   </xsl:apply-templates>  
 </xsl:template>
 <xsl:template match="dsc">
 	<xsl:param name="inheritedOriginations"/>
 	<xsl:param name="inheritedLanguages"/>
-        <xsl:param name="inheritedCustodhists"/>
+        <!--<xsl:param name="inheritedCustodhists"/>
         <xsl:param name="inheritedAltformavailHeads"/>
-        <xsl:param name="inheritedControlaccesses"/>
+        <xsl:param name="inheritedControlaccesses"/>-->
         <xsl:apply-templates select="c">
 		<xsl:with-param name="inheritedOriginations" select="$inheritedOriginations"/>
 	   	<xsl:with-param name="inheritedLanguages" select="$inheritedLanguages"/>
-                <xsl:with-param name="inheritedCustodhists" select="$inheritedCustodhists"/>
+                <!--<xsl:with-param name="inheritedCustodhists" select="$inheritedCustodhists"/>
                 <xsl:with-param name="inheritedAltformavailHeads" select="$inheritedAltformavailHeads"/>
-                <xsl:with-param name="inheritedControlaccesses" select="$inheritedControlaccesses"/>
+                <xsl:with-param name="inheritedControlaccesses" select="$inheritedControlaccesses"/>-->
   	</xsl:apply-templates>
 </xsl:template>
 <xsl:template match="c">
@@ -198,14 +199,20 @@ http://purl.org/dc/terms/ http://www.dublincore.org/schemas/xmls/qdc/dcterms.xsd
 						</xsl:choose>
 						<xsl:choose>
 							<xsl:when test='$cnode/scopecontent[@encodinganalog="summary"]'>
-								<dc:description><xsl:value-of select='$cnode/scopecontent[@encodinganalog="summary"]/p'/> <xsl:value-of select='$parentcnode/scopecontent[@encodinganalog="summary"]/head'/></dc:description>
+                                                            <dc:description>
+                                                                <xsl:value-of select='$cnode/scopecontent[@encodinganalog="summary"]/head'/>
+                                                                <xsl:if test='$cnode/scopecontent[@encodinganalog="summary"]/head'>
+                                                                    <xsl:text>: </xsl:text>
+                                                                </xsl:if>
+                                                                <xsl:value-of select='$cnode/scopecontent[@encodinganalog="summary"]/p'/>
+                                                            </dc:description>
 							</xsl:when>
 							<xsl:otherwise>
-								<xsl:if test='$parentcnode/scopecontent[@encodinganalog="summary"]/p'>
-									<dc:description><xsl:value-of select='$parentcnode/scopecontent[@encodinganalog="summary"]/p'/></dc:description>
-								</xsl:if>
 								<xsl:if test='$parentcnode/scopecontent[@encodinganalog="summary"]/head'>
 									<dc:description><xsl:value-of select='$parentcnode/scopecontent[@encodinganalog="summary"]/head'/></dc:description>
+								</xsl:if>
+								<xsl:if test='$parentcnode/scopecontent[@encodinganalog="summary"]/p'>
+									<dc:description><xsl:value-of select='$parentcnode/scopecontent[@encodinganalog="summary"]/p'/></dc:description>
 								</xsl:if>
 							</xsl:otherwise>
 						</xsl:choose>
@@ -361,13 +368,30 @@ http://purl.org/dc/terms/ http://www.dublincore.org/schemas/xmls/qdc/dcterms.xsd
 						<xsl:if test='$didnode/abstract[@encodinganalog="summary"]'>
 							<dc:description><xsl:value-of select='$didnode/abstract[@encodinganalog="summary"]'/></dc:description>
 						</xsl:if>
-						<xsl:if test='$cnode/scopecontent[@encodinganalog="summary"]/p'>
-								<dc:description><xsl:value-of select='$cnode/scopecontent[@encodinganalog="summary"]/p'/></dc:description>
-						</xsl:if>
-						<xsl:if test='$cnode/scopecontent[@encodinganalog="summary"]/head'>
-								<dc:description><xsl:value-of select='$cnode/scopecontent[@encodinganalog="summary"]/head'/></dc:description>
-						</xsl:if>
-						<xsl:if test="$didnode/physdesc/physfacet"><dc:format><xsl:value-of select="$didnode/physdesc/physfacet"/></dc:format></xsl:if>
+                                                <xsl:choose>
+							<xsl:when test='$cnode/scopecontent[@encodinganalog="summary"]'>
+                                                            <dc:description>
+                                                                <xsl:value-of select='$cnode/scopecontent[@encodinganalog="summary"]/head'/>
+                                                                <xsl:if test='$cnode/scopecontent[@encodinganalog="summary"]/head'>
+                                                                    <xsl:text>: </xsl:text>
+                                                                </xsl:if>
+                                                                <xsl:value-of select='$cnode/scopecontent[@encodinganalog="summary"]/p'/>
+                                                            </dc:description>
+							</xsl:when>
+							<xsl:otherwise>
+								<xsl:if test='$parentcnode/scopecontent[@encodinganalog="summary"]/head'>
+									<dc:description><xsl:value-of select='$parentcnode/scopecontent[@encodinganalog="summary"]/head'/></dc:description>
+								</xsl:if>
+								<xsl:if test='$parentcnode/scopecontent[@encodinganalog="summary"]/p'>
+									<dc:description><xsl:value-of select='$parentcnode/scopecontent[@encodinganalog="summary"]/p'/></dc:description>
+								</xsl:if>
+							</xsl:otherwise>
+						</xsl:choose>
+                                                <xsl:if test="$didnode/physdesc/physfacet">
+                                                    <dc:format>
+                                                        <xsl:value-of select="$didnode/physdesc/physfacet"/>
+                                                    </dc:format>
+                                                </xsl:if>
 						<xsl:if test="$didnode/materialspec"><dc:format><xsl:value-of select="$didnode/materialspec"/></dc:format></xsl:if>
 						<xsl:if test="$didnode/physdesc/extent"><dcterms:extent><xsl:value-of select="$didnode/physdesc/extent"/> </dcterms:extent></xsl:if>
 						<xsl:if test="$didnode/physdesc/dimensions"><dcterms:extent><xsl:value-of select="$didnode/physdesc/dimensions"/> </dcterms:extent></xsl:if>
@@ -690,7 +714,7 @@ http://purl.org/dc/terms/ http://www.dublincore.org/schemas/xmls/qdc/dcterms.xsd
 </xsl:template>
 <xsl:template match='unitdate'>
 	<xsl:choose>
-		<xsl:when test='$useISODates="true"'>
+            	<xsl:when test='$useISODates="true"'>
 			<xsl:choose>
 				<xsl:when test='./@era="ce" and ./@normal'> 
 					<xsl:analyze-string select="./@normal" 
@@ -785,5 +809,60 @@ http://purl.org/dc/terms/ http://www.dublincore.org/schemas/xmls/qdc/dcterms.xsd
                     </dc:subject>
 		</xsl:for-each>
     </xsl:for-each>
+</xsl:template>
+<xsl:template name="generateRecordForEad">
+    <record>
+        <dc:identifier><xsl:value-of select="/ead/eadheader/eadid/@identifier"/></dc:identifier>
+        <xsl:if test='/ead/archdesc/did/repository'>
+            <dc:source><xsl:value-of select="/ead/archdesc/did/repository/text()"/></dc:source>
+        </xsl:if>
+        <xsl:if test='/ead/eadheader/filedesc/publicationstmt/publisher'>
+            <dc:publisher><xsl:value-of select="/ead/eadheader/filedesc/publicationstmt/publisher/text()"/></dc:publisher>
+        </xsl:if>
+        <xsl:if test='/ead/eadheader/filedesc/publicationstmt/date'>
+            <dcterms:issued><xsl:value-of select="/ead/eadheader/filedesc/publicationstmt/date"/></dcterms:issued>
+        </xsl:if>
+        <xsl:if test='/ead/eadheader/filedesc/titlestmt/titleproper/text()'>
+            <dc:title><xsl:value-of select="/ead/eadheader/filedesc/titlestmt/titleproper/text()"/></dc:title>
+        </xsl:if>
+        <xsl:if test='/ead/archdesc/did/unitdate'>
+             <xsl:apply-templates select="/ead/archdesc/did/unitdate"/>
+        </xsl:if>
+        <xsl:for-each select='/ead/archdesc/scopecontent[@encodinganalog="summary"]'>
+            <dc:description>
+                <xsl:choose>
+                    <xsl:when test='./head and ./p'>
+                        <xsl:value-of select='./head'/><xsl:text>: </xsl:text><xsl:value-of select='./p'/>
+                    </xsl:when>
+                    <xsl:otherwise>
+                        <xsl:if test='./head'>
+                            <xsl:value-of select='./head'/><xsl:text> </xsl:text>
+                        </xsl:if>
+                        <xsl:if test='./p'>
+                            <xsl:value-of select='./p'/>
+                        </xsl:if>
+                    </xsl:otherwise>
+                </xsl:choose>
+            </dc:description>
+        </xsl:for-each>
+        <xsl:if test='/ead/archdesc/custodhist'>
+            <xsl:call-template name="custodhist">
+                <xsl:with-param name="custodhists" select="/ead/archdesc/custodhist" />
+            </xsl:call-template>
+        </xsl:if>
+        <dc:type>TEXT</dc:type>
+        <europeana:provider><xsl:value-of select="$europeana_provider"/></europeana:provider>
+        <europeana:type>TEXT</europeana:type>
+        <europeana:rights><xsl:value-of select="$europeana_rights"/></europeana:rights>
+        <xsl:choose>
+            <xsl:when test="$europeana_dataprovider">
+                <europeana:dataProvider><xsl:value-of select="$europeana_dataprovider"/></europeana:dataProvider>
+            </xsl:when>
+            <xsl:otherwise>
+                <europeana:dataProvider><xsl:value-of select="/ead/archdesc/did/repository/text()"/></europeana:dataProvider>
+            </xsl:otherwise>
+        </xsl:choose>
+        <europeana:isShownAt><xsl:value-of select="/ead/eadheader/eadid/@url"/></europeana:isShownAt>
+    </record>
 </xsl:template>
 </xsl:stylesheet>
