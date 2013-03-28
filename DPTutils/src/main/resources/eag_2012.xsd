@@ -489,8 +489,8 @@
     <xs:element name="identity">
         <xs:complexType>
             <xs:sequence>
-                <xs:element ref="repositorid"/>
-                <xs:element ref="otherRepositorId"/> <!-- Should be optional in EAG 2012 but mandatory in APE EAG 2012... 2 schemas? -->
+                <xs:element ref="repositorid" minOccurs="0"/>
+                <xs:element ref="otherRepositorId" minOccurs="0"/>
                 <xs:element ref="autform" maxOccurs="unbounded"/>
                 <xs:element ref="parform" minOccurs="0" maxOccurs="unbounded"/>
                 <xs:element ref="nonpreform" minOccurs="0" maxOccurs="unbounded"/>
@@ -501,7 +501,7 @@
     <xs:element name="repositorid">
         <xs:complexType>
             <xs:attribute name="countrycode" use="required" type="xs:NMTOKEN"/>
-            <xs:attribute name="repositorycode" use="required" type="xs:NMTOKEN"/>
+            <xs:attribute name="repositorycode" type="xs:NMTOKEN"/>
         </xs:complexType>
     </xs:element>
     <xs:element name="otherRepositorId">
