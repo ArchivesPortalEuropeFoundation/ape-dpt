@@ -719,6 +719,7 @@ public class DataPreparationToolGUI extends JFrame {
                                 apePanel.getApeTabbedPane().createEditionTree(((File) eseList.getSelectedValue()));
                             apePanel.getApeTabbedPane().changeBackgroundColor(APETabbedPane.TAB_CONVERSION, Utilities.TAB_COLOR);
                             apePanel.getApeTabbedPane().changeBackgroundColor(APETabbedPane.TAB_VALIDATION, Utilities.TAB_COLOR);
+                            apePanel.getApeTabbedPane().changeBackgroundColor(APETabbedPane.TAB_ESE, Utilities.TAB_COLOR);
                         }
                         checkHoldingsGuideButton();
                     } else {
@@ -1093,6 +1094,7 @@ public class DataPreparationToolGUI extends JFrame {
                 saveSelectedItem.setEnabled(true);
             }
             if (fileInstance.isEse()) {
+                apeTabbedPane.setEseConversionErrorText(fileInstance.getEuropeanaConversionErrors());    
                 validateItem.setEnabled(false);
                 apeTabbedPane.disableConversionBtn();
                 apeTabbedPane.disableValidationBtn();
