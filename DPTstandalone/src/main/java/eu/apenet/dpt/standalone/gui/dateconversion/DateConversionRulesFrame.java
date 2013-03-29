@@ -8,6 +8,9 @@ import eu.apenet.dpt.utils.util.DateConversionXMLFilehandler;
 import eu.apenet.dpt.standalone.gui.Utilities;
 import eu.apenet.dpt.standalone.gui.db.RetrieveFromDb;
 import eu.apenet.dpt.utils.util.extendxsl.DateNormalization;
+import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
+
 import java.awt.BorderLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
@@ -38,6 +41,7 @@ import javax.swing.table.DefaultTableModel;
  * @author papp
  */
 public class DateConversionRulesFrame extends JFrame {
+    private static final Logger LOG = Logger.getLogger(DateConversionRulesFrame.class);
 
     private ResourceBundle labels;
     private RetrieveFromDb retrieveFromDb;
@@ -65,11 +69,16 @@ public class DateConversionRulesFrame extends JFrame {
         dm.addRow(new Vector<String>());
         dm.addTableModelListener(new TableModelListener() {
             public void tableChanged(TableModelEvent e) {
+                if(ruleTable.getEditingRow() != ruleTable.getRowCount()-1 && (StringUtils.isEmpty((String)dm.getValueAt(ruleTable.getEditingRow(), 0)) && StringUtils.isEmpty((String)dm.getValueAt(ruleTable.getEditingRow(), 1)))) {
+                    dm.removeRow(ruleTable.getEditingRow());
+                }
                 if (ruleTable.getEditingRow() == ruleTable.getRowCount() - 1) {
-                    dm.addRow(new Vector<String>());
+                    if(StringUtils.isNotEmpty((String)dm.getValueAt(ruleTable.getEditingRow(), 0)) && StringUtils.isNotEmpty((String)dm.getValueAt(ruleTable.getEditingRow(), 1))) {
+                        dm.addRow(new Vector<String>());
+                    }
                 }
                 if (ruleTable.getEditingColumn() == 1) {
-                    if (!isCorrectDateFormat((String) dm.getValueAt(ruleTable.getEditingRow(), 1))) {
+                    if (StringUtils.isNotEmpty((String)dm.getValueAt(ruleTable.getEditingRow(), 1)) && !isCorrectDateFormat((String) dm.getValueAt(ruleTable.getEditingRow(), 1))) {
                         createOptionPaneForIsoDate(ruleTable.getEditingRow(), 1);
                     }
                 }
@@ -180,14 +189,17 @@ public class DateConversionRulesFrame extends JFrame {
         DateNormalization dateNormalization = new DateNormalization();
         String currentResult = (String) dm.getValueAt(row, column);
         String explanation = "'" + currentResult + "' " + labels.getString("dateConversion.notValidDate") + "\n" + labels.getString("dateConversion.enterCorrectIsoDate") + "\n" + labels.getString("dateConversion.validValues");
-        int i = 0;
         String result;
         do {
             result = (String) JOptionPane.showInputDialog(getContentPane(), explanation, labels.getString("dateConversion.header"), JOptionPane.QUESTION_MESSAGE, Utilities.icon, null, null);
-            i++;
+            if(result == null)
+                break;
         } while (dateNormalization.checkForNormalAttribute(result) == null);
         if (result != null) {
             dm.setValueAt(result, row, column);
+            dm.fireTableCellUpdated(row, column);
+        } else {
+            dm.setValueAt("", row, column);
             dm.fireTableCellUpdated(row, column);
         }
     }
