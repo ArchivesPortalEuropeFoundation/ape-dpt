@@ -16,6 +16,7 @@
 
     <!-- Options to be asked by the converter -->
     <xsl:param name="xmlLang" select="'eng'"/>
+    <xsl:param name="repositoryCode"/>
     <xsl:param name="repositoryRole" select="'Head quarter'"/>  <!-- @WP4: Same question as above - $WP4: selection from the 3 possibilities (ie drop-down-list) - Yoann: It is a stylesheet, not a form. There won't be any drop-down list. -->
 
     <xsl:variable name="unitList" select="('squaremetre', 'linearmetre', 'site', 'book', 'title')"/>
@@ -40,7 +41,7 @@
             <xsl:if test="exists($xmlLang)">
                 <xsl:attribute name="xml:lang" select="$xmlLang"/>
             </xsl:if>
-            <xsl:apply-templates select="*:eagid"/>
+            <recordId><xsl:value-of select="$repositoryCode"/></recordId>
             <xsl:call-template name="maintenanceAgencyTemplate">
                 <xsl:with-param name="repositorycode" select="following-sibling::*[name()='archguide']/*:identity/*:repositorid/@repositorycode"/>
                 <xsl:with-param name="agencyname" select="following-sibling::*[name()='archguide']/*:identity/*:autform/text()"/>
