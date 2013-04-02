@@ -973,18 +973,10 @@ http://purl.org/dc/terms/ http://www.dublincore.org/schemas/xmls/qdc/dcterms.xsd
             <europeana:rights>
                 <xsl:value-of select="$europeana_rights"/>
             </europeana:rights>
-            <xsl:choose>
-                <xsl:when test="$europeana_dataprovider">
-                    <europeana:dataProvider>
-                        <xsl:value-of select="$europeana_dataprovider"/>
-                    </europeana:dataProvider>
-                </xsl:when>
-                <xsl:otherwise>
-                    <europeana:dataProvider>
-                        <xsl:value-of select="/ead/archdesc/did/repository/text()"/>
-                    </europeana:dataProvider>
-                </xsl:otherwise>
-            </xsl:choose>
+            <xsl:apply-templates select='/ead/archdesc/did/repository' mode="archdescDataProvider" />
+            <!--<europeana:dataProvider>
+                <xsl:value-of select="/ead/archdesc/did/repository/text()"/>
+            </europeana:dataProvider>-->
             <europeana:isShownAt>
                 <xsl:value-of select="/ead/eadheader/eadid/@url"/>
             </europeana:isShownAt>
@@ -1001,7 +993,7 @@ http://purl.org/dc/terms/ http://www.dublincore.org/schemas/xmls/qdc/dcterms.xsd
                     <xsl:variable name='content'>
                         <xsl:apply-templates mode="all-but-address"/>
                     </xsl:variable>
-                    <xsl:value-of select="fn:replace(normalize-space($content), '[\n\t\r ]', '')"/>
+                    <xsl:value-of select="fn:replace(normalize-space($content), '[\n\t\r]', '')"/>
                 </xsl:otherwise>
             </xsl:choose>
         </dc:source>
@@ -1012,8 +1004,19 @@ http://purl.org/dc/terms/ http://www.dublincore.org/schemas/xmls/qdc/dcterms.xsd
             <xsl:variable name='content'>
                 <xsl:apply-templates mode="all-but-address"/>
             </xsl:variable>
-            <xsl:value-of select="fn:replace(normalize-space($content), '[\n\t\r ]', '')"/>
+            <xsl:value-of select="fn:replace(normalize-space($content), '[\n\t\r]', '')"/>
         </dc:source>
+    </xsl:template>
+    
+    <xsl:template match="repository" mode="archdescDataProvider">
+        <xsl:if test='position() = 1'>
+            <europeana:dataProvider>
+                <xsl:variable name='content'>
+                    <xsl:apply-templates mode="all-but-address"/>
+                </xsl:variable>
+                <xsl:value-of select="fn:replace(normalize-space($content), '[\n\t\r]', '')"/>
+            </europeana:dataProvider>
+        </xsl:if>
     </xsl:template>
     
     <xsl:template match='publisher'>
