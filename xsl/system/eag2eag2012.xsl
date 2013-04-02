@@ -41,7 +41,14 @@
             <xsl:if test="exists($xmlLang)">
                 <xsl:attribute name="xml:lang" select="$xmlLang"/>
             </xsl:if>
-            <recordId><xsl:value-of select="$repositoryCode"/></recordId>
+            <xsl:choose>
+                <xsl:when test="$repositoryCode">
+                    <recordId><xsl:value-of select="$repositoryCode"/></recordId>
+                </xsl:when>
+                <xsl:otherwise>
+                    <xsl:apply-templates select="*:eagid"/>
+                </xsl:otherwise>
+            </xsl:choose>
             <xsl:call-template name="maintenanceAgencyTemplate">
                 <xsl:with-param name="repositorycode" select="following-sibling::*[name()='archguide']/*:identity/*:repositorid/@repositorycode"/>
                 <xsl:with-param name="agencyname" select="following-sibling::*[name()='archguide']/*:identity/*:autform/text()"/>
