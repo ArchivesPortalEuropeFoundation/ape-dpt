@@ -58,6 +58,9 @@ public class APETabbedPane extends JTabbedPane {
     private JButton convertEdmBtn;
     private JButton reportBtn;
 
+    private JLabel stylesheetLabel;
+    private JLabel schemaLabel;
+
     private JPanel xsltPanel;
     private JPanel xsdPanel;
 
@@ -114,6 +117,9 @@ public class APETabbedPane extends JTabbedPane {
         validateBtn = new JButton();
         convertEseBtn = new JButton();
         convertEdmBtn = new JButton();
+
+        stylesheetLabel = new JLabel(labels.getString("summary.stylesheets.label") + ":");
+        schemaLabel = new JLabel(labels.getString("summary.schemas.label") + ":");
 
         xsltPanel = new JPanel();
         xsdPanel = new JPanel();
@@ -232,6 +238,9 @@ public class APETabbedPane extends JTabbedPane {
         convertEseBtn.setText(labels.getString("summary.convertEse.button"));
         convertEdmBtn.setText(labels.getString("summary.convertEdm.button"));
         reportBtn.setText(labels.getString("dataquality.report.download"));
+
+        stylesheetLabel.setText(labels.getString("summary.stylesheets.label") + ":");
+        schemaLabel.setText(labels.getString("summary.schemas.label") + ":");
     }
 
     public void setValidationBtnText(String text) {
@@ -284,7 +293,7 @@ public class APETabbedPane extends JTabbedPane {
 
     private JComponent makeCheckboxes() {
         xsltPanel.setLayout(new BoxLayout(xsltPanel, BoxLayout.PAGE_AXIS));
-        xsltPanel.add(new JLabel(labels.getString("summary.stylesheets.label") + ":"));
+        xsltPanel.add(stylesheetLabel);
         JRadioButton radioButton;
         for(File xsltFile : Utilities.getXsltFiles()){
             radioButton = new JRadioButton(xsltFile.getName());
@@ -300,7 +309,7 @@ public class APETabbedPane extends JTabbedPane {
 
     private JComponent makeCheckboxesXsd() {
         xsdPanel.setLayout(new BoxLayout(xsdPanel, BoxLayout.PAGE_AXIS));
-        xsdPanel.add(new JLabel(labels.getString("summary.schemas.label") + ":"));
+        xsdPanel.add(schemaLabel);
         JRadioButton radioButton;
         for(Xsd_enum xsdEnum : Xsd_enum.values()){
             radioButton = new JRadioButton(xsdEnum.getReadableName());

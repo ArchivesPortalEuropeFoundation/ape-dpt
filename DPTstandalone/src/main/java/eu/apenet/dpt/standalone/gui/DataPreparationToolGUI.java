@@ -112,7 +112,8 @@ public class DataPreparationToolGUI extends JFrame {
     private ProfileListModel eseListModel;
     private JList eseList;
     private JLabel xmlEadListLabel;
-    
+    private JLabel eseListLabel;
+
     private JLabel progressLabel = new JLabel("", JLabel.CENTER);
     private JLabel resultArea = new JLabel();
     private JTable eagFormTable;
@@ -167,7 +168,6 @@ public class DataPreparationToolGUI extends JFrame {
         dateNormalization = new DateNormalization();
 
         super.setTitle(labels.getString("title"));
-        nameComponents();
         Image topLeftIcon = Utilities.icon.getImage();
         setIconImage(topLeftIcon);
 
@@ -309,6 +309,7 @@ public class DataPreparationToolGUI extends JFrame {
         validateSelectionBtn.addActionListener(new ValidateSelectionActionListener(this, getContentPane()));
         convertEseSelectionBtn.addActionListener(new ConvertEseActionListener(labels, this, apePanel));
 
+        nameComponents();
         wireUp();
         setSize(Toolkit.getDefaultToolkit().getScreenSize());
     }
@@ -360,6 +361,9 @@ public class DataPreparationToolGUI extends JFrame {
 
         validateSelectionBtn.setText(labels.getString("validateSelected"));
         convertEseSelectionBtn.setText(labels.getString("convertEseSelectionBtn"));
+
+        xmlEadListLabel.setText(labels.getString("xmlEadFiles"));
+        eseListLabel.setText(labels.getString("eseFiles"));
     }
 
     private void changeAllTextLg() {
@@ -793,7 +797,8 @@ public class DataPreparationToolGUI extends JFrame {
         xmlEadListPanel.add(new JScrollPane(xmlEadList, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER), BorderLayout.CENTER);
         xmlEadListPanel.add(xmlEadListLabel, BorderLayout.NORTH);
         JPanel eseListPanel = new JPanel(new BorderLayout());
-        eseListPanel.add(new JLabel(labels.getString("eseFiles")), BorderLayout.NORTH);
+        eseListLabel = new JLabel(labels.getString("eseFiles"));
+        eseListPanel.add(eseListLabel, BorderLayout.NORTH);
         eseList.setCellRenderer(new IconListCellRenderer(fileInstances));
         eseList.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
 //        eseList.addFocusListener(new FocusListener() {
