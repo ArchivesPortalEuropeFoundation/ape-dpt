@@ -932,6 +932,9 @@ http://purl.org/dc/terms/ http://www.dublincore.org/schemas/xmls/qdc/dcterms.xsd
             <dc:identifier>
                 <xsl:value-of select="/ead/eadheader/eadid/@identifier"/>
             </dc:identifier>
+            <dc:identifier>
+                <xsl:value-of select="normalize-space(/ead/archdesc/did/unitid)"/>
+            </dc:identifier>
             <xsl:if test='/ead/archdesc/did/repository'>
                 <xsl:apply-templates select='/ead/archdesc/did/repository' mode="archdesc" />
             </xsl:if>

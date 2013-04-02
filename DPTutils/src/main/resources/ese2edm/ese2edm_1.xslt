@@ -25,9 +25,9 @@
     <xsl:param name="xml_type_name"></xsl:param>
     
     <!--variable for identifying the eadid, stored at /metadata/record[1]/dc:identifier-->
-    <xsl:variable name="eadid" select="substring-after(/metadata/record[1]/dc:identifier, '_')" />
+    <xsl:variable name="eadid" select="/metadata/record[1]/dc:identifier[1]" />
     <!--variable for base path of document identifiers-->
-    <xsl:variable name="id_base" select="concat($prefix_url, '/' , $repository_code, '/', $xml_type_name, '/', $eadid)" />
+    <xsl:variable name="id_base" select="concat($prefix_url, '/' , $repository_code, '/', $xml_type_name, '/', substring-after($eadid, '_'))" />
     
     <!-- template matching the root node and creating the RDF start tag -->
     <xsl:template match="/">
@@ -42,11 +42,11 @@
         <!-- Provider aggregation -->
         <ore:Aggregation>
             <xsl:attribute name="rdf:about">
-                <xsl:value-of select="dc:identifier"/>
+                <xsl:value-of select="dc:identifier[1]"/>
             </xsl:attribute>
             <edm:aggregatedCHO>
                 <xsl:attribute name="rdf:resource">
-                    <xsl:value-of select="dc:identifier"/>
+                    <xsl:value-of select="dc:identifier[1]"/>
                 </xsl:attribute>
             </edm:aggregatedCHO>
             <xsl:for-each select='europeana:dataProvider'>
@@ -61,7 +61,19 @@
                     </xsl:attribute>
                 </edm:isShownBy>
             </xsl:for-each>
-            <xsl:choose>
+            <edm:isShownAt>
+                <xsl:choose>
+                    <xsl:when test='string-length(europeana:isShownAt) > 0'>
+                        <xsl:value-of select="europeana:isShownAt"/>
+                    </xsl:when>
+                    <xsl:otherwise>
+                        <xsl:if test='position() = 1'>
+                            <xsl:value-of select="concat($prefix_url, '/', $repository_code, '/', $xml_type_name, '/', substring-after($eadid, '_'))"/>
+                        </xsl:if>
+                    </xsl:otherwise>
+                </xsl:choose>
+            </edm:isShownAt>
+            <!--            <xsl:choose>
                 <xsl:when test='position() = 1'>
                     <xsl:for-each select="europeana:isShownAt">
                         <edm:isShownAt>
@@ -80,7 +92,7 @@
                         </edm:isShownAt>
                     </xsl:for-each>
                 </xsl:otherwise>
-            </xsl:choose>                        
+            </xsl:choose>-->
             <xsl:for-each select="europeana:provider">
                 <edm:provider>
                     <xsl:value-of select="."/>
@@ -103,8 +115,18 @@
         <!-- Provided Cultural Heritage Object -->
         <edm:ProvidedCHO>
             <xsl:attribute name="rdf:about">
-                <xsl:value-of select="dc:identifier"/>
+                <xsl:value-of select="dc:identifier[1]"/>
             </xsl:attribute>
+            <dc:identifier>
+                <xsl:choose>
+                    <xsl:when test='position() = 1'>
+                        <xsl:value-of select="dc:identifier[2]"/>
+                    </xsl:when>
+                    <xsl:otherwise>
+                        <xsl:value-of select="dc:identifier[1]"/>
+                    </xsl:otherwise>
+                </xsl:choose>
+            </dc:identifier>
             <!-- deal with "other" corresponding properties -->
             <xsl:call-template name="mapChoProperties"/>
             <xsl:if test='position() > 1'>
@@ -115,7 +137,7 @@
             <xsl:if test='preceding-sibling::record[1]/dcterms:alternative eq dcterms:alternative'>
                 <edm:isNextInSequence>
                     <xsl:attribute name="rdf:resource">
-                        <xsl:value-of select="preceding-sibling::record[1]/dc:identifier" />
+                        <xsl:value-of select="preceding-sibling::record[1]/dc:identifier[1]" />
                     </xsl:attribute>
                 </edm:isNextInSequence>
             </xsl:if>
@@ -130,7 +152,7 @@
                     </xsl:when>
                     <xsl:otherwise>
                         <xsl:if test='position() = 1'>
-                            <xsl:value-of select="concat($prefix_url, '/', $repository_code, '/', $xml_type_name, '/', $eadid )"/>
+                            <xsl:value-of select="concat($prefix_url, '/', $repository_code, '/', $xml_type_name, '/', substring-after($eadid, '_'))"/>
                         </xsl:if>
                     </xsl:otherwise>
                 </xsl:choose>
@@ -178,7 +200,7 @@
         <xsl:if test='dcterms:alternative'>
             <skos:Concept>
                 <xsl:attribute name="rdf:about">
-                    <xsl:value-of select="dc:identifier"/>
+                    <xsl:value-of select="dc:identifier[1]"/>
                 </xsl:attribute>
                 <xsl:for-each select="dcterms:alternative">
                     <skos:prefLabel>
@@ -197,12 +219,12 @@
     -->
     <xsl:template name="mapChoProperties">
 
-        <xsl:for-each select="dc:identifier">
+        <!--<xsl:for-each select="dc:identifier">
             <xsl:call-template name="create_property">
                 <xsl:with-param name="tgt_property">dc:identifier</xsl:with-param>
             </xsl:call-template>
         </xsl:for-each>		
-		
+        -->	
         <xsl:for-each select="dc:publisher">
             <xsl:call-template name="create_property">
                 <xsl:with-param name="tgt_property">dc:publisher</xsl:with-param>
