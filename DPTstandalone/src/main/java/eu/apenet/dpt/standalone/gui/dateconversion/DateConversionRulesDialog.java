@@ -24,6 +24,7 @@ import java.util.Vector;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.swing.JButton;
+import javax.swing.JDialog;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -40,8 +41,8 @@ import javax.swing.table.DefaultTableModel;
  *
  * @author papp
  */
-public class DateConversionRulesFrame extends JFrame {
-    private static final Logger LOG = Logger.getLogger(DateConversionRulesFrame.class);
+public class DateConversionRulesDialog extends JDialog{
+    private static final Logger LOG = Logger.getLogger(DateConversionRulesDialog.class);
 
     private ResourceBundle labels;
     private RetrieveFromDb retrieveFromDb;
@@ -52,7 +53,9 @@ public class DateConversionRulesFrame extends JFrame {
     private DefaultTableModel dm;
     private DefaultTableModel oldModel;
 
-    public DateConversionRulesFrame(ResourceBundle labels, RetrieveFromDb retrieveFromDb) {
+    public DateConversionRulesDialog(ResourceBundle labels, RetrieveFromDb retrieveFromDb) {
+        super.setTitle(labels.getString("dateConversionListTitle"));
+        super.setModalityType(ModalityType.APPLICATION_MODAL);
         xmlFilehandler = new DateConversionXMLFilehandler();
         this.labels = labels;
         this.retrieveFromDb = retrieveFromDb;
@@ -60,8 +63,6 @@ public class DateConversionRulesFrame extends JFrame {
     }
 
     private void createDataConversionRulesList() {
-        super.setTitle(labels.getString("dateConversionListTitle"));
-
         Vector<String> columnNames = new Vector<String>();
         columnNames.add(labels.getString("dateConversion.valueRead"));
         columnNames.add(labels.getString("dateConversion.valueConverted"));

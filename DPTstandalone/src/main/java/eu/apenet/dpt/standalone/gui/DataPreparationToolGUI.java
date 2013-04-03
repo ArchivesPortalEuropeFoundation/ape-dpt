@@ -4,7 +4,7 @@ import eu.apenet.dpt.standalone.gui.adhoc.FileNameComparator;
 import eu.apenet.dpt.standalone.gui.batch.ConvertAndValidateActionListener;
 import eu.apenet.dpt.standalone.gui.conversion.ConvertActionListener;
 import eu.apenet.dpt.standalone.gui.databasechecker.DatabaseCheckerActionListener;
-import eu.apenet.dpt.standalone.gui.dateconversion.DateConversionRulesFrame;
+import eu.apenet.dpt.standalone.gui.dateconversion.DateConversionRulesDialog;
 import eu.apenet.dpt.standalone.gui.db.RetrieveFromDb;
 import eu.apenet.dpt.standalone.gui.ead2ese.ConvertEseActionListener;
 import eu.apenet.dpt.standalone.gui.eag2012.Eag2012Frame;
@@ -561,13 +561,13 @@ public class DataPreparationToolGUI extends JFrame {
         });
         listDateConversionRulesItem.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent actionEvent) {
-                JFrame dateConversionRulesFrame = new DateConversionRulesFrame(labels, retrieveFromDb);
+                JDialog dateConversionRulesDialog = new DateConversionRulesDialog(labels, retrieveFromDb);
 
-                dateConversionRulesFrame.setPreferredSize(new Dimension(getContentPane().getWidth() * 3 / 8, getContentPane().getHeight() * 7 / 8));
-                dateConversionRulesFrame.setLocation(getContentPane().getWidth() / 8, getContentPane().getHeight() / 8);
+                dateConversionRulesDialog.setPreferredSize(new Dimension(getContentPane().getWidth() * 3 / 8, getContentPane().getHeight() * 7 / 8));
+                dateConversionRulesDialog.setLocation(getContentPane().getWidth() / 8, getContentPane().getHeight() / 8);
 
-                dateConversionRulesFrame.pack();
-                dateConversionRulesFrame.setVisible(true);
+                dateConversionRulesDialog.pack();
+                dateConversionRulesDialog.setVisible(true);
 
             }
         });
