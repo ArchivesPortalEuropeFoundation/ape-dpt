@@ -452,7 +452,7 @@ public class EagAccessAndServicesPanel extends EagPanels {
         internetAccessDescTf = new TextFieldWithLanguage(internetAccess.getDescriptiveNote().getP().get(0).getContent(), internetAccess.getDescriptiveNote().getLang());
         builder.add(internetAccessDescTf.getTextField(), cc.xy(3, rowNb));
         builder.addLabel(labels.getString("eag2012.language"), cc.xy(5, rowNb));
-        builder.add(internetAccessDescTf.getTextField(), cc.xy(7, rowNb));
+        builder.add(internetAccessDescTf.getLanguageBox(), cc.xy(7, rowNb));
         setNextRow();
 
 
