@@ -774,6 +774,10 @@ public class DataPreparationToolGUI extends JFrame {
         return this;
     }
 
+    public String getDefaultSaveLocation() {
+        return retrieveFromDb.retrieveDefaultSaveFolder();
+    }
+
     public static void createErrorOrWarningPanel(Throwable e, boolean isError, String message, Component owner) {
         java.util.logging.Level level = java.util.logging.Level.INFO;
         if (isError) {
