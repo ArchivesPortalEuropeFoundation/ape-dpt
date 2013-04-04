@@ -135,7 +135,7 @@ public class EagAccessAndServicesPanel extends EagPanels {
             builder.add(textFieldWithLanguage.getLanguageBox(), cc.xy(7, rowNb));
             setNextRow();
 
-            builder.addLabel(labels.getString("eag2012.linkTitleLabel"), cc.xy(1, rowNb));
+            builder.addLabel(labels.getString("eag2012.linkLabel"), cc.xy(1, rowNb));
             builder.add(textFieldWithLanguage.getExtraField(),                                            cc.xy (3, rowNb));
             setNextRow();
         }
