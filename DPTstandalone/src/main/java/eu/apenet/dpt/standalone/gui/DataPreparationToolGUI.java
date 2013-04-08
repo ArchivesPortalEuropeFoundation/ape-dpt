@@ -1114,7 +1114,10 @@ public class DataPreparationToolGUI extends JFrame {
                 if (fileInstance.getValidationSchema().getFileType().equals(FileInstance.FileType.EAD))
                     apeTabbedPane.enableConversionEseBtn();
             }
-
+            if(fileInstance.isEdm()) {
+                apeTabbedPane.disableConversionEdmBtn();
+                apeTabbedPane.disableConversionEseBtn();
+            }
             refreshButtons(fileInstance, Utilities.XSLT_GROUP);
             refreshButtons(fileInstance, Utilities.XSD_GROUP);
         } else {
