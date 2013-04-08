@@ -48,6 +48,7 @@ public class EseOptionsPanel extends JPanel {
     private static final String IMAGE = "IMAGE";
     private static final String VIDEO = "VIDEO";
     private static final String SOUND = "SOUND";
+    private static final String THREE_D = "3D";
     private static final String YES = "yes";
     private static final String NO = "no";
     private static final String PROVIDE = "provide";
@@ -160,7 +161,7 @@ public class EseOptionsPanel extends JPanel {
         panel.setBorder(BLACK_LINE);
         formPanel.add(panel);
 
-        panel = new JPanel(new GridLayout(4, 3));
+        panel = new JPanel(new GridLayout(5, 3));
         typeGroup = new ButtonGroup();
         JRadioButton radioButton;
 
@@ -198,6 +199,15 @@ public class EseOptionsPanel extends JPanel {
             radioButton.setSelected(true);
         }
         radioButton.setActionCommand(SOUND);
+        typeGroup.add(radioButton);
+        panel.add(radioButton);
+
+        panel.add(new JLabel(""));
+        radioButton = new JRadioButton("3D");
+        if (currentRoleType.equals("3D")) {
+            radioButton.setSelected(true);
+        }
+        radioButton.setActionCommand(THREE_D);
         typeGroup.add(radioButton);
         panel.add(radioButton);
 
