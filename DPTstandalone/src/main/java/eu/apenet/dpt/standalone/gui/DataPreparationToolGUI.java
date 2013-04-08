@@ -1103,7 +1103,7 @@ public class DataPreparationToolGUI extends JFrame {
                 apeTabbedPane.disableConversionEseBtn();
                 saveSelectedItem.setEnabled(true);
             }
-/*            if (fileInstance.isEse()) {
+            if (fileInstance.isEse()) {
                 apeTabbedPane.setEseConversionErrorText(fileInstance.getEuropeanaConversionErrors());    
                 validateItem.setEnabled(false);
                 apeTabbedPane.disableConversionBtn();
@@ -1113,10 +1113,10 @@ public class DataPreparationToolGUI extends JFrame {
                     apeTabbedPane.enableConversionEseBtn();
             } else {
                 validateItem.setEnabled(true);
-                apeTabbedPane.enableValidationBtn();
-                apeTabbedPane.disableConversionEseBtn();
+                apeTabbedPane.enableConversionEseBtn();
+                apeTabbedPane.disableConversionEdmBtn();
                 saveSelectedItem.setEnabled(true);
-            }*/
+            }
 
             refreshButtons(fileInstance, Utilities.XSLT_GROUP);
             refreshButtons(fileInstance, Utilities.XSD_GROUP);
