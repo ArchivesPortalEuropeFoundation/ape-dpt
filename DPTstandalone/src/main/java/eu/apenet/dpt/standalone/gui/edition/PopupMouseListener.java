@@ -148,6 +148,15 @@ public class PopupMouseListener implements MouseListener {
                 ((Element)node).setAttributeNode(attr);
                 modelSupport.fireChildAdded(path, node.getAttributes().getLength()-1, attr);
             }
+        } else if(actionCommand.equals(labels.getString(ActionNamesEnum.INSERT_EADID.getBundleCode()))) {
+            String result = createPopupQuestion(2, labels.getString("eadidQuery"), labels.getString("eadidQuery") + ":");
+            if(result != null) {
+                Element eadidTag = node.getOwnerDocument().createElementNS(NodeAppendable.XMLNS_EAD, "eadid");
+                Text textNode = node.getOwnerDocument().createTextNode(result);
+                eadidTag.appendChild(textNode);
+                node.appendChild(eadidTag);
+                modelSupport.fireTreeStructureChanged(path);
+            }
         }
 
         if(!tree.isExpanded(path))

@@ -200,6 +200,9 @@
     <xsl:template match="eadheader" mode="copy">
         <eadheader countryencoding="iso3166-1" dateencoding="iso8601" langencoding="iso639-2b" repositoryencoding="iso15511" scriptencoding="iso15924">
             <xsl:attribute name="relatedencoding" select="'MARC21'"/>
+            <xsl:if test="not(eadid)">
+                <xsl:call-template name="addEadid" />
+            </xsl:if>
             <xsl:apply-templates select="node()" mode="copy"/>
             <xsl:if test="not(revisiondesc) and normalize-space($versionnb)">
                 <xsl:call-template name="revisiondesc_ape"/>
@@ -254,7 +257,7 @@
     </xsl:template>
 
     <!-- eadid -->
-    <xsl:template match="eadid" mode="copy">
+    <xsl:template match="eadid" name="addEadid" mode="copy">
         <eadid>
             <xsl:choose>
                 <xsl:when test="@identifier">

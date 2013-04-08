@@ -50,9 +50,10 @@ public class FileInstance {
         this.lastOperation = Operation.NONE;
     }
 
-//    public FileInstance(File file) {
-//        this(file, false);
-//    }
+    @Override
+    public String toString() {
+        return name + ":\noriginalPath=" + originalPath + "\nisValid=" + isValid + "\nisConverted=" + isConverted + "\nisEse=" + isEse + "\ncurrentLocation=" + currentLocation + "\nvalidationSchema=" + validationSchema.getName() + "\nconversionScript=" + conversionScriptName;
+    }
 
     public FileInstance(File file, String defaultXsl, String defaultXsd) {
         this(file, false, defaultXsl, defaultXsd);

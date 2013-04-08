@@ -2,6 +2,7 @@ package eu.apenet.dpt.standalone.gui.eag2012;
 
 import eu.apenet.dpt.standalone.gui.ProfileListModel;
 import eu.apenet.dpt.standalone.gui.eag2012.data.Eag;
+import eu.apenet.dpt.utils.util.LanguageIsoList;
 import org.apache.log4j.Logger;
 
 import javax.swing.*;
@@ -31,20 +32,8 @@ public abstract class EagPanels {
         temp += "p";
         EDITOR_ROW_SPEC = temp;
 
-        String[] isoLanguages = Locale.getISOLanguages();
-        Map<String, String> languagesTemp = new LinkedHashMap<String, String>(isoLanguages.length);
-        LinkedList<String> languagesList = new LinkedList<String>();
-        for(String isoLanguage : isoLanguages)
-            languagesTemp.put(new Locale(isoLanguage).getISO3Language(), isoLanguage);//DisplayLanguage(Locale.ENGLISH), isoLanguage);
-
-        List<String> tempList = new LinkedList<String>(languagesTemp.keySet());
-        Collections.sort(tempList, String.CASE_INSENSITIVE_ORDER);
-
-        for(String tempLanguage : tempList)
-            languagesList.add(tempLanguage);
-
+        List<String> languagesList = LanguageIsoList.getLanguageIsoList();
         languages = languagesList.toArray(new String[]{});
-
         languagesList.add("---");
         languagesDisplay = languagesList.toArray(new String[]{});
     }

@@ -1073,6 +1073,7 @@ public class DataPreparationToolGUI extends JFrame {
 
         if(StringUtils.isNotBlank(text)) {
             FileInstance fileInstance = fileInstances.get(text);
+            LOG.trace(fileInstance);
             if (fileInstance.isValid()) {
 //                apeTabbedPane.setValidationErrorText(labels.getString("validationSuccess"));
                 apeTabbedPane.setValidationErrorText(fileInstance.getValidationErrors());
@@ -1085,11 +1086,9 @@ public class DataPreparationToolGUI extends JFrame {
             if (fileInstance.isConverted()) {
                 convertItem.setEnabled(false);
                 apeTabbedPane.disableConversionBtn();
-                apeTabbedPane.setValidationBtnText(labels.getString("validate"));
             } else {
                 convertItem.setEnabled(true);
                 apeTabbedPane.enableConversionBtn();
-                apeTabbedPane.setValidationBtnText(labels.getString("validate"));
             }
             if (fileInstance.isValid()) {
                 validateItem.setEnabled(false);
