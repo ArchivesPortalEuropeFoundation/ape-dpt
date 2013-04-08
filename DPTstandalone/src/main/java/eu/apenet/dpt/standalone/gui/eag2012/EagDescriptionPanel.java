@@ -267,6 +267,8 @@ public class EagDescriptionPanel extends EagPanels {
                 super.updateEagObject();
             } catch (Eag2012FormException e) {
             }
+            if(eag.getArchguide().getDesc().getRepositories().getRepository().get(0).getAdminhierarchy() == null)
+                return;
             eag.getArchguide().getDesc().getRepositories().getRepository().get(0).getAdminhierarchy().getAdminunit().add(new Adminunit());
             reloadTabbedPanel(new EagDescriptionPanel(eag, tabbedPane, eag2012Frame, model, labels).buildEditorPanel(errors), 0);
         }
@@ -350,6 +352,8 @@ public class EagDescriptionPanel extends EagPanels {
 
                 int counterUnitAdministrativeStructureTfs = 0;
                 if(unitAdministrativeStructureTfs.size() > 0) {
+                    if(repository.getAdminhierarchy() == null)
+                        repository.setAdminhierarchy(new Adminhierarchy());
                     repository.getAdminhierarchy().getAdminunit().clear();
                     for(TextFieldWithLanguage textFieldWithLanguage : unitAdministrativeStructureTfs) {
                         if(StringUtils.isNotEmpty(textFieldWithLanguage.getTextValue())) {
@@ -361,7 +365,7 @@ public class EagDescriptionPanel extends EagPanels {
                         }
                     }
                 }
-                if(counterUnitAdministrativeStructureTfs == 0 && repository.getAdminhierarchy() != null)
+                if(counterUnitAdministrativeStructureTfs == 0)
                     repository.setAdminhierarchy(null);
 
                 if(StringUtils.isNotEmpty(buildingTf.getTextValue())) {
