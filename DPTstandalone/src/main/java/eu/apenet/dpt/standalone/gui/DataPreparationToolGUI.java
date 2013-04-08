@@ -674,9 +674,7 @@ public class DataPreparationToolGUI extends JFrame {
                                 if(tree != null)
                                     tree.addMouseListener(new PopupMouseListener(tree, getDataPreparationToolGUI(), getContentPane()));
                             }
-                            apePanel.getApeTabbedPane().changeBackgroundColor(APETabbedPane.TAB_CONVERSION, Utilities.TAB_COLOR);
-                            apePanel.getApeTabbedPane().changeBackgroundColor(APETabbedPane.TAB_VALIDATION, Utilities.TAB_COLOR);
-                            apePanel.getApeTabbedPane().changeBackgroundColor(APETabbedPane.TAB_ESE, Utilities.TAB_COLOR);
+                            disableTabFlashing();
                         }
                         checkHoldingsGuideButton();
                     } else {
@@ -1126,6 +1124,12 @@ public class DataPreparationToolGUI extends JFrame {
             apeTabbedPane.setEseConversionErrorText("");
             apeTabbedPane.createEditionTree(null);
         }
+    }
+
+    public void disableTabFlashing() {
+        apePanel.getApeTabbedPane().changeBackgroundColor(APETabbedPane.TAB_CONVERSION, Utilities.TAB_COLOR);
+        apePanel.getApeTabbedPane().changeBackgroundColor(APETabbedPane.TAB_VALIDATION, Utilities.TAB_COLOR);
+        apePanel.getApeTabbedPane().changeBackgroundColor(APETabbedPane.TAB_ESE, Utilities.TAB_COLOR);
     }
 
     public void refreshButtons(FileInstance fileInstance, int groupId) {

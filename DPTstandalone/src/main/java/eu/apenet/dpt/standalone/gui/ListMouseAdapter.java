@@ -46,6 +46,7 @@ public class ListMouseAdapter extends MouseAdapter {
                             filelistModel.removeFiles(filelist.getSelectedValues());
                         } else {
                             filelistModel.removeFile((File) filelist.getSelectedValue());
+                            dataPreparationToolGUI.disableTabFlashing();
                         }
                     } catch (Exception ex) {
                         DataPreparationToolGUI.createErrorOrWarningPanel(ex, true, dataPreparationToolGUI.getLabels().getString("errorRemovingFileFromList"), dataPreparationToolGUI.getContentPane());
