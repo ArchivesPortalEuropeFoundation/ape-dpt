@@ -662,6 +662,11 @@ http://purl.org/dc/terms/ http://www.dublincore.org/schemas/xmls/qdc/dcterms.xsd
                                         <xsl:text>VIDEO</xsl:text>
                                     </europeana:type>
                                 </xsl:when>									
+                                <xsl:when test=' "3D" eq fn:string(@xlink:role)'>
+                                    <europeana:type>
+                                        <xsl:text>3D</xsl:text>
+                                    </europeana:type>
+                                </xsl:when>									
                                 <xsl:otherwise>
                                     <europeana:type>
                                         <xsl:value-of select="$europeana_type"/>
@@ -872,6 +877,9 @@ http://purl.org/dc/terms/ http://www.dublincore.org/schemas/xmls/qdc/dcterms.xsd
             </xsl:when>		
             <xsl:when test=' "VIDEO" eq fn:string($role)'>
                 <xsl:text>MovingImage</xsl:text>
+            </xsl:when>	
+            <xsl:when test=' "3D" eq fn:string($role)'>
+                <xsl:text>PhysicalObject</xsl:text>
             </xsl:when>	
             <xsl:otherwise>
                 <xsl:call-template name="convertToDcType">
