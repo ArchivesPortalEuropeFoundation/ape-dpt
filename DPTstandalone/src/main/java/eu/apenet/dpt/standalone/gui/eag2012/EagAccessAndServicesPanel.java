@@ -46,7 +46,7 @@ public class EagAccessAndServicesPanel extends EagPanels {
     private JTextField webpageTitleLibraryTf;
     private JTextField monographicPubLibraryTf;
     private JTextField serialPubLibraryTf;
-    private TextFieldWithLanguage internetAccessDescTf;
+    private List<TextFieldWithLanguage> internetAccessDescTfs;
     private JTextField telephoneRestorationlabTf;
     private JTextField emailRestorationlabTf;
     private JTextField emailTitleRestorationlabTf;
@@ -448,15 +448,22 @@ public class EagAccessAndServicesPanel extends EagPanels {
             repository.getServices().setInternetAccess(internetAccess);
         }
         InternetAccess internetAccess = repository.getServices().getInternetAccess();
-        builder.addLabel(labels.getString("eag2012.descriptionLabel"),    cc.xy (1, rowNb));
-        internetAccessDescTf = new TextFieldWithLanguage(internetAccess.getDescriptiveNote().getP().get(0).getContent(), internetAccess.getDescriptiveNote().getLang());
-        builder.add(internetAccessDescTf.getTextField(), cc.xy(3, rowNb));
-        builder.addLabel(labels.getString("eag2012.language"), cc.xy(5, rowNb));
-        builder.add(internetAccessDescTf.getLanguageBox(), cc.xy(7, rowNb));
+        internetAccessDescTfs = new ArrayList<TextFieldWithLanguage>(internetAccess.getDescriptiveNote().getP().size());
+        for(P p : internetAccess.getDescriptiveNote().getP()) {
+            TextFieldWithLanguage textFieldWithLanguage = new TextFieldWithLanguage(p.getContent(), p.getLang());
+            internetAccessDescTfs.add(textFieldWithLanguage);
+            builder.addLabel(labels.getString("eag2012.descriptionLabel"),    cc.xy (1, rowNb));
+            builder.add(textFieldWithLanguage.getTextField(), cc.xy(3, rowNb));
+            builder.addLabel(labels.getString("eag2012.language"), cc.xy(5, rowNb));
+            builder.add(textFieldWithLanguage.getLanguageBox(), cc.xy(7, rowNb));
+            setNextRow();
+        }
+
+        JButton addInternetAccessBtn = new ButtonEag(labels.getString("eag2012.addInternetAccessButton"));
+        builder.add(addInternetAccessBtn, cc.xy (1, rowNb));
+        addInternetAccessBtn.addActionListener(new AddInternetAccessBtnAction(eag, tabbedPane, model));
         setNextRow();
 
-
-//        builder.addSeparator(labels.getString("eag2012.technicalServices"), cc.xy(1, rowNb));
         builder.addSeparator(labels.getString("eag2012.technicalServices"), cc.xyw(1, rowNb, 7));
         setNextRow();
         builder.addSeparator(labels.getString("eag2012.restaurationLab"), cc.xyw(1, rowNb, 7));
@@ -864,6 +871,27 @@ public class EagAccessAndServicesPanel extends EagPanels {
             reloadTabbedPanel(new EagAccessAndServicesPanel(eag, tabbedPane, eag2012Frame, model, labels).buildEditorPanel(errors), 3);
         }
     }
+    public class AddInternetAccessBtnAction extends UpdateEagObject {
+        AddInternetAccessBtnAction(Eag eag, JTabbedPane tabbedPane, ProfileListModel model) {
+            super(eag, tabbedPane, model);
+        }
+
+        @Override
+        public void actionPerformed(ActionEvent actionEvent) {
+            try {
+                super.updateEagObject();
+            } catch (Eag2012FormException e) {
+            }
+            if(eag.getArchguide().getDesc().getRepositories().getRepository().get(0).getServices().getInternetAccess() == null) {
+                eag.getArchguide().getDesc().getRepositories().getRepository().get(0).getServices().setInternetAccess(new InternetAccess());
+            }
+            if(eag.getArchguide().getDesc().getRepositories().getRepository().get(0).getServices().getInternetAccess().getDescriptiveNote() == null) {
+                eag.getArchguide().getDesc().getRepositories().getRepository().get(0).getServices().getInternetAccess().setDescriptiveNote(new DescriptiveNote());
+            }
+            eag.getArchguide().getDesc().getRepositories().getRepository().get(0).getServices().getInternetAccess().getDescriptiveNote().getP().add(new P());
+            reloadTabbedPanel(new EagAccessAndServicesPanel(eag, tabbedPane, eag2012Frame, model, labels).buildEditorPanel(errors), 3);
+        }
+    }
 
 
     public class SaveBtnAction extends UpdateEagObject {
@@ -1133,12 +1161,22 @@ public class EagAccessAndServicesPanel extends EagPanels {
                     repository.getServices().setLibrary(null);
                 }
 
-
-                if(StringUtils.isNotEmpty(internetAccessDescTf.getTextValue())) {
-                    repository.getServices().getInternetAccess().getDescriptiveNote().getP().get(0).setContent(internetAccessDescTf.getTextValue());
-                    repository.getServices().getInternetAccess().getDescriptiveNote().setLang(internetAccessDescTf.getLanguage());
-                    repository.getServices().getInternetAccess().setQuestion("yes");
-                } else {
+                InternetAccess internetAccess = repository.getServices().getInternetAccess();
+                internetAccess.setQuestion("yes");
+                boolean isInternetAccessFilled = false;
+                if(internetAccessDescTfs.size() > 0) {
+                    internetAccess.getDescriptiveNote().getP().clear();
+                    for(TextFieldWithLanguage textFieldWithLanguage : internetAccessDescTfs) {
+                        if(StringUtils.isNotEmpty(textFieldWithLanguage.getTextValue())) {
+                            P p = new P();
+                            p.setContent(textFieldWithLanguage.getTextValue());
+                            p.setLang(textFieldWithLanguage.getLanguage());
+                            internetAccess.getDescriptiveNote().getP().add(p);
+                            isInternetAccessFilled = true;
+                        }
+                    }
+                }
+                if(!isInternetAccessFilled) {
                     repository.getServices().setInternetAccess(null);
                 }
 
