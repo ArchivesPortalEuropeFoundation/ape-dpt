@@ -52,6 +52,7 @@ public class EagAccessAndServicesPanel extends EagPanels {
     private JTextField emailTitleRestorationlabTf;
     private JTextField webpageRestorationlabTf;
     private JTextField webpageTitleRestorationlabTf;
+    private List<TextFieldWithLanguage> descriptionRestorationServiceTfs;
     private JTextField telephoneReproductionServiceTf;
     private JTextField emailReproductionServiceTf;
     private JTextField emailTitleReproductionServiceTf;
@@ -475,6 +476,28 @@ public class EagAccessAndServicesPanel extends EagPanels {
             repository.getServices().getTechservices().setRestorationlab(new Restorationlab());
         Restorationlab restorationlab = repository.getServices().getTechservices().getRestorationlab();
 
+
+        if(restorationlab.getDescriptiveNote() == null)
+            restorationlab.setDescriptiveNote(new DescriptiveNote());
+        if(restorationlab.getDescriptiveNote().getP().size() == 0)
+            restorationlab.getDescriptiveNote().getP().add(new P());
+
+        descriptionRestorationServiceTfs = new ArrayList<TextFieldWithLanguage>(restorationlab.getDescriptiveNote().getP().size());
+        for(P p : restorationlab.getDescriptiveNote().getP()) {
+            TextFieldWithLanguage textFieldWithLanguage = new TextFieldWithLanguage(p.getContent(), p.getLang());
+            descriptionRestorationServiceTfs.add(textFieldWithLanguage);
+            builder.addLabel(labels.getString("eag2012.descriptionLabel"),    cc.xy (1, rowNb));
+            builder.add(textFieldWithLanguage.getTextField(), cc.xy(3, rowNb));
+            builder.addLabel(labels.getString("eag2012.language"), cc.xy(5, rowNb));
+            builder.add(textFieldWithLanguage.getLanguageBox(), cc.xy(7, rowNb));
+            setNextRow();
+        }
+        JButton addDescriptionRestorationBtn = new ButtonEag(labels.getString("eag2012.addDescriptionTranslationButton"));
+        builder.add(addDescriptionRestorationBtn, cc.xy (1, rowNb));
+        addDescriptionRestorationBtn.addActionListener(new AddDescriptionRestorationBtnAction(eag, tabbedPane, model));
+        setNextRow();
+
+
         if(restorationlab.getContact() == null)
             restorationlab.setContact(new Contact());
 
@@ -531,7 +554,7 @@ public class EagAccessAndServicesPanel extends EagPanels {
             builder.add(textFieldWithLanguage.getLanguageBox(), cc.xy(7, rowNb));
             setNextRow();
         }
-        JButton addDescriptionReproductionBtn = new ButtonEag(labels.getString("eag2012.addDescriptionReproductionButton"));
+        JButton addDescriptionReproductionBtn = new ButtonEag(labels.getString("eag2012.addDescriptionTranslationButton"));
         builder.add(addDescriptionReproductionBtn, cc.xy (1, rowNb));
         addDescriptionReproductionBtn.addActionListener(new AddDescriptionReproductionBtnAction(eag, tabbedPane, model));
         setNextRow();
@@ -933,6 +956,26 @@ public class EagAccessAndServicesPanel extends EagPanels {
         }
     }
 
+    public class AddDescriptionRestorationBtnAction extends UpdateEagObject {
+        AddDescriptionRestorationBtnAction(Eag eag, JTabbedPane tabbedPane, ProfileListModel model) {
+            super(eag, tabbedPane, model);
+        }
+
+        @Override
+        public void actionPerformed(ActionEvent actionEvent) {
+            try {
+                super.updateEagObject();
+            } catch (Eag2012FormException e) {
+            }
+            Restorationlab restorationlab = eag.getArchguide().getDesc().getRepositories().getRepository().get(0).getServices().getTechservices().getRestorationlab();
+            if(restorationlab.getDescriptiveNote() == null) {
+                restorationlab.setDescriptiveNote(new DescriptiveNote());
+            }
+            restorationlab.getDescriptiveNote().getP().add(new P());
+            reloadTabbedPanel(new EagAccessAndServicesPanel(eag, tabbedPane, eag2012Frame, model, labels).buildEditorPanel(errors), 3);
+        }
+    }
+
 
     public class SaveBtnAction extends UpdateEagObject {
         SaveBtnAction(Eag eag, JTabbedPane tabbedPane, ProfileListModel model) {
@@ -1222,7 +1265,26 @@ public class EagAccessAndServicesPanel extends EagPanels {
 
                 Techservices techservices = repository.getServices().getTechservices();
                 Restorationlab restorationlab = techservices.getRestorationlab();
+
+                boolean isRestorationDescFilled = false;
                 boolean restorationLabExists = false;
+                if(descriptionRestorationServiceTfs.size() > 0) {
+                    restorationlab.getDescriptiveNote().getP().clear();
+                    for(TextFieldWithLanguage textFieldWithLanguage : descriptionRestorationServiceTfs) {
+                        if(StringUtils.isNotEmpty(textFieldWithLanguage.getTextValue())) {
+                            P p = new P();
+                            p.setContent(textFieldWithLanguage.getTextValue());
+                            p.setLang(textFieldWithLanguage.getLanguage());
+                            restorationlab.getDescriptiveNote().getP().add(p);
+                            isRestorationDescFilled = true;
+                            restorationLabExists = true;
+                        }
+                    }
+                }
+                if(!isRestorationDescFilled) {
+                    restorationlab.setDescriptiveNote(null);
+                }
+
                 if(StringUtils.isNotEmpty(telephoneRestorationlabTf.getText())) {
                     restorationlab.getContact().getTelephone().get(0).setContent(telephoneRestorationlabTf.getText());
                     restorationLabExists = true;
