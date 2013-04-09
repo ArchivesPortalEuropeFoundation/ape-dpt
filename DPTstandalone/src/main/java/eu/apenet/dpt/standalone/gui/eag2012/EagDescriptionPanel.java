@@ -25,7 +25,9 @@ public class EagDescriptionPanel extends EagPanels {
 
 //    private TextFieldWithLanguage repositoryHistoryTf;
     private List<TextFieldWithLanguage> repositoryHistoryTfs;
+//    private List<TextFieldWithLanguage> repositoryFoundationTfs;
     private TextFieldWithLanguage repositoryFoundationTf;
+//    private List<TextFieldWithLanguage> repositorySuppressionTfs;
     private TextFieldWithLanguage repositorySuppressionTf;
     private List<TextFieldWithLanguage> unitAdministrativeStructureTfs;
     private List<TextFieldWithLanguage> buildingTfs;
@@ -99,6 +101,8 @@ public class EagDescriptionPanel extends EagPanels {
             repositorfound.setRule(new Rule());
             repository.setRepositorfound(repositorfound);
         }
+//        for(Rule rule : repository.getRepositorfound().getRule()) {
+//        }
         builder.addLabel(labels.getString("eag2012.dateRepositoryFoundation"), cc.xy(1, rowNb));
         repositoryFoundationTf = new TextFieldWithLanguage(repository.getRepositorfound().getRule().getContent(), repository.getRepositorfound().getRule().getLang(), repository.getRepositorfound().getDate().getContent());
         builder.add(repositoryFoundationTf.getExtraField(), cc.xy(3, rowNb));
