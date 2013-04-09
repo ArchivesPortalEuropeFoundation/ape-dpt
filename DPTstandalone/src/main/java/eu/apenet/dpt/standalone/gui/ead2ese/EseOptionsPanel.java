@@ -143,8 +143,10 @@ public class EseOptionsPanel extends JPanel {
         if (repository != null && !repository.equals("")) {
             dataProviderTextArea.setText(repository);
         } else {
-            panel2.setVisible(true);
-            dataProviderTextArea.setText(archdescRepository);
+            if (archdescRepository != null) {
+                panel2.setVisible(true);
+                dataProviderTextArea.setText(archdescRepository);
+            }
         }
         panel.setBorder(BLACK_LINE);
         formPanel.add(panel);
@@ -681,25 +683,22 @@ public class EseOptionsPanel extends JPanel {
                 public void run() {
                     int numberOfFiles = selectedIndices.size();
                     int currentFileNumberBatch = 0;
-                    ProgressFrame progressFrame = null;
+
+                    try {
+                        checkIfAllFilled();
+                    } catch (Exception ex1) {
+                        DataPreparationToolGUI.createErrorOrWarningPanel(ex1, false, labels.getString("ese.formNotFilledError"), parent);
+                    }
+
+                    ProgressFrame progressFrame = new ProgressFrame(labels, parent, true, true, apexActionListener);
+                    ProgressFrame.ApeProgressBar progressBar = progressFrame.getProgressBarBatch();
 
                     for (Object oneFile : selectedIndices) {
                         if (!continueLoop) {
                             break;
                         }
 
-
                         try {
-                            try {
-                                checkIfAllFilled();
-                            } catch (Exception ex1) {
-                                DataPreparationToolGUI.createErrorOrWarningPanel(ex1, false, labels.getString("ese.formNotFilledError"), parent);
-                                throw ex1;
-                            }
-
-                            progressFrame = new ProgressFrame(labels, parent, true, true, apexActionListener);
-                            ProgressFrame.ApeProgressBar progressBar = progressFrame.getProgressBarBatch();
-
                             apeTabbedPane.setEseConversionErrorText(labels.getString("ese.conversionEseStarted") + "\n");
                             SummaryWorking summaryWorking = new SummaryWorking(dataPreparationToolGUI.getResultArea(), progressBar);
                             summaryWorking.setTotalNumberFiles(numberOfFiles);
@@ -719,10 +718,12 @@ public class EseOptionsPanel extends JPanel {
                             } catch (Exception ex) {
                                 apeTabbedPane.checkFlashingTab(APETabbedPane.TAB_ESE, Utilities.FLASHING_RED_COLOR);
                             } finally {
-                                if(summaryWorking != null)
+                                if (summaryWorking != null) {
                                     summaryWorking.stop();
-                                if(threadRunner != null)
+                                }
+                                if (threadRunner != null) {
                                     threadRunner.interrupt();
+                                }
                             }
                         } catch (Exception e) {
                             LOG.error(e);
@@ -865,7 +866,7 @@ public class EseOptionsPanel extends JPanel {
         MALTA("Malta", "mt", "2.5"),
         MEXICO("Mexico", "mx", "2.5"),
         NETHERLANDS("Netherlands", "nl", "3.0"),
-        NEW_ZEALAND("New Zealand", "nz","3.0"),
+        NEW_ZEALAND("New Zealand", "nz", "3.0"),
         NORWAY("Norway", "no", "3.0"),
         PERU("Peru", "pe", "2.5"),
         PHILIPPINES("Philippines", "ph", "3.0"),
@@ -888,7 +889,6 @@ public class EseOptionsPanel extends JPanel {
         UGANDA("Uganda", "ug", "3.0"),
         UNITED_STATES("United States", "us", "3.0"),
         VIETNAM("Vietnam", "vn", "3.0");
-        
         private static final String URL_START = "http://creativecommons.org/license/{0}/";
         private static final String URL_SEP = "/";
         private String countryName;
