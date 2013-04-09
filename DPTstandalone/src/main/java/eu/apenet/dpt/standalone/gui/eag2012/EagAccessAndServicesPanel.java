@@ -57,6 +57,7 @@ public class EagAccessAndServicesPanel extends EagPanels {
     private JTextField emailTitleReproductionServiceTf;
     private JTextField webpageReproductionServiceTf;
     private JTextField webpageTitleReproductionServiceTf;
+    private List<TextFieldWithLanguage> descriptionReproductionServiceTfs;
     private JComboBox microformServicesCombo = new JComboBox(yesOrNo);
     private JComboBox photographServicesCombo = new JComboBox(yesOrNo);
     private JComboBox digitalServicesCombo = new JComboBox(yesOrNo);
@@ -458,7 +459,6 @@ public class EagAccessAndServicesPanel extends EagPanels {
             builder.add(textFieldWithLanguage.getLanguageBox(), cc.xy(7, rowNb));
             setNextRow();
         }
-
         JButton addInternetAccessBtn = new ButtonEag(labels.getString("eag2012.addInternetAccessButton"));
         builder.add(addInternetAccessBtn, cc.xy (1, rowNb));
         addInternetAccessBtn.addActionListener(new AddInternetAccessBtnAction(eag, tabbedPane, model));
@@ -515,6 +515,26 @@ public class EagAccessAndServicesPanel extends EagPanels {
         if(repository.getServices().getTechservices().getReproductionser() == null)
             repository.getServices().getTechservices().setReproductionser(new Reproductionser());
         Reproductionser reproductionser = repository.getServices().getTechservices().getReproductionser();
+
+        if(reproductionser.getDescriptiveNote() == null)
+            reproductionser.setDescriptiveNote(new DescriptiveNote());
+        if(reproductionser.getDescriptiveNote().getP().size() == 0)
+            reproductionser.getDescriptiveNote().getP().add(new P());
+
+        descriptionReproductionServiceTfs = new ArrayList<TextFieldWithLanguage>(reproductionser.getDescriptiveNote().getP().size());
+        for(P p : reproductionser.getDescriptiveNote().getP()) {
+            TextFieldWithLanguage textFieldWithLanguage = new TextFieldWithLanguage(p.getContent(), p.getLang());
+            descriptionReproductionServiceTfs.add(textFieldWithLanguage);
+            builder.addLabel(labels.getString("eag2012.descriptionLabel"),    cc.xy (1, rowNb));
+            builder.add(textFieldWithLanguage.getTextField(), cc.xy(3, rowNb));
+            builder.addLabel(labels.getString("eag2012.language"), cc.xy(5, rowNb));
+            builder.add(textFieldWithLanguage.getLanguageBox(), cc.xy(7, rowNb));
+            setNextRow();
+        }
+        JButton addDescriptionReproductionBtn = new ButtonEag(labels.getString("eag2012.addDescriptionReproductionButton"));
+        builder.add(addDescriptionReproductionBtn, cc.xy (1, rowNb));
+        addDescriptionReproductionBtn.addActionListener(new AddDescriptionReproductionBtnAction(eag, tabbedPane, model));
+        setNextRow();
 
         if(reproductionser.getContact() == null)
             reproductionser.setContact(new Contact());
@@ -893,6 +913,26 @@ public class EagAccessAndServicesPanel extends EagPanels {
         }
     }
 
+    public class AddDescriptionReproductionBtnAction extends UpdateEagObject {
+        AddDescriptionReproductionBtnAction(Eag eag, JTabbedPane tabbedPane, ProfileListModel model) {
+            super(eag, tabbedPane, model);
+        }
+
+        @Override
+        public void actionPerformed(ActionEvent actionEvent) {
+            try {
+                super.updateEagObject();
+            } catch (Eag2012FormException e) {
+            }
+            Reproductionser reproductionser = eag.getArchguide().getDesc().getRepositories().getRepository().get(0).getServices().getTechservices().getReproductionser();
+            if(reproductionser.getDescriptiveNote() == null) {
+                reproductionser.setDescriptiveNote(new DescriptiveNote());
+            }
+            reproductionser.getDescriptiveNote().getP().add(new P());
+            reloadTabbedPanel(new EagAccessAndServicesPanel(eag, tabbedPane, eag2012Frame, model, labels).buildEditorPanel(errors), 3);
+        }
+    }
+
 
     public class SaveBtnAction extends UpdateEagObject {
         SaveBtnAction(Eag eag, JTabbedPane tabbedPane, ProfileListModel model) {
@@ -1208,6 +1248,23 @@ public class EagAccessAndServicesPanel extends EagPanels {
 
 
                 Reproductionser reproductionser = techservices.getReproductionser();
+                boolean isReproductionDescFilled = false;
+                if(descriptionReproductionServiceTfs.size() > 0) {
+                    reproductionser.getDescriptiveNote().getP().clear();
+                    for(TextFieldWithLanguage textFieldWithLanguage : descriptionReproductionServiceTfs) {
+                        if(StringUtils.isNotEmpty(textFieldWithLanguage.getTextValue())) {
+                            P p = new P();
+                            p.setContent(textFieldWithLanguage.getTextValue());
+                            p.setLang(textFieldWithLanguage.getLanguage());
+                            reproductionser.getDescriptiveNote().getP().add(p);
+                            isReproductionDescFilled = true;
+                        }
+                    }
+                }
+                if(!isReproductionDescFilled) {
+                    reproductionser.setDescriptiveNote(null);
+                }
+
                 boolean contactExists = false;
                 if(StringUtils.isNotEmpty(telephoneReproductionServiceTf.getText())) {
                     reproductionser.getContact().getTelephone().get(0).setContent(telephoneReproductionServiceTf.getText());
