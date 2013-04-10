@@ -25,6 +25,7 @@ import java.awt.event.ItemListener;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.StringWriter;
 import java.text.MessageFormat;
 import java.util.*;
 import java.util.List;
@@ -681,6 +682,8 @@ public class EseOptionsPanel extends JPanel {
             final ApexActionListener apexActionListener = this;
             new Thread(new Runnable() {
                 public void run() {
+                    StringWriter writer = new StringWriter();
+
                     int numberOfFiles = selectedIndices.size();
                     int currentFileNumberBatch = 0;
 
@@ -693,42 +696,42 @@ public class EseOptionsPanel extends JPanel {
                     ProgressFrame progressFrame = new ProgressFrame(labels, parent, true, true, apexActionListener);
                     ProgressFrame.ApeProgressBar progressBar = progressFrame.getProgressBarBatch();
 
-                    for (Object oneFile : selectedIndices) {
-                        if (!continueLoop) {
-                            break;
-                        }
-
+                    try {
+                        apeTabbedPane.setEseConversionErrorText(labels.getString("ese.conversionEseStarted") + "\n");
+                        writer.append(labels.getString("ese.conversionEseStarted") + "\n");
+                        SummaryWorking summaryWorking = new SummaryWorking(dataPreparationToolGUI.getResultArea(), progressBar);
+                        summaryWorking.setTotalNumberFiles(numberOfFiles);
+                        summaryWorking.setCurrentFileNumberBatch(currentFileNumberBatch);
+                        Thread threadRunner = new Thread(summaryWorking);
+                        threadRunner.setName(SummaryWorking.class.toString());
+                        threadRunner.start();
+                        
                         try {
-                            apeTabbedPane.setEseConversionErrorText(labels.getString("ese.conversionEseStarted") + "\n");
-                            SummaryWorking summaryWorking = new SummaryWorking(dataPreparationToolGUI.getResultArea(), progressBar);
-                            summaryWorking.setTotalNumberFiles(numberOfFiles);
-                            summaryWorking.setCurrentFileNumberBatch(currentFileNumberBatch);
-                            Thread threadRunner = new Thread(summaryWorking);
-                            threadRunner.setName(SummaryWorking.class.toString());
-                            threadRunner.start();
-
-                            try {
-                                EseConfig config = fillConfig();
-                                for (File selectedIndexFile : selectedIndices) {
-                                    SwingUtilities.invokeLater(new TransformEse(config, selectedIndexFile));
-                                    apeTabbedPane.appendEseConversionErrorText(MessageFormat.format(labels.getString("ese.convertedAndSaved"), selectedIndexFile.getAbsolutePath(), retrieveFromDb.retrieveDefaultSaveFolder()) + "\n");
-                                }
-                                apeTabbedPane.checkFlashingTab(APETabbedPane.TAB_ESE, Utilities.FLASHING_GREEN_COLOR);
-                                close();
-                            } catch (Exception ex) {
-                                apeTabbedPane.checkFlashingTab(APETabbedPane.TAB_ESE, Utilities.FLASHING_RED_COLOR);
-                            } finally {
-                                if (summaryWorking != null) {
-                                    summaryWorking.stop();
-                                }
-                                if (threadRunner != null) {
-                                    threadRunner.interrupt();
-                                }
+                            EseConfig config = fillConfig();
+                            for (File selectedIndexFile : selectedIndices) {
+                                if (!continueLoop)
+                                    break;
+                                
+                                SwingUtilities.invokeLater(new TransformEse(config, selectedIndexFile));
+                                apeTabbedPane.appendEseConversionErrorText(MessageFormat.format(labels.getString("ese.convertedAndSaved"), selectedIndexFile.getAbsolutePath(), retrieveFromDb.retrieveDefaultSaveFolder()) + "\n");
+                                writer.append(MessageFormat.format(labels.getString("ese.convertedAndSaved"), selectedIndexFile.getAbsolutePath(), retrieveFromDb.retrieveDefaultSaveFolder()) + "\n");
                             }
-                        } catch (Exception e) {
-                            LOG.error(e);
+                            apeTabbedPane.checkFlashingTab(APETabbedPane.TAB_ESE, Utilities.FLASHING_GREEN_COLOR);
+                            close();
+                        } catch (Exception ex) {
+                            apeTabbedPane.checkFlashingTab(APETabbedPane.TAB_ESE, Utilities.FLASHING_RED_COLOR);
+                        } finally {
+                            if (summaryWorking != null) {
+                                summaryWorking.stop();
+                            }
+                            if (threadRunner != null) {
+                                threadRunner.interrupt();
+                            }
                         }
+                    } catch (Exception e) {
+                        LOG.error(e);
                     }
+                    
                     if (progressFrame != null) {
                         progressFrame.stop();
                     }
@@ -739,6 +742,7 @@ public class EseOptionsPanel extends JPanel {
                     } else {
                         dataPreparationToolGUI.setResultAreaText(labels.getString("aborted"));
                     }
+                    apeTabbedPane.setEseConversionErrorText(writer.toString());
                     dataPreparationToolGUI.enableSaveBtn();
                     dataPreparationToolGUI.enableRadioButtons();
                 }
