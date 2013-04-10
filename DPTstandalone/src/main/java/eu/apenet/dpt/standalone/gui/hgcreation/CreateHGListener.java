@@ -40,7 +40,7 @@ public class CreateHGListener implements ActionListener {
     private DataPreparationToolGUI dataPreparationToolGUI;
     private JButton buttonGoDown;
     private JButton buttonGoUp;
-    private JFrame createHGFrame;
+    private JDialog createHGDialog;
 
     public CreateHGListener(RetrieveFromDb retrieveFromDb, ResourceBundle labels, Component parent, Map<String, FileInstance> originalFileInstances, JList list, DataPreparationToolGUI dataPreparationToolGUI) {
         this.retrieveFromDb = retrieveFromDb;
@@ -58,9 +58,9 @@ public class CreateHGListener implements ActionListener {
     }
 
     public void actionPerformed(ActionEvent e){
-        createHGFrame = new JFrame(labels.getString("hgCreationFrame"));
+        createHGDialog = new JDialog(dataPreparationToolGUI, labels.getString("hgCreationFrame"), Dialog.ModalityType.DOCUMENT_MODAL);
 
-        createHGFrame.setPreferredSize(new Dimension(parent.getWidth(), parent.getHeight())); //getContentPane()???
+        createHGDialog.setPreferredSize(new Dimension(parent.getWidth(), parent.getHeight())); //getContentPane()???
 
         DefaultMutableTreeNode rootNode = new DefaultMutableTreeNode(new CLevelTreeObject());
 
@@ -91,9 +91,9 @@ public class CreateHGListener implements ActionListener {
 
         listFilesForHG.setCellRenderer(new IconListCellRenderer(fileInstances));
 
-        createHGFrame.add(paneListFilesHG, BorderLayout.EAST);
+        createHGDialog.add(paneListFilesHG, BorderLayout.EAST);
         JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, buttonsPanel, hgScrollPane);
-        createHGFrame.add(splitPane, BorderLayout.CENTER);
+        createHGDialog.add(splitPane, BorderLayout.CENTER);
 
         TreeDragSource treeDragSource = new TreeDragSource(holdingsGuideTree, DnDConstants.ACTION_COPY_OR_MOVE);
         TreeDropTarget treeDropTarget = new TreeDropTarget(holdingsGuideTree, listFilesForHG);
@@ -112,10 +112,7 @@ public class CreateHGListener implements ActionListener {
             buttonLoadHg.setEnabled(false);
         }
 
-        createHGFrame.add(buttonsSouthPanel, BorderLayout.SOUTH);
-
-        createHGFrame.pack();
-        createHGFrame.setVisible(true);
+        createHGDialog.add(buttonsSouthPanel, BorderLayout.SOUTH);
 
         buttonGoUp.addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent e) {
@@ -192,8 +189,8 @@ public class CreateHGListener implements ActionListener {
 
                 dataPreparationToolGUI.setResultAreaText(labels.getString("creatingHG"));
 
-                createHGFrame.setVisible(false);
-                createHGFrame.dispose();
+                createHGDialog.setVisible(false);
+                createHGDialog.dispose();
 
                 new Thread(new Runnable(){
                     public void run(){
@@ -235,6 +232,9 @@ public class CreateHGListener implements ActionListener {
         HoldingsGuideTreeMouseListener holdingsGuideTreeMouseListener = new HoldingsGuideTreeMouseListener();
         holdingsGuideTree.addMouseListener(holdingsGuideTreeMouseListener);
         holdingsGuideTreeMouseListener.doActionEditLevel(rootNode);
+        
+        createHGDialog.pack();
+        createHGDialog.setVisible(true);
     }
 
     public class HoldingsGuideTreeMouseListener implements MouseListener {
@@ -340,7 +340,7 @@ public class CreateHGListener implements ActionListener {
         public void doActionEditLevel(final DefaultMutableTreeNode cLevelTreeObject){
             final CLevelTreeObject obj = (CLevelTreeObject)cLevelTreeObject.getUserObject();
 
-            final JFrame editLevelFrame = new JFrame(labels.getString("edit"));
+            final JDialog editLevelFrame = new JDialog(createHGDialog, labels.getString("edit"), Dialog.ModalityType.MODELESS);
             editLevelFrame.setAlwaysOnTop(true);
             editLevelFrame.setPreferredSize(new Dimension(parent.getWidth() /2, parent.getHeight() /2)); //getContentPane
             editLevelFrame.setLocation((parent.getWidth() - parent.getWidth() /2)/2, (parent.getHeight() - parent.getHeight() /2)/2);
