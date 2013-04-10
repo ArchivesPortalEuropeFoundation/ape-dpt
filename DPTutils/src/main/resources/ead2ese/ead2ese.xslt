@@ -1029,14 +1029,14 @@ http://purl.org/dc/terms/ http://www.dublincore.org/schemas/xmls/qdc/dcterms.xsd
     </xsl:template>
     
     <xsl:template match="repository" mode="archdescDataProvider">
-        
-        <europeana:dataProvider>
-            <xsl:variable name='content'>
-                <xsl:apply-templates mode="all-but-address"/>
-            </xsl:variable>
-            <xsl:value-of select="fn:replace(normalize-space($content), '[\n\t\r]', '')"/>
-        </europeana:dataProvider>
-        
+        <xsl:if test='position() = 1'>
+            <europeana:dataProvider>
+                <xsl:variable name='content'>
+                    <xsl:apply-templates mode="all-but-address"/>
+                </xsl:variable>
+                <xsl:value-of select="fn:replace(normalize-space($content), '[\n\t\r]', '')"/>
+            </europeana:dataProvider>
+        </xsl:if>
     </xsl:template>
     
     <xsl:template match='publisher'>
