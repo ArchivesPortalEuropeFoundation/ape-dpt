@@ -525,9 +525,9 @@ public class EagDescriptionPanel extends EagPanels {
                 if (counterArchivalAndOthersTfs == 0) 
                     repository.setHoldings(null);
                 
-                Accessibility accessibility = new Accessibility();
+/*                Accessibility accessibility = new Accessibility();
                 accessibility.setQuestion("yes");
-                repository.getAccessibility().add(accessibility);
+                repository.getAccessibility().add(accessibility);*/
             }
 
             if (!errors.isEmpty()) {

@@ -5,6 +5,7 @@ import com.jgoodies.forms.layout.CellConstraints;
 import com.jgoodies.forms.layout.FormLayout;
 import eu.apenet.dpt.standalone.gui.ProfileListModel;
 import eu.apenet.dpt.standalone.gui.Utilities;
+import static eu.apenet.dpt.standalone.gui.eag2012.EagPanels.LOG;
 import eu.apenet.dpt.standalone.gui.eag2012.data.*;
 import org.apache.commons.lang.StringUtils;
 
@@ -200,8 +201,10 @@ public class EagAccessAndServicesPanel extends EagPanels {
         builder.add(facilitiesForDisabledCombo, cc.xy(3, rowNb));
         setNextRow();
 
-        if(repository.getAccessibility().size() == 0)
-            repository.getAccessibility().add(new Accessibility());
+//        if(repository.getAccessibility().size() == 0){
+//            LOG.info("create new accessibility");
+//            repository.getAccessibility().add(new Accessibility());
+//        }
         accessibilityTfs = new ArrayList<TextFieldWithLanguage>(repository.getAccessibility().size());
         for(Accessibility accessibility : repository.getAccessibility()) {
             builder.addLabel(labels.getString("eag2012.accessibility"),    cc.xy (1, rowNb));
@@ -815,7 +818,10 @@ public class EagAccessAndServicesPanel extends EagPanels {
                 super.updateEagObject();
             } catch (Eag2012FormException e) {
             }
-            eag.getArchguide().getDesc().getRepositories().getRepository().get(0).getAccessibility().add(new Accessibility());
+//            if(eag.getArchguide().getDesc().getRepositories().getRepository().get(0).getAccessibility().isEmpty()){
+//                LOG.info("create new accessibility");
+//                eag.getArchguide().getDesc().getRepositories().getRepository().get(0).getAccessibility().add(new Accessibility());
+//            }
             reloadTabbedPanel(new EagAccessAndServicesPanel(eag, tabbedPane, eag2012Frame, model, labels).buildEditorPanel(errors), 3);
         }
     }
@@ -1113,10 +1119,15 @@ public class EagAccessAndServicesPanel extends EagPanels {
                     }
                 }
 
-                if(repository.getAccessibility() == null)
-                    repository.setAccessibility(new ArrayList<Accessibility>(){{ add(new Accessibility()); }});
+//                if(repository.getAccessibility() == null){
+//                    LOG.info("create new accessibility");
+//                    repository.setAccessibility(new ArrayList<Accessibility>(){{ add(new Accessibility()); }});
+//                }
                 repository.getAccessibility().get(0).setQuestion((String) facilitiesForDisabledCombo.getSelectedItem());
+                repository.getAccessibility().get(0).setLang(accessibilityTfs.get(0).getLanguage());
+                repository.getAccessibility().get(0).setContent(accessibilityTfs.get(0).getTextValue());
 
+/*
                 if(accessibilityTfs.size() > 0) {
                     repository.getAccessibility().clear();
                     for(TextFieldWithLanguage textFieldWithLanguage : accessibilityTfs) {
@@ -1128,7 +1139,7 @@ public class EagAccessAndServicesPanel extends EagPanels {
                             hasChanged = true;
                         }
                     }
-                }
+                }*/
 
                 Searchroom searchroom = repository.getServices().getSearchroom();
                 if(!searchroom.getContact().getTelephone().isEmpty())
