@@ -165,12 +165,13 @@ public class EagAccessAndServicesPanel extends EagPanels {
             builder.add(textFieldWithLanguage.getTextField(),                     cc.xy (3, rowNb));
             builder.addLabel(labels.getString("eag2012.language"), cc.xy(5, rowNb));
             builder.add(textFieldWithLanguage.getLanguageBox(),                                            cc.xy (7, rowNb));
+            setNextRow();
             if(last-- == 0) {
                 JButton addRestaccessBtn = new ButtonEag(labels.getString("eag2012.addRestaccessButton"));
-                builder.add(addRestaccessBtn, cc.xy (7, rowNb));
+                builder.add(addRestaccessBtn, cc.xy (1, rowNb));
                 addRestaccessBtn.addActionListener(new AddRestaccessBtnAction(eag, tabbedPane, model));
+                setNextRow();
             }
-            setNextRow();
         }
 
 
