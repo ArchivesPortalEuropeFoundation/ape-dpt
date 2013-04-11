@@ -1120,9 +1120,14 @@ public class EagAccessAndServicesPanel extends EagPanels {
                 }
 
                 Searchroom searchroom = repository.getServices().getSearchroom();
-                if(StringUtils.isNotEmpty(telephoneSearchroomTf.getText())) {
+                if(!searchroom.getContact().getTelephone().isEmpty())
                     searchroom.getContact().getTelephone().get(0).setContent(telephoneSearchroomTf.getText());
+                else{
+                    Telephone telephone = new Telephone();
+                    telephone.setContent(telephoneSearchroomTf.getText());
+                    searchroom.getContact().getTelephone().add(telephone);
                 }
+                
                 if(StringUtils.isNotEmpty(emailSearchroomTf.getText())) {
                     searchroom.getContact().getEmail().get(0).setHref(emailSearchroomTf.getText());
                     if(StringUtils.isNotEmpty(emailTitleSearchroomTf.getText())) {
@@ -1209,8 +1214,14 @@ public class EagAccessAndServicesPanel extends EagPanels {
 
                 boolean libraryExists = false;
                 Library library = repository.getServices().getLibrary();
-                if(StringUtils.isNotEmpty(telephoneLibraryTf.getText())) {
+                if(!library.getContact().getTelephone().isEmpty()){
                     library.getContact().getTelephone().get(0).setContent(telephoneLibraryTf.getText());
+                    libraryExists = true;
+                }
+                else{
+                    Telephone telephone = new Telephone();
+                    telephone.setContent(telephoneLibraryTf.getText());
+                    library.getContact().getTelephone().add(telephone);
                     libraryExists = true;
                 }
                 if(StringUtils.isNotEmpty(emailLibraryTf.getText())) {
@@ -1286,8 +1297,14 @@ public class EagAccessAndServicesPanel extends EagPanels {
                     restorationlab.setDescriptiveNote(null);
                 }
 
-                if(StringUtils.isNotEmpty(telephoneRestorationlabTf.getText())) {
+                if(!restorationlab.getContact().getTelephone().isEmpty()){
                     restorationlab.getContact().getTelephone().get(0).setContent(telephoneRestorationlabTf.getText());
+                    restorationLabExists = true;
+                }
+                else{
+                    Telephone telephone = new Telephone();
+                    telephone.setContent(telephoneRestorationlabTf.getText());
+                    restorationlab.getContact().getTelephone().add(telephone);
                     restorationLabExists = true;
                 }
                 if(StringUtils.isNotEmpty(emailRestorationlabTf.getText())) {
@@ -1329,8 +1346,14 @@ public class EagAccessAndServicesPanel extends EagPanels {
                 }
 
                 boolean contactExists = false;
-                if(StringUtils.isNotEmpty(telephoneReproductionServiceTf.getText())) {
+                if(!reproductionser.getContact().getTelephone().isEmpty()){
                     reproductionser.getContact().getTelephone().get(0).setContent(telephoneReproductionServiceTf.getText());
+                    contactExists = true;
+                }
+                else{
+                    Telephone telephone = new Telephone();
+                    telephone.setContent(telephoneReproductionServiceTf.getText());
+                    reproductionser.getContact().getTelephone().add(telephone);
                     contactExists = true;
                 }
                 if(StringUtils.isNotEmpty(emailReproductionServiceTf.getText())) {
