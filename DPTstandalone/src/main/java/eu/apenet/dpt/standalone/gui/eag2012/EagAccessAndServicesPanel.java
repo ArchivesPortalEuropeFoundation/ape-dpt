@@ -1087,7 +1087,7 @@ public class EagAccessAndServicesPanel extends EagPanels {
 
                 if(termsOfUseTfs.size() > 0) {
                     repository.getAccess().getTermsOfUse().clear();
-                    for(TextFieldWithLanguage textFieldWithLanguage : travellingDirectionsTfs) {
+                    for(TextFieldWithLanguage textFieldWithLanguage : termsOfUseTfs) {
                         if(StringUtils.isNotEmpty(textFieldWithLanguage.getTextValue())) {
                             TermsOfUse termsOfUse = new TermsOfUse();
                             termsOfUse.setLang(textFieldWithLanguage.getLanguage());
