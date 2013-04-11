@@ -5,6 +5,7 @@ import com.jgoodies.forms.layout.CellConstraints;
 import com.jgoodies.forms.layout.FormLayout;
 import eu.apenet.dpt.standalone.gui.ProfileListModel;
 import eu.apenet.dpt.standalone.gui.Utilities;
+import static eu.apenet.dpt.standalone.gui.eag2012.EagPanels.LOG;
 import eu.apenet.dpt.standalone.gui.eag2012.data.*;
 import org.apache.commons.lang.StringUtils;
 
@@ -529,21 +530,34 @@ public class EagContactPanel extends EagPanels {
                             hasChanged = true;
                         }
                     }
-                    if(StringUtils.isNotEmpty(countyTf.getTextValue())) {
-                        if(!countyTf.getTextValue().equals(location.getSecondem().getContent())) {
-                            location.getSecondem().setContent(countyTf.getTextValue());
-                            location.getSecondem().setLang(countyTf.getLanguage());
-                            hasChanged = true;
-                        }
+                    
+                    if(location.getSecondem() == null){
+                        Secondem secondem = new Secondem();
+                        secondem.setContent(countyTf.getTextValue());
+                        secondem.setLang(countyTf.getLanguage());
+                        location.setSecondem(secondem);
+                        hasChanged = true;
                     }
-                    if(StringUtils.isNotEmpty(regionTf.getTextValue())) {
-                        if(!regionTf.getTextValue().equals(location.getFirstdem().getContent())) {
-                            location.getFirstdem().setContent(regionTf.getTextValue());
-                            location.getFirstdem().setLang(regionTf.getLanguage());
-                            hasChanged = true;
-                        }
+                    if(!countyTf.getTextValue().equals(location.getSecondem().getContent())) {
+                        location.getSecondem().setContent(countyTf.getTextValue());
+                        location.getSecondem().setLang(countyTf.getLanguage());
+                        hasChanged = true;
                     }
-
+                    
+                    
+                    if(location.getFirstdem() == null){
+                        Firstdem firstdem = new Firstdem();
+                        firstdem.setContent(countyTf.getTextValue());
+                        firstdem.setLang(countyTf.getLanguage());
+                        location.setFirstdem(firstdem);
+                        hasChanged = true;
+                    }
+                    if(!regionTf.getTextValue().equals(location.getFirstdem().getContent())) {
+                        location.getFirstdem().setContent(regionTf.getTextValue());
+                        location.getFirstdem().setLang(regionTf.getLanguage());
+                        hasChanged = true;
+                    }
+                    
                     if(StringUtils.isNotEmpty(countryTf.getTextValue())) {
                         if(!countryTf.getTextValue().equals(location.getCountry().getContent())) {
                             location.getCountry().setContent(countryTf.getTextValue());
