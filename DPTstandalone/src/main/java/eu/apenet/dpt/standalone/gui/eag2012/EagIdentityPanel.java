@@ -5,6 +5,7 @@ import com.jgoodies.forms.layout.CellConstraints;
 import com.jgoodies.forms.layout.FormLayout;
 import eu.apenet.dpt.standalone.gui.ProfileListModel;
 import eu.apenet.dpt.standalone.gui.Utilities;
+import static eu.apenet.dpt.standalone.gui.eag2012.EagPanels.LOG;
 import eu.apenet.dpt.standalone.gui.eag2012.data.*;
 import eu.apenet.dpt.standalone.gui.eag2012.data.Date;
 import org.apache.commons.lang.StringUtils;
@@ -124,13 +125,12 @@ public class EagIdentityPanel extends EagPanels {
 //        fromTfs = new ArrayList<JTextField>(eag.getArchguide().getIdentity().getNonpreform().size());
 //        toTfs = new ArrayList<JTextField>(eag.getArchguide().getIdentity().getNonpreform().size());
         for(Nonpreform nonpreform : eag.getArchguide().getIdentity().getNonpreform()) {
+            String nameStr = "";
+            String dateStr = "";
+            String fromDateStr = "";
+            String toDateStr = "";
             for(int i = 0; i < nonpreform.getContent().size(); i++) {
                 Object object = nonpreform.getContent().get(i);
-                String nameStr = "";
-                String dateStr = "";
-                String fromDateStr = "";
-                String toDateStr = "";
-
                 if(object instanceof String) {
                     nameStr = (String)object;
                 } else if (object instanceof UseDates) {
@@ -144,37 +144,37 @@ public class EagIdentityPanel extends EagPanels {
 //                    else if(useDates.getDateSet() != null) {
 //                    }
                 }
-
-                TextFieldWithDate textFieldWithDate = new TextFieldWithDate(nameStr, nonpreform.getLang(), fromDateStr, toDateStr, dateStr);
-                formerNameTfs.add(textFieldWithDate);
-                builder.addLabel(labels.getString("eag2012.formerlyUsedNameLabel"),    cc.xy (1, rowNb));
-                builder.add(textFieldWithDate.getTextField(), cc.xy (3, rowNb));
-                builder.addLabel(labels.getString("eag2012.language"),    cc.xy (5, rowNb));
-                builder.add(textFieldWithDate.getLanguageBox(), cc.xy (7, rowNb));
+            }
+            
+            TextFieldWithDate textFieldWithDate = new TextFieldWithDate(nameStr, nonpreform.getLang(), fromDateStr, toDateStr, dateStr);
+            formerNameTfs.add(textFieldWithDate);
+            builder.addLabel(labels.getString("eag2012.formerlyUsedNameLabel"),    cc.xy (1, rowNb));
+            builder.add(textFieldWithDate.getTextField(), cc.xy (3, rowNb));
+            builder.addLabel(labels.getString("eag2012.language"),    cc.xy (5, rowNb));
+            builder.add(textFieldWithDate.getLanguageBox(), cc.xy (7, rowNb));
+            setNextRow();
+            
+            builder.addLabel(labels.getString("eag2012.datesOfUsedNameLabel"),    cc.xy (1, rowNb));
+            setNextRow();
+            if(StringUtils.isNotBlank(dateStr)) {
+                builder.addLabel(labels.getString("eag2012.dateLabel"),    cc.xy (1, rowNb));
+                builder.add(textFieldWithDate.getDateField(), cc.xy (3, rowNb));
                 setNextRow();
-
+            }
+            if(StringUtils.isNotBlank(fromDateStr) && StringUtils.isNotBlank(toDateStr)) {
                 builder.addLabel(labels.getString("eag2012.datesOfUsedNameLabel"),    cc.xy (1, rowNb));
                 setNextRow();
-                if(StringUtils.isNotBlank(dateStr)) {
-                    builder.addLabel(labels.getString("eag2012.dateLabel"),    cc.xy (1, rowNb));
-                    builder.add(textFieldWithDate.getDateField(), cc.xy (3, rowNb));
-                    setNextRow();
-                }
-                if(StringUtils.isNotBlank(fromDateStr) && StringUtils.isNotBlank(toDateStr)) {
-                    builder.addLabel(labels.getString("eag2012.datesOfUsedNameLabel"),    cc.xy (1, rowNb));
-                    setNextRow();
-                    builder.addLabel(labels.getString("eag2012.fromLabel"),    cc.xy (1, rowNb));
-                    builder.add(textFieldWithDate.getFromDateField(), cc.xy (3, rowNb));
-                    builder.addLabel(labels.getString("eag2012.toLabel"),             cc.xy (5, rowNb));
-                    builder.add(textFieldWithDate.getToDateField(),                                            cc.xy (7, rowNb));
-                    setNextRow();
-                }
-                if(StringUtils.isBlank(dateStr) && StringUtils.isBlank(fromDateStr) && StringUtils.isBlank(toDateStr)) {
-                    builder.addLabel(labels.getString("eag2012.dateLabel"),    cc.xy (1, rowNb));
-                    builder.add(textFieldWithDate.getDateField(), cc.xy (3, rowNb));
-                    setNextRow();
-                }
+                builder.addLabel(labels.getString("eag2012.fromLabel"),    cc.xy (1, rowNb));
+                builder.add(textFieldWithDate.getFromDateField(), cc.xy (3, rowNb));
+                builder.addLabel(labels.getString("eag2012.toLabel"),             cc.xy (5, rowNb));
+                builder.add(textFieldWithDate.getToDateField(),                                            cc.xy (7, rowNb));
+                setNextRow();
             }
+            if(StringUtils.isBlank(dateStr) && StringUtils.isBlank(fromDateStr) && StringUtils.isBlank(toDateStr)) {
+                builder.addLabel(labels.getString("eag2012.dateLabel"),    cc.xy (1, rowNb));
+                builder.add(textFieldWithDate.getDateField(), cc.xy (3, rowNb));
+                setNextRow();
+            }            
         }
         JButton addNewNonpreNameInstitutionBtn = new ButtonEag(labels.getString("eag2012.addOtherNonpreNameInstitution"));
         addNewNonpreNameInstitutionBtn.addActionListener(new AddNonpreNameInstitutionAction(eag, tabbedPane, model));
