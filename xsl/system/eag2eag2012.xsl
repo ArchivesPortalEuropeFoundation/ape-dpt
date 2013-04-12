@@ -408,7 +408,7 @@
 						<xsl:value-of select="$repositoryRole" />
 					</repositoryRole>
 					<xsl:apply-templates select="*:geogarea" />
-					<location>
+					<location localType="visitors address" >
 						<xsl:apply-templates select="*:country, *:firstdem, *:secondem" />
 						<xsl:call-template name="address">
 							<xsl:with-param name="municipality" select="*:municipality" />
