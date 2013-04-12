@@ -69,7 +69,7 @@ public class EagRelationsPanel extends EagPanels {
             ResourceRelationType resourceRelationType = new ResourceRelationType(resourceRelation.getResourceRelationType(), resourceRelation.getHref(), resourceRelation.getRelationEntry().getContent(), resourceRelation.getDescriptiveNote().getP().get(0).getContent(), resourceRelation.getDescriptiveNote().getLang(), true);
             resourceRelationTypes.add(resourceRelationType);
 
-            builder.addLabel(labels.getString("eag2012.websiteForResources"), cc.xy(1, rowNb));
+            builder.addLabel(labels.getString("eag2012.linkToResourceRelation"), cc.xy(1, rowNb));
             builder.add(resourceRelationType.getWebsite(), cc.xy(3, rowNb));
             builder.addLabel(labels.getString("eag2012.typeRelation"), cc.xy(5, rowNb));
             builder.add(resourceRelationType.getTypeRelations(), cc.xy(7, rowNb));
@@ -90,6 +90,9 @@ public class EagRelationsPanel extends EagPanels {
         addResourceRelation.addActionListener(new AddResourceRelationAction(eag, tabbedPane, model));
         setNextRow();
 
+        builder.addSeparator(labels.getString("eag2012.institutionRelations"), cc.xyw(1, rowNb, 7));
+        setNextRow();
+
         institutionRelationTypes = new ArrayList<ResourceRelationType>(relations.getEagRelation().size());
         for(EagRelation eagRelation : relations.getEagRelation()) {
             if(eagRelation.getRelationEntry().size() == 0)
@@ -102,7 +105,7 @@ public class EagRelationsPanel extends EagPanels {
             ResourceRelationType resourceRelationType = new ResourceRelationType(eagRelation.getEagRelationType(), eagRelation.getHref(), eagRelation.getRelationEntry().get(0).getContent(), eagRelation.getDescriptiveNote().getP().get(0).getContent(), eagRelation.getDescriptiveNote().getLang(), false);
             institutionRelationTypes.add(resourceRelationType);
 
-            builder.addLabel(labels.getString("eag2012.websiteForResources"), cc.xy(1, rowNb));
+            builder.addLabel(labels.getString("eag2012.linkToInstitutionRelation"), cc.xy(1, rowNb));
             builder.add(resourceRelationType.getWebsite(), cc.xy(3, rowNb));
             builder.addLabel(labels.getString("eag2012.typeRelation"), cc.xy(5, rowNb));
             builder.add(resourceRelationType.getTypeRelations(), cc.xy(7, rowNb));
