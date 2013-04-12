@@ -172,12 +172,16 @@ public class EagInstitutionPanel extends EagPanels {
         if(eag.getArchguide().getDesc().getRepositories().getRepository().size() == 1) { //todo: BECAUSE FOR NOW ONLY ONE REPOSITORY!!!!
             Repository repository = eag.getArchguide().getDesc().getRepositories().getRepository().get(0);
 
+            LOG.info("Repository has " + repository.getLocation().size() + " location entries");
             for(int i = 0; i < repository.getLocation().size(); i++) {
                 boolean isPostal = false;
 
                 if(i == 2)
                     break;
                 Location location = repository.getLocation().get(i);
+                LOG.info("Read location #" + (i + 1));
+                LOG.info("Location type of this location is " + location.getLocalType());
+                LOG.info("Location type stored in the repository is" + repository.getLocation().get(i).getLocalType());
                 if(StringUtils.isEmpty(location.getLocalType())) {
                     location.setLocalType("visitors address");
                 }
