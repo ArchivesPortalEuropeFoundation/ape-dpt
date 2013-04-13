@@ -249,14 +249,17 @@ public class EagDescriptionPanel extends EagPanels {
         addArchivalAndOthersDescriptionBtn.addActionListener(new EagDescriptionPanel.AddArchivalAndOthersDescriptionBtnAction(eag, tabbedPane, model));
         setNextRow();
 
-        builder.addLabel(labels.getString("eag2012.dateOfHoldings"), cc.xy(1, rowNb));
+        builder.addSeparator(labels.getString("eag2012.yearsOfHoldings"), cc.xy(1, rowNb));
+        setNextRow();
+        
+        builder.addLabel(labels.getString("eag2012.yearLabel"), cc.xy(1, rowNb));
         dateHoldingsTf = new JTextField(repository.getHoldings().getDate().getContent());
         builder.add(dateHoldingsTf, cc.xy(3, rowNb));
         setNextRow();
-        builder.addLabel(labels.getString("eag2012.rangeFrom"), cc.xy(1, rowNb));
+        builder.addLabel(labels.getString("eag2012.yearLabel") + " " + labels.getString("eag2012.fromLabel"), cc.xy(1, rowNb));
         rangeFromTf = new JTextField(repository.getHoldings().getDateRange().getFromDate().getContent());
         builder.add(rangeFromTf, cc.xy(3, rowNb));
-        builder.addLabel(labels.getString("eag2012.rangeTo"), cc.xy(5, rowNb));
+        builder.addLabel(labels.getString("eag2012.toLabel"), cc.xy(5, rowNb));
         rangeToTf = new JTextField(repository.getHoldings().getDateRange().getToDate().getContent());
         builder.add(rangeToTf, cc.xy(7, rowNb));
         setNextRow();

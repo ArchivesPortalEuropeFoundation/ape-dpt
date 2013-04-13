@@ -154,24 +154,24 @@ public class EagIdentityPanel extends EagPanels {
             builder.add(textFieldWithDate.getLanguageBox(), cc.xy (7, rowNb));
             setNextRow();
             
-            builder.addLabel(labels.getString("eag2012.datesOfUsedNameLabel"),    cc.xy (1, rowNb));
+            builder.addLabel(labels.getString("eag2012.yearsOfUsedNameLabel"),    cc.xy (1, rowNb));
             setNextRow();
             if(StringUtils.isNotBlank(dateStr)) {
-                builder.addLabel(labels.getString("eag2012.dateLabel"),    cc.xy (1, rowNb));
+                builder.addLabel(labels.getString("eag2012.yearLabel"),    cc.xy (1, rowNb));
                 builder.add(textFieldWithDate.getDateField(), cc.xy (3, rowNb));
                 setNextRow();
             }
             if(StringUtils.isNotBlank(fromDateStr) && StringUtils.isNotBlank(toDateStr)) {
-                builder.addLabel(labels.getString("eag2012.datesOfUsedNameLabel"),    cc.xy (1, rowNb));
+                builder.addLabel(labels.getString("eag2012.yearsOfUsedNameLabel"),    cc.xy (1, rowNb));
                 setNextRow();
-                builder.addLabel(labels.getString("eag2012.fromLabel"),    cc.xy (1, rowNb));
+                builder.addLabel(labels.getString("eag2012.yearLabel") + " " + labels.getString("eag2012.fromLabel"),    cc.xy (1, rowNb));
                 builder.add(textFieldWithDate.getFromDateField(), cc.xy (3, rowNb));
                 builder.addLabel(labels.getString("eag2012.toLabel"),             cc.xy (5, rowNb));
                 builder.add(textFieldWithDate.getToDateField(),                                            cc.xy (7, rowNb));
                 setNextRow();
             }
             if(StringUtils.isBlank(dateStr) && StringUtils.isBlank(fromDateStr) && StringUtils.isBlank(toDateStr)) {
-                builder.addLabel(labels.getString("eag2012.dateLabel"),    cc.xy (1, rowNb));
+                builder.addLabel(labels.getString("eag2012.yearLabel"),    cc.xy (1, rowNb));
                 builder.add(textFieldWithDate.getDateField(), cc.xy (3, rowNb));
                 setNextRow();
             }            
