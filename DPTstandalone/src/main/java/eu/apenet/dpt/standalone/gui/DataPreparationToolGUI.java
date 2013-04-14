@@ -14,6 +14,7 @@ import eu.apenet.dpt.standalone.gui.hgcreation.*;
 import eu.apenet.dpt.standalone.gui.validation.ValidateActionListener;
 import eu.apenet.dpt.standalone.gui.validation.ValidateSelectionActionListener;
 import eu.apenet.dpt.standalone.gui.xsdaddition.XsdObject;
+import eu.apenet.dpt.utils.ead2ese.XMLUtil;
 import eu.apenet.dpt.utils.util.XmlChecker;
 import eu.apenet.dpt.utils.util.Xsd_enum;
 import eu.apenet.dpt.utils.util.extendxsl.DateNormalization;
@@ -21,6 +22,7 @@ import java.awt.*;
 import java.awt.dnd.DropTarget;
 import java.awt.event.*;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.text.MessageFormat;
 import java.util.*;
@@ -28,6 +30,7 @@ import java.util.List;
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
+import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
@@ -41,6 +44,8 @@ import org.jdesktop.swingx.JXTreeTable;
 import org.jdesktop.swingx.error.ErrorInfo;
 import org.jdesktop.swingx.treetable.TreeTableModel;
 import org.w3c.dom.*;
+import org.xml.sax.SAXException;
+import org.xml.sax.SAXParseException;
 
 /**
  * User: Yoann Date: Apr 19, 2010 Time: 8:07:25 PM
@@ -509,8 +514,23 @@ public class DataPreparationToolGUI extends JFrame {
                 eagFileChooser.setCurrentDirectory(new File(retrieveFromDb.retrieveOpenLocation()));
                 if (eagFileChooser.showOpenDialog(getParent()) == JFileChooser.APPROVE_OPTION) {
                     File eagFile = eagFileChooser.getSelectedFile();
-                    if(!Eag2012Frame.isUsed())
-                        new Eag2012Frame(eagFile, false, getContentPane().getSize(), (ProfileListModel) getXmlEadList().getModel(), labels);
+                    if(!Eag2012Frame.isUsed()){
+                        try {
+                            Document doc = XMLUtil.convertXMLToDocument(new FileInputStream(eagFile));
+                            if(doc.getDocumentElement().getNodeName().equals("eag"))
+                                new Eag2012Frame(eagFile, true, getContentPane().getSize(), (ProfileListModel) getXmlEadList().getModel(), labels);
+                            else
+                                JOptionPane.showMessageDialog(rootPane, labels.getString("eag2012.notAnEagFile"));
+                        } catch (SAXException ex) {
+                            if(ex instanceof SAXParseException)
+                                JOptionPane.showMessageDialog(rootPane, labels.getString("eag2012.notAnEagFile"));
+                            java.util.logging.Logger.getLogger(DataPreparationToolGUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+                        } catch (IOException ex) {
+                            java.util.logging.Logger.getLogger(DataPreparationToolGUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+                        } catch (ParserConfigurationException ex) {
+                            java.util.logging.Logger.getLogger(DataPreparationToolGUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+                        }
+                    }
                 }
             }
         });
@@ -522,8 +542,23 @@ public class DataPreparationToolGUI extends JFrame {
                 eagFileChooser.setCurrentDirectory(new File(retrieveFromDb.retrieveOpenLocation()));
                 if (eagFileChooser.showOpenDialog(getParent()) == JFileChooser.APPROVE_OPTION) {
                     File eagFile = eagFileChooser.getSelectedFile();
-                    if(!Eag2012Frame.isUsed())
-                        new Eag2012Frame(eagFile, true, getContentPane().getSize(), (ProfileListModel) getXmlEadList().getModel(), labels);
+                    if(!Eag2012Frame.isUsed()){
+                        try {
+                            Document doc = XMLUtil.convertXMLToDocument(new FileInputStream(eagFile));
+                            if(doc.getDocumentElement().getNodeName().equals("eag"))
+                                new Eag2012Frame(eagFile, true, getContentPane().getSize(), (ProfileListModel) getXmlEadList().getModel(), labels);
+                            else
+                                JOptionPane.showMessageDialog(rootPane, labels.getString("eag2012.notAnEagFile"));
+                        } catch (SAXException ex) {
+                            if(ex instanceof SAXParseException)
+                                JOptionPane.showMessageDialog(rootPane, labels.getString("eag2012.notAnEagFile"));
+                            java.util.logging.Logger.getLogger(DataPreparationToolGUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+                        } catch (IOException ex) {
+                            java.util.logging.Logger.getLogger(DataPreparationToolGUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+                        } catch (ParserConfigurationException ex) {
+                            java.util.logging.Logger.getLogger(DataPreparationToolGUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+                        }
+                    }
                 }
             }
         });
