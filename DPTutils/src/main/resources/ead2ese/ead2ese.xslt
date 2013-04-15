@@ -15,6 +15,7 @@
     <xsl:param name="inheritAltformavail"></xsl:param>
     <xsl:param name="inheritControlaccess"></xsl:param>
     <xsl:param name="contextInformationPrefix"></xsl:param>
+    <xsl:param name="useExistingDaoRole"></xsl:param>
     <xsl:template match="/">
         <metadata xsi:schemaLocation="http://www.europeana.eu/schemas/ese/ http://www.europeana.eu/schemas/ese/ESE-V3.4.xsd
 http://purl.org/dc/elements/1.1/ http://www.dublincore.org/schemas/xmls/qdc/dc.xsd
@@ -535,24 +536,50 @@ http://purl.org/dc/terms/ http://www.dublincore.org/schemas/xmls/qdc/dcterms.xsd
                         </xsl:choose>
                     </xsl:otherwise>
                 </xsl:choose>
+                
                 <xsl:choose>
-                    <xsl:when test='fn:string-length($europeana_type) > 0'>
-                        <dc:type>
-                            <xsl:call-template name="convertToDcType">
-                                <xsl:with-param name="role" select="$europeana_type"></xsl:with-param>
-                            </xsl:call-template>
-                        </dc:type>
+                    <xsl:when test='$useExistingDaoRole'>
+                        <xsl:choose>
+                            <xsl:when test="./@xlink:role">
+                                <dc:type>
+                                    <xsl:call-template name="convertToDcType">
+                                        <xsl:with-param name="role" select="./@xlink:role"></xsl:with-param>
+                                    </xsl:call-template>
+                                </dc:type>
+                            </xsl:when>
+                            <xsl:otherwise>
+                                <xsl:if test='fn:string-length($europeana_type) > 0'>
+                                    <dc:type>
+                                        <xsl:call-template name="convertToDcType">
+                                            <xsl:with-param name="role" select="$europeana_type"></xsl:with-param>
+                                        </xsl:call-template>
+                                    </dc:type>
+                                </xsl:if>
+                            </xsl:otherwise>
+                        </xsl:choose>
                     </xsl:when>
                     <xsl:otherwise>
-                        <xsl:if test="./@xlink:role">
-                            <dc:type>
-                                <xsl:call-template name="convertToDcType">
-                                    <xsl:with-param name="role" select="./@xlink:role"></xsl:with-param>
-                                </xsl:call-template>
-                            </dc:type>
-                        </xsl:if>
+                        <xsl:choose>
+                            <xsl:when test='fn:string-length($europeana_type) > 0'>
+                                <dc:type>
+                                    <xsl:call-template name="convertToDcType">
+                                        <xsl:with-param name="role" select="$europeana_type"></xsl:with-param>
+                                    </xsl:call-template>
+                                </dc:type>
+                            </xsl:when>
+                            <xsl:otherwise>
+                                <xsl:if test="./@xlink:role">
+                                    <dc:type>
+                                        <xsl:call-template name="convertToDcType">
+                                            <xsl:with-param name="role" select="./@xlink:role"></xsl:with-param>
+                                        </xsl:call-template>
+                                    </dc:type>
+                                </xsl:if>
+                            </xsl:otherwise>
+                        </xsl:choose>
                     </xsl:otherwise>
-                </xsl:choose>	
+                </xsl:choose>
+                	
                 <xsl:choose>
                     <xsl:when test="$inheritFromParent">
                         <xsl:variable name="parentofparentcnode" select="$parentcnode/parent::node()"/>
@@ -634,46 +661,84 @@ http://purl.org/dc/terms/ http://www.dublincore.org/schemas/xmls/qdc/dcterms.xsd
                     <xsl:value-of select="$europeana_provider"/>
                 </europeana:provider>
                 <xsl:choose>
-                    <xsl:when test='fn:string-length($europeana_type) > 0'>
-                        <europeana:type>
-                            <xsl:value-of select="$europeana_type"/>
-                        </europeana:type>
+                    <xsl:when test='$useExistingDaoRole'>
+                        <xsl:choose>
+                            <xsl:when test=' "TEXT" eq fn:string(@xlink:role)'>
+                                <europeana:type>
+                                    <xsl:text>TEXT</xsl:text>
+                                </europeana:type>
+                            </xsl:when>
+                            <xsl:when test=' "IMAGE" eq fn:string(@xlink:role)'>
+                                <europeana:type>
+                                    <xsl:text>IMAGE</xsl:text>
+                                </europeana:type>
+                            </xsl:when>
+                            <xsl:when test=' "SOUND" eq fn:string(@xlink:role)'>
+                                <europeana:type>
+                                    <xsl:text>SOUND</xsl:text>
+                                </europeana:type>
+                            </xsl:when>		
+                            <xsl:when test=' "VIDEO" eq fn:string(@xlink:role)'>
+                                <europeana:type>
+                                    <xsl:text>VIDEO</xsl:text>
+                                </europeana:type>
+                            </xsl:when>									
+                            <xsl:when test=' "3D" eq fn:string(@xlink:role)'>
+                                <europeana:type>
+                                    <xsl:text>3D</xsl:text>
+                                </europeana:type>
+                            </xsl:when>									
+                            <xsl:otherwise>
+                                <europeana:type>
+                                    <xsl:value-of select="$europeana_type"/>
+                                </europeana:type>
+                            </xsl:otherwise>
+                        </xsl:choose>
                     </xsl:when>
                     <xsl:otherwise>
-                        <xsl:if test="./@xlink:role">
-                            <xsl:choose>
-                                <xsl:when test=' "TEXT" eq fn:string(@xlink:role)'>
-                                    <europeana:type>
-                                        <xsl:text>TEXT</xsl:text>
-                                    </europeana:type>
-                                </xsl:when>
-                                <xsl:when test=' "IMAGE" eq fn:string(@xlink:role)'>
-                                    <europeana:type>
-                                        <xsl:text>IMAGE</xsl:text>
-                                    </europeana:type>
-                                </xsl:when>
-                                <xsl:when test=' "SOUND" eq fn:string(@xlink:role)'>
-                                    <europeana:type>
-                                        <xsl:text>SOUND</xsl:text>
-                                    </europeana:type>
-                                </xsl:when>		
-                                <xsl:when test=' "VIDEO" eq fn:string(@xlink:role)'>
-                                    <europeana:type>
-                                        <xsl:text>VIDEO</xsl:text>
-                                    </europeana:type>
-                                </xsl:when>									
-                                <xsl:when test=' "3D" eq fn:string(@xlink:role)'>
-                                    <europeana:type>
-                                        <xsl:text>3D</xsl:text>
-                                    </europeana:type>
-                                </xsl:when>									
-                                <xsl:otherwise>
-                                    <europeana:type>
-                                        <xsl:value-of select="$europeana_type"/>
-                                    </europeana:type>
-                                </xsl:otherwise>
-                            </xsl:choose>
-                        </xsl:if>
+                        <xsl:choose>
+                            <xsl:when test='fn:string-length($europeana_type) > 0'>
+                                <europeana:type>
+                                    <xsl:value-of select="$europeana_type"/>
+                                </europeana:type>
+                            </xsl:when>
+                            <xsl:otherwise>
+                                <xsl:if test="./@xlink:role">
+                                    <xsl:choose>
+                                        <xsl:when test=' "TEXT" eq fn:string(@xlink:role)'>
+                                            <europeana:type>
+                                                <xsl:text>TEXT</xsl:text>
+                                            </europeana:type>
+                                        </xsl:when>
+                                        <xsl:when test=' "IMAGE" eq fn:string(@xlink:role)'>
+                                            <europeana:type>
+                                                <xsl:text>IMAGE</xsl:text>
+                                            </europeana:type>
+                                        </xsl:when>
+                                        <xsl:when test=' "SOUND" eq fn:string(@xlink:role)'>
+                                            <europeana:type>
+                                                <xsl:text>SOUND</xsl:text>
+                                            </europeana:type>
+                                        </xsl:when>		
+                                        <xsl:when test=' "VIDEO" eq fn:string(@xlink:role)'>
+                                            <europeana:type>
+                                                <xsl:text>VIDEO</xsl:text>
+                                            </europeana:type>
+                                        </xsl:when>									
+                                        <xsl:when test=' "3D" eq fn:string(@xlink:role)'>
+                                            <europeana:type>
+                                                <xsl:text>3D</xsl:text>
+                                            </europeana:type>
+                                        </xsl:when>									
+                                        <xsl:otherwise>
+                                            <europeana:type>
+                                                <xsl:value-of select="$europeana_type"/>
+                                            </europeana:type>
+                                        </xsl:otherwise>
+                                    </xsl:choose>
+                                </xsl:if>
+                            </xsl:otherwise>
+                        </xsl:choose>
                     </xsl:otherwise>
                 </xsl:choose>				
                 <europeana:rights>
@@ -722,6 +787,7 @@ http://purl.org/dc/terms/ http://www.dublincore.org/schemas/xmls/qdc/dcterms.xsd
             <xsl:value-of select="fn:replace(normalize-space(.), '[\n\t\r]', '')"/>
         </xsl:if>		
     </xsl:template>
+    
     <xsl:template name='language'>
         <xsl:param name="langmaterials"/>
         <xsl:for-each select="$langmaterials/language/@langcode">
