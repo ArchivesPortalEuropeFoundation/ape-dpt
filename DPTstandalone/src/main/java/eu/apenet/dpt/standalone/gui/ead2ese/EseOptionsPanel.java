@@ -8,6 +8,7 @@ import eu.apenet.dpt.utils.ead2ese.EseConfig;
 import eu.apenet.dpt.utils.ead2ese.XMLUtil;
 import eu.apenet.dpt.utils.ead2ese.stax.ESEParser;
 import eu.apenet.dpt.utils.ead2ese.stax.RecordParser;
+import eu.apenet.dpt.utils.util.Ead2EseInformation;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.xml.sax.SAXException;
@@ -91,6 +92,8 @@ public class EseOptionsPanel extends JPanel {
     private static final Border GREY_LINE = BorderFactory.createLineBorder(Color.GRAY);
     private DataPreparationToolGUI dataPreparationToolGUI;
 
+    private Ead2EseInformation ead2EseInformation;
+
     public EseOptionsPanel(ResourceBundle labels, DataPreparationToolGUI dataPreparationToolGUI, JFrame parent, APETabbedPane apeTabbedPane) {
         super(new BorderLayout());
         this.labels = labels;
@@ -130,7 +133,8 @@ public class EseOptionsPanel extends JPanel {
         dataProviderTextArea = new JTextArea();
         dataProviderTextArea.setLineWrap(true);
         dataProviderTextArea.setWrapStyleWord(true);
-        String repository = determineDaoInformation()[1];
+        determineDaoInformation();
+        String repository = ead2EseInformation.getRepository();
         JScrollPane dptaScrollPane = new JScrollPane(dataProviderTextArea);
         dptaScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
         panel.add(dptaScrollPane);
@@ -169,7 +173,7 @@ public class EseOptionsPanel extends JPanel {
         JRadioButton radioButton;
 
         panel.add(new Label(labels.getString("ese.type") + ":" + "*"));
-        String currentRoleType = determineDaoInformation()[0];
+        String currentRoleType = ead2EseInformation.getRoleType();
         radioButton = new JRadioButton("TEXT");
         if (currentRoleType.equals("TEXT")) {
             radioButton.setSelected(true);
@@ -536,124 +540,23 @@ public class EseOptionsPanel extends JPanel {
         }
 
         if (typeGroup.getSelection().getActionCommand().equals(TEXT)) {
-            if (inheritLanguageGroup.getSelection().getActionCommand().equals(NO) && determineDaoInformation()[2] == null) {
+            if (inheritLanguageGroup.getSelection().getActionCommand().equals(NO) && ead2EseInformation.getLanguageCode() == null) {
                 throw new Exception("selected type requires language inheritance");
             }
         }
     }
 
-    private String[] determineDaoInformation() {
-        String[] result = new String[3];
-        String roleType = "";
-        String repository = "";
-        String languageCode = null;
-
+    public void determineDaoInformation() {
+        File index = selectedIndices.get(0);
+        FileInstance fileInstance = fileInstances.get(index.getName());
         try {
-            File index = selectedIndices.get(0);
-            FileInstance fileInstance = fileInstances.get(index.getName());
-            Document doc = XMLUtil.convertXMLToDocument(new FileInputStream(new File(fileInstance.getCurrentLocation())));
-            NodeList nodelist = doc.getElementsByTagName("dao");
-            if (nodelist.getLength() != 0) {
-                int counter = 0;
-                do {
-                    Node daoNode = nodelist.item(counter);
-                    roleType = determineRoleType(daoNode);
-                    repository = determineRepository(daoNode, doc);
-                    languageCode = determineLanguageCode(daoNode, doc);
-                    counter++;
-                } while (counter < nodelist.getLength());
-            }
-        } catch (SAXException ex) {
-            java.util.logging.Logger.getLogger(EseOptionsPanel.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (IOException ex) {
-            java.util.logging.Logger.getLogger(EseOptionsPanel.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (ParserConfigurationException ex) {
+            ead2EseInformation = new Ead2EseInformation(new File(fileInstance.getCurrentLocation()), retrieveFromDb.retrieveRoleType());
+        } catch (Exception ex) {
             java.util.logging.Logger.getLogger(EseOptionsPanel.class.getName()).log(Level.SEVERE, null, ex);
         }
-        result[0] = roleType;
-        result[1] = repository;
-        result[2] = languageCode;
-        return result;
-    }
-
-    private String determineRoleType(Node daoNode) {
-        String storedRoleType = retrieveFromDb.retrieveRoleType();
-        if (!storedRoleType.equals("UNSPECIFIED") && storedRoleType != null) {
-            return storedRoleType;
+        if(ead2EseInformation.getArchdescRepository() != null) {
+            archdescRepository = ead2EseInformation.getArchdescRepository();
         }
-
-        NamedNodeMap attributes = daoNode.getAttributes();
-        for (int i = 0; i < attributes.getLength(); i++) {
-            Node attribute = attributes.getNamedItem("xlink:role");
-            if (attribute != null) {
-                return attribute.getTextContent();
-            }
-        }
-        return "";
-    }
-
-    private String determineRepository(Node daoNode, Document doc) {
-        String result = "";
-        Node didNode = daoNode.getParentNode();
-        NodeList repositories = doc.getElementsByTagName("repository");
-        if (repositories.getLength() != 0) {
-            int counter = 0;
-            do {
-                Node repositoryNode = repositories.item(counter);
-                if (repositoryNode instanceof Element) {
-                    if (((Element) repositoryNode).getParentNode().getParentNode().getNodeName().equals("c") && ((Element) repositoryNode).getParentNode() == didNode) {
-                        int index = 0;
-                        while (index < ((Element) repositoryNode).getTextContent().length()) {
-                            if (((Element) repositoryNode).getTextContent().charAt(index) >= ' ') {
-                                index++;
-                            } else {
-                                break;
-                            }
-                        }
-                        return ((Element) repositoryNode).getTextContent().substring(0, index);
-                    }
-
-                    if (((Element) repositoryNode).getParentNode().getParentNode().getNodeName().equals("archdesc")) {
-                        int index = 0;
-                        while (index < ((Element) repositoryNode).getTextContent().length()) {
-                            if (((Element) repositoryNode).getTextContent().charAt(index) >= ' ') {
-                                index++;
-                            } else {
-                                break;
-                            }
-                        }
-                        if (archdescRepository == null) {
-                            archdescRepository = ((Element) repositoryNode).getTextContent().substring(0, index);
-                        }
-                    }
-                }
-                counter++;
-            } while (counter < repositories.getLength());
-        }
-        return result;
-    }
-
-    private String determineLanguageCode(Node daoNode, Document doc) {
-        String result = null;
-        Node didNode = daoNode.getParentNode();
-        NodeList languages = doc.getElementsByTagName("language");
-        if (languages.getLength() != 0) {
-            int counter = 0;
-            do {
-                Node languageNode = languages.item(counter);
-                if (languageNode.getParentNode().getParentNode() == didNode) {
-                    NamedNodeMap attributes = languageNode.getAttributes();
-                    for (int i = 0; i < attributes.getLength(); i++) {
-                        Node attribute = attributes.item(i);
-                        if (attribute != null) {
-                            return attribute.getTextContent();
-                        }
-                    }
-                }
-                counter++;
-            } while (counter < languages.getLength());
-        }
-        return result;
     }
 
     public class ChangePanelActionListener implements ActionListener {
