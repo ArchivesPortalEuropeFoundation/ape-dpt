@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
     EAG 2012 Schema
-    Version: 0.1e
-    Date: 20120828
+    Version: 0.2
+    Date: 20130415
     Editor: APEx project (www.apex-project.eu)
 -->
 <xs:schema xmlns="http://www.archivesportaleurope.net/Portal/profiles/eag_2012/" targetNamespace="http://www.archivesportaleurope.net/Portal/profiles/eag_2012/" xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
@@ -14,34 +14,23 @@
             <xs:sequence>
                 <xs:element ref="control"/>
                 <xs:element ref="archguide"/>
-                <xs:element ref="relations"/>
+                <xs:element ref="relations" minOccurs="0"/>
             </xs:sequence>
-            <xs:attributeGroup ref="audience"/>
+            <xs:attribute name="audience" use="required">
+                <xs:simpleType>
+                    <xs:restriction base="xs:token">
+                        <xs:enumeration value="external"/>
+                        <xs:enumeration value="internal"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:attribute>
+            <xs:attribute ref="xml:base"/>
+            <xs:attribute ref="xml:lang"/>
         </xs:complexType>
     </xs:element>
-
-    <xs:attributeGroup name="audience">
-        <xs:attribute name="audience" use="required">
-            <xs:simpleType>
-                <xs:restriction base="xs:token">
-                    <xs:enumeration value="external"/>
-                    <xs:enumeration value="internal"/>
-                </xs:restriction>
-            </xs:simpleType>
-        </xs:attribute>
-    </xs:attributeGroup>
     <xs:attributeGroup name="href">
         <xs:attribute name="href" type="xs:anyURI"/>
     </xs:attributeGroup>
-    <xs:attributeGroup name="a.xml.common">
-        <xs:attribute ref="xml:id"/>
-        <xs:attribute ref="xml:lang"/>
-    </xs:attributeGroup>
-    <xs:attributeGroup name="a.xml.common.base">
-        <xs:attributeGroup ref="a.xml.common"/>
-        <xs:attribute ref="xml:base"/>
-    </xs:attributeGroup>
-
 
     <!-- ###############
        CONTROL
@@ -62,7 +51,6 @@
                 <xs:element ref="publicationStatus" minOccurs="0"/>
                 <xs:element ref="sources" minOccurs="0"/>
             </xs:sequence>
-            <xs:attributeGroup ref="a.xml.common.base" />
         </xs:complexType>
     </xs:element>
     <xs:element name="recordId">
@@ -78,8 +66,7 @@
         <xs:complexType>
             <xs:simpleContent>
                 <xs:extension base="xs:string">
-                    <xs:attribute ref="xml:id"/>
-                    <xs:attributeGroup ref="localType"/>
+                    <xs:attribute name="localType" type="xs:anyURI" />
                 </xs:extension>
             </xs:simpleContent>
         </xs:complexType>
@@ -114,7 +101,6 @@
                             <xs:enumeration value="revised"/>
                         </xs:restriction>
                     </xs:simpleType>
-                    <xs:attribute ref="xml:id"/>
                 </xs:restriction>
             </xs:simpleContent>
         </xs:complexType>
@@ -124,7 +110,6 @@
             <xs:sequence>
                 <xs:element ref="maintenanceEvent" maxOccurs="unbounded"/>
             </xs:sequence>
-            <xs:attributeGroup ref="a.xml.common"/>
         </xs:complexType>
     </xs:element>
     <xs:element name="maintenanceEvent">
@@ -135,7 +120,7 @@
                 <xs:element ref="eventDateTime"/>
                 <xs:element ref="eventType"/>
             </xs:sequence>
-            <xs:attributeGroup ref="a.xml.common"/>
+            <xs:attribute ref="xml:lang"/>
         </xs:complexType>
     </xs:element>
     <xs:element name="eventType">
@@ -153,14 +138,12 @@
                             <xs:enumeration value="published"/>
                         </xs:restriction>
                     </xs:simpleType>
-                    <xs:attribute ref="xml:id"/>
                 </xs:restriction>
             </xs:simpleContent>
         </xs:complexType>
     </xs:element>
     <xs:element name="eventDateTime">
         <xs:complexType mixed="true">
-            <xs:attributeGroup ref="a.xml.common"/>
             <xs:attribute name="standardDateTime" type="m.data.standardDateTime"/>
         </xs:complexType>
     </xs:element>
@@ -198,14 +181,13 @@
                             <xs:enumeration value="machine"/>
                         </xs:restriction>
                     </xs:simpleType>
-                    <xs:attribute ref="xml:id"/>
                 </xs:restriction>
             </xs:simpleContent>
         </xs:complexType>
     </xs:element>
     <xs:element name="agent">
         <xs:complexType mixed="true">
-            <xs:attributeGroup ref="a.xml.common"/>
+            <xs:attribute ref="xml:lang"/>
         </xs:complexType>
     </xs:element>
     <xs:element name="languageDeclarations">
@@ -222,12 +204,11 @@
                 <xs:element ref="script"/>
                 <xs:element ref="descriptiveNote" minOccurs="0"/>
             </xs:sequence>
-            <xs:attributeGroup ref="a.xml.common"/>
         </xs:complexType>
     </xs:element>
     <xs:element name="language">
         <xs:complexType mixed="true">
-            <xs:attributeGroup ref="a.xml.common"/>
+            <xs:attribute ref="xml:lang"/>
             <xs:attribute name="languageCode" use="required">
                 <xs:simpleType>
                     <xs:restriction base="xs:string">
@@ -239,7 +220,7 @@
     </xs:element>
     <xs:element name="script">
         <xs:complexType mixed="true">
-            <xs:attributeGroup ref="a.xml.common"/>
+            <xs:attribute ref="xml:lang"/>
             <xs:attributeGroup ref="a.scriptCode"/>
         </xs:complexType>
     </xs:element>
@@ -260,7 +241,6 @@
                 <xs:element ref="citation" maxOccurs="unbounded"/>
                 <xs:element ref="descriptiveNote" minOccurs="0"/>
             </xs:sequence>
-            <xs:attributeGroup ref="a.xml.common"/>
         </xs:complexType>
     </xs:element>
     <xs:element name="abbreviation">
@@ -268,7 +248,7 @@
     </xs:element>
     <xs:element name="citation">
         <xs:complexType mixed="true">
-            <xs:attributeGroup ref="a.xml.common"/>
+            <xs:attribute ref="xml:lang"/>
             <xs:attributeGroup ref="href"/>
             <xs:attribute name="lastDateTimeVerified" type="m.data.standardDateTime"/>
         </xs:complexType>
@@ -283,7 +263,6 @@
                     <xs:element ref="dateRange"/>
                 </xs:choice>
             </xs:sequence>
-            <xs:attributeGroup ref="a.xml.common"/>
             <xs:attributeGroup ref="localType"/>
         </xs:complexType>
     </xs:element>
@@ -297,7 +276,6 @@
                             <xs:enumeration value="extended"/>
                         </xs:restriction>
                     </xs:simpleType>
-                    <xs:attribute ref="xml:id"/>
                     <xs:attributeGroup ref="m.entryLanguageAttributes"/>
                     <xs:attribute name="lastDateTimeVerified" type="m.data.standardDateTime"/>
                     <xs:attribute name="vocabularySource" type="xs:anyURI"/>
@@ -313,7 +291,7 @@
 
     <xs:element name="date">
         <xs:complexType mixed="true">
-            <xs:attributeGroup ref="a.xml.common"/>
+            <xs:attribute ref="xml:lang"/>
             <xs:attribute name="localType" type="xs:anyURI"/>
             <xs:attributeGroup ref="m.dateSingle"/>
         </xs:complexType>
@@ -329,19 +307,16 @@
                 <xs:element ref="fromDate"/>
                 <xs:element ref="toDate"/>
             </xs:sequence>
-            <xs:attributeGroup ref="a.xml.common"/>
             <xs:attribute name="localType" type="xs:anyURI"/>
         </xs:complexType>
     </xs:element>
     <xs:element name="fromDate">
         <xs:complexType mixed="true">
-            <xs:attributeGroup ref="a.xml.common"/>
             <xs:attributeGroup ref="m.dateSingle"/>
         </xs:complexType>
     </xs:element>
     <xs:element name="toDate">
         <xs:complexType mixed="true">
-            <xs:attributeGroup ref="a.xml.common"/>
             <xs:attributeGroup ref="m.dateSingle"/>
         </xs:complexType>
     </xs:element>
@@ -373,7 +348,6 @@
                 <xs:element ref="abbreviation" minOccurs="0"/>
                 <xs:element ref="descriptiveNote" minOccurs="0"/>
             </xs:sequence>
-            <xs:attributeGroup ref="a.xml.common"/>
         </xs:complexType>
     </xs:element>
     <xs:element name="publicationStatus">
@@ -386,7 +360,6 @@
                             <xs:enumeration value="approved"/>
                         </xs:restriction>
                     </xs:simpleType>
-                    <xs:attribute ref="xml:id"/>
                 </xs:restriction>
             </xs:simpleContent>
         </xs:complexType>
@@ -396,7 +369,6 @@
             <xs:sequence>
                 <xs:element ref="source" maxOccurs="unbounded"/>
             </xs:sequence>
-            <xs:attributeGroup ref="a.xml.common.base"/>
         </xs:complexType>
     </xs:element>
     <xs:element name="source">
@@ -409,28 +381,24 @@
                 </xs:choice>
                 <xs:element minOccurs="0" ref="descriptiveNote"/>
             </xs:sequence>
-            <xs:attribute ref="xml:id"/>
             <xs:attribute name="lastDateTimeVerified" type="m.data.standardDateTime"/>
             <xs:attributeGroup ref="href"/>
         </xs:complexType>
     </xs:element>
     <xs:element name="sourceEntry">
         <xs:complexType mixed="true">
-            <xs:attribute ref="xml:id"/>
             <xs:attributeGroup ref="m.entryLanguageAttributes"/>
         </xs:complexType>
     </xs:element>
     <xs:element name="objectXMLWrap">
         <xs:complexType>
             <xs:group ref="e.anyName"/>
-            <xs:attribute ref="xml:id"/>
         </xs:complexType>
     </xs:element>
     <xs:element name="objectBinWrap">
         <xs:complexType>
             <xs:simpleContent>
                 <xs:extension base="xs:base64Binary">
-                    <xs:attribute ref="xml:id"/>
                 </xs:extension>
             </xs:simpleContent>
         </xs:complexType>
@@ -443,18 +411,16 @@
 
     <xs:element name="agencyCode">
         <xs:complexType mixed="true">
-            <xs:attribute ref="xml:id"/>
         </xs:complexType>
     </xs:element>
     <xs:element name="agencyName">
         <xs:complexType mixed="true">
-            <xs:attributeGroup ref="a.xml.common"/>
+            <xs:attribute ref="xml:lang"/>
         </xs:complexType>
     </xs:element>
     <xs:element name="otherAgencyCode">
         <xs:complexType mixed="true">
             <xs:attributeGroup ref="localType"/>
-            <xs:attribute ref="xml:id"/>
         </xs:complexType>
     </xs:element>
     <xs:element name="descriptiveNote">
@@ -462,12 +428,11 @@
             <xs:sequence>
                 <xs:element ref="p" maxOccurs="unbounded"/>
             </xs:sequence>
-            <xs:attributeGroup ref="a.xml.common"/>
         </xs:complexType>
     </xs:element>
     <xs:element name="p">
         <xs:complexType mixed="true">
-            <xs:attributeGroup ref="a.xml.common"/>
+            <xs:attribute ref="xml:lang"/>
         </xs:complexType>
     </xs:element>
 
@@ -599,7 +564,7 @@
                 <xs:element ref="repositoryName" minOccurs="0" maxOccurs="unbounded"/>
                 <xs:element ref="repositoryRole" minOccurs="0"/>
                 <xs:element ref="geogarea"/>
-                <xs:element ref="location" maxOccurs="unbounded"/>
+                <xs:element name="location" type="location" maxOccurs="unbounded"/>
                 <xs:element ref="telephone" minOccurs="0" maxOccurs="unbounded"/>
                 <xs:element ref="fax" minOccurs="0" maxOccurs="unbounded"/>
                 <xs:element ref="email" minOccurs="0" maxOccurs="unbounded"/>
@@ -660,21 +625,19 @@
         </xs:complexType>
     </xs:element>
 
-    <xs:element name="location">
-        <xs:complexType>
-            <xs:sequence>
-                <xs:element ref="country"/>
-                <xs:element ref="firstdem" minOccurs="0"/>
-                <xs:element ref="secondem" minOccurs="0"/>
-                <xs:element ref="municipalityPostalcode"/>
-                <xs:element ref="localentity" minOccurs="0"/>
-                <xs:element ref="street"/>
-            </xs:sequence>
-            <xs:attributeGroup ref="localType"/>
-            <xs:attribute name="longitude" type="xs:NMTOKEN"/>
-            <xs:attribute name="latitude" type="xs:NMTOKEN"/>
-        </xs:complexType>
-    </xs:element>
+    <xs:complexType name="location">
+        <xs:sequence>
+            <xs:element ref="country"/>
+            <xs:element ref="firstdem" minOccurs="0"/>
+            <xs:element ref="secondem" minOccurs="0"/>
+            <xs:element ref="municipalityPostalcode"/>
+            <xs:element ref="localentity" minOccurs="0"/>
+            <xs:element ref="street"/>
+        </xs:sequence>
+        <xs:attribute name="localType" type="xs:anyURI" use="required"/>
+        <xs:attribute name="longitude" type="xs:NMTOKEN"/>
+        <xs:attribute name="latitude" type="xs:NMTOKEN"/>
+    </xs:complexType>
     <xs:element name="country">
         <xs:complexType mixed="true">
             <xs:attribute ref="xml:lang"/>
@@ -715,11 +678,13 @@
     <xs:element name="email">
         <xs:complexType mixed="true">
             <xs:attributeGroup ref="href" />
+            <xs:attribute ref="xml:lang"/>
         </xs:complexType>
     </xs:element>
     <xs:element name="webpage">
         <xs:complexType mixed="true">
             <xs:attributeGroup ref="href" />
+            <xs:attribute ref="xml:lang"/>
         </xs:complexType>
     </xs:element>
 
@@ -744,7 +709,7 @@
         <xs:complexType>
             <xs:sequence>
                 <xs:element ref="date"/>
-                <xs:element ref="rule"/>
+                <xs:element ref="rule" maxOccurs="unbounded"/>
             </xs:sequence>
         </xs:complexType>
     </xs:element>
@@ -752,7 +717,7 @@
         <xs:complexType>
             <xs:sequence>
                 <xs:element ref="date"/>
-                <xs:element ref="rule"/>
+                <xs:element ref="rule" maxOccurs="unbounded"/>
             </xs:sequence>
         </xs:complexType>
     </xs:element>
@@ -841,16 +806,19 @@
     <xs:element name="timetable">
         <xs:complexType>
             <xs:sequence>
-                <xs:element ref="opening"/>
-                <xs:element ref="closing" minOccurs="0"/>
+                <xs:element ref="opening" maxOccurs="unbounded"/>
+                <xs:element ref="closing" minOccurs="0" maxOccurs="unbounded"/>
             </xs:sequence>
         </xs:complexType>
     </xs:element>
     <xs:element name="opening">
-        <xs:complexType mixed="true"/>
+        <xs:complexType mixed="true">
+            <xs:attribute ref="xml:lang"/>
+        </xs:complexType>
     </xs:element>
     <xs:element name="closing">
         <xs:complexType mixed="true">
+            <xs:attribute ref="xml:lang"/>
             <xs:attribute name="standardDate" type="m.data.standardDate"/>
         </xs:complexType>
     </xs:element>
@@ -926,7 +894,22 @@
             <xs:sequence>
                 <xs:element ref="telephone" minOccurs="0" maxOccurs="unbounded"/>
                 <xs:element ref="email" minOccurs="0" maxOccurs="unbounded"/>
+                <xs:element ref="nameEntry" minOccurs="0" maxOccurs="unbounded"/>
             </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="nameEntry">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element maxOccurs="unbounded" ref="part"/>
+            </xs:sequence>
+            <xs:attribute ref="xml:lang"/>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="part">
+        <xs:complexType mixed="true">
+            <xs:attribute ref="xml:lang"/>
+            <xs:attribute name="localType" type="xs:anyURI"/>
         </xs:complexType>
     </xs:element>
     <xs:element name="workPlaces">
@@ -1143,6 +1126,7 @@
             <xs:sequence>
                 <xs:element ref="relationEntry"/>
                 <xs:element ref="descriptiveNote" minOccurs="0"/>
+                <xs:group ref="m.dates" minOccurs="0"/>
             </xs:sequence>
             <xs:attribute name="resourceRelationType" use="required">
                 <xs:simpleType>
@@ -1153,12 +1137,16 @@
                     </xs:restriction>
                 </xs:simpleType>
             </xs:attribute>
+            <xs:attribute name="lastDateTimeVerified" type="m.data.standardDateTime"/>
             <xs:attributeGroup ref="href"/>
         </xs:complexType>
     </xs:element>
 
     <xs:element name="relationEntry">
-        <xs:complexType mixed="true" />
+        <xs:complexType mixed="true">
+            <xs:attribute name="localType" type="xs:anyURI"/>
+            <xs:attributeGroup ref="m.entryLanguageAttributes"/>
+        </xs:complexType>
     </xs:element>
 
     <xs:element name="eagRelation">
@@ -1166,6 +1154,7 @@
             <xs:sequence>
                 <xs:element ref="relationEntry" minOccurs="0" maxOccurs="unbounded"/>
                 <xs:element ref="descriptiveNote" minOccurs="0"/>
+                <xs:group ref="m.dates" minOccurs="0"/>
             </xs:sequence>
             <xs:attribute name="eagRelationType" use="required">
                 <xs:simpleType>
@@ -1178,6 +1167,7 @@
                     </xs:restriction>
                 </xs:simpleType>
             </xs:attribute>
+            <xs:attribute name="lastDateTimeVerified" type="m.data.standardDateTime"/>
             <xs:attributeGroup ref="href"/>
         </xs:complexType>
     </xs:element>
