@@ -36,7 +36,7 @@ public class EagAccessAndServicesPanel extends EagPanels {
     private JTextField webpageTitleSearchroomTf;
     private JTextField workplacesSearchroomTf;
     private JTextField computerplacesSearchroomTf;
-    private TextFieldWithLanguage computerplacesDescriptionTf;
+    private List<TextFieldWithLanguage> computerplacesDescriptionTfs;
     private JTextField microfilmplacesSearchroomTf;
     private List<TextFieldWithLanguage> readersticketSearchroomTfs;
     private List<TextFieldWithLanguage> advancedordersSearchroomTfs;
@@ -303,15 +303,23 @@ public class EagAccessAndServicesPanel extends EagPanels {
         if(searchroom.getComputerPlaces().getDescriptiveNote() == null){
             JButton addDescriptionBtn = new ButtonEag(labels.getString("eag2012.addDescriptionButton"));
             builder.add(addDescriptionBtn, cc.xy (5, rowNb));
-            addDescriptionBtn.addActionListener(new AddDescriptionBtnAction(eag, tabbedPane, model));
+            addDescriptionBtn.addActionListener(new AddComputerplacesDescriptionBtnAction(eag, tabbedPane, model));
         }
         setNextRow();
         if(searchroom.getComputerPlaces().getDescriptiveNote() != null){
-            builder.addLabel(labels.getString("eag2012.computerplacesDescription"), cc.xy(1, rowNb));
-            computerplacesDescriptionTf = new TextFieldWithLanguage(searchroom.getComputerPlaces().getDescriptiveNote().getP().get(0).getContent(), searchroom.getComputerPlaces().getDescriptiveNote().getP().get(0).getLang());
-            builder.add(computerplacesDescriptionTf.getTextField(), cc.xy(3, rowNb));
-            builder.addLabel(labels.getString("eag2012.language"), cc.xy(5, rowNb));
-            builder.add(computerplacesDescriptionTf.getLanguageBox(), cc.xy(7, rowNb));
+            computerplacesDescriptionTfs = new ArrayList<TextFieldWithLanguage>(searchroom.getComputerPlaces().getDescriptiveNote().getP().size());
+            for (P p : searchroom.getComputerPlaces().getDescriptiveNote().getP()) {
+                builder.addLabel(labels.getString("eag2012.computerplacesDescription"), cc.xy(1, rowNb));
+                TextFieldWithLanguage textFieldWithLanguage = new TextFieldWithLanguage(p.getContent(), p.getLang());
+                computerplacesDescriptionTfs.add(textFieldWithLanguage);
+                builder.add(textFieldWithLanguage.getTextField(), cc.xy(3, rowNb));
+                builder.addLabel(labels.getString("eag2012.language"), cc.xy(5, rowNb));
+                builder.add(textFieldWithLanguage.getLanguageBox(), cc.xy(7, rowNb));
+                setNextRow();
+            }
+            JButton addDescriptionBtn = new ButtonEag(labels.getString("eag2012.addDescriptionButton"));
+            builder.add(addDescriptionBtn, cc.xy (5, rowNb));
+            addDescriptionBtn.addActionListener(new AddComputerplacesDescriptionBtnAction(eag, tabbedPane, model));
             setNextRow();
         }
 
@@ -839,8 +847,8 @@ public class EagAccessAndServicesPanel extends EagPanels {
             reloadTabbedPanel(new EagAccessAndServicesPanel(eag, tabbedPane, eag2012Frame, model, labels).buildEditorPanel(errors), 3);
         }
     }
-    public class AddDescriptionBtnAction extends UpdateEagObject {
-        AddDescriptionBtnAction(Eag eag, JTabbedPane tabbedPane, ProfileListModel model) {
+    public class AddComputerplacesDescriptionBtnAction extends UpdateEagObject {
+        AddComputerplacesDescriptionBtnAction(Eag eag, JTabbedPane tabbedPane, ProfileListModel model) {
             super(eag, tabbedPane, model);
         }
 
@@ -850,9 +858,15 @@ public class EagAccessAndServicesPanel extends EagPanels {
                 super.updateEagObject();
             } catch (Eag2012FormException e) {
             }
-            DescriptiveNote descriptiveNote = new DescriptiveNote();
-            descriptiveNote.setP(new ArrayList<P>(){{add(new P());}});
-            eag.getArchguide().getDesc().getRepositories().getRepository().get(0).getServices().getSearchroom().getComputerPlaces().setDescriptiveNote(descriptiveNote);
+            
+            if(eag.getArchguide().getDesc().getRepositories().getRepository().get(0).getServices().getSearchroom().getComputerPlaces().getDescriptiveNote() == null){
+                DescriptiveNote descriptiveNote = new DescriptiveNote();
+                descriptiveNote.setP(new ArrayList<P>());
+                descriptiveNote.getP().add(new P());
+                eag.getArchguide().getDesc().getRepositories().getRepository().get(0).getServices().getSearchroom().getComputerPlaces().setDescriptiveNote(descriptiveNote);
+            } else {
+                eag.getArchguide().getDesc().getRepositories().getRepository().get(0).getServices().getSearchroom().getComputerPlaces().getDescriptiveNote().getP().add(new P());
+            }
             reloadTabbedPanel(new EagAccessAndServicesPanel(eag, tabbedPane, eag2012Frame, model, labels).buildEditorPanel(errors), 3);
         }
     }
@@ -1204,13 +1218,19 @@ public class EagAccessAndServicesPanel extends EagPanels {
                     searchroom.getComputerPlaces().setNum(num);
                 }
                 
-                if(computerplacesDescriptionTf != null){
-                    if(StringUtils.isNotEmpty(computerplacesDescriptionTf.getTextValue())){
-                        searchroom.getComputerPlaces().getDescriptiveNote().getP().get(0).setLang(computerplacesDescriptionTf.getLanguage());
-                        searchroom.getComputerPlaces().getDescriptiveNote().getP().get(0).setContent(computerplacesDescriptionTf.getTextValue());
-                        hasChanged = true;
+                if (computerplacesDescriptionTfs != null && computerplacesDescriptionTfs.size() > 0) {
+                    searchroom.getComputerPlaces().getDescriptiveNote().getP().clear();
+                    for (TextFieldWithLanguage textFieldWithLanguage : computerplacesDescriptionTfs) {
+                        if (StringUtils.isNotEmpty(textFieldWithLanguage.getTextValue())) {
+                            P p = new P();
+                            p.setContent(textFieldWithLanguage.getTextValue());
+                            p.setLang(textFieldWithLanguage.getLanguage());
+                            searchroom.getComputerPlaces().getDescriptiveNote().getP().add(p);
+                            hasChanged = true;
+                        }
                     }
                 }
+
                 if(StringUtils.isNotEmpty(microfilmplacesSearchroomTf.getText())) {
                     Num num = new Num();
                     num.setUnit("site");
