@@ -30,6 +30,7 @@ public class EseConfig implements Serializable {
     private String rightsAdditionalInformation;
     private String dataProvider;
     private boolean useExistingDaoRole;
+    private boolean useExistingRepository;
     private Properties properties;
 
     public EseConfig() {
@@ -200,6 +201,14 @@ public class EseConfig implements Serializable {
         this.useExistingDaoRole = useExistingDaoRole;
     }
 
+    public boolean isUseExistingRepository() {
+        return useExistingRepository;
+    }
+
+    public void setUseExistingRepository(boolean useExistingRepository) {
+        this.useExistingRepository = useExistingRepository;
+    }
+
     public XMLTransformer getTransformerXML2XML() {
         if (transformerXML2XML == null) {
             transformerXML2XML = new XMLTransformer("/ead2ese/ead2ese.xslt", getProperties());
@@ -226,6 +235,7 @@ public class EseConfig implements Serializable {
             properties.put("inheritControlaccess", getString(new Boolean(isInheritControlaccess()).toString()));
             properties.put("contextInformationPrefix", getString(getContextInformationPrefix()));
             properties.put("useExistingDaoRole", getString(new Boolean(isUseExistingDaoRole()).toString()));
+            properties.put("useExistingRepository", getString(new Boolean(isUseExistingRepository()).toString()));
         }
         return properties;
     }
