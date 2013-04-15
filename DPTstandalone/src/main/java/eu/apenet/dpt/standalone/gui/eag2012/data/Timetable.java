@@ -13,6 +13,8 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
+import java.util.ArrayList;
+import java.util.List;
 
 
 /**
@@ -44,55 +46,20 @@ import javax.xml.bind.annotation.XmlType;
 public class Timetable {
 
     @XmlElement(required = true)
-    protected Opening opening;
-    protected Closing closing;
+    protected List<Opening> opening;
+    protected List<Closing> closing;
 
-    /**
-     * Gets the value of the opening property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link Opening }
-     *     
-     */
-    public Opening getOpening() {
+    public List<Opening> getOpening() {
+        if(opening == null) {
+            opening = new ArrayList<Opening>();
+        }
         return opening;
     }
 
-    /**
-     * Sets the value of the opening property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link Opening }
-     *     
-     */
-    public void setOpening(Opening value) {
-        this.opening = value;
-    }
-
-    /**
-     * Gets the value of the closing property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link Closing }
-     *     
-     */
-    public Closing getClosing() {
+    public List<Closing> getClosing() {
+        if(closing == null) {
+            closing = new ArrayList<Closing>();
+        }
         return closing;
     }
-
-    /**
-     * Sets the value of the closing property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link Closing }
-     *     
-     */
-    public void setClosing(Closing value) {
-        this.closing = value;
-    }
-
 }

@@ -23,12 +23,11 @@ import javax.swing.text.AbstractDocument.Content;
  */
 public class EagDescriptionPanel extends EagPanels {
 
-//    private TextFieldWithLanguage repositoryHistoryTf;
     private List<TextFieldWithLanguage> repositoryHistoryTfs;
-//    private List<TextFieldWithLanguage> repositoryFoundationTfs;
-    private TextFieldWithLanguage repositoryFoundationTf;
-//    private List<TextFieldWithLanguage> repositorySuppressionTfs;
-    private TextFieldWithLanguage repositorySuppressionTf;
+    private List<TextFieldWithLanguage> repositoryFoundationTfs;
+    private JTextField repositoryFoundationDateTf;
+    private List<TextFieldWithLanguage> repositorySuppressionTfs;
+    private JTextField repositorySuppressionDateTf;
     private List<TextFieldWithLanguage> unitAdministrativeStructureTfs;
     private List<TextFieldWithLanguage> buildingTfs;
     private JTextField repositoryAreaTf;
@@ -98,37 +97,48 @@ public class EagDescriptionPanel extends EagPanels {
         if (repository.getRepositorfound() == null) {
             Repositorfound repositorfound = new Repositorfound();
             repositorfound.setDate(new Date());
-            repositorfound.setRule(new Rule());
+            repositorfound.getRule().add(new Rule());
             repository.setRepositorfound(repositorfound);
         }
-//        for(Rule rule : repository.getRepositorfound().getRule()) {
-//        }
+
         builder.addLabel(labels.getString("eag2012.dateRepositoryFoundation"), cc.xy(1, rowNb));
-        repositoryFoundationTf = new TextFieldWithLanguage(repository.getRepositorfound().getRule().getContent(), repository.getRepositorfound().getRule().getLang(), repository.getRepositorfound().getDate().getContent());
-        builder.add(repositoryFoundationTf.getExtraField(), cc.xy(3, rowNb));
+        repositoryFoundationDateTf = new JTextField(repository.getRepositorfound().getDate().getContent());
+        builder.add(repositoryFoundationDateTf, cc.xy(3, rowNb));
         setNextRow();
-        builder.addLabel(labels.getString("eag2012.ruleRepositoryFoundation"), cc.xy(1, rowNb));
-        builder.add(repositoryFoundationTf.getTextField(), cc.xy(3, rowNb));
-        builder.addLabel(labels.getString("eag2012.language"), cc.xy(5, rowNb));
-        builder.add(repositoryFoundationTf.getLanguageBox(), cc.xy(7, rowNb));
-        setNextRow();
+
+        repositoryFoundationTfs = new ArrayList<TextFieldWithLanguage>(repository.getRepositorfound().getRule().size());
+        for(Rule rule : repository.getRepositorfound().getRule()) {
+            TextFieldWithLanguage textFieldWithLanguage = new TextFieldWithLanguage(rule.getContent(), rule.getLang());
+            repositoryFoundationTfs.add(textFieldWithLanguage);
+            builder.addLabel(labels.getString("eag2012.ruleRepositoryFoundation"), cc.xy(1, rowNb));
+            builder.add(textFieldWithLanguage.getTextField(), cc.xy(3, rowNb));
+            builder.addLabel(labels.getString("eag2012.language"), cc.xy(5, rowNb));
+            builder.add(textFieldWithLanguage.getLanguageBox(), cc.xy(7, rowNb));
+            setNextRow();
+        }
 
         if (repository.getRepositorsup() == null) {
             Repositorsup repositorsup = new Repositorsup();
             repositorsup.setDate(new Date());
-            repositorsup.setRule(new Rule());
+            repositorsup.getRule().add(new Rule());
             repository.setRepositorsup(repositorsup);
         }
+
         builder.addLabel(labels.getString("eag2012.dateRepositorySuppression"), cc.xy(1, rowNb));
-        repositorySuppressionTf = new TextFieldWithLanguage(repository.getRepositorsup().getRule().getContent(), repository.getRepositorsup().getRule().getLang(), repository.getRepositorsup().getDate().getContent());
-        builder.add(repositorySuppressionTf.getExtraField(), cc.xy(3, rowNb));
-        setNextRow();
-        builder.addLabel(labels.getString("eag2012.ruleRepositorySuppression"), cc.xy(1, rowNb));
-        builder.add(repositorySuppressionTf.getTextField(), cc.xy(3, rowNb));
-        builder.addLabel(labels.getString("eag2012.language"), cc.xy(5, rowNb));
-        builder.add(repositorySuppressionTf.getLanguageBox(), cc.xy(7, rowNb));
+        repositorySuppressionDateTf = new JTextField(repository.getRepositorsup().getDate().getContent());
+        builder.add(repositorySuppressionDateTf, cc.xy(3, rowNb));
         setNextRow();
 
+        repositorySuppressionTfs = new ArrayList<TextFieldWithLanguage>(repository.getRepositorsup().getRule().size());
+        for(Rule rule : repository.getRepositorsup().getRule()) {
+            TextFieldWithLanguage textFieldWithLanguage = new TextFieldWithLanguage(rule.getContent(), rule.getLang());
+            repositorySuppressionTfs.add(textFieldWithLanguage);
+            builder.addLabel(labels.getString("eag2012.ruleRepositorySuppression"), cc.xy(1, rowNb));
+            builder.add(textFieldWithLanguage.getTextField(), cc.xy(3, rowNb));
+            builder.addLabel(labels.getString("eag2012.language"), cc.xy(5, rowNb));
+            builder.add(textFieldWithLanguage.getLanguageBox(), cc.xy(7, rowNb));
+            setNextRow();
+        }
 
         builder.addSeparator(labels.getString("eag2012.administrativeStructure"), cc.xy(1, rowNb));
         setNextRow();
@@ -438,18 +448,46 @@ public class EagDescriptionPanel extends EagPanels {
                 }
                 if (counterRepositorhistoryTfs == 0) 
                     repository.setRepositorhist(null);
-                
 
-                if (StringUtils.isNotEmpty(repositoryFoundationTf.getTextValue())) {
-                    repository.getRepositorfound().getRule().setContent(repositoryFoundationTf.getTextValue());
-                    repository.getRepositorfound().getRule().setLang(repositoryFoundationTf.getLanguage());
-                    repository.getRepositorfound().getDate().setContent(repositoryFoundationTf.getExtraValue());
+
+                if (StringUtils.isNotEmpty(repositoryFoundationDateTf.getText())) {
+                    repository.getRepositorfound().getDate().setContent(repositoryFoundationDateTf.getText());
+                }
+                boolean repositoryFoundationExists = false;
+                if(repositoryFoundationTfs.size() > 0) {
+                    repository.getRepositorfound().getRule().clear();
+                    for(TextFieldWithLanguage textFieldWithLanguage : repositoryFoundationTfs) {
+                        if(StringUtils.isNotEmpty(textFieldWithLanguage.getTextValue())) {
+                            Rule rule = new Rule();
+                            rule.setContent(textFieldWithLanguage.getTextValue());
+                            rule.setLang(textFieldWithLanguage.getLanguage());
+                            repository.getRepositorfound().getRule().add(rule);
+                            repositoryFoundationExists = true;
+                        }
+                    }
+                }
+                if(!repositoryFoundationExists) {
+                    repository.setRepositorfound(null);
                 }
 
-                if (StringUtils.isNotEmpty(repositorySuppressionTf.getTextValue())) {
-                    repository.getRepositorsup().getRule().setContent(repositorySuppressionTf.getTextValue());
-                    repository.getRepositorsup().getRule().setLang(repositorySuppressionTf.getLanguage());
-                    repository.getRepositorsup().getDate().setContent(repositorySuppressionTf.getExtraValue());
+                if (StringUtils.isNotEmpty(repositorySuppressionDateTf.getText())) {
+                    repository.getRepositorsup().getDate().setContent(repositorySuppressionDateTf.getText());
+                }
+                boolean repositorySuppressionExists = false;
+                if(repositorySuppressionTfs.size() > 0) {
+                    repository.getRepositorsup().getRule().clear();
+                    for(TextFieldWithLanguage textFieldWithLanguage : repositorySuppressionTfs) {
+                        if(StringUtils.isNotEmpty(textFieldWithLanguage.getTextValue())) {
+                            Rule rule = new Rule();
+                            rule.setContent(textFieldWithLanguage.getTextValue());
+                            rule.setLang(textFieldWithLanguage.getLanguage());
+                            repository.getRepositorsup().getRule().add(rule);
+                            repositorySuppressionExists = true;
+                        }
+                    }
+                }
+                if(!repositorySuppressionExists) {
+                    repository.setRepositorsup(null);
                 }
 
                 int counterUnitAdministrativeStructureTfs = 0;

@@ -8,11 +8,9 @@
 
 package eu.apenet.dpt.standalone.gui.eag2012.data;
 
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlType;
-import javax.xml.bind.annotation.XmlValue;
+import javax.xml.bind.annotation.*;
+import javax.xml.bind.annotation.adapters.CollapsedStringAdapter;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 
 /**
@@ -40,6 +38,17 @@ public class RelationEntry {
 
     @XmlValue
     protected String content;
+    @XmlAttribute(name = "localType", namespace = "http://www.archivesportaleurope.net/Portal/profiles/eag_2012/")
+    @XmlSchemaType(name = "anySimpleType")
+    protected String localType;
+    @XmlAttribute(name = "lang", namespace = "http://www.w3.org/XML/1998/namespace")
+    protected String lang;
+    @XmlAttribute(name = "transliteration")
+    @XmlJavaTypeAdapter(CollapsedStringAdapter.class)
+    @XmlSchemaType(name = "NMTOKEN")
+    protected String transliteration;
+    @XmlAttribute(name = "scriptCode")
+    protected String scriptCode;
 
     /**
      * Gets the value of the content property.
@@ -65,4 +74,35 @@ public class RelationEntry {
         this.content = value;
     }
 
+    public String getLocalType() {
+        return localType;
+    }
+
+    public void setLocalType(String localType) {
+        this.localType = localType;
+    }
+
+    public String getLang() {
+        return lang;
+    }
+
+    public void setLang(String lang) {
+        this.lang = lang;
+    }
+
+    public String getTransliteration() {
+        return transliteration;
+    }
+
+    public void setTransliteration(String transliteration) {
+        this.transliteration = transliteration;
+    }
+
+    public String getScriptCode() {
+        return scriptCode;
+    }
+
+    public void setScriptCode(String scriptCode) {
+        this.scriptCode = scriptCode;
+    }
 }

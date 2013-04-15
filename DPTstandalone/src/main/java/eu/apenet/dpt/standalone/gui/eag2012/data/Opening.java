@@ -8,11 +8,7 @@
 
 package eu.apenet.dpt.standalone.gui.eag2012.data;
 
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlType;
-import javax.xml.bind.annotation.XmlValue;
+import javax.xml.bind.annotation.*;
 
 
 /**
@@ -40,6 +36,8 @@ public class Opening {
 
     @XmlValue
     protected String content;
+    @XmlAttribute(name = "lang", namespace = "http://www.w3.org/XML/1998/namespace")
+    protected String lang;
 
     /**
      * Gets the value of the content property.
@@ -65,4 +63,11 @@ public class Opening {
         this.content = value;
     }
 
+    public String getLang() {
+        return lang;
+    }
+
+    public void setLang(String lang) {
+        this.lang = lang;
+    }
 }

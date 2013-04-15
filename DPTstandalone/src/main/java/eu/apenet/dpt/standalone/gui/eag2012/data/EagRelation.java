@@ -55,19 +55,51 @@ import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "", propOrder = {
     "relationEntry",
-    "descriptiveNote"
+    "descriptiveNote",
+    "date",
+    "dateRange",
+    "dateSet"
 })
 @XmlRootElement(name = "eagRelation")
 public class EagRelation {
 
     protected List<RelationEntry> relationEntry;
     protected DescriptiveNote descriptiveNote;
+    protected Date date;
+    protected DateRange dateRange;
+    protected DateSet dateSet;
     @XmlAttribute(name = "eagRelationType", required = true)
     @XmlJavaTypeAdapter(CollapsedStringAdapter.class)
     protected String eagRelationType;
     @XmlAttribute(name = "href")
     @XmlSchemaType(name = "anyURI")
     protected String href;
+    @XmlAttribute(name = "lastDateTimeVerified")
+    protected String lastDateTimeVerified;
+
+    public Date getDate() {
+        return date;
+    }
+
+    public void setDate(Date date) {
+        this.date = date;
+    }
+
+    public DateRange getDateRange() {
+        return dateRange;
+    }
+
+    public void setDateRange(DateRange dateRange) {
+        this.dateRange = dateRange;
+    }
+
+    public DateSet getDateSet() {
+        return dateSet;
+    }
+
+    public void setDateSet(DateSet dateSet) {
+        this.dateSet = dateSet;
+    }
 
     /**
      * Gets the value of the relationEntry property.
@@ -170,4 +202,11 @@ public class EagRelation {
         this.href = value;
     }
 
+    public String getLastDateTimeVerified() {
+        return lastDateTimeVerified;
+    }
+
+    public void setLastDateTimeVerified(String lastDateTimeVerified) {
+        this.lastDateTimeVerified = lastDateTimeVerified;
+    }
 }

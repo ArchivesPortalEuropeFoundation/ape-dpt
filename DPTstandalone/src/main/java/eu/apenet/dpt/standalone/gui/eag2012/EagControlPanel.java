@@ -58,8 +58,13 @@ public class EagControlPanel extends EagPanels {
 
         builder.addLabel(labels.getString("eag2012.personInstitutionResponsible"), cc.xy(1, rowNb));
         int sizeEvents = eag.getControl().getMaintenanceHistory().getMaintenanceEvent().size();
-        MaintenanceEvent event = eag.getControl().getMaintenanceHistory().getMaintenanceEvent().get(sizeEvents - 1);
-        TextFieldWithLanguage personInstitutionRespTf = new TextFieldWithLanguage(event.getAgent().getContent(), event.getAgent().getLang());
+        TextFieldWithLanguage personInstitutionRespTf;
+        if(sizeEvents > 0) {
+            MaintenanceEvent event = eag.getControl().getMaintenanceHistory().getMaintenanceEvent().get(sizeEvents - 1);
+            personInstitutionRespTf = new TextFieldWithLanguage(event.getAgent().getContent(), event.getAgent().getLang());
+        } else {
+            personInstitutionRespTf = new TextFieldWithLanguage("", "");
+        }
         personInstitutionRespTf.getTextField().setEnabled(false);
         personInstitutionRespTf.getLanguageBox().setEnabled(false);
         builder.add(personInstitutionRespTf.getTextField(), cc.xy(3, rowNb));

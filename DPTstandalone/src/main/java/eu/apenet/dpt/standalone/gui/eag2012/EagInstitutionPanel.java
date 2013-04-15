@@ -44,8 +44,8 @@ public class EagInstitutionPanel extends EagPanels {
     private JTextField emailTitleTf;
     private JTextField webpageTf;
     private JTextField webpageTitleTf;
-    private JTextField openingTimesTf;
-    private JTextField closingTimesTf;
+    private List<TextFieldWithLanguage> openingTimesTfs;
+    private List<TextFieldWithLanguage> closingTimesTfs;
     private JTextField refInstitutionHoldingsGuideTf;
     private JTextField refInstitutionHoldingsGuideTitleTf;
     private JTextField workplacesSearchroomTf;
@@ -335,19 +335,38 @@ public class EagInstitutionPanel extends EagPanels {
             }
             setNextRow();
 
-            builder.addLabel(labels.getString("eag2012.openingTimesLabel") + "*",    cc.xy (1, rowNb));
-            openingTimesTf = new JTextField(repository.getTimetable().getOpening().getContent());
-            builder.add(openingTimesTf, cc.xy (3, rowNb));
-            builder.addLabel(labels.getString("eag2012.closingTimesLabel"), cc.xy(5, rowNb));
-            if(repository.getTimetable().getClosing() == null)
-                repository.getTimetable().setClosing(new Closing());
-            closingTimesTf = new JTextField(repository.getTimetable().getClosing().getContent());
-            builder.add(closingTimesTf,                                            cc.xy (7, rowNb));
-            if(errors.contains("openingTimesTf")) {
-                setNextRow();
-                builder.add(createErrorLabel(labels.getString("eag2012.errors.openingTimes")),          cc.xy (1, rowNb));
+            if(repository.getTimetable().getOpening().size() == 0) {
+                repository.getTimetable().getOpening().add(new Opening());
             }
-            setNextRow();
+            openingTimesTfs = new ArrayList<TextFieldWithLanguage>(repository.getTimetable().getOpening().size());
+            for(Opening opening : repository.getTimetable().getOpening()) {
+                builder.addLabel(labels.getString("eag2012.openingTimesLabel") + "*",    cc.xy (1, rowNb));
+                TextFieldWithLanguage textFieldWithLanguage = new TextFieldWithLanguage(opening.getContent(), opening.getLang());
+                openingTimesTfs.add(textFieldWithLanguage);
+                builder.add(textFieldWithLanguage.getTextField(), cc.xy (3, rowNb));
+                builder.addLabel(labels.getString("eag2012.language"),    cc.xy (5, rowNb));
+                builder.add(textFieldWithLanguage.getLanguageBox(), cc.xy(7, rowNb));
+                setNextRow();
+            }
+            if(errors.contains("openingTimesTfs")) {
+                builder.add(createErrorLabel(labels.getString("eag2012.errors.openingTimes")),          cc.xy (1, rowNb));
+                setNextRow();
+            }
+
+            if(repository.getTimetable().getClosing().size() == 0) {
+                repository.getTimetable().getClosing().add(new Closing());
+            }
+            closingTimesTfs = new ArrayList<TextFieldWithLanguage>(repository.getTimetable().getClosing().size());
+            for(Closing closing : repository.getTimetable().getClosing()) {
+                builder.addLabel(labels.getString("eag2012.closingTimesLabel"), cc.xy(1, rowNb));
+                TextFieldWithLanguage textFieldWithLanguage = new TextFieldWithLanguage(closing.getContent(), closing.getLang());
+                closingTimesTfs.add(textFieldWithLanguage);
+                builder.add(textFieldWithLanguage.getTextField(), cc.xy(3, rowNb));
+                builder.addLabel(labels.getString("eag2012.language"),    cc.xy (5, rowNb));
+                builder.add(textFieldWithLanguage.getLanguageBox(), cc.xy(7, rowNb));
+                setNextRow();
+            }
+
             builder.addLabel(labels.getString("eag2012.accessiblePublicLabel") + "*",    cc.xy (1, rowNb));
             if(Arrays.asList(yesOrNo).contains(repository.getAccess().getQuestion())) {
                 accessiblePublicCombo.setSelectedItem(repository.getAccess().getQuestion());
@@ -743,22 +762,33 @@ public class EagInstitutionPanel extends EagPanels {
 
 //                }
 
-                if(StringUtils.isNotEmpty(openingTimesTf.getText())) {
-                    repository.getTimetable().getOpening().setContent(openingTimesTf.getText());
-                    hasChanged = true;
-                } else {
-                    errors.add("openingTimesTf");
+                boolean openingTimeExists = false;
+                if(openingTimesTfs.size() > 0) {
+                    repository.getTimetable().getOpening().clear();
+                    for(TextFieldWithLanguage textFieldWithLanguage : openingTimesTfs) {
+                        if(StringUtils.isNotEmpty(textFieldWithLanguage.getTextValue())) {
+                            Opening opening = new Opening();
+                            opening.setContent(textFieldWithLanguage.getTextValue());
+                            opening.setLang(textFieldWithLanguage.getLanguage());
+                            repository.getTimetable().getOpening().add(opening);
+                            openingTimeExists = true;
+                        }
+                    }
+                }
+                if(!openingTimeExists) {
+                    errors.add("openingTimesTfs");
                 }
 
-                if(StringUtils.isNotEmpty(closingTimesTf.getText())) {
-                    if(repository.getTimetable().getClosing() == null)
-                        repository.getTimetable().setClosing(new Closing());
-                    if(!closingTimesTf.getText().equals(repository.getTimetable().getClosing().getContent())) {
-                        repository.getTimetable().getClosing().setContent(closingTimesTf.getText());
-                        hasChanged = true;
+                if(closingTimesTfs.size() > 0) {
+                    repository.getTimetable().getClosing().clear();
+                    for(TextFieldWithLanguage textFieldWithLanguage : closingTimesTfs) {
+                        if(StringUtils.isNotEmpty(textFieldWithLanguage.getTextValue())) {
+                            Closing closing = new Closing();
+                            closing.setContent(textFieldWithLanguage.getTextValue());
+                            closing.setLang(textFieldWithLanguage.getLanguage());
+                            repository.getTimetable().getClosing().add(closing);
+                        }
                     }
-                } else {
-                    repository.getTimetable().setClosing(null);
                 }
 
                 if(!accessiblePublicCombo.getSelectedItem().equals(repository.getAccess().getQuestion())) {
@@ -798,6 +828,21 @@ public class EagInstitutionPanel extends EagPanels {
                     errors.add("workplacesSearchroomTf");
                 }
 
+            }
+
+            for(int i = 0; i < eag.getControl().getMaintenanceHistory().getMaintenanceEvent().size(); i ++) {
+                MaintenanceEvent maintenanceEvent = eag.getControl().getMaintenanceHistory().getMaintenanceEvent().get(i);
+                if(StringUtils.isEmpty(maintenanceEvent.getAgent().getContent()) && StringUtils.isEmpty(maintenanceEvent.getEventDateTime().getStandardDateTime())) {
+                    if(eag.getControl().getMaintenanceHistory().getMaintenanceEvent().size() == 1) {
+                        Date date = new Date();
+                        SimpleDateFormat format = new SimpleDateFormat("dd.MM.yyyy");
+                        SimpleDateFormat formatStandard = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+                        maintenanceEvent.getEventDateTime().setContent(format.format(date));
+                        maintenanceEvent.getEventDateTime().setStandardDateTime(formatStandard.format(date));
+                    } else {
+                        eag.getControl().getMaintenanceHistory().getMaintenanceEvent().remove(maintenanceEvent);
+                    }
+                }
             }
 
             if(!errors.isEmpty()) {

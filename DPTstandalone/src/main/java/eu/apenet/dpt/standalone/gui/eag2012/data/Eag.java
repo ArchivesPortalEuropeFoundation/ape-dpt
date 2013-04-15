@@ -8,12 +8,7 @@
 
 package eu.apenet.dpt.standalone.gui.eag2012.data;
 
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlAttribute;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlType;
+import javax.xml.bind.annotation.*;
 import javax.xml.bind.annotation.adapters.CollapsedStringAdapter;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
@@ -53,11 +48,16 @@ public class Eag {
     protected Control control;
     @XmlElement(required = true)
     protected Archguide archguide;
-    @XmlElement(required = true)
+    @XmlElement
     protected Relations relations;
     @XmlAttribute(name = "audience", required = true)
     @XmlJavaTypeAdapter(CollapsedStringAdapter.class)
     protected String audience;
+    @XmlAttribute(name = "base", namespace = "http://www.w3.org/XML/1998/namespace")
+    @XmlSchemaType(name = "anyURI")
+    protected String base;
+    @XmlAttribute(name = "lang", namespace = "http://www.w3.org/XML/1998/namespace")
+    protected String lang;
 
     /**
      * Gets the value of the control property.
@@ -155,4 +155,19 @@ public class Eag {
         this.audience = value;
     }
 
+    public String getBase() {
+        return base;
+    }
+
+    public void setBase(String base) {
+        this.base = base;
+    }
+
+    public String getLang() {
+        return lang;
+    }
+
+    public void setLang(String lang) {
+        this.lang = lang;
+    }
 }

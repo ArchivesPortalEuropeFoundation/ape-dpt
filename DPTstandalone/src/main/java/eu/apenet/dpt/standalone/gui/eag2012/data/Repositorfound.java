@@ -13,6 +13,8 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
+import java.util.ArrayList;
+import java.util.List;
 
 
 /**
@@ -46,7 +48,7 @@ public class Repositorfound {
     @XmlElement(required = true)
     protected Date date;
     @XmlElement(required = true)
-    protected Rule rule;
+    protected List<Rule> rule;
 
     /**
      * Gets the value of the date property.
@@ -72,28 +74,10 @@ public class Repositorfound {
         this.date = value;
     }
 
-    /**
-     * Gets the value of the rule property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link Rule }
-     *     
-     */
-    public Rule getRule() {
+    public List<Rule> getRule() {
+        if(rule == null) {
+            rule = new ArrayList<Rule>();
+        }
         return rule;
     }
-
-    /**
-     * Sets the value of the rule property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link Rule }
-     *     
-     */
-    public void setRule(Rule value) {
-        this.rule = value;
-    }
-
 }

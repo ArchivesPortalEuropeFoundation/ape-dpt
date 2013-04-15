@@ -50,11 +50,6 @@ public class OtherAgencyCode {
     @XmlAttribute(name = "localType", namespace = "http://www.archivesportaleurope.net/Portal/profiles/eag_2012/")
     @XmlSchemaType(name = "anySimpleType")
     protected String localType;
-    @XmlAttribute(name = "id", namespace = "http://www.w3.org/XML/1998/namespace")
-    @XmlJavaTypeAdapter(CollapsedStringAdapter.class)
-    @XmlID
-    @XmlSchemaType(name = "ID")
-    protected String id;
 
     /**
      * Gets the value of the content property.
@@ -103,29 +98,4 @@ public class OtherAgencyCode {
     public void setLocalType(String value) {
         this.localType = value;
     }
-
-    /**
-     * Gets the value of the id property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
-     */
-    public String getId() {
-        return id;
-    }
-
-    /**
-     * Sets the value of the id property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
-     */
-    public void setId(String value) {
-        this.id = value;
-    }
-
 }

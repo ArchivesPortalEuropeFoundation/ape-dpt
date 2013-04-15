@@ -46,6 +46,8 @@ public class Webpage {
     @XmlAttribute(name = "href")
     @XmlSchemaType(name = "anyURI")
     protected String href;
+    @XmlAttribute(name = "lang", namespace = "http://www.w3.org/XML/1998/namespace")
+    protected String lang;
 
     /**
      * Gets the value of the content property.
@@ -95,4 +97,11 @@ public class Webpage {
         this.href = value;
     }
 
+    public String getLang() {
+        return lang;
+    }
+
+    public void setLang(String lang) {
+        this.lang = lang;
+    }
 }

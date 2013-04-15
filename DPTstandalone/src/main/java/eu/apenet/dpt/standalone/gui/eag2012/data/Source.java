@@ -60,11 +60,6 @@ public class Source {
     protected ObjectXMLWrap objectXMLWrap;
     protected ObjectBinWrap objectBinWrap;
     protected DescriptiveNote descriptiveNote;
-    @XmlAttribute(name = "id", namespace = "http://www.w3.org/XML/1998/namespace")
-    @XmlJavaTypeAdapter(CollapsedStringAdapter.class)
-    @XmlID
-    @XmlSchemaType(name = "ID")
-    protected String id;
     @XmlAttribute(name = "lastDateTimeVerified")
     protected String lastDateTimeVerified;
     @XmlAttribute(name = "href")
@@ -165,30 +160,6 @@ public class Source {
      */
     public void setDescriptiveNote(DescriptiveNote value) {
         this.descriptiveNote = value;
-    }
-
-    /**
-     * Gets the value of the id property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
-     */
-    public String getId() {
-        return id;
-    }
-
-    /**
-     * Sets the value of the id property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
-     */
-    public void setId(String value) {
-        this.id = value;
     }
 
     /**

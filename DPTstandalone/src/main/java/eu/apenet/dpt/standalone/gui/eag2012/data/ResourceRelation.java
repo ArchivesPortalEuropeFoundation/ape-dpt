@@ -52,7 +52,10 @@ import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "", propOrder = {
     "relationEntry",
-    "descriptiveNote"
+    "descriptiveNote",
+    "date",
+    "dateRange",
+    "dateSet"
 })
 @XmlRootElement(name = "resourceRelation")
 public class ResourceRelation {
@@ -60,12 +63,89 @@ public class ResourceRelation {
     @XmlElement(required = true)
     protected RelationEntry relationEntry;
     protected DescriptiveNote descriptiveNote;
+    protected Date date;
+    protected DateRange dateRange;
+    protected DateSet dateSet;
     @XmlAttribute(name = "resourceRelationType", required = true)
     @XmlJavaTypeAdapter(CollapsedStringAdapter.class)
     protected String resourceRelationType;
     @XmlAttribute(name = "href")
     @XmlSchemaType(name = "anyURI")
     protected String href;
+    @XmlAttribute(name = "lastDateTimeVerified")
+    protected String lastDateTimeVerified;
+
+    /**
+     * Gets the value of the date property.
+     *
+     * @return
+     *     possible object is
+     *     {@link Date }
+     *
+     */
+    public Date getDate() {
+        return date;
+    }
+
+    /**
+     * Sets the value of the date property.
+     *
+     * @param value
+     *     allowed object is
+     *     {@link Date }
+     *
+     */
+    public void setDate(Date value) {
+        this.date = value;
+    }
+
+    /**
+     * Gets the value of the dateRange property.
+     *
+     * @return
+     *     possible object is
+     *     {@link DateRange }
+     *
+     */
+    public DateRange getDateRange() {
+        return dateRange;
+    }
+
+    /**
+     * Sets the value of the dateRange property.
+     *
+     * @param value
+     *     allowed object is
+     *     {@link DateRange }
+     *
+     */
+    public void setDateRange(DateRange value) {
+        this.dateRange = value;
+    }
+
+    /**
+     * Gets the value of the dateSet property.
+     *
+     * @return
+     *     possible object is
+     *     {@link DateSet }
+     *
+     */
+    public DateSet getDateSet() {
+        return dateSet;
+    }
+
+    /**
+     * Sets the value of the dateSet property.
+     *
+     * @param value
+     *     allowed object is
+     *     {@link DateSet }
+     *
+     */
+    public void setDateSet(DateSet value) {
+        this.dateSet = value;
+    }
 
     /**
      * Gets the value of the relationEntry property.
@@ -163,4 +243,11 @@ public class ResourceRelation {
         this.href = value;
     }
 
+    public String getLastDateTimeVerified() {
+        return lastDateTimeVerified;
+    }
+
+    public void setLastDateTimeVerified(String lastDateTimeVerified) {
+        this.lastDateTimeVerified = lastDateTimeVerified;
+    }
 }

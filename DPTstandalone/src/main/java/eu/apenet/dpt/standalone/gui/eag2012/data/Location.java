@@ -62,7 +62,7 @@ public class Location {
     @XmlElement(required = true)
     protected Street street;
 
-    @XmlAttribute(name = "localType", namespace = "http://www.archivesportaleurope.net/Portal/profiles/eag_2012/")
+    @XmlAttribute(name = "localType", namespace = "http://www.archivesportaleurope.net/Portal/profiles/eag_2012/", required = true)
     @XmlSchemaType(name = "anySimpleType")
     protected String localType;
     @XmlAttribute(name = "latitude", namespace = "http://www.archivesportaleurope.net/Portal/profiles/eag_2012/")
