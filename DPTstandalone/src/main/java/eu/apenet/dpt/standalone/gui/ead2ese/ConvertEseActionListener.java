@@ -55,7 +55,10 @@ public class ConvertEseActionListener extends ApexActionListener {
             // Conversion from EAD to ESE in the if-statement, conversion from ESE to EDM in the else-statement
             if (!dataPreparationToolGUI.getXmlEadList().isSelectionEmpty()) {
                 JFrame eseOptionFrame = new JFrame(labels.getString("ese.eseOptionFrame"));
-                eseOptionFrame.add(new EseOptionsPanel(labels, dataPreparationToolGUI, eseOptionFrame, apePanel.getApeTabbedPane()));
+                if(dataPreparationToolGUI.getXmlEadList().getSelectedValues().length > 1)
+                    eseOptionFrame.add(new EseOptionsPanel(labels, dataPreparationToolGUI, eseOptionFrame, apePanel.getApeTabbedPane(), true));
+                else
+                    eseOptionFrame.add(new EseOptionsPanel(labels, dataPreparationToolGUI, eseOptionFrame, apePanel.getApeTabbedPane(), false));
                 eseOptionFrame.setPreferredSize(new Dimension(dataPreparationToolGUI.getContentPane().getWidth() * 3 / 4, dataPreparationToolGUI.getContentPane().getHeight() * 3 / 4));
                 eseOptionFrame.pack();
                 eseOptionFrame.setVisible(true);

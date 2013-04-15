@@ -91,10 +91,12 @@ public class EseOptionsPanel extends JPanel {
     private static final Border BLACK_LINE = BorderFactory.createLineBorder(Color.BLACK);
     private static final Border GREY_LINE = BorderFactory.createLineBorder(Color.GRAY);
     private DataPreparationToolGUI dataPreparationToolGUI;
-
+    private boolean batch;
     private Ead2EseInformation ead2EseInformation;
+    private JCheckBox useExistingRepoCheckbox;
+    private JCheckBox useExistingDaoRoleCheckbox;
 
-    public EseOptionsPanel(ResourceBundle labels, DataPreparationToolGUI dataPreparationToolGUI, JFrame parent, APETabbedPane apeTabbedPane) {
+    public EseOptionsPanel(ResourceBundle labels, DataPreparationToolGUI dataPreparationToolGUI, JFrame parent, APETabbedPane apeTabbedPane, boolean batch) {
         super(new BorderLayout());
         this.labels = labels;
         this.retrieveFromDb = new RetrieveFromDb();
@@ -103,6 +105,7 @@ public class EseOptionsPanel extends JPanel {
         this.selectedIndices = setIndices(dataPreparationToolGUI.getXmlEadList().getSelectedValues());
         this.apeTabbedPane = apeTabbedPane;
         this.fileInstances = dataPreparationToolGUI.getFileInstances();
+        this.batch = batch;
         createOptionPanel();
     }
 
@@ -133,24 +136,33 @@ public class EseOptionsPanel extends JPanel {
         dataProviderTextArea = new JTextArea();
         dataProviderTextArea.setLineWrap(true);
         dataProviderTextArea.setWrapStyleWord(true);
-        determineDaoInformation();
-        String repository = ead2EseInformation.getRepository();
         JScrollPane dptaScrollPane = new JScrollPane(dataProviderTextArea);
         dptaScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
         panel.add(dptaScrollPane);
-        JPanel panel2 = new JPanel(new GridLayout(2, 1));
-        archdescCheckbox = new JCheckBox(labels.getString("ese.mappingFromArchdesc") + " /ead/archdesc/did/repository", true);
-        archdescCheckbox.addItemListener(new CheckboxItemListener());
-        panel2.add(archdescCheckbox);
-        panel2.add(new JLabel(labels.getString("ese.archdescValue") + ": " + archdescRepository));
-        panel2.setVisible(false);
-        panel.add(panel2);
-        if (repository != null && !repository.equals("")) {
-            dataProviderTextArea.setText(repository);
+        if (batch) {
+            JPanel panel2 = new JPanel(new GridLayout(1, 1));
+            useExistingRepoCheckbox = new JCheckBox(labels.getString("ese.takeFromFileRepository"));
+            useExistingRepoCheckbox.setSelected(true);
+            useExistingRepoCheckbox.addItemListener(new CheckboxItemListener());
+            panel2.add(useExistingRepoCheckbox);
+            panel.add(panel2);
         } else {
-            if (archdescRepository != null) {
-                panel2.setVisible(true);
-                dataProviderTextArea.setText(archdescRepository);
+            determineDaoInformation();
+            String repository = ead2EseInformation.getRepository();
+            JPanel panel2 = new JPanel(new GridLayout(2, 1));
+            archdescCheckbox = new JCheckBox(labels.getString("ese.mappingFromArchdesc") + " /ead/archdesc/did/repository", true);
+            archdescCheckbox.addItemListener(new CheckboxItemListener());
+            panel2.add(archdescCheckbox);
+            panel2.add(new JLabel(labels.getString("ese.archdescValue") + ": " + archdescRepository));
+            panel2.setVisible(false);
+            panel.add(panel2);
+            if (repository != null && !repository.equals("")) {
+                dataProviderTextArea.setText(repository);
+            } else {
+                if (archdescRepository != null) {
+                    panel2.setVisible(true);
+                    dataProviderTextArea.setText(archdescRepository);
+                }
             }
         }
         panel.setBorder(BLACK_LINE);
@@ -173,7 +185,12 @@ public class EseOptionsPanel extends JPanel {
         JRadioButton radioButton;
 
         panel.add(new Label(labels.getString("ese.type") + ":" + "*"));
-        String currentRoleType = ead2EseInformation.getRoleType();
+        String currentRoleType;
+        if (batch) {
+            currentRoleType = "";
+        } else {
+            currentRoleType = ead2EseInformation.getRoleType();
+        }
         radioButton = new JRadioButton("TEXT");
         if (currentRoleType.equals("TEXT")) {
             radioButton.setSelected(true);
@@ -181,6 +198,7 @@ public class EseOptionsPanel extends JPanel {
         radioButton.setActionCommand(TEXT);
         typeGroup.add(radioButton);
         panel.add(radioButton);
+        panel.add(new JLabel(""));
 
         panel.add(new JLabel(""));
         radioButton = new JRadioButton("IMAGE");
@@ -190,6 +208,7 @@ public class EseOptionsPanel extends JPanel {
         radioButton.setActionCommand(IMAGE);
         typeGroup.add(radioButton);
         panel.add(radioButton);
+        panel.add(new JLabel(""));
 
         panel.add(new JLabel(""));
         radioButton = new JRadioButton("VIDEO");
@@ -200,6 +219,15 @@ public class EseOptionsPanel extends JPanel {
         typeGroup.add(radioButton);
         panel.add(radioButton);
 
+        if (batch) {
+            useExistingDaoRoleCheckbox = new JCheckBox(labels.getString("ese.takeFromFileDaoRole"));
+            useExistingDaoRoleCheckbox.setSelected(true);
+            useExistingDaoRoleCheckbox.addItemListener(new CheckboxItemListener());
+            panel.add(useExistingDaoRoleCheckbox);
+        } else {
+            panel.add(new JLabel(""));
+        }
+
         panel.add(new JLabel(""));
         radioButton = new JRadioButton("SOUND");
         if (currentRoleType.equals("SOUND")) {
@@ -208,6 +236,7 @@ public class EseOptionsPanel extends JPanel {
         radioButton.setActionCommand(SOUND);
         typeGroup.add(radioButton);
         panel.add(radioButton);
+        panel.add(new JLabel(""));
 
         panel.add(new JLabel(""));
         radioButton = new JRadioButton("3D");
@@ -217,6 +246,7 @@ public class EseOptionsPanel extends JPanel {
         radioButton.setActionCommand(THREE_D);
         typeGroup.add(radioButton);
         panel.add(radioButton);
+        panel.add(new JLabel(""));
 
         panel.setBorder(GREY_LINE);
         formPanel.add(panel);
@@ -390,12 +420,25 @@ public class EseOptionsPanel extends JPanel {
     private EseConfig fillConfig() {
         EseConfig config = new EseConfig();
 
+        config.setUseExistingRepository(false);
+        if (batch && useExistingRepoCheckbox.isSelected()) {
+            config.setUseExistingRepository(true);
+        }
+
+        config.setDataProvider(dataProviderTextArea.getText());
+        config.setProvider(providerTextArea.getText());
+
         Enumeration<AbstractButton> enumeration = typeGroup.getElements();
         while (enumeration.hasMoreElements()) {
             AbstractButton btn = enumeration.nextElement();
             if (btn.isSelected()) {
                 config.setType(btn.getText());
             }
+        }
+
+        config.setUseExistingDaoRole(false);
+        if (batch && useExistingDaoRoleCheckbox.isSelected()) {
+            config.setUseExistingDaoRole(true);
         }
 
         config.setInheritElementsFromFileLevel(false);
@@ -435,9 +478,6 @@ public class EseOptionsPanel extends JPanel {
         if (contextTextArea != null && StringUtils.isNotEmpty(contextTextArea.getText())) {
             config.setContextInformationPrefix(contextTextArea.getText());
         }
-
-        config.setDataProvider(dataProviderTextArea.getText());
-        config.setProvider(providerTextArea.getText());
 
         enumeration = licenseGroup.getElements();
         while (enumeration.hasMoreElements()) {
@@ -550,11 +590,15 @@ public class EseOptionsPanel extends JPanel {
         File index = selectedIndices.get(0);
         FileInstance fileInstance = fileInstances.get(index.getName());
         try {
-            ead2EseInformation = new Ead2EseInformation(new File(fileInstance.getCurrentLocation()), retrieveFromDb.retrieveRoleType(), archdescRepository);
+            if (batch) {
+                ead2EseInformation = new Ead2EseInformation();
+            } else {
+                ead2EseInformation = new Ead2EseInformation(new File(fileInstance.getCurrentLocation()), retrieveFromDb.retrieveRoleType(), archdescRepository);
+            }
         } catch (Exception ex) {
             java.util.logging.Logger.getLogger(EseOptionsPanel.class.getName()).log(Level.SEVERE, null, ex);
         }
-        if(ead2EseInformation.getArchdescRepository() != null) {
+        if (ead2EseInformation.getArchdescRepository() != null) {
             archdescRepository = ead2EseInformation.getArchdescRepository();
         }
     }
@@ -608,13 +652,14 @@ public class EseOptionsPanel extends JPanel {
                         Thread threadRunner = new Thread(summaryWorking);
                         threadRunner.setName(SummaryWorking.class.toString());
                         threadRunner.start();
-                        
+
                         try {
                             EseConfig config = fillConfig();
                             for (File selectedIndexFile : selectedIndices) {
-                                if (!continueLoop)
+                                if (!continueLoop) {
                                     break;
-                                
+                                }
+
                                 SwingUtilities.invokeLater(new TransformEse(config, selectedIndexFile));
                                 apeTabbedPane.appendEseConversionErrorText(MessageFormat.format(labels.getString("ese.convertedAndSaved"), selectedIndexFile.getAbsolutePath(), retrieveFromDb.retrieveDefaultSaveFolder()) + "\n");
                                 writer.append(MessageFormat.format(labels.getString("ese.convertedAndSaved"), selectedIndexFile.getAbsolutePath(), retrieveFromDb.retrieveDefaultSaveFolder()) + "\n");
@@ -634,7 +679,7 @@ public class EseOptionsPanel extends JPanel {
                     } catch (Exception e) {
                         LOG.error(e);
                     }
-                    
+
                     if (progressFrame != null) {
                         progressFrame.stop();
                     }
