@@ -39,7 +39,8 @@ public class Ead2EseInformation {
         return archdescRepository;
     }
 
-    public Ead2EseInformation(File fileToRead, String databaseRoleType) throws IOException, SAXException, ParserConfigurationException {
+    public Ead2EseInformation(File fileToRead, String databaseRoleType, String archdescRepository) throws IOException, SAXException, ParserConfigurationException {
+        this.archdescRepository = archdescRepository;
         determineDaoInformation(fileToRead, databaseRoleType);
     }
 

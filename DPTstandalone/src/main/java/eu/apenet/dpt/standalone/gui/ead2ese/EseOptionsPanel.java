@@ -550,7 +550,7 @@ public class EseOptionsPanel extends JPanel {
         File index = selectedIndices.get(0);
         FileInstance fileInstance = fileInstances.get(index.getName());
         try {
-            ead2EseInformation = new Ead2EseInformation(new File(fileInstance.getCurrentLocation()), retrieveFromDb.retrieveRoleType());
+            ead2EseInformation = new Ead2EseInformation(new File(fileInstance.getCurrentLocation()), retrieveFromDb.retrieveRoleType(), archdescRepository);
         } catch (Exception ex) {
             java.util.logging.Logger.getLogger(EseOptionsPanel.class.getName()).log(Level.SEVERE, null, ex);
         }
