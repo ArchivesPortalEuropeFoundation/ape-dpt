@@ -44,6 +44,13 @@ public class Ead2EseInformation {
         determineDaoInformation(fileToRead, databaseRoleType);
     }
 
+    public Ead2EseInformation() {
+        languageCode = "";
+        repository = "";
+        roleType = "";
+        archdescRepository = "";
+    }
+
     private void determineDaoInformation(File fileToRead, String databaseRoleType) throws IOException, SAXException, ParserConfigurationException {
         Document doc = XMLUtil.convertXMLToDocument(new FileInputStream(fileToRead));
         NodeList nodelist = doc.getElementsByTagName("dao");
