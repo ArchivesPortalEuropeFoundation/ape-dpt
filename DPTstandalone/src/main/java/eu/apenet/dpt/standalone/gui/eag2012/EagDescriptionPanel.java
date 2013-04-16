@@ -551,16 +551,31 @@ public class EagDescriptionPanel extends EagPanels {
                     } else {
                         repository.getHoldings().setExtent(null);
                     }
-                    if (StringUtils.isNotEmpty(dateHoldingsTf.getText())) {
-                        repository.getHoldings().getDate().setContent(dateHoldingsTf.getText());
-                    } else {
+                    if(StringUtils.isNotEmpty(dateHoldingsTf.getText()) && StringUtils.isNotEmpty(rangeFromTf.getText()) && StringUtils.isNotEmpty(rangeToTf.getText())) {
+                        if(repository.getHoldings().getDateSet() == null) {
+                            repository.getHoldings().setDateSet(new DateSet());
+                            repository.getHoldings().getDateSet().setDate(new Date());
+                            repository.getHoldings().getDateSet().setDateRange(new DateRange());
+                            repository.getHoldings().getDateSet().getDateRange().setFromDate(new FromDate());
+                            repository.getHoldings().getDateSet().getDateRange().setToDate(new ToDate());
+                        }
+                        repository.getHoldings().getDateSet().getDate().setContent(dateHoldingsTf.getText());
+                        repository.getHoldings().getDateSet().getDateRange().getFromDate().setContent(rangeFromTf.getText());
+                        repository.getHoldings().getDateSet().getDateRange().getToDate().setContent(rangeToTf.getText());
                         repository.getHoldings().setDate(null);
-                    }
-                    if (StringUtils.isNotEmpty(rangeFromTf.getText()) && StringUtils.isNotEmpty(rangeToTf.getText())) {
-                        repository.getHoldings().getDateRange().getFromDate().setContent(rangeFromTf.getText());
-                        repository.getHoldings().getDateRange().getToDate().setContent(rangeToTf.getText());
-                    } else {
                         repository.getHoldings().setDateRange(null);
+                    } else {
+                        if (StringUtils.isNotEmpty(dateHoldingsTf.getText())) {
+                            repository.getHoldings().getDate().setContent(dateHoldingsTf.getText());
+                        } else {
+                            repository.getHoldings().setDate(null);
+                        }
+                        if (StringUtils.isNotEmpty(rangeFromTf.getText()) && StringUtils.isNotEmpty(rangeToTf.getText())) {
+                            repository.getHoldings().getDateRange().getFromDate().setContent(rangeFromTf.getText());
+                            repository.getHoldings().getDateRange().getToDate().setContent(rangeToTf.getText());
+                        } else {
+                            repository.getHoldings().setDateRange(null);
+                        }
                     }
                 }
                 if (counterArchivalAndOthersTfs == 0) 
