@@ -752,9 +752,7 @@ public class EagAccessAndServicesPanel extends EagPanels {
         }
         otherServicesTfs = new ArrayList<TextFieldWithLanguage>(recreationalServices.getOtherServices().size());
         for(OtherServices otherServices : recreationalServices.getOtherServices()) {
-            LOG.info("for");
             if(otherServices.getDescriptiveNote() == null) {
-                LOG.info("1");
                 DescriptiveNote descriptiveNote = new DescriptiveNote();
                 otherServices.setDescriptiveNote(descriptiveNote);
             }
