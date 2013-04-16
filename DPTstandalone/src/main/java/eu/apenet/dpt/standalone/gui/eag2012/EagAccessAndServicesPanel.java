@@ -23,8 +23,8 @@ import java.util.ResourceBundle;
  * @author Yoann Moranville
  */
 public class EagAccessAndServicesPanel extends EagPanels {
-    private List<TextFieldWithLanguage> openingTimesTfs;
-    private List<TextFieldWithLanguage> closingTimesTfs;
+    private List<TextFieldWithLanguage> openingHoursTfs;
+    private List<TextFieldWithLanguage> closingDatesTfs;
     private List<TextFieldWithLanguage> travellingDirectionsTfs;
     private List<TextFieldWithLanguage> restaccessTfs;
     private List<TextFieldWithLanguage> termsOfUseTfs;
@@ -103,29 +103,29 @@ public class EagAccessAndServicesPanel extends EagPanels {
         if(repository.getTimetable().getOpening().size() == 0) {
             repository.getTimetable().getOpening().add(new Opening());
         }
-        openingTimesTfs = new ArrayList<TextFieldWithLanguage>(repository.getTimetable().getOpening().size());
+        openingHoursTfs = new ArrayList<TextFieldWithLanguage>(repository.getTimetable().getOpening().size());
         for(Opening opening : repository.getTimetable().getOpening()) {
-            builder.addLabel(labels.getString("eag2012.openingTimesLabel") + "*",    cc.xy (1, rowNb));
+            builder.addLabel(labels.getString("eag2012.openingHoursLabel") + "*",    cc.xy (1, rowNb));
             TextFieldWithLanguage textFieldWithLanguage = new TextFieldWithLanguage(opening.getContent(), opening.getLang());
-            openingTimesTfs.add(textFieldWithLanguage);
+            openingHoursTfs.add(textFieldWithLanguage);
             builder.add(textFieldWithLanguage.getTextField(), cc.xy (3, rowNb));
             builder.addLabel(labels.getString("eag2012.language"),    cc.xy (5, rowNb));
             builder.add(textFieldWithLanguage.getLanguageBox(), cc.xy(7, rowNb));
             setNextRow();
         }
-        if(errors.contains("openingTimesTfs")) {
-            builder.add(createErrorLabel(labels.getString("eag2012.errors.openingTimes")),          cc.xy (1, rowNb));
+        if(errors.contains("openingHoursTfs")) {
+            builder.add(createErrorLabel(labels.getString("eag2012.errors.openingHours")),          cc.xy (1, rowNb));
             setNextRow();
         }
 
         if(repository.getTimetable().getClosing().size() == 0) {
             repository.getTimetable().getClosing().add(new Closing());
         }
-        closingTimesTfs = new ArrayList<TextFieldWithLanguage>(repository.getTimetable().getClosing().size());
+        closingDatesTfs = new ArrayList<TextFieldWithLanguage>(repository.getTimetable().getClosing().size());
         for(Closing closing : repository.getTimetable().getClosing()) {
-            builder.addLabel(labels.getString("eag2012.closingTimesLabel"), cc.xy(1, rowNb));
+            builder.addLabel(labels.getString("eag2012.closingDatesLabel"), cc.xy(1, rowNb));
             TextFieldWithLanguage textFieldWithLanguage = new TextFieldWithLanguage(closing.getContent(), closing.getLang());
-            closingTimesTfs.add(textFieldWithLanguage);
+            closingDatesTfs.add(textFieldWithLanguage);
             builder.add(textFieldWithLanguage.getTextField(), cc.xy(3, rowNb));
             builder.addLabel(labels.getString("eag2012.language"),    cc.xy (5, rowNb));
             builder.add(textFieldWithLanguage.getLanguageBox(), cc.xy(7, rowNb));
@@ -208,7 +208,7 @@ public class EagAccessAndServicesPanel extends EagPanels {
             setNextRow();
         }
 
-        builder.addLabel(labels.getString("eag2012.facilitiesForDisabledLabel") + "*", cc.xy(1, rowNb));
+        builder.addLabel(labels.getString("eag2012.disabledAccessLabel") + "*", cc.xy(1, rowNb));
         if(repository.getAccessibility().size() > 0 && Arrays.asList(yesOrNo).contains(repository.getAccessibility().get(0).getQuestion())) {
             facilitiesForDisabledCombo.setSelectedItem(repository.getAccessibility().get(0).getQuestion());
         }
@@ -221,14 +221,14 @@ public class EagAccessAndServicesPanel extends EagPanels {
 //        }
         accessibilityTfs = new ArrayList<TextFieldWithLanguage>(repository.getAccessibility().size());
         for(Accessibility accessibility : repository.getAccessibility()) {
-            builder.addLabel(labels.getString("eag2012.accessibility"),    cc.xy (1, rowNb));
+            builder.addLabel(labels.getString("eag2012.facilitiesForDisabledPersons"),    cc.xy (1, rowNb));
             TextFieldWithLanguage textFieldWithLanguage = new TextFieldWithLanguage(accessibility.getContent(), accessibility.getLang());
             accessibilityTfs.add(textFieldWithLanguage);
             builder.add(textFieldWithLanguage.getTextField(),                     cc.xy (3, rowNb));
             builder.addLabel(labels.getString("eag2012.language"), cc.xy(5, rowNb));
             builder.add(textFieldWithLanguage.getLanguageBox(),                                            cc.xy (7, rowNb));
             if(last-- == 0) {
-                JButton addAccessibilityBtn = new ButtonEag(labels.getString("eag2012.addAccessibilityButton"));
+                JButton addAccessibilityBtn = new ButtonEag(labels.getString("eag2012.addFacilityButton"));
                 builder.add(addAccessibilityBtn, cc.xy (7, rowNb));
                 addAccessibilityBtn.addActionListener(new AddAccessibilityBtnAction(eag, tabbedPane, model));
             }
@@ -504,7 +504,7 @@ public class EagAccessAndServicesPanel extends EagPanels {
 
         builder.addSeparator(labels.getString("eag2012.technicalServices"), cc.xyw(1, rowNb, 7));
         setNextRow();
-        builder.addSeparator(labels.getString("eag2012.restaurationLab"), cc.xyw(1, rowNb, 7));
+        builder.addSeparator(labels.getString("eag2012.conservationLab"), cc.xyw(1, rowNb, 7));
         setNextRow();
 
         if(repository.getServices().getTechservices() == null)
@@ -729,7 +729,7 @@ public class EagAccessAndServicesPanel extends EagPanels {
                 toursSessions.setDescriptiveNote(descriptiveNote);
                 toursSessions.setWebpage(new Webpage());
             }
-            builder.addLabel(labels.getString("eag2012.toursAndSessions"),    cc.xy (1, rowNb));
+            builder.addLabel(labels.getString("eag2012.guidedToursAndSessions"),    cc.xy (1, rowNb));
             TextFieldWithLanguage textFieldWithLanguage = new TextFieldWithLanguage(toursSessions.getDescriptiveNote().getP().get(0).getContent(), toursSessions.getDescriptiveNote().getP().get(0).getLang(), toursSessions.getWebpage().getHref(), toursSessions.getWebpage().getContent());
             toursAndSessionsTfs.add(textFieldWithLanguage);
             builder.add(textFieldWithLanguage.getTextField(),                     cc.xy (3, rowNb));
@@ -1089,9 +1089,9 @@ public class EagAccessAndServicesPanel extends EagPanels {
                 Repository repository = eag.getArchguide().getDesc().getRepositories().getRepository().get(0);
 
                 boolean openingTimeExists = false;
-                if(openingTimesTfs.size() > 0) {
+                if(openingHoursTfs.size() > 0) {
                     repository.getTimetable().getOpening().clear();
-                    for(TextFieldWithLanguage textFieldWithLanguage : openingTimesTfs) {
+                    for(TextFieldWithLanguage textFieldWithLanguage : openingHoursTfs) {
                         if(StringUtils.isNotEmpty(textFieldWithLanguage.getTextValue())) {
                             Opening opening = new Opening();
                             opening.setContent(textFieldWithLanguage.getTextValue());
@@ -1102,12 +1102,12 @@ public class EagAccessAndServicesPanel extends EagPanels {
                     }
                 }
                 if(!openingTimeExists) {
-                    errors.add("openingTimesTfs");
+                    errors.add("openingHoursTfs");
                 }
 
-                if(closingTimesTfs.size() > 0) {
+                if(closingDatesTfs.size() > 0) {
                     repository.getTimetable().getClosing().clear();
-                    for(TextFieldWithLanguage textFieldWithLanguage : closingTimesTfs) {
+                    for(TextFieldWithLanguage textFieldWithLanguage : closingDatesTfs) {
                         if(StringUtils.isNotEmpty(textFieldWithLanguage.getTextValue())) {
                             Closing closing = new Closing();
                             closing.setContent(textFieldWithLanguage.getTextValue());

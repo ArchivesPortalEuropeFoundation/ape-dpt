@@ -81,7 +81,7 @@ public class EagDescriptionPanel extends EagPanels {
          }
         repositoryHistoryTfs = new ArrayList<TextFieldWithLanguage>(repository.getRepositorhist().getDescriptiveNote().getP().size());
         for (P p : repository.getRepositorhist().getDescriptiveNote().getP()) {
-            builder.addLabel(labels.getString("eag2012.repositoryHistory"), cc.xy(1, rowNb));
+            builder.addLabel(labels.getString("eag2012.historyOfArchive"), cc.xy(1, rowNb));
             TextFieldWithLanguage textFieldWithLanguage = new TextFieldWithLanguage(p.getContent(), p.getLang());
             repositoryHistoryTfs.add(textFieldWithLanguage);
             builder.add(textFieldWithLanguage.getTextField(), cc.xy(3, rowNb));
@@ -101,7 +101,7 @@ public class EagDescriptionPanel extends EagPanels {
             repository.setRepositorfound(repositorfound);
         }
 
-        builder.addLabel(labels.getString("eag2012.dateRepositoryFoundation"), cc.xy(1, rowNb));
+        builder.addLabel(labels.getString("eag2012.dateArchiveFoundation"), cc.xy(1, rowNb));
         repositoryFoundationDateTf = new JTextField(repository.getRepositorfound().getDate().getContent());
         builder.add(repositoryFoundationDateTf, cc.xy(3, rowNb));
         setNextRow();
@@ -110,7 +110,7 @@ public class EagDescriptionPanel extends EagPanels {
         for(Rule rule : repository.getRepositorfound().getRule()) {
             TextFieldWithLanguage textFieldWithLanguage = new TextFieldWithLanguage(rule.getContent(), rule.getLang());
             repositoryFoundationTfs.add(textFieldWithLanguage);
-            builder.addLabel(labels.getString("eag2012.ruleRepositoryFoundation"), cc.xy(1, rowNb));
+            builder.addLabel(labels.getString("eag2012.archiveFoundingAct"), cc.xy(1, rowNb));
             builder.add(textFieldWithLanguage.getTextField(), cc.xy(3, rowNb));
             builder.addLabel(labels.getString("eag2012.language"), cc.xy(5, rowNb));
             builder.add(textFieldWithLanguage.getLanguageBox(), cc.xy(7, rowNb));
@@ -124,7 +124,7 @@ public class EagDescriptionPanel extends EagPanels {
             repository.setRepositorsup(repositorsup);
         }
 
-        builder.addLabel(labels.getString("eag2012.dateRepositorySuppression"), cc.xy(1, rowNb));
+        builder.addLabel(labels.getString("eag2012.dateArchiveClosure"), cc.xy(1, rowNb));
         repositorySuppressionDateTf = new JTextField(repository.getRepositorsup().getDate().getContent());
         builder.add(repositorySuppressionDateTf, cc.xy(3, rowNb));
         setNextRow();
@@ -133,7 +133,7 @@ public class EagDescriptionPanel extends EagPanels {
         for(Rule rule : repository.getRepositorsup().getRule()) {
             TextFieldWithLanguage textFieldWithLanguage = new TextFieldWithLanguage(rule.getContent(), rule.getLang());
             repositorySuppressionTfs.add(textFieldWithLanguage);
-            builder.addLabel(labels.getString("eag2012.ruleRepositorySuppression"), cc.xy(1, rowNb));
+            builder.addLabel(labels.getString("eag2012.archiveClosureAct"), cc.xy(1, rowNb));
             builder.add(textFieldWithLanguage.getTextField(), cc.xy(3, rowNb));
             builder.addLabel(labels.getString("eag2012.language"), cc.xy(5, rowNb));
             builder.add(textFieldWithLanguage.getLanguageBox(), cc.xy(7, rowNb));

@@ -148,7 +148,7 @@ public class EagIdentityPanel extends EagPanels {
             
             TextFieldWithDate textFieldWithDate = new TextFieldWithDate(nameStr, nonpreform.getLang(), fromDateStr, toDateStr, dateStr);
             formerNameTfs.add(textFieldWithDate);
-            builder.addLabel(labels.getString("eag2012.formerlyUsedNameLabel"),    cc.xy (1, rowNb));
+            builder.addLabel(labels.getString("eag2012.previousNameOfArchiveLabel"),    cc.xy (1, rowNb));
             builder.add(textFieldWithDate.getTextField(), cc.xy (3, rowNb));
             builder.addLabel(labels.getString("eag2012.language"),    cc.xy (5, rowNb));
             builder.add(textFieldWithDate.getLanguageBox(), cc.xy (7, rowNb));
