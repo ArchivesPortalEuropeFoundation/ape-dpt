@@ -132,7 +132,7 @@ public class EagIdentityPanel extends EagPanels {
             for(int i = 0; i < nonpreform.getContent().size(); i++) {
                 Object object = nonpreform.getContent().get(i);
                 if(object instanceof String) {
-                    nameStr = (String)object;
+                    nameStr += (String)object;
                 } else if (object instanceof UseDates) {
                     UseDates useDates = (UseDates)object;
                     if(useDates.getDate() != null) {
