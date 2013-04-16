@@ -291,12 +291,10 @@ public class EagDescriptionPanel extends EagPanels {
         builder.add(nextTabBtn, cc.xy(5, rowNb));
         nextTabBtn.addActionListener(new EagDescriptionPanel.ChangeTabBtnAction(eag, tabbedPane, model, true));
 
-        if (Utilities.isDev) {
-            setNextRow();
-            JButton saveBtn = new ButtonEag(labels.getString("eag2012.saveButton"));
-            builder.add(saveBtn, cc.xy(5, rowNb));
-            saveBtn.addActionListener(new EagDescriptionPanel.SaveBtnAction(eag, tabbedPane, model));
-        }
+        setNextRow();
+        JButton saveBtn = new ButtonEag(labels.getString("eag2012.saveButton"));
+        builder.add(saveBtn, cc.xy(5, rowNb));
+        saveBtn.addActionListener(new EagDescriptionPanel.SaveBtnAction(eag, tabbedPane, model));
 
         return builder.getPanel();
     }

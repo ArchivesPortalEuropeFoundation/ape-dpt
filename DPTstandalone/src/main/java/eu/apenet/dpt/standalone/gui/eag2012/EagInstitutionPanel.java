@@ -425,12 +425,10 @@ public class EagInstitutionPanel extends EagPanels {
         exitBtn.addActionListener(new ExitBtnAction());
         nextTabBtn.addActionListener(new NextTabBtnAction(eag, tabbedPane, model));
 
-        if(Utilities.isDev) {
-            setNextRow();
-            JButton saveBtn = new ButtonEag(labels.getString("eag2012.saveButton"));
-            builder.add(saveBtn, cc.xy (5, rowNb));
-            saveBtn.addActionListener(new SaveBtnAction(eag, tabbedPane, model));
-        }
+        setNextRow();
+        JButton saveBtn = new ButtonEag(labels.getString("eag2012.saveButton"));
+        builder.add(saveBtn, cc.xy (5, rowNb));
+        saveBtn.addActionListener(new SaveBtnAction(eag, tabbedPane, model));
 
         return builder.getPanel();
     }
