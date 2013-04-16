@@ -212,9 +212,6 @@
 		<xsl:param name="mainhist" />
 		<xsl:if test="exists($mainhist/*:mainevent/*:source/text())">
 			<sources>
-				<xsl:if test="exists($xmlLang)">
-					<xsl:attribute name="xml:lang" select="$xmlLang" />
-				</xsl:if>
 				<xsl:for-each select="$mainhist/*:mainevent">
 					<xsl:if test="exists(*:source/text())">
 						<source>
