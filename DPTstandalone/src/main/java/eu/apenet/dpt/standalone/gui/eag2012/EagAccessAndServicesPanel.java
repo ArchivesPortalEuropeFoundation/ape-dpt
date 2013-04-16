@@ -752,10 +752,16 @@ public class EagAccessAndServicesPanel extends EagPanels {
         }
         otherServicesTfs = new ArrayList<TextFieldWithLanguage>(recreationalServices.getOtherServices().size());
         for(OtherServices otherServices : recreationalServices.getOtherServices()) {
+            LOG.info("for");
             if(otherServices.getDescriptiveNote() == null) {
+                LOG.info("1");
                 DescriptiveNote descriptiveNote = new DescriptiveNote();
-                descriptiveNote.getP().add(new P());
                 otherServices.setDescriptiveNote(descriptiveNote);
+            }
+            if(otherServices.getDescriptiveNote().getP().size() == 0) {
+                otherServices.getDescriptiveNote().getP().add(new P());
+            }
+            if(otherServices.getWebpage() == null) {
                 otherServices.setWebpage(new Webpage());
             }
             builder.addLabel(labels.getString("eag2012.otherServices"),    cc.xy (1, rowNb));
