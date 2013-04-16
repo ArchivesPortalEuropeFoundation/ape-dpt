@@ -45,9 +45,6 @@
 
 	<xsl:template match="*:eagheader">
 		<control>
-			<xsl:if test="exists($xmlLang)">
-				<xsl:attribute name="xml:lang" select="$xmlLang" />
-			</xsl:if>
 			<xsl:choose>
 				<xsl:when test="$repositoryCode">
 					<recordId>
@@ -111,9 +108,6 @@
 
 		<xsl:if test="exists($encoding)">
 			<conventionDeclaration>
-				<xsl:if test="exists($xmlLang)">
-					<xsl:attribute name="xml:lang" select="$xmlLang" />
-				</xsl:if>
 				<xsl:choose>
 					<xsl:when test="$encoding eq 'EAG'">
 						<abbreviation>
@@ -245,9 +239,6 @@
 
 	<xsl:template match="*:mainhist">
 		<maintenanceHistory>
-			<xsl:if test="exists($xmlLang)">
-				<xsl:attribute name="xml:lang" select="$xmlLang" />
-			</xsl:if>
 			<xsl:for-each select="*:mainevent">
 				<xsl:call-template name="oneMainEvent">
 					<xsl:with-param name="maintype" select="@maintype" />
@@ -277,9 +268,6 @@
 				<xsl:value-of select="if(exists($respevent)) then 'human' else 'machine'" />
 			</agentType>
 			<eventDateTime>
-				<xsl:if test="exists($xmlLang)">
-					<xsl:attribute name="xml:lang" select="$xmlLang" />
-				</xsl:if>
 				<xsl:choose>
 					<xsl:when
 						test="matches(ape:normalizeDate(normalize-space($date/@normal)),'\d{4}-\d{2}-\d{2}')">
