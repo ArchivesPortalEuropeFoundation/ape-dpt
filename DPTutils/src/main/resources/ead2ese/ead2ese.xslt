@@ -1090,19 +1090,31 @@ http://purl.org/dc/terms/ http://www.dublincore.org/schemas/xmls/qdc/dcterms.xsd
     </xsl:template>
 
     <xsl:template match="repository">
-        <dc:source>
-            <xsl:choose>
-                <xsl:when test="$europeana_dataprovider">
-                    <xsl:value-of select="$europeana_dataprovider"/>
-                </xsl:when>
-                <xsl:otherwise>
+        <xsl:choose>
+            <xsl:when test="$useExistingRepository">
+                <dc:source>
                     <xsl:variable name='content'>
                         <xsl:apply-templates mode="all-but-address"/>
                     </xsl:variable>
                     <xsl:value-of select="fn:replace(normalize-space($content), '[\n\t\r]', '')"/>
-                </xsl:otherwise>
-            </xsl:choose>
-        </dc:source>
+                </dc:source>
+            </xsl:when>
+            <xsl:otherwise>
+                <dc:source>
+                    <xsl:choose>
+                        <xsl:when test="$europeana_dataprovider">
+                            <xsl:value-of select="$europeana_dataprovider"/>
+                        </xsl:when>
+                        <xsl:otherwise>
+                            <xsl:variable name='content'>
+                                <xsl:apply-templates mode="all-but-address"/>
+                            </xsl:variable>
+                            <xsl:value-of select="fn:replace(normalize-space($content), '[\n\t\r]', '')"/>
+                        </xsl:otherwise>
+                    </xsl:choose>
+                </dc:source>
+            </xsl:otherwise>
+        </xsl:choose>
     </xsl:template>
     
     <xsl:template match="repository" mode="useExistingDataProvider">
