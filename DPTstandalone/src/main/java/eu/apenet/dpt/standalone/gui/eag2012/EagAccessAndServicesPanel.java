@@ -400,7 +400,7 @@ public class EagAccessAndServicesPanel extends EagPanels {
                 researchServices.setDescriptiveNote(descriptiveNote);
             }
             builder.addLabel(labels.getString("eag2012.researchServices"),    cc.xy (1, rowNb));
-            TextFieldWithLanguage textFieldWithLanguage = new TextFieldWithLanguage(researchServices.getDescriptiveNote().getP().get(0).getContent(), researchServices.getDescriptiveNote().getLang());
+            TextFieldWithLanguage textFieldWithLanguage = new TextFieldWithLanguage(researchServices.getDescriptiveNote().getP().get(0).getContent(), researchServices.getDescriptiveNote().getP().get(0).getLang());
             researchServicesSearchroomTfs.add(textFieldWithLanguage);
             builder.add(textFieldWithLanguage.getTextField(),                     cc.xy (3, rowNb));
             builder.addLabel(labels.getString("eag2012.language"), cc.xy(5, rowNb));
@@ -681,7 +681,7 @@ public class EagAccessAndServicesPanel extends EagPanels {
             recreationalServices.setRefreshment(refreshment);
         }
         builder.addLabel(labels.getString("eag2012.refreshment"), cc.xy(1, rowNb));
-        refreshmentTf = new TextFieldWithLanguage(recreationalServices.getRefreshment().getDescriptiveNote().getP().get(0).getContent(), recreationalServices.getRefreshment().getDescriptiveNote().getLang());
+        refreshmentTf = new TextFieldWithLanguage(recreationalServices.getRefreshment().getDescriptiveNote().getP().get(0).getContent(), recreationalServices.getRefreshment().getDescriptiveNote().getP().get(0).getLang());
         builder.add(refreshmentTf.getTextField(), cc.xy(3, rowNb));
         builder.addLabel(labels.getString("eag2012.language"), cc.xy(5, rowNb));
         builder.add(refreshmentTf.getLanguageBox(), cc.xy(7, rowNb));
@@ -700,7 +700,7 @@ public class EagAccessAndServicesPanel extends EagPanels {
             }
 
             builder.addLabel(labels.getString("eag2012.exhibition"),    cc.xy (1, rowNb));
-            TextFieldWithLanguage exhibitionTf = new TextFieldWithLanguage(exhibition.getDescriptiveNote().getP().get(0).getContent(), exhibition.getDescriptiveNote().getLang(), exhibition.getWebpage().getHref(), exhibition.getWebpage().getContent());
+            TextFieldWithLanguage exhibitionTf = new TextFieldWithLanguage(exhibition.getDescriptiveNote().getP().get(0).getContent(), exhibition.getDescriptiveNote().getP().get(0).getLang(), exhibition.getWebpage().getHref(), exhibition.getWebpage().getContent());
             exhibitionTfs.add(exhibitionTf);
             builder.add(exhibitionTf.getTextField(),                     cc.xy (3, rowNb));
             builder.addLabel(labels.getString("eag2012.language"), cc.xy(5, rowNb));
@@ -730,7 +730,7 @@ public class EagAccessAndServicesPanel extends EagPanels {
                 toursSessions.setWebpage(new Webpage());
             }
             builder.addLabel(labels.getString("eag2012.toursAndSessions"),    cc.xy (1, rowNb));
-            TextFieldWithLanguage textFieldWithLanguage = new TextFieldWithLanguage(toursSessions.getDescriptiveNote().getP().get(0).getContent(), toursSessions.getDescriptiveNote().getLang(), toursSessions.getWebpage().getHref(), toursSessions.getWebpage().getContent());
+            TextFieldWithLanguage textFieldWithLanguage = new TextFieldWithLanguage(toursSessions.getDescriptiveNote().getP().get(0).getContent(), toursSessions.getDescriptiveNote().getP().get(0).getLang(), toursSessions.getWebpage().getHref(), toursSessions.getWebpage().getContent());
             toursAndSessionsTfs.add(textFieldWithLanguage);
             builder.add(textFieldWithLanguage.getTextField(),                     cc.xy (3, rowNb));
             builder.addLabel(labels.getString("eag2012.language"), cc.xy(5, rowNb));
@@ -759,7 +759,7 @@ public class EagAccessAndServicesPanel extends EagPanels {
                 otherServices.setWebpage(new Webpage());
             }
             builder.addLabel(labels.getString("eag2012.otherServices"),    cc.xy (1, rowNb));
-            TextFieldWithLanguage otherServicesTf = new TextFieldWithLanguage(otherServices.getDescriptiveNote().getP().get(0).getContent(), otherServices.getDescriptiveNote().getLang(), otherServices.getWebpage().getHref(), otherServices.getWebpage().getContent());
+            TextFieldWithLanguage otherServicesTf = new TextFieldWithLanguage(otherServices.getDescriptiveNote().getP().get(0).getContent(), otherServices.getDescriptiveNote().getP().get(0).getLang(), otherServices.getWebpage().getHref(), otherServices.getWebpage().getContent());
             otherServicesTfs.add(otherServicesTf);
             builder.add(otherServicesTf.getTextField(),                     cc.xy (3, rowNb));
             builder.addLabel(labels.getString("eag2012.language"), cc.xy(5, rowNb));
@@ -1274,11 +1274,11 @@ public class EagAccessAndServicesPanel extends EagPanels {
                         if(StringUtils.isNotEmpty(textFieldWithLanguage.getTextValue())) {
                             ResearchServices researchServices = new ResearchServices();
                             DescriptiveNote descriptiveNote = new DescriptiveNote();
-                            descriptiveNote.setLang(textFieldWithLanguage.getLanguage());
                             descriptiveNote.setP(new ArrayList<P>() {{
                                 add(new P());
                             }});
                             descriptiveNote.getP().get(0).setContent(textFieldWithLanguage.getTextValue());
+                            descriptiveNote.getP().get(0).setLang(textFieldWithLanguage.getLanguage());
                             researchServices.setDescriptiveNote(descriptiveNote);
                             searchroom.getResearchServices().add(researchServices);
                             hasChanged = true;
@@ -1459,7 +1459,7 @@ public class EagAccessAndServicesPanel extends EagPanels {
                 RecreationalServices recreationalServices = repository.getServices().getRecreationalServices();
                 if(StringUtils.isNotEmpty(refreshmentTf.getTextValue())) {
                     recreationalServices.getRefreshment().getDescriptiveNote().getP().get(0).setContent(refreshmentTf.getTextValue());
-                    recreationalServices.getRefreshment().getDescriptiveNote().setLang(refreshmentTf.getLanguage());
+                    recreationalServices.getRefreshment().getDescriptiveNote().getP().get(0).setLang(refreshmentTf.getLanguage());
                 }
 
                 if(exhibitionTfs.size() > 0) {
@@ -1470,7 +1470,7 @@ public class EagAccessAndServicesPanel extends EagPanels {
                             DescriptiveNote descriptiveNote = new DescriptiveNote();
                             descriptiveNote.setP(new ArrayList<P>(){{ add(new P()); }});
                             exhibition.setDescriptiveNote(descriptiveNote);
-                            exhibition.getDescriptiveNote().setLang(textFieldWithLanguage.getLanguage());
+                            exhibition.getDescriptiveNote().getP().get(0).setLang(textFieldWithLanguage.getLanguage());
                             exhibition.getDescriptiveNote().getP().get(0).setContent(textFieldWithLanguage.getTextValue());
                             if(StringUtils.isNotEmpty(textFieldWithLanguage.getExtraValue())) {
                                 exhibition.setWebpage(new Webpage());
@@ -1491,7 +1491,7 @@ public class EagAccessAndServicesPanel extends EagPanels {
                             DescriptiveNote descriptiveNote = new DescriptiveNote();
                             descriptiveNote.setP(new ArrayList<P>(){{ add(new P()); }});
                             toursSessions.setDescriptiveNote(descriptiveNote);
-                            toursSessions.getDescriptiveNote().setLang(textFieldWithLanguage.getLanguage());
+                            toursSessions.getDescriptiveNote().getP().get(0).setLang(textFieldWithLanguage.getLanguage());
                             toursSessions.getDescriptiveNote().getP().get(0).setContent(textFieldWithLanguage.getTextValue());
                             if(StringUtils.isNotEmpty(textFieldWithLanguage.getExtraValue())) {
                                 toursSessions.setWebpage(new Webpage());
@@ -1512,7 +1512,7 @@ public class EagAccessAndServicesPanel extends EagPanels {
                             DescriptiveNote descriptiveNote = new DescriptiveNote();
                             descriptiveNote.setP(new ArrayList<P>(){{ add(new P()); }});
                             otherServices.setDescriptiveNote(descriptiveNote);
-                            otherServices.getDescriptiveNote().setLang(textFieldWithLanguage.getLanguage());
+                            otherServices.getDescriptiveNote().getP().get(0).setLang(textFieldWithLanguage.getLanguage());
                             otherServices.getDescriptiveNote().getP().get(0).setContent(textFieldWithLanguage.getTextValue());
                             if(StringUtils.isNotEmpty(textFieldWithLanguage.getExtraValue())) {
                                 otherServices.setWebpage(new Webpage());

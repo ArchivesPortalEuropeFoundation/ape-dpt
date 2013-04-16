@@ -66,7 +66,7 @@ public class EagRelationsPanel extends EagPanels {
                 descriptiveNote.setP(new ArrayList<P>(){{add(new P());}});
                 resourceRelation.setDescriptiveNote(descriptiveNote);
             }
-            ResourceRelationType resourceRelationType = new ResourceRelationType(resourceRelation.getResourceRelationType(), resourceRelation.getHref(), resourceRelation.getRelationEntry().getContent(), resourceRelation.getDescriptiveNote().getP().get(0).getContent(), resourceRelation.getDescriptiveNote().getLang(), true);
+            ResourceRelationType resourceRelationType = new ResourceRelationType(resourceRelation.getResourceRelationType(), resourceRelation.getHref(), resourceRelation.getRelationEntry().getContent(), resourceRelation.getDescriptiveNote().getP().get(0).getContent(), resourceRelation.getDescriptiveNote().getP().get(0).getLang(), true);
             resourceRelationTypes.add(resourceRelationType);
 
             builder.addLabel(labels.getString("eag2012.linkToResourceRelation"), cc.xy(1, rowNb));
@@ -102,7 +102,7 @@ public class EagRelationsPanel extends EagPanels {
                 descriptiveNote.setP(new ArrayList<P>(){{add(new P());}});
                 eagRelation.setDescriptiveNote(descriptiveNote);
             }
-            ResourceRelationType resourceRelationType = new ResourceRelationType(eagRelation.getEagRelationType(), eagRelation.getHref(), eagRelation.getRelationEntry().get(0).getContent(), eagRelation.getDescriptiveNote().getP().get(0).getContent(), eagRelation.getDescriptiveNote().getLang(), false);
+            ResourceRelationType resourceRelationType = new ResourceRelationType(eagRelation.getEagRelationType(), eagRelation.getHref(), eagRelation.getRelationEntry().get(0).getContent(), eagRelation.getDescriptiveNote().getP().get(0).getContent(), eagRelation.getDescriptiveNote().getP().get(0).getLang(), false);
             institutionRelationTypes.add(resourceRelationType);
 
             builder.addLabel(labels.getString("eag2012.linkToInstitutionRelation"), cc.xy(1, rowNb));

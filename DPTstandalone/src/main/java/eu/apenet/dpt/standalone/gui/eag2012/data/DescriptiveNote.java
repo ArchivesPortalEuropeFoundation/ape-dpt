@@ -51,8 +51,6 @@ public class DescriptiveNote {
 
     @XmlElement(required = true)
     protected List<P> p;
-    @XmlAttribute(name = "lang", namespace = "http://www.w3.org/XML/1998/namespace")
-    protected String lang;
 
     /**
      * Gets the value of the p property.
@@ -86,29 +84,4 @@ public class DescriptiveNote {
     public void setP(List<P> p) {
         this.p = p;
     }
-
-    /**
-     * Gets the value of the lang property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
-     */
-    public String getLang() {
-        return lang;
-    }
-
-    /**
-     * Sets the value of the lang property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
-     */
-    public void setLang(String value) {
-        this.lang = value;
-    }
-
 }
