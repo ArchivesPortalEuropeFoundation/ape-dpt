@@ -636,52 +636,51 @@ public class EseOptionsPanel extends JPanel {
 
                     try {
                         checkIfAllFilled();
-                    } catch (Exception ex1) {
-                        DataPreparationToolGUI.createErrorOrWarningPanel(ex1, false, labels.getString("ese.formNotFilledError"), parent);
-                    }
-
-                    ProgressFrame progressFrame = new ProgressFrame(labels, parent, true, true, apexActionListener);
-                    ProgressFrame.ApeProgressBar progressBar = progressFrame.getProgressBarBatch();
-
-                    try {
-                        apeTabbedPane.setEseConversionErrorText(labels.getString("ese.conversionEseStarted") + "\n");
-                        writer.append(labels.getString("ese.conversionEseStarted") + "\n");
-                        SummaryWorking summaryWorking = new SummaryWorking(dataPreparationToolGUI.getResultArea(), progressBar);
-                        summaryWorking.setTotalNumberFiles(numberOfFiles);
-                        summaryWorking.setCurrentFileNumberBatch(currentFileNumberBatch);
-                        Thread threadRunner = new Thread(summaryWorking);
-                        threadRunner.setName(SummaryWorking.class.toString());
-                        threadRunner.start();
+                        ProgressFrame progressFrame = new ProgressFrame(labels, parent, true, true, apexActionListener);
+                        ProgressFrame.ApeProgressBar progressBar = progressFrame.getProgressBarBatch();
 
                         try {
-                            EseConfig config = fillConfig();
-                            for (File selectedIndexFile : selectedIndices) {
-                                if (!continueLoop) {
-                                    break;
+                            apeTabbedPane.setEseConversionErrorText(labels.getString("ese.conversionEseStarted") + "\n");
+                            writer.append(labels.getString("ese.conversionEseStarted") + "\n");
+                            SummaryWorking summaryWorking = new SummaryWorking(dataPreparationToolGUI.getResultArea(), progressBar);
+                            summaryWorking.setTotalNumberFiles(numberOfFiles);
+                            summaryWorking.setCurrentFileNumberBatch(currentFileNumberBatch);
+                            Thread threadRunner = new Thread(summaryWorking);
+                            threadRunner.setName(SummaryWorking.class.toString());
+                            threadRunner.start();
+
+                            try {
+                                EseConfig config = fillConfig();
+                                for (File selectedIndexFile : selectedIndices) {
+                                    if (!continueLoop) {
+                                        break;
+                                    }
+
+                                    SwingUtilities.invokeLater(new TransformEse(config, selectedIndexFile));
+                                    apeTabbedPane.appendEseConversionErrorText(MessageFormat.format(labels.getString("ese.convertedAndSaved"), selectedIndexFile.getAbsolutePath(), retrieveFromDb.retrieveDefaultSaveFolder()) + "\n");
+                                    writer.append(MessageFormat.format(labels.getString("ese.convertedAndSaved"), selectedIndexFile.getAbsolutePath(), retrieveFromDb.retrieveDefaultSaveFolder()) + "\n");
                                 }
-
-                                SwingUtilities.invokeLater(new TransformEse(config, selectedIndexFile));
-                                apeTabbedPane.appendEseConversionErrorText(MessageFormat.format(labels.getString("ese.convertedAndSaved"), selectedIndexFile.getAbsolutePath(), retrieveFromDb.retrieveDefaultSaveFolder()) + "\n");
-                                writer.append(MessageFormat.format(labels.getString("ese.convertedAndSaved"), selectedIndexFile.getAbsolutePath(), retrieveFromDb.retrieveDefaultSaveFolder()) + "\n");
+                                apeTabbedPane.checkFlashingTab(APETabbedPane.TAB_ESE, Utilities.FLASHING_GREEN_COLOR);
+                                close();
+                            } catch (Exception ex) {
+                                apeTabbedPane.checkFlashingTab(APETabbedPane.TAB_ESE, Utilities.FLASHING_RED_COLOR);
+                            } finally {
+                                if (summaryWorking != null) {
+                                    summaryWorking.stop();
+                                }
+                                if (threadRunner != null) {
+                                    threadRunner.interrupt();
+                                }
                             }
-                            apeTabbedPane.checkFlashingTab(APETabbedPane.TAB_ESE, Utilities.FLASHING_GREEN_COLOR);
-                            close();
-                        } catch (Exception ex) {
-                            apeTabbedPane.checkFlashingTab(APETabbedPane.TAB_ESE, Utilities.FLASHING_RED_COLOR);
-                        } finally {
-                            if (summaryWorking != null) {
-                                summaryWorking.stop();
-                            }
-                            if (threadRunner != null) {
-                                threadRunner.interrupt();
-                            }
+                        } catch (Exception e) {
+                            LOG.error(e);
                         }
-                    } catch (Exception e) {
-                        LOG.error(e);
-                    }
 
-                    if (progressFrame != null) {
-                        progressFrame.stop();
+                        if (progressFrame != null) {
+                            progressFrame.stop();
+                        }
+                    } catch (Exception ex1) {
+                        DataPreparationToolGUI.createErrorOrWarningPanel(ex1, false, labels.getString("ese.formNotFilledError"), parent);
                     }
                     dataPreparationToolGUI.getFinalAct().run();
                     dataPreparationToolGUI.getXmlEadList().clearSelection();
