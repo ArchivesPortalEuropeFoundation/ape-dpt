@@ -725,6 +725,9 @@ public class EagInstitutionPanel extends EagPanels {
                     } else if(StringUtils.isEmpty(telephoneTf.getText())) {
                         repository.getTelephone().remove(0);
                     }
+                } else if(StringUtils.isNotEmpty(telephoneTf.getText())) {
+                    repository.getTelephone().add(new Telephone());
+                    repository.getTelephone().get(0).setContent(telephoneTf.getText());
                 }
 
                 if(repository.getEmail().size() > 0) {
@@ -742,6 +745,10 @@ public class EagInstitutionPanel extends EagPanels {
                     if(StringUtils.isEmpty(emailTf.getText())) {
                         repository.getEmail().remove(0);
                     }
+                }  else if(StringUtils.isNotEmpty(emailTf.getText())) {
+                    repository.getEmail().add(new Email());
+                    repository.getEmail().get(0).setHref(emailTf.getText());
+                    repository.getEmail().get(0).setContent(emailTitleTf.getText());
                 }
 
 //                if(repository.getWebpage().size() > 0) {
@@ -814,6 +821,12 @@ public class EagInstitutionPanel extends EagPanels {
                     if(StringUtils.isEmpty(refInstitutionHoldingsGuideTf.getText())) {
                         eag.getRelations().getResourceRelation().remove(0);
                     }
+                } else if(StringUtils.isNotEmpty(refInstitutionHoldingsGuideTf.getText())) {
+                    eag.getRelations().getResourceRelation().add(new ResourceRelation());
+                    eag.getRelations().getResourceRelation().get(0).setHref(refInstitutionHoldingsGuideTf.getText());
+                    eag.getRelations().getResourceRelation().get(0).setDescriptiveNote(new DescriptiveNote());
+                    eag.getRelations().getResourceRelation().get(0).getDescriptiveNote().getP().add(new P());
+                    eag.getRelations().getResourceRelation().get(0).getDescriptiveNote().getP().get(0).setContent(refInstitutionHoldingsGuideTitleTf.getText());
                 }
 
                 Searchroom searchroom = repository.getServices().getSearchroom();
