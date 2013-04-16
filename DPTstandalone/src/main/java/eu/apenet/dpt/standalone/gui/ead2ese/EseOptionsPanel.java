@@ -86,7 +86,6 @@ public class EseOptionsPanel extends JPanel {
     private JTextArea providerTextArea;
     private JComboBox languageComboBox;
     private JTextArea additionalRightsTextArea;
-    private JCheckBox archdescCheckbox;
     private Map<String, String> languages;
     private static final Border BLACK_LINE = BorderFactory.createLineBorder(Color.BLACK);
     private static final Border GREY_LINE = BorderFactory.createLineBorder(Color.GRAY);
@@ -139,29 +138,31 @@ public class EseOptionsPanel extends JPanel {
         JScrollPane dptaScrollPane = new JScrollPane(dataProviderTextArea);
         dptaScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
         panel.add(dptaScrollPane);
+        useExistingRepoCheckbox = new JCheckBox(labels.getString("ese.takeFromFileRepository"));
+        useExistingRepoCheckbox.setSelected(true);
+        useExistingRepoCheckbox.addItemListener(new CheckboxItemListener());
+        JPanel panel2 = new JPanel(new GridLayout(1, 1));
+        panel2.add(useExistingRepoCheckbox);
         if (batch) {
-            JPanel panel2 = new JPanel(new GridLayout(1, 1));
-            useExistingRepoCheckbox = new JCheckBox(labels.getString("ese.takeFromFileRepository"));
-            useExistingRepoCheckbox.setSelected(true);
-            useExistingRepoCheckbox.addItemListener(new CheckboxItemListener());
-            panel2.add(useExistingRepoCheckbox);
             panel.add(panel2);
         } else {
+            LOG.info("not batch");
             determineDaoInformation();
             String repository = ead2EseInformation.getRepository();
-            JPanel panel2 = new JPanel(new GridLayout(2, 1));
-            archdescCheckbox = new JCheckBox(labels.getString("ese.mappingFromArchdesc") + " /ead/archdesc/did/repository", true);
-            archdescCheckbox.addItemListener(new CheckboxItemListener());
-            panel2.add(archdescCheckbox);
-            panel2.add(new JLabel(labels.getString("ese.archdescValue") + ": " + archdescRepository));
-            panel2.setVisible(false);
-            panel.add(panel2);
-            if (repository != null && !repository.equals("")) {
+            if (!repository.equals("") && repository != null) {
+                LOG.info("repository not null, not blank");
                 dataProviderTextArea.setText(repository);
+                panel.add(panel2);        
             } else {
+                LOG.info("repository blank: " + repository.equals(""));
                 if (archdescRepository != null) {
-                    panel2.setVisible(true);
+                    LOG.info("archdescRepository not null");
                     dataProviderTextArea.setText(archdescRepository);
+                    panel.add(panel2);        
+                } else {
+                    LOG.info("archdescRepository null");
+                    useExistingRepoCheckbox.setSelected(false);
+                    panel.add(new JLabel());
                 }
             }
         }
@@ -219,15 +220,11 @@ public class EseOptionsPanel extends JPanel {
         typeGroup.add(radioButton);
         panel.add(radioButton);
 
-        if (batch) {
-            useExistingDaoRoleCheckbox = new JCheckBox(labels.getString("ese.takeFromFileDaoRole"));
-            useExistingDaoRoleCheckbox.setSelected(true);
-            useExistingDaoRoleCheckbox.addItemListener(new CheckboxItemListener());
-            panel.add(useExistingDaoRoleCheckbox);
-        } else {
-            panel.add(new JLabel(""));
-        }
-
+        useExistingDaoRoleCheckbox = new JCheckBox(labels.getString("ese.takeFromFileDaoRole"));
+        useExistingDaoRoleCheckbox.setSelected(true);
+        useExistingDaoRoleCheckbox.addItemListener(new CheckboxItemListener());
+        panel.add(useExistingDaoRoleCheckbox);
+        
         panel.add(new JLabel(""));
         radioButton = new JRadioButton("SOUND");
         if (currentRoleType.equals("SOUND")) {
@@ -421,10 +418,10 @@ public class EseOptionsPanel extends JPanel {
         EseConfig config = new EseConfig();
 
         config.setUseExistingRepository(false);
-        if (batch && useExistingRepoCheckbox.isSelected()) {
+        if (useExistingRepoCheckbox.isSelected()) {
             config.setUseExistingRepository(true);
         }
-
+        
         config.setDataProvider(dataProviderTextArea.getText());
         config.setProvider(providerTextArea.getText());
 
@@ -566,7 +563,8 @@ public class EseOptionsPanel extends JPanel {
         }
 
         if (StringUtils.isEmpty(dataProviderTextArea.getText())) {
-            throw new Exception("dataProviderTextField is empty");
+            if (!useExistingRepoCheckbox.isSelected())
+                throw new Exception("dataProviderTextField is empty");
         }
 
         if (StringUtils.isEmpty(providerTextArea.getText())) {
