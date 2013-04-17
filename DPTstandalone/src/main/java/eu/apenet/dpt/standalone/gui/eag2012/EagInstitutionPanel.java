@@ -659,6 +659,8 @@ public class EagInstitutionPanel extends EagPanels {
 
 //                if(repository.getWebpage().size() > 0) {
                     if(StringUtils.isNotEmpty(webpageTf.getText())) {
+                        if(repository.getWebpage().size() == 0)
+                            repository.getWebpage().add(new Webpage());
                         repository.getWebpage().get(0).setHref(webpageTf.getText());
                         hasChanged = true;
                         if(StringUtils.isNotEmpty(webpageTitleTf.getText()) && !webpageTitleTf.getText().equals(repository.getWebpage().get(0).getContent())) {
