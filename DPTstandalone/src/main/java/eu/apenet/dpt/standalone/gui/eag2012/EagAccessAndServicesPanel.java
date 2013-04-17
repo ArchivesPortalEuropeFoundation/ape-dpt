@@ -117,6 +117,10 @@ public class EagAccessAndServicesPanel extends EagPanels {
             builder.add(createErrorLabel(labels.getString("eag2012.errors.openingHours")),          cc.xy (1, rowNb));
             setNextRow();
         }
+        JButton addOpeningHoursBtn = new ButtonEag(labels.getString("eag2012.addOpeningHoursButton"));
+        builder.add(addOpeningHoursBtn, cc.xy (1, rowNb));
+        addOpeningHoursBtn.addActionListener(new AddOpeningHoursBtnAction(eag, tabbedPane, model));
+        setNextRow();
 
         if(repository.getTimetable().getClosing().size() == 0) {
             repository.getTimetable().getClosing().add(new Closing());
@@ -131,6 +135,10 @@ public class EagAccessAndServicesPanel extends EagPanels {
             builder.add(textFieldWithLanguage.getLanguageBox(), cc.xy(7, rowNb));
             setNextRow();
         }
+        JButton addClosingDatesBtn = new ButtonEag(labels.getString("eag2012.addClosingDatesButton"));
+        builder.add(addClosingDatesBtn, cc.xy (1, rowNb));
+        addClosingDatesBtn.addActionListener(new AddClosingDatesBtnAction(eag, tabbedPane, model));
+        setNextRow();
 
         if(repository.getDirections().size() == 0)
             repository.getDirections().add(new Directions());
@@ -801,6 +809,36 @@ public class EagAccessAndServicesPanel extends EagPanels {
         return builder.getPanel();
     }
 
+    public class AddOpeningHoursBtnAction extends UpdateEagObject {
+        AddOpeningHoursBtnAction(Eag eag, JTabbedPane tabbedPane, ProfileListModel model) {
+            super(eag, tabbedPane, model);
+        }
+
+        @Override
+        public void actionPerformed(ActionEvent actionEvent) {
+            try {
+                super.updateEagObject();
+            } catch (Eag2012FormException e) {
+            }
+            eag.getArchguide().getDesc().getRepositories().getRepository().get(0).getTimetable().getOpening().add(new Opening());
+            reloadTabbedPanel(new EagAccessAndServicesPanel(eag, tabbedPane, eag2012Frame, model, labels).buildEditorPanel(errors), 3);
+        }
+    }
+    public class AddClosingDatesBtnAction extends UpdateEagObject {
+        AddClosingDatesBtnAction(Eag eag, JTabbedPane tabbedPane, ProfileListModel model) {
+            super(eag, tabbedPane, model);
+        }
+
+        @Override
+        public void actionPerformed(ActionEvent actionEvent) {
+            try {
+                super.updateEagObject();
+            } catch (Eag2012FormException e) {
+            }
+            eag.getArchguide().getDesc().getRepositories().getRepository().get(0).getTimetable().getClosing().add(new Closing());
+            reloadTabbedPanel(new EagAccessAndServicesPanel(eag, tabbedPane, eag2012Frame, model, labels).buildEditorPanel(errors), 3);
+        }
+    }
     public class AddTravellingDirectionsBtnAction extends UpdateEagObject {
         AddTravellingDirectionsBtnAction(Eag eag, JTabbedPane tabbedPane, ProfileListModel model) {
             super(eag, tabbedPane, model);
