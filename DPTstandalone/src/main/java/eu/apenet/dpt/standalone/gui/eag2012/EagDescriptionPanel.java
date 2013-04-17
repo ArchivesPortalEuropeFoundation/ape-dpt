@@ -116,6 +116,10 @@ public class EagDescriptionPanel extends EagPanels {
             builder.add(textFieldWithLanguage.getLanguageBox(), cc.xy(7, rowNb));
             setNextRow();
         }
+        JButton addRuleFoundationBtn = new ButtonEag(labels.getString("eag2012.addRuleButton"));
+        builder.add(addRuleFoundationBtn, cc.xy(1, rowNb));
+        addRuleFoundationBtn.addActionListener(new AddRuleFoundationBtnAction(eag, tabbedPane, model));
+        setNextRow();
 
         if (repository.getRepositorsup() == null) {
             Repositorsup repositorsup = new Repositorsup();
@@ -139,6 +143,10 @@ public class EagDescriptionPanel extends EagPanels {
             builder.add(textFieldWithLanguage.getLanguageBox(), cc.xy(7, rowNb));
             setNextRow();
         }
+        JButton addRuleSuppressionBtn = new ButtonEag(labels.getString("eag2012.addRuleButton"));
+        builder.add(addRuleSuppressionBtn, cc.xy(1, rowNb));
+        addRuleSuppressionBtn.addActionListener(new AddRuleSuppressionBtnAction(eag, tabbedPane, model));
+        setNextRow();
 
         builder.addSeparator(labels.getString("eag2012.administrativeStructure"), cc.xy(1, rowNb));
         setNextRow();
@@ -312,6 +320,36 @@ public class EagDescriptionPanel extends EagPanels {
             } catch (Eag2012FormException e) {
             }
             eag.getArchguide().getDesc().getRepositories().getRepository().get(0).getRepositorhist().getDescriptiveNote().getP().add(new P());
+            reloadTabbedPanel(new EagDescriptionPanel(eag, tabbedPane, eag2012Frame, model, labels).buildEditorPanel(errors), 4);
+        }
+    }
+    public class AddRuleFoundationBtnAction extends UpdateEagObject {
+        AddRuleFoundationBtnAction(Eag eag, JTabbedPane tabbedPane, ProfileListModel model) {
+            super(eag, tabbedPane, model);
+        }
+
+        @Override
+        public void actionPerformed(ActionEvent actionEvent) {
+            try {
+                super.updateEagObject();
+            } catch (Eag2012FormException e) {
+            }
+            eag.getArchguide().getDesc().getRepositories().getRepository().get(0).getRepositorfound().getRule().add(new Rule());
+            reloadTabbedPanel(new EagDescriptionPanel(eag, tabbedPane, eag2012Frame, model, labels).buildEditorPanel(errors), 4);
+        }
+    }
+    public class AddRuleSuppressionBtnAction extends UpdateEagObject {
+        AddRuleSuppressionBtnAction(Eag eag, JTabbedPane tabbedPane, ProfileListModel model) {
+            super(eag, tabbedPane, model);
+        }
+
+        @Override
+        public void actionPerformed(ActionEvent actionEvent) {
+            try {
+                super.updateEagObject();
+            } catch (Eag2012FormException e) {
+            }
+            eag.getArchguide().getDesc().getRepositories().getRepository().get(0).getRepositorsup().getRule().add(new Rule());
             reloadTabbedPanel(new EagDescriptionPanel(eag, tabbedPane, eag2012Frame, model, labels).buildEditorPanel(errors), 4);
         }
     }
