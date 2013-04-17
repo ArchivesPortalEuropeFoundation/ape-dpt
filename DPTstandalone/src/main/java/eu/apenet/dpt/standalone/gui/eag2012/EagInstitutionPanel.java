@@ -615,7 +615,8 @@ public class EagInstitutionPanel extends EagPanels {
                     }
                     Location location = locationType.getLocation(defaultCountry);
                     errors.addAll(locationType.getErrors());
-                    repository.getLocation().add(location);
+                    if(location != null)
+                        repository.getLocation().add(location);
                 }
 
 

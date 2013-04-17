@@ -199,6 +199,11 @@ public class LocationType {
         if(StringUtils.isNotEmpty(getLongitudeTfValue())) {
             location.setLongitude(getLongitudeTfValue());
         }
+
+        if(getLocalType().equals("postal address") && StringUtils.isEmpty(getCityTfValue()) && StringUtils.isEmpty(getStreetTfValue())) {
+            errors = new ArrayList<String>();
+            return null;
+        }
         return location;
     }
 }
