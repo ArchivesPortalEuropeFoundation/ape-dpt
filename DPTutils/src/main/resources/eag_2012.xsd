@@ -504,7 +504,7 @@
                         <xs:restriction base="xs:token">
                             <xs:enumeration value="National archives"/>
                             <xs:enumeration value="Regional archives"/>
-                            <xs:enumeration value="Country/local authority archives"/>
+                            <xs:enumeration value="County/local authority archives"/>
                             <xs:enumeration value="Municipal archives"/>
                             <xs:enumeration value="Specialised government archives"/>
                             <xs:enumeration value="Private persons and family archives"/>
