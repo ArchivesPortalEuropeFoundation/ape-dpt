@@ -146,21 +146,16 @@ public class EseOptionsPanel extends JPanel {
         if (batch) {
             panel.add(panel2);
         } else {
-            LOG.info("not batch");
             determineDaoInformation();
             String repository = ead2EseInformation.getRepository();
             if (!repository.equals("") && repository != null) {
-                LOG.info("repository not null, not blank");
                 dataProviderTextArea.setText(repository);
                 panel.add(panel2);        
             } else {
-                LOG.info("repository blank: " + repository.equals(""));
                 if (archdescRepository != null) {
-                    LOG.info("archdescRepository not null");
                     dataProviderTextArea.setText(archdescRepository);
                     panel.add(panel2);        
                 } else {
-                    LOG.info("archdescRepository null");
                     useExistingRepoCheckbox.setSelected(false);
                     panel.add(new JLabel());
                 }
