@@ -9,6 +9,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.TreeSet;
 import java.util.logging.Level;
 import org.apache.log4j.Logger;
 
@@ -24,6 +25,7 @@ public class Ead2EseInformation {
     private String repository;
     private String roleType;
     private String archdescRepository;
+    private TreeSet<String> alternativeLanguages;
 
     public String getLanguageCode() {
         return languageCode;
@@ -40,9 +42,14 @@ public class Ead2EseInformation {
     public String getArchdescRepository() {
         return archdescRepository;
     }
+    
+    public TreeSet<String> getAlternativeLanguages() {
+        return alternativeLanguages;
+    }
 
     public Ead2EseInformation(File fileToRead, String databaseRoleType, String archdescRepository) throws IOException, SAXException, ParserConfigurationException {
         this.archdescRepository = archdescRepository;
+        this.alternativeLanguages = new TreeSet<String>();
         determineDaoInformation(fileToRead, databaseRoleType);
     }
 
@@ -51,6 +58,7 @@ public class Ead2EseInformation {
         repository = "";
         roleType = "";
         archdescRepository = "";
+        alternativeLanguages =  new TreeSet<String>();
     }
 
     private void determineDaoInformation(File fileToRead, String databaseRoleType) throws IOException, SAXException, ParserConfigurationException {
@@ -129,15 +137,12 @@ public class Ead2EseInformation {
 
     private String determineLanguageCode(Node daoNode, Document doc) {
         String result = null;
-        String higherLevelLanguage = null;
         Node didNode = daoNode.getParentNode();
         NodeList languages = doc.getElementsByTagName("language");
         if (languages.getLength() != 0) {
             int counter = 0;
             do {
                 Node languageNode = languages.item(counter);
-                LOG.info(languageNode.getParentNode().getParentNode());
-                LOG.info(didNode);
                 if (languageNode.getParentNode().getParentNode() == didNode) {
                     NamedNodeMap attributes = languageNode.getAttributes();
                     for (int i = 0; i < attributes.getLength(); i++) {
@@ -153,23 +158,18 @@ public class Ead2EseInformation {
                        
                  }
                  }*/
-                /*if (languageNode.getParentNode().getParentNode().getParentNode().getNodeName().equals("archdesc")) {
+                else {
                     NamedNodeMap attributes = languageNode.getAttributes();
                     for (int i = 0; i < attributes.getLength(); i++) {
                         Node attribute = attributes.item(i);
                         if (attribute.getNodeName().equals("langcode")) {
-                            higherLevelLanguage = attribute.getTextContent();
+                            alternativeLanguages.add(attribute.getTextContent());
                         }
                     }
-                }*/
+                }
                 counter++;
             } while (result == null && counter < languages.getLength());
         }
-        if (result != null) {
-            LOG.info(result);
-            return result;
-        } else {
-            return higherLevelLanguage;
-        }
+        return result;
     }
 }
