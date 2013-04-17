@@ -10,14 +10,16 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.logging.Level;
+import org.apache.log4j.Logger;
 
 /**
- * User: Yoann Moranville
- * Date: 15/04/2013
+ * User: Yoann Moranville Date: 15/04/2013
  *
  * @author Yoann Moranville
  */
 public class Ead2EseInformation {
+
+    private static final Logger LOG = Logger.getLogger(Ead2EseInformation.class);
     private String languageCode;
     private String repository;
     private String roleType;
@@ -57,6 +59,9 @@ public class Ead2EseInformation {
         if (nodelist.getLength() != 0) {
             int counter = 0;
             do {
+                if (languageCode != null && repository != null && roleType != null) {
+                    break;
+                }
                 Node daoNode = nodelist.item(counter);
                 roleType = determineRoleType(daoNode, databaseRoleType);
                 repository = determineRepository(daoNode, doc);
@@ -124,6 +129,7 @@ public class Ead2EseInformation {
 
     private String determineLanguageCode(Node daoNode, Document doc) {
         String result = null;
+        String higherLevelLanguage = null;
         Node didNode = daoNode.getParentNode();
         NodeList languages = doc.getElementsByTagName("language");
         if (languages.getLength() != 0) {
@@ -134,14 +140,34 @@ public class Ead2EseInformation {
                     NamedNodeMap attributes = languageNode.getAttributes();
                     for (int i = 0; i < attributes.getLength(); i++) {
                         Node attribute = attributes.item(i);
-                        if (attribute != null) {
-                            return attribute.getTextContent();
+                        if (attribute.getNodeName().equals("langcode")) {
+                            result = attribute.getTextContent();
                         }
                     }
                 }
+                /*                if (languageNode.getParentNode().getParentNode().getNodeName().equals("c")) {
+                 Node cNode = languageNode.getParentNode().getParentNode();
+                 while (!cNode.getParentNode().getNodeName().equals("ead")) {
+                       
+                 }
+                 }
+                 if (languageNode.getParentNode().getParentNode().getNodeName().equals("archdesc")) {
+                 NamedNodeMap attributes = languageNode.getAttributes();
+                 for (int i = 0; i < attributes.getLength(); i++) {
+                 Node attribute = attributes.item(i);
+                 if (attribute != null) {
+                 higherLevelLanguage = attribute.getTextContent();
+                 }
+                 }
+                 }*/
                 counter++;
-            } while (counter < languages.getLength());
+            } while (result == null || counter < languages.getLength());
         }
-        return result;
+        if (result != null) {
+            LOG.info(result);
+            return result;
+        } else {
+            return higherLevelLanguage;
+        }
     }
 }
