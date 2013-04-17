@@ -67,7 +67,7 @@ public class Ead2EseInformation {
                 repository = determineRepository(daoNode, doc);
                 languageCode = determineLanguageCode(daoNode, doc);
                 counter++;
-            } while (counter < nodelist.getLength());
+            } while ((languageCode == null || repository == null || roleType == null) && counter < nodelist.getLength());
         }
     }
 
@@ -136,6 +136,8 @@ public class Ead2EseInformation {
             int counter = 0;
             do {
                 Node languageNode = languages.item(counter);
+                LOG.info(languageNode.getParentNode().getParentNode());
+                LOG.info(didNode);
                 if (languageNode.getParentNode().getParentNode() == didNode) {
                     NamedNodeMap attributes = languageNode.getAttributes();
                     for (int i = 0; i < attributes.getLength(); i++) {
@@ -150,18 +152,18 @@ public class Ead2EseInformation {
                  while (!cNode.getParentNode().getNodeName().equals("ead")) {
                        
                  }
-                 }
-                 if (languageNode.getParentNode().getParentNode().getNodeName().equals("archdesc")) {
-                 NamedNodeMap attributes = languageNode.getAttributes();
-                 for (int i = 0; i < attributes.getLength(); i++) {
-                 Node attribute = attributes.item(i);
-                 if (attribute != null) {
-                 higherLevelLanguage = attribute.getTextContent();
-                 }
-                 }
                  }*/
+                /*if (languageNode.getParentNode().getParentNode().getParentNode().getNodeName().equals("archdesc")) {
+                    NamedNodeMap attributes = languageNode.getAttributes();
+                    for (int i = 0; i < attributes.getLength(); i++) {
+                        Node attribute = attributes.item(i);
+                        if (attribute.getNodeName().equals("langcode")) {
+                            higherLevelLanguage = attribute.getTextContent();
+                        }
+                    }
+                }*/
                 counter++;
-            } while (result == null || counter < languages.getLength());
+            } while (result == null && counter < languages.getLength());
         }
         if (result != null) {
             LOG.info(result);
