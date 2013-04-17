@@ -490,45 +490,44 @@ http://purl.org/dc/terms/ http://www.dublincore.org/schemas/xmls/qdc/dcterms.xsd
 				
 								
                 <xsl:choose>
-                    <xsl:when test="fn:string-length($language) > 0">
-                        <dc:language>
-                            <xsl:value-of select="$language"/>
-                        </dc:language>
+                    <xsl:when test="$didnode/langmaterial">
+                        <xsl:call-template name="language">
+                            <xsl:with-param name="langmaterials" select="$didnode/langmaterial"></xsl:with-param>
+                        </xsl:call-template>								
+                    </xsl:when>
+                    <xsl:when test='$inheritLanguage = "true"'>
+                        <xsl:choose>
+                            <xsl:when test='fn:string-length($inheritedLanguages) > 0'>
+                                <xsl:copy-of select="$inheritedLanguages"/>
+                            </xsl:when>
+                            <xsl:otherwise>
+                                <dc:language>
+                                    <xsl:text>unknown</xsl:text>
+                                </dc:language>
+                            </xsl:otherwise>
+                        </xsl:choose>
+                    </xsl:when>
+                    <xsl:when test='$inheritFromParent'>
+                        <xsl:choose>
+                            <xsl:when test='$parentcnode/did/langmaterial'>
+                                <xsl:call-template name="language">
+                                    <xsl:with-param name="langmaterials" select="$parentcnode/did/langmaterial"></xsl:with-param>
+                                </xsl:call-template>
+                            </xsl:when>
+                            <xsl:otherwise>
+                                <dc:language>
+                                    <xsl:text>unknown</xsl:text>
+                                </dc:language>
+                            </xsl:otherwise>
+                        </xsl:choose>							
                     </xsl:when>
                     <xsl:otherwise>
                         <xsl:choose>
-                            <xsl:when test="$didnode/langmaterial">
-                                <xsl:call-template name="language">
-                                    <xsl:with-param name="langmaterials" select="$didnode/langmaterial"></xsl:with-param>
-                                </xsl:call-template>								
+                            <xsl:when test="fn:string-length($language) > 0">
+                                <dc:language>
+                                    <xsl:value-of select="$language"/>
+                                </dc:language>
                             </xsl:when>
-                            <xsl:when test='$inheritLanguage = "true"'>
-                                <xsl:choose>
-                                    <xsl:when test='fn:string-length($inheritedLanguages) > 0'>
-                                        <xsl:copy-of select="$inheritedLanguages"/>
-                                    </xsl:when>
-                                    <xsl:otherwise>
-                                        <dc:language>
-                                            <xsl:text>unknown</xsl:text>
-                                        </dc:language>
-                                    </xsl:otherwise>
-                                </xsl:choose>
-
-                            </xsl:when>
-                            <xsl:when test='$inheritFromParent'>
-                                <xsl:choose>
-                                    <xsl:when test='$parentcnode/did/langmaterial'>
-                                        <xsl:call-template name="language">
-                                            <xsl:with-param name="langmaterials" select="$parentcnode/did/langmaterial"></xsl:with-param>
-                                        </xsl:call-template>
-                                    </xsl:when>
-                                    <xsl:otherwise>
-                                        <dc:language>
-                                            <xsl:text>unknown</xsl:text>
-                                        </dc:language>
-                                    </xsl:otherwise>
-                                </xsl:choose>							
-                            </xsl:when>		
                             <xsl:otherwise>
                                 <dc:language>
                                     <xsl:text>unknown</xsl:text>
