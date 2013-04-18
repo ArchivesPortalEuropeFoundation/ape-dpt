@@ -184,6 +184,35 @@ http://purl.org/dc/terms/ http://www.dublincore.org/schemas/xmls/qdc/dcterms.xsd
                 <dc:identifier>
                     <xsl:apply-templates select="$didnode/unitid"/>
                 </dc:identifier>
+                <xsl:choose>
+                    <xsl:when test='$useExistingRepository'>
+                        <xsl:choose>
+                            <xsl:when test="$didnode/repository">
+                                <xsl:apply-templates select="$didnode/repository"/>
+                            </xsl:when>
+                            <xsl:when test="/ead/archdesc/did/repository">
+                                <xsl:apply-templates select="/ead/archdesc/did/repository"/>
+                            </xsl:when>
+                            <xsl:otherwise>
+                                <dc:source>
+                                    <xsl:value-of select="$europeana_dataprovider"/>
+                                </dc:source>
+                            </xsl:otherwise>
+                        </xsl:choose>
+                    </xsl:when>
+                    <xsl:otherwise>
+                        <xsl:choose>
+                            <xsl:when test="$europeana_dataprovider">
+                                <dc:source>
+                                    <xsl:value-of select="$europeana_dataprovider"/>
+                                </dc:source>
+                            </xsl:when>
+                            <xsl:otherwise>
+                                <xsl:apply-templates select="/ead/archdesc/did/repository"/>
+                            </xsl:otherwise>
+                        </xsl:choose>
+                    </xsl:otherwise>
+                </xsl:choose>
                 <xsl:if test='/ead/archdesc/did/repository'>
                     <xsl:apply-templates select='/ead/archdesc/did/repository'/>
                 </xsl:if>
@@ -1089,31 +1118,12 @@ http://purl.org/dc/terms/ http://www.dublincore.org/schemas/xmls/qdc/dcterms.xsd
     </xsl:template>
 
     <xsl:template match="repository">
-        <xsl:choose>
-            <xsl:when test="$useExistingRepository">
-                <dc:source>
-                    <xsl:variable name='content'>
-                        <xsl:apply-templates mode="all-but-address"/>
-                    </xsl:variable>
-                    <xsl:value-of select="fn:replace(normalize-space($content), '[\n\t\r]', '')"/>
-                </dc:source>
-            </xsl:when>
-            <xsl:otherwise>
-                <dc:source>
-                    <xsl:choose>
-                        <xsl:when test="$europeana_dataprovider">
-                            <xsl:value-of select="$europeana_dataprovider"/>
-                        </xsl:when>
-                        <xsl:otherwise>
-                            <xsl:variable name='content'>
-                                <xsl:apply-templates mode="all-but-address"/>
-                            </xsl:variable>
-                            <xsl:value-of select="fn:replace(normalize-space($content), '[\n\t\r]', '')"/>
-                        </xsl:otherwise>
-                    </xsl:choose>
-                </dc:source>
-            </xsl:otherwise>
-        </xsl:choose>
+        <dc:source>
+            <xsl:variable name='content'>
+                <xsl:apply-templates mode="all-but-address"/>
+            </xsl:variable>
+            <xsl:value-of select="fn:replace(normalize-space($content), '[\n\t\r]', '')"/>
+        </dc:source>
     </xsl:template>
     
     <xsl:template match="repository" mode="useExistingDataProvider">
