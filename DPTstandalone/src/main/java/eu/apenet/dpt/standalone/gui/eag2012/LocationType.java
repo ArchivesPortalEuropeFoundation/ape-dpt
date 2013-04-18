@@ -2,6 +2,7 @@ package eu.apenet.dpt.standalone.gui.eag2012;
 
 import eu.apenet.dpt.standalone.gui.eag2012.data.*;
 import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
 
 import javax.swing.*;
 import java.util.ArrayList;
@@ -14,6 +15,7 @@ import java.util.List;
  * @author Yoann Moranville
  */
 public class LocationType {
+    private static final Logger LOG = Logger.getLogger(LocationType.class);
     private TextFieldWithLanguage streetTf;
     private TextFieldWithLanguage cityTf;
     private TextFieldWithLanguage districtTf;

@@ -14,7 +14,7 @@ public class Part {
     protected String content;
     @XmlAttribute(name = "lang", namespace = "http://www.w3.org/XML/1998/namespace")
     protected String lang;
-    @XmlAttribute(name = "localType", namespace = "http://www.archivesportaleurope.net/Portal/profiles/eag_2012/")
+    @XmlAttribute(name = "localType")
     @XmlSchemaType(name = "anySimpleType")
     protected String localType;
 
