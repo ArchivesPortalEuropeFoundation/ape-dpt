@@ -47,7 +47,7 @@
     </control>
     <archguide>
         <identity>
-            <repositorid countrycode="" repositorycode=""/>
+            <repositorid countrycode="" />
             <otherRepositorId></otherRepositorId>
             <autform></autform>
         </identity>
@@ -78,9 +78,4 @@
             </repositories>
         </desc>
     </archguide>
-    <relations>
-        <resourceRelation resourceRelationType="other" href="">
-            <relationEntry></relationEntry>
-        </resourceRelation>
-    </relations>
 </eag>

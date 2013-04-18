@@ -46,7 +46,8 @@ public class Repositorid {
     @XmlSchemaType(name = "NMTOKEN")
     protected String countrycode;
     @XmlAttribute(name = "repositorycode")
-    @XmlSchemaType(name = "anySimpleType")
+    @XmlJavaTypeAdapter(CollapsedStringAdapter.class)
+    @XmlSchemaType(name = "NMTOKEN")
     protected String repositorycode;
 
     /**

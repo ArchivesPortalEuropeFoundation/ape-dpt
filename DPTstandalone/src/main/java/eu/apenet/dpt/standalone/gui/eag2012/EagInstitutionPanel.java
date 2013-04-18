@@ -349,6 +349,9 @@ public class EagInstitutionPanel extends EagPanels {
             setNextRow();
 
             builder.addLabel(labels.getString("eag2012.linkToHoldingsGuideLabel"), cc.xy(1, rowNb));
+            if(eag.getRelations() == null) {
+                eag.setRelations(new Relations());
+            }
             if(eag.getRelations().getResourceRelation().size() > 0) {
                 refInstitutionHoldingsGuideTf = new JTextField(eag.getRelations().getResourceRelation().get(0).getHref());
                 if(eag.getRelations().getResourceRelation().get(0).getDescriptiveNote() != null && eag.getRelations().getResourceRelation().get(0).getDescriptiveNote().getP().size() > 0)
@@ -377,7 +380,7 @@ public class EagInstitutionPanel extends EagPanels {
             } catch (NullPointerException npe) {
                 workplacesSearchroomTf = new JTextField();
             }
-            builder.add(workplacesSearchroomTf,    cc.xy (3, rowNb));
+            builder.add(workplacesSearchroomTf, cc.xy(3, rowNb));
             if(errors.contains("workplacesSearchroomTf")) {
                 setNextRow();
                 builder.add(createErrorLabel(labels.getString("eag2012.errors.workplaces")),          cc.xy (1, rowNb));
@@ -731,7 +734,9 @@ public class EagInstitutionPanel extends EagPanels {
                     }
                 } else if(StringUtils.isNotEmpty(refInstitutionHoldingsGuideTf.getText())) {
                     eag.getRelations().getResourceRelation().add(new ResourceRelation());
+                    eag.getRelations().getResourceRelation().get(0).setResourceRelationType("other");
                     eag.getRelations().getResourceRelation().get(0).setHref(refInstitutionHoldingsGuideTf.getText());
+                    eag.getRelations().getResourceRelation().get(0).setRelationEntry(new RelationEntry());
                     eag.getRelations().getResourceRelation().get(0).setDescriptiveNote(new DescriptiveNote());
                     eag.getRelations().getResourceRelation().get(0).getDescriptiveNote().getP().add(new P());
                     eag.getRelations().getResourceRelation().get(0).getDescriptiveNote().getP().get(0).setContent(refInstitutionHoldingsGuideTitleTf.getText());
