@@ -4,20 +4,18 @@ import eu.apenet.dpt.standalone.gui.ProfileListModel;
 import eu.apenet.dpt.standalone.gui.Utilities;
 import eu.apenet.dpt.standalone.gui.eag2012.data.*;
 import eu.apenet.dpt.utils.service.TransformationTool;
+import eu.apenet.dpt.utils.util.ReadXml;
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.IOUtils;
 import org.apache.log4j.Logger;
 
 import javax.swing.*;
 import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
 import java.io.InputStream;
-import java.net.URL;
 import java.util.ResourceBundle;
 
 /**
@@ -35,7 +33,13 @@ public class Eag2012Frame extends JFrame {
     private static boolean used;
     private static boolean startOfForm;
 
-    public Eag2012Frame(File eagFile, boolean isEag2012, Dimension dimension, ProfileListModel model, ResourceBundle labels) {
+    public Eag2012Frame(File eagFile, boolean isEag2012, Dimension dimension, ProfileListModel model, ResourceBundle labels) throws Exception {
+        String namespace = ReadXml.getXmlNamespace(eagFile);
+        if(isEag2012 && !namespace.equals("http://www.archivesportaleurope.net/Portal/profiles/eag_2012/")) {
+            throw new Exception("eag2012.error.fileNotInEag2012Namespace");
+        } else if(!isEag2012 && namespace.equals("http://www.archivesportaleurope.net/Portal/profiles/eag_2012/")) {
+            throw new Exception("eag2012.error.fileInEag2012Namespace");
+        }
         if(!isEag2012) {
             try {
                 InputStream is = FileUtils.openInputStream(eagFile);

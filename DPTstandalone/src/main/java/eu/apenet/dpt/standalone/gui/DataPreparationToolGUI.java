@@ -15,6 +15,7 @@ import eu.apenet.dpt.standalone.gui.validation.ValidateActionListener;
 import eu.apenet.dpt.standalone.gui.validation.ValidateSelectionActionListener;
 import eu.apenet.dpt.standalone.gui.xsdaddition.XsdObject;
 import eu.apenet.dpt.utils.ead2ese.XMLUtil;
+import eu.apenet.dpt.utils.util.ReadXml;
 import eu.apenet.dpt.utils.util.XmlChecker;
 import eu.apenet.dpt.utils.util.Xsd_enum;
 import eu.apenet.dpt.utils.util.extendxsl.DateNormalization;
@@ -516,9 +517,8 @@ public class DataPreparationToolGUI extends JFrame {
                     File eagFile = eagFileChooser.getSelectedFile();
                     if(!Eag2012Frame.isUsed()){
                         try {
-                            Document doc = XMLUtil.convertXMLToDocument(new FileInputStream(eagFile));
-                            if(doc.getDocumentElement().getNodeName().equals("eag"))
-                                new Eag2012Frame(eagFile, true, getContentPane().getSize(), (ProfileListModel) getXmlEadList().getModel(), labels);
+                            if (ReadXml.isEagFile(eagFile))
+                                new Eag2012Frame(eagFile, false, getContentPane().getSize(), (ProfileListModel) getXmlEadList().getModel(), labels);
                             else
                                 JOptionPane.showMessageDialog(rootPane, labels.getString("eag2012.notAnEagFile"));
                         } catch (SAXException ex) {
@@ -529,6 +529,12 @@ public class DataPreparationToolGUI extends JFrame {
                             java.util.logging.Logger.getLogger(DataPreparationToolGUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
                         } catch (ParserConfigurationException ex) {
                             java.util.logging.Logger.getLogger(DataPreparationToolGUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+                        } catch (Exception ex) {
+                            try {
+                                JOptionPane.showMessageDialog(rootPane, labels.getString(ex.getMessage()));
+                            } catch (Exception ex1) {
+                                JOptionPane.showMessageDialog(rootPane, "Error...");
+                            }
                         }
                     }
                 }
@@ -544,8 +550,7 @@ public class DataPreparationToolGUI extends JFrame {
                     File eagFile = eagFileChooser.getSelectedFile();
                     if(!Eag2012Frame.isUsed()){
                         try {
-                            Document doc = XMLUtil.convertXMLToDocument(new FileInputStream(eagFile));
-                            if(doc.getDocumentElement().getNodeName().equals("eag"))
+                            if (ReadXml.isEagFile(eagFile))
                                 new Eag2012Frame(eagFile, true, getContentPane().getSize(), (ProfileListModel) getXmlEadList().getModel(), labels);
                             else
                                 JOptionPane.showMessageDialog(rootPane, labels.getString("eag2012.notAnEagFile"));
@@ -557,6 +562,12 @@ public class DataPreparationToolGUI extends JFrame {
                             java.util.logging.Logger.getLogger(DataPreparationToolGUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
                         } catch (ParserConfigurationException ex) {
                             java.util.logging.Logger.getLogger(DataPreparationToolGUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+                        } catch (Exception ex) {
+                            try {
+                                JOptionPane.showMessageDialog(rootPane, labels.getString(ex.getMessage()));
+                            } catch (Exception ex1) {
+                                JOptionPane.showMessageDialog(rootPane, "Error...");
+                            }
                         }
                     }
                 }
