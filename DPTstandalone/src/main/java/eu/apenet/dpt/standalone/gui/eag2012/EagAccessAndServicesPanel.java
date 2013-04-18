@@ -708,6 +708,9 @@ public class EagAccessAndServicesPanel extends EagPanels {
             }
 
             builder.addLabel(labels.getString("eag2012.exhibition"),    cc.xy (1, rowNb));
+            if(exhibition.getWebpage() == null){
+                exhibition.setWebpage(new Webpage());
+            }
             TextFieldWithLanguage exhibitionTf = new TextFieldWithLanguage(exhibition.getDescriptiveNote().getP().get(0).getContent(), exhibition.getDescriptiveNote().getP().get(0).getLang(), exhibition.getWebpage().getHref(), exhibition.getWebpage().getContent());
             exhibitionTfs.add(exhibitionTf);
             builder.add(exhibitionTf.getTextField(),                     cc.xy (3, rowNb));
@@ -738,6 +741,9 @@ public class EagAccessAndServicesPanel extends EagPanels {
                 toursSessions.setWebpage(new Webpage());
             }
             builder.addLabel(labels.getString("eag2012.guidedToursAndSessions"),    cc.xy (1, rowNb));
+            if(toursSessions.getWebpage() == null){
+                toursSessions.setWebpage(new Webpage());
+            }
             TextFieldWithLanguage textFieldWithLanguage = new TextFieldWithLanguage(toursSessions.getDescriptiveNote().getP().get(0).getContent(), toursSessions.getDescriptiveNote().getP().get(0).getLang(), toursSessions.getWebpage().getHref(), toursSessions.getWebpage().getContent());
             toursAndSessionsTfs.add(textFieldWithLanguage);
             builder.add(textFieldWithLanguage.getTextField(),                     cc.xy (3, rowNb));
