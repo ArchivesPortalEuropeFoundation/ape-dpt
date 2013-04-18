@@ -269,17 +269,30 @@ public class EagDescriptionPanel extends EagPanels {
 
         builder.addSeparator(labels.getString("eag2012.yearsOfHoldings"), cc.xy(1, rowNb));
         setNextRow();
-        
-        builder.addLabel(labels.getString("eag2012.yearLabel"), cc.xy(1, rowNb));
-        dateHoldingsTf = new JTextField(repository.getHoldings().getDate().getContent());
-        builder.add(dateHoldingsTf, cc.xy(3, rowNb));
-        setNextRow();
-        builder.addLabel(labels.getString("eag2012.yearLabel") + " " + labels.getString("eag2012.fromLabel"), cc.xy(1, rowNb));
-        rangeFromTf = new JTextField(repository.getHoldings().getDateRange().getFromDate().getContent());
-        builder.add(rangeFromTf, cc.xy(3, rowNb));
-        builder.addLabel(labels.getString("eag2012.toLabel"), cc.xy(5, rowNb));
-        rangeToTf = new JTextField(repository.getHoldings().getDateRange().getToDate().getContent());
-        builder.add(rangeToTf, cc.xy(7, rowNb));
+
+        if(repository.getHoldings().getDateSet() != null) {
+            builder.addLabel(labels.getString("eag2012.yearLabel"), cc.xy(1, rowNb));
+            dateHoldingsTf = new JTextField(repository.getHoldings().getDateSet().getDate().getContent());
+            builder.add(dateHoldingsTf, cc.xy(3, rowNb));
+            setNextRow();
+            builder.addLabel(labels.getString("eag2012.yearLabel") + " " + labels.getString("eag2012.fromLabel"), cc.xy(1, rowNb));
+            rangeFromTf = new JTextField(repository.getHoldings().getDateSet().getDateRange().getFromDate().getContent());
+            builder.add(rangeFromTf, cc.xy(3, rowNb));
+            builder.addLabel(labels.getString("eag2012.toLabel"), cc.xy(5, rowNb));
+            rangeToTf = new JTextField(repository.getHoldings().getDateSet().getDateRange().getToDate().getContent());
+            builder.add(rangeToTf, cc.xy(7, rowNb));
+        } else {
+            builder.addLabel(labels.getString("eag2012.yearLabel"), cc.xy(1, rowNb));
+            dateHoldingsTf = new JTextField(repository.getHoldings().getDate().getContent());
+            builder.add(dateHoldingsTf, cc.xy(3, rowNb));
+            setNextRow();
+            builder.addLabel(labels.getString("eag2012.yearLabel") + " " + labels.getString("eag2012.fromLabel"), cc.xy(1, rowNb));
+            rangeFromTf = new JTextField(repository.getHoldings().getDateRange().getFromDate().getContent());
+            builder.add(rangeFromTf, cc.xy(3, rowNb));
+            builder.addLabel(labels.getString("eag2012.toLabel"), cc.xy(5, rowNb));
+            rangeToTf = new JTextField(repository.getHoldings().getDateRange().getToDate().getContent());
+            builder.add(rangeToTf, cc.xy(7, rowNb));
+        }
         setNextRow();
         builder.addLabel(labels.getString("eag2012.extent"), cc.xy(1, rowNb));
         extentTf = new JTextField(repository.getHoldings().getExtent().getNum().getContent());
