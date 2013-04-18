@@ -69,7 +69,7 @@ public class EagDescriptionPanel extends EagPanels {
 
         Repository repository = eag.getArchguide().getDesc().getRepositories().getRepository().get(0);
 
-        builder.addSeparator(labels.getString("eag2012.repositoryDescription"), cc.xy(1, rowNb));
+        builder.addSeparator(labels.getString("eag2012.repositoryDescription"), cc.xyw(1, rowNb, 7));
         setNextRow();
 
         if(repository.getRepositorhist() == null) {
@@ -148,7 +148,7 @@ public class EagDescriptionPanel extends EagPanels {
         addRuleSuppressionBtn.addActionListener(new AddRuleSuppressionBtnAction(eag, tabbedPane, model));
         setNextRow();
 
-        builder.addSeparator(labels.getString("eag2012.administrativeStructure"), cc.xy(1, rowNb));
+        builder.addSeparator(labels.getString("eag2012.administrativeStructure"), cc.xyw(1, rowNb, 7));
         setNextRow();
 
         if (repository.getAdminhierarchy() == null) {
@@ -172,7 +172,7 @@ public class EagDescriptionPanel extends EagPanels {
         addUnitAdministrativeStructureBtn.addActionListener(new EagDescriptionPanel.AddUnitAdministrativeStructureBtnAction(eag, tabbedPane, model));
         setNextRow();
 
-        builder.addSeparator(labels.getString("eag2012.buildingDescription"), cc.xy(1, rowNb));
+        builder.addSeparator(labels.getString("eag2012.buildingDescription"), cc.xyw(1, rowNb, 7));
         setNextRow();
 
         if (repository.getBuildinginfo() == null) {
@@ -225,7 +225,7 @@ public class EagDescriptionPanel extends EagPanels {
         setNextRow();
 
 
-        builder.addSeparator(labels.getString("eag2012.holdingDescription"), cc.xy(1, rowNb));
+        builder.addSeparator(labels.getString("eag2012.holdingDescription"), cc.xyw(1, rowNb, 7));
         setNextRow();
 
         if (repository.getHoldings() == null) {
@@ -601,6 +601,7 @@ public class EagDescriptionPanel extends EagPanels {
                         repository.getHoldings().setExtent(null);
                     }
                     if(StringUtils.isNotEmpty(dateHoldingsTf.getText()) && StringUtils.isNotEmpty(rangeFromTf.getText()) && StringUtils.isNotEmpty(rangeToTf.getText())) {
+                        LOG.info("1");
                         if(repository.getHoldings().getDateSet() == null) {
                             repository.getHoldings().setDateSet(new DateSet());
                             repository.getHoldings().getDateSet().setDate(new Date());
@@ -614,6 +615,7 @@ public class EagDescriptionPanel extends EagPanels {
                         repository.getHoldings().setDate(null);
                         repository.getHoldings().setDateRange(null);
                     } else {
+                        LOG.info("2");
                         if (StringUtils.isNotEmpty(dateHoldingsTf.getText())) {
                             repository.getHoldings().getDate().setContent(dateHoldingsTf.getText());
                         } else {
