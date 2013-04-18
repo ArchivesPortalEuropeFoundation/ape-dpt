@@ -35,9 +35,9 @@ public class Eag2012Frame extends JFrame {
 
     public Eag2012Frame(File eagFile, boolean isEag2012, Dimension dimension, ProfileListModel model, ResourceBundle labels) throws Exception {
         String namespace = ReadXml.getXmlNamespace(eagFile);
-        if(isEag2012 && !namespace.equals("http://www.archivesportaleurope.net/Portal/profiles/eag_2012/")) {
+        if(isEag2012 && !namespace.equals(EagNamespaceMapper.EAG_URI)) {
             throw new Exception("eag2012.error.fileNotInEag2012Namespace");
-        } else if(!isEag2012 && namespace.equals("http://www.archivesportaleurope.net/Portal/profiles/eag_2012/")) {
+        } else if(!isEag2012 && namespace.equals(EagNamespaceMapper.EAG_URI)) {
             throw new Exception("eag2012.error.fileInEag2012Namespace");
         }
         if(!isEag2012) {
