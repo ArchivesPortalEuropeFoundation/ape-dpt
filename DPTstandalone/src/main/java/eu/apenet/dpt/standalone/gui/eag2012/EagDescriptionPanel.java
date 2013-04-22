@@ -95,10 +95,13 @@ public class EagDescriptionPanel extends EagPanels {
         setNextRow();
         
         if (repository.getRepositorfound() == null) {
-            Repositorfound repositorfound = new Repositorfound();
-            repositorfound.setDate(new Date());
-            repositorfound.getRule().add(new Rule());
-            repository.setRepositorfound(repositorfound);
+            repository.setRepositorfound(new Repositorfound());
+        }
+        if(repository.getRepositorfound().getDate() == null) {
+            repository.getRepositorfound().setDate(new Date());
+        }
+        if(repository.getRepositorfound().getRule().size() == 0) {
+            repository.getRepositorfound().getRule().add(new Rule());
         }
 
         builder.addLabel(labels.getString("eag2012.dateArchiveFoundation"), cc.xy(1, rowNb));
@@ -122,10 +125,13 @@ public class EagDescriptionPanel extends EagPanels {
         setNextRow();
 
         if (repository.getRepositorsup() == null) {
-            Repositorsup repositorsup = new Repositorsup();
-            repositorsup.setDate(new Date());
-            repositorsup.getRule().add(new Rule());
-            repository.setRepositorsup(repositorsup);
+            repository.setRepositorsup(new Repositorsup());
+        }
+        if(repository.getRepositorsup().getDate() == null) {
+            repository.getRepositorsup().setDate(new Date());
+        }
+        if(repository.getRepositorsup().getRule().size() == 0) {
+            repository.getRepositorsup().getRule().add(new Rule());
         }
 
         builder.addLabel(labels.getString("eag2012.dateArchiveClosure"), cc.xy(1, rowNb));
@@ -332,6 +338,10 @@ public class EagDescriptionPanel extends EagPanels {
                 super.updateEagObject();
             } catch (Eag2012FormException e) {
             }
+            if(eag.getArchguide().getDesc().getRepositories().getRepository().get(0).getRepositorhist() == null) {
+                eag.getArchguide().getDesc().getRepositories().getRepository().get(0).setRepositorhist(new Repositorhist());
+                eag.getArchguide().getDesc().getRepositories().getRepository().get(0).getRepositorhist().setDescriptiveNote(new DescriptiveNote());
+            }
             eag.getArchguide().getDesc().getRepositories().getRepository().get(0).getRepositorhist().getDescriptiveNote().getP().add(new P());
             reloadTabbedPanel(new EagDescriptionPanel(eag, tabbedPane, eag2012Frame, model, labels).buildEditorPanel(errors), 4);
         }
@@ -347,6 +357,9 @@ public class EagDescriptionPanel extends EagPanels {
                 super.updateEagObject();
             } catch (Eag2012FormException e) {
             }
+            if(eag.getArchguide().getDesc().getRepositories().getRepository().get(0).getRepositorhist() == null) {
+                eag.getArchguide().getDesc().getRepositories().getRepository().get(0).setRepositorfound(new Repositorfound());
+            }
             eag.getArchguide().getDesc().getRepositories().getRepository().get(0).getRepositorfound().getRule().add(new Rule());
             reloadTabbedPanel(new EagDescriptionPanel(eag, tabbedPane, eag2012Frame, model, labels).buildEditorPanel(errors), 4);
         }
@@ -361,6 +374,9 @@ public class EagDescriptionPanel extends EagPanels {
             try {
                 super.updateEagObject();
             } catch (Eag2012FormException e) {
+            }
+            if(eag.getArchguide().getDesc().getRepositories().getRepository().get(0).getRepositorhist() == null) {
+                eag.getArchguide().getDesc().getRepositories().getRepository().get(0).setRepositorsup(new Repositorsup());
             }
             eag.getArchguide().getDesc().getRepositories().getRepository().get(0).getRepositorsup().getRule().add(new Rule());
             reloadTabbedPanel(new EagDescriptionPanel(eag, tabbedPane, eag2012Frame, model, labels).buildEditorPanel(errors), 4);
@@ -379,8 +395,9 @@ public class EagDescriptionPanel extends EagPanels {
                 super.updateEagObject();
             } catch (Eag2012FormException e) {
             }
-            if(eag.getArchguide().getDesc().getRepositories().getRepository().get(0).getAdminhierarchy() == null)
-                return;
+            if(eag.getArchguide().getDesc().getRepositories().getRepository().get(0).getAdminhierarchy() == null) {
+                eag.getArchguide().getDesc().getRepositories().getRepository().get(0).setAdminhierarchy(new Adminhierarchy());
+            }
             eag.getArchguide().getDesc().getRepositories().getRepository().get(0).getAdminhierarchy().getAdminunit().add(new Adminunit());
             reloadTabbedPanel(new EagDescriptionPanel(eag, tabbedPane, eag2012Frame, model, labels).buildEditorPanel(errors), 4);
         }
@@ -398,6 +415,11 @@ public class EagDescriptionPanel extends EagPanels {
                 super.updateEagObject();
             } catch (Eag2012FormException e) {
             }
+            if(eag.getArchguide().getDesc().getRepositories().getRepository().get(0).getBuildinginfo() == null) {
+                eag.getArchguide().getDesc().getRepositories().getRepository().get(0).setBuildinginfo(new Buildinginfo());
+                eag.getArchguide().getDesc().getRepositories().getRepository().get(0).getBuildinginfo().setBuilding(new Building());
+                eag.getArchguide().getDesc().getRepositories().getRepository().get(0).getBuildinginfo().getBuilding().setDescriptiveNote(new DescriptiveNote());
+            }
             eag.getArchguide().getDesc().getRepositories().getRepository().get(0).getBuildinginfo().getBuilding().getDescriptiveNote().getP().add(new P());
             reloadTabbedPanel(new EagDescriptionPanel(eag, tabbedPane, eag2012Frame, model, labels).buildEditorPanel(errors), 4);
         }
@@ -414,6 +436,10 @@ public class EagDescriptionPanel extends EagPanels {
             try {
                 super.updateEagObject();
             } catch (Eag2012FormException e) {
+            }
+            if(eag.getArchguide().getDesc().getRepositories().getRepository().get(0).getHoldings() == null) {
+                eag.getArchguide().getDesc().getRepositories().getRepository().get(0).setHoldings(new Holdings());
+                eag.getArchguide().getDesc().getRepositories().getRepository().get(0).getHoldings().setDescriptiveNote(new DescriptiveNote());
             }
             eag.getArchguide().getDesc().getRepositories().getRepository().get(0).getHoldings().getDescriptiveNote().getP().add(new P());
             reloadTabbedPanel(new EagDescriptionPanel(eag, tabbedPane, eag2012Frame, model, labels).buildEditorPanel(errors), 4);
@@ -596,12 +622,13 @@ public class EagDescriptionPanel extends EagPanels {
                         }
                     }
                     if (StringUtils.isNotEmpty(extentTf.getText())) {
+                        counterArchivalAndOthersTfs++;
                         repository.getHoldings().getExtent().getNum().setContent(extentTf.getText());
                     } else {
                         repository.getHoldings().setExtent(null);
                     }
                     if(StringUtils.isNotEmpty(dateHoldingsTf.getText()) && StringUtils.isNotEmpty(rangeFromTf.getText()) && StringUtils.isNotEmpty(rangeToTf.getText())) {
-                        LOG.info("1");
+                        counterArchivalAndOthersTfs++;
                         if(repository.getHoldings().getDateSet() == null) {
                             repository.getHoldings().setDateSet(new DateSet());
                             repository.getHoldings().getDateSet().setDate(new Date());
@@ -615,13 +642,15 @@ public class EagDescriptionPanel extends EagPanels {
                         repository.getHoldings().setDate(null);
                         repository.getHoldings().setDateRange(null);
                     } else {
-                        LOG.info("2");
+                        repository.getHoldings().setDateSet(null);
                         if (StringUtils.isNotEmpty(dateHoldingsTf.getText())) {
+                            counterArchivalAndOthersTfs++;
                             repository.getHoldings().getDate().setContent(dateHoldingsTf.getText());
                         } else {
                             repository.getHoldings().setDate(null);
                         }
                         if (StringUtils.isNotEmpty(rangeFromTf.getText()) && StringUtils.isNotEmpty(rangeToTf.getText())) {
+                            counterArchivalAndOthersTfs++;
                             repository.getHoldings().getDateRange().getFromDate().setContent(rangeFromTf.getText());
                             repository.getHoldings().getDateRange().getToDate().setContent(rangeToTf.getText());
                         } else {
