@@ -98,24 +98,18 @@ public class EagInstitutionPanel extends EagPanels {
             setNextRow();
         }
 
+        if(eag.getControl().getOtherRecordId().size() == 0)
+            eag.getControl().getOtherRecordId().add(new OtherRecordId());
         otherRecordIdTfs = new ArrayList<TextFieldWithCheckbox>(eag.getControl().getOtherRecordId().size());
-        int nbOtherRecordIds = 0;
         for(OtherRecordId otherRecordId : eag.getControl().getOtherRecordId()) {
             TextFieldWithCheckbox textFieldWithCheckbox = new TextFieldWithCheckbox(otherRecordId.getValue(), otherRecordId.getLocalType());
             otherRecordIdTfs.add(textFieldWithCheckbox);
-            if(nbOtherRecordIds++ == 0)
-                builder.addLabel(labels.getString("eag2012.identifierInstitutionLabel") + "*",      cc.xy (1, rowNb));
-            else
-                builder.addLabel(labels.getString("eag2012.identifierInstitutionLabel"), cc.xy(1, rowNb));
+            builder.addLabel(labels.getString("eag2012.identifierInstitutionLabel"), cc.xy(1, rowNb));
             builder.add(textFieldWithCheckbox.getTextField(),               cc.xy (3, rowNb));
-            builder.addLabel(labels.getString("eag2012.isThisISILLabel"),               cc.xy (5, rowNb));
+            builder.addLabel(labels.getString("eag2012.isThisISILLabel"), cc.xy(5, rowNb));
             textFieldWithCheckbox.getTextField().addKeyListener(new CheckKeyListener(textFieldWithCheckbox));
             builder.add(textFieldWithCheckbox.getIsilOrNotCombo(),               cc.xy (7, rowNb));
             textFieldWithCheckbox.getIsilOrNotCombo().addActionListener(new ComboboxActionListener(textFieldWithCheckbox));
-            setNextRow();
-        }
-        if(errors.contains("otherRecordIdTfs")) {
-            builder.add(createErrorLabel(labels.getString("eag2012.errors.otherId")),          cc.xy (1, rowNb));
             setNextRow();
         }
 
@@ -270,7 +264,7 @@ public class EagInstitutionPanel extends EagPanels {
             builder.add(telephoneTf, cc.xy (3, rowNb));
             setNextRow();
 
-            builder.addLabel(labels.getString("eag2012.emailLabel"),    cc.xy (1, rowNb));
+            builder.addLabel(labels.getString("eag2012.emailLabel"), cc.xy(1, rowNb));
             if(repository.getEmail().size() > 0) {
                 emailTf = new JTextField(repository.getEmail().get(0).getHref());
                 emailTitleTf = new JTextField(repository.getEmail().get(0).getContent());
@@ -278,12 +272,12 @@ public class EagInstitutionPanel extends EagPanels {
                 emailTf = new JTextField();
                 emailTitleTf = new JTextField();
             }
-            builder.add(emailTf, cc.xy (3, rowNb));
+            builder.add(emailTf, cc.xy(3, rowNb));
             builder.addLabel(labels.getString("eag2012.linkTitleLabel"),             cc.xy (5, rowNb));
             builder.add(emailTitleTf,                                            cc.xy (7, rowNb));
             setNextRow();
 
-            builder.addLabel(labels.getString("eag2012.webpageLabel") + "*",    cc.xy (1, rowNb));
+            builder.addLabel(labels.getString("eag2012.webpageLabel") + "*", cc.xy(1, rowNb));
             if(repository.getWebpage().size() > 0) {
                 webpageTf = new JTextField(repository.getWebpage().get(0).getHref());
                 if(!StringUtils.isBlank(repository.getWebpage().get(0).getContent()))
@@ -294,7 +288,7 @@ public class EagInstitutionPanel extends EagPanels {
                 webpageTf = new JTextField();
                 webpageTitleTf = new JTextField();
             }
-            builder.add(webpageTf, cc.xy (3, rowNb));
+            builder.add(webpageTf, cc.xy(3, rowNb));
             builder.addLabel(labels.getString("eag2012.linkTitleLabel"),             cc.xy (5, rowNb));
             builder.add(webpageTitleTf,                                            cc.xy (7, rowNb));
             if(errors.contains("webpageTf")) {
@@ -317,7 +311,7 @@ public class EagInstitutionPanel extends EagPanels {
                 setNextRow();
             }
             if(errors.contains("openingHoursTfs")) {
-                builder.add(createErrorLabel(labels.getString("eag2012.errors.openingHours")),          cc.xy (1, rowNb));
+                builder.add(createErrorLabel(labels.getString("eag2012.errors.openingHours")), cc.xy(1, rowNb));
                 setNextRow();
             }
 
@@ -335,7 +329,7 @@ public class EagInstitutionPanel extends EagPanels {
                 setNextRow();
             }
 
-            builder.addLabel(labels.getString("eag2012.accessiblePublicLabel") + "*",    cc.xy (1, rowNb));
+            builder.addLabel(labels.getString("eag2012.accessiblePublicLabel") + "*", cc.xy(1, rowNb));
             if(Arrays.asList(yesOrNo).contains(repository.getAccess().getQuestion())) {
                 accessiblePublicCombo.setSelectedItem(repository.getAccess().getQuestion());
             }
