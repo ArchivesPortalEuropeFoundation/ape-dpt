@@ -277,13 +277,13 @@ public class EagDescriptionPanel extends EagPanels {
             holdingsYearsTfs = new ArrayList<TextFieldWithDate>(repository.getHoldings().getDateSet().getDateOrDateRange().size());
             for (Object dateObj : repository.getHoldings().getDateSet().getDateOrDateRange()) {
                 if (dateObj instanceof Date) {
-                    TextFieldWithDate textFieldWithDate = new TextFieldWithDate("", "", "", "", repository.getHoldings().getDateSet().getDate().getContent());
+                    TextFieldWithDate textFieldWithDate = new TextFieldWithDate("", "", "", "", ((Date)dateObj).getContent());
                     holdingsYearsTfs.add(textFieldWithDate);
                     builder.addLabel(labels.getString("eag2012.yearLabel"), cc.xy(1, rowNb));
                     builder.add(textFieldWithDate.getDateField(), cc.xy(3, rowNb));
                 }
                 if (dateObj instanceof DateRange) {
-                    TextFieldWithDate textFieldWithDate = new TextFieldWithDate("", "", repository.getHoldings().getDateSet().getDateRange().getFromDate().getContent(), repository.getHoldings().getDateSet().getDateRange().getToDate().getContent(), "");
+                    TextFieldWithDate textFieldWithDate = new TextFieldWithDate("", "", ((DateRange)dateObj).getFromDate().getContent(), ((DateRange)dateObj).getToDate().getContent(), "");
                     holdingsYearsTfs.add(textFieldWithDate);
                     builder.addLabel(labels.getString("eag2012.yearLabel") + " " + labels.getString("eag2012.fromLabel"), cc.xy(1, rowNb));
                     builder.add(textFieldWithDate.getFromDateField(), cc.xy(3, rowNb));
@@ -505,7 +505,10 @@ public class EagDescriptionPanel extends EagPanels {
             if (eag.getArchguide().getDesc().getRepositories().getRepository().get(0).getHoldings().getDateSet() == null) {
                 eag.getArchguide().getDesc().getRepositories().getRepository().get(0).getHoldings().setDateSet(new DateSet());
             }
-            eag.getArchguide().getDesc().getRepositories().getRepository().get(0).getHoldings().getDateSet().getDateOrDateRange().add(new DateRange());
+            DateRange dateRange = new DateRange();
+            dateRange.setFromDate(new FromDate());
+            dateRange.setToDate(new ToDate());
+            eag.getArchguide().getDesc().getRepositories().getRepository().get(0).getHoldings().getDateSet().getDateOrDateRange().add(dateRange);
             reloadTabbedPanel(new EagDescriptionPanel(eag, tabbedPane, eag2012Frame, model, labels).buildEditorPanel(errors), 4);
         }
     }
