@@ -91,6 +91,7 @@ public class EagInstitutionPanel extends EagPanels {
         setNextRow();
         builder.addLabel(labels.getString("eag2012.countryCodeLabel") + "*",          cc.xy (1, rowNb));
         countryCodeTf = new JTextField(eag.getArchguide().getIdentity().getRepositorid().getCountrycode());
+        countryCodeTf.addKeyListener(new CheckKeyListener());
         builder.add(countryCodeTf, cc.xy(3, rowNb));
         setNextRow();
         if(errors.contains("countryCodeTf")) {
@@ -107,7 +108,7 @@ public class EagInstitutionPanel extends EagPanels {
             builder.addLabel(labels.getString("eag2012.identifierInstitutionLabel"), cc.xy(1, rowNb));
             builder.add(textFieldWithCheckbox.getTextField(),               cc.xy (3, rowNb));
             builder.addLabel(labels.getString("eag2012.isThisISILLabel"), cc.xy(5, rowNb));
-            textFieldWithCheckbox.getTextField().addKeyListener(new CheckKeyListener(textFieldWithCheckbox));
+            textFieldWithCheckbox.getTextField().addKeyListener(new CheckKeyListener());
             builder.add(textFieldWithCheckbox.getIsilOrNotCombo(),               cc.xy (7, rowNb));
             textFieldWithCheckbox.getIsilOrNotCombo().addActionListener(new ComboboxActionListener(textFieldWithCheckbox));
             setNextRow();
@@ -792,11 +793,6 @@ public class EagInstitutionPanel extends EagPanels {
     }
 
     public class CheckKeyListener implements KeyListener {
-        private TextFieldWithCheckbox textFieldWithCheckbox;
-
-        public CheckKeyListener(TextFieldWithCheckbox textFieldWithCheckbox) {
-            this.textFieldWithCheckbox = textFieldWithCheckbox;
-        }
 
         public void keyTyped(KeyEvent keyEvent) {
         }
