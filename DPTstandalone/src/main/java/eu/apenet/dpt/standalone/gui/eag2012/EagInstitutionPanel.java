@@ -331,7 +331,7 @@ public class EagInstitutionPanel extends EagPanels {
             }
 
             builder.addLabel(labels.getString("eag2012.accessiblePublicLabel") + "*", cc.xy(1, rowNb));
-            if(Arrays.asList(yesOrNo).contains(repository.getAccess().getQuestion())) {
+            if(repository.getAccess() != null && Arrays.asList(yesOrNo).contains(repository.getAccess().getQuestion())) {
                 accessiblePublicCombo.setSelectedItem(repository.getAccess().getQuestion());
             }
             builder.add(accessiblePublicCombo, cc.xy(3, rowNb));
@@ -702,6 +702,9 @@ public class EagInstitutionPanel extends EagPanels {
                     }
                 }
 
+                if(repository.getAccess() == null) {
+                    repository.setAccess(new Access());
+                }
                 if(!accessiblePublicCombo.getSelectedItem().equals(repository.getAccess().getQuestion())) {
                     repository.getAccess().setQuestion(accessiblePublicCombo.getSelectedItem().toString());
                     hasChanged = true;
@@ -735,6 +738,8 @@ public class EagInstitutionPanel extends EagPanels {
                     eag.getRelations().getResourceRelation().get(0).setDescriptiveNote(new DescriptiveNote());
                     eag.getRelations().getResourceRelation().get(0).getDescriptiveNote().getP().add(new P());
                     eag.getRelations().getResourceRelation().get(0).getDescriptiveNote().getP().get(0).setContent(refInstitutionHoldingsGuideTitleTf.getText());
+                } else if(eag.getRelations().getEagRelation().size() == 0) {
+                    eag.setRelations(null);
                 }
 
                 Searchroom searchroom = repository.getServices().getSearchroom();

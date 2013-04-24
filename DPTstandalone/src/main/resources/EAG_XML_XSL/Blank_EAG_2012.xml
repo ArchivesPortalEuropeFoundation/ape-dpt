@@ -48,32 +48,24 @@
     <archguide>
         <identity>
             <repositorid countrycode="" />
-            <otherRepositorId></otherRepositorId>
             <autform></autform>
         </identity>
         <desc>
             <repositories>
                 <repository>
-                    <repositoryName></repositoryName>
                     <repositoryRole>Head quarter</repositoryRole>
                     <geogarea></geogarea>
                     <location>
                         <country></country>
                         <municipalityPostalcode></municipalityPostalcode>
-                        <localentity></localentity>
                         <street></street>
                     </location>
                     <telephone></telephone>
-                    <fax></fax>
                     <email href=""></email>
                     <webpage href=""></webpage>
                     <timetable>
                         <opening></opening>
                     </timetable>
-                    <access question="">
-                        <termsOfUse></termsOfUse>
-                    </access>
-                    <handicapped question=""></handicapped>
                 </repository>
             </repositories>
         </desc>
