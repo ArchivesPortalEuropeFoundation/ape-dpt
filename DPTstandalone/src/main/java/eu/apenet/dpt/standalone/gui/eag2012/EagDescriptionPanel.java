@@ -14,7 +14,6 @@ import java.awt.event.ActionEvent;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
-import javax.swing.text.AbstractDocument.Content;
 
 /**
  * User: Yoann Moranville Date: 28/11/2012
@@ -33,9 +32,7 @@ public class EagDescriptionPanel extends EagPanels {
     private JTextField repositoryAreaTf;
     private JTextField lengthShelfTf;
     private List<TextFieldWithLanguage> archivalAndOthersTfs;
-    private JTextField dateHoldingsTf;
-    private JTextField rangeFromTf;
-    private JTextField rangeToTf;
+    private List<TextFieldWithDate> holdingsYearsTfs;
     private JTextField extentTf;
 
     public EagDescriptionPanel(Eag eag, JTabbedPane tabbedPane, JFrame eag2012Frame, ProfileListModel model, ResourceBundle labels) {
@@ -72,13 +69,13 @@ public class EagDescriptionPanel extends EagPanels {
         builder.addSeparator(labels.getString("eag2012.repositoryDescription"), cc.xyw(1, rowNb, 7));
         setNextRow();
 
-        if(repository.getRepositorhist() == null) {
-         DescriptiveNote descriptiveNote = new DescriptiveNote();
-         descriptiveNote.getP().add(new P());
-         Repositorhist repositorhist = new Repositorhist();
-         repositorhist.setDescriptiveNote(descriptiveNote);
-         repository.setRepositorhist(repositorhist);
-         }
+        if (repository.getRepositorhist() == null) {
+            DescriptiveNote descriptiveNote = new DescriptiveNote();
+            descriptiveNote.getP().add(new P());
+            Repositorhist repositorhist = new Repositorhist();
+            repositorhist.setDescriptiveNote(descriptiveNote);
+            repository.setRepositorhist(repositorhist);
+        }
         repositoryHistoryTfs = new ArrayList<TextFieldWithLanguage>(repository.getRepositorhist().getDescriptiveNote().getP().size());
         for (P p : repository.getRepositorhist().getDescriptiveNote().getP()) {
             builder.addLabel(labels.getString("eag2012.historyOfArchive"), cc.xy(1, rowNb));
@@ -93,7 +90,7 @@ public class EagDescriptionPanel extends EagPanels {
         builder.add(addRepositorhistDescriptionBtn, cc.xy(1, rowNb));
         addRepositorhistDescriptionBtn.addActionListener(new EagDescriptionPanel.AddRepositorhistDescriptionBtnAction(eag, tabbedPane, model));
         setNextRow();
-        
+
         if (repository.getRepositorfound() == null) {
             repository.setRepositorfound(new Repositorfound());
         }
@@ -110,7 +107,7 @@ public class EagDescriptionPanel extends EagPanels {
         setNextRow();
 
         repositoryFoundationTfs = new ArrayList<TextFieldWithLanguage>(repository.getRepositorfound().getRule().size());
-        for(Rule rule : repository.getRepositorfound().getRule()) {
+        for (Rule rule : repository.getRepositorfound().getRule()) {
             TextFieldWithLanguage textFieldWithLanguage = new TextFieldWithLanguage(rule.getContent(), rule.getLang());
             repositoryFoundationTfs.add(textFieldWithLanguage);
             builder.addLabel(labels.getString("eag2012.archiveFoundingAct"), cc.xy(1, rowNb));
@@ -140,7 +137,7 @@ public class EagDescriptionPanel extends EagPanels {
         setNextRow();
 
         repositorySuppressionTfs = new ArrayList<TextFieldWithLanguage>(repository.getRepositorsup().getRule().size());
-        for(Rule rule : repository.getRepositorsup().getRule()) {
+        for (Rule rule : repository.getRepositorsup().getRule()) {
             TextFieldWithLanguage textFieldWithLanguage = new TextFieldWithLanguage(rule.getContent(), rule.getLang());
             repositorySuppressionTfs.add(textFieldWithLanguage);
             builder.addLabel(labels.getString("eag2012.archiveClosureAct"), cc.xy(1, rowNb));
@@ -276,29 +273,50 @@ public class EagDescriptionPanel extends EagPanels {
         builder.addSeparator(labels.getString("eag2012.yearsOfHoldings"), cc.xy(1, rowNb));
         setNextRow();
 
-        if(repository.getHoldings().getDateSet() != null) {
-            builder.addLabel(labels.getString("eag2012.yearLabel"), cc.xy(1, rowNb));
-            dateHoldingsTf = new JTextField(repository.getHoldings().getDateSet().getDate().getContent());
-            builder.add(dateHoldingsTf, cc.xy(3, rowNb));
-            setNextRow();
-            builder.addLabel(labels.getString("eag2012.yearLabel") + " " + labels.getString("eag2012.fromLabel"), cc.xy(1, rowNb));
-            rangeFromTf = new JTextField(repository.getHoldings().getDateSet().getDateRange().getFromDate().getContent());
-            builder.add(rangeFromTf, cc.xy(3, rowNb));
-            builder.addLabel(labels.getString("eag2012.toLabel"), cc.xy(5, rowNb));
-            rangeToTf = new JTextField(repository.getHoldings().getDateSet().getDateRange().getToDate().getContent());
-            builder.add(rangeToTf, cc.xy(7, rowNb));
+        if (repository.getHoldings().getDateSet() != null) {
+            holdingsYearsTfs = new ArrayList<TextFieldWithDate>(repository.getHoldings().getDateSet().getDateOrDateRange().size());
+            for (Object dateObj : repository.getHoldings().getDateSet().getDateOrDateRange()) {
+                if (dateObj instanceof Date) {
+                    TextFieldWithDate textFieldWithDate = new TextFieldWithDate("", "", "", "", repository.getHoldings().getDateSet().getDate().getContent());
+                    holdingsYearsTfs.add(textFieldWithDate);
+                    builder.addLabel(labels.getString("eag2012.yearLabel"), cc.xy(1, rowNb));
+                    builder.add(textFieldWithDate.getDateField(), cc.xy(3, rowNb));
+                }
+                if (dateObj instanceof DateRange) {
+                    TextFieldWithDate textFieldWithDate = new TextFieldWithDate("", "", repository.getHoldings().getDateSet().getDateRange().getFromDate().getContent(), repository.getHoldings().getDateSet().getDateRange().getToDate().getContent(), "");
+                    holdingsYearsTfs.add(textFieldWithDate);
+                    builder.addLabel(labels.getString("eag2012.yearLabel") + " " + labels.getString("eag2012.fromLabel"), cc.xy(1, rowNb));
+                    builder.add(textFieldWithDate.getFromDateField(), cc.xy(3, rowNb));
+                    builder.addLabel(labels.getString("eag2012.toLabel"), cc.xy(5, rowNb));
+                    builder.add(textFieldWithDate.getToDateField(), cc.xy(7, rowNb));
+                }
+                setNextRow();
+            }
         } else {
-            builder.addLabel(labels.getString("eag2012.yearLabel"), cc.xy(1, rowNb));
-            dateHoldingsTf = new JTextField(repository.getHoldings().getDate().getContent());
-            builder.add(dateHoldingsTf, cc.xy(3, rowNb));
-            setNextRow();
-            builder.addLabel(labels.getString("eag2012.yearLabel") + " " + labels.getString("eag2012.fromLabel"), cc.xy(1, rowNb));
-            rangeFromTf = new JTextField(repository.getHoldings().getDateRange().getFromDate().getContent());
-            builder.add(rangeFromTf, cc.xy(3, rowNb));
-            builder.addLabel(labels.getString("eag2012.toLabel"), cc.xy(5, rowNb));
-            rangeToTf = new JTextField(repository.getHoldings().getDateRange().getToDate().getContent());
-            builder.add(rangeToTf, cc.xy(7, rowNb));
+            holdingsYearsTfs = new ArrayList<TextFieldWithDate>();
+            if (repository.getHoldings().getDate() != null) {
+                TextFieldWithDate textFieldWithDate = new TextFieldWithDate("", "", "", "", repository.getHoldings().getDate().getContent());
+                holdingsYearsTfs.add(textFieldWithDate);
+                builder.addLabel(labels.getString("eag2012.yearLabel"), cc.xy(1, rowNb));
+                builder.add(textFieldWithDate.getDateField(), cc.xy(3, rowNb));
+                setNextRow();
+            }
+            if (repository.getHoldings().getDateRange() != null) {
+                TextFieldWithDate textFieldWithDate = new TextFieldWithDate("", "", repository.getHoldings().getDateRange().getFromDate().getContent(), repository.getHoldings().getDateRange().getToDate().getContent(), "");
+                holdingsYearsTfs.add(textFieldWithDate);
+                builder.addLabel(labels.getString("eag2012.yearLabel") + " " + labels.getString("eag2012.fromLabel"), cc.xy(1, rowNb));
+                builder.add(textFieldWithDate.getFromDateField(), cc.xy(3, rowNb));
+                builder.addLabel(labels.getString("eag2012.toLabel"), cc.xy(5, rowNb));
+                builder.add(textFieldWithDate.getToDateField(), cc.xy(7, rowNb));
+                setNextRow();
+            }
         }
+        JButton addSingleYearBtn = new ButtonEag(labels.getString("eag2012.addYearButton"));
+        addSingleYearBtn.addActionListener(new AddSingleYearAction(eag, tabbedPane, model));
+        builder.add(addSingleYearBtn, cc.xy(1, rowNb));
+        JButton addYearRangeBtn = new ButtonEag(labels.getString("eag2012.addYearRangeButton"));
+        addYearRangeBtn.addActionListener(new AddYearRangeAction(eag, tabbedPane, model));
+        builder.add(addYearRangeBtn, cc.xy(3, rowNb));
         setNextRow();
         builder.addLabel(labels.getString("eag2012.extent"), cc.xy(1, rowNb));
         extentTf = new JTextField(repository.getHoldings().getExtent().getNum().getContent());
@@ -446,6 +464,52 @@ public class EagDescriptionPanel extends EagPanels {
         }
     }
 
+    public class AddSingleYearAction extends EagDescriptionPanel.UpdateEagObject {
+
+        AddSingleYearAction(Eag eag, JTabbedPane tabbedPane, ProfileListModel model) {
+            super(eag, tabbedPane, model);
+        }
+
+        @Override
+        public void actionPerformed(ActionEvent actionEvent) {
+            try {
+                super.updateEagObject();
+            } catch (Eag2012FormException e) {
+            }
+            if(eag.getArchguide().getDesc().getRepositories().getRepository().get(0).getHoldings() == null) {
+                eag.getArchguide().getDesc().getRepositories().getRepository().get(0).setHoldings(new Holdings());
+            }
+            if (eag.getArchguide().getDesc().getRepositories().getRepository().get(0).getHoldings().getDateSet() == null) {
+                eag.getArchguide().getDesc().getRepositories().getRepository().get(0).getHoldings().setDateSet(new DateSet());
+            }
+            eag.getArchguide().getDesc().getRepositories().getRepository().get(0).getHoldings().getDateSet().getDateOrDateRange().add(new Date());
+            reloadTabbedPanel(new EagDescriptionPanel(eag, tabbedPane, eag2012Frame, model, labels).buildEditorPanel(errors), 4);
+        }
+    }
+
+    public class AddYearRangeAction extends EagDescriptionPanel.UpdateEagObject {
+
+        AddYearRangeAction(Eag eag, JTabbedPane tabbedPane, ProfileListModel model) {
+            super(eag, tabbedPane, model);
+        }
+
+        @Override
+        public void actionPerformed(ActionEvent actionEvent) {
+            try {
+                super.updateEagObject();
+            } catch (Eag2012FormException e) {
+            }
+            if(eag.getArchguide().getDesc().getRepositories().getRepository().get(0).getHoldings() == null) {
+                eag.getArchguide().getDesc().getRepositories().getRepository().get(0).setHoldings(new Holdings());
+            }
+            if (eag.getArchguide().getDesc().getRepositories().getRepository().get(0).getHoldings().getDateSet() == null) {
+                eag.getArchguide().getDesc().getRepositories().getRepository().get(0).getHoldings().setDateSet(new DateSet());
+            }
+            eag.getArchguide().getDesc().getRepositories().getRepository().get(0).getHoldings().getDateSet().getDateOrDateRange().add(new DateRange());
+            reloadTabbedPanel(new EagDescriptionPanel(eag, tabbedPane, eag2012Frame, model, labels).buildEditorPanel(errors), 4);
+        }
+    }
+
     public class SaveBtnAction extends EagDescriptionPanel.UpdateEagObject {
 
         SaveBtnAction(Eag eag, JTabbedPane tabbedPane, ProfileListModel model) {
@@ -521,7 +585,7 @@ public class EagDescriptionPanel extends EagPanels {
                         }
                     }
                 }
-                if (counterRepositorhistoryTfs == 0) 
+                if (counterRepositorhistoryTfs == 0)
                     repository.setRepositorhist(null);
 
 
@@ -529,10 +593,10 @@ public class EagDescriptionPanel extends EagPanels {
                     repository.getRepositorfound().getDate().setContent(repositoryFoundationDateTf.getText());
                 }
                 boolean repositoryFoundationExists = false;
-                if(repositoryFoundationTfs.size() > 0) {
+                if (repositoryFoundationTfs.size() > 0) {
                     repository.getRepositorfound().getRule().clear();
-                    for(TextFieldWithLanguage textFieldWithLanguage : repositoryFoundationTfs) {
-                        if(StringUtils.isNotEmpty(textFieldWithLanguage.getTextValue())) {
+                    for (TextFieldWithLanguage textFieldWithLanguage : repositoryFoundationTfs) {
+                        if (StringUtils.isNotEmpty(textFieldWithLanguage.getTextValue())) {
                             Rule rule = new Rule();
                             rule.setContent(textFieldWithLanguage.getTextValue());
                             rule.setLang(textFieldWithLanguage.getLanguage());
@@ -541,7 +605,7 @@ public class EagDescriptionPanel extends EagPanels {
                         }
                     }
                 }
-                if(!repositoryFoundationExists) {
+                if (!repositoryFoundationExists) {
                     repository.setRepositorfound(null);
                 }
 
@@ -549,10 +613,10 @@ public class EagDescriptionPanel extends EagPanels {
                     repository.getRepositorsup().getDate().setContent(repositorySuppressionDateTf.getText());
                 }
                 boolean repositorySuppressionExists = false;
-                if(repositorySuppressionTfs.size() > 0) {
+                if (repositorySuppressionTfs.size() > 0) {
                     repository.getRepositorsup().getRule().clear();
-                    for(TextFieldWithLanguage textFieldWithLanguage : repositorySuppressionTfs) {
-                        if(StringUtils.isNotEmpty(textFieldWithLanguage.getTextValue())) {
+                    for (TextFieldWithLanguage textFieldWithLanguage : repositorySuppressionTfs) {
+                        if (StringUtils.isNotEmpty(textFieldWithLanguage.getTextValue())) {
                             Rule rule = new Rule();
                             rule.setContent(textFieldWithLanguage.getTextValue());
                             rule.setLang(textFieldWithLanguage.getLanguage());
@@ -561,7 +625,7 @@ public class EagDescriptionPanel extends EagPanels {
                         }
                     }
                 }
-                if(!repositorySuppressionExists) {
+                if (!repositorySuppressionExists) {
                     repository.setRepositorsup(null);
                 }
 
@@ -582,7 +646,7 @@ public class EagDescriptionPanel extends EagPanels {
                 }
                 if(counterUnitAdministrativeStructureTfs == 0)
                     repository.setAdminhierarchy(null);
-                
+
 
                 int counterBuildingTfs = 0;
                 if (buildingTfs.size() > 0) {
@@ -597,17 +661,15 @@ public class EagDescriptionPanel extends EagPanels {
                         }
                     }
                 }
-                if (counterBuildingTfs == 0) 
+                if (counterBuildingTfs == 0)
                     repository.setBuildinginfo(null);
-                
 
-                if (StringUtils.isNotEmpty(repositoryAreaTf.getText())) 
+                if (StringUtils.isNotEmpty(repositoryAreaTf.getText()))
                     repository.getBuildinginfo().getRepositorarea().getNum().setContent(repositoryAreaTf.getText());
-                
 
-                if (StringUtils.isNotEmpty(lengthShelfTf.getText())) 
+                if (StringUtils.isNotEmpty(lengthShelfTf.getText()))
                     repository.getBuildinginfo().getLengthshelf().getNum().setContent(lengthShelfTf.getText());
-                
+
 
                 int counterArchivalAndOthersTfs = 0;
                 if (archivalAndOthersTfs.size() > 0) {
@@ -627,40 +689,119 @@ public class EagDescriptionPanel extends EagPanels {
                     } else {
                         repository.getHoldings().setExtent(null);
                     }
-                    if(StringUtils.isNotEmpty(dateHoldingsTf.getText()) && StringUtils.isNotEmpty(rangeFromTf.getText()) && StringUtils.isNotEmpty(rangeToTf.getText())) {
-                        counterArchivalAndOthersTfs++;
-                        if(repository.getHoldings().getDateSet() == null) {
-                            repository.getHoldings().setDateSet(new DateSet());
-                            repository.getHoldings().getDateSet().setDate(new Date());
-                            repository.getHoldings().getDateSet().setDateRange(new DateRange());
-                            repository.getHoldings().getDateSet().getDateRange().setFromDate(new FromDate());
-                            repository.getHoldings().getDateSet().getDateRange().setToDate(new ToDate());
-                        }
-                        repository.getHoldings().getDateSet().getDate().setContent(dateHoldingsTf.getText());
-                        repository.getHoldings().getDateSet().getDateRange().getFromDate().setContent(rangeFromTf.getText());
-                        repository.getHoldings().getDateSet().getDateRange().getToDate().setContent(rangeToTf.getText());
-                        repository.getHoldings().setDate(null);
-                        repository.getHoldings().setDateRange(null);
-                    } else {
-                        repository.getHoldings().setDateSet(null);
-                        if (StringUtils.isNotEmpty(dateHoldingsTf.getText())) {
-                            counterArchivalAndOthersTfs++;
-                            repository.getHoldings().getDate().setContent(dateHoldingsTf.getText());
-                        } else {
+
+
+
+//                    if(StringUtils.isNotEmpty(dateHoldingsTf.getText()) && StringUtils.isNotEmpty(rangeFromTf.getText()) && StringUtils.isNotEmpty(rangeToTf.getText())) {
+//                        counterArchivalAndOthersTfs++;
+//                        if(repository.getHoldings().getDateSet() == null) {
+//                            repository.getHoldings().setDateSet(new DateSet());
+//                            repository.getHoldings().getDateSet().setDate(new Date());
+//                            repository.getHoldings().getDateSet().setDateRange(new DateRange());
+//                            repository.getHoldings().getDateSet().getDateRange().setFromDate(new FromDate());
+//                            repository.getHoldings().getDateSet().getDateRange().setToDate(new ToDate());
+//                        }
+//                        repository.getHoldings().getDateSet().getDate().setContent(dateHoldingsTf.getText());
+//                        repository.getHoldings().getDateSet().getDateRange().getFromDate().setContent(rangeFromTf.getText());
+//                        repository.getHoldings().getDateSet().getDateRange().getToDate().setContent(rangeToTf.getText());
+//                        repository.getHoldings().setDate(null);
+//                        repository.getHoldings().setDateRange(null);
+//                    } else {
+//                        repository.getHoldings().setDateSet(null);
+//                        if (StringUtils.isNotEmpty(dateHoldingsTf.getText())) {
+//                            counterArchivalAndOthersTfs++;
+//                            repository.getHoldings().getDate().setContent(dateHoldingsTf.getText());
+//                        } else {
+//                            repository.getHoldings().setDate(null);
+//                        }
+//                        if (StringUtils.isNotEmpty(rangeFromTf.getText()) && StringUtils.isNotEmpty(rangeToTf.getText())) {
+//                            counterArchivalAndOthersTfs++;
+//                            repository.getHoldings().getDateRange().getFromDate().setContent(rangeFromTf.getText());
+//                            repository.getHoldings().getDateRange().getToDate().setContent(rangeToTf.getText());
+//                        } else {
+//                            repository.getHoldings().setDateRange(null);
+//                        }
+//                    }
+
+
+
+
+
+                    if (holdingsYearsTfs.size() > 0) {
+                        if (holdingsYearsTfs.size() > 1) {
+                            LOG.info("1");
+                            if (repository.getHoldings().getDateSet() == null) {
+                                repository.getHoldings().setDateSet(new DateSet());
+                                LOG.info("New DateSet created");
+                            } else {
+                                repository.getHoldings().getDateSet().getDateOrDateRange().clear();
+                            }
+                            for (TextFieldWithDate textFieldWithDate : holdingsYearsTfs) {
+                                if (!textFieldWithDate.getDate().equals("")) {
+                                    Date date = new Date();
+                                    date.setContent(textFieldWithDate.getDate());
+                                    repository.getHoldings().getDateSet().getDateOrDateRange().add(date);
+                                } else if (!textFieldWithDate.getFromDate().equals("") && !textFieldWithDate.getToDate().equals("")) {
+                                    FromDate fromDate = new FromDate();
+                                    fromDate.setContent(textFieldWithDate.getFromDate());
+                                    ToDate toDate = new ToDate();
+                                    toDate.setContent(textFieldWithDate.getToDate());
+                                    DateRange dateRange = new DateRange();
+                                    dateRange.setFromDate(fromDate);
+                                    dateRange.setToDate(toDate);
+                                    repository.getHoldings().getDateSet().getDateOrDateRange().add(dateRange);
+                                } else {
+                                    LOG.error("Illegal state for holdingsYearsTf!");
+                                    if (textFieldWithDate.getDate() == null) {
+                                        LOG.error("Date: " + "null-yada");
+                                    } else {
+                                        LOG.error("Date: '" + textFieldWithDate.getDate() + "'");
+                                    }
+                                    if (textFieldWithDate.getFromDate() == null) {
+                                        LOG.error("DateFrom: " + "null-yada");
+                                    } else {
+                                        LOG.error("DateFrom: '" + textFieldWithDate.getFromDate() + "'");
+                                    }
+                                    if (textFieldWithDate.getToDate() == null) {
+                                        LOG.error("DateTo: " + "null-yada");
+                                    } else {
+                                        LOG.error("DateTo: '" + textFieldWithDate.getToDate() + "'");
+                                    }
+                                }
+                            }
                             repository.getHoldings().setDate(null);
-                        }
-                        if (StringUtils.isNotEmpty(rangeFromTf.getText()) && StringUtils.isNotEmpty(rangeToTf.getText())) {
-                            counterArchivalAndOthersTfs++;
-                            repository.getHoldings().getDateRange().getFromDate().setContent(rangeFromTf.getText());
-                            repository.getHoldings().getDateRange().getToDate().setContent(rangeToTf.getText());
-                        } else {
                             repository.getHoldings().setDateRange(null);
+                        } else {
+                            LOG.info("2");
+                            if (StringUtils.isNotEmpty(holdingsYearsTfs.get(0).getDateField().getText())) {
+                                Date date = new Date();
+                                date.setContent(holdingsYearsTfs.get(0).getDate());
+                                repository.getHoldings().getDateSet().getDateOrDateRange().add(date);
+                            } else {
+                                repository.getHoldings().setDate(null);
+                            }
+                            if (StringUtils.isNotEmpty(holdingsYearsTfs.get(0).getFromDateField().getText()) && StringUtils.isNotEmpty(holdingsYearsTfs.get(0).getToDateField().getText())) {
+                                FromDate fromDate = new FromDate();
+                                fromDate.setContent(holdingsYearsTfs.get(0).getFromDate());
+                                ToDate toDate = new ToDate();
+                                toDate.setContent(holdingsYearsTfs.get(0).getToDate());
+                                DateRange dateRange = new DateRange();
+                                dateRange.setFromDate(fromDate);
+                                dateRange.setToDate(toDate);
+                                repository.getHoldings().getDateSet().getDateOrDateRange().add(dateRange);
+                            } else {
+                                repository.getHoldings().setDateRange(null);
+                            }
                         }
                     }
+
+
+
+
                 }
-                if (counterArchivalAndOthersTfs == 0) 
+                if (counterArchivalAndOthersTfs == 0)
                     repository.setHoldings(null);
-                
+
 /*                Accessibility accessibility = new Accessibility();
                 accessibility.setQuestion("yes");
                 repository.getAccessibility().add(accessibility);*/
