@@ -716,40 +716,6 @@ public class EagDescriptionPanel extends EagPanels {
                         repository.getHoldings().setExtent(null);
                     }
 
-
-
-//                    if(StringUtils.isNotEmpty(dateHoldingsTf.getText()) && StringUtils.isNotEmpty(rangeFromTf.getText()) && StringUtils.isNotEmpty(rangeToTf.getText())) {
-//                        counterArchivalAndOthersTfs++;
-//                        if(repository.getHoldings().getDateSet() == null) {
-//                            repository.getHoldings().setDateSet(new DateSet());
-//                            repository.getHoldings().getDateSet().setDate(new Date());
-//                            repository.getHoldings().getDateSet().setDateRange(new DateRange());
-//                            repository.getHoldings().getDateSet().getDateRange().setFromDate(new FromDate());
-//                            repository.getHoldings().getDateSet().getDateRange().setToDate(new ToDate());
-//                        }
-//                        repository.getHoldings().getDateSet().getDate().setContent(dateHoldingsTf.getText());
-//                        repository.getHoldings().getDateSet().getDateRange().getFromDate().setContent(rangeFromTf.getText());
-//                        repository.getHoldings().getDateSet().getDateRange().getToDate().setContent(rangeToTf.getText());
-//                        repository.getHoldings().setDate(null);
-//                        repository.getHoldings().setDateRange(null);
-//                    } else {
-//                        repository.getHoldings().setDateSet(null);
-//                        if (StringUtils.isNotEmpty(dateHoldingsTf.getText())) {
-//                            counterArchivalAndOthersTfs++;
-//                            repository.getHoldings().getDate().setContent(dateHoldingsTf.getText());
-//                        } else {
-//                            repository.getHoldings().setDate(null);
-//                        }
-//                        if (StringUtils.isNotEmpty(rangeFromTf.getText()) && StringUtils.isNotEmpty(rangeToTf.getText())) {
-//                            counterArchivalAndOthersTfs++;
-//                            repository.getHoldings().getDateRange().getFromDate().setContent(rangeFromTf.getText());
-//                            repository.getHoldings().getDateRange().getToDate().setContent(rangeToTf.getText());
-//                        } else {
-//                            repository.getHoldings().setDateRange(null);
-//                        }
-//                    }
-
-
                     repository.getHoldings().setDate(null);
                     repository.getHoldings().setDateRange(null);
                     repository.getHoldings().setDateSet(null);
@@ -769,14 +735,28 @@ public class EagDescriptionPanel extends EagPanels {
                     } else {
                         if(counterDate == 1) {
                             repository.getHoldings().setDate(new Date());
-                            repository.getHoldings().getDate().setContent(holdingsYearsTfs.get(0).getDate());
+                            String dateStr = "";
+                            for(TextFieldWithDate holdingsYearTextWithDate : holdingsYearsTfs) {
+                                if(StringUtils.isNotEmpty(holdingsYearTextWithDate.getDate())) {
+                                    dateStr = holdingsYearTextWithDate.getDate();
+                                }
+                            }
+                            repository.getHoldings().getDate().setContent(dateStr);
                             counterForHoldingsTfs++;
                         } else if(counterDateRange == 1) {
+                            String dateFromStr = "";
+                            String dateToStr = "";
+                            for(TextFieldWithDate holdingsYearTextWithDate : holdingsYearsTfs) {
+                                if(StringUtils.isNotEmpty(holdingsYearTextWithDate.getFromDate()) && StringUtils.isNotEmpty(holdingsYearTextWithDate.getToDate())) {
+                                    dateFromStr = holdingsYearTextWithDate.getFromDate();
+                                    dateToStr = holdingsYearTextWithDate.getToDate();
+                                }
+                            }
                             repository.getHoldings().setDateRange(new DateRange());
                             repository.getHoldings().getDateRange().setFromDate(new FromDate());
-                            repository.getHoldings().getDateRange().getFromDate().setContent(holdingsYearsTfs.get(0).getFromDate());
+                            repository.getHoldings().getDateRange().getFromDate().setContent(dateFromStr);
                             repository.getHoldings().getDateRange().setToDate(new ToDate());
-                            repository.getHoldings().getDateRange().getToDate().setContent(holdingsYearsTfs.get(0).getToDate());
+                            repository.getHoldings().getDateRange().getToDate().setContent(dateToStr);
                             counterForHoldingsTfs++;
                         }
                     }
