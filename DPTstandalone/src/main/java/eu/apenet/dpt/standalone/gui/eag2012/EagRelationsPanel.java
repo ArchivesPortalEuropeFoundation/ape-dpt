@@ -51,7 +51,8 @@ public class EagRelationsPanel extends EagPanels {
         CellConstraints cc = new CellConstraints();
 
         rowNb = 1;
-
+        if(eag.getRelations() == null)
+            eag.setRelations(new Relations());
         Relations relations = eag.getRelations();
 
         builder.addSeparator(labels.getString("eag2012.resourceRelations"), cc.xyw(1, rowNb, 7));
@@ -262,6 +263,9 @@ public class EagRelationsPanel extends EagPanels {
                     hasChanged = true;
                 }
             }
+
+            if(eag.getRelations().getEagRelation().size() == 0 && eag.getRelations().getResourceRelation().size() == 0)
+                eag.setRelations(null);
 
             if(!errors.isEmpty()) {
                 throw new Eag2012FormException("Errors in validation of EAG 2012");

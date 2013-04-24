@@ -1262,6 +1262,18 @@ public class EagAccessAndServicesPanel extends EagPanels {
                         hasContactInfo = true;
                 }
 
+                if(StringUtils.isNotEmpty(webpageSearchroomTf.getText())) {
+                    if(!searchroom.getWebpage().isEmpty()) {
+                        searchroom.getWebpage().get(0).setContent(webpageSearchroomTf.getText());
+                    } else {
+                        Webpage webpage = new Webpage();
+                        webpage.setContent(webpageSearchroomTf.getText());
+                        searchroom.getWebpage().add(webpage);
+                    }
+                } else if(!searchroom.getWebpage().isEmpty()) {
+                    searchroom.getWebpage().remove(0);
+                }
+
                 if(!hasContactInfo) {
                     searchroom.setContact(null);
                 }
@@ -1400,7 +1412,7 @@ public class EagAccessAndServicesPanel extends EagPanels {
                         library.getWebpage().get(0).setContent(webpageTitleLibraryTf.getText());
                     }
                     libraryExists = true;
-                } else {
+                } else if(library.getWebpage().size() > 0) {
                     library.getWebpage().remove(0);
                     if(library.getWebpage().size() > 0)
                         libraryExists = true;
@@ -1469,29 +1481,54 @@ public class EagAccessAndServicesPanel extends EagPanels {
                     restorationlab.setDescriptiveNote(null);
                 }
 
-                if(!restorationlab.getContact().getTelephone().isEmpty()){
-                    restorationlab.getContact().getTelephone().get(0).setContent(telephoneRestorationlabTf.getText());
-                    restorationLabExists = true;
-                }
-                else{
-                    Telephone telephone = new Telephone();
-                    telephone.setContent(telephoneRestorationlabTf.getText());
-                    restorationlab.getContact().getTelephone().add(telephone);
-                    restorationLabExists = true;
-                }
-                if(StringUtils.isNotEmpty(emailRestorationlabTf.getText())) {
-                    restorationlab.getContact().getEmail().get(0).setHref(emailRestorationlabTf.getText());
-                    if(StringUtils.isNotEmpty(emailTitleRestorationlabTf.getText())) {
-                        restorationlab.getContact().getEmail().get(0).setContent(emailTitleRestorationlabTf.getText());
+                boolean hasRestorationlabContactInfo = false;
+                if(StringUtils.isNotEmpty(telephoneRestorationlabTf.getText())) {
+                    if(!restorationlab.getContact().getTelephone().isEmpty()) {
+                        restorationlab.getContact().getTelephone().get(0).setContent(telephoneRestorationlabTf.getText());
+                        hasRestorationlabContactInfo = true;
+                    } else {
+                        Telephone telephone = new Telephone();
+                        telephone.setContent(telephoneRestorationlabTf.getText());
+                        restorationlab.getContact().getTelephone().add(telephone);
+                        hasRestorationlabContactInfo = true;
                     }
-                    restorationLabExists = true;
+                } else if(!restorationlab.getContact().getTelephone().isEmpty()) {
+                    restorationlab.getContact().getTelephone().remove(0);
+                    if(restorationlab.getContact().getTelephone().size() > 0)
+                        hasRestorationlabContactInfo = true;
                 }
+
+                if(StringUtils.isNotEmpty(emailRestorationlabTf.getText())) {
+                    if(!restorationlab.getContact().getEmail().isEmpty()) {
+                        restorationlab.getContact().getEmail().get(0).setContent(emailRestorationlabTf.getText());
+                        hasRestorationlabContactInfo = true;
+                    } else {
+                        Email email = new Email();
+                        email.setContent(emailRestorationlabTf.getText());
+                        restorationlab.getContact().getEmail().add(email);
+                        hasRestorationlabContactInfo = true;
+                    }
+                } else if(!restorationlab.getContact().getEmail().isEmpty()) {
+                    restorationlab.getContact().getEmail().remove(0);
+                    if(restorationlab.getContact().getEmail().size() > 0)
+                        hasRestorationlabContactInfo = true;
+                }
+
+                if(!hasRestorationlabContactInfo) {
+                    restorationlab.setContact(null);
+                }
+                restorationLabExists = hasRestorationlabContactInfo;
+
                 if(StringUtils.isNotEmpty(webpageRestorationlabTf.getText())) {
                     restorationlab.getWebpage().get(0).setHref(webpageRestorationlabTf.getText());
-                    if(StringUtils.isNotEmpty(webpageTitleRestorationlabTf.getText())) {
-                        restorationlab.getWebpage().get(0).setContent(webpageTitleRestorationlabTf.getText());
+                    if(StringUtils.isNotEmpty(webpageRestorationlabTf.getText())) {
+                        restorationlab.getWebpage().get(0).setContent(webpageRestorationlabTf.getText());
                     }
                     restorationLabExists = true;
+                } else if(restorationlab.getWebpage().size() > 0) {
+                    restorationlab.getWebpage().remove(0);
+                    if(restorationlab.getWebpage().size() > 0)
+                        restorationLabExists = true;
                 }
                 restorationlab.setQuestion("yes");
 
@@ -1517,34 +1554,50 @@ public class EagAccessAndServicesPanel extends EagPanels {
                     reproductionser.setDescriptiveNote(null);
                 }
 
-                boolean contactExists = false;
-                if(!reproductionser.getContact().getTelephone().isEmpty()){
-                    reproductionser.getContact().getTelephone().get(0).setContent(telephoneReproductionServiceTf.getText());
-                    contactExists = true;
-                }
-                else{
-                    Telephone telephone = new Telephone();
-                    telephone.setContent(telephoneReproductionServiceTf.getText());
-                    reproductionser.getContact().getTelephone().add(telephone);
-                    contactExists = true;
-                }
-                if(StringUtils.isNotEmpty(emailReproductionServiceTf.getText())) {
-                    reproductionser.getContact().getEmail().get(0).setHref(emailReproductionServiceTf.getText());
-                    if(StringUtils.isNotEmpty(emailTitleReproductionServiceTf.getText())) {
-                        reproductionser.getContact().getEmail().get(0).setContent(emailTitleReproductionServiceTf.getText());
+                boolean hasReproductionserContactInfo = false;
+                if(StringUtils.isNotEmpty(telephoneReproductionServiceTf.getText())) {
+                    if(!reproductionser.getContact().getTelephone().isEmpty()) {
+                        reproductionser.getContact().getTelephone().get(0).setContent(telephoneReproductionServiceTf.getText());
+                        hasReproductionserContactInfo = true;
+                    } else {
+                        Telephone telephone = new Telephone();
+                        telephone.setContent(telephoneReproductionServiceTf.getText());
+                        reproductionser.getContact().getTelephone().add(telephone);
+                        hasReproductionserContactInfo = true;
                     }
-                    contactExists = true;
+                } else if(!reproductionser.getContact().getTelephone().isEmpty()) {
+                    reproductionser.getContact().getTelephone().remove(0);
+                    if(reproductionser.getContact().getTelephone().size() > 0)
+                        hasReproductionserContactInfo = true;
                 }
-                if(!contactExists)
+
+                if(StringUtils.isNotEmpty(emailReproductionServiceTf.getText())) {
+                    if(!reproductionser.getContact().getEmail().isEmpty()) {
+                        reproductionser.getContact().getEmail().get(0).setContent(emailReproductionServiceTf.getText());
+                        hasReproductionserContactInfo = true;
+                    } else {
+                        Email email = new Email();
+                        email.setContent(emailReproductionServiceTf.getText());
+                        reproductionser.getContact().getEmail().add(email);
+                        hasReproductionserContactInfo = true;
+                    }
+                } else if(!reproductionser.getContact().getEmail().isEmpty()) {
+                    reproductionser.getContact().getEmail().remove(0);
+                    if(reproductionser.getContact().getEmail().size() > 0)
+                        hasReproductionserContactInfo = true;
+                }
+
+                if(!hasReproductionserContactInfo) {
                     reproductionser.setContact(null);
+                }
 
                 if(StringUtils.isNotEmpty(webpageReproductionServiceTf.getText())) {
                     reproductionser.getWebpage().get(0).setHref(webpageReproductionServiceTf.getText());
-                    if(StringUtils.isNotEmpty(webpageTitleReproductionServiceTf.getText())) {
-                        reproductionser.getWebpage().get(0).setContent(webpageTitleReproductionServiceTf.getText());
+                    if(StringUtils.isNotEmpty(webpageReproductionServiceTf.getText())) {
+                        reproductionser.getWebpage().get(0).setContent(webpageReproductionServiceTf.getText());
                     }
-                } else {
-                    reproductionser.getWebpage().clear();
+                } else if(reproductionser.getWebpage().size() > 0) {
+                        reproductionser.getWebpage().remove(0);
                 }
 
                 reproductionser.getMicroformser().setQuestion((String)microformServicesCombo.getSelectedItem());
@@ -1555,9 +1608,13 @@ public class EagAccessAndServicesPanel extends EagPanels {
 
 
                 RecreationalServices recreationalServices = repository.getServices().getRecreationalServices();
+                boolean hasRecreationalServices = false;
                 if(StringUtils.isNotEmpty(refreshmentTf.getTextValue())) {
                     recreationalServices.getRefreshment().getDescriptiveNote().getP().get(0).setContent(refreshmentTf.getTextValue());
                     recreationalServices.getRefreshment().getDescriptiveNote().getP().get(0).setLang(refreshmentTf.getLanguage());
+                    hasRecreationalServices = true;
+                } else {
+                    recreationalServices.setRefreshment(null);
                 }
 
                 if(exhibitionTfs.size() > 0) {
@@ -1577,6 +1634,7 @@ public class EagAccessAndServicesPanel extends EagPanels {
                             }
                             recreationalServices.getExhibition().add(exhibition);
                             hasChanged = true;
+                            hasRecreationalServices = true;
                         }
                     }
                 }
@@ -1598,6 +1656,7 @@ public class EagAccessAndServicesPanel extends EagPanels {
                             }
                             recreationalServices.getToursSessions().add(toursSessions);
                             hasChanged = true;
+                            hasRecreationalServices = true;
                         }
                     }
                 }
@@ -1619,9 +1678,13 @@ public class EagAccessAndServicesPanel extends EagPanels {
                             }
                             recreationalServices.getOtherServices().add(otherServices);
                             hasChanged = true;
+                            hasRecreationalServices = true;
                         }
                     }
                 }
+
+                if(!hasRecreationalServices)
+                    repository.getServices().setRecreationalServices(null);
             }
 
 
