@@ -16,6 +16,7 @@ public class ButtonEag extends JButton {
         setBorder(BorderFactory.createLineBorder(new Color(0, 162, 222), 3));
         setPreferredSize(new Dimension(200, 25));
         setMinimumSize(new Dimension(200, 25));
+        setToolTipText(title);
 //        setOpaque(true);
 //        setBorderPainted(false);
     }
