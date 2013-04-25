@@ -349,7 +349,7 @@ public class EagDescriptionPanel extends EagPanels {
         @Override
         public void actionPerformed(ActionEvent actionEvent) {
             try {
-                super.updateEagObject();
+                super.updateEagObject(false);
             } catch (Eag2012FormException e) {
             }
             if(eag.getArchguide().getDesc().getRepositories().getRepository().get(0).getRepositorhist() == null) {
@@ -368,7 +368,7 @@ public class EagDescriptionPanel extends EagPanels {
         @Override
         public void actionPerformed(ActionEvent actionEvent) {
             try {
-                super.updateEagObject();
+                super.updateEagObject(false);
             } catch (Eag2012FormException e) {
             }
             if(eag.getArchguide().getDesc().getRepositories().getRepository().get(0).getRepositorhist() == null) {
@@ -386,7 +386,7 @@ public class EagDescriptionPanel extends EagPanels {
         @Override
         public void actionPerformed(ActionEvent actionEvent) {
             try {
-                super.updateEagObject();
+                super.updateEagObject(false);
             } catch (Eag2012FormException e) {
             }
             if(eag.getArchguide().getDesc().getRepositories().getRepository().get(0).getRepositorhist() == null) {
@@ -406,7 +406,7 @@ public class EagDescriptionPanel extends EagPanels {
         @Override
         public void actionPerformed(ActionEvent actionEvent) {
             try {
-                super.updateEagObject();
+                super.updateEagObject(false);
             } catch (Eag2012FormException e) {
             }
             if(eag.getArchguide().getDesc().getRepositories().getRepository().get(0).getAdminhierarchy() == null) {
@@ -426,7 +426,7 @@ public class EagDescriptionPanel extends EagPanels {
         @Override
         public void actionPerformed(ActionEvent actionEvent) {
             try {
-                super.updateEagObject();
+                super.updateEagObject(false);
             } catch (Eag2012FormException e) {
             }
             if(eag.getArchguide().getDesc().getRepositories().getRepository().get(0).getBuildinginfo() == null) {
@@ -448,7 +448,7 @@ public class EagDescriptionPanel extends EagPanels {
         @Override
         public void actionPerformed(ActionEvent actionEvent) {
             try {
-                super.updateEagObject();
+                super.updateEagObject(false);
             } catch (Eag2012FormException e) {
             }
             if(eag.getArchguide().getDesc().getRepositories().getRepository().get(0).getHoldings() == null) {
@@ -469,7 +469,7 @@ public class EagDescriptionPanel extends EagPanels {
         @Override
         public void actionPerformed(ActionEvent actionEvent) {
             try {
-                super.updateEagObject();
+                super.updateEagObject(false);
             } catch (Eag2012FormException e) {
             }
             if(eag.getArchguide().getDesc().getRepositories().getRepository().get(0).getHoldings() == null) {
@@ -503,7 +503,7 @@ public class EagDescriptionPanel extends EagPanels {
         @Override
         public void actionPerformed(ActionEvent actionEvent) {
             try {
-                super.updateEagObject();
+                super.updateEagObject(true);
             } catch (Eag2012FormException e) {
             }
             if(eag.getArchguide().getDesc().getRepositories().getRepository().get(0).getHoldings() == null) {
@@ -540,7 +540,7 @@ public class EagDescriptionPanel extends EagPanels {
         @Override
         public void actionPerformed(ActionEvent actionEvent) {
             try {
-                super.updateEagObject();
+                super.updateEagObject(true);
                 super.saveFile(eag.getControl().getRecordId().getValue());
                 closeFrame();
             } catch (Eag2012FormException e) {
@@ -561,7 +561,7 @@ public class EagDescriptionPanel extends EagPanels {
         @Override
         public void actionPerformed(ActionEvent actionEvent) {
             try {
-                super.updateEagObject();
+                super.updateEagObject(false);
 
                 if (isNextTab) {
                     reloadTabbedPanel(new EagControlPanel(eag, tabbedPane, eag2012Frame, model, labels).buildEditorPanel(errors), 5);
@@ -585,7 +585,7 @@ public class EagDescriptionPanel extends EagPanels {
         }
 
         @Override
-        protected void updateEagObject() throws Eag2012FormException {
+        protected void updateEagObject(boolean save) throws Eag2012FormException {
             errors = new ArrayList<String>();
 
             boolean hasChanged = false;

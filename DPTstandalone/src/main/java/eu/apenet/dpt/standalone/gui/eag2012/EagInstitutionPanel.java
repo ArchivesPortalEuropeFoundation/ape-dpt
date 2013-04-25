@@ -407,7 +407,7 @@ public class EagInstitutionPanel extends EagPanels {
         @Override
         public void actionPerformed(ActionEvent actionEvent) {
             try {
-                super.updateEagObject();
+                super.updateEagObject(true);
                 super.saveFile(eag.getControl().getRecordId().getValue());
                 closeFrame();
             } catch (Eag2012FormException e) {
@@ -424,7 +424,7 @@ public class EagInstitutionPanel extends EagPanels {
         @Override
         public void actionPerformed(ActionEvent actionEvent) {
             try {
-                super.updateEagObject();
+                super.updateEagObject(true);
 
                 if(model == null)
                     LOG.info("The model is null, we can not add the EAG to the list...");
@@ -449,7 +449,7 @@ public class EagInstitutionPanel extends EagPanels {
         @Override
         public void actionPerformed(ActionEvent actionEvent) {
             try {
-                super.updateEagObject();
+                super.updateEagObject(false);
             } catch (Eag2012FormException e) {
 //                for(String error : getErrors().keySet()) {
 //                    System.out.println(error);
@@ -471,7 +471,7 @@ public class EagInstitutionPanel extends EagPanels {
         @Override
         public void actionPerformed(ActionEvent actionEvent) {
             try {
-                super.updateEagObject();
+                super.updateEagObject(false);
             } catch (Eag2012FormException e) {
 //                for(String error : getErrors().keySet()) {
 //                    System.out.println(error);
@@ -499,49 +499,35 @@ public class EagInstitutionPanel extends EagPanels {
             super(eag, tabbedPane, model);
         }
 
-        protected void updateEagObject() throws Eag2012FormException {
+        protected void updateEagObject(boolean save) throws Eag2012FormException {
             errors = new ArrayList<String>();
 
             boolean hasChanged = false;
-
-            if(StringUtils.isNotEmpty(personTf.getText())) {
-                if(Eag2012Frame.isStartOfForm()) {
-                    Eag2012Frame.setStartOfForm(false);
-                    MaintenanceEvent maintenanceEvent;
-                    if(eag.getControl().getMaintenanceHistory().getMaintenanceEvent().size() == 0) {
-                        maintenanceEvent = new MaintenanceEvent();
-                    } else {
-                        maintenanceEvent = eag.getControl().getMaintenanceHistory().getMaintenanceEvent().get(0);
-                        eag.getControl().getMaintenanceHistory().getMaintenanceEvent().remove(maintenanceEvent);
-                    }
-                    AgentType agentType = new AgentType();
-                    agentType.setValue("human");
-                    maintenanceEvent.setAgentType(agentType);
-                    EventDateTime eventDateTime = new EventDateTime();
-                    Date date = new Date();
+            if(save) {
+                if(Eag2012Frame.getTimeMaintenance() == null)
+                    Eag2012Frame.setTimeMaintenance(new Date());
+                MaintenanceEvent event = TextChanger.getMaintenanceEventSaved(Eag2012Frame.getTimeMaintenance(), eag.getControl().getMaintenanceHistory().getMaintenanceEvent());
+                if(event == null) {
+                    event = new MaintenanceEvent();
+                    event.setAgent(new Agent());
+                    event.setEventType(new EventType());
+                    if(isNew)
+                        event.getEventType().setValue("created");
+                    else
+                        event.getEventType().setValue("updated");
+                    event.setAgentType(new AgentType());
+                    event.getAgentType().setValue("human");
+                    event.setEventDateTime(new EventDateTime());
                     SimpleDateFormat format = new SimpleDateFormat("dd.MM.yyyy");
                     SimpleDateFormat formatStandard = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
-                    eventDateTime.setContent(format.format(date));
-                    eventDateTime.setStandardDateTime(formatStandard.format(date));
-                    maintenanceEvent.setEventDateTime(eventDateTime);
-                    EventType eventType = new EventType();
-                    if(isNew)
-                        eventType.setValue("created");
-                    else
-                        eventType.setValue("updated");
-                    maintenanceEvent.setEventType(eventType);
-                    Agent agent = new Agent();
-                    agent.setContent(personTf.getText());
-                    maintenanceEvent.setAgent(agent);
-                    eag.getControl().getMaintenanceHistory().getMaintenanceEvent().add(maintenanceEvent);
-                    isNew = false;
+                    event.getEventDateTime().setContent(format.format(Eag2012Frame.getTimeMaintenance()));
+                    event.getEventDateTime().setStandardDateTime(formatStandard.format(Eag2012Frame.getTimeMaintenance()));
                 } else {
-                    MaintenanceEvent event = eag.getControl().getMaintenanceHistory().getMaintenanceEvent().get(eag.getControl().getMaintenanceHistory().getMaintenanceEvent().size() - 1);
                     eag.getControl().getMaintenanceHistory().getMaintenanceEvent().remove(event);
-                    event.getAgent().setContent(personTf.getText());
-                    eag.getControl().getMaintenanceHistory().getMaintenanceEvent().add(event);
-                    isNew = false;
                 }
+                if(StringUtils.isNotEmpty(personTf.getText()))
+                    event.getAgent().setContent(personTf.getText());
+                eag.getControl().getMaintenanceHistory().getMaintenanceEvent().add(event);
             }
 
             if(StringUtils.isEmpty(countryCodeTf.getText()) || !Eag2012ValidFields.isCountryCodeCorrect(countryCodeTf.getText())) {

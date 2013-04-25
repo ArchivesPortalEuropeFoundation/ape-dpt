@@ -2,7 +2,7 @@ package eu.apenet.dpt.standalone.gui.eag2012;
 
 import eu.apenet.dpt.standalone.gui.ProfileListModel;
 import eu.apenet.dpt.standalone.gui.Utilities;
-import eu.apenet.dpt.standalone.gui.eag2012.data.*;
+import eu.apenet.dpt.standalone.gui.eag2012.data.Eag;
 import eu.apenet.dpt.utils.service.TransformationTool;
 import eu.apenet.dpt.utils.util.ReadXml;
 import org.apache.commons.io.FileUtils;
@@ -16,6 +16,7 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
 import java.io.InputStream;
+import java.util.Date;
 import java.util.ResourceBundle;
 
 /**
@@ -32,6 +33,7 @@ public class Eag2012Frame extends JFrame {
     private ResourceBundle labels;
     private static boolean used;
     private static boolean startOfForm;
+    private static Date timeMaintenance;
 
     public Eag2012Frame(File eagFile, boolean isEag2012, Dimension dimension, ProfileListModel model, ResourceBundle labels) throws Exception {
         String namespace = ReadXml.getXmlNamespace(eagFile);
@@ -147,5 +149,13 @@ public class Eag2012Frame extends JFrame {
 
     public static boolean isStartOfForm() {
         return startOfForm;
+    }
+
+    public static Date getTimeMaintenance() {
+        return timeMaintenance;
+    }
+
+    public static void setTimeMaintenance(Date timeMaintenance) {
+        Eag2012Frame.timeMaintenance = timeMaintenance;
     }
 }

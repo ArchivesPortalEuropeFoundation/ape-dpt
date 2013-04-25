@@ -1,8 +1,10 @@
 package eu.apenet.dpt.standalone.gui.eag2012;
 
-import eu.apenet.dpt.standalone.gui.eag2012.data.*;
+import eu.apenet.dpt.standalone.gui.eag2012.data.MaintenanceEvent;
 import org.apache.commons.lang.StringUtils;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -47,5 +49,21 @@ public abstract class TextChanger {
             }
         }
         return false;
+    }
+
+    public static MaintenanceEvent getMaintenanceEventSaved(Date timeMaintenance, List<MaintenanceEvent> maintenanceEvents) {
+//        Date date = new Date();
+//                    SimpleDateFormat format = new SimpleDateFormat("dd.MM.yyyy");
+//                    SimpleDateFormat formatStandard = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+//                    eventDateTime.setContent(format.format(date));
+//                    eventDateTime.setStandardDateTime(formatStandard.format(date));
+        for(MaintenanceEvent maintenanceEvent : maintenanceEvents) {
+            SimpleDateFormat formatStandard = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+            String maintenanceTimeStandardForm = formatStandard.format(timeMaintenance);
+            if(maintenanceEvent.getEventDateTime().getStandardDateTime().equals(maintenanceTimeStandardForm)) {
+                return maintenanceEvent;
+            }
+        }
+        return null;
     }
 }

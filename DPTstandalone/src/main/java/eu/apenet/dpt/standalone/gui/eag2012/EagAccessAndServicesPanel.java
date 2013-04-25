@@ -825,7 +825,7 @@ public class EagAccessAndServicesPanel extends EagPanels {
         @Override
         public void actionPerformed(ActionEvent actionEvent) {
             try {
-                super.updateEagObject();
+                super.updateEagObject(false);
             } catch (Eag2012FormException e) {
             }
             eag.getArchguide().getDesc().getRepositories().getRepository().get(0).getTimetable().getOpening().add(new Opening());
@@ -840,7 +840,7 @@ public class EagAccessAndServicesPanel extends EagPanels {
         @Override
         public void actionPerformed(ActionEvent actionEvent) {
             try {
-                super.updateEagObject();
+                super.updateEagObject(false);
             } catch (Eag2012FormException e) {
             }
             eag.getArchguide().getDesc().getRepositories().getRepository().get(0).getTimetable().getClosing().add(new Closing());
@@ -855,7 +855,7 @@ public class EagAccessAndServicesPanel extends EagPanels {
         @Override
         public void actionPerformed(ActionEvent actionEvent) {
             try {
-                super.updateEagObject();
+                super.updateEagObject(false);
             } catch (Eag2012FormException e) {
             }
             eag.getArchguide().getDesc().getRepositories().getRepository().get(0).getDirections().add(new Directions());
@@ -870,7 +870,7 @@ public class EagAccessAndServicesPanel extends EagPanels {
         @Override
         public void actionPerformed(ActionEvent actionEvent) {
             try {
-                super.updateEagObject();
+                super.updateEagObject(false);
             } catch (Eag2012FormException e) {
             }
             eag.getArchguide().getDesc().getRepositories().getRepository().get(0).getAccess().getRestaccess().add(new Restaccess());
@@ -885,7 +885,7 @@ public class EagAccessAndServicesPanel extends EagPanels {
         @Override
         public void actionPerformed(ActionEvent actionEvent) {
             try {
-                super.updateEagObject();
+                super.updateEagObject(false);
             } catch (Eag2012FormException e) {
             }
 //            if(eag.getArchguide().getDesc().getRepositories().getRepository().get(0).getAccessibility().isEmpty()){
@@ -903,7 +903,7 @@ public class EagAccessAndServicesPanel extends EagPanels {
         @Override
         public void actionPerformed(ActionEvent actionEvent) {
             try {
-                super.updateEagObject();
+                super.updateEagObject(false);
             } catch (Eag2012FormException e) {
             }
             
@@ -926,7 +926,7 @@ public class EagAccessAndServicesPanel extends EagPanels {
         @Override
         public void actionPerformed(ActionEvent actionEvent) {
             try {
-                super.updateEagObject();
+                super.updateEagObject(false);
             } catch (Eag2012FormException e) {
             }
             eag.getArchguide().getDesc().getRepositories().getRepository().get(0).getServices().getSearchroom().getReadersTicket().add(new ReadersTicket());
@@ -941,7 +941,7 @@ public class EagAccessAndServicesPanel extends EagPanels {
         @Override
         public void actionPerformed(ActionEvent actionEvent) {
             try {
-                super.updateEagObject();
+                super.updateEagObject(false);
             } catch (Eag2012FormException e) {
             }
             eag.getArchguide().getDesc().getRepositories().getRepository().get(0).getServices().getSearchroom().getAdvancedOrders().add(new AdvancedOrders());
@@ -956,7 +956,7 @@ public class EagAccessAndServicesPanel extends EagPanels {
         @Override
         public void actionPerformed(ActionEvent actionEvent) {
             try {
-                super.updateEagObject();
+                super.updateEagObject(false);
             } catch (Eag2012FormException e) {
             }
             eag.getArchguide().getDesc().getRepositories().getRepository().get(0).getServices().getSearchroom().getResearchServices().add(new ResearchServices());
@@ -971,7 +971,7 @@ public class EagAccessAndServicesPanel extends EagPanels {
         @Override
         public void actionPerformed(ActionEvent actionEvent) {
             try {
-                super.updateEagObject();
+                super.updateEagObject(false);
             } catch (Eag2012FormException e) {
             }
             eag.getArchguide().getDesc().getRepositories().getRepository().get(0).getServices().getRecreationalServices().getExhibition().add(new Exhibition());
@@ -986,7 +986,7 @@ public class EagAccessAndServicesPanel extends EagPanels {
         @Override
         public void actionPerformed(ActionEvent actionEvent) {
             try {
-                super.updateEagObject();
+                super.updateEagObject(false);
             } catch (Eag2012FormException e) {
             }
             eag.getArchguide().getDesc().getRepositories().getRepository().get(0).getServices().getRecreationalServices().getToursSessions().add(new ToursSessions());
@@ -1001,7 +1001,7 @@ public class EagAccessAndServicesPanel extends EagPanels {
         @Override
         public void actionPerformed(ActionEvent actionEvent) {
             try {
-                super.updateEagObject();
+                super.updateEagObject(false);
             } catch (Eag2012FormException e) {
             }
             eag.getArchguide().getDesc().getRepositories().getRepository().get(0).getServices().getRecreationalServices().getOtherServices().add(new OtherServices());
@@ -1016,7 +1016,7 @@ public class EagAccessAndServicesPanel extends EagPanels {
         @Override
         public void actionPerformed(ActionEvent actionEvent) {
             try {
-                super.updateEagObject();
+                super.updateEagObject(false);
             } catch (Eag2012FormException e) {
             }
             if(eag.getArchguide().getDesc().getRepositories().getRepository().get(0).getServices().getInternetAccess() == null) {
@@ -1038,7 +1038,7 @@ public class EagAccessAndServicesPanel extends EagPanels {
         @Override
         public void actionPerformed(ActionEvent actionEvent) {
             try {
-                super.updateEagObject();
+                super.updateEagObject(false);
             } catch (Eag2012FormException e) {
             }
             Reproductionser reproductionser = eag.getArchguide().getDesc().getRepositories().getRepository().get(0).getServices().getTechservices().getReproductionser();
@@ -1058,7 +1058,7 @@ public class EagAccessAndServicesPanel extends EagPanels {
         @Override
         public void actionPerformed(ActionEvent actionEvent) {
             try {
-                super.updateEagObject();
+                super.updateEagObject(false);
             } catch (Eag2012FormException e) {
             }
             Restorationlab restorationlab = eag.getArchguide().getDesc().getRepositories().getRepository().get(0).getServices().getTechservices().getRestorationlab();
@@ -1079,7 +1079,7 @@ public class EagAccessAndServicesPanel extends EagPanels {
         @Override
         public void actionPerformed(ActionEvent actionEvent) {
             try {
-                super.updateEagObject();
+                super.updateEagObject(true);
                 super.saveFile(eag.getControl().getRecordId().getValue());
                 closeFrame();
             } catch (Eag2012FormException e) {
@@ -1098,7 +1098,7 @@ public class EagAccessAndServicesPanel extends EagPanels {
         @Override
         public void actionPerformed(ActionEvent actionEvent) {
             try {
-                super.updateEagObject();
+                super.updateEagObject(false);
 
                 if(isNextTab) {
                     reloadTabbedPanel(new EagDescriptionPanel(eag, tabbedPane, eag2012Frame, model, labels).buildEditorPanel(errors), 4);
@@ -1122,7 +1122,7 @@ public class EagAccessAndServicesPanel extends EagPanels {
         }
 
         @Override
-        protected void updateEagObject() throws Eag2012FormException {
+        protected void updateEagObject(boolean save) throws Eag2012FormException {
             errors = new ArrayList<String>();
 
             boolean hasChanged = false;

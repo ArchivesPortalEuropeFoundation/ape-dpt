@@ -35,7 +35,7 @@ public abstract class DefaultBtnAction implements ActionListener {
     }
 
     public abstract void actionPerformed(ActionEvent actionEvent);
-    protected abstract void updateEagObject() throws Eag2012FormException;
+    protected abstract void updateEagObject(boolean save) throws Eag2012FormException;
 
     protected boolean notEqual(String newValue, String originalValue) {
         return !newValue.equals(originalValue);

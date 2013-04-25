@@ -304,7 +304,7 @@ public class EagContactPanel extends EagPanels {
         @Override
         public void actionPerformed(ActionEvent actionEvent) {
             try {
-                super.updateEagObject();
+                super.updateEagObject(true);
                 super.saveFile(eag.getControl().getRecordId().getValue());
                 closeFrame();
             } catch (Eag2012FormException e) {
@@ -323,7 +323,7 @@ public class EagContactPanel extends EagPanels {
         @Override
         public void actionPerformed(ActionEvent actionEvent) {
             try {
-                super.updateEagObject();
+                super.updateEagObject(false);
 
                 if(isNextTab) {
                     reloadTabbedPanel(new EagAccessAndServicesPanel(eag, tabbedPane, eag2012Frame, model, labels).buildEditorPanel(errors), 3);
@@ -350,7 +350,7 @@ public class EagContactPanel extends EagPanels {
         @Override
         public void actionPerformed(ActionEvent actionEvent) {
             try {
-                super.updateEagObject();
+                super.updateEagObject(false);
             } catch (Eag2012FormException e) {
 //                for(String error : getErrors().keySet()) {
 //                    System.out.println(error);
@@ -379,7 +379,7 @@ public class EagContactPanel extends EagPanels {
         @Override
         public void actionPerformed(ActionEvent actionEvent) {
             try {
-                super.updateEagObject();
+                super.updateEagObject(false);
             } catch (Eag2012FormException e) {
 
             }
@@ -397,7 +397,7 @@ public class EagContactPanel extends EagPanels {
         @Override
         public void actionPerformed(ActionEvent actionEvent) {
             try {
-                super.updateEagObject();
+                super.updateEagObject(false);
             } catch (Eag2012FormException e) {
 
             }
@@ -415,7 +415,7 @@ public class EagContactPanel extends EagPanels {
         @Override
         public void actionPerformed(ActionEvent actionEvent) {
             try {
-                super.updateEagObject();
+                super.updateEagObject(false);
             } catch (Eag2012FormException e) {
 
             }
@@ -433,7 +433,7 @@ public class EagContactPanel extends EagPanels {
         @Override
         public void actionPerformed(ActionEvent actionEvent) {
             try {
-                super.updateEagObject();
+                super.updateEagObject(false);
             } catch (Eag2012FormException e) {
 
             }
@@ -453,7 +453,7 @@ public class EagContactPanel extends EagPanels {
         }
 
         @Override
-        protected void updateEagObject() throws Eag2012FormException {
+        protected void updateEagObject(boolean save) throws Eag2012FormException {
             errors = new ArrayList<String>();
 
             boolean hasChanged = false;
