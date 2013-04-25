@@ -500,8 +500,13 @@ public class EagInstitutionPanel extends EagPanels {
                 } else {
                     eag.getControl().getMaintenanceHistory().getMaintenanceEvent().remove(event);
                 }
-                if(StringUtils.isNotEmpty(personTf.getText()))
+                if(StringUtils.isNotEmpty(personTf.getText())) {
+                    event.getAgentType().setValue("human");
                     event.getAgent().setContent(personTf.getText());
+                } else {
+                    event.getAgentType().setValue("human");
+                    event.getAgent().setContent("automatically created agent");
+                }
                 eag.getControl().getMaintenanceHistory().getMaintenanceEvent().add(event);
             }
 
