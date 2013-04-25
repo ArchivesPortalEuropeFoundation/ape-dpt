@@ -42,7 +42,6 @@ public class EagInstitutionPanel extends EagPanels {
     private List<TextFieldWithLanguage> closingDatesTfs;
     private JTextField refInstitutionHoldingsGuideTf;
     private JTextField refInstitutionHoldingsGuideTitleTf;
-    private JTextField workplacesSearchroomTf;
 
     private boolean isNew;
 
@@ -278,7 +277,7 @@ public class EagInstitutionPanel extends EagPanels {
             builder.add(emailTitleTf,                                            cc.xy (7, rowNb));
             setNextRow();
 
-            builder.addLabel(labels.getString("eag2012.webpageLabel") + "*", cc.xy(1, rowNb));
+            builder.addLabel(labels.getString("eag2012.webpageLabel"), cc.xy(1, rowNb));
             if(repository.getWebpage().size() > 0) {
                 webpageTf = new JTextField(repository.getWebpage().get(0).getHref());
                 if(!StringUtils.isBlank(repository.getWebpage().get(0).getContent()))
@@ -292,10 +291,6 @@ public class EagInstitutionPanel extends EagPanels {
             builder.add(webpageTf, cc.xy(3, rowNb));
             builder.addLabel(labels.getString("eag2012.linkTitleLabel"),             cc.xy (5, rowNb));
             builder.add(webpageTitleTf,                                            cc.xy (7, rowNb));
-            if(errors.contains("webpageTf")) {
-                setNextRow();
-                builder.add(createErrorLabel(labels.getString("eag2012.errors.webpage")),          cc.xy (1, rowNb));
-            }
             setNextRow();
 
             if(repository.getTimetable().getOpening().size() == 0) {
@@ -360,26 +355,6 @@ public class EagInstitutionPanel extends EagPanels {
             builder.add(refInstitutionHoldingsGuideTf, cc.xy(3, rowNb));
             builder.addLabel(labels.getString("eag2012.linkTitleLabel"),             cc.xy (5, rowNb));
             builder.add(refInstitutionHoldingsGuideTitleTf, cc.xy(7, rowNb));
-            setNextRow();
-
-            if(repository.getServices() == null) {
-                repository.setServices(new Services());
-                repository.getServices().setSearchroom(new Searchroom());
-            }
-            Searchroom searchroom = repository.getServices().getSearchroom();
-            if(searchroom.getWorkPlaces() == null)
-                searchroom.setWorkPlaces(new WorkPlaces());
-            builder.addLabel(labels.getString("eag2012.workplaces") + "*",    cc.xy (1, rowNb));
-            try {
-                workplacesSearchroomTf = new JTextField(searchroom.getWorkPlaces().getNum().getContent());
-            } catch (NullPointerException npe) {
-                workplacesSearchroomTf = new JTextField();
-            }
-            builder.add(workplacesSearchroomTf, cc.xy(3, rowNb));
-            if(errors.contains("workplacesSearchroomTf")) {
-                setNextRow();
-                builder.add(createErrorLabel(labels.getString("eag2012.errors.workplaces")),          cc.xy (1, rowNb));
-            }
             setNextRow();
         }
 
@@ -641,23 +616,19 @@ public class EagInstitutionPanel extends EagPanels {
                     repository.getEmail().get(0).setContent(emailTitleTf.getText());
                 }
 
-//                if(repository.getWebpage().size() > 0) {
-                    if(StringUtils.isNotEmpty(webpageTf.getText())) {
-                        if(repository.getWebpage().size() == 0)
-                            repository.getWebpage().add(new Webpage());
-                        repository.getWebpage().get(0).setHref(webpageTf.getText());
-                        hasChanged = true;
-                        if(StringUtils.isNotEmpty(webpageTitleTf.getText()) && !webpageTitleTf.getText().equals(repository.getWebpage().get(0).getContent())) {
-                            repository.getWebpage().get(0).setContent(webpageTitleTf.getText());
-                        } else if(StringUtils.isBlank(repository.getWebpage().get(0).getContent())) {
-                            repository.getWebpage().get(0).setContent("Go to our homepage");
-                        }
-                    } else {
-                        errors.add("webpageTf");
+                if(StringUtils.isNotEmpty(webpageTf.getText())) {
+                    if(repository.getWebpage().size() == 0)
+                        repository.getWebpage().add(new Webpage());
+                    repository.getWebpage().get(0).setHref(webpageTf.getText());
+                    hasChanged = true;
+                    if(StringUtils.isNotEmpty(webpageTitleTf.getText()) && !webpageTitleTf.getText().equals(repository.getWebpage().get(0).getContent())) {
+                        repository.getWebpage().get(0).setContent(webpageTitleTf.getText());
+                    } else if(StringUtils.isBlank(repository.getWebpage().get(0).getContent())) {
+                        repository.getWebpage().get(0).setContent("Go to our homepage");
                     }
-//                } else {
-
-//                }
+                } else if(repository.getWebpage().size() > 0) {
+                    repository.getWebpage().remove(0);
+                }
 
                 boolean openingTimeExists = false;
                 if(openingHoursTfs.size() > 0) {
@@ -727,17 +698,6 @@ public class EagInstitutionPanel extends EagPanels {
                 } else if(eag.getRelations().getEagRelation().size() == 0) {
                     eag.setRelations(null);
                 }
-
-                Searchroom searchroom = repository.getServices().getSearchroom();
-                if(StringUtils.isNotEmpty(workplacesSearchroomTf.getText())) {
-                    Num num = new Num();
-                    num.setUnit("site");
-                    num.setContent(workplacesSearchroomTf.getText());
-                    searchroom.getWorkPlaces().setNum(num);
-                } else {
-                    errors.add("workplacesSearchroomTf");
-                }
-
             }
 
             for(int i = 0; i < eag.getControl().getMaintenanceHistory().getMaintenanceEvent().size(); i ++) {
