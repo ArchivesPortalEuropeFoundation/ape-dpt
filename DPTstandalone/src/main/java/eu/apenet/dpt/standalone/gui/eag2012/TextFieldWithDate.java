@@ -1,5 +1,7 @@
 package eu.apenet.dpt.standalone.gui.eag2012;
 
+import eu.apenet.dpt.standalone.gui.eag2012.SwingStructures.EagScrollPane;
+
 import javax.swing.*;
 import java.util.Arrays;
 
@@ -22,7 +24,7 @@ public class TextFieldWithDate {
         dateField = new JTextField(date);
     }
 
-    public JTextField getTextField() {
+    public EagScrollPane getTextField() {
         return textFieldWithLanguage.getTextField();
     }
 

@@ -1,10 +1,10 @@
 package eu.apenet.dpt.standalone.gui.eag2012;
 
+import eu.apenet.dpt.standalone.gui.eag2012.SwingStructures.EagScrollPane;
+import eu.apenet.dpt.standalone.gui.eag2012.SwingStructures.EagScrollPaneHolder;
+
 import javax.swing.*;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
 
 /**
  * User: Yoann Moranville
@@ -15,7 +15,7 @@ import java.util.List;
  * @author Yoann Moranville
  */
 public class TextFieldWithLanguage {
-    private JTextField textField;
+    private EagScrollPaneHolder eagScrollPaneHolder;
     private JTextField extraField;
     private JTextField secondExtraField;
     private JComboBox languageBox;
@@ -23,7 +23,7 @@ public class TextFieldWithLanguage {
     private static final String[] languagesDisplay = EagPanels.languagesDisplay;
 
     public TextFieldWithLanguage(String text, String language, String extraText, String secondExtraText) {
-        textField = new JTextField(text);
+        eagScrollPaneHolder = new EagScrollPaneHolder(text);
         languageBox = new JComboBox(languagesDisplay);
         if(Arrays.asList(languages).contains(language))
             languageBox.setSelectedItem(language);
@@ -41,8 +41,8 @@ public class TextFieldWithLanguage {
         this(text, language, "");
     }
 
-    public JTextField getTextField() {
-        return textField;
+    public EagScrollPane getTextField() {
+        return eagScrollPaneHolder.getScrollPane();
     }
 
     public JTextField getExtraField() {
@@ -58,7 +58,7 @@ public class TextFieldWithLanguage {
     }
 
     public String getTextValue() {
-        return textField.getText();
+        return eagScrollPaneHolder.getText();
     }
 
     public String getExtraValue() {

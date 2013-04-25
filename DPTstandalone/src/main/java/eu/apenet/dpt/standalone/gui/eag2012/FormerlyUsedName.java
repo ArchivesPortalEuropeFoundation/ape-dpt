@@ -4,6 +4,8 @@
  */
 package eu.apenet.dpt.standalone.gui.eag2012;
 
+import eu.apenet.dpt.standalone.gui.eag2012.SwingStructures.EagScrollPane;
+
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JComboBox;
@@ -28,7 +30,7 @@ public class FormerlyUsedName {
         this.dateList = new ArrayList<TextFieldWithDate>();
     }
 
-    public JTextField getNameTextField() {
+    public EagScrollPane getNameTextField() {
         return textFieldWithLanguage.getTextField();
     }
 
