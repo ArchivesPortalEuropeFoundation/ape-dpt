@@ -14,7 +14,7 @@
 	<!-- Options to be asked by the converter -->
 	<xsl:param name="xmlLang" select="'eng'" />
 	<xsl:param name="repositoryCode" />
-	<xsl:param name="repositoryRole" select="'Head quarter'" />  <!-- @WP4: Same question as above - $WP4: selection from the 3 possibilities 
+	<!--xsl:param name="repositoryRole" select="'Head quarter'" /-->  <!-- @WP4: Same question as above - $WP4: selection from the 3 possibilities
 		(ie drop-down-list) - Yoann: It is a stylesheet, not a form. There won't 
 		be any drop-down list. -->
 
@@ -341,9 +341,11 @@
 		<!--<xsl:if test="not($isRepositorycodeCorrect)"> --> <!-- no if because otherRepositorId is mandatory --> <!-- @WP4: Should otherRepositorId really be mandatory in the schema? $WP4: 
 			optional in eag_2012.xsd, but mandatory for ape - Yoann: How do you want 
 			this? You want 2 schemas? EAG_2012 and APE_EAG_2012 ? -->
-		<otherRepositorId>
-			<xsl:value-of select="@repositorycode" />
-		</otherRepositorId>
+        <xsl:if test="@repositorycode">
+            <otherRepositorId>
+                <xsl:value-of select="@repositorycode" />
+            </otherRepositorId>
+        </xsl:if>
 		<!--</xsl:if> -->
 	</xsl:template>
 
@@ -382,16 +384,18 @@
 		<desc>
 			<repositories>
 				<repository>
-					<repositoryName>
-						<xsl:if test="exists($xmlLang)">
-							<xsl:attribute name="xml:lang" select="$xmlLang" />
-						</xsl:if>
-						<xsl:value-of
-							select="preceding-sibling::*[name()='identity']/*:autform/text()" />
-					</repositoryName>
-					<repositoryRole>
-						<xsl:value-of select="$repositoryRole" />
-					</repositoryRole>
+                    <xsl:if test="preceding-sibling::*[name()='identity']/*:autform/text()">
+                        <repositoryName>
+                            <xsl:if test="exists($xmlLang)">
+                                <xsl:attribute name="xml:lang" select="$xmlLang" />
+                            </xsl:if>
+                            <xsl:value-of
+                                select="preceding-sibling::*[name()='identity']/*:autform/text()" />
+                        </repositoryName>
+                    </xsl:if>
+					<!--<repositoryRole>-->
+						<!--<xsl:value-of select="$repositoryRole" />-->
+					<!--</repositoryRole>-->
 					<xsl:apply-templates select="*:geogarea" />
 					<location localType="visitors address" >
 						<xsl:apply-templates select="*:country, *:firstdem, *:secondem" />
