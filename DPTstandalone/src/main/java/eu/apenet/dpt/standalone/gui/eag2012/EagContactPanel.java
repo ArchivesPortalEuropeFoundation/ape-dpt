@@ -246,7 +246,6 @@ public class EagContactPanel extends EagPanels {
         webpageTitleTfs = new ArrayList<JTextField>(repository.getWebpage().size());
         if(repository.getWebpage().size() == 0)
             repository.getWebpage().add(new Webpage());
-        i = 0;
         for(Webpage webpage : repository.getWebpage()) {
             JTextField webpageTf = new JTextField(webpage.getHref());
             JTextField webpageTitleTf;
@@ -256,19 +255,10 @@ public class EagContactPanel extends EagPanels {
                 webpageTitleTf = new JTextField("Go to our homepage");
             webpageTfs.add(webpageTf);
             webpageTitleTfs.add(webpageTitleTf);
-            if(i == 0) {
-                builder.addLabel(labels.getString("eag2012.webpageLabel") + "*",    cc.xy (1, rowNb));
-                webpageTf.setEnabled(false);
-            } else {
-                builder.addLabel(labels.getString("eag2012.webpageLabel"),    cc.xy (1, rowNb));
-            }
+            builder.addLabel(labels.getString("eag2012.webpageLabel"),    cc.xy (1, rowNb));
             builder.add(webpageTf, cc.xy (3, rowNb));
             builder.addLabel(labels.getString("eag2012.linkTitleLabel"),             cc.xy (5, rowNb));
             builder.add(webpageTitleTf,                                            cc.xy (7, rowNb));
-            if(i++ == 0 && errors.contains("webpageTf")) {
-                setNextRow();
-                builder.add(createErrorLabel(labels.getString("eag2012.errors.webpage")),          cc.xy (1, rowNb));
-            }
             setNextRow();
         }
         JButton addWebpageBtn = new ButtonEag(labels.getString("eag2012.addWebpage"));
@@ -527,9 +517,6 @@ public class EagContactPanel extends EagPanels {
                         repository.getWebpage().add(webpage);
                         hasChanged = true;
                     }
-                }
-                if(repository.getWebpage().size() == 0) {
-                    errors.add("webpageTf");
                 }
             }
 

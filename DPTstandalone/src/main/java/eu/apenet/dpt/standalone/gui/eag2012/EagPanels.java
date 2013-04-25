@@ -39,8 +39,9 @@ public abstract class EagPanels {
     }
 
     protected final String[] continents = {"Africa", "Antarctica", "Asia", "Australia", "Europe", "North America", "South America"};
+    protected final String[] yesOrNoNotMandatory = {"---", "yes", "no"};
     protected final String[] yesOrNo = {"yes", "no"};
-    protected final String[] photographAllowance = {"depending on the material", "no", "yes", "yes (without flash)"};
+    protected final String[] photographAllowance = {"---", "depending on the material", "no", "yes", "yes (without flash)"};
 
     protected JComboBox continentCombo = new JComboBox(continents);
     protected JComboBox accessiblePublicCombo = new JComboBox(yesOrNo);

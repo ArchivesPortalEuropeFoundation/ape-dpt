@@ -61,10 +61,10 @@ public class EagAccessAndServicesPanel extends EagPanels {
     private JTextField webpageReproductionServiceTf;
     private JTextField webpageTitleReproductionServiceTf;
     private List<TextFieldWithLanguage> descriptionReproductionServiceTfs;
-    private JComboBox microformServicesCombo = new JComboBox(yesOrNo);
-    private JComboBox photographServicesCombo = new JComboBox(yesOrNo);
-    private JComboBox digitalServicesCombo = new JComboBox(yesOrNo);
-    private JComboBox photocopyServicesCombo = new JComboBox(yesOrNo);
+    private JComboBox microformServicesCombo = new JComboBox(yesOrNoNotMandatory);
+    private JComboBox photographServicesCombo = new JComboBox(yesOrNoNotMandatory);
+    private JComboBox digitalServicesCombo = new JComboBox(yesOrNoNotMandatory);
+    private JComboBox photocopyServicesCombo = new JComboBox(yesOrNoNotMandatory);
     private TextFieldWithLanguage refreshmentTf;
 
     private List<TextFieldWithLanguage> exhibitionTfs;
@@ -348,7 +348,7 @@ public class EagAccessAndServicesPanel extends EagPanels {
         if(Arrays.asList(photographAllowance).contains(searchroom.getPhotographAllowance().getValue())) {
             photographAllowanceCombo.setSelectedItem(searchroom.getPhotographAllowance().getValue());
         } else {
-            photographAllowanceCombo.setSelectedItem("no");
+            photographAllowanceCombo.setSelectedItem("---");
         }
         builder.add(photographAllowanceCombo, cc.xy(7, rowNb));
         setNextRow();
@@ -643,6 +643,8 @@ public class EagAccessAndServicesPanel extends EagPanels {
             reproductionser.setMicroformser(new Microformser());
         if(Arrays.asList(yesOrNo).contains(reproductionser.getMicroformser().getQuestion())) {
             microformServicesCombo.setSelectedItem(reproductionser.getMicroformser().getQuestion());
+        } else {
+            microformServicesCombo.setSelectedItem("---");
         }
         builder.add(microformServicesCombo, cc.xy(3, rowNb));
         setNextRow();
@@ -652,6 +654,8 @@ public class EagAccessAndServicesPanel extends EagPanels {
             reproductionser.setPhotographser(new Photographser());
         if(Arrays.asList(yesOrNo).contains(reproductionser.getPhotographser().getQuestion())) {
             photographServicesCombo.setSelectedItem(reproductionser.getPhotographser().getQuestion());
+        } else {
+            photographServicesCombo.setSelectedItem("---");
         }
         builder.add(photographServicesCombo, cc.xy(3, rowNb));
         setNextRow();
@@ -661,6 +665,8 @@ public class EagAccessAndServicesPanel extends EagPanels {
             reproductionser.setDigitalser(new Digitalser());
         if(Arrays.asList(yesOrNo).contains(reproductionser.getDigitalser().getQuestion())) {
             digitalServicesCombo.setSelectedItem(reproductionser.getDigitalser().getQuestion());
+        } else {
+            digitalServicesCombo.setSelectedItem("---");
         }
         builder.add(digitalServicesCombo, cc.xy(3, rowNb));
         setNextRow();
@@ -670,6 +676,8 @@ public class EagAccessAndServicesPanel extends EagPanels {
             reproductionser.setPhotocopyser(new Photocopyser());
         if(Arrays.asList(yesOrNo).contains(reproductionser.getPhotocopyser().getQuestion())) {
             photocopyServicesCombo.setSelectedItem(reproductionser.getPhotocopyser().getQuestion());
+        } else {
+            photocopyServicesCombo.setSelectedItem("---");
         }
         builder.add(photocopyServicesCombo, cc.xy(3, rowNb));
         setNextRow();
@@ -1230,6 +1238,7 @@ public class EagAccessAndServicesPanel extends EagPanels {
 
                 Searchroom searchroom = repository.getServices().getSearchroom();
                 boolean hasContactInfo = false;
+                boolean hasSearchRoomInfo = false;
                 if(StringUtils.isNotEmpty(telephoneSearchroomTf.getText())) {
                     if(!searchroom.getContact().getTelephone().isEmpty()) {
                         searchroom.getContact().getTelephone().get(0).setContent(telephoneSearchroomTf.getText());
@@ -1277,21 +1286,14 @@ public class EagAccessAndServicesPanel extends EagPanels {
                 if(!hasContactInfo) {
                     searchroom.setContact(null);
                 }
-
-                if(StringUtils.isNotEmpty(workplacesSearchroomTf.getText())) {
-                    Num num = new Num();
-                    num.setUnit("site");
-                    num.setContent(workplacesSearchroomTf.getText());
-                    searchroom.getWorkPlaces().setNum(num);
-                } else {
-                    errors.add("workplacesSearchroomTf");
-                }
+                hasSearchRoomInfo = hasContactInfo;
 
                 if(StringUtils.isNotEmpty(computerplacesSearchroomTf.getText())) {
                     Num num = new Num();
                     num.setUnit("site");
                     num.setContent(computerplacesSearchroomTf.getText());
                     searchroom.getComputerPlaces().setNum(num);
+                    hasSearchRoomInfo = true;
                 } else {
                     searchroom.setComputerPlaces(null);
                 }
@@ -1305,6 +1307,7 @@ public class EagAccessAndServicesPanel extends EagPanels {
                             p.setLang(textFieldWithLanguage.getLanguage());
                             searchroom.getComputerPlaces().getDescriptiveNote().getP().add(p);
                             hasChanged = true;
+                            hasSearchRoomInfo = true;
                         }
                     }
                 }
@@ -1314,11 +1317,17 @@ public class EagAccessAndServicesPanel extends EagPanels {
                     num.setUnit("site");
                     num.setContent(microfilmplacesSearchroomTf.getText());
                     searchroom.getMicrofilmPlaces().setNum(num);
+                    hasSearchRoomInfo = true;
                 } else {
                     searchroom.setMicrofilmPlaces(null);
                 }
 
-                searchroom.getPhotographAllowance().setValue((String)photographAllowanceCombo.getSelectedItem());
+                if(!(photographAllowanceCombo.getSelectedItem()).equals("---")) {
+                    searchroom.getPhotographAllowance().setValue((String)photographAllowanceCombo.getSelectedItem());
+                    hasSearchRoomInfo = true;
+                } else {
+                    searchroom.setPhotographAllowance(null);
+                }
 
                 if(readersticketSearchroomTfs.size() > 0) {
                     searchroom.getReadersTicket().clear();
@@ -1330,6 +1339,7 @@ public class EagAccessAndServicesPanel extends EagPanels {
                             readersTicket.setHref(textFieldWithLanguage.getExtraValue());
                             searchroom.getReadersTicket().add(readersTicket);
                             hasChanged = true;
+                            hasSearchRoomInfo = true;
                         }
                     }
                 }
@@ -1344,6 +1354,7 @@ public class EagAccessAndServicesPanel extends EagPanels {
                             advancedOrders.setHref(textFieldWithLanguage.getExtraValue());
                             searchroom.getAdvancedOrders().add(advancedOrders);
                             hasChanged = true;
+                            hasSearchRoomInfo = true;
                         }
                     }
                 }
@@ -1362,8 +1373,19 @@ public class EagAccessAndServicesPanel extends EagPanels {
                             researchServices.setDescriptiveNote(descriptiveNote);
                             searchroom.getResearchServices().add(researchServices);
                             hasChanged = true;
+                            hasSearchRoomInfo = true;
                         }
                     }
+                }
+
+                if(StringUtils.isNotEmpty(workplacesSearchroomTf.getText())) {
+                    Num num = new Num();
+                    num.setUnit("site");
+                    num.setContent(workplacesSearchroomTf.getText());
+                    searchroom.getWorkPlaces().setNum(num);
+                    hasSearchRoomInfo = true;
+                } else if(hasSearchRoomInfo) {
+                    errors.add("workplacesSearchroomTf");
                 }
 
                 boolean libraryExists = false;
@@ -1537,6 +1559,7 @@ public class EagAccessAndServicesPanel extends EagPanels {
 
 
                 Reproductionser reproductionser = techservices.getReproductionser();
+                boolean hasReproductionInfo = false;
                 boolean isReproductionDescFilled = false;
                 if(descriptionReproductionServiceTfs.size() > 0) {
                     reproductionser.getDescriptiveNote().getP().clear();
@@ -1590,6 +1613,9 @@ public class EagAccessAndServicesPanel extends EagPanels {
                 if(!hasReproductionserContactInfo) {
                     reproductionser.setContact(null);
                 }
+                if(isReproductionDescFilled || hasReproductionserContactInfo) {
+                    hasReproductionInfo = true;
+                }
 
                 if(StringUtils.isNotEmpty(webpageReproductionServiceTf.getText())) {
                     reproductionser.getWebpage().get(0).setHref(webpageReproductionServiceTf.getText());
@@ -1600,11 +1626,43 @@ public class EagAccessAndServicesPanel extends EagPanels {
                         reproductionser.getWebpage().remove(0);
                 }
 
-                reproductionser.getMicroformser().setQuestion((String)microformServicesCombo.getSelectedItem());
-                reproductionser.getPhotographser().setQuestion((String)photographServicesCombo.getSelectedItem());
-                reproductionser.getDigitalser().setQuestion((String)digitalServicesCombo.getSelectedItem());
-                reproductionser.getPhotocopyser().setQuestion((String)photocopyServicesCombo.getSelectedItem());
+                if(!microformServicesCombo.getSelectedItem().equals("---")) {
+                    reproductionser.getMicroformser().setQuestion((String)microformServicesCombo.getSelectedItem());
+                    hasReproductionInfo = true;
+                } else {
+                    reproductionser.setMicroformser(null);
+                }
+                if(!photographServicesCombo.getSelectedItem().equals("---")) {
+                    reproductionser.getPhotographser().setQuestion((String)photographServicesCombo.getSelectedItem());
+                    hasReproductionInfo = true;
+                } else {
+                    reproductionser.setPhotographser(null);
+                }
+                if(!digitalServicesCombo.getSelectedItem().equals("---")) {
+                    reproductionser.getDigitalser().setQuestion((String)digitalServicesCombo.getSelectedItem());
+                    hasReproductionInfo = true;
+                } else {
+                    reproductionser.setDigitalser(null);
+                }
+                if(!photocopyServicesCombo.getSelectedItem().equals("---")) {
+                    reproductionser.getPhotocopyser().setQuestion((String)photocopyServicesCombo.getSelectedItem());
+                    hasReproductionInfo = true;
+                } else {
+                    reproductionser.setPhotocopyser(null);
+                }
                 reproductionser.setQuestion("yes");
+
+                if(!hasReproductionInfo) {
+                    techservices.setReproductionser(null);
+                }
+
+                if(!hasSearchRoomInfo) {
+                    repository.getServices().setSearchroom(null);
+                }
+
+                if(techservices.getReproductionser() == null && techservices.getRestorationlab() == null) {
+                    repository.getServices().setTechservices(null);
+                }
 
 
                 RecreationalServices recreationalServices = repository.getServices().getRecreationalServices();
@@ -1685,6 +1743,12 @@ public class EagAccessAndServicesPanel extends EagPanels {
 
                 if(!hasRecreationalServices)
                     repository.getServices().setRecreationalServices(null);
+
+                if(repository.getServices().getInternetAccess() == null && repository.getServices().getLibrary() == null && repository.getServices().getRecreationalServices() == null && repository.getServices().getSearchroom() == null && repository.getServices().getTechservices() == null) {
+                    repository.setServices(null);
+                } else if(repository.getServices().getSearchroom() == null) {
+                    errors.add("workplacesSearchroomTf");
+                }
             }
 
 
