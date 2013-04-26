@@ -540,7 +540,7 @@ public class EagAccessAndServicesPanel extends EagPanels {
             builder.add(textFieldWithLanguage.getLanguageBox(), cc.xy(7, rowNb));
             setNextRow();
         }
-        JButton addDescriptionRestorationBtn = new ButtonEag(labels.getString("eag2012.addDescriptionTranslationButton"));
+        JButton addDescriptionRestorationBtn = new ButtonEag(labels.getString("eag2012.addDescriptionTranslationButton"), true);
         builder.add(addDescriptionRestorationBtn, cc.xy (1, rowNb));
         addDescriptionRestorationBtn.addActionListener(new AddDescriptionRestorationBtnAction(eag, tabbedPane, model));
         setNextRow();
@@ -602,7 +602,7 @@ public class EagAccessAndServicesPanel extends EagPanels {
             builder.add(textFieldWithLanguage.getLanguageBox(), cc.xy(7, rowNb));
             setNextRow();
         }
-        JButton addDescriptionReproductionBtn = new ButtonEag(labels.getString("eag2012.addDescriptionTranslationButton"));
+        JButton addDescriptionReproductionBtn = new ButtonEag(labels.getString("eag2012.addDescriptionTranslationButton"), true);
         builder.add(addDescriptionReproductionBtn, cc.xy (1, rowNb));
         addDescriptionReproductionBtn.addActionListener(new AddDescriptionReproductionBtnAction(eag, tabbedPane, model));
         setNextRow();
