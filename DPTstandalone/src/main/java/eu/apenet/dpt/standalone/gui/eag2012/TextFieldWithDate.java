@@ -24,7 +24,7 @@ public class TextFieldWithDate {
         dateField = new JTextField(date);
     }
 
-    public EagScrollPane getTextField() {
+    public JTextField getTextField() {
         return textFieldWithLanguage.getTextField();
     }
 

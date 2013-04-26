@@ -6,6 +6,8 @@ import com.jgoodies.forms.layout.FormLayout;
 import eu.apenet.dpt.standalone.gui.ProfileListModel;
 import eu.apenet.dpt.standalone.gui.Utilities;
 import static eu.apenet.dpt.standalone.gui.eag2012.EagPanels.LOG;
+
+import eu.apenet.dpt.standalone.gui.eag2012.SwingStructures.TextAreaWithLanguage;
 import eu.apenet.dpt.standalone.gui.eag2012.data.*;
 import org.apache.commons.lang.StringUtils;
 
@@ -22,16 +24,16 @@ import java.util.ResourceBundle;
  */
 public class EagDescriptionPanel extends EagPanels {
 
-    private List<TextFieldWithLanguage> repositoryHistoryTfs;
+    private List<TextAreaWithLanguage> repositoryHistoryTfs;
     private List<TextFieldWithLanguage> repositoryFoundationTfs;
     private JTextField repositoryFoundationDateTf;
     private List<TextFieldWithLanguage> repositorySuppressionTfs;
     private JTextField repositorySuppressionDateTf;
-    private List<TextFieldWithLanguage> unitAdministrativeStructureTfs;
-    private List<TextFieldWithLanguage> buildingTfs;
+    private List<TextAreaWithLanguage> unitAdministrativeStructureTfs;
+    private List<TextAreaWithLanguage> buildingTfs;
     private JTextField repositoryAreaTf;
     private JTextField lengthShelfTf;
-    private List<TextFieldWithLanguage> archivalAndOthersTfs;
+    private List<TextAreaWithLanguage> archivalAndOthersTfs;
     private List<TextFieldWithDate> holdingsYearsTfs;
     private JTextField extentTf;
 
@@ -76,14 +78,14 @@ public class EagDescriptionPanel extends EagPanels {
             repositorhist.setDescriptiveNote(descriptiveNote);
             repository.setRepositorhist(repositorhist);
         }
-        repositoryHistoryTfs = new ArrayList<TextFieldWithLanguage>(repository.getRepositorhist().getDescriptiveNote().getP().size());
+        repositoryHistoryTfs = new ArrayList<TextAreaWithLanguage>(repository.getRepositorhist().getDescriptiveNote().getP().size());
         for (P p : repository.getRepositorhist().getDescriptiveNote().getP()) {
             builder.addLabel(labels.getString("eag2012.historyOfArchive"), cc.xy(1, rowNb));
-            TextFieldWithLanguage textFieldWithLanguage = new TextFieldWithLanguage(p.getContent(), p.getLang());
-            repositoryHistoryTfs.add(textFieldWithLanguage);
-            builder.add(textFieldWithLanguage.getTextField(), cc.xy(3, rowNb));
+            TextAreaWithLanguage textAreaWithLanguage = new TextAreaWithLanguage(p.getContent(), p.getLang());
+            repositoryHistoryTfs.add(textAreaWithLanguage);
+            builder.add(textAreaWithLanguage.getTextField(), cc.xy(3, rowNb));
             builder.addLabel(labels.getString("eag2012.language"), cc.xy(5, rowNb));
-            builder.add(textFieldWithLanguage.getLanguageBox(), cc.xy(7, rowNb));
+            builder.add(textAreaWithLanguage.getLanguageBox(), cc.xy(7, rowNb));
             setNextRow();
         }
         JButton addRepositorhistDescriptionBtn = new ButtonEag(labels.getString("eag2012.addHistoryDescriptionButton"));
@@ -160,14 +162,14 @@ public class EagDescriptionPanel extends EagPanels {
         if (repository.getAdminhierarchy().getAdminunit().size() == 0) {
             repository.getAdminhierarchy().getAdminunit().add(new Adminunit());
         }
-        unitAdministrativeStructureTfs = new ArrayList<TextFieldWithLanguage>(repository.getAdminhierarchy().getAdminunit().size());
+        unitAdministrativeStructureTfs = new ArrayList<TextAreaWithLanguage>(repository.getAdminhierarchy().getAdminunit().size());
         for (Adminunit adminunit : repository.getAdminhierarchy().getAdminunit()) {
             builder.addLabel(labels.getString("eag2012.unitAdministrativeStructure"), cc.xy(1, rowNb));
-            TextFieldWithLanguage textFieldWithLanguage = new TextFieldWithLanguage(adminunit.getContent(), adminunit.getLang());
-            unitAdministrativeStructureTfs.add(textFieldWithLanguage);
-            builder.add(textFieldWithLanguage.getTextField(), cc.xy(3, rowNb));
+            TextAreaWithLanguage textAreaWithLanguage = new TextAreaWithLanguage(adminunit.getContent(), adminunit.getLang());
+            unitAdministrativeStructureTfs.add(textAreaWithLanguage);
+            builder.add(textAreaWithLanguage.getTextField(), cc.xy(3, rowNb));
             builder.addLabel(labels.getString("eag2012.language"), cc.xy(5, rowNb));
-            builder.add(textFieldWithLanguage.getLanguageBox(), cc.xy(7, rowNb));
+            builder.add(textAreaWithLanguage.getLanguageBox(), cc.xy(7, rowNb));
             setNextRow();
         }
         JButton addUnitAdministrativeStructureBtn = new ButtonEag(labels.getString("eag2012.addUnitAdministrativeStructureButton"));
@@ -188,14 +190,14 @@ public class EagDescriptionPanel extends EagPanels {
             building.setDescriptiveNote(descriptiveNote);
             repository.getBuildinginfo().setBuilding(building);
         }
-        buildingTfs = new ArrayList<TextFieldWithLanguage>(repository.getBuildinginfo().getBuilding().getDescriptiveNote().getP().size());
+        buildingTfs = new ArrayList<TextAreaWithLanguage>(repository.getBuildinginfo().getBuilding().getDescriptiveNote().getP().size());
         for (P p : repository.getBuildinginfo().getBuilding().getDescriptiveNote().getP()) {
             builder.addLabel(labels.getString("eag2012.building"), cc.xy(1, rowNb));
-            TextFieldWithLanguage textFieldWithLanguage = new TextFieldWithLanguage(p.getContent(), p.getLang());
-            buildingTfs.add(textFieldWithLanguage);
-            builder.add(textFieldWithLanguage.getTextField(), cc.xy(3, rowNb));
+            TextAreaWithLanguage textAreaWithLanguage = new TextAreaWithLanguage(p.getContent(), p.getLang());
+            buildingTfs.add(textAreaWithLanguage);
+            builder.add(textAreaWithLanguage.getTextField(), cc.xy(3, rowNb));
             builder.addLabel(labels.getString("eag2012.language"), cc.xy(5, rowNb));
-            builder.add(textFieldWithLanguage.getLanguageBox(), cc.xy(7, rowNb));
+            builder.add(textAreaWithLanguage.getLanguageBox(), cc.xy(7, rowNb));
             setNextRow();
         }
         JButton addBuildingDescriptionBtn = new ButtonEag(labels.getString("eag2012.addBuildingDescriptionButton"));
@@ -251,14 +253,14 @@ public class EagDescriptionPanel extends EagPanels {
         if (repository.getHoldings().getDate() == null) {
             repository.getHoldings().setDate(new Date());
         }
-        archivalAndOthersTfs = new ArrayList<TextFieldWithLanguage>(repository.getHoldings().getDescriptiveNote().getP().size());
+        archivalAndOthersTfs = new ArrayList<TextAreaWithLanguage>(repository.getHoldings().getDescriptiveNote().getP().size());
         for (P p : repository.getHoldings().getDescriptiveNote().getP()) {
             builder.addLabel(labels.getString("eag2012.archivalAndOtherHoldings"), cc.xy(1, rowNb));
-            TextFieldWithLanguage textFieldWithLanguage = new TextFieldWithLanguage(p.getContent(), p.getLang());
-            archivalAndOthersTfs.add(textFieldWithLanguage);
-            builder.add(textFieldWithLanguage.getTextField(), cc.xy(3, rowNb));
+            TextAreaWithLanguage textAreaWithLanguage = new TextAreaWithLanguage(p.getContent(), p.getLang());
+            archivalAndOthersTfs.add(textAreaWithLanguage);
+            builder.add(textAreaWithLanguage.getTextField(), cc.xy(3, rowNb));
             builder.addLabel(labels.getString("eag2012.language"), cc.xy(5, rowNb));
-            builder.add(textFieldWithLanguage.getLanguageBox(), cc.xy(7, rowNb));
+            builder.add(textAreaWithLanguage.getLanguageBox(), cc.xy(7, rowNb));
             setNextRow();
         }
         JButton addArchivalAndOthersDescriptionBtn = new ButtonEag(labels.getString("eag2012.addArchivalAndOtherHoldingsDescriptionButton"));
@@ -596,12 +598,12 @@ public class EagDescriptionPanel extends EagPanels {
                 int counterRepositorhistoryTfs = 0;
                 if (repositoryHistoryTfs.size() > 0) {
                     repository.getRepositorhist().getDescriptiveNote().getP().clear();
-                    for (TextFieldWithLanguage textFieldWithLanguage : repositoryHistoryTfs) {
-                        if (StringUtils.isNotEmpty(textFieldWithLanguage.getTextValue())) {
+                    for (TextAreaWithLanguage textAreaWithLanguage : repositoryHistoryTfs) {
+                        if (StringUtils.isNotEmpty(textAreaWithLanguage.getTextValue())) {
                             counterRepositorhistoryTfs++;
                             P p = new P();
-                            p.setContent(textFieldWithLanguage.getTextValue());
-                            p.setLang(textFieldWithLanguage.getLanguage());
+                            p.setContent(textAreaWithLanguage.getTextValue());
+                            p.setLang(textAreaWithLanguage.getLanguage());
                             repository.getRepositorhist().getDescriptiveNote().getP().add(p);
                         }
                     }
@@ -655,12 +657,12 @@ public class EagDescriptionPanel extends EagPanels {
                     if(repository.getAdminhierarchy() == null)
                         repository.setAdminhierarchy(new Adminhierarchy());
                     repository.getAdminhierarchy().getAdminunit().clear();
-                    for (TextFieldWithLanguage textFieldWithLanguage : unitAdministrativeStructureTfs) {
-                        if (StringUtils.isNotEmpty(textFieldWithLanguage.getTextValue())) {
+                    for (TextAreaWithLanguage textAreaWithLanguage : unitAdministrativeStructureTfs) {
+                        if (StringUtils.isNotEmpty(textAreaWithLanguage.getTextValue())) {
                             counterUnitAdministrativeStructureTfs++;
                             Adminunit adminunit = new Adminunit();
-                            adminunit.setContent(textFieldWithLanguage.getTextValue());
-                            adminunit.setLang(textFieldWithLanguage.getLanguage());
+                            adminunit.setContent(textAreaWithLanguage.getTextValue());
+                            adminunit.setLang(textAreaWithLanguage.getLanguage());
                             repository.getAdminhierarchy().getAdminunit().add(adminunit);
                         }
                     }
@@ -672,12 +674,12 @@ public class EagDescriptionPanel extends EagPanels {
                 int counterBuildingTfs = 0;
                 if (buildingTfs.size() > 0) {
                     repository.getBuildinginfo().getBuilding().getDescriptiveNote().getP().clear();
-                    for (TextFieldWithLanguage textFieldWithLanguage : buildingTfs) {
-                        if (StringUtils.isNotEmpty(textFieldWithLanguage.getTextValue())) {
+                    for (TextAreaWithLanguage textAreaWithLanguage : buildingTfs) {
+                        if (StringUtils.isNotEmpty(textAreaWithLanguage.getTextValue())) {
                             counterBuildingTfs++;
                             P p = new P();
-                            p.setContent(textFieldWithLanguage.getTextValue());
-                            p.setLang(textFieldWithLanguage.getLanguage());
+                            p.setContent(textAreaWithLanguage.getTextValue());
+                            p.setLang(textAreaWithLanguage.getLanguage());
                             repository.getBuildinginfo().getBuilding().getDescriptiveNote().getP().add(p);
                         }
                     }
@@ -696,13 +698,13 @@ public class EagDescriptionPanel extends EagPanels {
                 int counterArchivalAndOthersTfs = 0;
                 if (archivalAndOthersTfs.size() > 0) {
                     repository.getHoldings().getDescriptiveNote().getP().clear();
-                    for (TextFieldWithLanguage textFieldWithLanguage : archivalAndOthersTfs) {
-                        if (StringUtils.isNotEmpty(textFieldWithLanguage.getTextValue())) {
+                    for (TextAreaWithLanguage textAreaWithLanguage : archivalAndOthersTfs) {
+                        if (StringUtils.isNotEmpty(textAreaWithLanguage.getTextValue())) {
                             counterForHoldingsTfs++;
                             counterArchivalAndOthersTfs++;
                             P p = new P();
-                            p.setContent(textFieldWithLanguage.getTextValue());
-                            p.setLang(textFieldWithLanguage.getLanguage());
+                            p.setContent(textAreaWithLanguage.getTextValue());
+                            p.setLang(textAreaWithLanguage.getLanguage());
                             repository.getHoldings().getDescriptiveNote().getP().add(p);
                         }
                     }

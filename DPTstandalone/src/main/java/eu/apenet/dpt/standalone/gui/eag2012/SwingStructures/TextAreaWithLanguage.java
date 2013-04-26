@@ -1,29 +1,26 @@
-package eu.apenet.dpt.standalone.gui.eag2012;
+package eu.apenet.dpt.standalone.gui.eag2012.SwingStructures;
 
-import eu.apenet.dpt.standalone.gui.eag2012.SwingStructures.EagScrollPane;
-import eu.apenet.dpt.standalone.gui.eag2012.SwingStructures.EagScrollPaneHolder;
+import eu.apenet.dpt.standalone.gui.eag2012.EagPanels;
 
 import javax.swing.*;
 import java.util.Arrays;
 
 /**
  * User: Yoann Moranville
- * Date: 05/12/2012
- *
- * To be used when a TextField also has a language
+ * Date: 26/04/2013
  *
  * @author Yoann Moranville
  */
-public class TextFieldWithLanguage {
-    private JTextField textField;
+public class TextAreaWithLanguage {
+    private EagScrollPaneHolder eagScrollPaneHolder;
     private JTextField extraField;
     private JTextField secondExtraField;
     private JComboBox languageBox;
     private static final String[] languages = EagPanels.languages;
     private static final String[] languagesDisplay = EagPanels.languagesDisplay;
 
-    public TextFieldWithLanguage(String text, String language, String extraText, String secondExtraText) {
-        textField = new JTextField(text);
+    public TextAreaWithLanguage(String text, String language, String extraText, String secondExtraText) {
+        eagScrollPaneHolder = new EagScrollPaneHolder(text);
         languageBox = new JComboBox(languagesDisplay);
         if(Arrays.asList(languages).contains(language))
             languageBox.setSelectedItem(language);
@@ -33,16 +30,16 @@ public class TextFieldWithLanguage {
         secondExtraField = new JTextField(secondExtraText);
     }
 
-    public TextFieldWithLanguage(String text, String language, String extraText) {
+    public TextAreaWithLanguage(String text, String language, String extraText) {
         this(text, language, extraText, "");
     }
 
-    public TextFieldWithLanguage(String text, String language) {
+    public TextAreaWithLanguage(String text, String language) {
         this(text, language, "");
     }
 
-    public JTextField getTextField() {
-        return textField;
+    public EagScrollPane getTextField() {
+        return eagScrollPaneHolder.getScrollPane();
     }
 
     public JTextField getExtraField() {
@@ -58,7 +55,7 @@ public class TextFieldWithLanguage {
     }
 
     public String getTextValue() {
-        return textField.getText();
+        return eagScrollPaneHolder.getText();
     }
 
     public String getExtraValue() {

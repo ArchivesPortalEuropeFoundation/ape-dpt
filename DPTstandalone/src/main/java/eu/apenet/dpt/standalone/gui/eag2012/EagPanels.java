@@ -22,8 +22,8 @@ public abstract class EagPanels {
     private static final int NB_ROWS = 150;
     private static final String EDITOR_ROW = "p, 3dlu, ";
     protected static String EDITOR_ROW_SPEC;
-    protected static String[] languages;
-    protected static String[] languagesDisplay;
+    public static String[] languages;
+    public static String[] languagesDisplay;
     static {
         String temp = "";
         for(int i = 0; i < NB_ROWS; i++) {

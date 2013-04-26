@@ -30,7 +30,7 @@ public class FormerlyUsedName {
         this.dateList = new ArrayList<TextFieldWithDate>();
     }
 
-    public EagScrollPane getNameTextField() {
+    public JTextField getNameTextField() {
         return textFieldWithLanguage.getTextField();
     }
 

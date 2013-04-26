@@ -15,6 +15,6 @@ public class EagTextAreaScrollable extends JTextArea {
         this.setLineWrap(true);
         this.setAutoscrolls(true);
         this.setWrapStyleWord(true);
-        this.setRows(1);
+        this.setRows(3);
     }
 }

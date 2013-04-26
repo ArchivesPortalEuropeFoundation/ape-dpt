@@ -224,7 +224,7 @@ public class EagInstitutionPanel extends EagPanels {
             }
 
             if(hasMinimumOneVisitorAddress) {
-                JButton addNewVisitorTranslationAddressBtn = new ButtonEag(labels.getString("eag2012.addVisitorTranslationAddress"));
+                JButton addNewVisitorTranslationAddressBtn = new ButtonEag(labels.getString("eag2012.addVisitorTranslationAddress"), true);
                 addNewVisitorTranslationAddressBtn.addActionListener(new AddAddressAction(eag, tabbedPane, model, false));
                 builder.add(addNewVisitorTranslationAddressBtn, cc.xy(3, rowNb));
                 setNextRow();
@@ -236,7 +236,7 @@ public class EagInstitutionPanel extends EagPanels {
             }
 
             if(hasMinimumOnePostalAddress) {
-                JButton addNewPostalTranslationAddressBtn = new ButtonEag(labels.getString("eag2012.addPostalTranslationAddress"));
+                JButton addNewPostalTranslationAddressBtn = new ButtonEag(labels.getString("eag2012.addPostalTranslationAddress"), true);
                 addNewPostalTranslationAddressBtn.addActionListener(new AddAddressAction(eag, tabbedPane, model, true));
                 builder.add(addNewPostalTranslationAddressBtn, cc.xy(3, rowNb));
                 setNextRow();
