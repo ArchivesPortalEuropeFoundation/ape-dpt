@@ -576,7 +576,7 @@ public class DataPreparationToolGUI extends JFrame {
         createEag2012FromScratch.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 if(!Eag2012Frame.isUsed())
-                    new Eag2012Frame(getContentPane().getSize(), (ProfileListModel) getXmlEadList().getModel(), labels);
+                    new Eag2012Frame(getContentPane().getSize(), (ProfileListModel) getXmlEadList().getModel(), labels, retrieveFromDb.retrieveCountryCode(), retrieveFromDb.retrieveRepositoryCode());
             }
         });
         digitalObjectTypeItem.addActionListener(new ActionListener() {

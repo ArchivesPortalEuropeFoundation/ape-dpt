@@ -34,6 +34,8 @@ public class Eag2012Frame extends JFrame {
     private static boolean used;
     private static boolean startOfForm;
     private static Date timeMaintenance;
+    private String countrycode;
+    private String mainagencycode;
 
     public Eag2012Frame(File eagFile, boolean isEag2012, Dimension dimension, ProfileListModel model, ResourceBundle labels) throws Exception {
         String namespace = ReadXml.getXmlNamespace(eagFile);
@@ -59,7 +61,7 @@ public class Eag2012Frame extends JFrame {
         createFrame(eagFile, false);
     }
 
-    public Eag2012Frame(Dimension dimension, ProfileListModel model, ResourceBundle labels) {
+    public Eag2012Frame(Dimension dimension, ProfileListModel model, ResourceBundle labels, String countrycode, String mainagencycode) {
 //        URL emptyEAGFileURL = getClass().getResource("/EAG_XML_XSL/Blank_EAG_2012.xml");
         InputStream emptyEAGFileStream = getClass().getResourceAsStream("/EAG_XML_XSL/Blank_EAG_2012.xml");
 
@@ -68,6 +70,8 @@ public class Eag2012Frame extends JFrame {
         this.dimension = dimension;
         this.model = model;
         this.labels = labels;
+        this.countrycode = countrycode;
+        this.mainagencycode = mainagencycode;
         createFrame(emptyEAGFileStream, true);
     }
 
@@ -130,7 +134,7 @@ public class Eag2012Frame extends JFrame {
 
     protected JComponent buildInstitutionPanel(Eag eag, boolean isNew) {
         Eag2012Frame.setStartOfForm(true);
-        JScrollPane jScrollPane = new JScrollPane(new EagInstitutionPanel(eag, tabbedPane, this, model, isNew, labels).buildEditorPanel(null));
+        JScrollPane jScrollPane = new JScrollPane(new EagInstitutionPanel(eag, tabbedPane, this, model, isNew, labels, countrycode, mainagencycode).buildEditorPanel(null));
         jScrollPane.getVerticalScrollBar().setUnitIncrement(20);
         return jScrollPane;
     }

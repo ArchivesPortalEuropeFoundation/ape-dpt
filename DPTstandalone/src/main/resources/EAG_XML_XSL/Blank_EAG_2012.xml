@@ -2,7 +2,6 @@
 <eag xmlns="http://www.archivesportaleurope.net/Portal/profiles/eag_2012/" schemaLocation="http://www.archivesportaleurope.net/Portal/profiles/eag_2012/ http://www.archivesportaleurope.net/Portal/profiles/eag_2012.xsd" audience="internal">
     <control>
         <recordId></recordId>
-        <otherRecordId></otherRecordId>
         <maintenanceAgency>
             <agencyCode></agencyCode>
             <agencyName></agencyName>

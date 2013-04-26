@@ -44,10 +44,17 @@ public class EagInstitutionPanel extends EagPanels {
     private JTextField refInstitutionHoldingsGuideTitleTf;
 
     private boolean isNew;
+    private String countrycode;
+    private String mainagencycode;
 
     public EagInstitutionPanel(Eag eag, JTabbedPane tabbedPane, JFrame eag2012Frame, ProfileListModel model, boolean isNew, ResourceBundle labels) {
+        this(eag, tabbedPane, eag2012Frame, model, isNew, labels, "", "");
+    }
+    public EagInstitutionPanel(Eag eag, JTabbedPane tabbedPane, JFrame eag2012Frame, ProfileListModel model, boolean isNew, ResourceBundle labels, String countrycode, String mainagencycode) {
         super(eag, tabbedPane, eag2012Frame, model, labels);
         this.isNew = isNew;
+        this.countrycode = countrycode;
+        this.mainagencycode = mainagencycode;
     }
 
     /**
@@ -89,7 +96,10 @@ public class EagInstitutionPanel extends EagPanels {
         builder.add(personTf, cc.xy(3, rowNb));
         setNextRow();
         builder.addLabel(labels.getString("eag2012.countryCodeLabel") + "*",          cc.xy (1, rowNb));
-        countryCodeTf = new JTextField(eag.getArchguide().getIdentity().getRepositorid().getCountrycode());
+        if(isNew && StringUtils.isEmpty(eag.getArchguide().getIdentity().getRepositorid().getCountrycode()))
+            countryCodeTf = new JTextField(countrycode);
+        else
+            countryCodeTf = new JTextField(eag.getArchguide().getIdentity().getRepositorid().getCountrycode());
         countryCodeTf.addKeyListener(new CheckKeyListener());
         builder.add(countryCodeTf, cc.xy(3, rowNb));
         setNextRow();
@@ -98,8 +108,14 @@ public class EagInstitutionPanel extends EagPanels {
             setNextRow();
         }
 
-        if(eag.getControl().getOtherRecordId().size() == 0)
+        if(eag.getControl().getOtherRecordId().size() == 0) {
             eag.getControl().getOtherRecordId().add(new OtherRecordId());
+            if(isNew && StringUtils.isNotEmpty(mainagencycode)) {
+                eag.getControl().getOtherRecordId().get(0).setLocalType("yes");
+                eag.getControl().getOtherRecordId().get(0).setValue(mainagencycode);
+            }
+        }
+
         otherRecordIdTfs = new ArrayList<TextFieldWithCheckbox>(eag.getControl().getOtherRecordId().size());
         for(OtherRecordId otherRecordId : eag.getControl().getOtherRecordId()) {
             TextFieldWithCheckbox textFieldWithCheckbox = new TextFieldWithCheckbox(otherRecordId.getValue(), otherRecordId.getLocalType());
