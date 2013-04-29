@@ -1,9 +1,13 @@
 package eu.apenet.dpt.standalone.gui.eag2012;
 
+import eu.apenet.dpt.standalone.gui.eag2012.data.DateRange;
+import eu.apenet.dpt.standalone.gui.eag2012.data.DateSet;
 import eu.apenet.dpt.standalone.gui.eag2012.data.MaintenanceEvent;
 import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -14,6 +18,7 @@ import java.util.List;
  * @author Yoann Moranville
  */
 public abstract class TextChanger {
+    private static final Logger LOG = Logger.getLogger(TextChanger.class);
     public static String getNewText(List<TextFieldWithCheckbox> textFieldWithCheckboxs, String countryCode) {
         String returnValue = "";
         for(TextFieldWithCheckbox textFieldWithCheckbox : textFieldWithCheckboxs) {
@@ -52,11 +57,6 @@ public abstract class TextChanger {
     }
 
     public static MaintenanceEvent getMaintenanceEventSaved(Date timeMaintenance, List<MaintenanceEvent> maintenanceEvents) {
-//        Date date = new Date();
-//                    SimpleDateFormat format = new SimpleDateFormat("dd.MM.yyyy");
-//                    SimpleDateFormat formatStandard = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
-//                    eventDateTime.setContent(format.format(date));
-//                    eventDateTime.setStandardDateTime(formatStandard.format(date));
         for(MaintenanceEvent maintenanceEvent : maintenanceEvents) {
             SimpleDateFormat formatStandard = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
             String maintenanceTimeStandardForm = formatStandard.format(timeMaintenance);
@@ -65,5 +65,14 @@ public abstract class TextChanger {
             }
         }
         return null;
+    }
+
+    public static List<Object> transformDatesToDateOrDateRange(DateSet dateSet) {
+        eu.apenet.dpt.standalone.gui.eag2012.data.Date date = dateSet.getDate();
+        DateRange dateRange = dateSet.getDateRange();
+        List<Object> objects = new ArrayList<Object>();
+        objects.add(date);
+        objects.add(dateRange);
+        return objects;
     }
 }
