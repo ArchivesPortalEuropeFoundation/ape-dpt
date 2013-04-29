@@ -120,12 +120,19 @@ public class EagIdentityPanel extends EagPanels {
         setNextRow();
 
         formerlyUsedNameTfs = new ArrayList<FormerlyUsedName>(eag.getArchguide().getIdentity().getNonpreform().size());
+        LOG.info(eag.getArchguide().getIdentity().getNonpreform().size());
         for(Nonpreform nonpreform : eag.getArchguide().getIdentity().getNonpreform()) {
             String nameStr = "";
             ArrayList<String[]> dateList = new ArrayList<String[]>();
+            LOG.info(nonpreform.getContent().size());
             for(int i = 0; i < nonpreform.getContent().size(); i++) {
                 Object object = nonpreform.getContent().get(i);
+                LOG.info(object.getClass().getName());
                 if(object instanceof String) {
+                    if(object == null)
+                        LOG.info("null String");
+                    else
+                        LOG.info(object);
                     nameStr += (String)object;
                 } else if (object instanceof UseDates) {
                     String[] dates = new String[3];
@@ -133,16 +140,12 @@ public class EagIdentityPanel extends EagPanels {
                     dates[1] = "";
                     dates[2] = "";
                     UseDates useDates = (UseDates)object;
-                    if(useDates.getDate() != null) {
-                        dates[0] = useDates.getDate().getContent();
-                        dateList.add(dates);
-                    } else if(useDates.getDateRange() != null) {
-                        dates[1] = useDates.getDateRange().getFromDate().getContent();
-                        dates[2] = useDates.getDateRange().getToDate().getContent();
-                        dateList.add(dates);
-                    } else if(useDates.getDateSet() != null) {
-                        ArrayList<Object> dateSetContent = new ArrayList<Object>(useDates.getDateSet().getDateOrDateRange().size());
-                        for (Object object1 : dateSetContent) {
+                    LOG.info("Has date set: " + useDates.getDateSet());
+                    LOG.info("Has date: " + useDates.getDate());
+                    LOG.info("Has date range: " + useDates.getDateRange());
+                    if(useDates.getDateSet() != null) {
+                        LOG.info(useDates.getDateSet().getDateOrDateRange().size());
+                        for (Object object1 : useDates.getDateSet().getDateOrDateRange()) {
                             if(object1 instanceof Date){
                                 dates[0] = ((Date) object1).getContent();
                                 dateList.add(dates);
@@ -153,6 +156,13 @@ public class EagIdentityPanel extends EagPanels {
                                 dateList.add(dates);
                             }
                         }
+                    } else if(useDates.getDate() != null) {
+                        dates[0] = useDates.getDate().getContent();
+                        dateList.add(dates);
+                    } else if(useDates.getDateRange() != null) {
+                        dates[1] = useDates.getDateRange().getFromDate().getContent();
+                        dates[2] = useDates.getDateRange().getToDate().getContent();
+                        dateList.add(dates);
                     }
                 }
             }
