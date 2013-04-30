@@ -19,6 +19,7 @@ import javax.swing.JTextField;
 public class FormerlyUsedName {
     private TextFieldWithLanguage textFieldWithLanguage;
     private List<TextFieldWithDate> dateList;
+    private int orderInXmlFile;
     
     public FormerlyUsedName(String name, String language, List<TextFieldWithDate> dateList){
         this.textFieldWithLanguage = new TextFieldWithLanguage(name, language);
@@ -76,5 +77,17 @@ public class FormerlyUsedName {
                 break;
             }
         }
+    }
+
+    public TextFieldWithLanguage getTextFieldWithLanguage() {
+        return textFieldWithLanguage;
+    }
+
+    public int getOrderInXmlFile() {
+        return orderInXmlFile;
+    }
+
+    public void setOrderInXmlFile(int orderInXmlFile) {
+        this.orderInXmlFile = orderInXmlFile;
     }
 }
