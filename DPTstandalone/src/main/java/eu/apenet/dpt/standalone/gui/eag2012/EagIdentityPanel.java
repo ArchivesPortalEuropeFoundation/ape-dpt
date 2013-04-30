@@ -5,17 +5,12 @@ import com.jgoodies.forms.layout.CellConstraints;
 import com.jgoodies.forms.layout.FormLayout;
 import eu.apenet.dpt.standalone.gui.ProfileListModel;
 import eu.apenet.dpt.standalone.gui.Utilities;
-import static eu.apenet.dpt.standalone.gui.eag2012.EagPanels.LOG;
 import eu.apenet.dpt.standalone.gui.eag2012.data.*;
 import eu.apenet.dpt.standalone.gui.eag2012.data.Date;
 import org.apache.commons.lang.StringUtils;
 
 import javax.swing.*;
-import javax.swing.text.AbstractDocument;
-import javax.swing.text.AttributeSet;
-import javax.swing.text.PlainDocument;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.*;
 
 /**
@@ -120,26 +115,18 @@ public class EagIdentityPanel extends EagPanels {
         setNextRow();
 
         formerlyUsedNameTfs = new ArrayList<FormerlyUsedName>(eag.getArchguide().getIdentity().getNonpreform().size());
-        LOG.info(eag.getArchguide().getIdentity().getNonpreform().size());
         for(int formerNameCounter = 0; formerNameCounter < eag.getArchguide().getIdentity().getNonpreform().size(); formerNameCounter++) {
             Nonpreform nonpreform = eag.getArchguide().getIdentity().getNonpreform().get(formerNameCounter);
             String nameStr = "";
-//            ArrayList<String[]> dateList = new ArrayList<String[]>();
-            LOG.info(nonpreform.getContent().size());
             for(int i = 0; i < nonpreform.getContent().size(); i++) {
                 Object object = nonpreform.getContent().get(i);
-                LOG.info(object.getClass().getName());
                 if(object instanceof String) {
                     nameStr += (String)object;
                 }
                 if (object instanceof UseDates) {
                     UseDates useDates = (UseDates)object;
-                    LOG.info("Has date set: " + useDates.getDateSet());
-                    LOG.info("Has date: " + useDates.getDate());
-                    LOG.info("Has date range: " + useDates.getDateRange());
                     if(useDates.getDateSet() != null) {
                         datesForFormerlyUsedName = new ArrayList<TextFieldWithDate>(useDates.getDateSet().getDateOrDateRange().size());
-                        LOG.info(useDates.getDateSet().getDateOrDateRange().size());
                         for (Object object1 : useDates.getDateSet().getDateOrDateRange()) {
                             if(object1 instanceof Date){
                                 TextFieldWithDate textFieldWithDate = new TextFieldWithDate("", "", "", "", ((Date)object1).getContent());
@@ -147,6 +134,7 @@ public class EagIdentityPanel extends EagPanels {
                             }
                             if(object1 instanceof DateRange){
                                 TextFieldWithDate textFieldWithDate = new TextFieldWithDate("", "", ((DateRange)object1).getFromDate().getContent(), ((DateRange)object1).getToDate().getContent(), "");
+                                textFieldWithDate.setDateRange(true);
                                 datesForFormerlyUsedName.add(textFieldWithDate);
                             }
                         }
@@ -158,6 +146,7 @@ public class EagIdentityPanel extends EagPanels {
                         } 
                         if(useDates.getDateRange() != null) {
                             TextFieldWithDate textFieldWithDate = new TextFieldWithDate("", "", useDates.getDateRange().getFromDate().getContent(), useDates.getDateRange().getToDate().getContent(), "");
+                            textFieldWithDate.setDateRange(true);
                             datesForFormerlyUsedName.add(textFieldWithDate);
                         }
                     }
@@ -179,11 +168,11 @@ public class EagIdentityPanel extends EagPanels {
             setNextRow();
             
             for (TextFieldWithDate textFieldWithDate : datesForFormerlyUsedName) {
-                if(StringUtils.isNotBlank(textFieldWithDate.getDate())) {
+                if(!textFieldWithDate.isDateRange()) {
                     builder.addLabel(labels.getString("eag2012.yearLabel"),    cc.xy (1, rowNb));
                     builder.add(textFieldWithDate.getDateField(), cc.xy (3, rowNb));
                     setNextRow();
-                } else if(StringUtils.isNotBlank(textFieldWithDate.getFromDate()) && StringUtils.isNotBlank(textFieldWithDate.getToDate())) {
+                } else {
                     builder.addLabel(labels.getString("eag2012.yearLabel") + " " + labels.getString("eag2012.fromLabel"),    cc.xy (1, rowNb));
                     builder.add(textFieldWithDate.getFromDateField(), cc.xy (3, rowNb));
                     builder.addLabel(labels.getString("eag2012.toLabel"),             cc.xy (5, rowNb));
@@ -251,10 +240,14 @@ public class EagIdentityPanel extends EagPanels {
             }
             String sourceString = ((JButton)actionEvent.getSource()).getName();
             int sourceOrderNo = Integer.parseInt(sourceString.substring(sourceString.lastIndexOf('_') + 1));
-            LOG.info(sourceOrderNo);
             List<TextFieldWithDate> yearsTfs = formerlyUsedNameTfs.get(sourceOrderNo).getDateList();
             
-            UseDates currentUseDate = (UseDates) eag.getArchguide().getIdentity().getNonpreform().get(sourceOrderNo).getContent().get(1);
+            UseDates currentUseDate = new UseDates();
+            for(Object obj : eag.getArchguide().getIdentity().getNonpreform().get(sourceOrderNo).getContent()) {
+                if(obj instanceof UseDates) {
+                    currentUseDate = (UseDates)obj;
+                }
+            }
             if(TextChanger.isDateSetReady(yearsTfs, true, false)) {
                 if (currentUseDate.getDateSet() == null) {
                     currentUseDate.setDateSet(new DateSet());
@@ -269,7 +262,7 @@ public class EagIdentityPanel extends EagPanels {
             } else {
                 currentUseDate.setDate(new Date());
             }
-            reloadTabbedPanel(new EagIdentityPanel(eag, tabbedPane, eag2012Frame, model, labels).buildEditorPanel(errors), 4);
+            reloadTabbedPanel(new EagIdentityPanel(eag, tabbedPane, eag2012Frame, model, labels).buildEditorPanel(errors), 1);
         }
     }
 
@@ -287,9 +280,15 @@ public class EagIdentityPanel extends EagPanels {
             }
             String sourceString = ((JButton)actionEvent.getSource()).getName();
             int sourceOrderNo = Integer.parseInt(sourceString.substring(sourceString.lastIndexOf('_') + 1));
-            LOG.info(sourceOrderNo);
             List<TextFieldWithDate> yearsTfs = formerlyUsedNameTfs.get(sourceOrderNo).getDateList();
-            UseDates currentUseDate = (UseDates) eag.getArchguide().getIdentity().getNonpreform().get(sourceOrderNo).getContent().get(1);
+
+            UseDates currentUseDate = new UseDates();
+            for(Object obj : eag.getArchguide().getIdentity().getNonpreform().get(sourceOrderNo).getContent()) {
+                if(obj instanceof UseDates) {
+                    currentUseDate = (UseDates)obj;
+                }
+            }
+
             DateRange dateRange = new DateRange();
             dateRange.setFromDate(new FromDate());
             dateRange.setToDate(new ToDate());
@@ -307,7 +306,7 @@ public class EagIdentityPanel extends EagPanels {
             } else {
                 currentUseDate.setDateRange(dateRange);
             }
-            reloadTabbedPanel(new EagIdentityPanel(eag, tabbedPane, eag2012Frame, model, labels).buildEditorPanel(errors), 4);
+            reloadTabbedPanel(new EagIdentityPanel(eag, tabbedPane, eag2012Frame, model, labels).buildEditorPanel(errors), 1);
         }
     }
 
@@ -444,61 +443,80 @@ public class EagIdentityPanel extends EagPanels {
             int counterForHoldingsTfs = 0;
             if(formerlyUsedNameTfs.size() > 0) {
                 eag.getArchguide().getIdentity().getNonpreform().clear();
-                for(int formerNameCounter = 0; formerNameCounter < formerlyUsedNameTfs.size(); formerNameCounter++){
-                    FormerlyUsedName formerlyUsedName = formerlyUsedNameTfs.get(formerNameCounter);
-                    if(StringUtils.isNotEmpty(formerlyUsedName.getName())) {
+                for (FormerlyUsedName formerlyUsedName : formerlyUsedNameTfs) {
+                    if (StringUtils.isNotEmpty(formerlyUsedName.getName())) {
                         Nonpreform nonpreform = new Nonpreform();
                         nonpreform.setLang(formerlyUsedName.getLanguage());
                         nonpreform.getContent().add(formerlyUsedName.getName());
-                        ArrayList<TextFieldWithDate> yearsTfs = (ArrayList<TextFieldWithDate>) formerlyUsedName.getDateList();
+                        List<TextFieldWithDate> yearsTfs = formerlyUsedName.getDateList();
                         UseDates useDates = new UseDates();
-                        
+
                         useDates.setDate(null);
                         useDates.setDateRange(null);
                         useDates.setDateSet(null);
                         int counterDate = 0;
                         int counterDateRange = 0;
                         boolean isDateSet = false;
-                        for(TextFieldWithDate yearTextWithDate : yearsTfs) {
-                            if(StringUtils.isNotEmpty(yearTextWithDate.getDate())) {
-                            counterDate++;
-                        } else if(StringUtils.isNotEmpty(yearTextWithDate.getFromDate()) && StringUtils.isNotEmpty(yearTextWithDate.getToDate())) {
-                            counterDateRange++;
+                        for (TextFieldWithDate yearTextWithDate : yearsTfs) {
+                            if (StringUtils.isNotEmpty(yearTextWithDate.getDate())) {
+                                counterDate++;
+                            } else if (StringUtils.isNotEmpty(yearTextWithDate.getFromDate()) && StringUtils.isNotEmpty(yearTextWithDate.getToDate())) {
+                                counterDateRange++;
+                            }
                         }
-                    }
-                    if((counterDate > 1 || counterDateRange > 1) || (counterDate > 0 && counterDateRange > 0)) {
-                        useDates.setDateSet(new DateSet());
-                        isDateSet = true;
-                    } else {
-                        if(counterDate == 1) {
-                            useDates.setDate(new Date());
-                            String dateStr = "";
+                        if ((counterDate > 1 || counterDateRange > 1) || (counterDate > 0 && counterDateRange > 0)) {
+                            useDates.setDateSet(new DateSet());
+                            isDateSet = true;
+                        } else {
+                            if (counterDate == 1) {
+                                useDates.setDate(new Date());
+                                String dateStr = "";
+                                for (TextFieldWithDate yearTextWithDate : yearsTfs) {
+                                    if (StringUtils.isNotEmpty(yearTextWithDate.getDate())) {
+                                        dateStr = yearTextWithDate.getDate();
+                                    }
+                                }
+                                useDates.getDate().setContent(dateStr);
+                                counterForHoldingsTfs++;
+                            } else if (counterDateRange == 1) {
+                                String dateFromStr = "";
+                                String dateToStr = "";
+                                for (TextFieldWithDate yearTextWithDate : yearsTfs) {
+                                    if (StringUtils.isNotEmpty(yearTextWithDate.getFromDate()) && StringUtils.isNotEmpty(yearTextWithDate.getToDate())) {
+                                        dateFromStr = yearTextWithDate.getFromDate();
+                                        dateToStr = yearTextWithDate.getToDate();
+                                    }
+                                }
+                                useDates.setDateRange(new DateRange());
+                                useDates.getDateRange().setFromDate(new FromDate());
+                                useDates.getDateRange().getFromDate().setContent(dateFromStr);
+                                useDates.getDateRange().setToDate(new ToDate());
+                                useDates.getDateRange().getToDate().setContent(dateToStr);
+                                counterForHoldingsTfs++;
+                            }
+                        }
+
+                        if(isDateSet) {
                             for(TextFieldWithDate yearTextWithDate : yearsTfs) {
                                 if(StringUtils.isNotEmpty(yearTextWithDate.getDate())) {
-                                    dateStr = yearTextWithDate.getDate();
+                                    Date date = new Date();
+                                    date.setContent(yearTextWithDate.getDate());
+                                    useDates.getDateSet().getDateOrDateRange().add(date);
+                                    counterForHoldingsTfs++;
+                                } else if(StringUtils.isNotEmpty(yearTextWithDate.getToDate()) && StringUtils.isNotEmpty(yearTextWithDate.getFromDate())) {
+                                    FromDate fromDate = new FromDate();
+                                    fromDate.setContent(yearTextWithDate.getFromDate());
+                                    ToDate toDate = new ToDate();
+                                    toDate.setContent(yearTextWithDate.getToDate());
+                                    DateRange dateRange = new DateRange();
+                                    dateRange.setFromDate(fromDate);
+                                    dateRange.setToDate(toDate);
+                                    useDates.getDateSet().getDateOrDateRange().add(dateRange);
+                                    counterForHoldingsTfs++;
                                 }
                             }
-                            useDates.getDate().setContent(dateStr);
-                            counterForHoldingsTfs++;
-                        } else if(counterDateRange == 1) {
-                            String dateFromStr = "";
-                            String dateToStr = "";
-                            for(TextFieldWithDate yearTextWithDate : yearsTfs) {
-                                if(StringUtils.isNotEmpty(yearTextWithDate.getFromDate()) && StringUtils.isNotEmpty(yearTextWithDate.getToDate())) {
-                                    dateFromStr = yearTextWithDate.getFromDate();
-                                    dateToStr = yearTextWithDate.getToDate();
-                                }
-                            }
-                            useDates.setDateRange(new DateRange());
-                            useDates.getDateRange().setFromDate(new FromDate());
-                            useDates.getDateRange().getFromDate().setContent(dateFromStr);
-                            useDates.getDateRange().setToDate(new ToDate());
-                            useDates.getDateRange().getToDate().setContent(dateToStr);
-                            counterForHoldingsTfs++;
                         }
-                    }
 
-                        
                         nonpreform.getContent().add(useDates);
                         eag.getArchguide().getIdentity().getNonpreform().add(nonpreform);
                         hasChanged = true;

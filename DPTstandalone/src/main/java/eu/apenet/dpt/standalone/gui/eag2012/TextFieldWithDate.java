@@ -16,12 +16,22 @@ public class TextFieldWithDate {
     private JTextField dateField;
     private JTextField fromDateField;
     private JTextField toDateField;
+    private boolean isDateRange;
 
     public TextFieldWithDate(String text, String language, String fromDate, String toDate, String date) {
         textFieldWithLanguage = new TextFieldWithLanguage(text, language);
         fromDateField = new JTextField(fromDate);
         toDateField = new JTextField(toDate);
         dateField = new JTextField(date);
+        isDateRange = false;
+    }
+
+    public boolean isDateRange() {
+        return isDateRange;
+    }
+
+    public void setDateRange(boolean dateRange) {
+        isDateRange = dateRange;
     }
 
     public JTextField getTextField() {
