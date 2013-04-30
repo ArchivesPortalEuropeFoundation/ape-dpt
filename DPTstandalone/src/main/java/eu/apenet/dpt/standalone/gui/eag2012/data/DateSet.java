@@ -46,15 +46,15 @@ import javax.xml.bind.annotation.XmlType;
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "", propOrder = {
-    "date",
-    "dateRange",
+//    "date",
+//    "dateRange",
     "dateOrDateRange"
 })
 @XmlRootElement(name = "dateSet")
 public class DateSet {
 
-    protected Date date;
-    protected DateRange dateRange;
+//    protected Date date;
+//    protected DateRange dateRange;
     @XmlElements({
         @XmlElement(name = "date", type = Date.class),
         @XmlElement(name = "dateRange", type = DateRange.class)
@@ -69,9 +69,9 @@ public class DateSet {
      *     {@link Date }
      *     
      */
-    public Date getDate() {
-        return date;
-    }
+//    public Date getDate() {
+//        return date;
+//    }
 
     /**
      * Sets the value of the date property.
@@ -81,9 +81,9 @@ public class DateSet {
      *     {@link Date }
      *     
      */
-    public void setDate(Date value) {
-        this.date = value;
-    }
+//    public void setDate(Date value) {
+//        this.date = value;
+//    }
 
     /**
      * Gets the value of the dateRange property.
@@ -93,9 +93,9 @@ public class DateSet {
      *     {@link DateRange }
      *     
      */
-    public DateRange getDateRange() {
-        return dateRange;
-    }
+//    public DateRange getDateRange() {
+//        return dateRange;
+//    }
 
     /**
      * Sets the value of the dateRange property.
@@ -105,9 +105,9 @@ public class DateSet {
      *     {@link DateRange }
      *     
      */
-    public void setDateRange(DateRange value) {
-        this.dateRange = value;
-    }
+//    public void setDateRange(DateRange value) {
+//        this.dateRange = value;
+//    }
 
     /**
      * Gets the value of the dateOrDateRange property.

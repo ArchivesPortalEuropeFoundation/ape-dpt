@@ -67,12 +67,12 @@ public abstract class TextChanger {
         return null;
     }
 
-    public static List<Object> transformDatesToDateOrDateRange(DateSet dateSet) {
-        eu.apenet.dpt.standalone.gui.eag2012.data.Date date = dateSet.getDate();
-        DateRange dateRange = dateSet.getDateRange();
-        List<Object> objects = new ArrayList<Object>();
-        objects.add(date);
-        objects.add(dateRange);
-        return objects;
-    }
+//    public static List<Object> transformDatesToDateOrDateRange(DateSet dateSet) {
+//        eu.apenet.dpt.standalone.gui.eag2012.data.Date date = dateSet.getDate();
+//        DateRange dateRange = dateSet.getDateRange();
+//        List<Object> objects = new ArrayList<Object>();
+//        objects.add(date);
+//        objects.add(dateRange);
+//        return objects;
+//    }
 }

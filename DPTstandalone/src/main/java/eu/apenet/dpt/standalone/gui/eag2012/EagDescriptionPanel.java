@@ -272,12 +272,12 @@ public class EagDescriptionPanel extends EagPanels {
         setNextRow();
 
         if (repository.getHoldings().getDateSet() != null) {
-            if(repository.getHoldings().getDateSet().getDateOrDateRange().size() == 0) {
-                List<Object> dates = TextChanger.transformDatesToDateOrDateRange(repository.getHoldings().getDateSet());
-                repository.getHoldings().getDateSet().getDateOrDateRange().addAll(dates);
-                repository.getHoldings().getDateSet().setDate(null);
-                repository.getHoldings().getDateSet().setDateRange(null);
-            }
+//            if(repository.getHoldings().getDateSet().getDateOrDateRange().size() == 0) {
+//                List<Object> dates = TextChanger.transformDatesToDateOrDateRange(repository.getHoldings().getDateSet());
+//                repository.getHoldings().getDateSet().getDateOrDateRange().addAll(dates);
+//                repository.getHoldings().getDateSet().setDate(null);
+//                repository.getHoldings().getDateSet().setDateRange(null);
+//            }
             holdingsYearsTfs = new ArrayList<TextFieldWithDate>(repository.getHoldings().getDateSet().getDateOrDateRange().size());
             for (Object dateObj : repository.getHoldings().getDateSet().getDateOrDateRange()) {
                 if (dateObj instanceof Date) {
