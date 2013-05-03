@@ -26,7 +26,7 @@ public class EagIdentityPanel extends EagPanels {
     private List<FormerlyUsedName> formerlyUsedNameTfs;
     private List<TextFieldWithDate> datesForFormerlyUsedName;
 
-    final private String[] typeInstitution = {"National archives", "Regional archives", "County/local authority archives",
+    final private String[] typeInstitution = {"---", "National archives", "Regional archives", "County/local authority archives",
     "Municipal archives", "Specialised governmental archives", "Private persons and family archives", "Church and religious archives",
     "Business archives", "University and research archives", "Media archives", "Archives of political parties, of popular/labour movement and other non-governmental organisations, associations, agencies and foundations",
     "Specialised non-governmental archives and archives of other cultural (heritage) institutions"};
@@ -201,6 +201,8 @@ public class EagIdentityPanel extends EagPanels {
         if(eag.getArchguide().getIdentity().getRepositoryType() != null && eag.getArchguide().getIdentity().getRepositoryType().size() > 0) {
             if(Arrays.asList(typeInstitution).contains(eag.getArchguide().getIdentity().getRepositoryType().get(0).getValue())){
                 typeInstitutionCombo.setSelectedItem(eag.getArchguide().getIdentity().getRepositoryType().get(0).getValue());
+            } else {
+                typeInstitutionCombo.setSelectedItem("---");
             }
         }
         builder.add(typeInstitutionCombo, cc.xy (3, rowNb));
@@ -524,13 +526,11 @@ public class EagIdentityPanel extends EagPanels {
                 }
             }
 
-            if(Arrays.asList(typeInstitution).contains(typeInstitutionCombo.getSelectedItem().toString())) {
-                if(eag.getArchguide().getIdentity().getRepositoryType().size() == 0) {
-                    eag.getArchguide().getIdentity().getRepositoryType().add(new RepositoryType());
-                }
+            if(!(typeInstitutionCombo.getSelectedItem()).equals("---")) {
+                eag.getArchguide().getIdentity().getRepositoryType().add(new RepositoryType());
                 eag.getArchguide().getIdentity().getRepositoryType().get(0).setValue(typeInstitutionCombo.getSelectedItem().toString());
-            }
-
+                }
+            
             if(!errors.isEmpty()) {
                 throw new Eag2012FormException("Errors in validation of EAG 2012");
             }
