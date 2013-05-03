@@ -299,7 +299,7 @@ public class EagInstitutionPanel extends EagPanels {
                 if(!StringUtils.isBlank(repository.getWebpage().get(0).getContent()))
                     webpageTitleTf = new JTextField(repository.getWebpage().get(0).getContent());
                 else
-                    webpageTitleTf = new JTextField("Go to our homepage");
+                    webpageTitleTf = new JTextField();
             } else {
                 webpageTf = new JTextField();
                 webpageTitleTf = new JTextField();
