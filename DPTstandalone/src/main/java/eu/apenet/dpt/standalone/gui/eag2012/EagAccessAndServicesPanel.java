@@ -926,7 +926,7 @@ public class EagAccessAndServicesPanel extends EagPanels {
                     eag.getArchguide().getDesc().getRepositories().getRepository().get(0).getServices().getSearchroom().getComputerPlaces().getDescriptiveNote().getP().add(new P());
                 }
             } else {
-                JOptionPane.showMessageDialog(eag2012Frame, "To add a description, computer places must not be empty");
+                JOptionPane.showMessageDialog(eag2012Frame, labels.getString("eag2012.computerplacesNotBlank"));
             }
             reloadTabbedPanel(new EagAccessAndServicesPanel(eag, tabbedPane, eag2012Frame, model, labels).buildEditorPanel(errors), 3);
         }
