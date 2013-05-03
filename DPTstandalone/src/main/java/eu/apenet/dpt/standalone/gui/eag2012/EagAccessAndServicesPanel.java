@@ -916,13 +916,17 @@ public class EagAccessAndServicesPanel extends EagPanels {
             } catch (Eag2012FormException e) {
             }
             
-            if(eag.getArchguide().getDesc().getRepositories().getRepository().get(0).getServices().getSearchroom().getComputerPlaces().getDescriptiveNote() == null){
-                DescriptiveNote descriptiveNote = new DescriptiveNote();
-                descriptiveNote.setP(new ArrayList<P>());
-                descriptiveNote.getP().add(new P());
-                eag.getArchguide().getDesc().getRepositories().getRepository().get(0).getServices().getSearchroom().getComputerPlaces().setDescriptiveNote(descriptiveNote);
+            if(!computerplacesSearchroomTf.getText().equals("")){
+                if(eag.getArchguide().getDesc().getRepositories().getRepository().get(0).getServices().getSearchroom().getComputerPlaces().getDescriptiveNote() == null){
+                    DescriptiveNote descriptiveNote = new DescriptiveNote();
+                    descriptiveNote.setP(new ArrayList<P>());
+                    descriptiveNote.getP().add(new P());
+                    eag.getArchguide().getDesc().getRepositories().getRepository().get(0).getServices().getSearchroom().getComputerPlaces().setDescriptiveNote(descriptiveNote);
+                } else {
+                    eag.getArchguide().getDesc().getRepositories().getRepository().get(0).getServices().getSearchroom().getComputerPlaces().getDescriptiveNote().getP().add(new P());
+                }
             } else {
-                eag.getArchguide().getDesc().getRepositories().getRepository().get(0).getServices().getSearchroom().getComputerPlaces().getDescriptiveNote().getP().add(new P());
+                JOptionPane.showMessageDialog(eag2012Frame, "To add a description, computer places must not be empty");
             }
             reloadTabbedPanel(new EagAccessAndServicesPanel(eag, tabbedPane, eag2012Frame, model, labels).buildEditorPanel(errors), 3);
         }
