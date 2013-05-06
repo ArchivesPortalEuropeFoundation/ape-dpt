@@ -530,6 +530,8 @@ public class EagIdentityPanel extends EagPanels {
                 if(eag.getArchguide().getIdentity().getRepositoryType().size() == 0)
                     eag.getArchguide().getIdentity().getRepositoryType().add(new RepositoryType());
                 eag.getArchguide().getIdentity().getRepositoryType().get(0).setValue(typeInstitutionCombo.getSelectedItem().toString());
+            } else if(eag.getArchguide().getIdentity().getRepositoryType().size() != 0) {
+                eag.getArchguide().getIdentity().getRepositoryType().remove(0);
             }
             
             if(!errors.isEmpty()) {
