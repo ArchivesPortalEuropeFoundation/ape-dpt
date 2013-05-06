@@ -1,5 +1,7 @@
 package eu.apenet.dpt.standalone.gui.eag2012;
 
+import eu.apenet.dpt.standalone.gui.eag2012.SwingStructures.TextAreaWithLanguage;
+
 import javax.swing.*;
 import java.util.Arrays;
 
@@ -16,12 +18,12 @@ public class ResourceRelationType {
     private JComboBox typeRelations;
     private JTextField website;
     private JTextField titleAndId;
-    private TextFieldWithLanguage description;
+    private TextAreaWithLanguage description;
 
     ResourceRelationType(String typeRelationValue, String websiteDesc, String titleIdValue, String descriptionOfRel, String langOfDesc, boolean isResourceRelation) {
         website = new JTextField(websiteDesc);
         titleAndId = new JTextField(titleIdValue);
-        description = new TextFieldWithLanguage(descriptionOfRel, langOfDesc);
+        description = new TextAreaWithLanguage(descriptionOfRel, langOfDesc);
         if(isResourceRelation) {
             typeRelations = new JComboBox(resourceRelations);
             if(Arrays.asList(resourceRelations).contains(typeRelationValue))
@@ -41,7 +43,7 @@ public class ResourceRelationType {
         return titleAndId;
     }
 
-    public TextFieldWithLanguage getDescription() {
+    public TextAreaWithLanguage getDescription() {
         return description;
     }
 

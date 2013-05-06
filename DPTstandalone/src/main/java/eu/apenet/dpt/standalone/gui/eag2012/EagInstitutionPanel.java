@@ -362,8 +362,8 @@ public class EagInstitutionPanel extends EagPanels {
             }
             if(eag.getRelations().getResourceRelation().size() > 0) {
                 refInstitutionHoldingsGuideTf = new JTextField(eag.getRelations().getResourceRelation().get(0).getHref());
-                if(eag.getRelations().getResourceRelation().get(0).getDescriptiveNote() != null && eag.getRelations().getResourceRelation().get(0).getDescriptiveNote().getP().size() > 0)
-                    refInstitutionHoldingsGuideTitleTf = new JTextField(eag.getRelations().getResourceRelation().get(0).getDescriptiveNote().getP().get(0).getContent());
+                if(eag.getRelations().getResourceRelation().get(0).getRelationEntry() != null)
+                    refInstitutionHoldingsGuideTitleTf = new JTextField(eag.getRelations().getResourceRelation().get(0).getRelationEntry().getContent());
                 else
                     refInstitutionHoldingsGuideTitleTf = new JTextField();
             } else {
@@ -701,9 +701,9 @@ public class EagInstitutionPanel extends EagPanels {
                         hasChanged = true;
                     }
 
-                    if(eag.getRelations().getResourceRelation().get(0).getDescriptiveNote() != null && eag.getRelations().getResourceRelation().get(0).getDescriptiveNote().getP().size() > 0) {
-                        if(StringUtils.isNotEmpty(refInstitutionHoldingsGuideTitleTf.getText()) && !refInstitutionHoldingsGuideTitleTf.getText().equals(eag.getRelations().getResourceRelation().get(0).getDescriptiveNote().getP().get(0).getContent())) {
-                            eag.getRelations().getResourceRelation().get(0).getDescriptiveNote().getP().get(0).setContent(refInstitutionHoldingsGuideTitleTf.getText());
+                    if(eag.getRelations().getResourceRelation().get(0).getRelationEntry() != null) {
+                        if(StringUtils.isNotEmpty(refInstitutionHoldingsGuideTitleTf.getText())) {
+                            eag.getRelations().getResourceRelation().get(0).getRelationEntry().setContent(refInstitutionHoldingsGuideTitleTf.getText());
                             hasChanged = true;
                         }
                     }
@@ -712,12 +712,10 @@ public class EagInstitutionPanel extends EagPanels {
                     }
                 } else if(StringUtils.isNotEmpty(refInstitutionHoldingsGuideTf.getText())) {
                     eag.getRelations().getResourceRelation().add(new ResourceRelation());
-                    eag.getRelations().getResourceRelation().get(0).setResourceRelationType("other");
+                    eag.getRelations().getResourceRelation().get(0).setResourceRelationType("creatorOf");
                     eag.getRelations().getResourceRelation().get(0).setHref(refInstitutionHoldingsGuideTf.getText());
                     eag.getRelations().getResourceRelation().get(0).setRelationEntry(new RelationEntry());
-                    eag.getRelations().getResourceRelation().get(0).setDescriptiveNote(new DescriptiveNote());
-                    eag.getRelations().getResourceRelation().get(0).getDescriptiveNote().getP().add(new P());
-                    eag.getRelations().getResourceRelation().get(0).getDescriptiveNote().getP().get(0).setContent(refInstitutionHoldingsGuideTitleTf.getText());
+                    eag.getRelations().getResourceRelation().get(0).getRelationEntry().setContent(refInstitutionHoldingsGuideTitleTf.getText());
                 } else if(eag.getRelations().getEagRelation().size() == 0) {
                     eag.setRelations(null);
                 }

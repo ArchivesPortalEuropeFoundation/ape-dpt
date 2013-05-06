@@ -68,6 +68,7 @@ public class EagRelationsPanel extends EagPanels {
                 resourceRelation.setDescriptiveNote(descriptiveNote);
             }
             ResourceRelationType resourceRelationType = new ResourceRelationType(resourceRelation.getResourceRelationType(), resourceRelation.getHref(), resourceRelation.getRelationEntry().getContent(), resourceRelation.getDescriptiveNote().getP().get(0).getContent(), resourceRelation.getDescriptiveNote().getP().get(0).getLang(), true);
+            LOG.info(resourceRelation.getDescriptiveNote().getP().get(0).getContent());
             resourceRelationTypes.add(resourceRelationType);
 
             builder.addLabel(labels.getString("eag2012.linkToResourceRelation"), cc.xy(1, rowNb));
