@@ -916,7 +916,7 @@ public class EagAccessAndServicesPanel extends EagPanels {
             } catch (Eag2012FormException e) {
             }
             
-            if(!computerplacesSearchroomTf.getText().equals("")){
+            if(StringUtils.isNotEmpty(computerplacesSearchroomTf.getText())){
                 if(eag.getArchguide().getDesc().getRepositories().getRepository().get(0).getServices().getSearchroom().getComputerPlaces().getDescriptiveNote() == null){
                     DescriptiveNote descriptiveNote = new DescriptiveNote();
                     descriptiveNote.setP(new ArrayList<P>());

@@ -527,9 +527,10 @@ public class EagIdentityPanel extends EagPanels {
             }
 
             if(!(typeInstitutionCombo.getSelectedItem()).equals("---")) {
-                eag.getArchguide().getIdentity().getRepositoryType().add(new RepositoryType());
+                if(eag.getArchguide().getIdentity().getRepositoryType().size() == 0)
+                    eag.getArchguide().getIdentity().getRepositoryType().add(new RepositoryType());
                 eag.getArchguide().getIdentity().getRepositoryType().get(0).setValue(typeInstitutionCombo.getSelectedItem().toString());
-                }
+            }
             
             if(!errors.isEmpty()) {
                 throw new Eag2012FormException("Errors in validation of EAG 2012");
