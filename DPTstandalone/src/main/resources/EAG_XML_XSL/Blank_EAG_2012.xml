@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<eag xmlns="http://www.archivesportaleurope.net/Portal/profiles/eag_2012/" schemaLocation="http://www.archivesportaleurope.net/Portal/profiles/eag_2012/ http://www.archivesportaleurope.net/Portal/profiles/eag_2012.xsd" audience="internal">
+<eag xmlns="http://www.archivesportaleurope.net/Portal/profiles/eag_2012/" schemaLocation="http://www.archivesportaleurope.net/Portal/profiles/eag_2012/ http://www.archivesportaleurope.net/Portal/profiles/eag_2012.xsd" audience="external">
     <control>
         <recordId></recordId>
         <maintenanceAgency>
@@ -17,31 +17,31 @@
         </maintenanceHistory>
         <conventionDeclaration>
             <abbreviation>EAG</abbreviation>
-            <citation xml:lang="eng">EAG (Encoded Archival Guide) 2012</citation>
+            <citation>EAG (Encoded Archival Guide) 2012</citation>
         </conventionDeclaration>
-        <conventionDeclaration xml:lang="eng">
+        <conventionDeclaration>
             <abbreviation>ISDIAH</abbreviation>
-            <citation xml:lang="eng">International Standard for Describing Institutions with Archival Holdings</citation>
+            <citation>International Standard for Describing Institutions with Archival Holdings</citation>
         </conventionDeclaration>
-        <conventionDeclaration xml:lang="eng">
+        <conventionDeclaration>
             <abbreviation>ISO 639-2b</abbreviation>
-            <citation xml:lang="eng">Codes for the representation of names of languages — Part 2: Alpha-3 code</citation>
+            <citation>Codes for the representation of names of languages — Part 2: Alpha-3 code</citation>
         </conventionDeclaration>
-        <conventionDeclaration xml:lang="eng">
+        <conventionDeclaration>
             <abbreviation>ISO 3166-1</abbreviation>
-            <citation xml:lang="eng">Codes for the representation of names of countries and their subdivisions – Part 1: Country codes</citation>
+            <citation>Codes for the representation of names of countries and their subdivisions – Part 1: Country codes</citation>
         </conventionDeclaration>
-        <conventionDeclaration xml:lang="eng">
+        <conventionDeclaration>
             <abbreviation>ISO 8601</abbreviation>
-            <citation xml:lang="eng">Data elements and interchange formats – Information interchange – Representation of dates and times</citation>
+            <citation>Data elements and interchange formats – Information interchange – Representation of dates and times</citation>
         </conventionDeclaration>
-        <conventionDeclaration xml:lang="eng">
+        <conventionDeclaration>
             <abbreviation>ISO 15511</abbreviation>
-            <citation xml:lang="eng">International Standard Identifier for Libraries and Related Organisations</citation>
+            <citation>International Standard Identifier for Libraries and Related Organisations</citation>
         </conventionDeclaration>
-        <conventionDeclaration xml:lang="eng">
+        <conventionDeclaration>
             <abbreviation>ISO 15924</abbreviation>
-            <citation xml:lang="eng">Codes for the representation of names of scripts</citation>
+            <citation>Codes for the representation of names of scripts</citation>
         </conventionDeclaration>
     </control>
     <archguide>
