@@ -319,6 +319,7 @@ public class DataPreparationToolGUI extends JFrame {
         nameComponents();
         wireUp();
         setSize(Toolkit.getDefaultToolkit().getScreenSize());
+        setExtendedState(JFrame.MAXIMIZED_BOTH);
     }
 
     private void nameComponents() {
