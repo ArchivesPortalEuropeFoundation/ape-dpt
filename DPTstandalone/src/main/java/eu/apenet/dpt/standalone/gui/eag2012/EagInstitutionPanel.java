@@ -86,13 +86,15 @@ public class EagInstitutionPanel extends EagPanels {
         builder.addSeparator(labels.getString("eag2012.YourInstitution"), cc.xyw(1, rowNb, 7));
         setNextRow();
         builder.addLabel(labels.getString("eag2012.personResponsibleLabel"),    cc.xy (1, rowNb));
-        if(Eag2012Frame.isStartOfForm()) {
+
+        int sizeEvents = eag.getControl().getMaintenanceHistory().getMaintenanceEvent().size();
+        if(sizeEvents == 0) {
             personTf = new JTextField("");
         } else {
-            int sizeEvents = eag.getControl().getMaintenanceHistory().getMaintenanceEvent().size();
             MaintenanceEvent event = eag.getControl().getMaintenanceHistory().getMaintenanceEvent().get(sizeEvents - 1);
             personTf = new JTextField(event.getAgent().getContent());
         }
+
         builder.add(personTf, cc.xy(3, rowNb));
         setNextRow();
         builder.addLabel(labels.getString("eag2012.countryCodeLabel") + "*",          cc.xy (1, rowNb));

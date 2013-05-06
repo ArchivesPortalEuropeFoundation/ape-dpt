@@ -32,7 +32,6 @@ public class Eag2012Frame extends JFrame {
     private ProfileListModel model;
     private ResourceBundle labels;
     private static boolean used;
-    private static boolean startOfForm;
     private static Date timeMaintenance;
     private String countrycode;
     private String mainagencycode;
@@ -134,7 +133,6 @@ public class Eag2012Frame extends JFrame {
 
 
     protected JComponent buildInstitutionPanel(Eag eag, boolean isNew) {
-        Eag2012Frame.setStartOfForm(true);
         JScrollPane jScrollPane = new JScrollPane(new EagInstitutionPanel(eag, tabbedPane, this, model, isNew, labels, countrycode, mainagencycode).buildEditorPanel(null));
         jScrollPane.getVerticalScrollBar().setUnitIncrement(20);
         return jScrollPane;
@@ -146,14 +144,6 @@ public class Eag2012Frame extends JFrame {
 
     public static boolean isUsed() {
         return used;
-    }
-
-    public static void setStartOfForm(boolean startOfForm) {
-        Eag2012Frame.startOfForm = startOfForm;
-    }
-
-    public static boolean isStartOfForm() {
-        return startOfForm;
     }
 
     public static Date getTimeMaintenance() {
