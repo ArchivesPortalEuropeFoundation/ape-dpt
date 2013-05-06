@@ -17,26 +17,18 @@ import javax.swing.*;
 import javax.swing.border.Border;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
-import javax.xml.transform.TransformerException;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.text.MessageFormat;
 import java.util.*;
 import java.util.List;
 import java.util.logging.Level;
-import javax.xml.parsers.ParserConfigurationException;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.NamedNodeMap;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
 
 /**
  * User: Yoann Moranville Date: 17/11/2011
@@ -84,7 +76,7 @@ public class EseOptionsPanel extends JPanel {
     private JTextArea contextTextArea;
     private JTextArea dataProviderTextArea;
     private JTextArea providerTextArea;
-    private JComboBox languageComboBox;
+    private JList languageList;
     private JTextArea additionalRightsTextArea;
     private Map<String, String> languages;
     private static final Border BLACK_LINE = BorderFactory.createLineBorder(Color.BLACK);
@@ -140,7 +132,12 @@ public class EseOptionsPanel extends JPanel {
         panel.add(dptaScrollPane);
         useExistingRepoCheckbox = new JCheckBox(labels.getString("ese.takeFromFileRepository"));
         useExistingRepoCheckbox.setSelected(true);
-        useExistingRepoCheckbox.addItemListener(new CheckboxItemListener());
+        useExistingRepoCheckbox.addItemListener(new ItemListener() {
+
+            public void itemStateChanged(ItemEvent e) {
+                //empty method on purpose
+            }
+        });
         JPanel panel2 = new JPanel(new GridLayout(1, 1));
         panel2.add(useExistingRepoCheckbox);
         if (batch) {
@@ -217,7 +214,11 @@ public class EseOptionsPanel extends JPanel {
 
         useExistingDaoRoleCheckbox = new JCheckBox(labels.getString("ese.takeFromFileDaoRole"));
         useExistingDaoRoleCheckbox.setSelected(true);
-        useExistingDaoRoleCheckbox.addItemListener(new CheckboxItemListener());
+        useExistingDaoRoleCheckbox.addItemListener(new ItemListener() {
+
+            public void itemStateChanged(ItemEvent e) {
+            }
+        });
         panel.add(useExistingDaoRoleCheckbox);
         
         panel.add(new JLabel(""));
@@ -285,28 +286,27 @@ public class EseOptionsPanel extends JPanel {
         panel.setBorder(BLACK_LINE);
         formPanel.add(panel);
 
-        panel = new JPanel(new GridLayout(3, 3));
+        panel = new JPanel(new GridLayout(1, 3));
         panel.add(new Label(labels.getString("ese.inheritLanguage") + ":" + "*"));
+        JPanel rbPanel = new JPanel(new GridLayout(3, 1));
         inheritLanguageGroup = new ButtonGroup();
         radioButton = new JRadioButton(labels.getString("ese.yes"));
         radioButton.setActionCommand(YES);
         inheritLanguageGroup.add(radioButton);
-        panel.add(radioButton);
-        panel.add(new JLabel(""));
-        panel.add(new JLabel(""));
+        rbPanel.add(radioButton);
         radioButton = new JRadioButton(labels.getString("ese.no"), true);
         radioButton.setActionCommand(NO);
         inheritLanguageGroup.add(radioButton);
-        panel.add(radioButton);
-        panel.add(new JLabel(""));
-        panel.add(new JLabel(""));
+        rbPanel.add(radioButton);
         radioButton = new JRadioButton(labels.getString("ese.provide") + ":");
         radioButton.setActionCommand(PROVIDE);
-        inheritLanguageGroup.add(radioButton);
-        panel.add(radioButton);
+        inheritLanguageGroup.add(radioButton);        
+        rbPanel.add(radioButton);
+        panel.add(rbPanel);
 
-        languageComboBox = new JComboBox(getAllLanguages());
-        panel.add(languageComboBox);
+        languageList = new JList(getAllLanguages());
+        languageList.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
+        panel.add(new JScrollPane(languageList));
         panel.setBorder(GREY_LINE);
         formPanel.add(panel);
 
@@ -429,7 +429,7 @@ public class EseOptionsPanel extends JPanel {
         }
 
         config.setUseExistingDaoRole(false);
-        if (batch && useExistingDaoRoleCheckbox.isSelected()) {
+        if (useExistingDaoRoleCheckbox.isSelected()) {
             config.setUseExistingDaoRole(true);
         }
 
@@ -462,7 +462,15 @@ public class EseOptionsPanel extends JPanel {
                 if (btn.getActionCommand().equals(YES)) {
                     config.setInheritLanguage(true);
                 } else if (btn.getActionCommand().equals(PROVIDE)) {
-                    config.setLanguage(languages.get(languageComboBox.getSelectedItem().toString()));
+                    StringBuilder result = new StringBuilder();
+                    Object[] languageValues = languageList.getSelectedValues();
+                    for(int i=0; i < languageValues.length; i++){
+                        result.append(languages.get(languageValues[i].toString()));
+                        if(languageValues.length > 0 && i < (languageValues.length - 1)){
+                            result.append(" ");
+                        }
+                    }
+                    config.setLanguage(result.toString());
                 }
             }
         }
@@ -574,6 +582,7 @@ public class EseOptionsPanel extends JPanel {
 
         if (typeGroup.getSelection().getActionCommand().equals(TEXT)) {
             if (inheritLanguageGroup.getSelection().getActionCommand().equals(NO) && ead2EseInformation.getLanguageCode() == null) {
+                JOptionPane.showMessageDialog(parent, "Digital object type TEXT requires language inheritance. Please either select one of the options below or provide a language in the configuration window.");
                 throw new Exception("selected type requires language inheritance");
             }
         }
