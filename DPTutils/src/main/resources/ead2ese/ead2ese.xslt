@@ -17,6 +17,7 @@
     <xsl:param name="contextInformationPrefix"></xsl:param>
     <xsl:param name="useExistingDaoRole"></xsl:param>
     <xsl:param name="useExistingRepository"></xsl:param>
+    
     <xsl:template match="/">
         <metadata xsi:schemaLocation="http://www.europeana.eu/schemas/ese/ http://www.europeana.eu/schemas/ese/ESE-V3.4.xsd
 http://purl.org/dc/elements/1.1/ http://www.dublincore.org/schemas/xmls/qdc/dc.xsd
@@ -553,9 +554,11 @@ http://purl.org/dc/terms/ http://www.dublincore.org/schemas/xmls/qdc/dcterms.xsd
                     <xsl:otherwise>
                         <xsl:choose>
                             <xsl:when test="fn:string-length($language) > 0">
-                                <dc:language>
-                                    <xsl:value-of select="$language"/>
-                                </dc:language>
+                                <xsl:for-each select="tokenize($language,' ')">
+                                    <dc:language>
+                                        <xsl:value-of select="."/>
+                                    </dc:language>
+                                </xsl:for-each>
                             </xsl:when>
                             <xsl:otherwise>
                                 <dc:language>
