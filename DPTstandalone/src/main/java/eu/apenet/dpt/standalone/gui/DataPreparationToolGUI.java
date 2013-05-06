@@ -1,5 +1,6 @@
 package eu.apenet.dpt.standalone.gui;
 
+import eu.apenet.dpt.standalone.gui.adhoc.DirectoryPermission;
 import eu.apenet.dpt.standalone.gui.adhoc.FileNameComparator;
 import eu.apenet.dpt.standalone.gui.batch.ConvertAndValidateActionListener;
 import eu.apenet.dpt.standalone.gui.conversion.ConvertActionListener;
@@ -598,7 +599,7 @@ public class DataPreparationToolGUI extends JFrame {
                 defaultSaveFolderChooser.setCurrentDirectory(new File(retrieveFromDb.retrieveDefaultSaveFolder()));
                 if (defaultSaveFolderChooser.showOpenDialog(getParent()) == JFileChooser.APPROVE_OPTION) {
                     File directory = defaultSaveFolderChooser.getSelectedFile();
-                    if(directory.canWrite())
+                    if(directory.canWrite() && DirectoryPermission.canWrite(directory))
                         retrieveFromDb.saveDefaultSaveFolder(directory + "/");
                     else
                         createErrorOrWarningPanel(new Exception(labels.getString("error.directory.nowrites")), false, labels.getString("error.directory.nowrites"), getContentPane());
