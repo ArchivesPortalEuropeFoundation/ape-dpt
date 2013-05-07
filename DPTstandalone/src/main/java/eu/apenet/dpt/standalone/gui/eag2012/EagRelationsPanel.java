@@ -68,7 +68,6 @@ public class EagRelationsPanel extends EagPanels {
                 resourceRelation.setDescriptiveNote(descriptiveNote);
             }
             ResourceRelationType resourceRelationType = new ResourceRelationType(resourceRelation.getResourceRelationType(), resourceRelation.getHref(), resourceRelation.getRelationEntry().getContent(), resourceRelation.getDescriptiveNote().getP().get(0).getContent(), resourceRelation.getDescriptiveNote().getP().get(0).getLang(), true);
-            LOG.info(resourceRelation.getDescriptiveNote().getP().get(0).getContent());
             resourceRelationTypes.add(resourceRelationType);
 
             builder.addLabel(labels.getString("eag2012.linkToResourceRelation"), cc.xy(1, rowNb));
@@ -155,6 +154,8 @@ public class EagRelationsPanel extends EagPanels {
                 super.updateEagObject(false);
             } catch (Eag2012FormException e) {
             }
+            if(eag.getRelations() == null)
+                eag.setRelations(new Relations());
             eag.getRelations().getResourceRelation().add(new ResourceRelation());
             reloadTabbedPanel(new EagRelationsPanel(eag, tabbedPane, eag2012Frame, model, labels).buildEditorPanel(errors), 6);
         }
@@ -170,6 +171,8 @@ public class EagRelationsPanel extends EagPanels {
                 super.updateEagObject(false);
             } catch (Eag2012FormException e) {
             }
+            if(eag.getRelations() == null)
+                eag.setRelations(new Relations());
             eag.getRelations().getEagRelation().add(new EagRelation());
             reloadTabbedPanel(new EagRelationsPanel(eag, tabbedPane, eag2012Frame, model, labels).buildEditorPanel(errors), 6);
         }
