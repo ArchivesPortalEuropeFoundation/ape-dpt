@@ -678,7 +678,7 @@
     <!-- Here begin something for NL--> <!--todo: Ok, this WILL need to be changed, here we pass other info that are not sent to the user but instead are just discarded-->
     <!-- descgrp -->
     <xsl:template match="archdesc/descgrp[not(@type='appendices')]" mode="copy">
-        <xsl:apply-templates select="bioghist | custodhist | custodhist/acqinfo | accruals | appraisal | arrangement | originalsloc | processinfo | scopecontent | accessrestrict | userestrict | otherfindaid | prefercite | separatedmaterial | odd" mode="copy"/>
+        <xsl:apply-templates select="bibliography | bioghist | custodhist | custodhist/acqinfo | accruals | appraisal | arrangement | originalsloc | processinfo | scopecontent | accessrestrict | userestrict | otherfindaid | prefercite | separatedmaterial | odd | controlaccess | phystech | relatedmaterial" mode="copy"/>
     </xsl:template>
 
     <!-- descgrp/bioghist -->
@@ -781,7 +781,7 @@
 
     <!-- descgrp[@type='appendices'] -->
     <xsl:template match="archdesc/descgrp[@type='appendices']" mode="copy">
-        <xsl:apply-templates select="fileplan" mode="copy"/>
+        <xsl:apply-templates select="fileplan | index | odd" mode="copy"/>
     </xsl:template>
 
     <!--End of the NL descgrp-->
@@ -2139,7 +2139,7 @@
             <xsl:when test="$countrycode='NL' and ../../@otherlevel='subfile'">
                 <xsl:apply-templates select="../../../did/unitid" mode="#current"/>
             </xsl:when>
-            <xsl:when test="(@type='call number' or @type='ABS' or @type='bestellnummer' or @type='series_code' or @type='reference' or @type='Sygnatura' or @type='REFERENCE_CODE' or @type='cote-de-consultation' or @type='cote-groupee' or @type='identifiant' or (not(@type))) and text()[string-length(normalize-space(.)) ge 1]"><!-- and not(preceding-sibling::unitid) and not(following-sibling::unitid)-->
+            <xsl:when test="(@type='call number' or @type='ABS' or @type='bestellnummer' or @type='series_code' or @type='reference' or @type='Sygnatura' or @type='REFERENCE_CODE' or @type='cote-de-consultation' or @type='cote-groupee' or @type='identifiant' or @type='cote' or (not(@type))) and text()[string-length(normalize-space(.)) ge 1]"><!-- and not(preceding-sibling::unitid) and not(following-sibling::unitid)-->
                 <xsl:choose>
                     <xsl:when test="@countrycode and @repositorycode">
                         <xsl:choose>
@@ -2379,6 +2379,9 @@
                     </xsl:if>
                     <xsl:if test="@*:title!=''">
                         <xsl:attribute name="xlink:title" select="@*:title"/>
+                    </xsl:if>
+                    <xsl:if test="not(@title) and not(@*:title) and ../daodesc[@label='reference']/p/text()">
+                        <xsl:attribute name="xlink:title" select="../daodesc[@label='reference']/p/text()"/>
                     </xsl:if>
                     <xsl:call-template name="daoRoleType"/>
                 </dao>
