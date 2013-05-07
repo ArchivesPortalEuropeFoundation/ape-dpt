@@ -257,6 +257,8 @@ public class DateNormalization extends ExtensionFunctionDefinition {
     }
 
     public String checkForMainagencycode(String mainagencycode) {
+        if(mainagencycode == null)
+            return null;
         if (mainagencycode.contains("Ö")) 
             mainagencycode = mainagencycode.replace("Ö", "O");
         Matcher matcher = PATTERN_MAINAGENCYCODE.matcher(mainagencycode);
@@ -266,6 +268,8 @@ public class DateNormalization extends ExtensionFunctionDefinition {
     }
 
     public String checkForCountrycode(String countrycode) {
+        if(countrycode == null)
+            return null;
         Matcher matcher = PATTERN_COUNTRYCODE.matcher(countrycode);
         if (matcher.matches()) 
             return countrycode;
