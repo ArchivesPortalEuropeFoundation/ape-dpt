@@ -1243,8 +1243,10 @@ public class DataPreparationToolGUI extends JFrame {
             JOptionPane.showMessageDialog(getContentPane(), errorMsg, labels.getString("error"), JOptionPane.ERROR_MESSAGE, Utilities.icon);
             System.exit(0);
         }
-        createOptionPaneForCountryCode();
-        createOptionPaneForRepositoryCode();
+        if(getCountryCode() == null)
+            createOptionPaneForCountryCode();
+        if(getRepositoryCodeIdentifier() == null)
+            createOptionPaneForRepositoryCode();
 
         defaultRoleType = retrieveFromDb.retrieveRoleType();
         useExistingRoleType = retrieveFromDb.retrieveUseExistingRoleType();
