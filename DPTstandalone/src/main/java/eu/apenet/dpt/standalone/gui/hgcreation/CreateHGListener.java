@@ -9,6 +9,7 @@ import org.apache.log4j.Logger;
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.MutableTreeNode;
+import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
 import java.awt.*;
 import java.awt.dnd.DnDConstants;
@@ -406,10 +407,40 @@ public class CreateHGListener implements ActionListener {
         public void doActionRemoveLevel(final DefaultMutableTreeNode defaultMutableTreeNode){
             LOG.trace("try remove child");
             if(defaultMutableTreeNode.getParent() != null){
-                if(((CLevelTreeObject)defaultMutableTreeNode.getUserObject()).getFile() != null)
-                    ((ProfileListModel)listFilesForHG.getModel()).addFile(((CLevelTreeObject)defaultMutableTreeNode.getUserObject()).getFile());
+                if(((CLevelTreeObject)defaultMutableTreeNode.getUserObject()).getFile() != null) {
+                    ((ProfileListModel)listFilesForHG.getModel()).addFile(((CLevelTreeObject) defaultMutableTreeNode.getUserObject()).getFile());
+                } else {
+                    TreeNode parent = findTreeNode(null, (CLevelTreeObject)defaultMutableTreeNode.getUserObject());
+                    deleteChildrenRecursively(parent);
+                }
                 ((LevelTreeModel) holdingsGuideTree.getModel()).removeNodeFromParent(defaultMutableTreeNode);
                 LOG.trace("child removed");
+            }
+        }
+        
+        private TreeNode findTreeNode(TreeNode checkInside, CLevelTreeObject parent) {
+            TreeNode correctParentTreeNode = null;
+            if(checkInside == null)
+                checkInside = (TreeNode)(holdingsGuideTree.getModel().getRoot());
+            for(int i = 0; i < checkInside.getChildCount(); i++) {
+                TreeNode child = checkInside.getChildAt(i);
+                if((CLevelTreeObject)((DefaultMutableTreeNode)child).getUserObject() == parent) {
+                    correctParentTreeNode = child;
+                } else {
+                    correctParentTreeNode = findTreeNode(child, parent);
+                }
+            }
+            return correctParentTreeNode;
+        }
+        
+        private void deleteChildrenRecursively(TreeNode parent) {
+            for(int i = 0; i < parent.getChildCount(); i++) {
+                TreeNode child = parent.getChildAt(i);
+                CLevelTreeObject cLevelTreeObjectChild = (CLevelTreeObject)((DefaultMutableTreeNode)child).getUserObject();
+                if(cLevelTreeObjectChild.isFile())
+                    ((ProfileListModel)listFilesForHG.getModel()).addFile(cLevelTreeObjectChild.getFile());
+                else
+                    deleteChildrenRecursively(child);
             }
         }
     }
