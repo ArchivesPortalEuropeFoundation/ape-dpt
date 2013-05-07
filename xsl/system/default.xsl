@@ -648,6 +648,7 @@
     </xsl:template>
 
     <xsl:template match="p/extref | p/extptr" mode="#all">
+        <xsl:text> </xsl:text>
         <extref>
             <xsl:if test="@href">
                 <xsl:attribute name="xlink:href" select="@href"/>
@@ -664,6 +665,7 @@
             <!--xsl:value-of select="normalize-space(.)"/-->
             <xsl:apply-templates select="node()" mode="#current"/>
         </extref>
+        <xsl:text> </xsl:text>
     </xsl:template>
 
     <xsl:template match="p/extref/corpname" mode="#all">
@@ -1745,6 +1747,12 @@
     <xsl:template match="p/unitdate" mode="copy fonds intermediate lowest nested">
         <xsl:apply-templates select="node()" mode="#current"/>
     </xsl:template>
+    <xsl:template match="p/bibref" mode="copy fonds intermediate lowest nested">
+        <xsl:apply-templates select="node()" mode="#current"/>
+    </xsl:template>
+    <xsl:template match="p/bibref/title" mode="copy fonds intermediate lowest nested">
+        <xsl:apply-templates select="node()" mode="#current"/>
+    </xsl:template>
 
     <!-- copy fonds intermediate: scopecontent[not(@*)] -->
     <xsl:template match="scopecontent[not(@encodinganalog='preface' or @encodinganalog='Vorwort')]" mode="copy fonds intermediate lowest">
@@ -1917,7 +1925,7 @@
         </bibref>
     </xsl:template>
 
-    <xsl:template match="otherfindaid/bibref" mode="copy fonds intermediate lowest nested">
+    <xsl:template match="otherfindaid/bibref | relatedmaterial/bibref" mode="copy fonds intermediate lowest nested">
         <p>
             <xsl:if test="@href or @*:href">
                 <extref>
@@ -1942,6 +1950,36 @@
         </p>
     </xsl:template>
 
+    <xsl:template match="separatedmaterial/bibref" mode="copy fonds nested">
+        <p>
+            <xsl:if test="@href or @*:href">
+                <extref>
+                    <xsl:if test="@*:href">
+                        <xsl:attribute name="xlink:href" select="@*:href"/>
+                    </xsl:if>
+                    <xsl:if test="@href">
+                        <xsl:attribute name="xlink:href" select="@href"/>
+                    </xsl:if>
+                    <xsl:if test="@*:title">
+                        <xsl:attribute name="xlink:title" select="@*:title"/>
+                    </xsl:if>
+                    <xsl:if test="@title">
+                        <xsl:attribute name="xlink:title" select="@title"/>
+                    </xsl:if>
+                    <xsl:apply-templates select="node()" mode="#current"/>
+                </extref>
+            </xsl:if>
+            <xsl:if test="not(@href) and not(@*:href)">
+                <xsl:apply-templates select="node()" mode="#current"/>
+            </xsl:if>
+        </p>
+    </xsl:template>
+    <xsl:template match="separatedmaterial/bibref/title" mode="copy fonds nested">
+        <title>
+            <xsl:apply-templates select="node()" mode="#current"/>
+        </title>
+    </xsl:template>
+
     <xsl:template name="deflist_table">
         <tgroup cols="2">
             <tbody>
@@ -1962,7 +2000,7 @@
         </entry>
     </xsl:template>
 
-    <xsl:template match="otherfindaid/bibref/extref" mode="copy fonds intermediate lowest nested">
+    <xsl:template match="otherfindaid/bibref/extref | relatedmaterial/bibref/extref" mode="copy fonds intermediate lowest nested">
         <extref>
             <xsl:if test="@href">
                 <xsl:attribute name="xlink:href" select="@href"/>
