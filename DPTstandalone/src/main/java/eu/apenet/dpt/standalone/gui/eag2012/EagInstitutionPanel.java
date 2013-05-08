@@ -627,7 +627,7 @@ public class EagInstitutionPanel extends EagPanels {
                         repository.getEmail().get(0).setContent(emailTitleTf.getText());
                         hasChanged = true;
                     } else if(StringUtils.isBlank(repository.getEmail().get(0).getContent())) {
-                        repository.getEmail().get(0).setContent("Send an email");
+                        repository.getEmail().get(0).setContent("Send an e-mail");
                         hasChanged = true;
                     }
                     if(StringUtils.isEmpty(emailTf.getText())) {

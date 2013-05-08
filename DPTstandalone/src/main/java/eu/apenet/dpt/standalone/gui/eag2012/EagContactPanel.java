@@ -498,7 +498,7 @@ public class EagContactPanel extends EagPanels {
                         if(StringUtils.isNotEmpty(fieldTitle.getText()))
                             email.setContent(fieldTitle.getText());
                         else
-                            email.setContent("Send an email");
+                            email.setContent("Send an e-mail");
                         repository.getEmail().add(email);
                         hasChanged = true;
                     }
