@@ -112,7 +112,7 @@ public class EagRelationsPanel extends EagPanels {
             builder.add(resourceRelationType.getTypeRelations(), cc.xy(7, rowNb));
             setNextRow();
 
-            builder.addLabel(labels.getString("eag2012.titleIdRelatedInstitution"), cc.xy(1, rowNb));
+            builder.addLabel(labels.getString("eag2012.nameIdRelatedInstitution"), cc.xy(1, rowNb));
             builder.add(resourceRelationType.getTitleAndId(), cc.xy(3, rowNb));
             setNextRow();
 
