@@ -24,6 +24,7 @@ import java.util.ResourceBundle;
 public class EagControlPanel extends EagPanels {
     private List<LanguageWithScript> languageWithScriptTfs;
     private List<TextFieldWithLanguage> rulesConventionTfs;
+    private TextFieldWithLanguage personInstitutionRespTf;
 
     public EagControlPanel(Eag eag, JTabbedPane tabbedPane, JFrame eag2012Frame, ProfileListModel model, ResourceBundle labels) {
         super(eag, tabbedPane, eag2012Frame, model, labels);
@@ -52,13 +53,14 @@ public class EagControlPanel extends EagPanels {
 
         rowNb = 1;
 
-        builder.addLabel(labels.getString("eag2012.descriptionIdentifier") + "*", cc.xy(1, rowNb));
-        builder.addLabel(eag.getControl().getRecordId().getValue(), cc.xy(3, rowNb));
+        builder.addLabel(labels.getString("eag2012.idUsedInApeLabel") + "*", cc.xy(1, rowNb));
+        JTextField recordIdTf = new JTextField(eag.getControl().getRecordId().getValue());
+        recordIdTf.setEnabled(false);
+        builder.add(recordIdTf, cc.xy(3, rowNb));
         setNextRow();
 
         builder.addLabel(labels.getString("eag2012.personInstitutionResponsible"), cc.xy(1, rowNb));
         int sizeEvents = eag.getControl().getMaintenanceHistory().getMaintenanceEvent().size();
-        TextFieldWithLanguage personInstitutionRespTf;
         if(sizeEvents > 0) {
             MaintenanceEvent event = eag.getControl().getMaintenanceHistory().getMaintenanceEvent().get(sizeEvents - 1);
             personInstitutionRespTf = new TextFieldWithLanguage(event.getAgent().getContent(), event.getAgent().getLang());
@@ -66,16 +68,9 @@ public class EagControlPanel extends EagPanels {
             personInstitutionRespTf = new TextFieldWithLanguage("", "");
         }
         personInstitutionRespTf.getTextField().setEnabled(false);
-        personInstitutionRespTf.getLanguageBox().setEnabled(false);
         builder.add(personInstitutionRespTf.getTextField(), cc.xy(3, rowNb));
         builder.addLabel(labels.getString("eag2012.language"), cc.xy(5, rowNb));
         builder.add(personInstitutionRespTf.getLanguageBox(), cc.xy(7, rowNb));
-        setNextRow();
-
-        builder.addLabel(labels.getString("eag2012.identifierInstitution") + "*", cc.xy(1, rowNb));
-        JTextField identifierRespInstitTf = new JTextField(eag.getControl().getRecordId().getValue());
-        identifierRespInstitTf.setEnabled(false);
-        builder.add(identifierRespInstitTf, cc.xy(3, rowNb));
         setNextRow();
 
         builder.addSeparator(labels.getString("eag2012.usedLanguages"), cc.xyw(1, rowNb, 3));
@@ -240,7 +235,12 @@ public class EagControlPanel extends EagPanels {
 
             boolean hasChanged = false;
 
-            //todo here
+            int sizeEvents = eag.getControl().getMaintenanceHistory().getMaintenanceEvent().size();
+            if(sizeEvents > 0) {
+                MaintenanceEvent event = eag.getControl().getMaintenanceHistory().getMaintenanceEvent().get(sizeEvents - 1);
+                event.getAgent().setLang(personInstitutionRespTf.getLanguage());
+            }
+
             if(languageWithScriptTfs.size() == 0 || (languageWithScriptTfs.size() == 1 && StringUtils.isEmpty(languageWithScriptTfs.get(0).getLanguage()))) {
                 eag.getControl().setLanguageDeclarations(null);
             } else {
