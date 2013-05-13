@@ -1,5 +1,7 @@
 package eu.apenet.dpt.utils.util;
 
+import org.apache.log4j.Logger;
+
 import java.util.*;
 
 /**
@@ -9,14 +11,17 @@ import java.util.*;
  * @author Yoann Moranville
  */
 public class LanguageIsoList {
+    private static final Logger LOG = Logger.getLogger(LanguageIsoList.class);
+    private static Map<String, String> languagesTemp;
+    static {
+        String[] isoLanguages = Locale.getISOLanguages();
+        languagesTemp = new LinkedHashMap<String, String>(isoLanguages.length);
+        for(String isoLanguage : isoLanguages)
+        languagesTemp.put(new Locale(isoLanguage).getDisplayLanguage(Locale.ENGLISH), new Locale(isoLanguage).getISO3Language());
+    }
 
     public static List<String> getLanguageIsoList() {
-        String[] isoLanguages = Locale.getISOLanguages();
-        Map<String, String> languagesTemp = new LinkedHashMap<String, String>(isoLanguages.length);
         LinkedList<String> languagesList = new LinkedList<String>();
-        for(String isoLanguage : isoLanguages)
-            languagesTemp.put(new Locale(isoLanguage).getISO3Language(), isoLanguage);//DisplayLanguage(Locale.ENGLISH), isoLanguage);
-
         List<String> tempList = new LinkedList<String>(languagesTemp.keySet());
         Collections.sort(tempList, String.CASE_INSENSITIVE_ORDER);
 
@@ -24,6 +29,19 @@ public class LanguageIsoList {
             languagesList.add(tempLanguage);
 
         return languagesList;
+    }
+
+    public static String getIsoCode(String languageStr) {
+        return languagesTemp.get(languageStr);
+    }
+
+    public static String getLanguageStr(String isoCode) {
+        for(String language : languagesTemp.keySet()) {
+            if(languagesTemp.get(language).equals(isoCode)) {
+                return language;
+            }
+        }
+        return null;
     }
 
 }

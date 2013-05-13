@@ -1,6 +1,7 @@
 package eu.apenet.dpt.standalone.gui.eag2012.SwingStructures;
 
 import eu.apenet.dpt.standalone.gui.eag2012.EagPanels;
+import eu.apenet.dpt.utils.util.LanguageIsoList;
 
 import javax.swing.*;
 import java.util.Arrays;
@@ -22,8 +23,8 @@ public class TextAreaWithLanguage {
     public TextAreaWithLanguage(String text, String language, String extraText, String secondExtraText) {
         eagScrollPaneHolder = new EagScrollPaneHolder(text);
         languageBox = new JComboBox(languagesDisplay);
-        if(Arrays.asList(languages).contains(language))
-            languageBox.setSelectedItem(language);
+        if(Arrays.asList(languages).contains(LanguageIsoList.getLanguageStr(language)))
+            languageBox.setSelectedItem(LanguageIsoList.getLanguageStr(language));
         else
             languageBox.setSelectedItem("---");
         extraField = new JTextField(extraText);
@@ -68,7 +69,7 @@ public class TextAreaWithLanguage {
 
     public String getLanguage() {
         if(Arrays.asList(languages).contains((String) languageBox.getSelectedItem()))
-            return (String)languageBox.getSelectedItem();
+            return LanguageIsoList.getIsoCode((String)languageBox.getSelectedItem());
         return null;
     }
 }
