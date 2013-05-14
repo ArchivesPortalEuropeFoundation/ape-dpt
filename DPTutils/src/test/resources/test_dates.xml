@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map key-type="java.lang.String" value-type="java.lang.String">
+    <entry key="1400/3000" value="1400/2999"/>
+    <entry key="18090117" value="1809-01-17"/>
+    <entry key="157805" value="1578-05" />
+    <entry key="1782 oktober 7 en 1783 februari 13" value="1782-10-07/1783-02-13" />
+    <entry key="03.07.1985" value="1985-07-03" />
+    <entry key="03071985" value="1985-07-03" />
+    <entry key="1985-07-03" value="1985-07-03" />
+    <entry key="1985" value="1985" />
+    <entry key="03.07.1985/06.07.1985" value="1985-07-03/1985-07-06" />
+    <entry key="03071985/06071985" value="1985-07-03/1985-07-06" />
+    <entry key="1985-07-03/1985-07-06" value="1985-07-03/1985-07-06" />
+    <entry key="19850703" value="1985-07-03" />
+    <entry key="19850703/19850706" value="1985-07-03/1985-07-06" />
+    <entry key="1985/1986" value="1985/1986" />
+    <entry key="1985-01" value="1985-01" />
+    <entry key="1985-01/1986-02" value="1985-01/1986-02" />
+    <entry key="1985.07.03" value="1985-07-03" />
+    <entry key="1985.07.03/1985.07.06" value="1985-07-03/1985-07-06" />
+    <entry key="1985--1986" value="1985/1986" />
+    <entry key="1985.07.03 ? 1985.07.06" value="1985-07-03/1985-07-06" />
+    <entry key="1985.07.03 / 1985.07.06" value="1985-07-03/1985-07-06" />
+    <entry key="03.07.1985 bis (to, à, etc.) 06.07.1985" value="1985-07-03/1985-07-06" />
+    <entry key="1985 bis (to, à, etc.) 1988" value="1985/1988" />
+    <entry key="1985 ? 1988" value="1985/1988" />
+    <entry key="1985 / 1988" value="1985/1988" />
+    <entry key="1985 - 1988, 1992" value="1985/1992" />
+    <entry key="1985, 1988 - 1992" value="1985/1992" />
+    <entry key="(1985) 1988, 1992" value="1985/1992" />
+    <entry key="1985, 1988, 1992" value="1985/1992" />
+    <entry key="1985, 1988 (1992)" value="1985/1992" />
+    <entry key="(1985) 1988 (1992)" value="1985/1992" />
+    <entry key="[1985] 1988 - 1992" value="1985/1992" />
+    <entry key="1985 - 1988 [1992]" value="1985/1992" />
+    <entry key="vor 1985" value="0000/1985" />
+    <entry key="avant 1985" value="0000/1985" />
+    <entry key="before 1985" value="0000/1985" />
+    <entry key="nach 1985" value="1985/2999" />
+    <entry key="apres 1985" value="1985/2999" />
+    <entry key="after 1985" value="1985/2999" />
+    <entry key="um 1985" value="1985" />
+    <entry key="environ 1985" value="1985" />
+    <entry key="around 1985" value="1985" />
+    <entry key="ca. 1985" value="1985" />
+    <entry key="env. 1985" value="1985" />
+    <entry key="etwa 1985" value="1985" />
+    <entry key="3.7.1985 bis 6.7.1985" value="1985-07-03/1985-07-06" />
+    <entry key="3.7.1985 to 6.7.1985" value="1985-07-03/1985-07-06" />
+    <entry key="3.7.1985 - 6.7.1985" value="1985-07-03/1985-07-06" />
+    <entry key="03. Juli 1985 bis 06. Juli 1985" value="1985" />
+    <entry key="3. Juli 1985 bis 6. Juli 1985" value="1985" />
+    <entry key="3. Juli 1985 ? 6. Juli 1985" value="1985" />
+    <entry key="3rd July 1985 to 6th July 1986" value="1985/1986" />
+    <entry key="3. Juillet 1985 a 6. Juillet 1986" value="1985/1986" />
+    <entry key="3i?me Juillet 1985 a 6ieme Juillet 1985" value="1985" />
+    <entry key="03. Juli 1985" value="1985" />
+    <entry key="3. Juli 1985" value="1985" />
+    <entry key="03 Juli 1985" value="1985" />
+    <entry key="03. July 1985" value="1985" />
+    <entry key="3ieme Juillet 1985" value="1985" />
+    <entry key="16th century" value="1500/1600" />
+    <entry key="16th to 18th century" value="1500/1800" />
+    <entry key="16. Jahrhundert" value="1500/1600" />
+    <entry key="16. Jh." value="1500/1600" />
+    <entry key="16. Jhd." value="1500/1600" />
+    <entry key="16. bis 18. Jahrhundert" value="1500/1800" />
+    <entry key="16. bis 18. Jh." value="1500/1800" />
+    <entry key="16. bis 18. Jhd." value="1500/1800" />
+    <entry key="16ieme siecle" value="1500/1600" />
+    <entry key="16de eeuw" value="1500/1600" />
+    <entry key="16ieme a 18ieme siecle" value="1500/1800" />
+    <entry key="1762--1786 (1788)" value="1762/1788"/>
+    <entry key="XXIX die mensis augusti anno domini MCCCXXIX anno pontificatus domini Johannis pape XXII anno XIII" value="null" />
+    <entry key="ohne Datum" value="null" />
+    <!--<entry key="" value="..." />-->
+    <!--<entry key="" value="..." />-->
+</map>
