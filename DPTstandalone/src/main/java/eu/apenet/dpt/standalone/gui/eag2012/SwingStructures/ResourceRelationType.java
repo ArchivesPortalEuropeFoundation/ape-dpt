@@ -1,6 +1,4 @@
-package eu.apenet.dpt.standalone.gui.eag2012;
-
-import eu.apenet.dpt.standalone.gui.eag2012.SwingStructures.TextAreaWithLanguage;
+package eu.apenet.dpt.standalone.gui.eag2012.SwingStructures;
 
 import javax.swing.*;
 import java.util.Arrays;
@@ -20,7 +18,7 @@ public class ResourceRelationType {
     private JTextField titleAndId;
     private TextAreaWithLanguage description;
 
-    ResourceRelationType(String typeRelationValue, String websiteDesc, String titleIdValue, String descriptionOfRel, String langOfDesc, boolean isResourceRelation) {
+    public ResourceRelationType(String typeRelationValue, String websiteDesc, String titleIdValue, String descriptionOfRel, String langOfDesc, boolean isResourceRelation) {
         website = new JTextField(websiteDesc);
         titleAndId = new JTextField(titleIdValue);
         description = new TextAreaWithLanguage(descriptionOfRel, langOfDesc);

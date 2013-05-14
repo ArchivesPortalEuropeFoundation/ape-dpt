@@ -1,4 +1,4 @@
-package eu.apenet.dpt.standalone.gui.eag2012;
+package eu.apenet.dpt.standalone.gui.eag2012.SwingStructures;
 
 import eu.apenet.dpt.utils.eag2012.*;
 import org.apache.commons.lang.StringUtils;

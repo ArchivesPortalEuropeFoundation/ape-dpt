@@ -5,11 +5,12 @@ import com.jgoodies.forms.layout.CellConstraints;
 import com.jgoodies.forms.layout.FormLayout;
 import eu.apenet.dpt.standalone.gui.ProfileListModel;
 import eu.apenet.dpt.standalone.gui.Utilities;
+import eu.apenet.dpt.standalone.gui.eag2012.SwingStructures.LanguageWithScript;
+import eu.apenet.dpt.standalone.gui.eag2012.SwingStructures.TextFieldWithLanguage;
 import eu.apenet.dpt.utils.eag2012.*;
 import org.apache.commons.lang.StringUtils;
 
 import javax.swing.*;
-import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.util.ArrayList;
 import java.util.List;

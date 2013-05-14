@@ -1,9 +1,6 @@
-package eu.apenet.dpt.standalone.gui.eag2012;
-
-import eu.apenet.dpt.standalone.gui.eag2012.SwingStructures.EagScrollPane;
+package eu.apenet.dpt.standalone.gui.eag2012.SwingStructures;
 
 import javax.swing.*;
-import java.util.Arrays;
 
 /**
  * User: Yoann Moranville

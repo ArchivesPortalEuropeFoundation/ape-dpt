@@ -2,9 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package eu.apenet.dpt.standalone.gui.eag2012;
-
-import eu.apenet.dpt.standalone.gui.eag2012.SwingStructures.EagScrollPane;
+package eu.apenet.dpt.standalone.gui.eag2012.SwingStructures;
 
 import java.util.ArrayList;
 import java.util.List;

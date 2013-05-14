@@ -1,4 +1,4 @@
-package eu.apenet.dpt.standalone.gui.eag2012;
+package eu.apenet.dpt.standalone.gui.eag2012.SwingStructures;
 
 import javax.swing.*;
 import java.util.Arrays;

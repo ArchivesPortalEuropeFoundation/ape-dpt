@@ -1,13 +1,12 @@
 package eu.apenet.dpt.standalone.gui.eag2012;
 
-import eu.apenet.dpt.utils.eag2012.DateRange;
-import eu.apenet.dpt.utils.eag2012.DateSet;
+import eu.apenet.dpt.standalone.gui.eag2012.SwingStructures.TextFieldWithCheckbox;
+import eu.apenet.dpt.standalone.gui.eag2012.SwingStructures.TextFieldWithDate;
 import eu.apenet.dpt.utils.eag2012.MaintenanceEvent;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
