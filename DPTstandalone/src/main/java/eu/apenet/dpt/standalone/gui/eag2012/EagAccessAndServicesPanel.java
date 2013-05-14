@@ -73,8 +73,8 @@ public class EagAccessAndServicesPanel extends EagPanels {
     private List<TextAreaWithLanguage> toursAndSessionsTfs;
     private List<TextAreaWithLanguage> otherServicesTfs;
 
-    public EagAccessAndServicesPanel(Eag eag, JTabbedPane tabbedPane, JFrame eag2012Frame, ProfileListModel model, ResourceBundle labels) {
-        super(eag, tabbedPane, eag2012Frame, model, labels);
+    public EagAccessAndServicesPanel(Eag eag, JTabbedPane tabbedPane, JTabbedPane mainTabbedPane, JFrame eag2012Frame, ProfileListModel model, ResourceBundle labels) {
+        super(eag, tabbedPane, mainTabbedPane, eag2012Frame, model, labels);
     }
 
     @Override
@@ -839,7 +839,7 @@ public class EagAccessAndServicesPanel extends EagPanels {
             } catch (Eag2012FormException e) {
             }
             eag.getArchguide().getDesc().getRepositories().getRepository().get(0).getTimetable().getOpening().add(new Opening());
-            reloadTabbedPanel(new EagAccessAndServicesPanel(eag, tabbedPane, eag2012Frame, model, labels).buildEditorPanel(errors), 3);
+            reloadTabbedPanel(new EagAccessAndServicesPanel(eag, tabbedPane, mainTabbedPane, eag2012Frame, model, labels).buildEditorPanel(errors), 3);
         }
     }
     public class AddClosingDatesBtnAction extends UpdateEagObject {
@@ -854,7 +854,7 @@ public class EagAccessAndServicesPanel extends EagPanels {
             } catch (Eag2012FormException e) {
             }
             eag.getArchguide().getDesc().getRepositories().getRepository().get(0).getTimetable().getClosing().add(new Closing());
-            reloadTabbedPanel(new EagAccessAndServicesPanel(eag, tabbedPane, eag2012Frame, model, labels).buildEditorPanel(errors), 3);
+            reloadTabbedPanel(new EagAccessAndServicesPanel(eag, tabbedPane, mainTabbedPane, eag2012Frame, model, labels).buildEditorPanel(errors), 3);
         }
     }
     public class AddTravellingDirectionsBtnAction extends UpdateEagObject {
@@ -869,7 +869,7 @@ public class EagAccessAndServicesPanel extends EagPanels {
             } catch (Eag2012FormException e) {
             }
             eag.getArchguide().getDesc().getRepositories().getRepository().get(0).getDirections().add(new Directions());
-            reloadTabbedPanel(new EagAccessAndServicesPanel(eag, tabbedPane, eag2012Frame, model, labels).buildEditorPanel(errors), 3);
+            reloadTabbedPanel(new EagAccessAndServicesPanel(eag, tabbedPane, mainTabbedPane, eag2012Frame, model, labels).buildEditorPanel(errors), 3);
         }
     }
     public class AddRestaccessBtnAction extends UpdateEagObject {
@@ -884,7 +884,7 @@ public class EagAccessAndServicesPanel extends EagPanels {
             } catch (Eag2012FormException e) {
             }
             eag.getArchguide().getDesc().getRepositories().getRepository().get(0).getAccess().getRestaccess().add(new Restaccess());
-            reloadTabbedPanel(new EagAccessAndServicesPanel(eag, tabbedPane, eag2012Frame, model, labels).buildEditorPanel(errors), 3);
+            reloadTabbedPanel(new EagAccessAndServicesPanel(eag, tabbedPane, mainTabbedPane, eag2012Frame, model, labels).buildEditorPanel(errors), 3);
         }
     }
     public class AddAccessibilityBtnAction extends UpdateEagObject {
@@ -902,7 +902,7 @@ public class EagAccessAndServicesPanel extends EagPanels {
 //                LOG.info("create new accessibility");
 //                eag.getArchguide().getDesc().getRepositories().getRepository().get(0).getAccessibility().add(new Accessibility());
 //            }
-            reloadTabbedPanel(new EagAccessAndServicesPanel(eag, tabbedPane, eag2012Frame, model, labels).buildEditorPanel(errors), 3);
+            reloadTabbedPanel(new EagAccessAndServicesPanel(eag, tabbedPane, mainTabbedPane, eag2012Frame, model, labels).buildEditorPanel(errors), 3);
         }
     }
     public class AddComputerplacesDescriptionBtnAction extends UpdateEagObject {
@@ -929,7 +929,7 @@ public class EagAccessAndServicesPanel extends EagPanels {
             } else {
                 JOptionPane.showMessageDialog(eag2012Frame, labels.getString("eag2012.computerplacesNotBlank"));
             }
-            reloadTabbedPanel(new EagAccessAndServicesPanel(eag, tabbedPane, eag2012Frame, model, labels).buildEditorPanel(errors), 3);
+            reloadTabbedPanel(new EagAccessAndServicesPanel(eag, tabbedPane, mainTabbedPane, eag2012Frame, model, labels).buildEditorPanel(errors), 3);
         }
     }
     public class AddReadersticketBtnAction extends UpdateEagObject {
@@ -944,7 +944,7 @@ public class EagAccessAndServicesPanel extends EagPanels {
             } catch (Eag2012FormException e) {
             }
             eag.getArchguide().getDesc().getRepositories().getRepository().get(0).getServices().getSearchroom().getReadersTicket().add(new ReadersTicket());
-            reloadTabbedPanel(new EagAccessAndServicesPanel(eag, tabbedPane, eag2012Frame, model, labels).buildEditorPanel(errors), 3);
+            reloadTabbedPanel(new EagAccessAndServicesPanel(eag, tabbedPane, mainTabbedPane, eag2012Frame, model, labels).buildEditorPanel(errors), 3);
         }
     }
     public class AddAdvancedordersBtnAction extends UpdateEagObject {
@@ -959,7 +959,7 @@ public class EagAccessAndServicesPanel extends EagPanels {
             } catch (Eag2012FormException e) {
             }
             eag.getArchguide().getDesc().getRepositories().getRepository().get(0).getServices().getSearchroom().getAdvancedOrders().add(new AdvancedOrders());
-            reloadTabbedPanel(new EagAccessAndServicesPanel(eag, tabbedPane, eag2012Frame, model, labels).buildEditorPanel(errors), 3);
+            reloadTabbedPanel(new EagAccessAndServicesPanel(eag, tabbedPane, mainTabbedPane, eag2012Frame, model, labels).buildEditorPanel(errors), 3);
         }
     }
     public class AddResearchservicesBtnAction extends UpdateEagObject {
@@ -974,7 +974,7 @@ public class EagAccessAndServicesPanel extends EagPanels {
             } catch (Eag2012FormException e) {
             }
             eag.getArchguide().getDesc().getRepositories().getRepository().get(0).getServices().getSearchroom().getResearchServices().add(new ResearchServices());
-            reloadTabbedPanel(new EagAccessAndServicesPanel(eag, tabbedPane, eag2012Frame, model, labels).buildEditorPanel(errors), 3);
+            reloadTabbedPanel(new EagAccessAndServicesPanel(eag, tabbedPane, mainTabbedPane, eag2012Frame, model, labels).buildEditorPanel(errors), 3);
         }
     }
     public class AddExhibitionsBtnAction extends UpdateEagObject {
@@ -989,7 +989,7 @@ public class EagAccessAndServicesPanel extends EagPanels {
             } catch (Eag2012FormException e) {
             }
             eag.getArchguide().getDesc().getRepositories().getRepository().get(0).getServices().getRecreationalServices().getExhibition().add(new Exhibition());
-            reloadTabbedPanel(new EagAccessAndServicesPanel(eag, tabbedPane, eag2012Frame, model, labels).buildEditorPanel(errors), 3);
+            reloadTabbedPanel(new EagAccessAndServicesPanel(eag, tabbedPane, mainTabbedPane, eag2012Frame, model, labels).buildEditorPanel(errors), 3);
         }
     }
     public class AddToursSessionsBtnAction extends UpdateEagObject {
@@ -1004,7 +1004,7 @@ public class EagAccessAndServicesPanel extends EagPanels {
             } catch (Eag2012FormException e) {
             }
             eag.getArchguide().getDesc().getRepositories().getRepository().get(0).getServices().getRecreationalServices().getToursSessions().add(new ToursSessions());
-            reloadTabbedPanel(new EagAccessAndServicesPanel(eag, tabbedPane, eag2012Frame, model, labels).buildEditorPanel(errors), 3);
+            reloadTabbedPanel(new EagAccessAndServicesPanel(eag, tabbedPane, mainTabbedPane, eag2012Frame, model, labels).buildEditorPanel(errors), 3);
         }
     }
     public class AddOtherServicesBtnAction extends UpdateEagObject {
@@ -1019,7 +1019,7 @@ public class EagAccessAndServicesPanel extends EagPanels {
             } catch (Eag2012FormException e) {
             }
             eag.getArchguide().getDesc().getRepositories().getRepository().get(0).getServices().getRecreationalServices().getOtherServices().add(new OtherServices());
-            reloadTabbedPanel(new EagAccessAndServicesPanel(eag, tabbedPane, eag2012Frame, model, labels).buildEditorPanel(errors), 3);
+            reloadTabbedPanel(new EagAccessAndServicesPanel(eag, tabbedPane, mainTabbedPane, eag2012Frame, model, labels).buildEditorPanel(errors), 3);
         }
     }
     public class AddInternetAccessBtnAction extends UpdateEagObject {
@@ -1040,7 +1040,7 @@ public class EagAccessAndServicesPanel extends EagPanels {
                 eag.getArchguide().getDesc().getRepositories().getRepository().get(0).getServices().getInternetAccess().setDescriptiveNote(new DescriptiveNote());
             }
             eag.getArchguide().getDesc().getRepositories().getRepository().get(0).getServices().getInternetAccess().getDescriptiveNote().getP().add(new P());
-            reloadTabbedPanel(new EagAccessAndServicesPanel(eag, tabbedPane, eag2012Frame, model, labels).buildEditorPanel(errors), 3);
+            reloadTabbedPanel(new EagAccessAndServicesPanel(eag, tabbedPane, mainTabbedPane, eag2012Frame, model, labels).buildEditorPanel(errors), 3);
         }
     }
 
@@ -1060,7 +1060,7 @@ public class EagAccessAndServicesPanel extends EagPanels {
                 reproductionser.setDescriptiveNote(new DescriptiveNote());
             }
             reproductionser.getDescriptiveNote().getP().add(new P());
-            reloadTabbedPanel(new EagAccessAndServicesPanel(eag, tabbedPane, eag2012Frame, model, labels).buildEditorPanel(errors), 3);
+            reloadTabbedPanel(new EagAccessAndServicesPanel(eag, tabbedPane, mainTabbedPane, eag2012Frame, model, labels).buildEditorPanel(errors), 3);
         }
     }
 
@@ -1080,7 +1080,7 @@ public class EagAccessAndServicesPanel extends EagPanels {
                 restorationlab.setDescriptiveNote(new DescriptiveNote());
             }
             restorationlab.getDescriptiveNote().getP().add(new P());
-            reloadTabbedPanel(new EagAccessAndServicesPanel(eag, tabbedPane, eag2012Frame, model, labels).buildEditorPanel(errors), 3);
+            reloadTabbedPanel(new EagAccessAndServicesPanel(eag, tabbedPane, mainTabbedPane, eag2012Frame, model, labels).buildEditorPanel(errors), 3);
         }
     }
 
@@ -1097,7 +1097,7 @@ public class EagAccessAndServicesPanel extends EagPanels {
                 super.saveFile(eag.getControl().getRecordId().getValue());
                 closeFrame();
             } catch (Eag2012FormException e) {
-                reloadTabbedPanel(new EagAccessAndServicesPanel(eag, tabbedPane, eag2012Frame, model, labels).buildEditorPanel(errors), 3);
+                reloadTabbedPanel(new EagAccessAndServicesPanel(eag, tabbedPane, mainTabbedPane, eag2012Frame, model, labels).buildEditorPanel(errors), 3);
             }
         }
     }
@@ -1115,16 +1115,16 @@ public class EagAccessAndServicesPanel extends EagPanels {
                 super.updateEagObject(false);
 
                 if(isNextTab) {
-                    reloadTabbedPanel(new EagDescriptionPanel(eag, tabbedPane, eag2012Frame, model, labels).buildEditorPanel(errors), 4);
+                    reloadTabbedPanel(new EagDescriptionPanel(eag, tabbedPane, mainTabbedPane, eag2012Frame, model, labels).buildEditorPanel(errors), 4);
                     tabbedPane.setEnabledAt(4, true);
                     tabbedPane.setEnabledAt(3, false);
                 } else {
-                    reloadTabbedPanel(new EagContactPanel(eag, tabbedPane, eag2012Frame, model, labels).buildEditorPanel(errors), 2);
+                    reloadTabbedPanel(new EagContactPanel(eag, tabbedPane, mainTabbedPane, eag2012Frame, model, labels).buildEditorPanel(errors), 2);
                     tabbedPane.setEnabledAt(2, true);
                     tabbedPane.setEnabledAt(3, false);
                 }
             } catch (Eag2012FormException e) {
-                reloadTabbedPanel(new EagAccessAndServicesPanel(eag, tabbedPane, eag2012Frame, model, labels).buildEditorPanel(errors), 3);
+                reloadTabbedPanel(new EagAccessAndServicesPanel(eag, tabbedPane, mainTabbedPane, eag2012Frame, model, labels).buildEditorPanel(errors), 3);
             }
         }
     }

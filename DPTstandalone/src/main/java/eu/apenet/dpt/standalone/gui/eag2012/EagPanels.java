@@ -50,15 +50,17 @@ public abstract class EagPanels {
 
     protected int rowNb;
     protected JTabbedPane tabbedPane;
+    protected JTabbedPane mainTabbedPane;
     protected Eag eag;
     protected JFrame eag2012Frame;
     protected ProfileListModel model;
     protected ResourceBundle labels;
 
-    public EagPanels(Eag eag, JTabbedPane tabbedPane, JFrame eag2012Frame, ProfileListModel model, ResourceBundle labels) {
+    public EagPanels(Eag eag, JTabbedPane tabbedPane, JTabbedPane mainTabbedPane, JFrame eag2012Frame, ProfileListModel model, ResourceBundle labels) {
         this.eag2012Frame = eag2012Frame;
         this.eag = eag;
         this.tabbedPane = tabbedPane;
+        this.mainTabbedPane = mainTabbedPane;
         this.model = model;
         this.labels = labels;
     }

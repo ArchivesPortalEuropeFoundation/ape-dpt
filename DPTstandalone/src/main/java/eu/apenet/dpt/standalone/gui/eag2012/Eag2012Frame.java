@@ -17,6 +17,7 @@ import java.awt.event.WindowEvent;
 import java.io.File;
 import java.io.InputStream;
 import java.util.Date;
+import java.util.Enumeration;
 import java.util.ResourceBundle;
 
 /**
@@ -112,30 +113,35 @@ public class Eag2012Frame extends JFrame {
     }
 
     public void buildPanel(Eag eag, boolean isNew) {
+        ResourceBundle dummyResourceBundle = new DummyResourceBundle();
         tabbedPane = new JTabbedPane();
         tabbedPane.putClientProperty("jgoodies.noContentBorder", Boolean.TRUE);
-
-        tabbedPane.add(labels.getString("eag2012.yourInstitutionTab"),  buildInstitutionPanel(eag, isNew));
-
-        tabbedPane.add(labels.getString("eag2012.identityTab"),  null);
-        tabbedPane.setEnabledAt(1, false);
-        tabbedPane.add(labels.getString("eag2012.contactTab"), null);
-        tabbedPane.setEnabledAt(2, false);
-        tabbedPane.add(labels.getString("eag2012.accessAndServicesTab"), null);
-        tabbedPane.setEnabledAt(3, false);
-        tabbedPane.add(labels.getString("eag2012.descriptionTab"), null);
-        tabbedPane.setEnabledAt(4, false);
-        tabbedPane.add(labels.getString("eag2012.controlTab"), null);
-        tabbedPane.setEnabledAt(5, false);
-        tabbedPane.add(labels.getString("eag2012.relationsTab"), null);
-        tabbedPane.setEnabledAt(6, false);
+        tabbedPane.add(dummyResourceBundle.getString("eag2012.mainInstitution"),  buildFirstInstitutionTabbedPane(eag, isNew));
     }
 
 
-    protected JComponent buildInstitutionPanel(Eag eag, boolean isNew) {
-        JScrollPane jScrollPane = new JScrollPane(new EagInstitutionPanel(eag, tabbedPane, this, model, isNew, labels, countrycode, mainagencycode).buildEditorPanel(null));
-        jScrollPane.getVerticalScrollBar().setUnitIncrement(20);
-        return jScrollPane;
+    protected JComponent buildFirstInstitutionTabbedPane(Eag eag, boolean isNew) {
+        JTabbedPane mainInstitutionTabbedPane = new JTabbedPane();
+        mainInstitutionTabbedPane.putClientProperty("jgoodies.noContentBorder", Boolean.TRUE);
+
+        JScrollPane institutionPane = new JScrollPane(new EagInstitutionPanel(eag, mainInstitutionTabbedPane, tabbedPane, this, model, isNew, labels, countrycode, mainagencycode).buildEditorPanel(null));
+        institutionPane.getVerticalScrollBar().setUnitIncrement(20);
+        mainInstitutionTabbedPane.add(labels.getString("eag2012.yourInstitutionTab"), institutionPane);
+        mainInstitutionTabbedPane.setEnabledAt(0, true);
+        mainInstitutionTabbedPane.add(labels.getString("eag2012.identityTab"),  null);
+        mainInstitutionTabbedPane.setEnabledAt(1, false);
+        mainInstitutionTabbedPane.add(labels.getString("eag2012.contactTab"), null);
+        mainInstitutionTabbedPane.setEnabledAt(2, false);
+        mainInstitutionTabbedPane.add(labels.getString("eag2012.accessAndServicesTab"), null);
+        mainInstitutionTabbedPane.setEnabledAt(3, false);
+        mainInstitutionTabbedPane.add(labels.getString("eag2012.descriptionTab"), null);
+        mainInstitutionTabbedPane.setEnabledAt(4, false);
+        mainInstitutionTabbedPane.add(labels.getString("eag2012.controlTab"), null);
+        mainInstitutionTabbedPane.setEnabledAt(5, false);
+        mainInstitutionTabbedPane.add(labels.getString("eag2012.relationsTab"), null);
+        mainInstitutionTabbedPane.setEnabledAt(6, false);
+
+        return mainInstitutionTabbedPane;
     }
 
     public static void inUse(boolean used) {
@@ -152,5 +158,18 @@ public class Eag2012Frame extends JFrame {
 
     public static void setTimeMaintenance(Date timeMaintenance) {
         Eag2012Frame.timeMaintenance = timeMaintenance;
+    }
+
+    public class DummyResourceBundle extends ResourceBundle {
+
+        @Override
+        protected Object handleGetObject(String s) {
+            return s.replaceAll("eag2012.", "");
+        }
+
+        @Override
+        public Enumeration<String> getKeys() {
+            return null;
+        }
     }
 }
