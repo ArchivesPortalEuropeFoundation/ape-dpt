@@ -8,7 +8,6 @@ import eu.apenet.dpt.standalone.gui.Utilities;
 import static eu.apenet.dpt.standalone.gui.eag2012.EagPanels.LOG;
 
 import eu.apenet.dpt.standalone.gui.eag2012.SwingStructures.TextAreaWithLanguage;
-import eu.apenet.dpt.standalone.gui.eag2012.data.*;
 import eu.apenet.dpt.utils.eag2012.*;
 import org.apache.commons.lang.StringUtils;
 
