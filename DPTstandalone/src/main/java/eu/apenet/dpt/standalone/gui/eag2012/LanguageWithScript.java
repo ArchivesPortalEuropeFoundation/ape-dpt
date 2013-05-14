@@ -1,5 +1,7 @@
 package eu.apenet.dpt.standalone.gui.eag2012;
 
+import eu.apenet.dpt.utils.util.LanguageIsoList;
+
 import javax.swing.*;
 import java.util.Arrays;
 
@@ -21,8 +23,8 @@ public class LanguageWithScript {
 
     public LanguageWithScript(String language, String script) {
         languageBox = new JComboBox(languagesDisplay);
-        if(Arrays.asList(languages).contains(language))
-            languageBox.setSelectedItem(language);
+        if(Arrays.asList(languages).contains(LanguageIsoList.getLanguageStr(language)))
+            languageBox.setSelectedItem(LanguageIsoList.getLanguageStr(language));
         else
             languageBox.setSelectedItem("---");
         scriptBox = new JComboBox(scriptsDisplay);
@@ -36,7 +38,7 @@ public class LanguageWithScript {
 
     public String getLanguage() {
         if(Arrays.asList(languages).contains((String) languageBox.getSelectedItem()))
-            return (String)languageBox.getSelectedItem();
+            return LanguageIsoList.getIsoCode((String)languageBox.getSelectedItem());
         return null;
     }
 
