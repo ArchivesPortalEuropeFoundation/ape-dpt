@@ -75,7 +75,6 @@ public class Eag2012Frame extends JFrame {
     }
 
     public void createFrame(File eagFile, boolean isNew) {
-        timeMaintenance = null;
         try {
             createFrame(FileUtils.openInputStream(eagFile), isNew);
         } catch (Exception e){
@@ -84,6 +83,7 @@ public class Eag2012Frame extends JFrame {
     }
 
     public void createFrame(InputStream eagStream, boolean isNew) {
+        timeMaintenance = null;
         inUse(true);
         addWindowListener(new WindowAdapter() {
             public void windowClosing(WindowEvent e) {
