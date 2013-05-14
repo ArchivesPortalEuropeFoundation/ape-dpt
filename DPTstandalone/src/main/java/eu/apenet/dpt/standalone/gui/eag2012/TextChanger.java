@@ -1,8 +1,8 @@
 package eu.apenet.dpt.standalone.gui.eag2012;
 
-import eu.apenet.dpt.standalone.gui.eag2012.data.DateRange;
-import eu.apenet.dpt.standalone.gui.eag2012.data.DateSet;
-import eu.apenet.dpt.standalone.gui.eag2012.data.MaintenanceEvent;
+import eu.apenet.dpt.utils.eag2012.DateRange;
+import eu.apenet.dpt.utils.eag2012.DateSet;
+import eu.apenet.dpt.utils.eag2012.MaintenanceEvent;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 

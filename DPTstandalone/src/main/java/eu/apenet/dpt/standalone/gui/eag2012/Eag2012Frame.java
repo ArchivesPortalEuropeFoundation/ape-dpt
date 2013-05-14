@@ -2,7 +2,7 @@ package eu.apenet.dpt.standalone.gui.eag2012;
 
 import eu.apenet.dpt.standalone.gui.ProfileListModel;
 import eu.apenet.dpt.standalone.gui.Utilities;
-import eu.apenet.dpt.standalone.gui.eag2012.data.Eag;
+import eu.apenet.dpt.utils.eag2012.Eag;
 import eu.apenet.dpt.utils.service.TransformationTool;
 import eu.apenet.dpt.utils.util.ReadXml;
 import org.apache.commons.io.FileUtils;

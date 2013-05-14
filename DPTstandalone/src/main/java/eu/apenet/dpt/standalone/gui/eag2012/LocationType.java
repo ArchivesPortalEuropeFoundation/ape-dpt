@@ -1,6 +1,7 @@
 package eu.apenet.dpt.standalone.gui.eag2012;
 
 import eu.apenet.dpt.standalone.gui.eag2012.data.*;
+import eu.apenet.dpt.utils.eag2012.*;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 

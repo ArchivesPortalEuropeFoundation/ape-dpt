@@ -6,12 +6,14 @@ import com.jgoodies.forms.layout.FormLayout;
 import eu.apenet.dpt.standalone.gui.ProfileListModel;
 import eu.apenet.dpt.standalone.gui.Utilities;
 import eu.apenet.dpt.standalone.gui.eag2012.data.*;
-import eu.apenet.dpt.standalone.gui.eag2012.data.Date;
+import eu.apenet.dpt.utils.eag2012.Date;
+import eu.apenet.dpt.utils.eag2012.*;
 import org.apache.commons.lang.StringUtils;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.util.*;
+import java.util.Date;
 
 /**
  * User: Yoann Moranville
@@ -128,8 +130,8 @@ public class EagIdentityPanel extends EagPanels {
                     if(useDates.getDateSet() != null) {
                         datesForFormerlyUsedName = new ArrayList<TextFieldWithDate>(useDates.getDateSet().getDateOrDateRange().size());
                         for (Object object1 : useDates.getDateSet().getDateOrDateRange()) {
-                            if(object1 instanceof Date){
-                                TextFieldWithDate textFieldWithDate = new TextFieldWithDate("", "", "", "", ((Date)object1).getContent());
+                            if(object1 instanceof eu.apenet.dpt.utils.eag2012.Date){
+                                TextFieldWithDate textFieldWithDate = new TextFieldWithDate("", "", "", "", ((eu.apenet.dpt.utils.eag2012.Date)object1).getContent());
                                 datesForFormerlyUsedName.add(textFieldWithDate);
                             }
                             if(object1 instanceof DateRange){
@@ -260,9 +262,9 @@ public class EagIdentityPanel extends EagPanels {
                 if(currentUseDate.getDateRange() != null) {
                     currentUseDate.getDateSet().getDateOrDateRange().add(currentUseDate.getDateRange());
                 }
-                currentUseDate.getDateSet().getDateOrDateRange().add(new Date());
+                currentUseDate.getDateSet().getDateOrDateRange().add(new eu.apenet.dpt.utils.eag2012.Date());
             } else {
-                currentUseDate.setDate(new Date());
+                currentUseDate.setDate(new eu.apenet.dpt.utils.eag2012.Date());
             }
             reloadTabbedPanel(new EagIdentityPanel(eag, tabbedPane, eag2012Frame, model, labels).buildEditorPanel(errors), 1);
         }
@@ -471,7 +473,7 @@ public class EagIdentityPanel extends EagPanels {
                             isDateSet = true;
                         } else {
                             if (counterDate == 1) {
-                                useDates.setDate(new Date());
+                                useDates.setDate(new eu.apenet.dpt.utils.eag2012.Date());
                                 String dateStr = "";
                                 for (TextFieldWithDate yearTextWithDate : yearsTfs) {
                                     if (StringUtils.isNotEmpty(yearTextWithDate.getDate())) {
@@ -501,7 +503,7 @@ public class EagIdentityPanel extends EagPanels {
                         if(isDateSet) {
                             for(TextFieldWithDate yearTextWithDate : yearsTfs) {
                                 if(StringUtils.isNotEmpty(yearTextWithDate.getDate())) {
-                                    Date date = new Date();
+                                    eu.apenet.dpt.utils.eag2012.Date date = new eu.apenet.dpt.utils.eag2012.Date();
                                     date.setContent(yearTextWithDate.getDate());
                                     useDates.getDateSet().getDateOrDateRange().add(date);
                                     counterForHoldingsTfs++;

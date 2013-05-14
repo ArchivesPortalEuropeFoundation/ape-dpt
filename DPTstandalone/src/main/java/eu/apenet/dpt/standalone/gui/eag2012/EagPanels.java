@@ -1,7 +1,7 @@
 package eu.apenet.dpt.standalone.gui.eag2012;
 
 import eu.apenet.dpt.standalone.gui.ProfileListModel;
-import eu.apenet.dpt.standalone.gui.eag2012.data.Eag;
+import eu.apenet.dpt.utils.eag2012.Eag;
 import eu.apenet.dpt.utils.util.LanguageIsoList;
 import org.apache.log4j.Logger;
 
