@@ -19,8 +19,8 @@ public class LanguageWithScript {
     private static final String[] languages = EagPanels.languages;
     private static final String[] languagesDisplay = EagPanels.languagesDisplay;
 
-    private static final String[] scripts = {"Latn"};
-    private static final String[] scriptsDisplay = {"---", "Latn"};
+    private static final String[] scripts = {"Arab", "Armn", "Cprt", "Cyrl", "Geor", "Grek", "Hebr", "Latn"};
+    private static final String[] scriptsDisplay = {"---", "Arab", "Armn", "Cprt", "Cyrl", "Geor", "Grek", "Hebr", "Latn"};
 
     public LanguageWithScript(String language, String script) {
         languageBox = new JComboBox(languagesDisplay);
