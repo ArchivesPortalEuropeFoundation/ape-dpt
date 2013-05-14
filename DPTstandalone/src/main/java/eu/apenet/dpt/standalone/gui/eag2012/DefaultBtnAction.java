@@ -3,7 +3,7 @@ package eu.apenet.dpt.standalone.gui.eag2012;
 import eu.apenet.dpt.standalone.gui.FileInstance;
 import eu.apenet.dpt.standalone.gui.ProfileListModel;
 import eu.apenet.dpt.standalone.gui.Utilities;
-import eu.apenet.dpt.standalone.gui.eag2012.data.Eag;
+import eu.apenet.dpt.utils.eag2012.Eag;
 import eu.apenet.dpt.utils.util.Xsd_enum;
 import org.apache.commons.lang.StringUtils;
 
@@ -55,6 +55,10 @@ public abstract class DefaultBtnAction implements ActionListener {
             jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
             jaxbMarshaller.setProperty("com.sun.xml.bind.namespacePrefixMapper", new EagNamespaceMapper());
             File eagFile = new File(Utilities.TEMP_DIR + "EAG2012_" + id + ".xml");
+            if(model.existsFile(eagFile)) {
+                model.removeFile(eagFile);
+                eagFile.delete();
+            }
             jaxbMarshaller.marshal(eag, eagFile);
 
             model.addFile(eagFile, Utilities.getXsdObjectFromPath(Xsd_enum.XSD_EAG_2012_SCHEMA.getPath()), FileInstance.FileType.EAG);
