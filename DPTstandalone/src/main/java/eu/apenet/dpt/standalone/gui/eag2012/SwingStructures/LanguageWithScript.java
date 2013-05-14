@@ -4,7 +4,9 @@ import eu.apenet.dpt.standalone.gui.eag2012.EagPanels;
 import eu.apenet.dpt.utils.util.LanguageIsoList;
 
 import javax.swing.*;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 /**
  * User: Yoann Moranville
@@ -20,7 +22,14 @@ public class LanguageWithScript {
     private static final String[] languagesDisplay = EagPanels.languagesDisplay;
 
     private static final String[] scripts = {"Arab", "Armn", "Cprt", "Cyrl", "Geor", "Grek", "Hebr", "Latn"};
-    private static final String[] scriptsDisplay = {"---", "Arab", "Armn", "Cprt", "Cyrl", "Geor", "Grek", "Hebr", "Latn"};
+    private static String[] scriptsDisplay;
+
+    static {
+        List<String> scriptList = new ArrayList<String>();
+        scriptList.add("---");
+        scriptList.addAll(Arrays.asList(scripts));
+        scriptsDisplay = scriptList.toArray(new String[]{});
+    }
 
     public LanguageWithScript(String language, String script) {
         languageBox = new JComboBox(languagesDisplay);
