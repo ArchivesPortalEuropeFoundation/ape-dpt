@@ -14,12 +14,8 @@ import java.util.List;
  *
  * @author Yoann Moranville
  */
-public class LanguageWithScript {
-
-    private JComboBox languageBox;
+public class LanguageWithScript extends StructureWithLanguage {
     private JComboBox scriptBox;
-    private static final String[] languages = EagPanels.languages;
-    private static final String[] languagesDisplay = EagPanels.languagesDisplay;
 
     private static final String[] scripts = {"Arab", "Armn", "Cprt", "Cyrl", "Geor", "Grek", "Hebr", "Latn"};
     private static String[] scriptsDisplay;
@@ -32,24 +28,10 @@ public class LanguageWithScript {
     }
 
     public LanguageWithScript(String language, String script) {
-        languageBox = new JComboBox(languagesDisplay);
-        if(Arrays.asList(languages).contains(LanguageIsoList.getLanguageStr(language)))
-            languageBox.setSelectedItem(LanguageIsoList.getLanguageStr(language));
-        else
-            languageBox.setSelectedItem("---");
+        super(language);
         scriptBox = new JComboBox(scriptsDisplay);
         if(Arrays.asList(scripts).contains(script))
             scriptBox.setSelectedItem(script);
-    }
-
-    public JComboBox getLanguageBox() {
-        return languageBox;
-    }
-
-    public String getLanguage() {
-        if(Arrays.asList(languages).contains((String) languageBox.getSelectedItem()))
-            return LanguageIsoList.getIsoCode((String)languageBox.getSelectedItem());
-        return null;
     }
 
     public JComboBox getScriptBox() {

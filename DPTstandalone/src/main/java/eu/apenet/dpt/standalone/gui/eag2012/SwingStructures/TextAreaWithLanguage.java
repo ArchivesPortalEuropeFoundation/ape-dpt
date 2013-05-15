@@ -12,21 +12,14 @@ import java.util.Arrays;
  *
  * @author Yoann Moranville
  */
-public class TextAreaWithLanguage {
+public class TextAreaWithLanguage extends StructureWithLanguage {
     private EagScrollPaneHolder eagScrollPaneHolder;
     private JTextField extraField;
     private JTextField secondExtraField;
-    private JComboBox languageBox;
-    private static final String[] languages = EagPanels.languages;
-    private static final String[] languagesDisplay = EagPanels.languagesDisplay;
 
     public TextAreaWithLanguage(String text, String language, String extraText, String secondExtraText) {
+        super(language);
         eagScrollPaneHolder = new EagScrollPaneHolder(text);
-        languageBox = new JComboBox(languagesDisplay);
-        if(Arrays.asList(languages).contains(LanguageIsoList.getLanguageStr(language)))
-            languageBox.setSelectedItem(LanguageIsoList.getLanguageStr(language));
-        else
-            languageBox.setSelectedItem("---");
         extraField = new JTextField(extraText);
         secondExtraField = new JTextField(secondExtraText);
     }
@@ -51,10 +44,6 @@ public class TextAreaWithLanguage {
         return secondExtraField;
     }
 
-    public JComboBox getLanguageBox() {
-        return languageBox;
-    }
-
     public String getTextValue() {
         return eagScrollPaneHolder.getText();
     }
@@ -65,11 +54,5 @@ public class TextAreaWithLanguage {
 
     public String getSecondExtraValue() {
         return secondExtraField.getText();
-    }
-
-    public String getLanguage() {
-        if(Arrays.asList(languages).contains((String) languageBox.getSelectedItem()))
-            return LanguageIsoList.getIsoCode((String)languageBox.getSelectedItem());
-        return null;
     }
 }
