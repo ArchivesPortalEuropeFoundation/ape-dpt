@@ -28,7 +28,7 @@ import java.util.ResourceBundle;
  */
 public class Eag2012Frame extends JFrame {
     private static final Logger LOG = Logger.getLogger(Eag2012Frame.class);
-    private JTabbedPane tabbedPane;
+    private JTabbedPane mainTabbedPane;
     private Dimension dimension;
     private ProfileListModel model;
     private ResourceBundle labels;
@@ -103,7 +103,7 @@ public class Eag2012Frame extends JFrame {
         }
 
         buildPanel(eag, isNew);
-        this.getContentPane().add(tabbedPane);
+        this.getContentPane().add(mainTabbedPane);
 
         Dimension frameDim = new Dimension(((Double)(dimension.getWidth() * 0.95)).intValue(), ((Double)(dimension.getHeight() * 0.95)).intValue());
         this.setSize(frameDim);
@@ -113,36 +113,13 @@ public class Eag2012Frame extends JFrame {
     }
 
     public void buildPanel(Eag eag, boolean isNew) {
-        ResourceBundle dummyResourceBundle = new DummyResourceBundle();
-        tabbedPane = new JTabbedPane();
-        tabbedPane.putClientProperty("jgoodies.noContentBorder", Boolean.TRUE);
-        tabbedPane.add(dummyResourceBundle.getString("eag2012.mainInstitution"),  buildFirstInstitutionTabbedPane(eag, isNew));
+        mainTabbedPane = new JTabbedPane();
+        mainTabbedPane.putClientProperty("jgoodies.noContentBorder", Boolean.TRUE);
+        mainTabbedPane.add("eag2012.mainInstitution", new EagNewRepositoryPanel(eag, null, mainTabbedPane, this, model, isNew, labels).buildInstitutionTabbedPane(isNew, countrycode, mainagencycode));
     }
 
 
-    protected JComponent buildFirstInstitutionTabbedPane(Eag eag, boolean isNew) {
-        JTabbedPane mainInstitutionTabbedPane = new JTabbedPane();
-        mainInstitutionTabbedPane.putClientProperty("jgoodies.noContentBorder", Boolean.TRUE);
 
-        JScrollPane institutionPane = new JScrollPane(new EagInstitutionPanel(eag, mainInstitutionTabbedPane, tabbedPane, this, model, isNew, labels, countrycode, mainagencycode).buildEditorPanel(null));
-        institutionPane.getVerticalScrollBar().setUnitIncrement(20);
-        mainInstitutionTabbedPane.add(labels.getString("eag2012.yourInstitutionTab"), institutionPane);
-        mainInstitutionTabbedPane.setEnabledAt(0, true);
-        mainInstitutionTabbedPane.add(labels.getString("eag2012.identityTab"),  null);
-        mainInstitutionTabbedPane.setEnabledAt(1, false);
-        mainInstitutionTabbedPane.add(labels.getString("eag2012.contactTab"), null);
-        mainInstitutionTabbedPane.setEnabledAt(2, false);
-        mainInstitutionTabbedPane.add(labels.getString("eag2012.accessAndServicesTab"), null);
-        mainInstitutionTabbedPane.setEnabledAt(3, false);
-        mainInstitutionTabbedPane.add(labels.getString("eag2012.descriptionTab"), null);
-        mainInstitutionTabbedPane.setEnabledAt(4, false);
-        mainInstitutionTabbedPane.add(labels.getString("eag2012.controlTab"), null);
-        mainInstitutionTabbedPane.setEnabledAt(5, false);
-        mainInstitutionTabbedPane.add(labels.getString("eag2012.relationsTab"), null);
-        mainInstitutionTabbedPane.setEnabledAt(6, false);
-
-        return mainInstitutionTabbedPane;
-    }
 
     public static void inUse(boolean used) {
         Eag2012Frame.used = used;
@@ -158,18 +135,5 @@ public class Eag2012Frame extends JFrame {
 
     public static void setTimeMaintenance(Date timeMaintenance) {
         Eag2012Frame.timeMaintenance = timeMaintenance;
-    }
-
-    public class DummyResourceBundle extends ResourceBundle {
-
-        @Override
-        protected Object handleGetObject(String s) {
-            return s.replaceAll("eag2012.", "");
-        }
-
-        @Override
-        public Enumeration<String> getKeys() {
-            return null;
-        }
     }
 }

@@ -417,9 +417,8 @@ public class EagInstitutionPanel extends EagPanels {
     }
 
     public class AddRepositoryTabButton implements ActionListener {
-        //todo!!! Very fucking complicated
         public void actionPerformed(ActionEvent actionEvent) {
-            //todo
+            mainTabbedPane.add("eag2012.newInstitution1", new EagNewRepositoryPanel(eag, tabbedPane, mainTabbedPane, eag2012Frame, model, isNew, labels).buildInstitutionTabbedPane(isNew, countrycode, mainagencycode));
         }
     }
 

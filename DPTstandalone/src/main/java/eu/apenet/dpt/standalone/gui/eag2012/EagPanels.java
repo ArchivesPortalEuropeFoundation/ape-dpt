@@ -80,6 +80,10 @@ public abstract class EagPanels {
         return label;
     }
 
+    protected void setInstitutionTabbedPane(JTabbedPane tabbedPane) {
+        this.tabbedPane = tabbedPane;
+    }
+
     protected abstract JComponent buildEditorPanel(List<String> errors);
 
     protected class ExitBtnAction implements ActionListener {
