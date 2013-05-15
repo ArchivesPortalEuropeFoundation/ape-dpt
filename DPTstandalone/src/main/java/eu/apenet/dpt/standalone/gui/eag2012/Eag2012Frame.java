@@ -115,7 +115,7 @@ public class Eag2012Frame extends JFrame {
     public void buildPanel(Eag eag, boolean isNew) {
         mainTabbedPane = new JTabbedPane();
         mainTabbedPane.putClientProperty("jgoodies.noContentBorder", Boolean.TRUE);
-        mainTabbedPane.add("eag2012.mainInstitution", new EagNewRepositoryPanel(eag, null, mainTabbedPane, this, model, isNew, labels).buildInstitutionTabbedPane(isNew, countrycode, mainagencycode));
+        mainTabbedPane.add("eag2012.mainInstitution", new EagNewRepositoryPanel(eag, null, mainTabbedPane, this, model, labels, 0).buildInstitutionTabbedPane(isNew, countrycode, mainagencycode));
     }
 
 

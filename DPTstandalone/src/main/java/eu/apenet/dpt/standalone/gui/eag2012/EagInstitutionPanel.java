@@ -50,11 +50,11 @@ public class EagInstitutionPanel extends EagPanels {
     private String countrycode;
     private String mainagencycode;
 
-    public EagInstitutionPanel(Eag eag, JTabbedPane tabbedPane, JTabbedPane mainTabbedPane, JFrame eag2012Frame, ProfileListModel model, boolean isNew, ResourceBundle labels) {
-        this(eag, tabbedPane, mainTabbedPane, eag2012Frame, model, isNew, labels, "", "");
+    public EagInstitutionPanel(Eag eag, JTabbedPane tabbedPane, JTabbedPane mainTabbedPane, JFrame eag2012Frame, ProfileListModel model, boolean isNew, ResourceBundle labels, int repositoryNb) {
+        this(eag, tabbedPane, mainTabbedPane, eag2012Frame, model, isNew, labels, "", "", repositoryNb);
     }
-    public EagInstitutionPanel(Eag eag, JTabbedPane tabbedPane, JTabbedPane mainTabbedPane, JFrame eag2012Frame, ProfileListModel model, boolean isNew, ResourceBundle labels, String countrycode, String mainagencycode) {
-        super(eag, tabbedPane, mainTabbedPane, eag2012Frame, model, labels);
+    public EagInstitutionPanel(Eag eag, JTabbedPane tabbedPane, JTabbedPane mainTabbedPane, JFrame eag2012Frame, ProfileListModel model, boolean isNew, ResourceBundle labels, String countrycode, String mainagencycode, int repositoryNb) {
+        super(eag, tabbedPane, mainTabbedPane, eag2012Frame, model, labels, repositoryNb);
         this.isNew = isNew;
         this.countrycode = countrycode;
         this.mainagencycode = mainagencycode;
@@ -86,7 +86,7 @@ public class EagInstitutionPanel extends EagPanels {
         CellConstraints cc = new CellConstraints();
 
         rowNb = 1;
-        builder.addSeparator(labels.getString("eag2012.YourInstitution"), cc.xyw(1, rowNb, 7));
+        builder.addSeparator(labels.getString("eag2012.YourInstitution") + (repositoryNb==0?" FIRST":" NOT FIRST"), cc.xyw(1, rowNb, 7));
         setNextRow();
         builder.addLabel(labels.getString("eag2012.personResponsibleLabel"),    cc.xy (1, rowNb));
 
@@ -178,8 +178,8 @@ public class EagInstitutionPanel extends EagPanels {
             setNextRow();
         }
 
-        if(eag.getArchguide().getDesc().getRepositories().getRepository().size() == 1) { //todo: BECAUSE FOR NOW ONLY ONE REPOSITORY!!!!
-            Repository repository = eag.getArchguide().getDesc().getRepositories().getRepository().get(0);
+//        if(eag.getArchguide().getDesc().getRepositories().getRepository().size() == 1) { //todo: BECAUSE FOR NOW ONLY ONE REPOSITORY!!!!
+            Repository repository = eag.getArchguide().getDesc().getRepositories().getRepository().get(repositoryNb);
 
             boolean hasMinimumOnePostalAddress = false;
             boolean hasMinimumOneVisitorAddress = false;
@@ -377,7 +377,7 @@ public class EagInstitutionPanel extends EagPanels {
             builder.addLabel(labels.getString("eag2012.linkTitleLabel"),             cc.xy (5, rowNb));
             builder.add(refInstitutionHoldingsGuideTitleTf, cc.xy(7, rowNb));
             setNextRow();
-        }
+//        }
 
 
         JButton addRepositoryBtn = new ButtonEag("eag2012.addRepositoryTabButton");
@@ -411,14 +411,14 @@ public class EagInstitutionPanel extends EagPanels {
                 super.saveFile(eag.getControl().getRecordId().getValue());
                 closeFrame();
             } catch (Eag2012FormException e) {
-                reloadTabbedPanel(new EagInstitutionPanel(eag, tabbedPane, mainTabbedPane, eag2012Frame, model, isNew, labels).buildEditorPanel(errors), 0);
+                reloadTabbedPanel(new EagInstitutionPanel(eag, tabbedPane, mainTabbedPane, eag2012Frame, model, isNew, labels, repositoryNb).buildEditorPanel(errors), 0);
             }
         }
     }
 
     public class AddRepositoryTabButton implements ActionListener {
         public void actionPerformed(ActionEvent actionEvent) {
-            mainTabbedPane.add("eag2012.newInstitution1", new EagNewRepositoryPanel(eag, tabbedPane, mainTabbedPane, eag2012Frame, model, isNew, labels).buildInstitutionTabbedPane(isNew, countrycode, mainagencycode));
+            mainTabbedPane.add("eag2012.newInstitution1", new EagNewRepositoryPanel(eag, null, mainTabbedPane, eag2012Frame, model, labels, mainTabbedPane.getTabCount()).buildInstitutionTabbedPane(isNew, countrycode, mainagencycode));
         }
     }
 
@@ -435,14 +435,14 @@ public class EagInstitutionPanel extends EagPanels {
                 if(model == null)
                     LOG.info("The model is null, we can not add the EAG to the list...");
 
-                reloadTabbedPanel(new EagIdentityPanel(eag, tabbedPane, mainTabbedPane, eag2012Frame, model, labels).buildEditorPanel(errors), 1);
+                reloadTabbedPanel(new EagIdentityPanel(eag, tabbedPane, mainTabbedPane, eag2012Frame, model, labels, repositoryNb).buildEditorPanel(errors), 1);
                 tabbedPane.setEnabledAt(1, true);
                 tabbedPane.setEnabledAt(0, false);
             } catch (Eag2012FormException e) {
                 if(model == null)
                     LOG.info("The model is null, we can not add the EAG to the list...");
 
-                reloadTabbedPanel(new EagInstitutionPanel(eag, tabbedPane, mainTabbedPane, eag2012Frame, model, isNew, labels).buildEditorPanel(errors), 0);
+                reloadTabbedPanel(new EagInstitutionPanel(eag, tabbedPane, mainTabbedPane, eag2012Frame, model, isNew, labels, repositoryNb).buildEditorPanel(errors), 0);
             }
         }
     }
@@ -462,7 +462,7 @@ public class EagInstitutionPanel extends EagPanels {
 //                }
             }
             eag.getControl().getOtherRecordId().add(new OtherRecordId());
-            reloadTabbedPanel(new EagInstitutionPanel(eag, tabbedPane, mainTabbedPane, eag2012Frame, model, isNew, labels).buildEditorPanel(errors), 0);
+            reloadTabbedPanel(new EagInstitutionPanel(eag, tabbedPane, mainTabbedPane, eag2012Frame, model, isNew, labels, repositoryNb).buildEditorPanel(errors), 0);
         }
 
     }
@@ -494,8 +494,8 @@ public class EagInstitutionPanel extends EagPanels {
             location.setStreet(new Street());
             location.setMunicipalityPostalcode(new MunicipalityPostalcode());
 
-            eag.getArchguide().getDesc().getRepositories().getRepository().get(0).getLocation().add(location);
-            reloadTabbedPanel(new EagInstitutionPanel(eag, tabbedPane, mainTabbedPane, eag2012Frame, model, isNew, labels).buildEditorPanel(errors), 0);
+            eag.getArchguide().getDesc().getRepositories().getRepository().get(repositoryNb).getLocation().add(location);
+            reloadTabbedPanel(new EagInstitutionPanel(eag, tabbedPane, mainTabbedPane, eag2012Frame, model, isNew, labels, repositoryNb).buildEditorPanel(errors), 0);
         }
     }
 
@@ -599,8 +599,8 @@ public class EagInstitutionPanel extends EagPanels {
                 }
             }
 
-            if(eag.getArchguide().getDesc().getRepositories().getRepository().size() == 1) { //todo: BECAUSE FOR NOW ONLY ONE REPOSITORY!!!!
-                Repository repository = eag.getArchguide().getDesc().getRepositories().getRepository().get(0);
+//            if(eag.getArchguide().getDesc().getRepositories().getRepository().size() == 1) { //todo: BECAUSE FOR NOW ONLY ONE REPOSITORY!!!!
+                Repository repository = eag.getArchguide().getDesc().getRepositories().getRepository().get(repositoryNb);
                 repository.getLocation().clear();
 
                 String defaultCountry = "";
@@ -708,6 +708,7 @@ public class EagInstitutionPanel extends EagPanels {
                 }
                 repository.getAccessibility().get(0).setQuestion(facilitiesForDisabledCombo.getSelectedItem().toString());
 
+                eag.setRelations(new Relations());
                 if(eag.getRelations().getResourceRelation().size() > 0) {
                     if(StringUtils.isNotEmpty(refInstitutionHoldingsGuideTf.getText()) && !refInstitutionHoldingsGuideTf.getText().equals(eag.getRelations().getResourceRelation().get(0).getHref())) {
                         eag.getRelations().getResourceRelation().get(0).setHref(refInstitutionHoldingsGuideTf.getText());
@@ -732,7 +733,7 @@ public class EagInstitutionPanel extends EagPanels {
                 } else if(eag.getRelations().getEagRelation().size() == 0) {
                     eag.setRelations(null);
                 }
-            }
+//            }
 
             for(int i = 0; i < eag.getControl().getMaintenanceHistory().getMaintenanceEvent().size(); i ++) {
                 MaintenanceEvent maintenanceEvent = eag.getControl().getMaintenanceHistory().getMaintenanceEvent().get(i);

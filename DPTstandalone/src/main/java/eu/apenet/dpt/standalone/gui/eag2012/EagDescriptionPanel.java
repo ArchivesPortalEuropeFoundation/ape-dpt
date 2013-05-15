@@ -38,8 +38,8 @@ public class EagDescriptionPanel extends EagPanels {
     private List<TextFieldWithDate> holdingsYearsTfs;
     private JTextField extentTf;
 
-    public EagDescriptionPanel(Eag eag, JTabbedPane tabbedPane, JTabbedPane mainTabbedPane, JFrame eag2012Frame, ProfileListModel model, ResourceBundle labels) {
-        super(eag, tabbedPane, mainTabbedPane, eag2012Frame, model, labels);
+    public EagDescriptionPanel(Eag eag, JTabbedPane tabbedPane, JTabbedPane mainTabbedPane, JFrame eag2012Frame, ProfileListModel model, ResourceBundle labels, int repositoryNb) {
+        super(eag, tabbedPane, mainTabbedPane, eag2012Frame, model, labels, repositoryNb);
     }
 
     @Override
@@ -67,7 +67,7 @@ public class EagDescriptionPanel extends EagPanels {
 
         //todo here
 
-        Repository repository = eag.getArchguide().getDesc().getRepositories().getRepository().get(0);
+        Repository repository = eag.getArchguide().getDesc().getRepositories().getRepository().get(repositoryNb);
 
         builder.addSeparator(labels.getString("eag2012.repositoryDescription"), cc.xyw(1, rowNb, 7));
         setNextRow();
@@ -361,12 +361,12 @@ public class EagDescriptionPanel extends EagPanels {
                 super.updateEagObject(false);
             } catch (Eag2012FormException e) {
             }
-            if(eag.getArchguide().getDesc().getRepositories().getRepository().get(0).getRepositorhist() == null) {
-                eag.getArchguide().getDesc().getRepositories().getRepository().get(0).setRepositorhist(new Repositorhist());
-                eag.getArchguide().getDesc().getRepositories().getRepository().get(0).getRepositorhist().setDescriptiveNote(new DescriptiveNote());
+            if(eag.getArchguide().getDesc().getRepositories().getRepository().get(repositoryNb).getRepositorhist() == null) {
+                eag.getArchguide().getDesc().getRepositories().getRepository().get(repositoryNb).setRepositorhist(new Repositorhist());
+                eag.getArchguide().getDesc().getRepositories().getRepository().get(repositoryNb).getRepositorhist().setDescriptiveNote(new DescriptiveNote());
             }
-            eag.getArchguide().getDesc().getRepositories().getRepository().get(0).getRepositorhist().getDescriptiveNote().getP().add(new P());
-            reloadTabbedPanel(new EagDescriptionPanel(eag, tabbedPane, mainTabbedPane, eag2012Frame, model, labels).buildEditorPanel(errors), 4);
+            eag.getArchguide().getDesc().getRepositories().getRepository().get(repositoryNb).getRepositorhist().getDescriptiveNote().getP().add(new P());
+            reloadTabbedPanel(new EagDescriptionPanel(eag, tabbedPane, mainTabbedPane, eag2012Frame, model, labels, repositoryNb).buildEditorPanel(errors), 4);
         }
     }
     public class AddRuleFoundationBtnAction extends UpdateEagObject {
@@ -380,11 +380,11 @@ public class EagDescriptionPanel extends EagPanels {
                 super.updateEagObject(false);
             } catch (Eag2012FormException e) {
             }
-            if(eag.getArchguide().getDesc().getRepositories().getRepository().get(0).getRepositorhist() == null) {
-                eag.getArchguide().getDesc().getRepositories().getRepository().get(0).setRepositorfound(new Repositorfound());
+            if(eag.getArchguide().getDesc().getRepositories().getRepository().get(repositoryNb).getRepositorhist() == null) {
+                eag.getArchguide().getDesc().getRepositories().getRepository().get(repositoryNb).setRepositorfound(new Repositorfound());
             }
-            eag.getArchguide().getDesc().getRepositories().getRepository().get(0).getRepositorfound().getRule().add(new Rule());
-            reloadTabbedPanel(new EagDescriptionPanel(eag, tabbedPane, mainTabbedPane, eag2012Frame, model, labels).buildEditorPanel(errors), 4);
+            eag.getArchguide().getDesc().getRepositories().getRepository().get(repositoryNb).getRepositorfound().getRule().add(new Rule());
+            reloadTabbedPanel(new EagDescriptionPanel(eag, tabbedPane, mainTabbedPane, eag2012Frame, model, labels, repositoryNb).buildEditorPanel(errors), 4);
         }
     }
     public class AddRuleSuppressionBtnAction extends UpdateEagObject {
@@ -398,11 +398,11 @@ public class EagDescriptionPanel extends EagPanels {
                 super.updateEagObject(false);
             } catch (Eag2012FormException e) {
             }
-            if(eag.getArchguide().getDesc().getRepositories().getRepository().get(0).getRepositorhist() == null) {
-                eag.getArchguide().getDesc().getRepositories().getRepository().get(0).setRepositorsup(new Repositorsup());
+            if(eag.getArchguide().getDesc().getRepositories().getRepository().get(repositoryNb).getRepositorhist() == null) {
+                eag.getArchguide().getDesc().getRepositories().getRepository().get(repositoryNb).setRepositorsup(new Repositorsup());
             }
-            eag.getArchguide().getDesc().getRepositories().getRepository().get(0).getRepositorsup().getRule().add(new Rule());
-            reloadTabbedPanel(new EagDescriptionPanel(eag, tabbedPane, mainTabbedPane, eag2012Frame, model, labels).buildEditorPanel(errors), 4);
+            eag.getArchguide().getDesc().getRepositories().getRepository().get(repositoryNb).getRepositorsup().getRule().add(new Rule());
+            reloadTabbedPanel(new EagDescriptionPanel(eag, tabbedPane, mainTabbedPane, eag2012Frame, model, labels, repositoryNb).buildEditorPanel(errors), 4);
         }
     }
 
@@ -418,11 +418,11 @@ public class EagDescriptionPanel extends EagPanels {
                 super.updateEagObject(false);
             } catch (Eag2012FormException e) {
             }
-            if(eag.getArchguide().getDesc().getRepositories().getRepository().get(0).getAdminhierarchy() == null) {
-                eag.getArchguide().getDesc().getRepositories().getRepository().get(0).setAdminhierarchy(new Adminhierarchy());
+            if(eag.getArchguide().getDesc().getRepositories().getRepository().get(repositoryNb).getAdminhierarchy() == null) {
+                eag.getArchguide().getDesc().getRepositories().getRepository().get(repositoryNb).setAdminhierarchy(new Adminhierarchy());
             }
-            eag.getArchguide().getDesc().getRepositories().getRepository().get(0).getAdminhierarchy().getAdminunit().add(new Adminunit());
-            reloadTabbedPanel(new EagDescriptionPanel(eag, tabbedPane, mainTabbedPane, eag2012Frame, model, labels).buildEditorPanel(errors), 4);
+            eag.getArchguide().getDesc().getRepositories().getRepository().get(repositoryNb).getAdminhierarchy().getAdminunit().add(new Adminunit());
+            reloadTabbedPanel(new EagDescriptionPanel(eag, tabbedPane, mainTabbedPane, eag2012Frame, model, labels, repositoryNb).buildEditorPanel(errors), 4);
         }
     }
 
@@ -438,13 +438,13 @@ public class EagDescriptionPanel extends EagPanels {
                 super.updateEagObject(false);
             } catch (Eag2012FormException e) {
             }
-            if(eag.getArchguide().getDesc().getRepositories().getRepository().get(0).getBuildinginfo() == null) {
-                eag.getArchguide().getDesc().getRepositories().getRepository().get(0).setBuildinginfo(new Buildinginfo());
-                eag.getArchguide().getDesc().getRepositories().getRepository().get(0).getBuildinginfo().setBuilding(new Building());
-                eag.getArchguide().getDesc().getRepositories().getRepository().get(0).getBuildinginfo().getBuilding().setDescriptiveNote(new DescriptiveNote());
+            if(eag.getArchguide().getDesc().getRepositories().getRepository().get(repositoryNb).getBuildinginfo() == null) {
+                eag.getArchguide().getDesc().getRepositories().getRepository().get(repositoryNb).setBuildinginfo(new Buildinginfo());
+                eag.getArchguide().getDesc().getRepositories().getRepository().get(repositoryNb).getBuildinginfo().setBuilding(new Building());
+                eag.getArchguide().getDesc().getRepositories().getRepository().get(repositoryNb).getBuildinginfo().getBuilding().setDescriptiveNote(new DescriptiveNote());
             }
-            eag.getArchguide().getDesc().getRepositories().getRepository().get(0).getBuildinginfo().getBuilding().getDescriptiveNote().getP().add(new P());
-            reloadTabbedPanel(new EagDescriptionPanel(eag, tabbedPane, mainTabbedPane, eag2012Frame, model, labels).buildEditorPanel(errors), 4);
+            eag.getArchguide().getDesc().getRepositories().getRepository().get(repositoryNb).getBuildinginfo().getBuilding().getDescriptiveNote().getP().add(new P());
+            reloadTabbedPanel(new EagDescriptionPanel(eag, tabbedPane, mainTabbedPane, eag2012Frame, model, labels, repositoryNb).buildEditorPanel(errors), 4);
         }
     }
 
@@ -460,12 +460,12 @@ public class EagDescriptionPanel extends EagPanels {
                 super.updateEagObject(false);
             } catch (Eag2012FormException e) {
             }
-            if(eag.getArchguide().getDesc().getRepositories().getRepository().get(0).getHoldings() == null) {
-                eag.getArchguide().getDesc().getRepositories().getRepository().get(0).setHoldings(new Holdings());
-                eag.getArchguide().getDesc().getRepositories().getRepository().get(0).getHoldings().setDescriptiveNote(new DescriptiveNote());
+            if(eag.getArchguide().getDesc().getRepositories().getRepository().get(repositoryNb).getHoldings() == null) {
+                eag.getArchguide().getDesc().getRepositories().getRepository().get(repositoryNb).setHoldings(new Holdings());
+                eag.getArchguide().getDesc().getRepositories().getRepository().get(repositoryNb).getHoldings().setDescriptiveNote(new DescriptiveNote());
             }
-            eag.getArchguide().getDesc().getRepositories().getRepository().get(0).getHoldings().getDescriptiveNote().getP().add(new P());
-            reloadTabbedPanel(new EagDescriptionPanel(eag, tabbedPane, mainTabbedPane, eag2012Frame, model, labels).buildEditorPanel(errors), 4);
+            eag.getArchguide().getDesc().getRepositories().getRepository().get(repositoryNb).getHoldings().getDescriptiveNote().getP().add(new P());
+            reloadTabbedPanel(new EagDescriptionPanel(eag, tabbedPane, mainTabbedPane, eag2012Frame, model, labels, repositoryNb).buildEditorPanel(errors), 4);
         }
     }
 
@@ -481,25 +481,25 @@ public class EagDescriptionPanel extends EagPanels {
                 super.updateEagObject(false);
             } catch (Eag2012FormException e) {
             }
-            if(eag.getArchguide().getDesc().getRepositories().getRepository().get(0).getHoldings() == null) {
-                eag.getArchguide().getDesc().getRepositories().getRepository().get(0).setHoldings(new Holdings());
+            if(eag.getArchguide().getDesc().getRepositories().getRepository().get(repositoryNb).getHoldings() == null) {
+                eag.getArchguide().getDesc().getRepositories().getRepository().get(repositoryNb).setHoldings(new Holdings());
             }
             if(TextChanger.isDateSetReady(holdingsYearsTfs, true, false)) {
-                if (eag.getArchguide().getDesc().getRepositories().getRepository().get(0).getHoldings().getDateSet() == null) {
-                    eag.getArchguide().getDesc().getRepositories().getRepository().get(0).getHoldings().setDateSet(new DateSet());
+                if (eag.getArchguide().getDesc().getRepositories().getRepository().get(repositoryNb).getHoldings().getDateSet() == null) {
+                    eag.getArchguide().getDesc().getRepositories().getRepository().get(repositoryNb).getHoldings().setDateSet(new DateSet());
                 }
-                if(eag.getArchguide().getDesc().getRepositories().getRepository().get(0).getHoldings().getDate() != null) {
-                    eag.getArchguide().getDesc().getRepositories().getRepository().get(0).getHoldings().getDateSet().getDateOrDateRange().add(eag.getArchguide().getDesc().getRepositories().getRepository().get(0).getHoldings().getDate());
+                if(eag.getArchguide().getDesc().getRepositories().getRepository().get(repositoryNb).getHoldings().getDate() != null) {
+                    eag.getArchguide().getDesc().getRepositories().getRepository().get(repositoryNb).getHoldings().getDateSet().getDateOrDateRange().add(eag.getArchguide().getDesc().getRepositories().getRepository().get(repositoryNb).getHoldings().getDate());
                 }
-                if(eag.getArchguide().getDesc().getRepositories().getRepository().get(0).getHoldings().getDateRange() != null) {
-                    eag.getArchguide().getDesc().getRepositories().getRepository().get(0).getHoldings().getDateSet().getDateOrDateRange().add(eag.getArchguide().getDesc().getRepositories().getRepository().get(0).getHoldings().getDateRange());
+                if(eag.getArchguide().getDesc().getRepositories().getRepository().get(repositoryNb).getHoldings().getDateRange() != null) {
+                    eag.getArchguide().getDesc().getRepositories().getRepository().get(repositoryNb).getHoldings().getDateSet().getDateOrDateRange().add(eag.getArchguide().getDesc().getRepositories().getRepository().get(repositoryNb).getHoldings().getDateRange());
                 }
 
-                eag.getArchguide().getDesc().getRepositories().getRepository().get(0).getHoldings().getDateSet().getDateOrDateRange().add(new Date());
+                eag.getArchguide().getDesc().getRepositories().getRepository().get(repositoryNb).getHoldings().getDateSet().getDateOrDateRange().add(new Date());
             } else {
-                eag.getArchguide().getDesc().getRepositories().getRepository().get(0).getHoldings().setDate(new Date());
+                eag.getArchguide().getDesc().getRepositories().getRepository().get(repositoryNb).getHoldings().setDate(new Date());
             }
-            reloadTabbedPanel(new EagDescriptionPanel(eag, tabbedPane, mainTabbedPane, eag2012Frame, model, labels).buildEditorPanel(errors), 4);
+            reloadTabbedPanel(new EagDescriptionPanel(eag, tabbedPane, mainTabbedPane, eag2012Frame, model, labels, repositoryNb).buildEditorPanel(errors), 4);
         }
     }
 
@@ -515,28 +515,28 @@ public class EagDescriptionPanel extends EagPanels {
                 super.updateEagObject(true);
             } catch (Eag2012FormException e) {
             }
-            if(eag.getArchguide().getDesc().getRepositories().getRepository().get(0).getHoldings() == null) {
-                eag.getArchguide().getDesc().getRepositories().getRepository().get(0).setHoldings(new Holdings());
+            if(eag.getArchguide().getDesc().getRepositories().getRepository().get(repositoryNb).getHoldings() == null) {
+                eag.getArchguide().getDesc().getRepositories().getRepository().get(repositoryNb).setHoldings(new Holdings());
             }
 
             DateRange dateRange = new DateRange();
             dateRange.setFromDate(new FromDate());
             dateRange.setToDate(new ToDate());
             if(TextChanger.isDateSetReady(holdingsYearsTfs, false, true)) {
-                if (eag.getArchguide().getDesc().getRepositories().getRepository().get(0).getHoldings().getDateSet() == null) {
-                    eag.getArchguide().getDesc().getRepositories().getRepository().get(0).getHoldings().setDateSet(new DateSet());
+                if (eag.getArchguide().getDesc().getRepositories().getRepository().get(repositoryNb).getHoldings().getDateSet() == null) {
+                    eag.getArchguide().getDesc().getRepositories().getRepository().get(repositoryNb).getHoldings().setDateSet(new DateSet());
                 }
-                if(eag.getArchguide().getDesc().getRepositories().getRepository().get(0).getHoldings().getDate() != null) {
-                    eag.getArchguide().getDesc().getRepositories().getRepository().get(0).getHoldings().getDateSet().getDateOrDateRange().add(eag.getArchguide().getDesc().getRepositories().getRepository().get(0).getHoldings().getDate());
+                if(eag.getArchguide().getDesc().getRepositories().getRepository().get(repositoryNb).getHoldings().getDate() != null) {
+                    eag.getArchguide().getDesc().getRepositories().getRepository().get(repositoryNb).getHoldings().getDateSet().getDateOrDateRange().add(eag.getArchguide().getDesc().getRepositories().getRepository().get(repositoryNb).getHoldings().getDate());
                 }
-                if(eag.getArchguide().getDesc().getRepositories().getRepository().get(0).getHoldings().getDateRange() != null) {
-                    eag.getArchguide().getDesc().getRepositories().getRepository().get(0).getHoldings().getDateSet().getDateOrDateRange().add(eag.getArchguide().getDesc().getRepositories().getRepository().get(0).getHoldings().getDateRange());
+                if(eag.getArchguide().getDesc().getRepositories().getRepository().get(repositoryNb).getHoldings().getDateRange() != null) {
+                    eag.getArchguide().getDesc().getRepositories().getRepository().get(repositoryNb).getHoldings().getDateSet().getDateOrDateRange().add(eag.getArchguide().getDesc().getRepositories().getRepository().get(repositoryNb).getHoldings().getDateRange());
                 }
-                eag.getArchguide().getDesc().getRepositories().getRepository().get(0).getHoldings().getDateSet().getDateOrDateRange().add(dateRange);
+                eag.getArchguide().getDesc().getRepositories().getRepository().get(repositoryNb).getHoldings().getDateSet().getDateOrDateRange().add(dateRange);
             } else {
-                eag.getArchguide().getDesc().getRepositories().getRepository().get(0).getHoldings().setDateRange(dateRange);
+                eag.getArchguide().getDesc().getRepositories().getRepository().get(repositoryNb).getHoldings().setDateRange(dateRange);
             }
-            reloadTabbedPanel(new EagDescriptionPanel(eag, tabbedPane, mainTabbedPane, eag2012Frame, model, labels).buildEditorPanel(errors), 4);
+            reloadTabbedPanel(new EagDescriptionPanel(eag, tabbedPane, mainTabbedPane, eag2012Frame, model, labels, repositoryNb).buildEditorPanel(errors), 4);
         }
     }
 
@@ -553,7 +553,7 @@ public class EagDescriptionPanel extends EagPanels {
                 super.saveFile(eag.getControl().getRecordId().getValue());
                 closeFrame();
             } catch (Eag2012FormException e) {
-                reloadTabbedPanel(new EagDescriptionPanel(eag, tabbedPane, mainTabbedPane, eag2012Frame, model, labels).buildEditorPanel(errors), 4);
+                reloadTabbedPanel(new EagDescriptionPanel(eag, tabbedPane, mainTabbedPane, eag2012Frame, model, labels, repositoryNb).buildEditorPanel(errors), 4);
             }
         }
     }
@@ -573,16 +573,16 @@ public class EagDescriptionPanel extends EagPanels {
                 super.updateEagObject(false);
 
                 if (isNextTab) {
-                    reloadTabbedPanel(new EagControlPanel(eag, tabbedPane, mainTabbedPane, eag2012Frame, model, labels).buildEditorPanel(errors), 5);
+                    reloadTabbedPanel(new EagControlPanel(eag, tabbedPane, mainTabbedPane, eag2012Frame, model, labels, repositoryNb).buildEditorPanel(errors), 5);
                     tabbedPane.setEnabledAt(5, true);
                     tabbedPane.setEnabledAt(4, false);
                 } else {
-                    reloadTabbedPanel(new EagAccessAndServicesPanel(eag, tabbedPane, mainTabbedPane, eag2012Frame, model, labels).buildEditorPanel(errors), 3);
+                    reloadTabbedPanel(new EagAccessAndServicesPanel(eag, tabbedPane, mainTabbedPane, eag2012Frame, model, labels, repositoryNb).buildEditorPanel(errors), 3);
                     tabbedPane.setEnabledAt(3, true);
                     tabbedPane.setEnabledAt(4, false);
                 }
             } catch (Eag2012FormException e) {
-                reloadTabbedPanel(new EagDescriptionPanel(eag, tabbedPane, mainTabbedPane, eag2012Frame, model, labels).buildEditorPanel(errors), 4);
+                reloadTabbedPanel(new EagDescriptionPanel(eag, tabbedPane, mainTabbedPane, eag2012Frame, model, labels, repositoryNb).buildEditorPanel(errors), 4);
             }
         }
     }
@@ -599,8 +599,8 @@ public class EagDescriptionPanel extends EagPanels {
 
             boolean hasChanged = false;
 
-            if (eag.getArchguide().getDesc().getRepositories().getRepository().size() == 1) { //todo: BECAUSE FOR NOW ONLY ONE REPOSITORY!!!!
-                Repository repository = eag.getArchguide().getDesc().getRepositories().getRepository().get(0);
+//            if (eag.getArchguide().getDesc().getRepositories().getRepository().size() == 1) { //todo: BECAUSE FOR NOW ONLY ONE REPOSITORY!!!!
+                Repository repository = eag.getArchguide().getDesc().getRepositories().getRepository().get(repositoryNb);
 
                 int counterRepositorhistoryTfs = 0;
                 if (repositoryHistoryTfs.size() > 0) {
@@ -793,7 +793,7 @@ public class EagDescriptionPanel extends EagPanels {
                 }
                 if (counterForHoldingsTfs == 0)
                     repository.setHoldings(null);
-            }
+//            }
 
             if (!errors.isEmpty()) {
                 throw new Eag2012FormException("Errors in validation of EAG 2012");
