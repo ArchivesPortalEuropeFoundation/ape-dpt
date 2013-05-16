@@ -28,13 +28,14 @@ public class RoleTypeFrame extends JFrame {
     private void createRoleTypeForm(){
         super.setTitle(labels.getString("roleFrameTitle"));
 
-        JRadioButton[] radioButtons = new JRadioButton[5];
+        JRadioButton[] radioButtons = new JRadioButton[6];
         final ButtonGroup group = new ButtonGroup();
 
         final String textType = "TEXT";
         final String imageType = "IMAGE";
         final String videoType = "VIDEO";
         final String audioType = "SOUND";
+        final String threeDType = "3D";
         final String unspecifiedType = "UNSPECIFIED";
 
         final JCheckBox useExistingCheckBox = new JCheckBox(labels.getString("useExistingIfFound"));
@@ -53,8 +54,11 @@ public class RoleTypeFrame extends JFrame {
         radioButtons[3] = new JRadioButton(MessageFormat.format(labels.getString("type"), "SOUND"));
         radioButtons[3].setActionCommand(audioType);
 
-        radioButtons[4] = new JRadioButton(MessageFormat.format(labels.getString("type"), "UNSPECIFIED"));
-        radioButtons[4].setActionCommand(unspecifiedType);
+        radioButtons[4] = new JRadioButton(MessageFormat.format(labels.getString("type"), "3D"));
+        radioButtons[4].setActionCommand(audioType);
+
+        radioButtons[5] = new JRadioButton(MessageFormat.format(labels.getString("type"), "UNSPECIFIED"));
+        radioButtons[5].setActionCommand(unspecifiedType);
 
         String defaultRoleType = retrieveFromDb.retrieveRoleType();
 
@@ -64,7 +68,7 @@ public class RoleTypeFrame extends JFrame {
                 radioButton.setSelected(true);
         }
         if(defaultRoleType == null)
-            radioButtons[4].setSelected(true);
+            radioButtons[5].setSelected(true);
 
         JButton showItButton = new JButton(labels.getString("ok"));
         showItButton.addActionListener(new ActionListener() {

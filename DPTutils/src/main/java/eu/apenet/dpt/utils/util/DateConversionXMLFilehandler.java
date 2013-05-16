@@ -19,6 +19,7 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.w3c.dom.Document;
@@ -34,7 +35,7 @@ import org.xml.sax.SAXException;
 public class DateConversionXMLFilehandler {
     private static final Logger LOG = Logger.getLogger(DateConversionXMLFilehandler.class);
 
-    public void saveDataToFile(Vector data, String xmlFile) {
+    public void saveDataToFile(Vector data, String xmlFilePath) {
         try {
             DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
             DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
@@ -60,29 +61,16 @@ public class DateConversionXMLFilehandler {
             StreamResult result = new StreamResult(new StringWriter());
             transformer.setOutputProperty(OutputKeys.INDENT, "yes");
             transformer.transform(source, result);
-            FileOutputStream fop = null;
             File file;
             try {
-                file = new File(xmlFile);
-                fop = new FileOutputStream(file);
+                file = new File(xmlFilePath);
                 if (!file.exists()) {
                     file.createNewFile();
                 }
                 String xmlString = result.getWriter().toString();
-                byte[] contentInBytes = xmlString.getBytes();
-                fop.write(contentInBytes);
-                fop.flush();
-                fop.close();
+                FileUtils.writeStringToFile(file, xmlString, "UTF-8");
             } catch (IOException e) {
                 LOG.error("We could not use the date conversion XML file, most likely it was not found, cause: " + e.getMessage());
-            } finally {
-                try {
-                    if (fop != null) {
-                        fop.close();
-                    }
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
             }
         } catch (TransformerException ex) {
         } catch (ParserConfigurationException ex) {

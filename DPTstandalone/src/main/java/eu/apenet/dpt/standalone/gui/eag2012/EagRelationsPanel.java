@@ -5,7 +5,8 @@ import com.jgoodies.forms.layout.CellConstraints;
 import com.jgoodies.forms.layout.FormLayout;
 import eu.apenet.dpt.standalone.gui.ProfileListModel;
 import eu.apenet.dpt.standalone.gui.Utilities;
-import eu.apenet.dpt.standalone.gui.eag2012.data.*;
+import eu.apenet.dpt.standalone.gui.eag2012.SwingStructures.ResourceRelationType;
+import eu.apenet.dpt.utils.eag2012.*;
 import org.apache.commons.lang.StringUtils;
 
 import javax.swing.*;
@@ -51,7 +52,8 @@ public class EagRelationsPanel extends EagPanels {
         CellConstraints cc = new CellConstraints();
 
         rowNb = 1;
-
+        if(eag.getRelations() == null)
+            eag.setRelations(new Relations());
         Relations relations = eag.getRelations();
 
         builder.addSeparator(labels.getString("eag2012.resourceRelations"), cc.xyw(1, rowNb, 7));
@@ -66,10 +68,10 @@ public class EagRelationsPanel extends EagPanels {
                 descriptiveNote.setP(new ArrayList<P>(){{add(new P());}});
                 resourceRelation.setDescriptiveNote(descriptiveNote);
             }
-            ResourceRelationType resourceRelationType = new ResourceRelationType(resourceRelation.getResourceRelationType(), resourceRelation.getHref(), resourceRelation.getRelationEntry().getContent(), resourceRelation.getDescriptiveNote().getP().get(0).getContent(), resourceRelation.getDescriptiveNote().getLang(), true);
+            ResourceRelationType resourceRelationType = new ResourceRelationType(resourceRelation.getResourceRelationType(), resourceRelation.getHref(), resourceRelation.getRelationEntry().getContent(), resourceRelation.getDescriptiveNote().getP().get(0).getContent(), resourceRelation.getDescriptiveNote().getP().get(0).getLang(), true);
             resourceRelationTypes.add(resourceRelationType);
 
-            builder.addLabel(labels.getString("eag2012.websiteForResources"), cc.xy(1, rowNb));
+            builder.addLabel(labels.getString("eag2012.linkToResourceRelation"), cc.xy(1, rowNb));
             builder.add(resourceRelationType.getWebsite(), cc.xy(3, rowNb));
             builder.addLabel(labels.getString("eag2012.typeRelation"), cc.xy(5, rowNb));
             builder.add(resourceRelationType.getTypeRelations(), cc.xy(7, rowNb));
@@ -90,6 +92,9 @@ public class EagRelationsPanel extends EagPanels {
         addResourceRelation.addActionListener(new AddResourceRelationAction(eag, tabbedPane, model));
         setNextRow();
 
+        builder.addSeparator(labels.getString("eag2012.institutionRelations"), cc.xyw(1, rowNb, 7));
+        setNextRow();
+
         institutionRelationTypes = new ArrayList<ResourceRelationType>(relations.getEagRelation().size());
         for(EagRelation eagRelation : relations.getEagRelation()) {
             if(eagRelation.getRelationEntry().size() == 0)
@@ -99,16 +104,16 @@ public class EagRelationsPanel extends EagPanels {
                 descriptiveNote.setP(new ArrayList<P>(){{add(new P());}});
                 eagRelation.setDescriptiveNote(descriptiveNote);
             }
-            ResourceRelationType resourceRelationType = new ResourceRelationType(eagRelation.getEagRelationType(), eagRelation.getHref(), eagRelation.getRelationEntry().get(0).getContent(), eagRelation.getDescriptiveNote().getP().get(0).getContent(), eagRelation.getDescriptiveNote().getLang(), false);
+            ResourceRelationType resourceRelationType = new ResourceRelationType(eagRelation.getEagRelationType(), eagRelation.getHref(), eagRelation.getRelationEntry().get(0).getContent(), eagRelation.getDescriptiveNote().getP().get(0).getContent(), eagRelation.getDescriptiveNote().getP().get(0).getLang(), false);
             institutionRelationTypes.add(resourceRelationType);
 
-            builder.addLabel(labels.getString("eag2012.websiteForResources"), cc.xy(1, rowNb));
+            builder.addLabel(labels.getString("eag2012.linkToInstitutionRelation"), cc.xy(1, rowNb));
             builder.add(resourceRelationType.getWebsite(), cc.xy(3, rowNb));
             builder.addLabel(labels.getString("eag2012.typeRelation"), cc.xy(5, rowNb));
             builder.add(resourceRelationType.getTypeRelations(), cc.xy(7, rowNb));
             setNextRow();
 
-            builder.addLabel(labels.getString("eag2012.titleIdRelatedInstitution"), cc.xy(1, rowNb));
+            builder.addLabel(labels.getString("eag2012.nameIdRelatedInstitution"), cc.xy(1, rowNb));
             builder.add(resourceRelationType.getTitleAndId(), cc.xy(3, rowNb));
             setNextRow();
 
@@ -147,9 +152,11 @@ public class EagRelationsPanel extends EagPanels {
         @Override
         public void actionPerformed(ActionEvent actionEvent) {
             try {
-                super.updateEagObject();
+                super.updateEagObject(false);
             } catch (Eag2012FormException e) {
             }
+            if(eag.getRelations() == null)
+                eag.setRelations(new Relations());
             eag.getRelations().getResourceRelation().add(new ResourceRelation());
             reloadTabbedPanel(new EagRelationsPanel(eag, tabbedPane, eag2012Frame, model, labels).buildEditorPanel(errors), 6);
         }
@@ -162,9 +169,11 @@ public class EagRelationsPanel extends EagPanels {
         @Override
         public void actionPerformed(ActionEvent actionEvent) {
             try {
-                super.updateEagObject();
+                super.updateEagObject(false);
             } catch (Eag2012FormException e) {
             }
+            if(eag.getRelations() == null)
+                eag.setRelations(new Relations());
             eag.getRelations().getEagRelation().add(new EagRelation());
             reloadTabbedPanel(new EagRelationsPanel(eag, tabbedPane, eag2012Frame, model, labels).buildEditorPanel(errors), 6);
         }
@@ -178,7 +187,7 @@ public class EagRelationsPanel extends EagPanels {
         @Override
         public void actionPerformed(ActionEvent actionEvent) {
             try {
-                super.updateEagObject();
+                super.updateEagObject(false);
 
                 reloadTabbedPanel(new EagControlPanel(eag, tabbedPane, eag2012Frame, model, labels).buildEditorPanel(errors), 5);
                 tabbedPane.setEnabledAt(5, true);
@@ -197,7 +206,7 @@ public class EagRelationsPanel extends EagPanels {
         @Override
         public void actionPerformed(ActionEvent actionEvent) {
             try {
-                super.updateEagObject();
+                super.updateEagObject(true);
                 super.saveFile(eag.getControl().getRecordId().getValue());
                 closeFrame();
             } catch (Eag2012FormException e) {
@@ -213,7 +222,7 @@ public class EagRelationsPanel extends EagPanels {
         }
 
         @Override
-        protected void updateEagObject() throws Eag2012FormException {
+        protected void updateEagObject(boolean save) throws Eag2012FormException {
             errors = new ArrayList<String>();
 
             boolean hasChanged = false;
@@ -259,6 +268,9 @@ public class EagRelationsPanel extends EagPanels {
                     hasChanged = true;
                 }
             }
+
+            if(eag.getRelations().getEagRelation().size() == 0 && eag.getRelations().getResourceRelation().size() == 0)
+                eag.setRelations(null);
 
             if(!errors.isEmpty()) {
                 throw new Eag2012FormException("Errors in validation of EAG 2012");

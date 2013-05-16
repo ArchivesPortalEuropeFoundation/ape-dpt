@@ -12,11 +12,11 @@ import com.sun.xml.bind.marshaller.NamespacePrefixMapper;
 public class EagNamespaceMapper extends NamespacePrefixMapper {
 
     private static final String PREFIX = "";
-    private static final String URI = "http://www.archivesportaleurope.net/Portal/profiles/eag_2012/";
+    public static final String EAG_URI = "http://www.archivesportaleurope.net/Portal/profiles/eag_2012/";
 
     @Override
     public String getPreferredPrefix(String namespaceUri, String suggestion, boolean requirePrefix) {
-        if(URI.equals(namespaceUri)) {
+        if(EAG_URI.equals(namespaceUri)) {
             return PREFIX;
         }
         return suggestion;
@@ -24,7 +24,7 @@ public class EagNamespaceMapper extends NamespacePrefixMapper {
 
     @Override
     public String[] getPreDeclaredNamespaceUris() {
-        return new String[] {URI};
+        return new String[] {EAG_URI};
     }
 
 }

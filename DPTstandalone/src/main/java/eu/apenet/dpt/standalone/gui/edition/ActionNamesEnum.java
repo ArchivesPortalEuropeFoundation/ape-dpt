@@ -7,6 +7,7 @@ package eu.apenet.dpt.standalone.gui.edition;
  * @author Yoann Moranville
  */
 public enum ActionNamesEnum {
+    INSERT_EADID("edit.insertEltEadid"),
     INSERT_COUNTRYCODE("edit.insertAttrCountrycode"),
     INSERT_MAINAGENCYCODE("edit.insertAttrMainagencycode"),
     INSERT_NORMALATTR("edit.insertAttrNormal"),

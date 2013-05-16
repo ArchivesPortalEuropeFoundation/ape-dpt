@@ -8,6 +8,7 @@ import eu.apenet.dpt.utils.ead2ese.EseConfig;
 import eu.apenet.dpt.utils.ead2ese.XMLUtil;
 import eu.apenet.dpt.utils.ead2ese.stax.ESEParser;
 import eu.apenet.dpt.utils.ead2ese.stax.RecordParser;
+import eu.apenet.dpt.utils.util.Ead2EseInformation;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.xml.sax.SAXException;
@@ -16,25 +17,18 @@ import javax.swing.*;
 import javax.swing.border.Border;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
-import javax.xml.transform.TransformerException;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.StringWriter;
 import java.text.MessageFormat;
 import java.util.*;
 import java.util.List;
 import java.util.logging.Level;
-import javax.xml.parsers.ParserConfigurationException;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.NamedNodeMap;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
 
 /**
  * User: Yoann Moranville Date: 17/11/2011
@@ -48,6 +42,7 @@ public class EseOptionsPanel extends JPanel {
     private static final String IMAGE = "IMAGE";
     private static final String VIDEO = "VIDEO";
     private static final String SOUND = "SOUND";
+    private static final String THREE_D = "3D";
     private static final String YES = "yes";
     private static final String NO = "no";
     private static final String PROVIDE = "provide";
@@ -81,15 +76,18 @@ public class EseOptionsPanel extends JPanel {
     private JTextArea contextTextArea;
     private JTextArea dataProviderTextArea;
     private JTextArea providerTextArea;
-    private JComboBox languageComboBox;
+    private JList languageList;
     private JTextArea additionalRightsTextArea;
-    private JCheckBox archdescCheckbox;
     private Map<String, String> languages;
     private static final Border BLACK_LINE = BorderFactory.createLineBorder(Color.BLACK);
     private static final Border GREY_LINE = BorderFactory.createLineBorder(Color.GRAY);
     private DataPreparationToolGUI dataPreparationToolGUI;
+    private boolean batch;
+    private Ead2EseInformation ead2EseInformation;
+    private JCheckBox useExistingRepoCheckbox;
+    private JCheckBox useExistingDaoRoleCheckbox;
 
-    public EseOptionsPanel(ResourceBundle labels, DataPreparationToolGUI dataPreparationToolGUI, JFrame parent, APETabbedPane apeTabbedPane) {
+    public EseOptionsPanel(ResourceBundle labels, DataPreparationToolGUI dataPreparationToolGUI, JFrame parent, APETabbedPane apeTabbedPane, boolean batch) {
         super(new BorderLayout());
         this.labels = labels;
         this.retrieveFromDb = new RetrieveFromDb();
@@ -98,6 +96,7 @@ public class EseOptionsPanel extends JPanel {
         this.selectedIndices = setIndices(dataPreparationToolGUI.getXmlEadList().getSelectedValues());
         this.apeTabbedPane = apeTabbedPane;
         this.fileInstances = dataPreparationToolGUI.getFileInstances();
+        this.batch = batch;
         createOptionPanel();
     }
 
@@ -128,22 +127,36 @@ public class EseOptionsPanel extends JPanel {
         dataProviderTextArea = new JTextArea();
         dataProviderTextArea.setLineWrap(true);
         dataProviderTextArea.setWrapStyleWord(true);
-        String repository = determineDaoInformation()[1];
         JScrollPane dptaScrollPane = new JScrollPane(dataProviderTextArea);
         dptaScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
         panel.add(dptaScrollPane);
-        JPanel panel2 = new JPanel(new GridLayout(2, 1));
-        archdescCheckbox = new JCheckBox(labels.getString("ese.mappingFromArchdesc") + " /ead/archdesc/did/repository", true);
-        archdescCheckbox.addItemListener(new CheckboxItemListener());
-        panel2.add(archdescCheckbox);
-        panel2.add(new JLabel(labels.getString("ese.archdescValue") + ": " + archdescRepository));
-        panel2.setVisible(false);
-        panel.add(panel2);
-        if (repository != null) {
-            dataProviderTextArea.setText(repository);
-        } else if (archdescRepository != null) {
-            panel2.setVisible(true);
-            dataProviderTextArea.setText(archdescRepository);
+        useExistingRepoCheckbox = new JCheckBox(labels.getString("ese.takeFromFileRepository"));
+        useExistingRepoCheckbox.setSelected(true);
+        useExistingRepoCheckbox.addItemListener(new ItemListener() {
+
+            public void itemStateChanged(ItemEvent e) {
+                //empty method on purpose
+            }
+        });
+        JPanel panel2 = new JPanel(new GridLayout(1, 1));
+        panel2.add(useExistingRepoCheckbox);
+        if (batch) {
+            panel.add(panel2);
+        } else {
+            determineDaoInformation();
+            String repository = ead2EseInformation.getRepository();
+            if (!repository.equals("") && repository != null) {
+                dataProviderTextArea.setText(repository);
+                panel.add(panel2);
+            } else {
+                if (archdescRepository != null) {
+                    dataProviderTextArea.setText(archdescRepository);
+                    panel.add(panel2);
+                } else {
+                    useExistingRepoCheckbox.setSelected(false);
+                    panel.add(new JLabel());
+                }
+            }
         }
         panel.setBorder(BLACK_LINE);
         formPanel.add(panel);
@@ -160,20 +173,25 @@ public class EseOptionsPanel extends JPanel {
         panel.setBorder(BLACK_LINE);
         formPanel.add(panel);
 
-        panel = new JPanel(new GridLayout(4, 3));
+        panel = new JPanel(new GridLayout(5, 3));
         typeGroup = new ButtonGroup();
         JRadioButton radioButton;
 
         panel.add(new Label(labels.getString("ese.type") + ":" + "*"));
-        String currentRoleType = determineDaoInformation()[0];
+        String currentRoleType;
+        if (batch) {
+            currentRoleType = "";
+        } else {
+            currentRoleType = ead2EseInformation.getRoleType();
+        }
         radioButton = new JRadioButton("TEXT");
-        System.out.println(currentRoleType);
         if (currentRoleType.equals("TEXT")) {
             radioButton.setSelected(true);
         }
         radioButton.setActionCommand(TEXT);
         typeGroup.add(radioButton);
         panel.add(radioButton);
+        panel.add(new JLabel(""));
 
         panel.add(new JLabel(""));
         radioButton = new JRadioButton("IMAGE");
@@ -183,6 +201,7 @@ public class EseOptionsPanel extends JPanel {
         radioButton.setActionCommand(IMAGE);
         typeGroup.add(radioButton);
         panel.add(radioButton);
+        panel.add(new JLabel(""));
 
         panel.add(new JLabel(""));
         radioButton = new JRadioButton("VIDEO");
@@ -193,6 +212,15 @@ public class EseOptionsPanel extends JPanel {
         typeGroup.add(radioButton);
         panel.add(radioButton);
 
+        useExistingDaoRoleCheckbox = new JCheckBox(labels.getString("ese.takeFromFileDaoRole"));
+        useExistingDaoRoleCheckbox.setSelected(true);
+        useExistingDaoRoleCheckbox.addItemListener(new ItemListener() {
+
+            public void itemStateChanged(ItemEvent e) {
+            }
+        });
+        panel.add(useExistingDaoRoleCheckbox);
+
         panel.add(new JLabel(""));
         radioButton = new JRadioButton("SOUND");
         if (currentRoleType.equals("SOUND")) {
@@ -201,6 +229,17 @@ public class EseOptionsPanel extends JPanel {
         radioButton.setActionCommand(SOUND);
         typeGroup.add(radioButton);
         panel.add(radioButton);
+        panel.add(new JLabel(""));
+
+        panel.add(new JLabel(""));
+        radioButton = new JRadioButton("3D");
+        if (currentRoleType.equals("3D")) {
+            radioButton.setSelected(true);
+        }
+        radioButton.setActionCommand(THREE_D);
+        typeGroup.add(radioButton);
+        panel.add(radioButton);
+        panel.add(new JLabel(""));
 
         panel.setBorder(GREY_LINE);
         formPanel.add(panel);
@@ -247,28 +286,27 @@ public class EseOptionsPanel extends JPanel {
         panel.setBorder(BLACK_LINE);
         formPanel.add(panel);
 
-        panel = new JPanel(new GridLayout(3, 3));
+        panel = new JPanel(new GridLayout(1, 3));
         panel.add(new Label(labels.getString("ese.inheritLanguage") + ":" + "*"));
+        JPanel rbPanel = new JPanel(new GridLayout(3, 1));
         inheritLanguageGroup = new ButtonGroup();
         radioButton = new JRadioButton(labels.getString("ese.yes"));
         radioButton.setActionCommand(YES);
         inheritLanguageGroup.add(radioButton);
-        panel.add(radioButton);
-        panel.add(new JLabel(""));
-        panel.add(new JLabel(""));
+        rbPanel.add(radioButton);
         radioButton = new JRadioButton(labels.getString("ese.no"), true);
         radioButton.setActionCommand(NO);
         inheritLanguageGroup.add(radioButton);
-        panel.add(radioButton);
-        panel.add(new JLabel(""));
-        panel.add(new JLabel(""));
+        rbPanel.add(radioButton);
         radioButton = new JRadioButton(labels.getString("ese.provide") + ":");
         radioButton.setActionCommand(PROVIDE);
         inheritLanguageGroup.add(radioButton);
-        panel.add(radioButton);
+        rbPanel.add(radioButton);
+        panel.add(rbPanel);
 
-        languageComboBox = new JComboBox(getAllLanguages());
-        panel.add(languageComboBox);
+        languageList = new JList(getAllLanguages());
+        languageList.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
+        panel.add(new JScrollPane(languageList));
         panel.setBorder(GREY_LINE);
         formPanel.add(panel);
 
@@ -374,12 +412,25 @@ public class EseOptionsPanel extends JPanel {
     private EseConfig fillConfig() {
         EseConfig config = new EseConfig();
 
+        config.setUseExistingRepository(false);
+        if (useExistingRepoCheckbox.isSelected()) {
+            config.setUseExistingRepository(true);
+        }
+
+        config.setDataProvider(dataProviderTextArea.getText());
+        config.setProvider(providerTextArea.getText());
+
         Enumeration<AbstractButton> enumeration = typeGroup.getElements();
         while (enumeration.hasMoreElements()) {
             AbstractButton btn = enumeration.nextElement();
             if (btn.isSelected()) {
                 config.setType(btn.getText());
             }
+        }
+
+        config.setUseExistingDaoRole(false);
+        if (useExistingDaoRoleCheckbox.isSelected()) {
+            config.setUseExistingDaoRole(true);
         }
 
         config.setInheritElementsFromFileLevel(false);
@@ -411,7 +462,15 @@ public class EseOptionsPanel extends JPanel {
                 if (btn.getActionCommand().equals(YES)) {
                     config.setInheritLanguage(true);
                 } else if (btn.getActionCommand().equals(PROVIDE)) {
-                    config.setLanguage(languages.get(languageComboBox.getSelectedItem().toString()));
+                    StringBuilder result = new StringBuilder();
+                    Object[] languageValues = languageList.getSelectedValues();
+                    for(int i=0; i < languageValues.length; i++){
+                        result.append(languages.get(languageValues[i].toString()));
+                        if(languageValues.length > 0 && i < (languageValues.length - 1)){
+                            result.append(" ");
+                        }
+                    }
+                    config.setLanguage(result.toString());
                 }
             }
         }
@@ -419,9 +478,6 @@ public class EseOptionsPanel extends JPanel {
         if (contextTextArea != null && StringUtils.isNotEmpty(contextTextArea.getText())) {
             config.setContextInformationPrefix(contextTextArea.getText());
         }
-
-        config.setDataProvider(dataProviderTextArea.getText());
-        config.setProvider(providerTextArea.getText());
 
         enumeration = licenseGroup.getElements();
         while (enumeration.hasMoreElements()) {
@@ -510,7 +566,8 @@ public class EseOptionsPanel extends JPanel {
         }
 
         if (StringUtils.isEmpty(dataProviderTextArea.getText())) {
-            throw new Exception("dataProviderTextField is empty");
+            if (!useExistingRepoCheckbox.isSelected())
+                throw new Exception("dataProviderTextField is empty");
         }
 
         if (StringUtils.isEmpty(providerTextArea.getText())) {
@@ -524,128 +581,28 @@ public class EseOptionsPanel extends JPanel {
         }
 
         if (typeGroup.getSelection().getActionCommand().equals(TEXT)) {
-            if (inheritLanguageGroup.getSelection().getActionCommand().equals(NO) && determineDaoInformation()[2] == null) {
+            if (inheritLanguageGroup.getSelection().getActionCommand().equals(NO) && ead2EseInformation.getLanguageCode() == null) {
+                JOptionPane.showMessageDialog(parent, "Digital object type TEXT requires language inheritance. Please either select one of the options below or provide a language in the configuration window.");
                 throw new Exception("selected type requires language inheritance");
             }
         }
     }
 
-    private String[] determineDaoInformation() {
-        String[] result = new String[3];
-        String roleType = "";
-        String repository = "";
-        String languageCode = null;
-
+    public void determineDaoInformation() {
+        File index = selectedIndices.get(0);
+        FileInstance fileInstance = fileInstances.get(index.getName());
         try {
-            File index = selectedIndices.get(0);
-            FileInstance fileInstance = fileInstances.get(index.getName());
-            System.out.println(fileInstance.isConverted() + " " + fileInstance.isValid());
-            System.out.println(fileInstance.getCurrentLocation());
-            Document doc = XMLUtil.convertXMLToDocument(new FileInputStream(new File(fileInstance.getCurrentLocation())));
-            NodeList nodelist = doc.getElementsByTagName("dao");
-            if (nodelist.getLength() != 0) {
-                int counter = 0;
-                do {
-                    Node daoNode = nodelist.item(counter);
-                    roleType = determineRoleType(daoNode);
-                    repository = determineRepository(daoNode, doc);
-                    languageCode = determineLanguageCode(daoNode, doc);
-                    counter++;
-                } while (counter < nodelist.getLength());
+            if (batch) {
+                ead2EseInformation = new Ead2EseInformation();
+            } else {
+                ead2EseInformation = new Ead2EseInformation(new File(fileInstance.getCurrentLocation()), retrieveFromDb.retrieveRoleType(), archdescRepository);
             }
-        } catch (SAXException ex) {
-            java.util.logging.Logger.getLogger(EseOptionsPanel.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (IOException ex) {
-            java.util.logging.Logger.getLogger(EseOptionsPanel.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (ParserConfigurationException ex) {
+        } catch (Exception ex) {
             java.util.logging.Logger.getLogger(EseOptionsPanel.class.getName()).log(Level.SEVERE, null, ex);
         }
-        result[0] = roleType;
-        result[1] = repository;
-        result[2] = languageCode;
-        return result;
-    }
-
-    private String determineRoleType(Node daoNode) {
-        String storedRoleType = retrieveFromDb.retrieveRoleType();
-        if (!storedRoleType.equals("UNSPECIFIED") && storedRoleType != null) {
-            return storedRoleType;
+        if (ead2EseInformation.getArchdescRepository() != null) {
+            archdescRepository = ead2EseInformation.getArchdescRepository();
         }
-
-        NamedNodeMap attributes = daoNode.getAttributes();
-        for (int i = 0; i < attributes.getLength(); i++) {
-            Node attribute = attributes.getNamedItem("xlink:role");
-            if (attribute != null) {
-                return attribute.getTextContent();
-            }
-        }
-        return "";
-    }
-
-    private String determineRepository(Node daoNode, Document doc) {
-        String result = "";
-        Node didNode = daoNode.getParentNode();
-        NodeList repositories = doc.getElementsByTagName("repository");
-        if (repositories.getLength() != 0) {
-            int counter = 0;
-            do {
-                Node repositoryNode = repositories.item(counter);
-                if (repositoryNode instanceof Element) {
-                    if (((Element) repositoryNode).getParentNode().getParentNode().getNodeName().equals("c") && ((Element) repositoryNode).getParentNode() == didNode) {
-                        int index = 0;
-                        while (index < ((Element) repositoryNode).getTextContent().length()) {
-                            if (((Element) repositoryNode).getTextContent().charAt(index) >= ' ') {
-                                index++;
-                            } else {
-                                break;
-                            }
-                        }
-                        return ((Element) repositoryNode).getTextContent().substring(0, index);
-                    }
-                }
-                if (((Element) repositoryNode).getParentNode().getParentNode().getNodeName().equals("archdesc")) {
-                    int index = 0;
-                    while (index < ((Element) repositoryNode).getTextContent().length()) {
-                        if (((Element) repositoryNode).getTextContent().charAt(index) >= ' ') {
-                            index++;
-                        } else {
-                            break;
-                        }
-                    }
-                    if (archdescRepository != null) {
-                        archdescRepository = ((Element) repositoryNode).getTextContent().substring(0, index);
-                    }
-                }
-                counter++;
-            } while (counter < repositories.getLength());
-        }
-        if (archdescRepository != null) {
-            return archdescRepository;
-        } else {
-            return result;
-        }
-    }
-
-    private String determineLanguageCode(Node daoNode, Document doc) {
-        String result = null;
-        Node didNode = daoNode.getParentNode();
-        NodeList languages = doc.getElementsByTagName("language");
-        if (languages.getLength() != 0) {
-            int counter = 0;
-            do {
-                Node languageNode = languages.item(counter);
-                if (languageNode.getParentNode().getParentNode() == didNode) {
-                    NamedNodeMap attributes = languageNode.getAttributes();
-                    for (int i = 0; i < attributes.getLength(); i++) {
-                        Node attribute = attributes.item(i);
-                        if (attribute != null)
-                            return attribute.getTextContent();
-                    }
-                }
-                counter++;
-            } while (counter < languages.getLength());
-        }
-        return result;
     }
 
     public class ChangePanelActionListener implements ActionListener {
@@ -671,62 +628,74 @@ public class EseOptionsPanel extends JPanel {
         public void actionPerformed(ActionEvent e) {
 //            dataPreparationToolGUI.disableAllBtnAndItems(); //todo: FIX!
             continueLoop = true;
-        final ApexActionListener apexActionListener = this;
-        new Thread(new Runnable(){
-            public void run(){
-                int numberOfFiles = selectedIndices.size();
-                int currentFileNumberBatch = 0;
-                ProgressFrame progressFrame = new ProgressFrame(labels, parent, true, true, apexActionListener);
+            final ApexActionListener apexActionListener = this;
+            new Thread(new Runnable() {
+                public void run() {
+                    StringWriter writer = new StringWriter();
 
-                ProgressFrame.ApeProgressBar progressBar = progressFrame.getProgressBarBatch();
-                for(Object oneFile : selectedIndices){
-                    if(!continueLoop)
-                        break;
-                    
-                    File file = (File)oneFile;
-                    apeTabbedPane.setEseConversionErrorText(labels.getString("ese.conversionEseStarted") + "\n");
-                    SummaryWorking summaryWorking = new SummaryWorking(dataPreparationToolGUI.getResultArea(), progressBar);
-                    summaryWorking.setTotalNumberFiles(numberOfFiles);
-                    summaryWorking.setCurrentFileNumberBatch(currentFileNumberBatch);
-                    Thread threadRunner = new Thread(summaryWorking);
-                    threadRunner.setName(SummaryWorking.class.toString());
-                    threadRunner.start();
-                    
+                    int numberOfFiles = selectedIndices.size();
+                    int currentFileNumberBatch = 0;
+
                     try {
+                        checkIfAllFilled();
+                        ProgressFrame progressFrame = new ProgressFrame(labels, parent, true, true, apexActionListener);
+                        ProgressFrame.ApeProgressBar progressBar = progressFrame.getProgressBarBatch();
+
                         try {
-                            checkIfAllFilled();
-                        } catch (Exception ex1) {
-                            DataPreparationToolGUI.createErrorOrWarningPanel(ex1, false, labels.getString("ese.formNotFilledError"), parent);
-                            throw ex1;
+                            apeTabbedPane.setEseConversionErrorText(labels.getString("ese.conversionEseStarted") + "\n");
+                            writer.append(labels.getString("ese.conversionEseStarted") + "\n");
+                            SummaryWorking summaryWorking = new SummaryWorking(dataPreparationToolGUI.getResultArea(), progressBar);
+                            summaryWorking.setTotalNumberFiles(numberOfFiles);
+                            summaryWorking.setCurrentFileNumberBatch(currentFileNumberBatch);
+                            Thread threadRunner = new Thread(summaryWorking);
+                            threadRunner.setName(SummaryWorking.class.toString());
+                            threadRunner.start();
+
+                            try {
+                                EseConfig config = fillConfig();
+                                for (File selectedIndexFile : selectedIndices) {
+                                    if (!continueLoop) {
+                                        break;
+                                    }
+
+                                    SwingUtilities.invokeLater(new TransformEse(config, selectedIndexFile));
+                                    apeTabbedPane.appendEseConversionErrorText(MessageFormat.format(labels.getString("ese.convertedAndSaved"), selectedIndexFile.getAbsolutePath(), retrieveFromDb.retrieveDefaultSaveFolder()) + "\n");
+                                    writer.append(MessageFormat.format(labels.getString("ese.convertedAndSaved"), selectedIndexFile.getAbsolutePath(), retrieveFromDb.retrieveDefaultSaveFolder()) + "\n");
+                                }
+                                apeTabbedPane.checkFlashingTab(APETabbedPane.TAB_ESE, Utilities.FLASHING_GREEN_COLOR);
+                                close();
+                            } catch (Exception ex) {
+                                apeTabbedPane.checkFlashingTab(APETabbedPane.TAB_ESE, Utilities.FLASHING_RED_COLOR);
+                            } finally {
+                                if (summaryWorking != null) {
+                                    summaryWorking.stop();
+                                }
+                                if (threadRunner != null) {
+                                    threadRunner.interrupt();
+                                }
+                            }
+                        } catch (Exception e) {
+                            LOG.error(e);
                         }
-                        EseConfig config = fillConfig();
-                        for (File selectedIndexFile : selectedIndices) {
-                            SwingUtilities.invokeLater(new TransformEse(config, selectedIndexFile));
-                            apeTabbedPane.appendEseConversionErrorText(MessageFormat.format(labels.getString("ese.convertedAndSaved"), selectedIndexFile.getAbsolutePath(), retrieveFromDb.retrieveDefaultSaveFolder()) + "\n");
+
+                        if (progressFrame != null) {
+                            progressFrame.stop();
                         }
-                        apeTabbedPane.checkFlashingTab(APETabbedPane.TAB_ESE, Utilities.FLASHING_GREEN_COLOR);
-                        close();
-                    } catch (Exception ex) {
-                        LOG.error(ex);
-                        apeTabbedPane.checkFlashingTab(APETabbedPane.TAB_ESE, Utilities.FLASHING_RED_COLOR);
-                    } finally {
-                        summaryWorking.stop();
-                        threadRunner.interrupt();
+                    } catch (Exception ex1) {
+                        DataPreparationToolGUI.createErrorOrWarningPanel(ex1, false, labels.getString("ese.formNotFilledError"), parent);
                     }
+                    dataPreparationToolGUI.getFinalAct().run();
+                    dataPreparationToolGUI.getXmlEadList().clearSelection();
+                    if (continueLoop) {
+                        dataPreparationToolGUI.setResultAreaText(labels.getString("finished"));
+                    } else {
+                        dataPreparationToolGUI.setResultAreaText(labels.getString("aborted"));
+                    }
+                    apeTabbedPane.setEseConversionErrorText(writer.toString());
+                    dataPreparationToolGUI.enableSaveBtn();
+                    dataPreparationToolGUI.enableRadioButtons();
                 }
-                if(progressFrame != null){
-                    progressFrame.stop();
-                }
-                dataPreparationToolGUI.getFinalAct().run();
-                dataPreparationToolGUI.getXmlEadList().clearSelection();
-                if(continueLoop)
-                    dataPreparationToolGUI.setResultAreaText(labels.getString("finished"));
-                else
-                    dataPreparationToolGUI.setResultAreaText(labels.getString("aborted"));
-                dataPreparationToolGUI.enableSaveBtn();
-                dataPreparationToolGUI.enableRadioButtons();
-            }
-        }).start();
+            }).start();
         }
     }
 
@@ -816,10 +785,63 @@ public class EseOptionsPanel extends JPanel {
     private enum CreativeCommons {
 
         UNPORTED("Unported", "", "3.0"),
-        FRANCE("France", "fr", "2.0"),
+        ARGENTINA("Argentina", "ar", "2.5"),
+        AUSTRALIA("Australia", "au", "3.0"),
+        AUSTRIA("Austria", "at", "3.0"),
+        BELGIUM("Belgium", "be", "2.0"),
+        BRAZIL("Brazil", "br", "3.0"),
+        BULGARIA("Bulgaria", "bg", "2.5"),
+        CANADA("Canada", "ca", "2.5"),
+        CHILE("Chile", "cl", "3.0"),
+        CHINA_MAINLAND("China Mainland", "cn", "3.0"),
+        COLOMBIA("Colombia", "co", "2.5"),
+        COSTA_RICA("Costa Rica", "cr", "3.0"),
+        CROATIA("Croatia", "hr", "3.0"),
+        CZECH_REPUBLIC("Czech Republic", "cz", "3.0"),
+        DENMARK("Denmark", "dk", "2.5"),
+        ECUADOR("Ecuador", "ec", "3.0"),
+        ESTONIA("Estonia", "ee", "3.0"),
+        FINLAND("Finland", "fi", "1.0"),
+        FRANCE("France", "fr", "3.0"),
         GERMANY("Germany", "de", "3.0"),
+        GREECE("Greece", "gr", "3.0"),
+        GUATEMALA("Guatemala", "gt", "3.0"),
+        HONG_KONG("Hong Kong", "hk", "3.0"),
+        HUNGARY("Hungary", "hu", "2.5"),
+        INDIA("India", "in", "2.5"),
+        IRELAND("Ireland", "ie", "3.0"),
+        ISRAEL("Israel", "il", "2.5"),
+        ITALY("Italy", "it", "3.0"),
+        JAPAN("Japan", "jp", "2.1"),
+        LUXEMBOURG("Luxembourg", "lu", "3.0"),
+        MACEDONIA("Macedonia", "mk", "2.5"),
+        MALAYSIA("Malaysia", "my", "2.5"),
+        MALTA("Malta", "mt", "2.5"),
+        MEXICO("Mexico", "mx", "2.5"),
         NETHERLANDS("Netherlands", "nl", "3.0"),
-        SPAIN("Spain", "es", "3.0");
+        NEW_ZEALAND("New Zealand", "nz", "3.0"),
+        NORWAY("Norway", "no", "3.0"),
+        PERU("Peru", "pe", "2.5"),
+        PHILIPPINES("Philippines", "ph", "3.0"),
+        POLAND("Poland", "pl", "3.0"),
+        PORTUGAL("Portugal", "pt", "3.0"),
+        PUERTO_RICO("Puerto Rico", "pr", "3.0"),
+        ROMANIA("Romania", "ro", "3.0"),
+        SERBIA("Serbia", "rs", "3.0"),
+        SINGAPORE("Singapore", "sg", "3.0"),
+        SLOVENIA("Slovenia", "si", "2.5"),
+        SOUTH_AFRICA("South Africa", "za", "2.5"),
+        SOUTH_KOREA("Korea", "ko", "2.0"),
+        SPAIN("Spain", "es", "3.0"),
+        SWEDEN("Sweden", "se", "2.5"),
+        SWITZERLAND("Switzerland", "ch", "3.0"),
+        TAIWAN("Taiwan", "tw", "3.0"),
+        THAILAND("Thailand", "th", "3.0"),
+        UK_ENGLAND_WALES("UK: England & Wales", "uk", "2.0"),
+        UK_SCOTLAND("UK: Scotland", "scotland", "2.5"),
+        UGANDA("Uganda", "ug", "3.0"),
+        UNITED_STATES("United States", "us", "3.0"),
+        VIETNAM("Vietnam", "vn", "3.0");
         private static final String URL_START = "http://creativecommons.org/license/{0}/";
         private static final String URL_SEP = "/";
         private String countryName;

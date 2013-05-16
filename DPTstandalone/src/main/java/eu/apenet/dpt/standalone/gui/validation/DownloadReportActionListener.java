@@ -7,6 +7,7 @@ import eu.apenet.dpt.standalone.gui.Utilities;
 import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
 
+import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
@@ -32,12 +33,15 @@ public class DownloadReportActionListener implements ActionListener {
     }
 
     public void actionPerformed(ActionEvent e) {
-        File file = new File(Utilities.LOG_DIR + "report.txt");
+        String defaultSaveLocation = dataPreparationToolGUI.getDefaultSaveLocation();
+        File file = new File(defaultSaveLocation + "report.txt");
         try {
             FileInstance fileInstance = dataPreparationToolGUI.getFileInstances().get(((File) dataPreparationToolGUI.getXmlEadList().getSelectedValue()).getName());
             FileUtils.writeStringToFile(file, getStringFromMap(fileInstance.getXmlQualityErrors()));
+            JOptionPane.showMessageDialog(dataPreparationToolGUI.getContentPane(), MessageFormat.format(dataPreparationToolGUI.getLabels().getString("dataquality.reportSaved"), defaultSaveLocation), dataPreparationToolGUI.getLabels().getString("fileSaved"), JOptionPane.INFORMATION_MESSAGE, Utilities.icon);
         } catch (IOException e1) {
-            e1.printStackTrace();
+            LOG.error("Could not save the report.txt file", e1);
+            JOptionPane.showMessageDialog(dataPreparationToolGUI.getContentPane(), dataPreparationToolGUI.getLabels().getString("dataquality.reportSavedError"), dataPreparationToolGUI.getLabels().getString("fileSaved"), JOptionPane.ERROR_MESSAGE, Utilities.icon);
         }
     }
 

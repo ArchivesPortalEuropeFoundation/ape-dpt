@@ -45,6 +45,7 @@ public class TransformEdm implements Runnable {
 //           Document intermediateDoc = docBuilder.newDocument();
             File outputFile = new File(xmlOutputFilename);
             edmConfig.getTransformerXML2XML().transform(new File(loc), outputFile);
+            fileInstance.setEdm(true);
 //                File outputFile_temp = new File(Utilities.TEMP_DIR + ".temp_"+selectedIndex.getName());
 //            config.getTransformerXML2XML().transform(new File(loc), intermediateDoc);
 //                System.out.println("intermediateDoc root: " + intermediateDoc.getDocumentElement().getNodeName());

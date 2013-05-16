@@ -81,23 +81,23 @@
 			</activation>
 			<build>
 				<plugins>
-                    <plugin>
-                        <groupId>org.codehaus.mojo</groupId>
-                        <artifactId>latex-maven-plugin</artifactId>
-                        <version>1.0</version>
-                        <executions>
-                            <execution>
-                                <goals>
-                                    <goal>latex</goal>
-                                </goals>
-                                <phase>package</phase>
-                                <configuration>
-                                    <binariesPath>/usr/texbin</binariesPath>
-                                    <docsRoot>src/main/resources/documentation</docsRoot>
-                                </configuration>
-                            </execution>
-                        </executions>
-                    </plugin>
+                    <!--<plugin>-->
+                        <!--<groupId>org.codehaus.mojo</groupId>-->
+                        <!--<artifactId>latex-maven-plugin</artifactId>-->
+                        <!--<version>1.0</version>-->
+                        <!--<executions>-->
+                            <!--<execution>-->
+                                <!--<goals>-->
+                                    <!--<goal>latex</goal>-->
+                                <!--</goals>-->
+                                <!--<phase>package</phase>-->
+                                <!--<configuration>-->
+                                    <!--<binariesPath>/usr/texbin</binariesPath>-->
+                                    <!--<docsRoot>src/main/resources/documentation</docsRoot>-->
+                                <!--</configuration>-->
+                            <!--</execution>-->
+                        <!--</executions>-->
+                    <!--</plugin>-->
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-antrun-plugin</artifactId>
@@ -124,7 +124,8 @@
                                         <copy verbose="true" file="../xsl/system/languages.xml" todir="target/production/xsl/system/" />
                                         <copy verbose="true" file="../xsl/system/eag2eag2012.xsl" todir="target/production/xsl/system/" />
                                         <copy verbose="true" file="../xsl/system/dateconversion.xml" todir="target/production/xsl/system/" />
-                                        <copy verbose="true" file="target/manual.pdf" tofile="target/production/APE_data_preparation_tool_${project.version}_manual.pdf" />
+                                        <copy verbose="true" file="src/main/resources/documentation/manual.pdf" tofile="target/production/APE_data_preparation_tool_${project.version}_manual.pdf" />
+                                        <!--<copy verbose="true" file="target/manual.pdf" tofile="target/production/APE_data_preparation_tool_${project.version}_manual.pdf" />-->
                                         <copy file="target/APE_data_preparation_tool-jar-with-dependencies.jar" todir="target/production/" verbose="true" />
                                         <zip destfile="target/APE_data_preparation_tool_${project.version}.zip" basedir="target/production/" />
                                         <delete dir="target/production/" />

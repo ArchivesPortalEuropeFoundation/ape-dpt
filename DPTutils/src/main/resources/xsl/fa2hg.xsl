@@ -25,19 +25,19 @@
                                 <xsl:if test="//*:archdesc/*:did/*:unittitle[not(@type='short')]">
                                     <unittitle encodinganalog="3.1.2"><xsl:value-of select="//*:archdesc/*:did/*:unittitle[not(@type='short')]/text()"/></unittitle>
                                 </xsl:if>
-                                <xsl:if test="//*:archdesc/*:did/*:unitdate">
+                                <xsl:for-each select="//*:archdesc/*:did/*:unitdate">
                                     <unitdate>
                                         <xsl:attribute name="calendar" select="'gregorian'"/>
                                         <xsl:attribute name="era" select="'ce'"/>
                                         <xsl:attribute name="encodinganalog" select="'3.1.3'"/>
-                                        <xsl:if test="normalize-space(//*:archdesc/*:did/*:unitdate/@normal)">
+                                        <xsl:if test="normalize-space(@normal)">
                                             <xsl:attribute name="normal">
-                                                <xsl:value-of select="ape:normalizeDate(normalize-space(//*:archdesc/*:did/*:unitdate/@normal))"/>
+                                                <xsl:value-of select="ape:normalizeDate(normalize-space(@normal))"/>
                                             </xsl:attribute>
                                         </xsl:if>
-                                        <xsl:value-of select="//*:archdesc/*:did/*:unitdate"/>
+                                        <xsl:value-of select="text()"/>
                                     </unitdate>
-                                </xsl:if>
+                                </xsl:for-each>
                             </did>
                             <otherfindaid>
                                 <p>
@@ -57,19 +57,19 @@
                                 <xsl:if test="//*:archdesc/*:did/*:unittitle[not(@type='short')]">
                                     <unittitle encodinganalog="3.1.2"><xsl:value-of select="//*:archdesc/*:did/*:unittitle[not(@type='short')]/text()"/></unittitle>
                                 </xsl:if>
-                                <xsl:if test="//*:archdesc/*:did/*:unitdate">
+                                <xsl:for-each select="//*:archdesc/*:did/*:unitdate">
                                     <unitdate>
                                         <xsl:attribute name="calendar" select="'gregorian'"/>
                                         <xsl:attribute name="era" select="'ce'"/>
                                         <xsl:attribute name="encodinganalog" select="'3.1.3'"/>
-                                        <xsl:if test="normalize-space(//*:archdesc/*:did/*:unitdate/@normal)">
+                                        <xsl:if test="normalize-space(@normal)">
                                             <xsl:attribute name="normal">
-                                                <xsl:value-of select="ape:normalizeDate(normalize-space(//*:archdesc/*:did/*:unitdate/@normal))"/>
+                                                <xsl:value-of select="ape:normalizeDate(normalize-space(@normal))"/>
                                             </xsl:attribute>
                                         </xsl:if>
-                                        <xsl:value-of select="//*:archdesc/*:did/*:unitdate"/>
+                                        <xsl:value-of select="text()"/>
                                     </unitdate>
-                                </xsl:if>
+                                </xsl:for-each>
                             </did>
                             <otherfindaid>
                                 <p>

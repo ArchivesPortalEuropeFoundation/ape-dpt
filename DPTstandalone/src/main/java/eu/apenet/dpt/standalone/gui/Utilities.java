@@ -57,7 +57,7 @@ public final class Utilities {
     public final static String DEFAULT_XSL_FILE_PATH = SYSTEM_DIR + XSL_DEFAULT_NAME;
     public final static String BEFORE_XSL_FILE_PATH = SYSTEM_DIR + XSL_BEFORE_NAME;
     public final static String LANGUAGES_XML_FILE_PATH = SYSTEM_DIR + XML_LANGUAGES_NAME;
-    public final static String HG_TREE_SER_FILE_PATH = TEMP_DIR + SER_HG_TREE_NAME;
+    public final static String HG_TREE_SER_FILE_PATH = LOG_DIR + SER_HG_TREE_NAME;
 
     public final static File BEFORE_XSL_FILE = new File(BEFORE_XSL_FILE_PATH);
 

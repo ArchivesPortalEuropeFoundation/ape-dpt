@@ -1,10 +1,11 @@
 package eu.apenet.dpt.standalone.gui;
 
+import eu.apenet.dpt.standalone.gui.adhoc.DirectoryPermission;
 import eu.apenet.dpt.standalone.gui.adhoc.FileNameComparator;
 import eu.apenet.dpt.standalone.gui.batch.ConvertAndValidateActionListener;
 import eu.apenet.dpt.standalone.gui.conversion.ConvertActionListener;
 import eu.apenet.dpt.standalone.gui.databasechecker.DatabaseCheckerActionListener;
-import eu.apenet.dpt.standalone.gui.dateconversion.DateConversionRulesFrame;
+import eu.apenet.dpt.standalone.gui.dateconversion.DateConversionRulesDialog;
 import eu.apenet.dpt.standalone.gui.db.RetrieveFromDb;
 import eu.apenet.dpt.standalone.gui.ead2ese.ConvertEseActionListener;
 import eu.apenet.dpt.standalone.gui.eag2012.Eag2012Frame;
@@ -14,6 +15,8 @@ import eu.apenet.dpt.standalone.gui.hgcreation.*;
 import eu.apenet.dpt.standalone.gui.validation.ValidateActionListener;
 import eu.apenet.dpt.standalone.gui.validation.ValidateSelectionActionListener;
 import eu.apenet.dpt.standalone.gui.xsdaddition.XsdObject;
+import eu.apenet.dpt.utils.ead2ese.XMLUtil;
+import eu.apenet.dpt.utils.util.ReadXml;
 import eu.apenet.dpt.utils.util.XmlChecker;
 import eu.apenet.dpt.utils.util.Xsd_enum;
 import eu.apenet.dpt.utils.util.extendxsl.DateNormalization;
@@ -21,6 +24,7 @@ import java.awt.*;
 import java.awt.dnd.DropTarget;
 import java.awt.event.*;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.text.MessageFormat;
 import java.util.*;
@@ -28,6 +32,7 @@ import java.util.List;
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
+import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
@@ -41,6 +46,8 @@ import org.jdesktop.swingx.JXTreeTable;
 import org.jdesktop.swingx.error.ErrorInfo;
 import org.jdesktop.swingx.treetable.TreeTableModel;
 import org.w3c.dom.*;
+import org.xml.sax.SAXException;
+import org.xml.sax.SAXParseException;
 
 /**
  * User: Yoann Date: Apr 19, 2010 Time: 8:07:25 PM
@@ -112,7 +119,8 @@ public class DataPreparationToolGUI extends JFrame {
     private ProfileListModel eseListModel;
     private JList eseList;
     private JLabel xmlEadListLabel;
-    
+    private JLabel eseListLabel;
+
     private JLabel progressLabel = new JLabel("", JLabel.CENTER);
     private JLabel resultArea = new JLabel();
     private JTable eagFormTable;
@@ -167,7 +175,6 @@ public class DataPreparationToolGUI extends JFrame {
         dateNormalization = new DateNormalization();
 
         super.setTitle(labels.getString("title"));
-        nameComponents();
         Image topLeftIcon = Utilities.icon.getImage();
         setIconImage(topLeftIcon);
 
@@ -309,8 +316,10 @@ public class DataPreparationToolGUI extends JFrame {
         validateSelectionBtn.addActionListener(new ValidateSelectionActionListener(this, getContentPane()));
         convertEseSelectionBtn.addActionListener(new ConvertEseActionListener(labels, this, apePanel));
 
+        nameComponents();
         wireUp();
         setSize(Toolkit.getDefaultToolkit().getScreenSize());
+        setExtendedState(JFrame.MAXIMIZED_BOTH);
     }
 
     private void nameComponents() {
@@ -360,6 +369,9 @@ public class DataPreparationToolGUI extends JFrame {
 
         validateSelectionBtn.setText(labels.getString("validateSelected"));
         convertEseSelectionBtn.setText(labels.getString("convertEseSelectionBtn"));
+
+        xmlEadListLabel.setText(labels.getString("xmlEadFiles"));
+        eseListLabel.setText(labels.getString("eseFiles"));
     }
 
     private void changeAllTextLg() {
@@ -505,8 +517,28 @@ public class DataPreparationToolGUI extends JFrame {
                 eagFileChooser.setCurrentDirectory(new File(retrieveFromDb.retrieveOpenLocation()));
                 if (eagFileChooser.showOpenDialog(getParent()) == JFileChooser.APPROVE_OPTION) {
                     File eagFile = eagFileChooser.getSelectedFile();
-                    if(!Eag2012Frame.isUsed())
-                        new Eag2012Frame(eagFile, false, getContentPane().getSize(), (ProfileListModel) getXmlEadList().getModel(), labels);
+                    if(!Eag2012Frame.isUsed()){
+                        try {
+                            if (ReadXml.isEagFile(eagFile))
+                                new Eag2012Frame(eagFile, false, getContentPane().getSize(), (ProfileListModel) getXmlEadList().getModel(), labels);
+                            else
+                                JOptionPane.showMessageDialog(rootPane, labels.getString("eag2012.notAnEagFile"));
+                        } catch (SAXException ex) {
+                            if(ex instanceof SAXParseException)
+                                JOptionPane.showMessageDialog(rootPane, labels.getString("eag2012.notAnEagFile"));
+                            java.util.logging.Logger.getLogger(DataPreparationToolGUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+                        } catch (IOException ex) {
+                            java.util.logging.Logger.getLogger(DataPreparationToolGUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+                        } catch (ParserConfigurationException ex) {
+                            java.util.logging.Logger.getLogger(DataPreparationToolGUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+                        } catch (Exception ex) {
+                            try {
+                                JOptionPane.showMessageDialog(rootPane, labels.getString(ex.getMessage()));
+                            } catch (Exception ex1) {
+                                JOptionPane.showMessageDialog(rootPane, "Error...");
+                            }
+                        }
+                    }
                 }
             }
         });
@@ -518,15 +550,35 @@ public class DataPreparationToolGUI extends JFrame {
                 eagFileChooser.setCurrentDirectory(new File(retrieveFromDb.retrieveOpenLocation()));
                 if (eagFileChooser.showOpenDialog(getParent()) == JFileChooser.APPROVE_OPTION) {
                     File eagFile = eagFileChooser.getSelectedFile();
-                    if(!Eag2012Frame.isUsed())
-                        new Eag2012Frame(eagFile, true, getContentPane().getSize(), (ProfileListModel) getXmlEadList().getModel(), labels);
+                    if(!Eag2012Frame.isUsed()){
+                        try {
+                            if (ReadXml.isEagFile(eagFile))
+                                new Eag2012Frame(eagFile, true, getContentPane().getSize(), (ProfileListModel) getXmlEadList().getModel(), labels);
+                            else
+                                JOptionPane.showMessageDialog(rootPane, labels.getString("eag2012.notAnEagFile"));
+                        } catch (SAXException ex) {
+                            if(ex instanceof SAXParseException)
+                                JOptionPane.showMessageDialog(rootPane, labels.getString("eag2012.notAnEagFile"));
+                            java.util.logging.Logger.getLogger(DataPreparationToolGUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+                        } catch (IOException ex) {
+                            java.util.logging.Logger.getLogger(DataPreparationToolGUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+                        } catch (ParserConfigurationException ex) {
+                            java.util.logging.Logger.getLogger(DataPreparationToolGUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+                        } catch (Exception ex) {
+                            try {
+                                JOptionPane.showMessageDialog(rootPane, labels.getString(ex.getMessage()));
+                            } catch (Exception ex1) {
+                                JOptionPane.showMessageDialog(rootPane, "Error...");
+                            }
+                        }
+                    }
                 }
             }
         });
         createEag2012FromScratch.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 if(!Eag2012Frame.isUsed())
-                    new Eag2012Frame(getContentPane().getSize(), (ProfileListModel) getXmlEadList().getModel(), labels);
+                    new Eag2012Frame(getContentPane().getSize(), (ProfileListModel) getXmlEadList().getModel(), labels, retrieveFromDb.retrieveCountryCode(), retrieveFromDb.retrieveRepositoryCode());
             }
         });
         digitalObjectTypeItem.addActionListener(new ActionListener() {
@@ -548,7 +600,7 @@ public class DataPreparationToolGUI extends JFrame {
                 defaultSaveFolderChooser.setCurrentDirectory(new File(retrieveFromDb.retrieveDefaultSaveFolder()));
                 if (defaultSaveFolderChooser.showOpenDialog(getParent()) == JFileChooser.APPROVE_OPTION) {
                     File directory = defaultSaveFolderChooser.getSelectedFile();
-                    if(directory.canWrite())
+                    if(directory.canWrite() && DirectoryPermission.canWrite(directory))
                         retrieveFromDb.saveDefaultSaveFolder(directory + "/");
                     else
                         createErrorOrWarningPanel(new Exception(labels.getString("error.directory.nowrites")), false, labels.getString("error.directory.nowrites"), getContentPane());
@@ -557,13 +609,13 @@ public class DataPreparationToolGUI extends JFrame {
         });
         listDateConversionRulesItem.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent actionEvent) {
-                JFrame dateConversionRulesFrame = new DateConversionRulesFrame(labels, retrieveFromDb);
+                JDialog dateConversionRulesDialog = new DateConversionRulesDialog(labels, retrieveFromDb);
 
-                dateConversionRulesFrame.setPreferredSize(new Dimension(getContentPane().getWidth() * 3 / 8, getContentPane().getHeight() * 7 / 8));
-                dateConversionRulesFrame.setLocation(getContentPane().getWidth() / 8, getContentPane().getHeight() / 8);
+                dateConversionRulesDialog.setPreferredSize(new Dimension(getContentPane().getWidth() * 3 / 8, getContentPane().getHeight() * 7 / 8));
+                dateConversionRulesDialog.setLocation(getContentPane().getWidth() / 8, getContentPane().getHeight() / 8);
 
-                dateConversionRulesFrame.pack();
-                dateConversionRulesFrame.setVisible(true);
+                dateConversionRulesDialog.pack();
+                dateConversionRulesDialog.setVisible(true);
 
             }
         });
@@ -670,9 +722,7 @@ public class DataPreparationToolGUI extends JFrame {
                                 if(tree != null)
                                     tree.addMouseListener(new PopupMouseListener(tree, getDataPreparationToolGUI(), getContentPane()));
                             }
-                            apePanel.getApeTabbedPane().changeBackgroundColor(APETabbedPane.TAB_CONVERSION, Utilities.TAB_COLOR);
-                            apePanel.getApeTabbedPane().changeBackgroundColor(APETabbedPane.TAB_VALIDATION, Utilities.TAB_COLOR);
-                            apePanel.getApeTabbedPane().changeBackgroundColor(APETabbedPane.TAB_ESE, Utilities.TAB_COLOR);
+                            disableTabFlashing();
                         }
                         checkHoldingsGuideButton();
                     } else {
@@ -719,6 +769,7 @@ public class DataPreparationToolGUI extends JFrame {
                                 apePanel.getApeTabbedPane().createEditionTree(((File) eseList.getSelectedValue()));
                             apePanel.getApeTabbedPane().changeBackgroundColor(APETabbedPane.TAB_CONVERSION, Utilities.TAB_COLOR);
                             apePanel.getApeTabbedPane().changeBackgroundColor(APETabbedPane.TAB_VALIDATION, Utilities.TAB_COLOR);
+                            apePanel.getApeTabbedPane().changeBackgroundColor(APETabbedPane.TAB_ESE, Utilities.TAB_COLOR);
                         }
                         checkHoldingsGuideButton();
                     } else {
@@ -750,22 +801,27 @@ public class DataPreparationToolGUI extends JFrame {
     }
 
     protected void checkHoldingsGuideButton() {
-        boolean first = true;
+        boolean isOnlyValidFiles = true;
         for (int i = 0; i < xmlEadList.getSelectedValues().length; i++) {
             FileInstance fileInstance = fileInstances.get(((File) xmlEadList.getSelectedValues()[i]).getName());
-            if (fileInstance.getValidationSchema().getFileType().equals(FileInstance.FileType.EAD) && fileInstance.isValid()) {
-                if(!first) {
-                    createHGBtn.setEnabled(true);
-                    return;
-                }
-                first = false;
+            if (fileInstance.getValidationSchema().getFileType().equals(FileInstance.FileType.EAD) && !fileInstance.isValid()) {
+                isOnlyValidFiles = false;
+                break;
             }
         }
-        createHGBtn.setEnabled(false);
+        if(xmlEadList.getSelectedValues().length > 1 && isOnlyValidFiles) {
+            createHGBtn.setEnabled(true);
+        } else {
+            createHGBtn.setEnabled(false);
+        }
     }
 
     public DataPreparationToolGUI getDataPreparationToolGUI() {
         return this;
+    }
+
+    public String getDefaultSaveLocation() {
+        return retrieveFromDb.retrieveDefaultSaveFolder();
     }
 
     public static void createErrorOrWarningPanel(Throwable e, boolean isError, String message, Component owner) {
@@ -791,7 +847,8 @@ public class DataPreparationToolGUI extends JFrame {
         xmlEadListPanel.add(new JScrollPane(xmlEadList, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER), BorderLayout.CENTER);
         xmlEadListPanel.add(xmlEadListLabel, BorderLayout.NORTH);
         JPanel eseListPanel = new JPanel(new BorderLayout());
-        eseListPanel.add(new JLabel(labels.getString("eseFiles")), BorderLayout.NORTH);
+        eseListLabel = new JLabel(labels.getString("eseFiles"));
+        eseListPanel.add(eseListLabel, BorderLayout.NORTH);
         eseList.setCellRenderer(new IconListCellRenderer(fileInstances));
         eseList.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
 //        eseList.addFocusListener(new FocusListener() {
@@ -1003,7 +1060,7 @@ public class DataPreparationToolGUI extends JFrame {
 
     private void createOptionPaneForCountryCode() {
         String currentResult = retrieveFromDb.retrieveCountryCode();
-        String explanation = labels.getString("enterCountryCode") + "\n" + labels.getString("currentCountryCode") + ": '" + currentResult + "'";
+        String explanation = labels.getString("enterCountryCode") + ((currentResult!=null)?"\n" + labels.getString("currentCountryCode") + ": '" + currentResult + "'":"");
         int i = 0;
         String result;
         do {
@@ -1011,7 +1068,7 @@ public class DataPreparationToolGUI extends JFrame {
                 explanation += "\n" + labels.getString("options.pleaseFollowRules");
             }
             result = (String) JOptionPane.showInputDialog(getContentPane(), explanation, labels.getString("chooseCountryCode"), JOptionPane.QUESTION_MESSAGE, Utilities.icon, null, null);
-            if (result == null) {
+            if (result == null && currentResult != null) {
                 break;
             }
             i++;
@@ -1023,7 +1080,7 @@ public class DataPreparationToolGUI extends JFrame {
 
     private void createOptionPaneForRepositoryCode() {
         String currentResult = retrieveFromDb.retrieveRepositoryCode();
-        String explanation = labels.getString("enterIdentifier") + "\n" + labels.getString("currentRepositoryCode") + ": '" + currentResult + "'";
+        String explanation = labels.getString("enterIdentifier") + ((currentResult!=null)?"\n" + labels.getString("currentRepositoryCode") + ": '" + currentResult + "'":"");
         int i = 0;
         String result;
         do {
@@ -1031,7 +1088,7 @@ public class DataPreparationToolGUI extends JFrame {
                 explanation += "\n" + labels.getString("options.pleaseFollowRules");
             }
             result = (String) JOptionPane.showInputDialog(getContentPane(), explanation, labels.getString("chooseRepositoryCode"), JOptionPane.QUESTION_MESSAGE, Utilities.icon, null, null);
-            if (result == null) {
+            if (result == null && currentResult != null) {
                 break;
             }
             i++;
@@ -1062,8 +1119,10 @@ public class DataPreparationToolGUI extends JFrame {
 
         if(StringUtils.isNotBlank(text)) {
             FileInstance fileInstance = fileInstances.get(text);
+            LOG.trace(fileInstance);
             if (fileInstance.isValid()) {
-                apeTabbedPane.setValidationErrorText(labels.getString("validationSuccess"));
+//                apeTabbedPane.setValidationErrorText(labels.getString("validationSuccess"));
+                apeTabbedPane.setValidationErrorText(fileInstance.getValidationErrors());
                 apeTabbedPane.enableReportBtn();
             } else {
                 apeTabbedPane.setValidationErrorText(fileInstance.getValidationErrors());
@@ -1073,15 +1132,16 @@ public class DataPreparationToolGUI extends JFrame {
             if (fileInstance.isConverted()) {
                 convertItem.setEnabled(false);
                 apeTabbedPane.disableConversionBtn();
-                apeTabbedPane.setValidationBtnText(labels.getString("validate"));
             } else {
                 convertItem.setEnabled(true);
                 apeTabbedPane.enableConversionBtn();
-                apeTabbedPane.setValidationBtnText(labels.getString("validate"));
             }
             if (fileInstance.isValid()) {
                 validateItem.setEnabled(false);
+                convertItem.setEnabled(false);
                 apeTabbedPane.disableValidationBtn();
+                apeTabbedPane.disableConversionBtn();
+                apeTabbedPane.disableConversionEdmBtn();
                 saveSelectedItem.setEnabled(true);
                 if (fileInstance.getValidationSchema().getFileType().equals(FileInstance.FileType.EAD))
                     apeTabbedPane.enableConversionEseBtn();
@@ -1092,19 +1152,18 @@ public class DataPreparationToolGUI extends JFrame {
                 saveSelectedItem.setEnabled(true);
             }
             if (fileInstance.isEse()) {
+                apeTabbedPane.setEseConversionErrorText(fileInstance.getEuropeanaConversionErrors());    
                 validateItem.setEnabled(false);
                 apeTabbedPane.disableConversionBtn();
                 apeTabbedPane.disableValidationBtn();
                 saveSelectedItem.setEnabled(true);
                 if (fileInstance.getValidationSchema().getFileType().equals(FileInstance.FileType.EAD))
                     apeTabbedPane.enableConversionEseBtn();
-            } else {
-                validateItem.setEnabled(true);
-                apeTabbedPane.enableValidationBtn();
-                apeTabbedPane.disableConversionEseBtn();
-                saveSelectedItem.setEnabled(true);
             }
-
+            if(fileInstance.isEdm()) {
+                apeTabbedPane.disableConversionEdmBtn();
+                apeTabbedPane.disableConversionEseBtn();
+            }
             refreshButtons(fileInstance, Utilities.XSLT_GROUP);
             refreshButtons(fileInstance, Utilities.XSD_GROUP);
         } else {
@@ -1113,6 +1172,12 @@ public class DataPreparationToolGUI extends JFrame {
             apeTabbedPane.setEseConversionErrorText("");
             apeTabbedPane.createEditionTree(null);
         }
+    }
+
+    public void disableTabFlashing() {
+        apePanel.getApeTabbedPane().changeBackgroundColor(APETabbedPane.TAB_CONVERSION, Utilities.TAB_COLOR);
+        apePanel.getApeTabbedPane().changeBackgroundColor(APETabbedPane.TAB_VALIDATION, Utilities.TAB_COLOR);
+        apePanel.getApeTabbedPane().changeBackgroundColor(APETabbedPane.TAB_ESE, Utilities.TAB_COLOR);
     }
 
     public void refreshButtons(FileInstance fileInstance, int groupId) {
@@ -1178,22 +1243,10 @@ public class DataPreparationToolGUI extends JFrame {
             JOptionPane.showMessageDialog(getContentPane(), errorMsg, labels.getString("error"), JOptionPane.ERROR_MESSAGE, Utilities.icon);
             System.exit(0);
         }
-
-        String repositoryCodeIdentifier = getRepositoryCodeIdentifier();
-        if (repositoryCodeIdentifier == null) {
-            do {
-                repositoryCodeIdentifier = (String) JOptionPane.showInputDialog(getContentPane(), labels.getString("enterIdentifier") + "\n" + labels.getString("modifyInOption") + "\n\n", labels.getString("chooseId"), JOptionPane.QUESTION_MESSAGE, Utilities.icon, null, null);
-            } while (repositoryCodeIdentifier == null || repositoryCodeIdentifier.equals(""));
-            retrieveFromDb.saveRepositoryCode(repositoryCodeIdentifier);
-        }
-
-        String countrycode = getCountryCode();
-        if (countrycode == null) {
-            do {
-                countrycode = (String) JOptionPane.showInputDialog(getContentPane(), labels.getString("enterCountryCode") + "\n" + labels.getString("modifyInOption") + "\n\n", labels.getString("chooseCountryCode"), JOptionPane.QUESTION_MESSAGE, Utilities.icon, null, null);
-            } while (countrycode == null || countrycode.equals(""));
-            retrieveFromDb.saveCountryCode(countrycode);
-        }
+        if(getCountryCode() == null)
+            createOptionPaneForCountryCode();
+        if(getRepositoryCodeIdentifier() == null)
+            createOptionPaneForRepositoryCode();
 
         defaultRoleType = retrieveFromDb.retrieveRoleType();
         useExistingRoleType = retrieveFromDb.retrieveUseExistingRoleType();

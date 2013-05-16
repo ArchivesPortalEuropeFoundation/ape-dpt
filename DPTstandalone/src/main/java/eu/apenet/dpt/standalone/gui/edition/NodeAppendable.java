@@ -2,6 +2,7 @@ package eu.apenet.dpt.standalone.gui.edition;
 
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,6 +34,18 @@ public class NodeAppendable {
             NamedNodeMap map = node.getAttributes();
             if(map.getNamedItem("normal") == null)
                 actions.add(labels.getString(ActionNamesEnum.INSERT_NORMALATTR.getBundleCode()));
+        } else if(nodename.equals("eadheader")) {
+            NodeList list = node.getChildNodes();
+            boolean hasEadid = false;
+            for(int i = 0; i < list.getLength(); i++) {
+                Node child = list.item(i);
+                if(child.getNodeName().equals("eadid")) {
+                    hasEadid = true;
+                }
+            }
+            if(!hasEadid) {
+                actions.add(labels.getString(ActionNamesEnum.INSERT_EADID.getBundleCode()));
+            }
         }
         return actions;
     }

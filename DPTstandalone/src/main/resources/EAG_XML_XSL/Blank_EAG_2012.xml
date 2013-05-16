@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<eag xmlns="http://www.archivesportaleurope.net/Portal/profiles/eag_2012/" audience="internal">
+<eag xmlns="http://www.archivesportaleurope.net/Portal/profiles/eag_2012/" schemaLocation="http://www.archivesportaleurope.net/Portal/profiles/eag_2012/ http://www.archivesportaleurope.net/Portal/profiles/eag_2012.xsd" audience="external">
     <control>
         <recordId></recordId>
-        <otherRecordId></otherRecordId>
         <maintenanceAgency>
             <agencyCode></agencyCode>
             <agencyName></agencyName>
@@ -18,69 +17,55 @@
         </maintenanceHistory>
         <conventionDeclaration>
             <abbreviation>EAG</abbreviation>
-            <citation xml:lang="eng">EAG (Encoded Archival Guide) 2012</citation>
+            <citation>EAG (Encoded Archival Guide) 2012</citation>
         </conventionDeclaration>
-        <conventionDeclaration xml:lang="eng">
+        <conventionDeclaration>
             <abbreviation>ISDIAH</abbreviation>
-            <citation xml:lang="eng">International Standard for Describing Institutions with Archival Holdings</citation>
+            <citation>International Standard for Describing Institutions with Archival Holdings</citation>
         </conventionDeclaration>
-        <conventionDeclaration xml:lang="eng">
+        <conventionDeclaration>
             <abbreviation>ISO 639-2b</abbreviation>
-            <citation xml:lang="eng">Codes for the representation of names of languages — Part 2: Alpha-3 code</citation>
+            <citation>Codes for the representation of names of languages — Part 2: Alpha-3 code</citation>
         </conventionDeclaration>
-        <conventionDeclaration xml:lang="eng">
+        <conventionDeclaration>
             <abbreviation>ISO 3166-1</abbreviation>
-            <citation xml:lang="eng">Codes for the representation of names of countries and their subdivisions – Part 1: Country codes</citation>
+            <citation>Codes for the representation of names of countries and their subdivisions – Part 1: Country codes</citation>
         </conventionDeclaration>
-        <conventionDeclaration xml:lang="eng">
+        <conventionDeclaration>
             <abbreviation>ISO 8601</abbreviation>
-            <citation xml:lang="eng">Data elements and interchange formats – Information interchange – Representation of dates and times</citation>
+            <citation>Data elements and interchange formats – Information interchange – Representation of dates and times</citation>
         </conventionDeclaration>
-        <conventionDeclaration xml:lang="eng">
+        <conventionDeclaration>
             <abbreviation>ISO 15511</abbreviation>
-            <citation xml:lang="eng">International Standard Identifier for Libraries and Related Organisations</citation>
+            <citation>International Standard Identifier for Libraries and Related Organisations</citation>
         </conventionDeclaration>
-        <conventionDeclaration xml:lang="eng">
+        <conventionDeclaration>
             <abbreviation>ISO 15924</abbreviation>
-            <citation xml:lang="eng">Codes for the representation of names of scripts</citation>
+            <citation>Codes for the representation of names of scripts</citation>
         </conventionDeclaration>
     </control>
     <archguide>
         <identity>
-            <repositorid countrycode="" repositorycode=""/>
-            <otherRepositorId></otherRepositorId>
+            <repositorid countrycode="" />
             <autform></autform>
         </identity>
         <desc>
             <repositories>
                 <repository>
-                    <repositoryName></repositoryName>
-                    <repositoryRole>Head quarter</repositoryRole>
                     <geogarea></geogarea>
                     <location>
                         <country></country>
                         <municipalityPostalcode></municipalityPostalcode>
-                        <localentity></localentity>
                         <street></street>
                     </location>
                     <telephone></telephone>
-                    <fax></fax>
                     <email href=""></email>
                     <webpage href=""></webpage>
                     <timetable>
                         <opening></opening>
                     </timetable>
-                    <access question="">
-                        <termsOfUse></termsOfUse>
-                    </access>
-                    <handicapped question=""></handicapped>
                 </repository>
             </repositories>
         </desc>
     </archguide>
-    <relations>
-        <resourceRelation resourceRelationType="other" href="">
-            <relationEntry></relationEntry>
-        </resourceRelation>
-    </relations>
 </eag>

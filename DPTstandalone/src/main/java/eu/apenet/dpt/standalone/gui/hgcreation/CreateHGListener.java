@@ -9,6 +9,7 @@ import org.apache.log4j.Logger;
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.MutableTreeNode;
+import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
 import java.awt.*;
 import java.awt.dnd.DnDConstants;
@@ -17,10 +18,8 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.io.*;
-import java.util.LinkedList;
+import java.util.*;
 import java.util.List;
-import java.util.Map;
-import java.util.ResourceBundle;
 
 /**
  * User: Yoann Moranville
@@ -37,17 +36,19 @@ public class CreateHGListener implements ActionListener {
     private JTree holdingsGuideTree;
     private JList listFilesForHG;
     private Map<String, FileInstance> fileInstances;
+    private Map<String, FileInstance> originalFileInstances;
     private JList list;
     private DataPreparationToolGUI dataPreparationToolGUI;
     private JButton buttonGoDown;
     private JButton buttonGoUp;
-    private JFrame createHGFrame;
+    private JDialog createHGDialog;
 
-    public CreateHGListener(RetrieveFromDb retrieveFromDb, ResourceBundle labels, Component parent, Map<String, FileInstance> fileInstances, JList list, DataPreparationToolGUI dataPreparationToolGUI) {
+    public CreateHGListener(RetrieveFromDb retrieveFromDb, ResourceBundle labels, Component parent, Map<String, FileInstance> originalFileInstances, JList list, DataPreparationToolGUI dataPreparationToolGUI) {
         this.retrieveFromDb = retrieveFromDb;
         this.labels = labels;
         this.parent = parent;
-        this.fileInstances = fileInstances;
+        this.fileInstances = new HashMap<String, FileInstance>();
+        this.originalFileInstances = originalFileInstances;
         this.list = list;
         this.dataPreparationToolGUI = dataPreparationToolGUI;
         holdingsGuideTree = new JTree();
@@ -58,9 +59,9 @@ public class CreateHGListener implements ActionListener {
     }
 
     public void actionPerformed(ActionEvent e){
-        createHGFrame = new JFrame(labels.getString("hgCreationFrame"));
+        createHGDialog = new JDialog(dataPreparationToolGUI, labels.getString("hgCreationFrame"), Dialog.ModalityType.DOCUMENT_MODAL);
 
-        createHGFrame.setPreferredSize(new Dimension(parent.getWidth(), parent.getHeight())); //getContentPane()???
+        createHGDialog.setPreferredSize(new Dimension(parent.getWidth(), parent.getHeight())); //getContentPane()???
 
         DefaultMutableTreeNode rootNode = new DefaultMutableTreeNode(new CLevelTreeObject());
 
@@ -85,14 +86,15 @@ public class CreateHGListener implements ActionListener {
         paneListFilesHG.setPreferredSize(new Dimension(parent.getWidth()/4, parent.getHeight())); //getContentPane
 
         for(Object selectedValue : list.getSelectedValues()){
-            ((ProfileListModel)listFilesForHG.getModel()).addFile((File)selectedValue);
+            FileInstance currentFileInstance =  originalFileInstances.get(((File)selectedValue).getName());
+            ((ProfileListModel)listFilesForHG.getModel()).addFileInstance(currentFileInstance, (File)selectedValue);
         }
 
         listFilesForHG.setCellRenderer(new IconListCellRenderer(fileInstances));
 
-        createHGFrame.add(paneListFilesHG, BorderLayout.EAST);
+        createHGDialog.add(paneListFilesHG, BorderLayout.EAST);
         JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, buttonsPanel, hgScrollPane);
-        createHGFrame.add(splitPane, BorderLayout.CENTER);
+        createHGDialog.add(splitPane, BorderLayout.CENTER);
 
         TreeDragSource treeDragSource = new TreeDragSource(holdingsGuideTree, DnDConstants.ACTION_COPY_OR_MOVE);
         TreeDropTarget treeDropTarget = new TreeDropTarget(holdingsGuideTree, listFilesForHG);
@@ -111,10 +113,7 @@ public class CreateHGListener implements ActionListener {
             buttonLoadHg.setEnabled(false);
         }
 
-        createHGFrame.add(buttonsSouthPanel, BorderLayout.SOUTH);
-
-        createHGFrame.pack();
-        createHGFrame.setVisible(true);
+        createHGDialog.add(buttonsSouthPanel, BorderLayout.SOUTH);
 
         buttonGoUp.addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent e) {
@@ -191,8 +190,8 @@ public class CreateHGListener implements ActionListener {
 
                 dataPreparationToolGUI.setResultAreaText(labels.getString("creatingHG"));
 
-                createHGFrame.setVisible(false);
-                createHGFrame.dispose();
+                createHGDialog.setVisible(false);
+                createHGDialog.dispose();
 
                 new Thread(new Runnable(){
                     public void run(){
@@ -206,10 +205,10 @@ public class CreateHGListener implements ActionListener {
                         if(model.existsFile(hgFile))
                             model.removeFile(hgFile);
                         model.addFile(hgFile);
-                        fileInstances.get(hgFile.getName()).setCurrentLocation(hgFile.getPath());
-                        fileInstances.get(hgFile.getName()).setLastOperation(FileInstance.Operation.CONVERT);
-                        fileInstances.get(hgFile.getName()).setConverted();
-                        fileInstances.get(hgFile.getName()).setFileType(FileInstance.FileType.EAD);
+                        originalFileInstances.get(hgFile.getName()).setCurrentLocation(hgFile.getPath());
+                        originalFileInstances.get(hgFile.getName()).setLastOperation(FileInstance.Operation.CONVERT);
+                        originalFileInstances.get(hgFile.getName()).setConverted();
+                        originalFileInstances.get(hgFile.getName()).setFileType(FileInstance.FileType.EAD);
 //                        list.clearSelection();
 
                         summaryWorking.stop();
@@ -234,6 +233,9 @@ public class CreateHGListener implements ActionListener {
         HoldingsGuideTreeMouseListener holdingsGuideTreeMouseListener = new HoldingsGuideTreeMouseListener();
         holdingsGuideTree.addMouseListener(holdingsGuideTreeMouseListener);
         holdingsGuideTreeMouseListener.doActionEditLevel(rootNode);
+        
+        createHGDialog.pack();
+        createHGDialog.setVisible(true);
     }
 
     public class HoldingsGuideTreeMouseListener implements MouseListener {
@@ -339,7 +341,7 @@ public class CreateHGListener implements ActionListener {
         public void doActionEditLevel(final DefaultMutableTreeNode cLevelTreeObject){
             final CLevelTreeObject obj = (CLevelTreeObject)cLevelTreeObject.getUserObject();
 
-            final JFrame editLevelFrame = new JFrame(labels.getString("edit"));
+            final JDialog editLevelFrame = new JDialog(createHGDialog, labels.getString("edit"), Dialog.ModalityType.MODELESS);
             editLevelFrame.setAlwaysOnTop(true);
             editLevelFrame.setPreferredSize(new Dimension(parent.getWidth() /2, parent.getHeight() /2)); //getContentPane
             editLevelFrame.setLocation((parent.getWidth() - parent.getWidth() /2)/2, (parent.getHeight() - parent.getHeight() /2)/2);
@@ -405,10 +407,40 @@ public class CreateHGListener implements ActionListener {
         public void doActionRemoveLevel(final DefaultMutableTreeNode defaultMutableTreeNode){
             LOG.trace("try remove child");
             if(defaultMutableTreeNode.getParent() != null){
-                if(((CLevelTreeObject)defaultMutableTreeNode.getUserObject()).getFile() != null)
-                    ((ProfileListModel)listFilesForHG.getModel()).addFile(((CLevelTreeObject)defaultMutableTreeNode.getUserObject()).getFile());
+                if(((CLevelTreeObject)defaultMutableTreeNode.getUserObject()).getFile() != null) {
+                    ((ProfileListModel)listFilesForHG.getModel()).addFile(((CLevelTreeObject) defaultMutableTreeNode.getUserObject()).getFile());
+                } else {
+                    TreeNode parent = findTreeNode(null, (CLevelTreeObject)defaultMutableTreeNode.getUserObject());
+                    deleteChildrenRecursively(parent);
+                }
                 ((LevelTreeModel) holdingsGuideTree.getModel()).removeNodeFromParent(defaultMutableTreeNode);
                 LOG.trace("child removed");
+            }
+        }
+        
+        private TreeNode findTreeNode(TreeNode checkInside, CLevelTreeObject parent) {
+            TreeNode correctParentTreeNode = null;
+            if(checkInside == null)
+                checkInside = (TreeNode)(holdingsGuideTree.getModel().getRoot());
+            for(int i = 0; i < checkInside.getChildCount(); i++) {
+                TreeNode child = checkInside.getChildAt(i);
+                if((CLevelTreeObject)((DefaultMutableTreeNode)child).getUserObject() == parent) {
+                    correctParentTreeNode = child;
+                } else {
+                    correctParentTreeNode = findTreeNode(child, parent);
+                }
+            }
+            return correctParentTreeNode;
+        }
+        
+        private void deleteChildrenRecursively(TreeNode parent) {
+            for(int i = 0; i < parent.getChildCount(); i++) {
+                TreeNode child = parent.getChildAt(i);
+                CLevelTreeObject cLevelTreeObjectChild = (CLevelTreeObject)((DefaultMutableTreeNode)child).getUserObject();
+                if(cLevelTreeObjectChild.isFile())
+                    ((ProfileListModel)listFilesForHG.getModel()).addFile(cLevelTreeObjectChild.getFile());
+                else
+                    deleteChildrenRecursively(child);
             }
         }
     }

@@ -1,7 +1,8 @@
 package eu.apenet.dpt.standalone.gui.eag2012;
 
 import eu.apenet.dpt.standalone.gui.ProfileListModel;
-import eu.apenet.dpt.standalone.gui.eag2012.data.Eag;
+import eu.apenet.dpt.utils.eag2012.Eag;
+import eu.apenet.dpt.utils.util.LanguageIsoList;
 import org.apache.log4j.Logger;
 
 import javax.swing.*;
@@ -21,8 +22,8 @@ public abstract class EagPanels {
     private static final int NB_ROWS = 150;
     private static final String EDITOR_ROW = "p, 3dlu, ";
     protected static String EDITOR_ROW_SPEC;
-    protected static String[] languages;
-    protected static String[] languagesDisplay;
+    public static String[] languages;
+    public static String[] languagesDisplay;
     static {
         String temp = "";
         for(int i = 0; i < NB_ROWS; i++) {
@@ -31,27 +32,16 @@ public abstract class EagPanels {
         temp += "p";
         EDITOR_ROW_SPEC = temp;
 
-        String[] isoLanguages = Locale.getISOLanguages();
-        Map<String, String> languagesTemp = new LinkedHashMap<String, String>(isoLanguages.length);
-        LinkedList<String> languagesList = new LinkedList<String>();
-        for(String isoLanguage : isoLanguages)
-            languagesTemp.put(new Locale(isoLanguage).getISO3Language(), isoLanguage);//DisplayLanguage(Locale.ENGLISH), isoLanguage);
-
-        List<String> tempList = new LinkedList<String>(languagesTemp.keySet());
-        Collections.sort(tempList, String.CASE_INSENSITIVE_ORDER);
-
-        for(String tempLanguage : tempList)
-            languagesList.add(tempLanguage);
-
+        List<String> languagesList = LanguageIsoList.getLanguageIsoList();
         languages = languagesList.toArray(new String[]{});
-
         languagesList.add("---");
         languagesDisplay = languagesList.toArray(new String[]{});
     }
 
     protected final String[] continents = {"Africa", "Antarctica", "Asia", "Australia", "Europe", "North America", "South America"};
+    protected final String[] yesOrNoNotMandatory = {"---", "yes", "no"};
     protected final String[] yesOrNo = {"yes", "no"};
-    protected final String[] photographAllowance = {"depending on the material", "no", "yes", "yes (without flash)"};
+    protected final String[] photographAllowance = {"---", "depending on the material", "no", "yes", "yes (without flash)"};
 
     protected JComboBox continentCombo = new JComboBox(continents);
     protected JComboBox accessiblePublicCombo = new JComboBox(yesOrNo);

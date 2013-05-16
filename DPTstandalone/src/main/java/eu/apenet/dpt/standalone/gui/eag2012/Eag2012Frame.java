@@ -2,22 +2,21 @@ package eu.apenet.dpt.standalone.gui.eag2012;
 
 import eu.apenet.dpt.standalone.gui.ProfileListModel;
 import eu.apenet.dpt.standalone.gui.Utilities;
-import eu.apenet.dpt.standalone.gui.eag2012.data.*;
+import eu.apenet.dpt.utils.eag2012.Eag;
 import eu.apenet.dpt.utils.service.TransformationTool;
+import eu.apenet.dpt.utils.util.ReadXml;
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.IOUtils;
 import org.apache.log4j.Logger;
 
 import javax.swing.*;
 import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
 import java.io.InputStream;
-import java.net.URL;
+import java.util.Date;
 import java.util.ResourceBundle;
 
 /**
@@ -33,9 +32,17 @@ public class Eag2012Frame extends JFrame {
     private ProfileListModel model;
     private ResourceBundle labels;
     private static boolean used;
-    private static boolean startOfForm;
+    private static Date timeMaintenance;
+    private String countrycode;
+    private String mainagencycode;
 
-    public Eag2012Frame(File eagFile, boolean isEag2012, Dimension dimension, ProfileListModel model, ResourceBundle labels) {
+    public Eag2012Frame(File eagFile, boolean isEag2012, Dimension dimension, ProfileListModel model, ResourceBundle labels) throws Exception {
+        String namespace = ReadXml.getXmlNamespace(eagFile);
+        if(isEag2012 && !namespace.equals(EagNamespaceMapper.EAG_URI)) {
+            throw new Exception("eag2012.error.fileNotInEag2012Namespace");
+        } else if(!isEag2012 && namespace.equals(EagNamespaceMapper.EAG_URI)) {
+            throw new Exception("eag2012.error.fileInEag2012Namespace");
+        }
         if(!isEag2012) {
             try {
                 InputStream is = FileUtils.openInputStream(eagFile);
@@ -53,7 +60,7 @@ public class Eag2012Frame extends JFrame {
         createFrame(eagFile, false);
     }
 
-    public Eag2012Frame(Dimension dimension, ProfileListModel model, ResourceBundle labels) {
+    public Eag2012Frame(Dimension dimension, ProfileListModel model, ResourceBundle labels, String countrycode, String mainagencycode) {
 //        URL emptyEAGFileURL = getClass().getResource("/EAG_XML_XSL/Blank_EAG_2012.xml");
         InputStream emptyEAGFileStream = getClass().getResourceAsStream("/EAG_XML_XSL/Blank_EAG_2012.xml");
 
@@ -62,6 +69,8 @@ public class Eag2012Frame extends JFrame {
         this.dimension = dimension;
         this.model = model;
         this.labels = labels;
+        this.countrycode = countrycode;
+        this.mainagencycode = mainagencycode;
         createFrame(emptyEAGFileStream, true);
     }
 
@@ -74,6 +83,7 @@ public class Eag2012Frame extends JFrame {
     }
 
     public void createFrame(InputStream eagStream, boolean isNew) {
+        timeMaintenance = null;
         inUse(true);
         addWindowListener(new WindowAdapter() {
             public void windowClosing(WindowEvent e) {
@@ -105,26 +115,25 @@ public class Eag2012Frame extends JFrame {
         tabbedPane = new JTabbedPane();
         tabbedPane.putClientProperty("jgoodies.noContentBorder", Boolean.TRUE);
 
-        tabbedPane.add("eag2012.yourInstitutionTab",  buildInstitutionPanel(eag, isNew));
+        tabbedPane.add(labels.getString("eag2012.yourInstitutionTab"),  buildInstitutionPanel(eag, isNew));
 
-        tabbedPane.add("eag2012.identityTab",  null);
+        tabbedPane.add(labels.getString("eag2012.identityTab"),  null);
         tabbedPane.setEnabledAt(1, false);
-        tabbedPane.add("eag2012.contactTab", null);
+        tabbedPane.add(labels.getString("eag2012.contactTab"), null);
         tabbedPane.setEnabledAt(2, false);
-        tabbedPane.add("eag2012.accessAndServicesTab", null);
+        tabbedPane.add(labels.getString("eag2012.accessAndServicesTab"), null);
         tabbedPane.setEnabledAt(3, false);
-        tabbedPane.add("eag2012.descriptionTab", null);
+        tabbedPane.add(labels.getString("eag2012.descriptionTab"), null);
         tabbedPane.setEnabledAt(4, false);
-        tabbedPane.add("eag2012.controlTab", null);
+        tabbedPane.add(labels.getString("eag2012.controlTab"), null);
         tabbedPane.setEnabledAt(5, false);
-        tabbedPane.add("eag2012.relationsTab", null);
+        tabbedPane.add(labels.getString("eag2012.relationsTab"), null);
         tabbedPane.setEnabledAt(6, false);
     }
 
 
     protected JComponent buildInstitutionPanel(Eag eag, boolean isNew) {
-        Eag2012Frame.setStartOfForm(true);
-        JScrollPane jScrollPane = new JScrollPane(new EagInstitutionPanel(eag, tabbedPane, this, model, isNew, labels).buildEditorPanel(null));
+        JScrollPane jScrollPane = new JScrollPane(new EagInstitutionPanel(eag, tabbedPane, this, model, isNew, labels, countrycode, mainagencycode).buildEditorPanel(null));
         jScrollPane.getVerticalScrollBar().setUnitIncrement(20);
         return jScrollPane;
     }
@@ -137,11 +146,11 @@ public class Eag2012Frame extends JFrame {
         return used;
     }
 
-    public static void setStartOfForm(boolean startOfForm) {
-        Eag2012Frame.startOfForm = startOfForm;
+    public static Date getTimeMaintenance() {
+        return timeMaintenance;
     }
 
-    public static boolean isStartOfForm() {
-        return startOfForm;
+    public static void setTimeMaintenance(Date timeMaintenance) {
+        Eag2012Frame.timeMaintenance = timeMaintenance;
     }
 }

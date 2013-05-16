@@ -200,6 +200,9 @@
     <xsl:template match="eadheader" mode="copy">
         <eadheader countryencoding="iso3166-1" dateencoding="iso8601" langencoding="iso639-2b" repositoryencoding="iso15511" scriptencoding="iso15924">
             <xsl:attribute name="relatedencoding" select="'MARC21'"/>
+            <xsl:if test="not(eadid)">
+                <xsl:call-template name="addEadid" />
+            </xsl:if>
             <xsl:apply-templates select="node()" mode="copy"/>
             <xsl:if test="not(revisiondesc) and normalize-space($versionnb)">
                 <xsl:call-template name="revisiondesc_ape"/>
@@ -254,7 +257,7 @@
     </xsl:template>
 
     <!-- eadid -->
-    <xsl:template match="eadid" mode="copy">
+    <xsl:template match="eadid" name="addEadid" mode="copy">
         <eadid>
             <xsl:choose>
                 <xsl:when test="@identifier">
@@ -645,6 +648,7 @@
     </xsl:template>
 
     <xsl:template match="p/extref | p/extptr" mode="#all">
+        <xsl:text> </xsl:text>
         <extref>
             <xsl:if test="@href">
                 <xsl:attribute name="xlink:href" select="@href"/>
@@ -661,6 +665,7 @@
             <!--xsl:value-of select="normalize-space(.)"/-->
             <xsl:apply-templates select="node()" mode="#current"/>
         </extref>
+        <xsl:text> </xsl:text>
     </xsl:template>
 
     <xsl:template match="p/extref/corpname" mode="#all">
@@ -675,7 +680,7 @@
     <!-- Here begin something for NL--> <!--todo: Ok, this WILL need to be changed, here we pass other info that are not sent to the user but instead are just discarded-->
     <!-- descgrp -->
     <xsl:template match="archdesc/descgrp[not(@type='appendices')]" mode="copy">
-        <xsl:apply-templates select="bioghist | custodhist | custodhist/acqinfo | accruals | appraisal | arrangement | originalsloc | processinfo | scopecontent | accessrestrict | userestrict | otherfindaid | prefercite | separatedmaterial | odd" mode="copy"/>
+        <xsl:apply-templates select="bibliography | bioghist | custodhist | custodhist/acqinfo | accruals | appraisal | arrangement | originalsloc | processinfo | scopecontent | accessrestrict | userestrict | otherfindaid | prefercite | separatedmaterial | odd | controlaccess | phystech | relatedmaterial" mode="copy"/>
     </xsl:template>
 
     <!-- descgrp/bioghist -->
@@ -778,7 +783,7 @@
 
     <!-- descgrp[@type='appendices'] -->
     <xsl:template match="archdesc/descgrp[@type='appendices']" mode="copy">
-        <xsl:apply-templates select="fileplan" mode="copy"/>
+        <xsl:apply-templates select="fileplan | index | odd" mode="copy"/>
     </xsl:template>
 
     <!--End of the NL descgrp-->
@@ -1745,6 +1750,12 @@
     <xsl:template match="p/unitdate" mode="copy fonds intermediate lowest nested">
         <xsl:apply-templates select="node()" mode="#current"/>
     </xsl:template>
+    <xsl:template match="p/bibref" mode="copy fonds intermediate lowest nested">
+        <xsl:apply-templates select="node()" mode="#current"/>
+    </xsl:template>
+    <xsl:template match="p/bibref/title" mode="copy fonds intermediate lowest nested">
+        <xsl:apply-templates select="node()" mode="#current"/>
+    </xsl:template>
 
     <!-- copy fonds intermediate: scopecontent[not(@*)] -->
     <xsl:template match="scopecontent[not(@encodinganalog='preface' or @encodinganalog='Vorwort')]" mode="copy fonds intermediate lowest">
@@ -1917,7 +1928,7 @@
         </bibref>
     </xsl:template>
 
-    <xsl:template match="otherfindaid/bibref" mode="copy fonds intermediate lowest nested">
+    <xsl:template match="otherfindaid/bibref | relatedmaterial/bibref" mode="copy fonds intermediate lowest nested">
         <p>
             <xsl:if test="@href or @*:href">
                 <extref>
@@ -1942,6 +1953,36 @@
         </p>
     </xsl:template>
 
+    <xsl:template match="separatedmaterial/bibref" mode="copy fonds nested">
+        <p>
+            <xsl:if test="@href or @*:href">
+                <extref>
+                    <xsl:if test="@*:href">
+                        <xsl:attribute name="xlink:href" select="@*:href"/>
+                    </xsl:if>
+                    <xsl:if test="@href">
+                        <xsl:attribute name="xlink:href" select="@href"/>
+                    </xsl:if>
+                    <xsl:if test="@*:title">
+                        <xsl:attribute name="xlink:title" select="@*:title"/>
+                    </xsl:if>
+                    <xsl:if test="@title">
+                        <xsl:attribute name="xlink:title" select="@title"/>
+                    </xsl:if>
+                    <xsl:apply-templates select="node()" mode="#current"/>
+                </extref>
+            </xsl:if>
+            <xsl:if test="not(@href) and not(@*:href)">
+                <xsl:apply-templates select="node()" mode="#current"/>
+            </xsl:if>
+        </p>
+    </xsl:template>
+    <xsl:template match="separatedmaterial/bibref/title" mode="copy fonds nested">
+        <title>
+            <xsl:apply-templates select="node()" mode="#current"/>
+        </title>
+    </xsl:template>
+
     <xsl:template name="deflist_table">
         <tgroup cols="2">
             <tbody>
@@ -1962,7 +2003,7 @@
         </entry>
     </xsl:template>
 
-    <xsl:template match="otherfindaid/bibref/extref" mode="copy fonds intermediate lowest nested">
+    <xsl:template match="otherfindaid/bibref/extref | relatedmaterial/bibref/extref" mode="copy fonds intermediate lowest nested">
         <extref>
             <xsl:if test="@href">
                 <xsl:attribute name="xlink:href" select="@href"/>
@@ -2139,7 +2180,7 @@
             <xsl:when test="$countrycode='NL' and ../../@otherlevel='subfile'">
                 <xsl:apply-templates select="../../../did/unitid" mode="#current"/>
             </xsl:when>
-            <xsl:when test="(@type='call number' or @type='ABS' or @type='bestellnummer' or @type='series_code' or @type='reference' or @type='Sygnatura' or @type='REFERENCE_CODE' or @type='cote-de-consultation' or @type='cote-groupee' or @type='identifiant' or (not(@type))) and text()[string-length(normalize-space(.)) ge 1]"><!-- and not(preceding-sibling::unitid) and not(following-sibling::unitid)-->
+            <xsl:when test="(@type='call number' or @type='ABS' or @type='bestellnummer' or @type='series_code' or @type='reference' or @type='Sygnatura' or @type='REFERENCE_CODE' or @type='cote-de-consultation' or @type='cote-groupee' or @type='identifiant' or @type='cote' or (not(@type))) and text()[string-length(normalize-space(.)) ge 1]"><!-- and not(preceding-sibling::unitid) and not(following-sibling::unitid)-->
                 <xsl:choose>
                     <xsl:when test="@countrycode and @repositorycode">
                         <xsl:choose>
@@ -2379,6 +2420,9 @@
                     </xsl:if>
                     <xsl:if test="@*:title!=''">
                         <xsl:attribute name="xlink:title" select="@*:title"/>
+                    </xsl:if>
+                    <xsl:if test="not(@title) and not(@*:title) and ../daodesc[@label='reference']/p/text()">
+                        <xsl:attribute name="xlink:title" select="../daodesc[@label='reference']/p/text()"/>
                     </xsl:if>
                     <xsl:call-template name="daoRoleType"/>
                 </dao>

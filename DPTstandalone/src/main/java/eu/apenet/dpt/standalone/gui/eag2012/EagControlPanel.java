@@ -5,11 +5,12 @@ import com.jgoodies.forms.layout.CellConstraints;
 import com.jgoodies.forms.layout.FormLayout;
 import eu.apenet.dpt.standalone.gui.ProfileListModel;
 import eu.apenet.dpt.standalone.gui.Utilities;
-import eu.apenet.dpt.standalone.gui.eag2012.data.*;
+import eu.apenet.dpt.standalone.gui.eag2012.SwingStructures.LanguageWithScript;
+import eu.apenet.dpt.standalone.gui.eag2012.SwingStructures.TextFieldWithLanguage;
+import eu.apenet.dpt.utils.eag2012.*;
 import org.apache.commons.lang.StringUtils;
 
 import javax.swing.*;
-import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.util.ArrayList;
 import java.util.List;
@@ -24,6 +25,7 @@ import java.util.ResourceBundle;
 public class EagControlPanel extends EagPanels {
     private List<LanguageWithScript> languageWithScriptTfs;
     private List<TextFieldWithLanguage> rulesConventionTfs;
+    private TextFieldWithLanguage personInstitutionRespTf;
 
     public EagControlPanel(Eag eag, JTabbedPane tabbedPane, JFrame eag2012Frame, ProfileListModel model, ResourceBundle labels) {
         super(eag, tabbedPane, eag2012Frame, model, labels);
@@ -52,25 +54,24 @@ public class EagControlPanel extends EagPanels {
 
         rowNb = 1;
 
-        builder.addLabel(labels.getString("eag2012.descriptionIdentifier") + "*", cc.xy(1, rowNb));
-        builder.addLabel(eag.getControl().getRecordId().getValue(), cc.xy(3, rowNb));
+        builder.addLabel(labels.getString("eag2012.idUsedInApeLabel") + "*", cc.xy(1, rowNb));
+        JTextField recordIdTf = new JTextField(eag.getControl().getRecordId().getValue());
+        recordIdTf.setEnabled(false);
+        builder.add(recordIdTf, cc.xy(3, rowNb));
         setNextRow();
 
         builder.addLabel(labels.getString("eag2012.personInstitutionResponsible"), cc.xy(1, rowNb));
         int sizeEvents = eag.getControl().getMaintenanceHistory().getMaintenanceEvent().size();
-        MaintenanceEvent event = eag.getControl().getMaintenanceHistory().getMaintenanceEvent().get(sizeEvents - 1);
-        TextFieldWithLanguage personInstitutionRespTf = new TextFieldWithLanguage(event.getAgent().getContent(), event.getAgent().getLang());
+        if(sizeEvents > 0) {
+            MaintenanceEvent event = eag.getControl().getMaintenanceHistory().getMaintenanceEvent().get(sizeEvents - 1);
+            personInstitutionRespTf = new TextFieldWithLanguage(event.getAgent().getContent(), event.getAgent().getLang());
+        } else {
+            personInstitutionRespTf = new TextFieldWithLanguage("", "");
+        }
         personInstitutionRespTf.getTextField().setEnabled(false);
-        personInstitutionRespTf.getLanguageBox().setEnabled(false);
         builder.add(personInstitutionRespTf.getTextField(), cc.xy(3, rowNb));
         builder.addLabel(labels.getString("eag2012.language"), cc.xy(5, rowNb));
         builder.add(personInstitutionRespTf.getLanguageBox(), cc.xy(7, rowNb));
-        setNextRow();
-
-        builder.addLabel(labels.getString("eag2012.identifierInstitution") + "*", cc.xy(1, rowNb));
-        JTextField identifierRespInstitTf = new JTextField(eag.getControl().getRecordId().getValue());
-        identifierRespInstitTf.setEnabled(false);
-        builder.add(identifierRespInstitTf, cc.xy(3, rowNb));
         setNextRow();
 
         builder.addSeparator(labels.getString("eag2012.usedLanguages"), cc.xyw(1, rowNb, 3));
@@ -131,12 +132,10 @@ public class EagControlPanel extends EagPanels {
         builder.add(nextTabBtn, cc.xy (5, rowNb));
         nextTabBtn.addActionListener(new ChangeTabBtnAction(eag, tabbedPane, model, true));
 
-        if(Utilities.isDev) {
-            setNextRow();
-            JButton saveBtn = new ButtonEag(labels.getString("eag2012.saveButton"));
-            builder.add(saveBtn, cc.xy (5, rowNb));
-            saveBtn.addActionListener(new SaveBtnAction(eag, tabbedPane, model));
-        }
+        setNextRow();
+        JButton saveBtn = new ButtonEag(labels.getString("eag2012.saveButton"));
+        builder.add(saveBtn, cc.xy (5, rowNb));
+        saveBtn.addActionListener(new SaveBtnAction(eag, tabbedPane, model));
 
         return builder.getPanel();
     }
@@ -149,14 +148,16 @@ public class EagControlPanel extends EagPanels {
         @Override
         public void actionPerformed(ActionEvent actionEvent) {
             try {
-                super.updateEagObject();
+                super.updateEagObject(false);
             } catch (Eag2012FormException e) {
             }
             LanguageDeclaration languageDeclaration = new LanguageDeclaration();
             languageDeclaration.setLanguage(new Language());
             languageDeclaration.setScript(new Script());
+            if(eag.getControl().getLanguageDeclarations() == null)
+                eag.getControl().setLanguageDeclarations(new LanguageDeclarations());
             eag.getControl().getLanguageDeclarations().getLanguageDeclaration().add(languageDeclaration);
-            reloadTabbedPanel(new EagControlPanel(eag, tabbedPane, eag2012Frame, model, labels).buildEditorPanel(errors), 0);
+            reloadTabbedPanel(new EagControlPanel(eag, tabbedPane, eag2012Frame, model, labels).buildEditorPanel(errors), 5);
         }
     }
 
@@ -168,14 +169,14 @@ public class EagControlPanel extends EagPanels {
         @Override
         public void actionPerformed(ActionEvent actionEvent) {
             try {
-                super.updateEagObject();
+                super.updateEagObject(false);
             } catch (Eag2012FormException e) {
             }
             ConventionDeclaration conventionDeclaration = new ConventionDeclaration();
             conventionDeclaration.setAbbreviation(new Abbreviation());
             conventionDeclaration.getCitation().add(new Citation());
             eag.getControl().getConventionDeclaration().add(conventionDeclaration);
-            reloadTabbedPanel(new EagControlPanel(eag, tabbedPane, eag2012Frame, model, labels).buildEditorPanel(errors), 0);
+            reloadTabbedPanel(new EagControlPanel(eag, tabbedPane, eag2012Frame, model, labels).buildEditorPanel(errors), 5);
         }
     }
 
@@ -187,11 +188,11 @@ public class EagControlPanel extends EagPanels {
         @Override
         public void actionPerformed(ActionEvent actionEvent) {
             try {
-                super.updateEagObject();
+                super.updateEagObject(true);
                 super.saveFile(eag.getControl().getRecordId().getValue());
                 closeFrame();
             } catch (Eag2012FormException e) {
-                reloadTabbedPanel(new EagControlPanel(eag, tabbedPane, eag2012Frame, model, labels).buildEditorPanel(errors), 0);
+                reloadTabbedPanel(new EagControlPanel(eag, tabbedPane, eag2012Frame, model, labels).buildEditorPanel(errors), 5);
             }
         }
     }
@@ -206,7 +207,7 @@ public class EagControlPanel extends EagPanels {
         @Override
         public void actionPerformed(ActionEvent actionEvent) {
             try {
-                super.updateEagObject();
+                super.updateEagObject(false);
 
                 if(isNextTab) {
                     reloadTabbedPanel(new EagRelationsPanel(eag, tabbedPane, eag2012Frame, model, labels).buildEditorPanel(errors), 6);
@@ -230,12 +231,17 @@ public class EagControlPanel extends EagPanels {
         }
 
         @Override
-        protected void updateEagObject() throws Eag2012FormException {
+        protected void updateEagObject(boolean save) throws Eag2012FormException {
             errors = new ArrayList<String>();
 
             boolean hasChanged = false;
 
-            //todo here
+            int sizeEvents = eag.getControl().getMaintenanceHistory().getMaintenanceEvent().size();
+            if(sizeEvents > 0) {
+                MaintenanceEvent event = eag.getControl().getMaintenanceHistory().getMaintenanceEvent().get(sizeEvents - 1);
+                event.getAgent().setLang(personInstitutionRespTf.getLanguage());
+            }
+
             if(languageWithScriptTfs.size() == 0 || (languageWithScriptTfs.size() == 1 && StringUtils.isEmpty(languageWithScriptTfs.get(0).getLanguage()))) {
                 eag.getControl().setLanguageDeclarations(null);
             } else {
