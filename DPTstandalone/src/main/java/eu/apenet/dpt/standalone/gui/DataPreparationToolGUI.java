@@ -583,13 +583,15 @@ public class DataPreparationToolGUI extends JFrame {
         });
         digitalObjectTypeItem.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                JFrame roleTypeFrame = new RoleTypeFrame(labels, retrieveFromDb);
+                if(!RoleTypeFrame.isInUse()) {
+                    JFrame roleTypeFrame = new RoleTypeFrame(labels, retrieveFromDb);
 
-                roleTypeFrame.setPreferredSize(new Dimension(getContentPane().getWidth() * 3 / 8, getContentPane().getHeight() * 3 / 8));
-                roleTypeFrame.setLocation(getContentPane().getWidth() / 8, getContentPane().getHeight() / 8);
+                    roleTypeFrame.setPreferredSize(new Dimension(getContentPane().getWidth() * 3 / 8, getContentPane().getHeight() * 3 / 8));
+                    roleTypeFrame.setLocation(getContentPane().getWidth() / 8, getContentPane().getHeight() / 8);
 
-                roleTypeFrame.pack();
-                roleTypeFrame.setVisible(true);
+                    roleTypeFrame.pack();
+                    roleTypeFrame.setVisible(true);
+                }
             }
         });
         defaultSaveFolderItem.addActionListener(new ActionListener() {

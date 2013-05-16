@@ -6,6 +6,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.text.MessageFormat;
 import java.util.ResourceBundle;
 
@@ -18,8 +20,10 @@ import java.util.ResourceBundle;
 public class RoleTypeFrame extends JFrame {
     private ResourceBundle labels;
     private RetrieveFromDb retrieveFromDb;
+    private static boolean inUse = false;
 
     public RoleTypeFrame(ResourceBundle labels, RetrieveFromDb retrieveFromDb){
+        inUse = true;
         this.labels = labels;
         this.retrieveFromDb = retrieveFromDb;
         createRoleTypeForm();
@@ -55,7 +59,7 @@ public class RoleTypeFrame extends JFrame {
         radioButtons[3].setActionCommand(audioType);
 
         radioButtons[4] = new JRadioButton(MessageFormat.format(labels.getString("type"), "3D"));
-        radioButtons[4].setActionCommand(audioType);
+        radioButtons[4].setActionCommand(threeDType);
 
         radioButtons[5] = new JRadioButton(MessageFormat.format(labels.getString("type"), "UNSPECIFIED"));
         radioButtons[5].setActionCommand(unspecifiedType);
@@ -75,16 +79,40 @@ public class RoleTypeFrame extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 String command = group.getSelection().getActionCommand();
                 retrieveFromDb.saveOrUpdateRoleType(command, useExistingCheckBox.isSelected());
-                setVisible(false);
+                closeFrame();
+            }
+        });
+        JButton cancelButton = new JButton(labels.getString("cancelBtn"));
+        cancelButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent actionEvent) {
+                closeFrame();
             }
         });
 
-        JPanel buttonPanel = new JPanel(new GridLayout(1, 3));
+        JPanel buttonPanel = new JPanel(new GridLayout(1, 5));
         buttonPanel.add(new JLabel(""));
         buttonPanel.add(showItButton);
         buttonPanel.add(new JLabel(""));
+        buttonPanel.add(cancelButton);
+        buttonPanel.add(new JLabel(""));
 
         add(createPane(labels.getString("chooseType"), radioButtons, useExistingCheckBox, buttonPanel));
+
+        addWindowListener(new WindowAdapter() {
+            public void windowClosing(WindowEvent e) {
+                closeFrame();
+            }
+        });
+    }
+
+    protected void closeFrame() {
+        inUse = false;
+        this.dispose();
+        this.setVisible(false);
+    }
+
+    public static boolean isInUse() {
+        return inUse;
     }
 
     private JPanel createPane(String description, JRadioButton[] radioButtons, JCheckBox checkBox, Component buttonPanel) {
