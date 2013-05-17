@@ -66,6 +66,7 @@ public class EagInstitutionPanel extends EagPanels {
      */
 
     protected JComponent buildEditorPanel(List<String> errors) {
+        hiddenSaveButton.addActionListener(new SaveForUpdateOnlyActionListener(eag, tabbedPane, model));
         if(errors == null)
             errors = new ArrayList<String>(0);
         else if(Utilities.isDev && errors.size() > 0) {
@@ -412,6 +413,25 @@ public class EagInstitutionPanel extends EagPanels {
                 closeFrame();
             } catch (Eag2012FormException e) {
                 reloadTabbedPanel(new EagInstitutionPanel(eag, tabbedPane, mainTabbedPane, eag2012Frame, model, isNew, labels, repositoryNb).buildEditorPanel(errors), 0);
+            }
+        }
+    }
+
+    public class SaveForUpdateOnlyActionListener extends UpdateEagObject {
+        SaveForUpdateOnlyActionListener(Eag eag, JTabbedPane jTabbedPane, ProfileListModel model) {
+            super(eag, jTabbedPane, model);
+        }
+
+        @Override
+        public void actionPerformed(ActionEvent actionEvent) {
+            try {
+                super.updateEagObject(true);
+                isDataValid = true;
+             } catch (Eag2012FormException e) {
+                isDataValid = false;
+                EagInstitutionPanel eagInstitutionPanel = new EagInstitutionPanel(eag, tabbedPane, mainTabbedPane, eag2012Frame, model, isNew, labels, repositoryNb);
+                Eag2012Frame.setEagInstitutionPanel(eagInstitutionPanel);
+                reloadTabbedPanel(eagInstitutionPanel.buildEditorPanel(errors), 0);
             }
         }
     }
