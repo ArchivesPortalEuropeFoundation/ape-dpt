@@ -502,12 +502,6 @@ public class EagInstitutionPanel extends EagPanels {
             if(save) {
                 if(Eag2012Frame.getTimeMaintenance() == null)
                     Eag2012Frame.setTimeMaintenance(new Date());
-                int sizeEvents = eag.getControl().getMaintenanceHistory().getMaintenanceEvent().size();
-                String languagePerson = "";
-                if(sizeEvents > 0) {
-                    MaintenanceEvent event = eag.getControl().getMaintenanceHistory().getMaintenanceEvent().get(sizeEvents - 1);
-                    languagePerson = event.getAgent().getLang();
-                }
                 MaintenanceEvent event = TextChanger.getMaintenanceEventSaved(Eag2012Frame.getTimeMaintenance(), eag.getControl().getMaintenanceHistory().getMaintenanceEvent());
                 if(event == null) {
                     event = new MaintenanceEvent();
@@ -534,8 +528,6 @@ public class EagInstitutionPanel extends EagPanels {
                     event.getAgentType().setValue("human");
                     event.getAgent().setContent("automatically created agent");
                 }
-                if(StringUtils.isNotEmpty(languagePerson))
-                    event.getAgent().setLang(languagePerson);
                 eag.getControl().getMaintenanceHistory().getMaintenanceEvent().add(event);
             }
 
