@@ -55,7 +55,7 @@ public class RoleTypeFrame extends JFrame {
         radioButtons[3].setActionCommand(audioType);
 
         radioButtons[4] = new JRadioButton(MessageFormat.format(labels.getString("type"), "3D"));
-        radioButtons[4].setActionCommand(audioType);
+        radioButtons[4].setActionCommand(threeDType);
 
         radioButtons[5] = new JRadioButton(MessageFormat.format(labels.getString("type"), "UNSPECIFIED"));
         radioButtons[5].setActionCommand(unspecifiedType);

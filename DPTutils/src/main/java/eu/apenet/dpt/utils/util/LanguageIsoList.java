@@ -17,7 +17,7 @@ public class LanguageIsoList {
         String[] isoLanguages = Locale.getISOLanguages();
         languagesTemp = new LinkedHashMap<String, String>(isoLanguages.length);
         for(String isoLanguage : isoLanguages)
-        languagesTemp.put(new Locale(isoLanguage).getDisplayLanguage(Locale.ENGLISH), new Locale(isoLanguage).getISO3Language());
+            languagesTemp.put(new Locale(isoLanguage).getDisplayLanguage(Locale.ENGLISH), new Locale(isoLanguage).getISO3Language());
     }
 
     public static List<String> getLanguageIsoList() {
