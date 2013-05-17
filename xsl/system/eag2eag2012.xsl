@@ -546,7 +546,7 @@
 	</xsl:template>
 
 	<xsl:template match="*:webpage">
-		<xsl:if test="exists(text())">
+		<xsl:if test="exists(@*:href) or exists(@href)">
 			<webpage>
 				<xsl:attribute name="href"
 					select="if(@*:href) then @*:href else @href" />
