@@ -16,21 +16,14 @@ import java.util.Arrays;
  *
  * @author Yoann Moranville
  */
-public class TextFieldWithLanguage {
+public class TextFieldWithLanguage extends StructureWithLanguage {
     private JTextField textField;
     private JTextField extraField;
     private JTextField secondExtraField;
-    private JComboBox languageBox;
-    private static final String[] languages = EagPanels.languages;
-    private static final String[] languagesDisplay = EagPanels.languagesDisplay;
 
     public TextFieldWithLanguage(String text, String language, String extraText, String secondExtraText) {
+        super(language);
         textField = new JTextField(text);
-        languageBox = new JComboBox(languagesDisplay);
-        if(Arrays.asList(languages).contains(LanguageIsoList.getLanguageStr(language)))
-            languageBox.setSelectedItem(LanguageIsoList.getLanguageStr(language));
-        else
-            languageBox.setSelectedItem("---");
         extraField = new JTextField(extraText);
         secondExtraField = new JTextField(secondExtraText);
     }
@@ -55,10 +48,6 @@ public class TextFieldWithLanguage {
         return secondExtraField;
     }
 
-    public JComboBox getLanguageBox() {
-        return languageBox;
-    }
-
     public String getTextValue() {
         return textField.getText();
     }
@@ -69,11 +58,5 @@ public class TextFieldWithLanguage {
 
     public String getSecondExtraValue() {
         return secondExtraField.getText();
-    }
-
-    public String getLanguage() {
-        if(Arrays.asList(languages).contains((String) languageBox.getSelectedItem()))
-            return LanguageIsoList.getIsoCode((String)languageBox.getSelectedItem());
-        return null;
     }
 }

@@ -1557,7 +1557,7 @@ public class EagAccessAndServicesPanel extends EagPanels {
                 if(!hasRestorationlabContactInfo) {
                     restorationlab.setContact(null);
                 }
-                restorationLabExists = hasRestorationlabContactInfo;
+                restorationLabExists = restorationLabExists || hasRestorationlabContactInfo;
 
                 if(StringUtils.isNotEmpty(webpageRestorationlabTf.getText())) {
                     restorationlab.getWebpage().get(0).setHref(webpageRestorationlabTf.getText());
