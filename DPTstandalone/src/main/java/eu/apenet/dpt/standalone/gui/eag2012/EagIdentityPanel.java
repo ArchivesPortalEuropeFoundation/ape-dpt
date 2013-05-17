@@ -29,13 +29,13 @@ public class EagIdentityPanel extends EagPanels {
     private List<TextFieldWithDate> datesForFormerlyUsedName;
 
     final private String[] typeInstitution = {"---", "National archives", "Regional archives", "County/local authority archives",
-    "Municipal archives", "Specialised governmental archives", "Private persons and family archives", "Church and religious archives",
-    "Business archives", "University and research archives", "Media archives", "Archives of political parties, of popular/labour movement and other non-governmental organisations, associations, agencies and foundations",
-    "Specialised non-governmental archives and archives of other cultural (heritage) institutions"};
+            "Municipal archives", "Specialised governmental archives", "Private persons and family archives", "Church and religious archives",
+            "Business archives", "University and research archives", "Media archives", "Archives of political parties, of popular/labour movement and other non-governmental organisations, associations, agencies and foundations",
+            "Specialised non-governmental archives and archives of other cultural (heritage) institutions"};
     private JComboBox typeInstitutionCombo = new JComboBox(typeInstitution);
 
-    public EagIdentityPanel(Eag eag, JTabbedPane tabbedPane, JFrame eag2012Frame, ProfileListModel model, ResourceBundle labels) {
-        super(eag, tabbedPane, eag2012Frame, model, labels);
+    public EagIdentityPanel(Eag eag, JTabbedPane tabbedPane, JTabbedPane mainTabbedPane, JFrame eag2012Frame, ProfileListModel model, ResourceBundle labels, int repositoryNb) {
+        super(eag, tabbedPane, mainTabbedPane, eag2012Frame, model, labels, repositoryNb);
     }
 
     /**
@@ -145,7 +145,7 @@ public class EagIdentityPanel extends EagPanels {
                         if(useDates.getDate() != null) {
                             TextFieldWithDate textFieldWithDate = new TextFieldWithDate("", "", "", "", useDates.getDate().getContent());
                             datesForFormerlyUsedName.add(textFieldWithDate);
-                        } 
+                        }
                         if(useDates.getDateRange() != null) {
                             TextFieldWithDate textFieldWithDate = new TextFieldWithDate("", "", useDates.getDateRange().getFromDate().getContent(), useDates.getDateRange().getToDate().getContent(), "");
                             textFieldWithDate.setDateRange(true);
@@ -156,7 +156,7 @@ public class EagIdentityPanel extends EagPanels {
             }
             if(datesForFormerlyUsedName.isEmpty())
                 datesForFormerlyUsedName.add(new TextFieldWithDate("", "", "", "", ""));
-            
+
             FormerlyUsedName formerlyUsedName = new FormerlyUsedName(nameStr, nonpreform.getLang(), datesForFormerlyUsedName);
             formerlyUsedName.setOrderInXmlFile(formerNameCounter);
             formerlyUsedNameTfs.add(formerlyUsedName);
@@ -165,10 +165,10 @@ public class EagIdentityPanel extends EagPanels {
             builder.addLabel(labels.getString("eag2012.language"),    cc.xy (5, rowNb));
             builder.add(formerlyUsedName.getLanguageBox(), cc.xy (7, rowNb));
             setNextRow();
-            
+
             builder.addLabel(labels.getString("eag2012.yearsOfUsedNameLabel"),    cc.xy (1, rowNb));
             setNextRow();
-            
+
             for (TextFieldWithDate textFieldWithDate : datesForFormerlyUsedName) {
                 if(!textFieldWithDate.isDateRange()) {
                     builder.addLabel(labels.getString("eag2012.yearLabel"),    cc.xy (1, rowNb));
@@ -245,7 +245,7 @@ public class EagIdentityPanel extends EagPanels {
             String sourceString = ((JButton)actionEvent.getSource()).getName();
             int sourceOrderNo = Integer.parseInt(sourceString.substring(sourceString.lastIndexOf('_') + 1));
             List<TextFieldWithDate> yearsTfs = formerlyUsedNameTfs.get(sourceOrderNo).getDateList();
-            
+
             UseDates currentUseDate = new UseDates();
             for(Object obj : eag.getArchguide().getIdentity().getNonpreform().get(sourceOrderNo).getContent()) {
                 if(obj instanceof UseDates) {
@@ -266,7 +266,7 @@ public class EagIdentityPanel extends EagPanels {
             } else {
                 currentUseDate.setDate(new eu.apenet.dpt.utils.eag2012.Date());
             }
-            reloadTabbedPanel(new EagIdentityPanel(eag, tabbedPane, eag2012Frame, model, labels).buildEditorPanel(errors), 1);
+            reloadTabbedPanel(new EagIdentityPanel(eag, tabbedPane, mainTabbedPane, eag2012Frame, model, labels, repositoryNb).buildEditorPanel(errors), 1);
         }
     }
 
@@ -310,7 +310,7 @@ public class EagIdentityPanel extends EagPanels {
             } else {
                 currentUseDate.setDateRange(dateRange);
             }
-            reloadTabbedPanel(new EagIdentityPanel(eag, tabbedPane, eag2012Frame, model, labels).buildEditorPanel(errors), 1);
+            reloadTabbedPanel(new EagIdentityPanel(eag, tabbedPane, mainTabbedPane, eag2012Frame, model, labels, repositoryNb).buildEditorPanel(errors), 1);
         }
     }
 
@@ -326,7 +326,7 @@ public class EagIdentityPanel extends EagPanels {
                 super.saveFile(eag.getControl().getRecordId().getValue());
                 closeFrame();
             } catch (Eag2012FormException e) {
-                reloadTabbedPanel(new EagIdentityPanel(eag, tabbedPane, eag2012Frame, model, labels).buildEditorPanel(errors), 0);
+                reloadTabbedPanel(new EagIdentityPanel(eag, tabbedPane, mainTabbedPane, eag2012Frame, model, labels, repositoryNb).buildEditorPanel(errors), 0);
             }
         }
     }
@@ -343,7 +343,7 @@ public class EagIdentityPanel extends EagPanels {
 
             }
             eag.getArchguide().getIdentity().getAutform().add(new Autform());
-            reloadTabbedPanel(new EagIdentityPanel(eag, tabbedPane, eag2012Frame, model, labels).buildEditorPanel(errors), 1);
+            reloadTabbedPanel(new EagIdentityPanel(eag, tabbedPane, mainTabbedPane, eag2012Frame, model, labels, repositoryNb).buildEditorPanel(errors), 1);
         }
     }
     public class AddParallelNameInstitutionAction extends UpdateEagObject {
@@ -358,7 +358,7 @@ public class EagIdentityPanel extends EagPanels {
 
             }
             eag.getArchguide().getIdentity().getParform().add(new Parform());
-            reloadTabbedPanel(new EagIdentityPanel(eag, tabbedPane, eag2012Frame, model, labels).buildEditorPanel(errors), 1);
+            reloadTabbedPanel(new EagIdentityPanel(eag, tabbedPane, mainTabbedPane, eag2012Frame, model, labels, repositoryNb).buildEditorPanel(errors), 1);
         }
     }
     public class AddNonpreNameInstitutionAction extends UpdateEagObject {
@@ -375,7 +375,7 @@ public class EagIdentityPanel extends EagPanels {
             Nonpreform nonpreform = new Nonpreform();
             nonpreform.getContent().add(new UseDates());
             eag.getArchguide().getIdentity().getNonpreform().add(nonpreform);
-            reloadTabbedPanel(new EagIdentityPanel(eag, tabbedPane, eag2012Frame, model, labels).buildEditorPanel(errors), 1);
+            reloadTabbedPanel(new EagIdentityPanel(eag, tabbedPane, mainTabbedPane, eag2012Frame, model, labels, repositoryNb).buildEditorPanel(errors), 1);
         }
     }
 
@@ -392,16 +392,16 @@ public class EagIdentityPanel extends EagPanels {
                 super.updateEagObject(false);
 
                 if(isNextTab) {
-                    reloadTabbedPanel(new EagContactPanel(eag, tabbedPane, eag2012Frame, model, labels).buildEditorPanel(errors), 2);
+                    reloadTabbedPanel(new EagContactPanel(eag, tabbedPane, mainTabbedPane, eag2012Frame, model, labels, repositoryNb).buildEditorPanel(errors), 2);
                     tabbedPane.setEnabledAt(2, true);
                     tabbedPane.setEnabledAt(1, false);
                 } else {
-                    reloadTabbedPanel(new EagInstitutionPanel(eag, tabbedPane, eag2012Frame, model, false, labels).buildEditorPanel(errors), 0);
+                    reloadTabbedPanel(new EagInstitutionPanel(eag, tabbedPane, mainTabbedPane, eag2012Frame, model, false, labels, repositoryNb).buildEditorPanel(errors), 0);
                     tabbedPane.setEnabledAt(0, true);
                     tabbedPane.setEnabledAt(1, false);
                 }
             } catch (Eag2012FormException e) {
-                reloadTabbedPanel(new EagIdentityPanel(eag, tabbedPane, eag2012Frame, model, labels).buildEditorPanel(errors), 1);
+                reloadTabbedPanel(new EagIdentityPanel(eag, tabbedPane, mainTabbedPane, eag2012Frame, model, labels, repositoryNb).buildEditorPanel(errors), 1);
             }
         }
     }
@@ -535,7 +535,7 @@ public class EagIdentityPanel extends EagPanels {
             } else if(eag.getArchguide().getIdentity().getRepositoryType().size() != 0) {
                 eag.getArchguide().getIdentity().getRepositoryType().remove(0);
             }
-            
+
             if(!errors.isEmpty()) {
                 throw new Eag2012FormException("Errors in validation of EAG 2012");
             }

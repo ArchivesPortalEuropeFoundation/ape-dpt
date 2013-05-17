@@ -17,6 +17,7 @@ import java.awt.event.WindowEvent;
 import java.io.File;
 import java.io.InputStream;
 import java.util.Date;
+import java.util.Enumeration;
 import java.util.ResourceBundle;
 
 /**
@@ -27,7 +28,7 @@ import java.util.ResourceBundle;
  */
 public class Eag2012Frame extends JFrame {
     private static final Logger LOG = Logger.getLogger(Eag2012Frame.class);
-    private JTabbedPane tabbedPane;
+    private JTabbedPane mainTabbedPane;
     private Dimension dimension;
     private ProfileListModel model;
     private ResourceBundle labels;
@@ -102,7 +103,7 @@ public class Eag2012Frame extends JFrame {
         }
 
         buildPanel(eag, isNew);
-        this.getContentPane().add(tabbedPane);
+        this.getContentPane().add(mainTabbedPane);
 
         Dimension frameDim = new Dimension(((Double)(dimension.getWidth() * 0.95)).intValue(), ((Double)(dimension.getHeight() * 0.95)).intValue());
         this.setSize(frameDim);
@@ -112,31 +113,13 @@ public class Eag2012Frame extends JFrame {
     }
 
     public void buildPanel(Eag eag, boolean isNew) {
-        tabbedPane = new JTabbedPane();
-        tabbedPane.putClientProperty("jgoodies.noContentBorder", Boolean.TRUE);
-
-        tabbedPane.add(labels.getString("eag2012.yourInstitutionTab"),  buildInstitutionPanel(eag, isNew));
-
-        tabbedPane.add(labels.getString("eag2012.identityTab"),  null);
-        tabbedPane.setEnabledAt(1, false);
-        tabbedPane.add(labels.getString("eag2012.contactTab"), null);
-        tabbedPane.setEnabledAt(2, false);
-        tabbedPane.add(labels.getString("eag2012.accessAndServicesTab"), null);
-        tabbedPane.setEnabledAt(3, false);
-        tabbedPane.add(labels.getString("eag2012.descriptionTab"), null);
-        tabbedPane.setEnabledAt(4, false);
-        tabbedPane.add(labels.getString("eag2012.controlTab"), null);
-        tabbedPane.setEnabledAt(5, false);
-        tabbedPane.add(labels.getString("eag2012.relationsTab"), null);
-        tabbedPane.setEnabledAt(6, false);
+        mainTabbedPane = new JTabbedPane();
+        mainTabbedPane.putClientProperty("jgoodies.noContentBorder", Boolean.TRUE);
+        mainTabbedPane.add("eag2012.mainInstitution", new EagNewRepositoryPanel(eag, null, mainTabbedPane, this, model, labels, 0).buildInstitutionTabbedPane(isNew, countrycode, mainagencycode));
     }
 
 
-    protected JComponent buildInstitutionPanel(Eag eag, boolean isNew) {
-        JScrollPane jScrollPane = new JScrollPane(new EagInstitutionPanel(eag, tabbedPane, this, model, isNew, labels, countrycode, mainagencycode).buildEditorPanel(null));
-        jScrollPane.getVerticalScrollBar().setUnitIncrement(20);
-        return jScrollPane;
-    }
+
 
     public static void inUse(boolean used) {
         Eag2012Frame.used = used;

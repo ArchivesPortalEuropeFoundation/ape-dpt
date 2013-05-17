@@ -73,8 +73,8 @@ public class EagAccessAndServicesPanel extends EagPanels {
     private List<TextAreaWithLanguage> toursAndSessionsTfs;
     private List<TextAreaWithLanguage> otherServicesTfs;
 
-    public EagAccessAndServicesPanel(Eag eag, JTabbedPane tabbedPane, JFrame eag2012Frame, ProfileListModel model, ResourceBundle labels) {
-        super(eag, tabbedPane, eag2012Frame, model, labels);
+    public EagAccessAndServicesPanel(Eag eag, JTabbedPane tabbedPane, JTabbedPane mainTabbedPane, JFrame eag2012Frame, ProfileListModel model, ResourceBundle labels, int repositoryNb) {
+        super(eag, tabbedPane, mainTabbedPane, eag2012Frame, model, labels, repositoryNb);
     }
 
     @Override
@@ -100,7 +100,7 @@ public class EagAccessAndServicesPanel extends EagPanels {
 
         rowNb = 1;
 
-        Repository repository = eag.getArchguide().getDesc().getRepositories().getRepository().get(0);
+        Repository repository = eag.getArchguide().getDesc().getRepositories().getRepository().get(repositoryNb);
 
         if(repository.getTimetable().getOpening().size() == 0) {
             repository.getTimetable().getOpening().add(new Opening());
@@ -838,8 +838,8 @@ public class EagAccessAndServicesPanel extends EagPanels {
                 super.updateEagObject(false);
             } catch (Eag2012FormException e) {
             }
-            eag.getArchguide().getDesc().getRepositories().getRepository().get(0).getTimetable().getOpening().add(new Opening());
-            reloadTabbedPanel(new EagAccessAndServicesPanel(eag, tabbedPane, eag2012Frame, model, labels).buildEditorPanel(errors), 3);
+            eag.getArchguide().getDesc().getRepositories().getRepository().get(repositoryNb).getTimetable().getOpening().add(new Opening());
+            reloadTabbedPanel(new EagAccessAndServicesPanel(eag, tabbedPane, mainTabbedPane, eag2012Frame, model, labels, repositoryNb).buildEditorPanel(errors), 3);
         }
     }
     public class AddClosingDatesBtnAction extends UpdateEagObject {
@@ -853,8 +853,8 @@ public class EagAccessAndServicesPanel extends EagPanels {
                 super.updateEagObject(false);
             } catch (Eag2012FormException e) {
             }
-            eag.getArchguide().getDesc().getRepositories().getRepository().get(0).getTimetable().getClosing().add(new Closing());
-            reloadTabbedPanel(new EagAccessAndServicesPanel(eag, tabbedPane, eag2012Frame, model, labels).buildEditorPanel(errors), 3);
+            eag.getArchguide().getDesc().getRepositories().getRepository().get(repositoryNb).getTimetable().getClosing().add(new Closing());
+            reloadTabbedPanel(new EagAccessAndServicesPanel(eag, tabbedPane, mainTabbedPane, eag2012Frame, model, labels, repositoryNb).buildEditorPanel(errors), 3);
         }
     }
     public class AddTravellingDirectionsBtnAction extends UpdateEagObject {
@@ -868,8 +868,8 @@ public class EagAccessAndServicesPanel extends EagPanels {
                 super.updateEagObject(false);
             } catch (Eag2012FormException e) {
             }
-            eag.getArchguide().getDesc().getRepositories().getRepository().get(0).getDirections().add(new Directions());
-            reloadTabbedPanel(new EagAccessAndServicesPanel(eag, tabbedPane, eag2012Frame, model, labels).buildEditorPanel(errors), 3);
+            eag.getArchguide().getDesc().getRepositories().getRepository().get(repositoryNb).getDirections().add(new Directions());
+            reloadTabbedPanel(new EagAccessAndServicesPanel(eag, tabbedPane, mainTabbedPane, eag2012Frame, model, labels, repositoryNb).buildEditorPanel(errors), 3);
         }
     }
     public class AddRestaccessBtnAction extends UpdateEagObject {
@@ -883,8 +883,8 @@ public class EagAccessAndServicesPanel extends EagPanels {
                 super.updateEagObject(false);
             } catch (Eag2012FormException e) {
             }
-            eag.getArchguide().getDesc().getRepositories().getRepository().get(0).getAccess().getRestaccess().add(new Restaccess());
-            reloadTabbedPanel(new EagAccessAndServicesPanel(eag, tabbedPane, eag2012Frame, model, labels).buildEditorPanel(errors), 3);
+            eag.getArchguide().getDesc().getRepositories().getRepository().get(repositoryNb).getAccess().getRestaccess().add(new Restaccess());
+            reloadTabbedPanel(new EagAccessAndServicesPanel(eag, tabbedPane, mainTabbedPane, eag2012Frame, model, labels, repositoryNb).buildEditorPanel(errors), 3);
         }
     }
     public class AddAccessibilityBtnAction extends UpdateEagObject {
@@ -898,11 +898,11 @@ public class EagAccessAndServicesPanel extends EagPanels {
                 super.updateEagObject(false);
             } catch (Eag2012FormException e) {
             }
-//            if(eag.getArchguide().getDesc().getRepositories().getRepository().get(0).getAccessibility().isEmpty()){
+//            if(eag.getArchguide().getDesc().getRepositories().getRepository().get(repositoryNb).getAccessibility().isEmpty()){
 //                LOG.info("create new accessibility");
-//                eag.getArchguide().getDesc().getRepositories().getRepository().get(0).getAccessibility().add(new Accessibility());
+//                eag.getArchguide().getDesc().getRepositories().getRepository().get(repositoryNb).getAccessibility().add(new Accessibility());
 //            }
-            reloadTabbedPanel(new EagAccessAndServicesPanel(eag, tabbedPane, eag2012Frame, model, labels).buildEditorPanel(errors), 3);
+            reloadTabbedPanel(new EagAccessAndServicesPanel(eag, tabbedPane, mainTabbedPane, eag2012Frame, model, labels, repositoryNb).buildEditorPanel(errors), 3);
         }
     }
     public class AddComputerplacesDescriptionBtnAction extends UpdateEagObject {
@@ -916,20 +916,20 @@ public class EagAccessAndServicesPanel extends EagPanels {
                 super.updateEagObject(false);
             } catch (Eag2012FormException e) {
             }
-            
+
             if(StringUtils.isNotEmpty(computerplacesSearchroomTf.getText())){
-                if(eag.getArchguide().getDesc().getRepositories().getRepository().get(0).getServices().getSearchroom().getComputerPlaces().getDescriptiveNote() == null){
+                if(eag.getArchguide().getDesc().getRepositories().getRepository().get(repositoryNb).getServices().getSearchroom().getComputerPlaces().getDescriptiveNote() == null){
                     DescriptiveNote descriptiveNote = new DescriptiveNote();
                     descriptiveNote.setP(new ArrayList<P>());
                     descriptiveNote.getP().add(new P());
-                    eag.getArchguide().getDesc().getRepositories().getRepository().get(0).getServices().getSearchroom().getComputerPlaces().setDescriptiveNote(descriptiveNote);
+                    eag.getArchguide().getDesc().getRepositories().getRepository().get(repositoryNb).getServices().getSearchroom().getComputerPlaces().setDescriptiveNote(descriptiveNote);
                 } else {
-                    eag.getArchguide().getDesc().getRepositories().getRepository().get(0).getServices().getSearchroom().getComputerPlaces().getDescriptiveNote().getP().add(new P());
+                    eag.getArchguide().getDesc().getRepositories().getRepository().get(repositoryNb).getServices().getSearchroom().getComputerPlaces().getDescriptiveNote().getP().add(new P());
                 }
             } else {
                 JOptionPane.showMessageDialog(eag2012Frame, labels.getString("eag2012.computerplacesNotBlank"));
             }
-            reloadTabbedPanel(new EagAccessAndServicesPanel(eag, tabbedPane, eag2012Frame, model, labels).buildEditorPanel(errors), 3);
+            reloadTabbedPanel(new EagAccessAndServicesPanel(eag, tabbedPane, mainTabbedPane, eag2012Frame, model, labels, repositoryNb).buildEditorPanel(errors), 3);
         }
     }
     public class AddReadersticketBtnAction extends UpdateEagObject {
@@ -943,8 +943,8 @@ public class EagAccessAndServicesPanel extends EagPanels {
                 super.updateEagObject(false);
             } catch (Eag2012FormException e) {
             }
-            eag.getArchguide().getDesc().getRepositories().getRepository().get(0).getServices().getSearchroom().getReadersTicket().add(new ReadersTicket());
-            reloadTabbedPanel(new EagAccessAndServicesPanel(eag, tabbedPane, eag2012Frame, model, labels).buildEditorPanel(errors), 3);
+            eag.getArchguide().getDesc().getRepositories().getRepository().get(repositoryNb).getServices().getSearchroom().getReadersTicket().add(new ReadersTicket());
+            reloadTabbedPanel(new EagAccessAndServicesPanel(eag, tabbedPane, mainTabbedPane, eag2012Frame, model, labels, repositoryNb).buildEditorPanel(errors), 3);
         }
     }
     public class AddAdvancedordersBtnAction extends UpdateEagObject {
@@ -958,8 +958,8 @@ public class EagAccessAndServicesPanel extends EagPanels {
                 super.updateEagObject(false);
             } catch (Eag2012FormException e) {
             }
-            eag.getArchguide().getDesc().getRepositories().getRepository().get(0).getServices().getSearchroom().getAdvancedOrders().add(new AdvancedOrders());
-            reloadTabbedPanel(new EagAccessAndServicesPanel(eag, tabbedPane, eag2012Frame, model, labels).buildEditorPanel(errors), 3);
+            eag.getArchguide().getDesc().getRepositories().getRepository().get(repositoryNb).getServices().getSearchroom().getAdvancedOrders().add(new AdvancedOrders());
+            reloadTabbedPanel(new EagAccessAndServicesPanel(eag, tabbedPane, mainTabbedPane, eag2012Frame, model, labels, repositoryNb).buildEditorPanel(errors), 3);
         }
     }
     public class AddResearchservicesBtnAction extends UpdateEagObject {
@@ -973,8 +973,8 @@ public class EagAccessAndServicesPanel extends EagPanels {
                 super.updateEagObject(false);
             } catch (Eag2012FormException e) {
             }
-            eag.getArchguide().getDesc().getRepositories().getRepository().get(0).getServices().getSearchroom().getResearchServices().add(new ResearchServices());
-            reloadTabbedPanel(new EagAccessAndServicesPanel(eag, tabbedPane, eag2012Frame, model, labels).buildEditorPanel(errors), 3);
+            eag.getArchguide().getDesc().getRepositories().getRepository().get(repositoryNb).getServices().getSearchroom().getResearchServices().add(new ResearchServices());
+            reloadTabbedPanel(new EagAccessAndServicesPanel(eag, tabbedPane, mainTabbedPane, eag2012Frame, model, labels, repositoryNb).buildEditorPanel(errors), 3);
         }
     }
     public class AddExhibitionsBtnAction extends UpdateEagObject {
@@ -988,8 +988,8 @@ public class EagAccessAndServicesPanel extends EagPanels {
                 super.updateEagObject(false);
             } catch (Eag2012FormException e) {
             }
-            eag.getArchguide().getDesc().getRepositories().getRepository().get(0).getServices().getRecreationalServices().getExhibition().add(new Exhibition());
-            reloadTabbedPanel(new EagAccessAndServicesPanel(eag, tabbedPane, eag2012Frame, model, labels).buildEditorPanel(errors), 3);
+            eag.getArchguide().getDesc().getRepositories().getRepository().get(repositoryNb).getServices().getRecreationalServices().getExhibition().add(new Exhibition());
+            reloadTabbedPanel(new EagAccessAndServicesPanel(eag, tabbedPane, mainTabbedPane, eag2012Frame, model, labels, repositoryNb).buildEditorPanel(errors), 3);
         }
     }
     public class AddToursSessionsBtnAction extends UpdateEagObject {
@@ -1003,8 +1003,8 @@ public class EagAccessAndServicesPanel extends EagPanels {
                 super.updateEagObject(false);
             } catch (Eag2012FormException e) {
             }
-            eag.getArchguide().getDesc().getRepositories().getRepository().get(0).getServices().getRecreationalServices().getToursSessions().add(new ToursSessions());
-            reloadTabbedPanel(new EagAccessAndServicesPanel(eag, tabbedPane, eag2012Frame, model, labels).buildEditorPanel(errors), 3);
+            eag.getArchguide().getDesc().getRepositories().getRepository().get(repositoryNb).getServices().getRecreationalServices().getToursSessions().add(new ToursSessions());
+            reloadTabbedPanel(new EagAccessAndServicesPanel(eag, tabbedPane, mainTabbedPane, eag2012Frame, model, labels, repositoryNb).buildEditorPanel(errors), 3);
         }
     }
     public class AddOtherServicesBtnAction extends UpdateEagObject {
@@ -1018,8 +1018,8 @@ public class EagAccessAndServicesPanel extends EagPanels {
                 super.updateEagObject(false);
             } catch (Eag2012FormException e) {
             }
-            eag.getArchguide().getDesc().getRepositories().getRepository().get(0).getServices().getRecreationalServices().getOtherServices().add(new OtherServices());
-            reloadTabbedPanel(new EagAccessAndServicesPanel(eag, tabbedPane, eag2012Frame, model, labels).buildEditorPanel(errors), 3);
+            eag.getArchguide().getDesc().getRepositories().getRepository().get(repositoryNb).getServices().getRecreationalServices().getOtherServices().add(new OtherServices());
+            reloadTabbedPanel(new EagAccessAndServicesPanel(eag, tabbedPane, mainTabbedPane, eag2012Frame, model, labels, repositoryNb).buildEditorPanel(errors), 3);
         }
     }
     public class AddInternetAccessBtnAction extends UpdateEagObject {
@@ -1033,14 +1033,14 @@ public class EagAccessAndServicesPanel extends EagPanels {
                 super.updateEagObject(false);
             } catch (Eag2012FormException e) {
             }
-            if(eag.getArchguide().getDesc().getRepositories().getRepository().get(0).getServices().getInternetAccess() == null) {
-                eag.getArchguide().getDesc().getRepositories().getRepository().get(0).getServices().setInternetAccess(new InternetAccess());
+            if(eag.getArchguide().getDesc().getRepositories().getRepository().get(repositoryNb).getServices().getInternetAccess() == null) {
+                eag.getArchguide().getDesc().getRepositories().getRepository().get(repositoryNb).getServices().setInternetAccess(new InternetAccess());
             }
-            if(eag.getArchguide().getDesc().getRepositories().getRepository().get(0).getServices().getInternetAccess().getDescriptiveNote() == null) {
-                eag.getArchguide().getDesc().getRepositories().getRepository().get(0).getServices().getInternetAccess().setDescriptiveNote(new DescriptiveNote());
+            if(eag.getArchguide().getDesc().getRepositories().getRepository().get(repositoryNb).getServices().getInternetAccess().getDescriptiveNote() == null) {
+                eag.getArchguide().getDesc().getRepositories().getRepository().get(repositoryNb).getServices().getInternetAccess().setDescriptiveNote(new DescriptiveNote());
             }
-            eag.getArchguide().getDesc().getRepositories().getRepository().get(0).getServices().getInternetAccess().getDescriptiveNote().getP().add(new P());
-            reloadTabbedPanel(new EagAccessAndServicesPanel(eag, tabbedPane, eag2012Frame, model, labels).buildEditorPanel(errors), 3);
+            eag.getArchguide().getDesc().getRepositories().getRepository().get(repositoryNb).getServices().getInternetAccess().getDescriptiveNote().getP().add(new P());
+            reloadTabbedPanel(new EagAccessAndServicesPanel(eag, tabbedPane, mainTabbedPane, eag2012Frame, model, labels, repositoryNb).buildEditorPanel(errors), 3);
         }
     }
 
@@ -1055,12 +1055,12 @@ public class EagAccessAndServicesPanel extends EagPanels {
                 super.updateEagObject(false);
             } catch (Eag2012FormException e) {
             }
-            Reproductionser reproductionser = eag.getArchguide().getDesc().getRepositories().getRepository().get(0).getServices().getTechservices().getReproductionser();
+            Reproductionser reproductionser = eag.getArchguide().getDesc().getRepositories().getRepository().get(repositoryNb).getServices().getTechservices().getReproductionser();
             if(reproductionser.getDescriptiveNote() == null) {
                 reproductionser.setDescriptiveNote(new DescriptiveNote());
             }
             reproductionser.getDescriptiveNote().getP().add(new P());
-            reloadTabbedPanel(new EagAccessAndServicesPanel(eag, tabbedPane, eag2012Frame, model, labels).buildEditorPanel(errors), 3);
+            reloadTabbedPanel(new EagAccessAndServicesPanel(eag, tabbedPane, mainTabbedPane, eag2012Frame, model, labels, repositoryNb).buildEditorPanel(errors), 3);
         }
     }
 
@@ -1075,12 +1075,12 @@ public class EagAccessAndServicesPanel extends EagPanels {
                 super.updateEagObject(false);
             } catch (Eag2012FormException e) {
             }
-            Restorationlab restorationlab = eag.getArchguide().getDesc().getRepositories().getRepository().get(0).getServices().getTechservices().getRestorationlab();
+            Restorationlab restorationlab = eag.getArchguide().getDesc().getRepositories().getRepository().get(repositoryNb).getServices().getTechservices().getRestorationlab();
             if(restorationlab.getDescriptiveNote() == null) {
                 restorationlab.setDescriptiveNote(new DescriptiveNote());
             }
             restorationlab.getDescriptiveNote().getP().add(new P());
-            reloadTabbedPanel(new EagAccessAndServicesPanel(eag, tabbedPane, eag2012Frame, model, labels).buildEditorPanel(errors), 3);
+            reloadTabbedPanel(new EagAccessAndServicesPanel(eag, tabbedPane, mainTabbedPane, eag2012Frame, model, labels, repositoryNb).buildEditorPanel(errors), 3);
         }
     }
 
@@ -1097,7 +1097,7 @@ public class EagAccessAndServicesPanel extends EagPanels {
                 super.saveFile(eag.getControl().getRecordId().getValue());
                 closeFrame();
             } catch (Eag2012FormException e) {
-                reloadTabbedPanel(new EagAccessAndServicesPanel(eag, tabbedPane, eag2012Frame, model, labels).buildEditorPanel(errors), 3);
+                reloadTabbedPanel(new EagAccessAndServicesPanel(eag, tabbedPane, mainTabbedPane, eag2012Frame, model, labels, repositoryNb).buildEditorPanel(errors), 3);
             }
         }
     }
@@ -1115,16 +1115,16 @@ public class EagAccessAndServicesPanel extends EagPanels {
                 super.updateEagObject(false);
 
                 if(isNextTab) {
-                    reloadTabbedPanel(new EagDescriptionPanel(eag, tabbedPane, eag2012Frame, model, labels).buildEditorPanel(errors), 4);
+                    reloadTabbedPanel(new EagDescriptionPanel(eag, tabbedPane, mainTabbedPane, eag2012Frame, model, labels, repositoryNb).buildEditorPanel(errors), 4);
                     tabbedPane.setEnabledAt(4, true);
                     tabbedPane.setEnabledAt(3, false);
                 } else {
-                    reloadTabbedPanel(new EagContactPanel(eag, tabbedPane, eag2012Frame, model, labels).buildEditorPanel(errors), 2);
+                    reloadTabbedPanel(new EagContactPanel(eag, tabbedPane, mainTabbedPane, eag2012Frame, model, labels, repositoryNb).buildEditorPanel(errors), 2);
                     tabbedPane.setEnabledAt(2, true);
                     tabbedPane.setEnabledAt(3, false);
                 }
             } catch (Eag2012FormException e) {
-                reloadTabbedPanel(new EagAccessAndServicesPanel(eag, tabbedPane, eag2012Frame, model, labels).buildEditorPanel(errors), 3);
+                reloadTabbedPanel(new EagAccessAndServicesPanel(eag, tabbedPane, mainTabbedPane, eag2012Frame, model, labels, repositoryNb).buildEditorPanel(errors), 3);
             }
         }
     }
@@ -1141,92 +1141,92 @@ public class EagAccessAndServicesPanel extends EagPanels {
 
             boolean hasChanged = false;
 
-            if(eag.getArchguide().getDesc().getRepositories().getRepository().size() == 1) { //todo: BECAUSE FOR NOW ONLY ONE REPOSITORY!!!!
-                Repository repository = eag.getArchguide().getDesc().getRepositories().getRepository().get(0);
+//            if(eag.getArchguide().getDesc().getRepositories().getRepository().size() == 1) { //todo: BECAUSE FOR NOW ONLY ONE REPOSITORY!!!!
+            Repository repository = eag.getArchguide().getDesc().getRepositories().getRepository().get(repositoryNb);
 
-                boolean openingTimeExists = false;
-                if(openingHoursTfs.size() > 0) {
-                    repository.getTimetable().getOpening().clear();
-                    for(TextAreaWithLanguage textAreaWithLanguage : openingHoursTfs) {
-                        if(StringUtils.isNotEmpty(textAreaWithLanguage.getTextValue())) {
-                            Opening opening = new Opening();
-                            opening.setContent(textAreaWithLanguage.getTextValue());
-                            opening.setLang(textAreaWithLanguage.getLanguage());
-                            repository.getTimetable().getOpening().add(opening);
-                            openingTimeExists = true;
-                        }
+            boolean openingTimeExists = false;
+            if(openingHoursTfs.size() > 0) {
+                repository.getTimetable().getOpening().clear();
+                for(TextAreaWithLanguage textAreaWithLanguage : openingHoursTfs) {
+                    if(StringUtils.isNotEmpty(textAreaWithLanguage.getTextValue())) {
+                        Opening opening = new Opening();
+                        opening.setContent(textAreaWithLanguage.getTextValue());
+                        opening.setLang(textAreaWithLanguage.getLanguage());
+                        repository.getTimetable().getOpening().add(opening);
+                        openingTimeExists = true;
                     }
                 }
-                if(!openingTimeExists) {
-                    errors.add("openingHoursTfs");
-                }
+            }
+            if(!openingTimeExists) {
+                errors.add("openingHoursTfs");
+            }
 
-                if(closingDatesTfs.size() > 0) {
-                    repository.getTimetable().getClosing().clear();
-                    for(TextAreaWithLanguage textAreaWithLanguage : closingDatesTfs) {
-                        if(StringUtils.isNotEmpty(textAreaWithLanguage.getTextValue())) {
-                            Closing closing = new Closing();
-                            closing.setContent(textAreaWithLanguage.getTextValue());
-                            closing.setLang(textAreaWithLanguage.getLanguage());
-                            repository.getTimetable().getClosing().add(closing);
-                        }
+            if(closingDatesTfs.size() > 0) {
+                repository.getTimetable().getClosing().clear();
+                for(TextAreaWithLanguage textAreaWithLanguage : closingDatesTfs) {
+                    if(StringUtils.isNotEmpty(textAreaWithLanguage.getTextValue())) {
+                        Closing closing = new Closing();
+                        closing.setContent(textAreaWithLanguage.getTextValue());
+                        closing.setLang(textAreaWithLanguage.getLanguage());
+                        repository.getTimetable().getClosing().add(closing);
                     }
                 }
+            }
 
-                if(travellingDirectionsTfs.size() > 0) {
-                    repository.getDirections().clear();
-                    for(TextAreaWithLanguage textAreaWithLanguage : travellingDirectionsTfs) {
-                        if(StringUtils.isNotEmpty(textAreaWithLanguage.getTextValue())) {
-                            Directions directions = new Directions();
-                            directions.setLang(textAreaWithLanguage.getLanguage());
-                            directions.getContent().add(textAreaWithLanguage.getTextValue());
-                            if(StringUtils.isNotEmpty(textAreaWithLanguage.getExtraValue())) {
-                                Citation citation = new Citation();
-                                citation.setHref(textAreaWithLanguage.getExtraValue());
-                                directions.getContent().add(citation);
-                            }
-                            repository.getDirections().add(directions);
-                            hasChanged = true;
+            if(travellingDirectionsTfs.size() > 0) {
+                repository.getDirections().clear();
+                for(TextAreaWithLanguage textAreaWithLanguage : travellingDirectionsTfs) {
+                    if(StringUtils.isNotEmpty(textAreaWithLanguage.getTextValue())) {
+                        Directions directions = new Directions();
+                        directions.setLang(textAreaWithLanguage.getLanguage());
+                        directions.getContent().add(textAreaWithLanguage.getTextValue());
+                        if(StringUtils.isNotEmpty(textAreaWithLanguage.getExtraValue())) {
+                            Citation citation = new Citation();
+                            citation.setHref(textAreaWithLanguage.getExtraValue());
+                            directions.getContent().add(citation);
                         }
+                        repository.getDirections().add(directions);
+                        hasChanged = true;
                     }
                 }
-                repository.getAccess().setQuestion((String)accessiblePublicCombo.getSelectedItem());
+            }
+            repository.getAccess().setQuestion((String)accessiblePublicCombo.getSelectedItem());
 
-                if(restaccessTfs.size() > 0) {
-                    repository.getAccess().getRestaccess().clear();
-                    for(TextAreaWithLanguage textAreaWithLanguage : restaccessTfs) {
-                        if(StringUtils.isNotEmpty(textAreaWithLanguage.getTextValue())) {
-                            Restaccess restaccess = new Restaccess();
-                            restaccess.setContent(textAreaWithLanguage.getTextValue());
-                            restaccess.setLang(textAreaWithLanguage.getLanguage());
-                            repository.getAccess().getRestaccess().add(restaccess);
-                        }
+            if(restaccessTfs.size() > 0) {
+                repository.getAccess().getRestaccess().clear();
+                for(TextAreaWithLanguage textAreaWithLanguage : restaccessTfs) {
+                    if(StringUtils.isNotEmpty(textAreaWithLanguage.getTextValue())) {
+                        Restaccess restaccess = new Restaccess();
+                        restaccess.setContent(textAreaWithLanguage.getTextValue());
+                        restaccess.setLang(textAreaWithLanguage.getLanguage());
+                        repository.getAccess().getRestaccess().add(restaccess);
                     }
                 }
+            }
 
-                if(termsOfUseTfs.size() > 0) {
-                    repository.getAccess().getTermsOfUse().clear();
-                    for(TextAreaWithLanguage textAreaWithLanguage : termsOfUseTfs) {
-                        if(StringUtils.isNotEmpty(textAreaWithLanguage.getTextValue())) {
-                            TermsOfUse termsOfUse = new TermsOfUse();
-                            termsOfUse.setLang(textAreaWithLanguage.getLanguage());
-                            termsOfUse.setContent(textAreaWithLanguage.getTextValue());
-                            if(StringUtils.isNotEmpty(textAreaWithLanguage.getExtraValue())) {
-                                termsOfUse.setHref(textAreaWithLanguage.getExtraValue());
-                            }
-                            repository.getAccess().getTermsOfUse().add(termsOfUse);
-                            hasChanged = true;
+            if(termsOfUseTfs.size() > 0) {
+                repository.getAccess().getTermsOfUse().clear();
+                for(TextAreaWithLanguage textAreaWithLanguage : termsOfUseTfs) {
+                    if(StringUtils.isNotEmpty(textAreaWithLanguage.getTextValue())) {
+                        TermsOfUse termsOfUse = new TermsOfUse();
+                        termsOfUse.setLang(textAreaWithLanguage.getLanguage());
+                        termsOfUse.setContent(textAreaWithLanguage.getTextValue());
+                        if(StringUtils.isNotEmpty(textAreaWithLanguage.getExtraValue())) {
+                            termsOfUse.setHref(textAreaWithLanguage.getExtraValue());
                         }
+                        repository.getAccess().getTermsOfUse().add(termsOfUse);
+                        hasChanged = true;
                     }
                 }
+            }
 
 //                if(repository.getAccessibility() == null){
 //                    LOG.info("create new accessibility");
 //                    repository.setAccessibility(new ArrayList<Accessibility>(){{ add(new Accessibility()); }});
 //                }
-                repository.getAccessibility().get(0).setQuestion((String) facilitiesForDisabledCombo.getSelectedItem());
-                repository.getAccessibility().get(0).setLang(accessibilityTfs.get(0).getLanguage());
-                repository.getAccessibility().get(0).setContent(accessibilityTfs.get(0).getTextValue());
+            repository.getAccessibility().get(0).setQuestion((String) facilitiesForDisabledCombo.getSelectedItem());
+            repository.getAccessibility().get(0).setLang(accessibilityTfs.get(0).getLanguage());
+            repository.getAccessibility().get(0).setContent(accessibilityTfs.get(0).getTextValue());
 
 /*
                 if(accessibilityTfs.size() > 0) {
@@ -1242,535 +1242,535 @@ public class EagAccessAndServicesPanel extends EagPanels {
                     }
                 }*/
 
-                Searchroom searchroom = repository.getServices().getSearchroom();
-                boolean hasContactInfo = false;
-                boolean hasSearchRoomInfo = false;
-                if(StringUtils.isNotEmpty(telephoneSearchroomTf.getText())) {
-                    if(!searchroom.getContact().getTelephone().isEmpty()) {
-                        searchroom.getContact().getTelephone().get(0).setContent(telephoneSearchroomTf.getText());
-                        hasContactInfo = true;
-                    } else {
-                        Telephone telephone = new Telephone();
-                        telephone.setContent(telephoneSearchroomTf.getText());
-                        searchroom.getContact().getTelephone().add(telephone);
-                        hasContactInfo = true;
-                    }
-                } else if(!searchroom.getContact().getTelephone().isEmpty()) {
-                    searchroom.getContact().getTelephone().remove(0);
-                    if(searchroom.getContact().getTelephone().size() > 0)
-                        hasContactInfo = true;
-                }
-
-                if(StringUtils.isNotEmpty(emailSearchroomTf.getText())) {
-                    if(!searchroom.getContact().getEmail().isEmpty()) {
-                        searchroom.getContact().getEmail().get(0).setHref(emailSearchroomTf.getText());
-                        hasContactInfo = true;
-                    } else {
-                        Email email = new Email();
-                        email.setHref(emailSearchroomTf.getText());
-                        searchroom.getContact().getEmail().add(email);
-                        hasContactInfo = true;
-                    }
-                    if(StringUtils.isNotEmpty(emailTitleSearchroomTf.getText())) {
-                        searchroom.getContact().getEmail().get(0).setContent(emailTitleSearchroomTf.getText());
-                    }
-                } else if(!searchroom.getContact().getEmail().isEmpty()) {
-                    searchroom.getContact().getEmail().remove(0);
-                    if(searchroom.getContact().getEmail().size() > 0)
-                        hasContactInfo = true;
-                }
-
-                if(StringUtils.isNotEmpty(webpageSearchroomTf.getText())) {
-                    if(!searchroom.getWebpage().isEmpty()) {
-                        searchroom.getWebpage().get(0).setHref(webpageSearchroomTf.getText());
-                    } else {
-                        Webpage webpage = new Webpage();
-                        webpage.setHref(webpageSearchroomTf.getText());
-                        searchroom.getWebpage().add(webpage);
-                    }
-                    if(StringUtils.isNotEmpty(webpageTitleSearchroomTf.getText())) {
-                        searchroom.getWebpage().get(0).setContent(webpageTitleSearchroomTf.getText());
-                    }
-                } else if(!searchroom.getWebpage().isEmpty()) {
-                    searchroom.getWebpage().remove(0);
-                }
-
-                if(!hasContactInfo) {
-                    searchroom.setContact(null);
-                }
-                hasSearchRoomInfo = hasContactInfo;
-
-                if(StringUtils.isNotEmpty(computerplacesSearchroomTf.getText())) {
-                    Num num = new Num();
-                    num.setUnit("site");
-                    num.setContent(computerplacesSearchroomTf.getText());
-                    searchroom.getComputerPlaces().setNum(num);
-                    hasSearchRoomInfo = true;
+            Searchroom searchroom = repository.getServices().getSearchroom();
+            boolean hasContactInfo = false;
+            boolean hasSearchRoomInfo = false;
+            if(StringUtils.isNotEmpty(telephoneSearchroomTf.getText())) {
+                if(!searchroom.getContact().getTelephone().isEmpty()) {
+                    searchroom.getContact().getTelephone().get(0).setContent(telephoneSearchroomTf.getText());
+                    hasContactInfo = true;
                 } else {
-                    searchroom.setComputerPlaces(null);
+                    Telephone telephone = new Telephone();
+                    telephone.setContent(telephoneSearchroomTf.getText());
+                    searchroom.getContact().getTelephone().add(telephone);
+                    hasContactInfo = true;
                 }
-                
-                if (computerplacesDescriptionTfs != null && computerplacesDescriptionTfs.size() > 0) {
-                    searchroom.getComputerPlaces().getDescriptiveNote().getP().clear();
-                    for (TextFieldWithLanguage textFieldWithLanguage : computerplacesDescriptionTfs) {
-                        if (StringUtils.isNotEmpty(textFieldWithLanguage.getTextValue())) {
-                            P p = new P();
-                            p.setContent(textFieldWithLanguage.getTextValue());
-                            p.setLang(textFieldWithLanguage.getLanguage());
-                            searchroom.getComputerPlaces().getDescriptiveNote().getP().add(p);
-                            hasChanged = true;
-                            hasSearchRoomInfo = true;
-                        }
-                    }
-                }
+            } else if(!searchroom.getContact().getTelephone().isEmpty()) {
+                searchroom.getContact().getTelephone().remove(0);
+                if(searchroom.getContact().getTelephone().size() > 0)
+                    hasContactInfo = true;
+            }
 
-                if(StringUtils.isNotEmpty(microfilmplacesSearchroomTf.getText())) {
-                    Num num = new Num();
-                    num.setUnit("site");
-                    num.setContent(microfilmplacesSearchroomTf.getText());
-                    searchroom.getMicrofilmPlaces().setNum(num);
-                    hasSearchRoomInfo = true;
+            if(StringUtils.isNotEmpty(emailSearchroomTf.getText())) {
+                if(!searchroom.getContact().getEmail().isEmpty()) {
+                    searchroom.getContact().getEmail().get(0).setHref(emailSearchroomTf.getText());
+                    hasContactInfo = true;
                 } else {
-                    searchroom.setMicrofilmPlaces(null);
+                    Email email = new Email();
+                    email.setHref(emailSearchroomTf.getText());
+                    searchroom.getContact().getEmail().add(email);
+                    hasContactInfo = true;
                 }
+                if(StringUtils.isNotEmpty(emailTitleSearchroomTf.getText())) {
+                    searchroom.getContact().getEmail().get(0).setContent(emailTitleSearchroomTf.getText());
+                }
+            } else if(!searchroom.getContact().getEmail().isEmpty()) {
+                searchroom.getContact().getEmail().remove(0);
+                if(searchroom.getContact().getEmail().size() > 0)
+                    hasContactInfo = true;
+            }
 
-                if(!(photographAllowanceCombo.getSelectedItem()).equals("---")) {
-                    searchroom.getPhotographAllowance().setValue((String)photographAllowanceCombo.getSelectedItem());
-                    hasSearchRoomInfo = true;
+            if(StringUtils.isNotEmpty(webpageSearchroomTf.getText())) {
+                if(!searchroom.getWebpage().isEmpty()) {
+                    searchroom.getWebpage().get(0).setHref(webpageSearchroomTf.getText());
                 } else {
-                    searchroom.setPhotographAllowance(null);
+                    Webpage webpage = new Webpage();
+                    webpage.setHref(webpageSearchroomTf.getText());
+                    searchroom.getWebpage().add(webpage);
                 }
+                if(StringUtils.isNotEmpty(webpageTitleSearchroomTf.getText())) {
+                    searchroom.getWebpage().get(0).setContent(webpageTitleSearchroomTf.getText());
+                }
+            } else if(!searchroom.getWebpage().isEmpty()) {
+                searchroom.getWebpage().remove(0);
+            }
 
-                if(readersticketSearchroomTfs.size() > 0) {
-                    searchroom.getReadersTicket().clear();
-                    for(TextFieldWithLanguage textFieldWithLanguage : readersticketSearchroomTfs) {
-                        if(StringUtils.isNotEmpty(textFieldWithLanguage.getTextValue())) {
-                            ReadersTicket readersTicket = new ReadersTicket();
-                            readersTicket.setLang(textFieldWithLanguage.getLanguage());
-                            readersTicket.setContent(textFieldWithLanguage.getTextValue());
-                            readersTicket.setHref(textFieldWithLanguage.getExtraValue());
-                            searchroom.getReadersTicket().add(readersTicket);
-                            hasChanged = true;
-                            hasSearchRoomInfo = true;
-                        }
+            if(!hasContactInfo) {
+                searchroom.setContact(null);
+            }
+            hasSearchRoomInfo = hasContactInfo;
+
+            if(StringUtils.isNotEmpty(computerplacesSearchroomTf.getText())) {
+                Num num = new Num();
+                num.setUnit("site");
+                num.setContent(computerplacesSearchroomTf.getText());
+                searchroom.getComputerPlaces().setNum(num);
+                hasSearchRoomInfo = true;
+            } else {
+                searchroom.setComputerPlaces(null);
+            }
+
+            if (computerplacesDescriptionTfs != null && computerplacesDescriptionTfs.size() > 0) {
+                searchroom.getComputerPlaces().getDescriptiveNote().getP().clear();
+                for (TextFieldWithLanguage textFieldWithLanguage : computerplacesDescriptionTfs) {
+                    if (StringUtils.isNotEmpty(textFieldWithLanguage.getTextValue())) {
+                        P p = new P();
+                        p.setContent(textFieldWithLanguage.getTextValue());
+                        p.setLang(textFieldWithLanguage.getLanguage());
+                        searchroom.getComputerPlaces().getDescriptiveNote().getP().add(p);
+                        hasChanged = true;
+                        hasSearchRoomInfo = true;
                     }
-                }
-
-                if(advancedordersSearchroomTfs.size() > 0) {
-                    searchroom.getAdvancedOrders().clear();
-                    for(TextFieldWithLanguage textFieldWithLanguage : advancedordersSearchroomTfs) {
-                        if(StringUtils.isNotEmpty(textFieldWithLanguage.getTextValue())) {
-                            AdvancedOrders advancedOrders = new AdvancedOrders();
-                            advancedOrders.setLang(textFieldWithLanguage.getLanguage());
-                            advancedOrders.setContent(textFieldWithLanguage.getTextValue());
-                            advancedOrders.setHref(textFieldWithLanguage.getExtraValue());
-                            searchroom.getAdvancedOrders().add(advancedOrders);
-                            hasChanged = true;
-                            hasSearchRoomInfo = true;
-                        }
-                    }
-                }
-
-                if(researchServicesSearchroomTfs.size() > 0) {
-                    searchroom.getResearchServices().clear();
-                    for(TextFieldWithLanguage textFieldWithLanguage : researchServicesSearchroomTfs) {
-                        if(StringUtils.isNotEmpty(textFieldWithLanguage.getTextValue())) {
-                            ResearchServices researchServices = new ResearchServices();
-                            DescriptiveNote descriptiveNote = new DescriptiveNote();
-                            descriptiveNote.setP(new ArrayList<P>() {{
-                                add(new P());
-                            }});
-                            descriptiveNote.getP().get(0).setContent(textFieldWithLanguage.getTextValue());
-                            descriptiveNote.getP().get(0).setLang(textFieldWithLanguage.getLanguage());
-                            researchServices.setDescriptiveNote(descriptiveNote);
-                            searchroom.getResearchServices().add(researchServices);
-                            hasChanged = true;
-                            hasSearchRoomInfo = true;
-                        }
-                    }
-                }
-
-                if(StringUtils.isNotEmpty(workplacesSearchroomTf.getText())) {
-                    Num num = new Num();
-                    num.setUnit("site");
-                    num.setContent(workplacesSearchroomTf.getText());
-                    searchroom.getWorkPlaces().setNum(num);
-                    hasSearchRoomInfo = true;
-                } else if(hasSearchRoomInfo) {
-                    errors.add("workplacesSearchroomTf");
-                }
-
-                boolean libraryExists = false;
-                Library library = repository.getServices().getLibrary();
-                boolean hasLibraryContactInfo = false;
-                if(StringUtils.isNotEmpty(telephoneLibraryTf.getText())) {
-                    if(!library.getContact().getTelephone().isEmpty()) {
-                        library.getContact().getTelephone().get(0).setContent(telephoneLibraryTf.getText());
-                        hasLibraryContactInfo = true;
-                    } else {
-                        Telephone telephone = new Telephone();
-                        telephone.setContent(telephoneLibraryTf.getText());
-                        library.getContact().getTelephone().add(telephone);
-                        hasLibraryContactInfo = true;
-                    }
-                } else if(!library.getContact().getTelephone().isEmpty()) {
-                    library.getContact().getTelephone().remove(0);
-                    if(library.getContact().getTelephone().size() > 0)
-                        hasLibraryContactInfo = true;
-                }
-
-                if(StringUtils.isNotEmpty(emailLibraryTf.getText())) {
-                    if(!library.getContact().getEmail().isEmpty()) {
-                        library.getContact().getEmail().get(0).setHref(emailLibraryTf.getText());
-                        hasLibraryContactInfo = true;
-                    } else {
-                        Email email = new Email();
-                        email.setHref(emailLibraryTf.getText());
-                        library.getContact().getEmail().add(email);
-                        hasLibraryContactInfo = true;
-                    }
-                    if(StringUtils.isNotEmpty(emailTitleLibraryTf.getText())) {
-                        library.getContact().getEmail().get(0).setContent(emailTitleLibraryTf.getText());
-                    }
-                } else if(!library.getContact().getEmail().isEmpty()) {
-                    library.getContact().getEmail().remove(0);
-                    if(library.getContact().getEmail().size() > 0)
-                        hasLibraryContactInfo = true;
-                }
-
-                if(!hasLibraryContactInfo) {
-                    library.setContact(null);
-                }
-                libraryExists = hasLibraryContactInfo;
-
-                if(StringUtils.isNotEmpty(webpageLibraryTf.getText())) {
-                    library.getWebpage().get(0).setHref(webpageLibraryTf.getText());
-                    if(StringUtils.isNotEmpty(webpageTitleLibraryTf.getText())) {
-                        library.getWebpage().get(0).setContent(webpageTitleLibraryTf.getText());
-                    }
-                    libraryExists = true;
-                } else if(library.getWebpage().size() > 0) {
-                    library.getWebpage().remove(0);
-                    if(library.getWebpage().size() > 0)
-                        libraryExists = true;
-                }
-                if(StringUtils.isNotEmpty(monographicPubLibraryTf.getText())) {
-                    Num num = new Num();
-                    num.setUnit("site");
-                    num.setContent(monographicPubLibraryTf.getText());
-                    library.getMonographicpub().setNum(num);
-                    libraryExists = true;
-                } else {
-                    library.setMonographicpub(null);
-                }
-                if(StringUtils.isNotEmpty(serialPubLibraryTf.getText())) {
-                    Num num = new Num();
-                    num.setUnit("site");
-                    num.setContent(serialPubLibraryTf.getText());
-                    library.getSerialpub().setNum(num);
-                    libraryExists = true;
-                } else {
-                    library.setSerialpub(null);
-                }
-                library.setQuestion("yes");
-                if(!libraryExists) {
-                    repository.getServices().setLibrary(null);
-                }
-
-                InternetAccess internetAccess = repository.getServices().getInternetAccess();
-                internetAccess.setQuestion("yes");
-                boolean isInternetAccessFilled = false;
-                if(internetAccessDescTfs.size() > 0) {
-                    internetAccess.getDescriptiveNote().getP().clear();
-                    for(TextFieldWithLanguage textFieldWithLanguage : internetAccessDescTfs) {
-                        if(StringUtils.isNotEmpty(textFieldWithLanguage.getTextValue())) {
-                            P p = new P();
-                            p.setContent(textFieldWithLanguage.getTextValue());
-                            p.setLang(textFieldWithLanguage.getLanguage());
-                            internetAccess.getDescriptiveNote().getP().add(p);
-                            isInternetAccessFilled = true;
-                        }
-                    }
-                }
-                if(!isInternetAccessFilled) {
-                    repository.getServices().setInternetAccess(null);
-                }
-
-                Techservices techservices = repository.getServices().getTechservices();
-                Restorationlab restorationlab = techservices.getRestorationlab();
-
-                boolean isRestorationDescFilled = false;
-                boolean restorationLabExists = false;
-                if(descriptionRestorationServiceTfs.size() > 0) {
-                    restorationlab.getDescriptiveNote().getP().clear();
-                    for(TextFieldWithLanguage textFieldWithLanguage : descriptionRestorationServiceTfs) {
-                        if(StringUtils.isNotEmpty(textFieldWithLanguage.getTextValue())) {
-                            P p = new P();
-                            p.setContent(textFieldWithLanguage.getTextValue());
-                            p.setLang(textFieldWithLanguage.getLanguage());
-                            restorationlab.getDescriptiveNote().getP().add(p);
-                            isRestorationDescFilled = true;
-                            restorationLabExists = true;
-                        }
-                    }
-                }
-                if(!isRestorationDescFilled) {
-                    restorationlab.setDescriptiveNote(null);
-                }
-
-                boolean hasRestorationlabContactInfo = false;
-                if(StringUtils.isNotEmpty(telephoneRestorationlabTf.getText())) {
-                    if(!restorationlab.getContact().getTelephone().isEmpty()) {
-                        restorationlab.getContact().getTelephone().get(0).setContent(telephoneRestorationlabTf.getText());
-                        hasRestorationlabContactInfo = true;
-                    } else {
-                        Telephone telephone = new Telephone();
-                        telephone.setContent(telephoneRestorationlabTf.getText());
-                        restorationlab.getContact().getTelephone().add(telephone);
-                        hasRestorationlabContactInfo = true;
-                    }
-                } else if(!restorationlab.getContact().getTelephone().isEmpty()) {
-                    restorationlab.getContact().getTelephone().remove(0);
-                    if(restorationlab.getContact().getTelephone().size() > 0)
-                        hasRestorationlabContactInfo = true;
-                }
-
-                if(StringUtils.isNotEmpty(emailRestorationlabTf.getText())) {
-                    if(!restorationlab.getContact().getEmail().isEmpty()) {
-                        restorationlab.getContact().getEmail().get(0).setHref(emailRestorationlabTf.getText());
-                        hasRestorationlabContactInfo = true;
-                    } else {
-                        Email email = new Email();
-                        email.setHref(emailRestorationlabTf.getText());
-                        restorationlab.getContact().getEmail().add(email);
-                        hasRestorationlabContactInfo = true;
-                    }
-                    if(StringUtils.isNotEmpty(emailTitleRestorationlabTf.getText())) {
-                        restorationlab.getContact().getEmail().get(0).setContent(emailTitleRestorationlabTf.getText());
-                    }
-                } else if(!restorationlab.getContact().getEmail().isEmpty()) {
-                    restorationlab.getContact().getEmail().remove(0);
-                    if(restorationlab.getContact().getEmail().size() > 0)
-                        hasRestorationlabContactInfo = true;
-                }
-
-                if(!hasRestorationlabContactInfo) {
-                    restorationlab.setContact(null);
-                }
-                restorationLabExists = hasRestorationlabContactInfo;
-
-                if(StringUtils.isNotEmpty(webpageRestorationlabTf.getText())) {
-                    restorationlab.getWebpage().get(0).setHref(webpageRestorationlabTf.getText());
-                    if(StringUtils.isNotEmpty(webpageTitleRestorationlabTf.getText())) {
-                        restorationlab.getWebpage().get(0).setContent(webpageTitleRestorationlabTf.getText());
-                    }
-                    restorationLabExists = true;
-                } else if(restorationlab.getWebpage().size() > 0) {
-                    restorationlab.getWebpage().remove(0);
-                    if(restorationlab.getWebpage().size() > 0)
-                        restorationLabExists = true;
-                }
-                restorationlab.setQuestion("yes");
-
-                if(!restorationLabExists)
-                    techservices.setRestorationlab(null);
-
-
-                Reproductionser reproductionser = techservices.getReproductionser();
-                boolean hasReproductionInfo = false;
-                boolean isReproductionDescFilled = false;
-                if(descriptionReproductionServiceTfs.size() > 0) {
-                    reproductionser.getDescriptiveNote().getP().clear();
-                    for(TextFieldWithLanguage textFieldWithLanguage : descriptionReproductionServiceTfs) {
-                        if(StringUtils.isNotEmpty(textFieldWithLanguage.getTextValue())) {
-                            P p = new P();
-                            p.setContent(textFieldWithLanguage.getTextValue());
-                            p.setLang(textFieldWithLanguage.getLanguage());
-                            reproductionser.getDescriptiveNote().getP().add(p);
-                            isReproductionDescFilled = true;
-                        }
-                    }
-                }
-                if(!isReproductionDescFilled) {
-                    reproductionser.setDescriptiveNote(null);
-                }
-
-                boolean hasReproductionserContactInfo = false;
-                if(StringUtils.isNotEmpty(telephoneReproductionServiceTf.getText())) {
-                    if(!reproductionser.getContact().getTelephone().isEmpty()) {
-                        reproductionser.getContact().getTelephone().get(0).setContent(telephoneReproductionServiceTf.getText());
-                        hasReproductionserContactInfo = true;
-                    } else {
-                        Telephone telephone = new Telephone();
-                        telephone.setContent(telephoneReproductionServiceTf.getText());
-                        reproductionser.getContact().getTelephone().add(telephone);
-                        hasReproductionserContactInfo = true;
-                    }
-                } else if(!reproductionser.getContact().getTelephone().isEmpty()) {
-                    reproductionser.getContact().getTelephone().remove(0);
-                    if(reproductionser.getContact().getTelephone().size() > 0)
-                        hasReproductionserContactInfo = true;
-                }
-
-                if(StringUtils.isNotEmpty(emailReproductionServiceTf.getText())) {
-                    if(!reproductionser.getContact().getEmail().isEmpty()) {
-                        reproductionser.getContact().getEmail().get(0).setHref(emailReproductionServiceTf.getText());
-                        hasReproductionserContactInfo = true;
-                    } else {
-                        Email email = new Email();
-                        email.setHref(emailReproductionServiceTf.getText());
-                        reproductionser.getContact().getEmail().add(email);
-                        hasReproductionserContactInfo = true;
-                    }
-                    if(StringUtils.isNotEmpty(emailTitleReproductionServiceTf.getText())) {
-                        reproductionser.getContact().getEmail().get(0).setContent(emailTitleReproductionServiceTf.getText());
-                    }
-                } else if(!reproductionser.getContact().getEmail().isEmpty()) {
-                    reproductionser.getContact().getEmail().remove(0);
-                    if(reproductionser.getContact().getEmail().size() > 0)
-                        hasReproductionserContactInfo = true;
-                }
-
-                if(!hasReproductionserContactInfo) {
-                    reproductionser.setContact(null);
-                }
-                if(isReproductionDescFilled || hasReproductionserContactInfo) {
-                    hasReproductionInfo = true;
-                }
-
-                if(StringUtils.isNotEmpty(webpageReproductionServiceTf.getText())) {
-                    reproductionser.getWebpage().get(0).setHref(webpageReproductionServiceTf.getText());
-                    if(StringUtils.isNotEmpty(webpageTitleReproductionServiceTf.getText())) {
-                        reproductionser.getWebpage().get(0).setContent(webpageTitleReproductionServiceTf.getText());
-                    }
-                } else if(reproductionser.getWebpage().size() > 0) {
-                        reproductionser.getWebpage().remove(0);
-                }
-
-                if(!microformServicesCombo.getSelectedItem().equals("---")) {
-                    reproductionser.getMicroformser().setQuestion((String)microformServicesCombo.getSelectedItem());
-                    hasReproductionInfo = true;
-                } else {
-                    reproductionser.setMicroformser(null);
-                }
-                if(!photographServicesCombo.getSelectedItem().equals("---")) {
-                    reproductionser.getPhotographser().setQuestion((String)photographServicesCombo.getSelectedItem());
-                    hasReproductionInfo = true;
-                } else {
-                    reproductionser.setPhotographser(null);
-                }
-                if(!digitalServicesCombo.getSelectedItem().equals("---")) {
-                    reproductionser.getDigitalser().setQuestion((String)digitalServicesCombo.getSelectedItem());
-                    hasReproductionInfo = true;
-                } else {
-                    reproductionser.setDigitalser(null);
-                }
-                if(!photocopyServicesCombo.getSelectedItem().equals("---")) {
-                    reproductionser.getPhotocopyser().setQuestion((String)photocopyServicesCombo.getSelectedItem());
-                    hasReproductionInfo = true;
-                } else {
-                    reproductionser.setPhotocopyser(null);
-                }
-                reproductionser.setQuestion("yes");
-
-                if(!hasReproductionInfo) {
-                    techservices.setReproductionser(null);
-                }
-
-                if(!hasSearchRoomInfo) {
-                    repository.getServices().setSearchroom(null);
-                }
-
-                if(techservices.getReproductionser() == null && techservices.getRestorationlab() == null) {
-                    repository.getServices().setTechservices(null);
-                }
-
-
-                RecreationalServices recreationalServices = repository.getServices().getRecreationalServices();
-                boolean hasRecreationalServices = false;
-                if(StringUtils.isNotEmpty(refreshmentTf.getTextValue())) {
-                    recreationalServices.getRefreshment().getDescriptiveNote().getP().get(0).setContent(refreshmentTf.getTextValue());
-                    recreationalServices.getRefreshment().getDescriptiveNote().getP().get(0).setLang(refreshmentTf.getLanguage());
-                    hasRecreationalServices = true;
-                } else {
-                    recreationalServices.setRefreshment(null);
-                }
-
-                if(exhibitionTfs.size() > 0) {
-                    recreationalServices.getExhibition().clear();
-                    for(TextAreaWithLanguage textAreaWithLanguage : exhibitionTfs) {
-                        if(StringUtils.isNotEmpty(textAreaWithLanguage.getTextValue())) {
-                            Exhibition exhibition = new Exhibition();
-                            DescriptiveNote descriptiveNote = new DescriptiveNote();
-                            descriptiveNote.setP(new ArrayList<P>(){{ add(new P()); }});
-                            exhibition.setDescriptiveNote(descriptiveNote);
-                            exhibition.getDescriptiveNote().getP().get(0).setLang(textAreaWithLanguage.getLanguage());
-                            exhibition.getDescriptiveNote().getP().get(0).setContent(textAreaWithLanguage.getTextValue());
-                            if(StringUtils.isNotEmpty(textAreaWithLanguage.getExtraValue())) {
-                                exhibition.setWebpage(new Webpage());
-                                exhibition.getWebpage().setHref(textAreaWithLanguage.getExtraValue());
-                                exhibition.getWebpage().setContent(textAreaWithLanguage.getSecondExtraValue());
-                            }
-                            recreationalServices.getExhibition().add(exhibition);
-                            hasChanged = true;
-                            hasRecreationalServices = true;
-                        }
-                    }
-                }
-
-                if(toursAndSessionsTfs.size() > 0) {
-                    recreationalServices.getToursSessions().clear();
-                    for(TextAreaWithLanguage textAreaWithLanguage : toursAndSessionsTfs) {
-                        if(StringUtils.isNotEmpty(textAreaWithLanguage.getTextValue())) {
-                            ToursSessions toursSessions = new ToursSessions();
-                            DescriptiveNote descriptiveNote = new DescriptiveNote();
-                            descriptiveNote.setP(new ArrayList<P>(){{ add(new P()); }});
-                            toursSessions.setDescriptiveNote(descriptiveNote);
-                            toursSessions.getDescriptiveNote().getP().get(0).setLang(textAreaWithLanguage.getLanguage());
-                            toursSessions.getDescriptiveNote().getP().get(0).setContent(textAreaWithLanguage.getTextValue());
-                            if(StringUtils.isNotEmpty(textAreaWithLanguage.getExtraValue())) {
-                                toursSessions.setWebpage(new Webpage());
-                                toursSessions.getWebpage().setHref(textAreaWithLanguage.getExtraValue());
-                                toursSessions.getWebpage().setContent(textAreaWithLanguage.getSecondExtraValue());
-                            }
-                            recreationalServices.getToursSessions().add(toursSessions);
-                            hasChanged = true;
-                            hasRecreationalServices = true;
-                        }
-                    }
-                }
-
-                if(otherServicesTfs.size() > 0) {
-                    recreationalServices.getOtherServices().clear();
-                    for(TextAreaWithLanguage textAreaWithLanguage : otherServicesTfs) {
-                        if(StringUtils.isNotEmpty(textAreaWithLanguage.getTextValue())) {
-                            OtherServices otherServices = new OtherServices();
-                            DescriptiveNote descriptiveNote = new DescriptiveNote();
-                            descriptiveNote.setP(new ArrayList<P>(){{ add(new P()); }});
-                            otherServices.setDescriptiveNote(descriptiveNote);
-                            otherServices.getDescriptiveNote().getP().get(0).setLang(textAreaWithLanguage.getLanguage());
-                            otherServices.getDescriptiveNote().getP().get(0).setContent(textAreaWithLanguage.getTextValue());
-                            if(StringUtils.isNotEmpty(textAreaWithLanguage.getExtraValue())) {
-                                otherServices.setWebpage(new Webpage());
-                                otherServices.getWebpage().setHref(textAreaWithLanguage.getExtraValue());
-                                otherServices.getWebpage().setContent(textAreaWithLanguage.getSecondExtraValue());
-                            }
-                            recreationalServices.getOtherServices().add(otherServices);
-                            hasChanged = true;
-                            hasRecreationalServices = true;
-                        }
-                    }
-                }
-
-                if(!hasRecreationalServices)
-                    repository.getServices().setRecreationalServices(null);
-
-                if(repository.getServices().getInternetAccess() == null && repository.getServices().getLibrary() == null && repository.getServices().getRecreationalServices() == null && repository.getServices().getSearchroom() == null && repository.getServices().getTechservices() == null) {
-                    repository.setServices(null);
-                } else if(repository.getServices().getSearchroom() == null) {
-                    errors.add("workplacesSearchroomTf");
                 }
             }
+
+            if(StringUtils.isNotEmpty(microfilmplacesSearchroomTf.getText())) {
+                Num num = new Num();
+                num.setUnit("site");
+                num.setContent(microfilmplacesSearchroomTf.getText());
+                searchroom.getMicrofilmPlaces().setNum(num);
+                hasSearchRoomInfo = true;
+            } else {
+                searchroom.setMicrofilmPlaces(null);
+            }
+
+            if(!(photographAllowanceCombo.getSelectedItem()).equals("---")) {
+                searchroom.getPhotographAllowance().setValue((String)photographAllowanceCombo.getSelectedItem());
+                hasSearchRoomInfo = true;
+            } else {
+                searchroom.setPhotographAllowance(null);
+            }
+
+            if(readersticketSearchroomTfs.size() > 0) {
+                searchroom.getReadersTicket().clear();
+                for(TextFieldWithLanguage textFieldWithLanguage : readersticketSearchroomTfs) {
+                    if(StringUtils.isNotEmpty(textFieldWithLanguage.getTextValue())) {
+                        ReadersTicket readersTicket = new ReadersTicket();
+                        readersTicket.setLang(textFieldWithLanguage.getLanguage());
+                        readersTicket.setContent(textFieldWithLanguage.getTextValue());
+                        readersTicket.setHref(textFieldWithLanguage.getExtraValue());
+                        searchroom.getReadersTicket().add(readersTicket);
+                        hasChanged = true;
+                        hasSearchRoomInfo = true;
+                    }
+                }
+            }
+
+            if(advancedordersSearchroomTfs.size() > 0) {
+                searchroom.getAdvancedOrders().clear();
+                for(TextFieldWithLanguage textFieldWithLanguage : advancedordersSearchroomTfs) {
+                    if(StringUtils.isNotEmpty(textFieldWithLanguage.getTextValue())) {
+                        AdvancedOrders advancedOrders = new AdvancedOrders();
+                        advancedOrders.setLang(textFieldWithLanguage.getLanguage());
+                        advancedOrders.setContent(textFieldWithLanguage.getTextValue());
+                        advancedOrders.setHref(textFieldWithLanguage.getExtraValue());
+                        searchroom.getAdvancedOrders().add(advancedOrders);
+                        hasChanged = true;
+                        hasSearchRoomInfo = true;
+                    }
+                }
+            }
+
+            if(researchServicesSearchroomTfs.size() > 0) {
+                searchroom.getResearchServices().clear();
+                for(TextFieldWithLanguage textFieldWithLanguage : researchServicesSearchroomTfs) {
+                    if(StringUtils.isNotEmpty(textFieldWithLanguage.getTextValue())) {
+                        ResearchServices researchServices = new ResearchServices();
+                        DescriptiveNote descriptiveNote = new DescriptiveNote();
+                        descriptiveNote.setP(new ArrayList<P>() {{
+                            add(new P());
+                        }});
+                        descriptiveNote.getP().get(0).setContent(textFieldWithLanguage.getTextValue());
+                        descriptiveNote.getP().get(0).setLang(textFieldWithLanguage.getLanguage());
+                        researchServices.setDescriptiveNote(descriptiveNote);
+                        searchroom.getResearchServices().add(researchServices);
+                        hasChanged = true;
+                        hasSearchRoomInfo = true;
+                    }
+                }
+            }
+
+            if(StringUtils.isNotEmpty(workplacesSearchroomTf.getText())) {
+                Num num = new Num();
+                num.setUnit("site");
+                num.setContent(workplacesSearchroomTf.getText());
+                searchroom.getWorkPlaces().setNum(num);
+                hasSearchRoomInfo = true;
+            } else if(hasSearchRoomInfo) {
+                errors.add("workplacesSearchroomTf");
+            }
+
+            boolean libraryExists = false;
+            Library library = repository.getServices().getLibrary();
+            boolean hasLibraryContactInfo = false;
+            if(StringUtils.isNotEmpty(telephoneLibraryTf.getText())) {
+                if(!library.getContact().getTelephone().isEmpty()) {
+                    library.getContact().getTelephone().get(0).setContent(telephoneLibraryTf.getText());
+                    hasLibraryContactInfo = true;
+                } else {
+                    Telephone telephone = new Telephone();
+                    telephone.setContent(telephoneLibraryTf.getText());
+                    library.getContact().getTelephone().add(telephone);
+                    hasLibraryContactInfo = true;
+                }
+            } else if(!library.getContact().getTelephone().isEmpty()) {
+                library.getContact().getTelephone().remove(0);
+                if(library.getContact().getTelephone().size() > 0)
+                    hasLibraryContactInfo = true;
+            }
+
+            if(StringUtils.isNotEmpty(emailLibraryTf.getText())) {
+                if(!library.getContact().getEmail().isEmpty()) {
+                    library.getContact().getEmail().get(0).setHref(emailLibraryTf.getText());
+                    hasLibraryContactInfo = true;
+                } else {
+                    Email email = new Email();
+                    email.setHref(emailLibraryTf.getText());
+                    library.getContact().getEmail().add(email);
+                    hasLibraryContactInfo = true;
+                }
+                if(StringUtils.isNotEmpty(emailTitleLibraryTf.getText())) {
+                    library.getContact().getEmail().get(0).setContent(emailTitleLibraryTf.getText());
+                }
+            } else if(!library.getContact().getEmail().isEmpty()) {
+                library.getContact().getEmail().remove(0);
+                if(library.getContact().getEmail().size() > 0)
+                    hasLibraryContactInfo = true;
+            }
+
+            if(!hasLibraryContactInfo) {
+                library.setContact(null);
+            }
+            libraryExists = hasLibraryContactInfo;
+
+            if(StringUtils.isNotEmpty(webpageLibraryTf.getText())) {
+                library.getWebpage().get(0).setHref(webpageLibraryTf.getText());
+                if(StringUtils.isNotEmpty(webpageTitleLibraryTf.getText())) {
+                    library.getWebpage().get(0).setContent(webpageTitleLibraryTf.getText());
+                }
+                libraryExists = true;
+            } else if(library.getWebpage().size() > 0) {
+                library.getWebpage().remove(0);
+                if(library.getWebpage().size() > 0)
+                    libraryExists = true;
+            }
+            if(StringUtils.isNotEmpty(monographicPubLibraryTf.getText())) {
+                Num num = new Num();
+                num.setUnit("site");
+                num.setContent(monographicPubLibraryTf.getText());
+                library.getMonographicpub().setNum(num);
+                libraryExists = true;
+            } else {
+                library.setMonographicpub(null);
+            }
+            if(StringUtils.isNotEmpty(serialPubLibraryTf.getText())) {
+                Num num = new Num();
+                num.setUnit("site");
+                num.setContent(serialPubLibraryTf.getText());
+                library.getSerialpub().setNum(num);
+                libraryExists = true;
+            } else {
+                library.setSerialpub(null);
+            }
+            library.setQuestion("yes");
+            if(!libraryExists) {
+                repository.getServices().setLibrary(null);
+            }
+
+            InternetAccess internetAccess = repository.getServices().getInternetAccess();
+            internetAccess.setQuestion("yes");
+            boolean isInternetAccessFilled = false;
+            if(internetAccessDescTfs.size() > 0) {
+                internetAccess.getDescriptiveNote().getP().clear();
+                for(TextFieldWithLanguage textFieldWithLanguage : internetAccessDescTfs) {
+                    if(StringUtils.isNotEmpty(textFieldWithLanguage.getTextValue())) {
+                        P p = new P();
+                        p.setContent(textFieldWithLanguage.getTextValue());
+                        p.setLang(textFieldWithLanguage.getLanguage());
+                        internetAccess.getDescriptiveNote().getP().add(p);
+                        isInternetAccessFilled = true;
+                    }
+                }
+            }
+            if(!isInternetAccessFilled) {
+                repository.getServices().setInternetAccess(null);
+            }
+
+            Techservices techservices = repository.getServices().getTechservices();
+            Restorationlab restorationlab = techservices.getRestorationlab();
+
+            boolean isRestorationDescFilled = false;
+            boolean restorationLabExists = false;
+            if(descriptionRestorationServiceTfs.size() > 0) {
+                restorationlab.getDescriptiveNote().getP().clear();
+                for(TextFieldWithLanguage textFieldWithLanguage : descriptionRestorationServiceTfs) {
+                    if(StringUtils.isNotEmpty(textFieldWithLanguage.getTextValue())) {
+                        P p = new P();
+                        p.setContent(textFieldWithLanguage.getTextValue());
+                        p.setLang(textFieldWithLanguage.getLanguage());
+                        restorationlab.getDescriptiveNote().getP().add(p);
+                        isRestorationDescFilled = true;
+                        restorationLabExists = true;
+                    }
+                }
+            }
+            if(!isRestorationDescFilled) {
+                restorationlab.setDescriptiveNote(null);
+            }
+
+            boolean hasRestorationlabContactInfo = false;
+            if(StringUtils.isNotEmpty(telephoneRestorationlabTf.getText())) {
+                if(!restorationlab.getContact().getTelephone().isEmpty()) {
+                    restorationlab.getContact().getTelephone().get(0).setContent(telephoneRestorationlabTf.getText());
+                    hasRestorationlabContactInfo = true;
+                } else {
+                    Telephone telephone = new Telephone();
+                    telephone.setContent(telephoneRestorationlabTf.getText());
+                    restorationlab.getContact().getTelephone().add(telephone);
+                    hasRestorationlabContactInfo = true;
+                }
+            } else if(!restorationlab.getContact().getTelephone().isEmpty()) {
+                restorationlab.getContact().getTelephone().remove(0);
+                if(restorationlab.getContact().getTelephone().size() > 0)
+                    hasRestorationlabContactInfo = true;
+            }
+
+            if(StringUtils.isNotEmpty(emailRestorationlabTf.getText())) {
+                if(!restorationlab.getContact().getEmail().isEmpty()) {
+                    restorationlab.getContact().getEmail().get(0).setHref(emailRestorationlabTf.getText());
+                    hasRestorationlabContactInfo = true;
+                } else {
+                    Email email = new Email();
+                    email.setHref(emailRestorationlabTf.getText());
+                    restorationlab.getContact().getEmail().add(email);
+                    hasRestorationlabContactInfo = true;
+                }
+                if(StringUtils.isNotEmpty(emailTitleRestorationlabTf.getText())) {
+                    restorationlab.getContact().getEmail().get(0).setContent(emailTitleRestorationlabTf.getText());
+                }
+            } else if(!restorationlab.getContact().getEmail().isEmpty()) {
+                restorationlab.getContact().getEmail().remove(0);
+                if(restorationlab.getContact().getEmail().size() > 0)
+                    hasRestorationlabContactInfo = true;
+            }
+
+            if(!hasRestorationlabContactInfo) {
+                restorationlab.setContact(null);
+            }
+            restorationLabExists = hasRestorationlabContactInfo;
+
+            if(StringUtils.isNotEmpty(webpageRestorationlabTf.getText())) {
+                restorationlab.getWebpage().get(0).setHref(webpageRestorationlabTf.getText());
+                if(StringUtils.isNotEmpty(webpageTitleRestorationlabTf.getText())) {
+                    restorationlab.getWebpage().get(0).setContent(webpageTitleRestorationlabTf.getText());
+                }
+                restorationLabExists = true;
+            } else if(restorationlab.getWebpage().size() > 0) {
+                restorationlab.getWebpage().remove(0);
+                if(restorationlab.getWebpage().size() > 0)
+                    restorationLabExists = true;
+            }
+            restorationlab.setQuestion("yes");
+
+            if(!restorationLabExists)
+                techservices.setRestorationlab(null);
+
+
+            Reproductionser reproductionser = techservices.getReproductionser();
+            boolean hasReproductionInfo = false;
+            boolean isReproductionDescFilled = false;
+            if(descriptionReproductionServiceTfs.size() > 0) {
+                reproductionser.getDescriptiveNote().getP().clear();
+                for(TextFieldWithLanguage textFieldWithLanguage : descriptionReproductionServiceTfs) {
+                    if(StringUtils.isNotEmpty(textFieldWithLanguage.getTextValue())) {
+                        P p = new P();
+                        p.setContent(textFieldWithLanguage.getTextValue());
+                        p.setLang(textFieldWithLanguage.getLanguage());
+                        reproductionser.getDescriptiveNote().getP().add(p);
+                        isReproductionDescFilled = true;
+                    }
+                }
+            }
+            if(!isReproductionDescFilled) {
+                reproductionser.setDescriptiveNote(null);
+            }
+
+            boolean hasReproductionserContactInfo = false;
+            if(StringUtils.isNotEmpty(telephoneReproductionServiceTf.getText())) {
+                if(!reproductionser.getContact().getTelephone().isEmpty()) {
+                    reproductionser.getContact().getTelephone().get(0).setContent(telephoneReproductionServiceTf.getText());
+                    hasReproductionserContactInfo = true;
+                } else {
+                    Telephone telephone = new Telephone();
+                    telephone.setContent(telephoneReproductionServiceTf.getText());
+                    reproductionser.getContact().getTelephone().add(telephone);
+                    hasReproductionserContactInfo = true;
+                }
+            } else if(!reproductionser.getContact().getTelephone().isEmpty()) {
+                reproductionser.getContact().getTelephone().remove(0);
+                if(reproductionser.getContact().getTelephone().size() > 0)
+                    hasReproductionserContactInfo = true;
+            }
+
+            if(StringUtils.isNotEmpty(emailReproductionServiceTf.getText())) {
+                if(!reproductionser.getContact().getEmail().isEmpty()) {
+                    reproductionser.getContact().getEmail().get(0).setHref(emailReproductionServiceTf.getText());
+                    hasReproductionserContactInfo = true;
+                } else {
+                    Email email = new Email();
+                    email.setHref(emailReproductionServiceTf.getText());
+                    reproductionser.getContact().getEmail().add(email);
+                    hasReproductionserContactInfo = true;
+                }
+                if(StringUtils.isNotEmpty(emailTitleReproductionServiceTf.getText())) {
+                    reproductionser.getContact().getEmail().get(0).setContent(emailTitleReproductionServiceTf.getText());
+                }
+            } else if(!reproductionser.getContact().getEmail().isEmpty()) {
+                reproductionser.getContact().getEmail().remove(0);
+                if(reproductionser.getContact().getEmail().size() > 0)
+                    hasReproductionserContactInfo = true;
+            }
+
+            if(!hasReproductionserContactInfo) {
+                reproductionser.setContact(null);
+            }
+            if(isReproductionDescFilled || hasReproductionserContactInfo) {
+                hasReproductionInfo = true;
+            }
+
+            if(StringUtils.isNotEmpty(webpageReproductionServiceTf.getText())) {
+                reproductionser.getWebpage().get(0).setHref(webpageReproductionServiceTf.getText());
+                if(StringUtils.isNotEmpty(webpageTitleReproductionServiceTf.getText())) {
+                    reproductionser.getWebpage().get(0).setContent(webpageTitleReproductionServiceTf.getText());
+                }
+            } else if(reproductionser.getWebpage().size() > 0) {
+                reproductionser.getWebpage().remove(0);
+            }
+
+            if(!microformServicesCombo.getSelectedItem().equals("---")) {
+                reproductionser.getMicroformser().setQuestion((String)microformServicesCombo.getSelectedItem());
+                hasReproductionInfo = true;
+            } else {
+                reproductionser.setMicroformser(null);
+            }
+            if(!photographServicesCombo.getSelectedItem().equals("---")) {
+                reproductionser.getPhotographser().setQuestion((String)photographServicesCombo.getSelectedItem());
+                hasReproductionInfo = true;
+            } else {
+                reproductionser.setPhotographser(null);
+            }
+            if(!digitalServicesCombo.getSelectedItem().equals("---")) {
+                reproductionser.getDigitalser().setQuestion((String)digitalServicesCombo.getSelectedItem());
+                hasReproductionInfo = true;
+            } else {
+                reproductionser.setDigitalser(null);
+            }
+            if(!photocopyServicesCombo.getSelectedItem().equals("---")) {
+                reproductionser.getPhotocopyser().setQuestion((String)photocopyServicesCombo.getSelectedItem());
+                hasReproductionInfo = true;
+            } else {
+                reproductionser.setPhotocopyser(null);
+            }
+            reproductionser.setQuestion("yes");
+
+            if(!hasReproductionInfo) {
+                techservices.setReproductionser(null);
+            }
+
+            if(!hasSearchRoomInfo) {
+                repository.getServices().setSearchroom(null);
+            }
+
+            if(techservices.getReproductionser() == null && techservices.getRestorationlab() == null) {
+                repository.getServices().setTechservices(null);
+            }
+
+
+            RecreationalServices recreationalServices = repository.getServices().getRecreationalServices();
+            boolean hasRecreationalServices = false;
+            if(StringUtils.isNotEmpty(refreshmentTf.getTextValue())) {
+                recreationalServices.getRefreshment().getDescriptiveNote().getP().get(0).setContent(refreshmentTf.getTextValue());
+                recreationalServices.getRefreshment().getDescriptiveNote().getP().get(0).setLang(refreshmentTf.getLanguage());
+                hasRecreationalServices = true;
+            } else {
+                recreationalServices.setRefreshment(null);
+            }
+
+            if(exhibitionTfs.size() > 0) {
+                recreationalServices.getExhibition().clear();
+                for(TextAreaWithLanguage textAreaWithLanguage : exhibitionTfs) {
+                    if(StringUtils.isNotEmpty(textAreaWithLanguage.getTextValue())) {
+                        Exhibition exhibition = new Exhibition();
+                        DescriptiveNote descriptiveNote = new DescriptiveNote();
+                        descriptiveNote.setP(new ArrayList<P>(){{ add(new P()); }});
+                        exhibition.setDescriptiveNote(descriptiveNote);
+                        exhibition.getDescriptiveNote().getP().get(0).setLang(textAreaWithLanguage.getLanguage());
+                        exhibition.getDescriptiveNote().getP().get(0).setContent(textAreaWithLanguage.getTextValue());
+                        if(StringUtils.isNotEmpty(textAreaWithLanguage.getExtraValue())) {
+                            exhibition.setWebpage(new Webpage());
+                            exhibition.getWebpage().setHref(textAreaWithLanguage.getExtraValue());
+                            exhibition.getWebpage().setContent(textAreaWithLanguage.getSecondExtraValue());
+                        }
+                        recreationalServices.getExhibition().add(exhibition);
+                        hasChanged = true;
+                        hasRecreationalServices = true;
+                    }
+                }
+            }
+
+            if(toursAndSessionsTfs.size() > 0) {
+                recreationalServices.getToursSessions().clear();
+                for(TextAreaWithLanguage textAreaWithLanguage : toursAndSessionsTfs) {
+                    if(StringUtils.isNotEmpty(textAreaWithLanguage.getTextValue())) {
+                        ToursSessions toursSessions = new ToursSessions();
+                        DescriptiveNote descriptiveNote = new DescriptiveNote();
+                        descriptiveNote.setP(new ArrayList<P>(){{ add(new P()); }});
+                        toursSessions.setDescriptiveNote(descriptiveNote);
+                        toursSessions.getDescriptiveNote().getP().get(0).setLang(textAreaWithLanguage.getLanguage());
+                        toursSessions.getDescriptiveNote().getP().get(0).setContent(textAreaWithLanguage.getTextValue());
+                        if(StringUtils.isNotEmpty(textAreaWithLanguage.getExtraValue())) {
+                            toursSessions.setWebpage(new Webpage());
+                            toursSessions.getWebpage().setHref(textAreaWithLanguage.getExtraValue());
+                            toursSessions.getWebpage().setContent(textAreaWithLanguage.getSecondExtraValue());
+                        }
+                        recreationalServices.getToursSessions().add(toursSessions);
+                        hasChanged = true;
+                        hasRecreationalServices = true;
+                    }
+                }
+            }
+
+            if(otherServicesTfs.size() > 0) {
+                recreationalServices.getOtherServices().clear();
+                for(TextAreaWithLanguage textAreaWithLanguage : otherServicesTfs) {
+                    if(StringUtils.isNotEmpty(textAreaWithLanguage.getTextValue())) {
+                        OtherServices otherServices = new OtherServices();
+                        DescriptiveNote descriptiveNote = new DescriptiveNote();
+                        descriptiveNote.setP(new ArrayList<P>(){{ add(new P()); }});
+                        otherServices.setDescriptiveNote(descriptiveNote);
+                        otherServices.getDescriptiveNote().getP().get(0).setLang(textAreaWithLanguage.getLanguage());
+                        otherServices.getDescriptiveNote().getP().get(0).setContent(textAreaWithLanguage.getTextValue());
+                        if(StringUtils.isNotEmpty(textAreaWithLanguage.getExtraValue())) {
+                            otherServices.setWebpage(new Webpage());
+                            otherServices.getWebpage().setHref(textAreaWithLanguage.getExtraValue());
+                            otherServices.getWebpage().setContent(textAreaWithLanguage.getSecondExtraValue());
+                        }
+                        recreationalServices.getOtherServices().add(otherServices);
+                        hasChanged = true;
+                        hasRecreationalServices = true;
+                    }
+                }
+            }
+
+            if(!hasRecreationalServices)
+                repository.getServices().setRecreationalServices(null);
+
+            if(repository.getServices().getInternetAccess() == null && repository.getServices().getLibrary() == null && repository.getServices().getRecreationalServices() == null && repository.getServices().getSearchroom() == null && repository.getServices().getTechservices() == null) {
+                repository.setServices(null);
+            } else if(repository.getServices().getSearchroom() == null) {
+                errors.add("workplacesSearchroomTf");
+            }
+//            }
 
 
 

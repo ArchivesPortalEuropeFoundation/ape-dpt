@@ -219,14 +219,14 @@ public class DataPreparationToolGUI extends JFrame {
 
         xmlEadList.setDropTarget(new DropTarget(xmlEadList, new ListDropTargetListener(xmlEadList, from)));
         xmlEadListModel.setList(xmlEadList);
-        
+
         eseListModel = new ProfileListModel(fileInstances, this);
         eseList = new JList(eseListModel);
         eseList.setCellRenderer(new IconListCellRenderer(fileInstances));
         eseList.setDragEnabled(true);
-        
+
         eseList.setTransferHandler(new ListTransferHandler());
-        
+
         eseList.setDropTarget(new DropTarget(eseList, new ListDropTargetListener(eseList, from)));
         eseListModel.setList(eseList);
 
@@ -583,13 +583,15 @@ public class DataPreparationToolGUI extends JFrame {
         });
         digitalObjectTypeItem.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                JFrame roleTypeFrame = new RoleTypeFrame(labels, retrieveFromDb);
+                if(!RoleTypeFrame.isInUse()) {
+                    JFrame roleTypeFrame = new RoleTypeFrame(labels, retrieveFromDb);
 
-                roleTypeFrame.setPreferredSize(new Dimension(getContentPane().getWidth() * 3 / 8, getContentPane().getHeight() * 3 / 8));
-                roleTypeFrame.setLocation(getContentPane().getWidth() / 8, getContentPane().getHeight() / 8);
+                    roleTypeFrame.setPreferredSize(new Dimension(getContentPane().getWidth() * 3 / 8, getContentPane().getHeight() * 3 / 8));
+                    roleTypeFrame.setLocation(getContentPane().getWidth() / 8, getContentPane().getHeight() / 8);
 
-                roleTypeFrame.pack();
-                roleTypeFrame.setVisible(true);
+                    roleTypeFrame.pack();
+                    roleTypeFrame.setVisible(true);
+                }
             }
         });
         defaultSaveFolderItem.addActionListener(new ActionListener() {
@@ -786,7 +788,7 @@ public class DataPreparationToolGUI extends JFrame {
                 }
             }
         });
-        
+
         summaryWindowItem.addActionListener(new TabItemActionListener(apePanel, APETabbedPane.TAB_SUMMARY));
         validationWindowItem.addActionListener(new TabItemActionListener(apePanel, APETabbedPane.TAB_VALIDATION));
         conversionWindowItem.addActionListener(new TabItemActionListener(apePanel, APETabbedPane.TAB_CONVERSION));
@@ -1152,7 +1154,7 @@ public class DataPreparationToolGUI extends JFrame {
                 saveSelectedItem.setEnabled(true);
             }
             if (fileInstance.isEse()) {
-                apeTabbedPane.setEseConversionErrorText(fileInstance.getEuropeanaConversionErrors());    
+                apeTabbedPane.setEseConversionErrorText(fileInstance.getEuropeanaConversionErrors());
                 validateItem.setEnabled(false);
                 apeTabbedPane.disableConversionBtn();
                 apeTabbedPane.disableValidationBtn();
@@ -1391,7 +1393,7 @@ public class DataPreparationToolGUI extends JFrame {
     public JLabel getXmlEadListLabel() {
         return xmlEadListLabel;
     }
-    
+
     private class LanguageActionListener implements ActionListener {
 
         public void actionPerformed(ActionEvent e) {
@@ -1401,6 +1403,6 @@ public class DataPreparationToolGUI extends JFrame {
             changeAllTextLg();
         }
     }
-    
-    
+
+
 }

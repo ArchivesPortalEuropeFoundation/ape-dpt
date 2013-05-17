@@ -26,8 +26,8 @@ public class EagRelationsPanel extends EagPanels {
     private List<ResourceRelationType> resourceRelationTypes;
     private List<ResourceRelationType> institutionRelationTypes;
 
-    public EagRelationsPanel(Eag eag, JTabbedPane tabbedPane, JFrame eag2012Frame, ProfileListModel model, ResourceBundle labels) {
-        super(eag, tabbedPane, eag2012Frame, model, labels);
+    public EagRelationsPanel(Eag eag, JTabbedPane tabbedPane, JTabbedPane mainTabbedPane, JFrame eag2012Frame, ProfileListModel model, ResourceBundle labels, int repositoryNb) {
+        super(eag, tabbedPane, mainTabbedPane, eag2012Frame, model, labels, repositoryNb);
     }
 
     @Override
@@ -158,7 +158,7 @@ public class EagRelationsPanel extends EagPanels {
             if(eag.getRelations() == null)
                 eag.setRelations(new Relations());
             eag.getRelations().getResourceRelation().add(new ResourceRelation());
-            reloadTabbedPanel(new EagRelationsPanel(eag, tabbedPane, eag2012Frame, model, labels).buildEditorPanel(errors), 6);
+            reloadTabbedPanel(new EagRelationsPanel(eag, tabbedPane, mainTabbedPane, eag2012Frame, model, labels, repositoryNb).buildEditorPanel(errors), 6);
         }
     }
     public class AddInstitutionRelationAction extends UpdateEagObject {
@@ -175,7 +175,7 @@ public class EagRelationsPanel extends EagPanels {
             if(eag.getRelations() == null)
                 eag.setRelations(new Relations());
             eag.getRelations().getEagRelation().add(new EagRelation());
-            reloadTabbedPanel(new EagRelationsPanel(eag, tabbedPane, eag2012Frame, model, labels).buildEditorPanel(errors), 6);
+            reloadTabbedPanel(new EagRelationsPanel(eag, tabbedPane, mainTabbedPane, eag2012Frame, model, labels, repositoryNb).buildEditorPanel(errors), 6);
         }
     }
 
@@ -189,11 +189,11 @@ public class EagRelationsPanel extends EagPanels {
             try {
                 super.updateEagObject(false);
 
-                reloadTabbedPanel(new EagControlPanel(eag, tabbedPane, eag2012Frame, model, labels).buildEditorPanel(errors), 5);
+                reloadTabbedPanel(new EagControlPanel(eag, tabbedPane, mainTabbedPane, eag2012Frame, model, labels, repositoryNb).buildEditorPanel(errors), 5);
                 tabbedPane.setEnabledAt(5, true);
                 tabbedPane.setEnabledAt(6, false);
             } catch (Eag2012FormException e) {
-                reloadTabbedPanel(new EagRelationsPanel(eag, tabbedPane, eag2012Frame, model, labels).buildEditorPanel(errors), 6);
+                reloadTabbedPanel(new EagRelationsPanel(eag, tabbedPane, mainTabbedPane, eag2012Frame, model, labels, repositoryNb).buildEditorPanel(errors), 6);
             }
         }
     }
@@ -210,7 +210,7 @@ public class EagRelationsPanel extends EagPanels {
                 super.saveFile(eag.getControl().getRecordId().getValue());
                 closeFrame();
             } catch (Eag2012FormException e) {
-                reloadTabbedPanel(new EagRelationsPanel(eag, tabbedPane, eag2012Frame, model, labels).buildEditorPanel(errors), 6);
+                reloadTabbedPanel(new EagRelationsPanel(eag, tabbedPane, mainTabbedPane, eag2012Frame, model, labels, repositoryNb).buildEditorPanel(errors), 6);
             }
         }
     }

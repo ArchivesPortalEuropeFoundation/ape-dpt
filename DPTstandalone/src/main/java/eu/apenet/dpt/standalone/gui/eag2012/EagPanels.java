@@ -50,17 +50,21 @@ public abstract class EagPanels {
 
     protected int rowNb;
     protected JTabbedPane tabbedPane;
+    protected JTabbedPane mainTabbedPane;
     protected Eag eag;
     protected JFrame eag2012Frame;
     protected ProfileListModel model;
     protected ResourceBundle labels;
+    protected int repositoryNb;
 
-    public EagPanels(Eag eag, JTabbedPane tabbedPane, JFrame eag2012Frame, ProfileListModel model, ResourceBundle labels) {
+    public EagPanels(Eag eag, JTabbedPane tabbedPane, JTabbedPane mainTabbedPane, JFrame eag2012Frame, ProfileListModel model, ResourceBundle labels, int repositoryNb) {
         this.eag2012Frame = eag2012Frame;
         this.eag = eag;
         this.tabbedPane = tabbedPane;
+        this.mainTabbedPane = mainTabbedPane;
         this.model = model;
         this.labels = labels;
+        this.repositoryNb = repositoryNb;
     }
 
     protected void closeFrame() {
@@ -76,6 +80,18 @@ public abstract class EagPanels {
         JLabel label = new JLabel("<html><font color=red>" + errorMsg + "</font></html>");
         label.setIcon(UIManager.getIcon("OptionPane.errorIcon"));
         return label;
+    }
+
+    protected void setInstitutionTabbedPane(JTabbedPane tabbedPane) {
+        this.tabbedPane = tabbedPane;
+    }
+
+    public int getRepositoryNb() {
+        return repositoryNb;
+    }
+
+    public void setRepositoryNb(int repositoryNb) {
+        this.repositoryNb = repositoryNb;
     }
 
     protected abstract JComponent buildEditorPanel(List<String> errors);
