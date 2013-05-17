@@ -8,7 +8,6 @@ import eu.apenet.dpt.standalone.gui.Utilities;
 import eu.apenet.dpt.standalone.gui.eag2012.SwingStructures.LanguageWithScript;
 import eu.apenet.dpt.standalone.gui.eag2012.SwingStructures.TextFieldWithLanguage;
 import eu.apenet.dpt.utils.eag2012.*;
-import eu.apenet.dpt.utils.util.LanguageIsoList;
 import org.apache.commons.lang.StringUtils;
 
 import javax.swing.*;
@@ -252,7 +251,7 @@ public class EagControlPanel extends EagPanels {
                         LanguageDeclaration languageDeclaration = new LanguageDeclaration();
                         Language language = new Language();
                         language.setLanguageCode(languageWithScript.getLanguage());
-                        language.setContent(LanguageIsoList.getLanguageStr(languageWithScript.getLanguage()));
+                        language.setContent(languageWithScript.getLanguage());
                         Script script = new Script();
                         script.setScriptCode(languageWithScript.getScript());
                         script.setContent(languageWithScript.getScript());
