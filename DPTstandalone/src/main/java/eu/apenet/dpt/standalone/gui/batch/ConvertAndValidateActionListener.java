@@ -13,6 +13,7 @@ import eu.apenet.dpt.utils.util.CountCLevels;
 import eu.apenet.dpt.utils.util.XmlChecker;
 import eu.apenet.dpt.utils.util.extendxsl.CounterCLevelCall;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.xml.sax.SAXParseException;
 
@@ -105,7 +106,7 @@ public class ConvertAndValidateActionListener extends ApexActionListener {
                                 eadidQueryComponent = new EadidQueryComponent(labels);
                             }
                             int result = JOptionPane.showConfirmDialog(parent, eadidQueryComponent.getMainPanel(), labels.getString("enterEADID"), JOptionPane.OK_CANCEL_OPTION);
-                            while ((eadidQueryComponent.getEntryEadid() == null || eadidQueryComponent.getEntryEadid().equals("")) && result != JOptionPane.CANCEL_OPTION){
+                            while (StringUtils.isEmpty(eadidQueryComponent.getEntryEadid()) && result != JOptionPane.CANCEL_OPTION ) {
                                 result = JOptionPane.showConfirmDialog(parent, eadidQueryComponent.getMainPanel(), labels.getString("enterEADID"), JOptionPane.OK_CANCEL_OPTION);
                             }
                             if(result == JOptionPane.OK_OPTION)

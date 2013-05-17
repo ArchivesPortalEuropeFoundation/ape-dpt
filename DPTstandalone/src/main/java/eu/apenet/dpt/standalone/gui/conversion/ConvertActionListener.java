@@ -12,6 +12,7 @@ import eu.apenet.dpt.utils.util.Xsd_enum;
 import eu.apenet.dpt.utils.util.extendxsl.CounterCLevelCall;
 import net.sf.saxon.s9api.SaxonApiException;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
 import javax.swing.*;
@@ -90,7 +91,7 @@ public class ConvertActionListener implements ActionListener {
                         eadidQueryComponent = new EadidQueryComponent(labels);
                     }
                     int result = JOptionPane.showConfirmDialog(parent, eadidQueryComponent.getMainPanel(), labels.getString("enterEADID"), JOptionPane.OK_CANCEL_OPTION);
-                    while ((eadidQueryComponent.getEntryEadid() == null || eadidQueryComponent.getEntryEadid().equals("") && result != JOptionPane.CANCEL_OPTION))
+                    while (StringUtils.isEmpty(eadidQueryComponent.getEntryEadid()) && result != JOptionPane.CANCEL_OPTION )
                         result = JOptionPane.showConfirmDialog(parent, eadidQueryComponent.getMainPanel(), labels.getString("enterEADID"), JOptionPane.OK_CANCEL_OPTION);
                     if(result == JOptionPane.OK_OPTION)
                         eadid = eadidQueryComponent.getEntryEadid();
