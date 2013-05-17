@@ -9,13 +9,9 @@ import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
 
 import javax.swing.*;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Unmarshaller;
 import java.awt.*;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
@@ -40,11 +36,6 @@ public class Eag2012Frame extends JFrame {
     private static Date timeMaintenance;
     private String countrycode;
     private String mainagencycode;
-    private int currentTabIndex = 0;
-    private int previousTabIndex = 0;
-    private boolean clicked = true;
-
-    private static EagPanels eagInstitutionPanel;
 
     public Eag2012Frame(File eagFile, boolean isEag2012, Dimension dimension, ProfileListModel model, ResourceBundle labels) throws Exception {
         String namespace = ReadXml.getXmlNamespace(eagFile);
@@ -125,8 +116,6 @@ public class Eag2012Frame extends JFrame {
         mainTabbedPane = new JTabbedPane();
         mainTabbedPane.putClientProperty("jgoodies.noContentBorder", Boolean.TRUE);
         mainTabbedPane.add("eag2012.mainInstitution", new EagNewRepositoryPanel(eag, null, mainTabbedPane, this, model, labels, 0).buildInstitutionTabbedPane(isNew, countrycode, mainagencycode));
-        mainTabbedPane.addMouseListener(new TabClickerListener());
-        mainTabbedPane.addChangeListener(new TabChangeListener());
     }
 
 
@@ -146,55 +135,5 @@ public class Eag2012Frame extends JFrame {
 
     public static void setTimeMaintenance(Date timeMaintenance) {
         Eag2012Frame.timeMaintenance = timeMaintenance;
-    }
-
-    public static EagPanels getEagInstitutionPanel() {
-        return eagInstitutionPanel;
-    }
-
-    public static void setEagInstitutionPanel(EagPanels eagInstitutionPanel) {
-        Eag2012Frame.eagInstitutionPanel = eagInstitutionPanel;
-    }
-
-    public class TabChangeListener implements ChangeListener {
-        public void stateChanged(ChangeEvent changeEvent) {
-            previousTabIndex = currentTabIndex;
-            currentTabIndex = mainTabbedPane.getSelectedIndex();
-            if(clicked) {
-                JTabbedPane tabbedPane = (JTabbedPane)mainTabbedPane.getComponentAt(previousTabIndex);
-                LOG.info(tabbedPane.getSelectedIndex()); //small tab system number
-
-                EagPanels eagPanels = null;
-                if(tabbedPane.getSelectedIndex() == 0) {
-                    eagPanels = Eag2012Frame.getEagInstitutionPanel();
-                }
-                eagPanels.getHiddenSaveButton().doClick();
-                if(!eagPanels.isDataValid()) {
-                    clicked = false;
-                    mainTabbedPane.setSelectedIndex(previousTabIndex);
-                }
-            }
-        }
-    }
-    public class TabClickerListener implements MouseListener {
-
-        public void mouseClicked(MouseEvent mouseEvent) {
-            LOG.info("cli");
-            clicked = true;
-        }
-
-        public void mousePressed(MouseEvent mouseEvent) {
-        }
-
-        public void mouseReleased(MouseEvent mouseEvent) {
-            //To change body of implemented methods use File | Settings | File Templates.
-        }
-
-        public void mouseEntered(MouseEvent mouseEvent) {
-        }
-
-        public void mouseExited(MouseEvent mouseEvent) {
-            //To change body of implemented methods use File | Settings | File Templates.
-        }
     }
 }

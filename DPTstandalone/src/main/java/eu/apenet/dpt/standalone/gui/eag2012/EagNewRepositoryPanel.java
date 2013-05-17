@@ -7,8 +7,6 @@ import eu.apenet.dpt.standalone.gui.ProfileListModel;
 import eu.apenet.dpt.utils.eag2012.*;
 
 import javax.swing.*;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 import java.util.List;
 import java.util.ResourceBundle;
 
@@ -19,9 +17,6 @@ import java.util.ResourceBundle;
  * @author Yoann Moranville
  */
 public class EagNewRepositoryPanel extends EagPanels {
-    private int previousTabIndex = 0;
-    private int currentTabIndex = 0;
-
     public EagNewRepositoryPanel(Eag eag, JTabbedPane tabbedPane1, JTabbedPane mainTabbedPane, JFrame eag2012Frame, ProfileListModel model, ResourceBundle labels, int repositoryNb) {
         super(eag, tabbedPane1, mainTabbedPane, eag2012Frame, model, labels, repositoryNb);
         tabbedPane = new JTabbedPane();
@@ -51,9 +46,7 @@ public class EagNewRepositoryPanel extends EagPanels {
             repository.getTimetable().getOpening().add(new Opening());
         }
 
-        EagInstitutionPanel eagInstitutionPanel = new EagInstitutionPanel(eag, tabbedPane, mainTabbedPane, eag2012Frame, model, isNew, labels, countrycode, mainagencycode, repositoryNb);
-        Eag2012Frame.setEagInstitutionPanel(eagInstitutionPanel);
-        JScrollPane institutionPane = new JScrollPane(eagInstitutionPanel.buildEditorPanel(null));
+        JScrollPane institutionPane = new JScrollPane(new EagInstitutionPanel(eag, tabbedPane, mainTabbedPane, eag2012Frame, model, isNew, labels, countrycode, mainagencycode, repositoryNb).buildEditorPanel(null));
         institutionPane.getVerticalScrollBar().setUnitIncrement(20);
         tabbedPane.add(labels.getString("eag2012.yourInstitutionTab"), institutionPane);
         tabbedPane.setEnabledAt(0, true);
@@ -71,23 +64,6 @@ public class EagNewRepositoryPanel extends EagPanels {
         tabbedPane.add(labels.getString("eag2012.relationsTab"), null);
         tabbedPane.setEnabledAt(6, false);
 
-        tabbedPane.addChangeListener(new TabChangeListener());
-
         return tabbedPane;
-    }
-
-    public int getCurrentTabIndex() {
-        return currentTabIndex;
-    }
-
-    public class TabChangeListener implements ChangeListener {
-        public void stateChanged(ChangeEvent changeEvent) {
-//            previousTabIndex = currentTabIndex;
-//            currentTabIndex = mainTabbedPane.getSelectedIndex();
-//            ((EagPanels)mainTabbedPane.getTabComponentAt(previousTabIndex)).getHiddenSaveButton().doClick();
-//            if(!((EagPanels)mainTabbedPane.getTabComponentAt(previousTabIndex)).isDataValid()) {
-//                mainTabbedPane.setSelectedIndex(previousTabIndex);
-//            }
-        }
     }
 }

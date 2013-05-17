@@ -6,11 +6,9 @@ import eu.apenet.dpt.utils.util.LanguageIsoList;
 import org.apache.log4j.Logger;
 
 import javax.swing.*;
-import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.*;
-import java.util.List;
 
 /**
  * User: Yoann Moranville
@@ -18,7 +16,7 @@ import java.util.List;
  *
  * @author Yoann Moranville
  */
-public abstract class EagPanels extends Component {
+public abstract class EagPanels {
     protected static final Logger LOG = Logger.getLogger(EagPanels.class);
 
     private static final int NB_ROWS = 150;
@@ -58,8 +56,6 @@ public abstract class EagPanels extends Component {
     protected ProfileListModel model;
     protected ResourceBundle labels;
     protected int repositoryNb;
-    protected JButton hiddenSaveButton;
-    protected boolean isDataValid;
 
     public EagPanels(Eag eag, JTabbedPane tabbedPane, JTabbedPane mainTabbedPane, JFrame eag2012Frame, ProfileListModel model, ResourceBundle labels, int repositoryNb) {
         this.eag2012Frame = eag2012Frame;
@@ -69,19 +65,6 @@ public abstract class EagPanels extends Component {
         this.model = model;
         this.labels = labels;
         this.repositoryNb = repositoryNb;
-        hiddenSaveButton = new JButton();
-    }
-
-    public JButton getHiddenSaveButton() {
-        return hiddenSaveButton;
-    }
-
-    public boolean isDataValid() {
-        return isDataValid;
-    }
-
-    public JTabbedPane getTabbedPane() {
-        return tabbedPane;
     }
 
     protected void closeFrame() {
