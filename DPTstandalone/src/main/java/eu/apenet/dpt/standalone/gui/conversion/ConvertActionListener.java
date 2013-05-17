@@ -90,7 +90,7 @@ public class ConvertActionListener implements ActionListener {
                         eadidQueryComponent = new EadidQueryComponent(labels);
                     }
                     int result = JOptionPane.showConfirmDialog(parent, eadidQueryComponent.getMainPanel(), labels.getString("enterEADID"), JOptionPane.OK_CANCEL_OPTION);
-                    while (eadidQueryComponent.getEntryEadid() == null || eadidQueryComponent.getEntryEadid().equals(""))
+                    while ((eadidQueryComponent.getEntryEadid() == null || eadidQueryComponent.getEntryEadid().equals("") && result != JOptionPane.CANCEL_OPTION))
                         result = JOptionPane.showConfirmDialog(parent, eadidQueryComponent.getMainPanel(), labels.getString("enterEADID"), JOptionPane.OK_CANCEL_OPTION);
                     if(result == JOptionPane.OK_OPTION)
                         eadid = eadidQueryComponent.getEntryEadid();
