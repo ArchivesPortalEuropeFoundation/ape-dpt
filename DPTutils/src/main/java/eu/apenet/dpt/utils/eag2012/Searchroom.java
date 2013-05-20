@@ -60,7 +60,6 @@ import javax.xml.bind.annotation.XmlType;
 public class Searchroom {
 
     protected Contact contact;
-    @XmlElement(required = true)
     protected WorkPlaces workPlaces;
     protected ComputerPlaces computerPlaces;
     protected MicrofilmPlaces microfilmPlaces;

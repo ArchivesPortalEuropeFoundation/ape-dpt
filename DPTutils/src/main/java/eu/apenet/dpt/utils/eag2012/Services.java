@@ -49,7 +49,6 @@ import javax.xml.bind.annotation.XmlType;
 @XmlRootElement(name = "services")
 public class Services {
 
-    @XmlElement(required = true)
     protected Searchroom searchroom;
     protected Library library;
     protected InternetAccess internetAccess;

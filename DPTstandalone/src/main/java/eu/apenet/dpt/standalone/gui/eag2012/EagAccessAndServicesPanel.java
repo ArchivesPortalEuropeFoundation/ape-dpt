@@ -287,17 +287,13 @@ public class EagAccessAndServicesPanel extends EagPanels {
 
         if(searchroom.getWorkPlaces() == null)
             searchroom.setWorkPlaces(new WorkPlaces());
-        builder.addLabel(labels.getString("eag2012.workplaces") + "*",    cc.xy (1, rowNb));
+        builder.addLabel(labels.getString("eag2012.workplaces"),    cc.xy (1, rowNb));
         try {
             workplacesSearchroomTf = new JTextField(searchroom.getWorkPlaces().getNum().getContent());
         } catch (NullPointerException npe) {
             workplacesSearchroomTf = new JTextField();
         }
         builder.add(workplacesSearchroomTf,    cc.xy (3, rowNb));
-        if(errors.contains("workplacesSearchroomTf")) {
-            setNextRow();
-            builder.add(createErrorLabel(labels.getString("eag2012.errors.workplaces")),          cc.xy (1, rowNb));
-        }
         setNextRow();
 
         if(searchroom.getComputerPlaces() == null) {
@@ -1397,7 +1393,7 @@ public class EagAccessAndServicesPanel extends EagPanels {
                 searchroom.getWorkPlaces().setNum(num);
                 hasSearchRoomInfo = true;
             } else if(hasSearchRoomInfo) {
-                errors.add("workplacesSearchroomTf");
+                repository.getServices().getSearchroom().setWorkPlaces(null);
             }
 
             boolean libraryExists = false;
@@ -1767,8 +1763,6 @@ public class EagAccessAndServicesPanel extends EagPanels {
 
             if(repository.getServices().getInternetAccess() == null && repository.getServices().getLibrary() == null && repository.getServices().getRecreationalServices() == null && repository.getServices().getSearchroom() == null && repository.getServices().getTechservices() == null) {
                 repository.setServices(null);
-            } else if(repository.getServices().getSearchroom() == null) {
-                errors.add("workplacesSearchroomTf");
             }
 //            }
 

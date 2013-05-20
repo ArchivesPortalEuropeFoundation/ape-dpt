@@ -712,14 +712,16 @@
 		<xsl:param name="searchroom" />
 		<xsl:param name="techservices" />
 		<services>
-			<searchroom>
-				<workPlaces>
-					<num>
-						<xsl:attribute name="unit" select="'site'" />
-						<xsl:value-of select="$searchroom/*:num/text()" />
-					</num>
-				</workPlaces>
-			</searchroom>
+            <xsl:if test="exists($searchroom/*:num/text())">
+                <searchroom>
+                    <workPlaces>
+                        <num>
+                            <xsl:attribute name="unit" select="'site'" />
+                            <xsl:value-of select="$searchroom/*:num/text()" />
+                        </num>
+                    </workPlaces>
+                </searchroom>
+            </xsl:if>
 			<xsl:if
 				test="exists($techservices/*:library/*:monographicpub or $techservices/*:library/*:serialpub)">
 				<library question="no">

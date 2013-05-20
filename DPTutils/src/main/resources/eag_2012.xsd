@@ -823,7 +823,7 @@
     <xs:complexType name="services">
         
             <xs:sequence>
-                <xs:element name="searchroom" type="searchroom"/>
+                <xs:element name="searchroom" type="searchroom" minOccurs="0"/>
                 <xs:element name="library" type="library" minOccurs="0"/>
                 <xs:element name="internetAccess" type="internetAccess" minOccurs="0"/>
                 <xs:element name="techservices" type="techservices" minOccurs="0"/>
@@ -836,7 +836,7 @@
         
             <xs:sequence>
                 <xs:element name="contact" type="contact" minOccurs="0"/>
-                <xs:element name="workPlaces" type="workPlaces"/>
+                <xs:element name="workPlaces" type="workPlaces" minOccurs="0"/>
                 <xs:element name="computerPlaces" type="computerPlaces" minOccurs="0"/>
                 <xs:element name="microfilmPlaces" type="microfilmPlaces" minOccurs="0"/>
                 <xs:element name="webpage" type="webpage" minOccurs="0" maxOccurs="unbounded"/>
