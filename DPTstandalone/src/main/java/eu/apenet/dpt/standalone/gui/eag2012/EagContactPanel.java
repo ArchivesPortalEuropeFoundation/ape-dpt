@@ -284,7 +284,61 @@ public class EagContactPanel extends EagPanels {
         builder.add(saveBtn, cc.xy (5, rowNb));
         saveBtn.addActionListener(new SaveBtnAction(eag, tabbedPane, model));
 
+        setNextRow();
+        builder.addSeparator("", cc.xyw(1, rowNb, 7));
+        setNextRow();
+        JButton previousInstitutionTabBtn = new ButtonEag("eag2012.previousInstitutionBtn");
+        previousInstitutionTabBtn.addActionListener(new PreviousInstitutionTabBtnAction(eag, tabbedPane, model));
+        builder.add(previousInstitutionTabBtn, cc.xy(1, rowNb));
+        JButton nextInstitutionTabBtn = new ButtonEag("eag2012.nextInstitutionBtn");
+        nextInstitutionTabBtn.addActionListener(new NextInstitutionTabBtnAction(eag, tabbedPane, model));
+        builder.add(nextInstitutionTabBtn, cc.xy(5, rowNb));
+
         return builder.getPanel();
+    }
+
+    public class NextInstitutionTabBtnAction extends UpdateEagObject {
+        NextInstitutionTabBtnAction(Eag eag, JTabbedPane tabbedPane, ProfileListModel model) {
+            super(eag, tabbedPane, model);
+        }
+
+        @Override
+        public void actionPerformed(ActionEvent actionEvent) {
+            try {
+                super.updateEagObject(true);
+
+                int currentTabIndex = mainTabbedPane.getSelectedIndex();
+                if(currentTabIndex+1 < mainTabbedPane.getTabCount()) {
+                    mainTabbedPane.setEnabledAt(currentTabIndex, false);
+                    mainTabbedPane.setEnabledAt(currentTabIndex+1, true);
+                    mainTabbedPane.setSelectedIndex(currentTabIndex+1);
+                }
+            } catch (Eag2012FormException e) {
+                reloadTabbedPanel(new EagContactPanel(eag, tabbedPane, mainTabbedPane, eag2012Frame, model, labels, repositoryNb).buildEditorPanel(errors), 2);
+            }
+        }
+    }
+
+    public class PreviousInstitutionTabBtnAction extends UpdateEagObject {
+        PreviousInstitutionTabBtnAction(Eag eag, JTabbedPane tabbedPane, ProfileListModel model) {
+            super(eag, tabbedPane, model);
+        }
+
+        @Override
+        public void actionPerformed(ActionEvent actionEvent) {
+            try {
+                super.updateEagObject(true);
+
+                int currentTabIndex = mainTabbedPane.getSelectedIndex();
+                if(currentTabIndex > 0) {
+                    mainTabbedPane.setEnabledAt(currentTabIndex, false);
+                    mainTabbedPane.setEnabledAt(currentTabIndex-1, true);
+                    mainTabbedPane.setSelectedIndex(currentTabIndex-1);
+                }
+            } catch (Eag2012FormException e) {
+                reloadTabbedPanel(new EagContactPanel(eag, tabbedPane, mainTabbedPane, eag2012Frame, model, labels, repositoryNb).buildEditorPanel(errors), 2);
+            }
+        }
     }
 
     public class SaveBtnAction extends UpdateEagObject {
@@ -299,7 +353,7 @@ public class EagContactPanel extends EagPanels {
                 super.saveFile(eag.getControl().getRecordId().getValue());
                 closeFrame();
             } catch (Eag2012FormException e) {
-                reloadTabbedPanel(new EagContactPanel(eag, tabbedPane, mainTabbedPane, eag2012Frame, model, labels, repositoryNb).buildEditorPanel(errors), 0);
+                reloadTabbedPanel(new EagContactPanel(eag, tabbedPane, mainTabbedPane, eag2012Frame, model, labels, repositoryNb).buildEditorPanel(errors), 2);
             }
         }
     }
