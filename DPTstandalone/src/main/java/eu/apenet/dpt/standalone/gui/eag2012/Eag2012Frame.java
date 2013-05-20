@@ -114,8 +114,13 @@ public class Eag2012Frame extends JFrame {
 
     public void buildPanel(Eag eag, boolean isNew) {
         mainTabbedPane = new JTabbedPane();
+        mainTabbedPane.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
         mainTabbedPane.putClientProperty("jgoodies.noContentBorder", Boolean.TRUE);
         mainTabbedPane.add("eag2012.mainInstitution", new EagNewRepositoryPanel(eag, null, mainTabbedPane, this, model, labels, 0).buildInstitutionTabbedPane(isNew, countrycode, mainagencycode));
+        for(int i = 1; i < eag.getArchguide().getDesc().getRepositories().getRepository().size(); i++) {
+            mainTabbedPane.add("eag2012.otherInstitution", new EagNewRepositoryPanel(eag, null, mainTabbedPane, this, model, labels, i).buildInstitutionTabbedPane(isNew, countrycode, mainagencycode));
+            mainTabbedPane.setEnabledAt(i, false);
+        }
     }
 
 
