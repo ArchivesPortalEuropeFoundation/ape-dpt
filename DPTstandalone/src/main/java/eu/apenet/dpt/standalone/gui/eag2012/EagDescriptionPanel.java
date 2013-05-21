@@ -436,7 +436,7 @@ public class EagDescriptionPanel extends EagPanels {
                 super.updateEagObject(false);
             } catch (Eag2012FormException e) {
             }
-            if(eag.getArchguide().getDesc().getRepositories().getRepository().get(repositoryNb).getRepositorhist() == null) {
+            if(eag.getArchguide().getDesc().getRepositories().getRepository().get(repositoryNb).getRepositorfound() == null) {
                 eag.getArchguide().getDesc().getRepositories().getRepository().get(repositoryNb).setRepositorfound(new Repositorfound());
             }
             eag.getArchguide().getDesc().getRepositories().getRepository().get(repositoryNb).getRepositorfound().getRule().add(new Rule());
@@ -454,7 +454,7 @@ public class EagDescriptionPanel extends EagPanels {
                 super.updateEagObject(false);
             } catch (Eag2012FormException e) {
             }
-            if(eag.getArchguide().getDesc().getRepositories().getRepository().get(repositoryNb).getRepositorhist() == null) {
+            if(eag.getArchguide().getDesc().getRepositories().getRepository().get(repositoryNb).getRepositorsup() == null) {
                 eag.getArchguide().getDesc().getRepositories().getRepository().get(repositoryNb).setRepositorsup(new Repositorsup());
             }
             eag.getArchguide().getDesc().getRepositories().getRepository().get(repositoryNb).getRepositorsup().getRule().add(new Rule());
