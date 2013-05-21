@@ -590,7 +590,7 @@ public class EagContactPanel extends EagPanels {
                         if(StringUtils.isNotEmpty(fieldTitle.getText()))
                             email.setContent(fieldTitle.getText());
                         else
-                            email.setContent("");
+                            email.setContent(field.getText());
                         repository.getEmail().add(email);
                         hasChanged = true;
                     }
@@ -605,7 +605,7 @@ public class EagContactPanel extends EagPanels {
                         if(StringUtils.isNotEmpty(fieldTitle.getText()))
                             webpage.setContent(fieldTitle.getText());
                         else
-                            webpage.setContent("");
+                            webpage.setContent(field.getText());
                         repository.getWebpage().add(webpage);
                         hasChanged = true;
                     }
