@@ -8,6 +8,7 @@ import eu.apenet.dpt.utils.service.DocumentValidation;
 import eu.apenet.dpt.utils.service.TransformationTool;
 import eu.apenet.dpt.utils.util.ReadXml;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
 import javax.swing.*;
@@ -119,7 +120,12 @@ public class Eag2012Frame extends JFrame {
         mainTabbedPane.putClientProperty("jgoodies.noContentBorder", Boolean.TRUE);
         mainTabbedPane.add(labels.getString("eag2012.mainInstitution"), new EagNewRepositoryPanel(eag, null, mainTabbedPane, this, model, labels, 0).buildInstitutionTabbedPane(isNew, countrycode, mainagencycode));
         for(int i = 1; i < eag.getArchguide().getDesc().getRepositories().getRepository().size(); i++) {
-            mainTabbedPane.add(labels.getString("eag2012.extraRepository") + " " + i, new EagNewRepositoryPanel(eag, null, mainTabbedPane, this, model, labels, i).buildInstitutionTabbedPane(isNew, countrycode, mainagencycode));
+            if(eag.getArchguide().getDesc().getRepositories().getRepository().get(i).getRepositoryName() != null && StringUtils.isNotEmpty(eag.getArchguide().getDesc().getRepositories().getRepository().get(i).getRepositoryName().getContent())) {
+                String name = eag.getArchguide().getDesc().getRepositories().getRepository().get(i).getRepositoryName().getContent();
+                mainTabbedPane.add(name, new EagNewRepositoryPanel(eag, null, mainTabbedPane, this, model, labels, i).buildInstitutionTabbedPane(isNew, countrycode, mainagencycode));
+            } else {
+                mainTabbedPane.add(labels.getString("eag2012.extraRepository") + " " + i, new EagNewRepositoryPanel(eag, null, mainTabbedPane, this, model, labels, i).buildInstitutionTabbedPane(isNew, countrycode, mainagencycode));
+            }
             mainTabbedPane.setEnabledAt(i, false);
         }
     }

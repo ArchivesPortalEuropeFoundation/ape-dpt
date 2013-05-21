@@ -71,7 +71,6 @@ public class EagNewRepositoryPanel extends EagPanels {
             tabbedPane.setSelectedIndex(2);
         }
 
-//        tabbedPane.setTitleAt(); //todo use for renaming the repository tabs with their real names
         tabbedPane.add(labels.getString("eag2012.accessAndServicesTab"), null);
         tabbedPane.setEnabledAt(3, false);
         tabbedPane.add(labels.getString("eag2012.descriptionTab"), null);
