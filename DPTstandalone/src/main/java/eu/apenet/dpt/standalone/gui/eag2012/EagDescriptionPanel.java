@@ -337,9 +337,11 @@ public class EagDescriptionPanel extends EagPanels {
         builder.add(previousTabBtn, cc.xy(3, rowNb));
         previousTabBtn.addActionListener(new EagDescriptionPanel.ChangeTabBtnAction(eag, tabbedPane, model, false));
 
-        JButton nextTabBtn = new ButtonEag(labels.getString("eag2012.nextTabButton"));
-        builder.add(nextTabBtn, cc.xy(5, rowNb));
-        nextTabBtn.addActionListener(new EagDescriptionPanel.ChangeTabBtnAction(eag, tabbedPane, model, true));
+        if(repositoryNb == 0) {
+            JButton nextTabBtn = new ButtonEag(labels.getString("eag2012.nextTabButton"));
+            builder.add(nextTabBtn, cc.xy(5, rowNb));
+            nextTabBtn.addActionListener(new EagDescriptionPanel.ChangeTabBtnAction(eag, tabbedPane, model, true));
+        }
 
         setNextRow();
         JButton saveBtn = new ButtonEag(labels.getString("eag2012.saveButton"));
@@ -349,10 +351,10 @@ public class EagDescriptionPanel extends EagPanels {
         setNextRow();
         builder.addSeparator("", cc.xyw(1, rowNb, 7));
         setNextRow();
-        JButton previousInstitutionTabBtn = new ButtonEag("eag2012.previousInstitutionBtn");
+        JButton previousInstitutionTabBtn = new ButtonEag(labels.getString("eag2012.previousInstitutionBtn"));
         previousInstitutionTabBtn.addActionListener(new PreviousInstitutionTabBtnAction(eag, tabbedPane, model));
         builder.add(previousInstitutionTabBtn, cc.xy(1, rowNb));
-        JButton nextInstitutionTabBtn = new ButtonEag("eag2012.nextInstitutionBtn");
+        JButton nextInstitutionTabBtn = new ButtonEag(labels.getString("eag2012.nextInstitutionBtn"));
         nextInstitutionTabBtn.addActionListener(new NextInstitutionTabBtnAction(eag, tabbedPane, model));
         builder.add(nextInstitutionTabBtn, cc.xy(5, rowNb));
 

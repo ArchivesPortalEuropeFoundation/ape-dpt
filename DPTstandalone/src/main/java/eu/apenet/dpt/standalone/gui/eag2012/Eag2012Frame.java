@@ -3,6 +3,8 @@ package eu.apenet.dpt.standalone.gui.eag2012;
 import eu.apenet.dpt.standalone.gui.ProfileListModel;
 import eu.apenet.dpt.standalone.gui.Utilities;
 import eu.apenet.dpt.utils.eag2012.Eag;
+import eu.apenet.dpt.utils.eag2012.namespace.EagNamespaceMapper;
+import eu.apenet.dpt.utils.service.DocumentValidation;
 import eu.apenet.dpt.utils.service.TransformationTool;
 import eu.apenet.dpt.utils.util.ReadXml;
 import org.apache.commons.io.FileUtils;
@@ -17,7 +19,6 @@ import java.awt.event.WindowEvent;
 import java.io.File;
 import java.io.InputStream;
 import java.util.Date;
-import java.util.Enumeration;
 import java.util.ResourceBundle;
 
 /**
@@ -63,7 +64,7 @@ public class Eag2012Frame extends JFrame {
 
     public Eag2012Frame(Dimension dimension, ProfileListModel model, ResourceBundle labels, String countrycode, String mainagencycode) {
 //        URL emptyEAGFileURL = getClass().getResource("/EAG_XML_XSL/Blank_EAG_2012.xml");
-        InputStream emptyEAGFileStream = getClass().getResourceAsStream("/EAG_XML_XSL/Blank_EAG_2012.xml");
+        InputStream emptyEAGFileStream = DocumentValidation.class.getResourceAsStream("/eag2012/Blank_EAG_2012.xml");
 
 //        File emptyEAGFile = new File(emptyEAGFileURL.getPath());
 
@@ -116,9 +117,9 @@ public class Eag2012Frame extends JFrame {
         mainTabbedPane = new JTabbedPane();
         mainTabbedPane.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
         mainTabbedPane.putClientProperty("jgoodies.noContentBorder", Boolean.TRUE);
-        mainTabbedPane.add("eag2012.mainInstitution", new EagNewRepositoryPanel(eag, null, mainTabbedPane, this, model, labels, 0).buildInstitutionTabbedPane(isNew, countrycode, mainagencycode));
+        mainTabbedPane.add(labels.getString("eag2012.mainInstitution"), new EagNewRepositoryPanel(eag, null, mainTabbedPane, this, model, labels, 0).buildInstitutionTabbedPane(isNew, countrycode, mainagencycode));
         for(int i = 1; i < eag.getArchguide().getDesc().getRepositories().getRepository().size(); i++) {
-            mainTabbedPane.add("eag2012.otherInstitution", new EagNewRepositoryPanel(eag, null, mainTabbedPane, this, model, labels, i).buildInstitutionTabbedPane(isNew, countrycode, mainagencycode));
+            mainTabbedPane.add(labels.getString("eag2012.extraRepository") + " " + i, new EagNewRepositoryPanel(eag, null, mainTabbedPane, this, model, labels, i).buildInstitutionTabbedPane(isNew, countrycode, mainagencycode));
             mainTabbedPane.setEnabledAt(i, false);
         }
     }

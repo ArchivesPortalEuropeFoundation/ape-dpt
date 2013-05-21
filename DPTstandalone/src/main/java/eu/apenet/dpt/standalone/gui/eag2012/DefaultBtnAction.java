@@ -4,12 +4,11 @@ import eu.apenet.dpt.standalone.gui.FileInstance;
 import eu.apenet.dpt.standalone.gui.ProfileListModel;
 import eu.apenet.dpt.standalone.gui.Utilities;
 import eu.apenet.dpt.utils.eag2012.Eag;
+import eu.apenet.dpt.utils.eag2012.namespace.EagNamespaceMapper;
 import eu.apenet.dpt.utils.util.Xsd_enum;
-import org.apache.commons.lang.StringUtils;
 
 import javax.swing.*;
 import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;

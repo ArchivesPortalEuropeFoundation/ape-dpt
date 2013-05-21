@@ -230,10 +230,10 @@ public class EagIdentityPanel extends EagPanels {
         setNextRow();
         builder.addSeparator("", cc.xyw(1, rowNb, 7));
         setNextRow();
-        JButton previousInstitutionTabBtn = new ButtonEag("eag2012.previousInstitutionBtn");
+        JButton previousInstitutionTabBtn = new ButtonEag(labels.getString("eag2012.previousInstitutionBtn"));
         previousInstitutionTabBtn.addActionListener(new PreviousInstitutionTabBtnAction(eag, tabbedPane, model));
         builder.add(previousInstitutionTabBtn, cc.xy(1, rowNb));
-        JButton nextInstitutionTabBtn = new ButtonEag("eag2012.nextInstitutionBtn");
+        JButton nextInstitutionTabBtn = new ButtonEag(labels.getString("eag2012.nextInstitutionBtn"));
         nextInstitutionTabBtn.addActionListener(new NextInstitutionTabBtnAction(eag, tabbedPane, model));
         builder.add(nextInstitutionTabBtn, cc.xy(5, rowNb));
 

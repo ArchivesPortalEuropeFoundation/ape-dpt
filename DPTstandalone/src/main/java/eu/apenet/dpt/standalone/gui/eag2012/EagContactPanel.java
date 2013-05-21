@@ -24,6 +24,9 @@ import java.util.ResourceBundle;
  * @author Yoann Moranville
  */
 public class EagContactPanel extends EagPanels {
+    private JTextField repositoryNameTf;
+    private JComboBox repositoryRoleTypeCombo = new JComboBox(repositoryRoles);
+
     private List<LocationType> locationFields;
     private List<JTextField> telephoneTfs;
     private List<JTextField> faxTfs;
@@ -62,6 +65,23 @@ public class EagContactPanel extends EagPanels {
         rowNb = 1;
 
         Repository repository = eag.getArchguide().getDesc().getRepositories().getRepository().get(repositoryNb);
+
+        if(repositoryNb > 0) {
+            if(repository.getRepositoryName() == null)
+                repository.setRepositoryName(new RepositoryName());
+            repositoryNameTf = new JTextField(repository.getRepositoryName().getContent());
+            builder.addLabel(labels.getString("eag2012.nameOfRepository"), cc.xy(1, rowNb));
+            builder.add(repositoryNameTf, cc.xy(3, rowNb));
+
+            if(repository.getRepositoryRole() == null)
+                repository.setRepositoryRole(new RepositoryRole());
+            if(Arrays.asList(repositoryRoles).contains(repository.getRepositoryRole().getValue()))
+                repositoryRoleTypeCombo.setSelectedItem(repository.getRepositoryRole().getValue());
+            builder.addLabel(labels.getString("eag2012.roleRepository"), cc.xy(5, rowNb));
+            builder.add(repositoryRoleTypeCombo, cc.xy(7, rowNb));
+
+            setNextRow();
+        }
 
         boolean hasMinimumOnePostalAddress = false;
         boolean hasMinimumOneVisitorAddress = false;
@@ -271,9 +291,11 @@ public class EagContactPanel extends EagPanels {
         builder.add(exitBtn, cc.xy (1, rowNb));
         exitBtn.addActionListener(new ExitBtnAction());
 
-        JButton previousTabBtn = new ButtonEag(labels.getString("eag2012.previousTabButton"));
-        builder.add(previousTabBtn, cc.xy (3, rowNb));
-        previousTabBtn.addActionListener(new ChangeTabBtnAction(eag, tabbedPane, model, false));
+        if(repositoryNb == 0) {
+            JButton previousTabBtn = new ButtonEag(labels.getString("eag2012.previousTabButton"));
+            builder.add(previousTabBtn, cc.xy (3, rowNb));
+            previousTabBtn.addActionListener(new ChangeTabBtnAction(eag, tabbedPane, model, false));
+        }
 
         JButton nextTabBtn = new ButtonEag(labels.getString("eag2012.nextTabButton"));
         builder.add(nextTabBtn, cc.xy (5, rowNb));
@@ -287,10 +309,10 @@ public class EagContactPanel extends EagPanels {
         setNextRow();
         builder.addSeparator("", cc.xyw(1, rowNb, 7));
         setNextRow();
-        JButton previousInstitutionTabBtn = new ButtonEag("eag2012.previousInstitutionBtn");
+        JButton previousInstitutionTabBtn = new ButtonEag(labels.getString("eag2012.previousInstitutionBtn"));
         previousInstitutionTabBtn.addActionListener(new PreviousInstitutionTabBtnAction(eag, tabbedPane, model));
         builder.add(previousInstitutionTabBtn, cc.xy(1, rowNb));
-        JButton nextInstitutionTabBtn = new ButtonEag("eag2012.nextInstitutionBtn");
+        JButton nextInstitutionTabBtn = new ButtonEag(labels.getString("eag2012.nextInstitutionBtn"));
         nextInstitutionTabBtn.addActionListener(new NextInstitutionTabBtnAction(eag, tabbedPane, model));
         builder.add(nextInstitutionTabBtn, cc.xy(5, rowNb));
 
@@ -503,8 +525,23 @@ public class EagContactPanel extends EagPanels {
 
             boolean hasChanged = false;
 
-            if(eag.getArchguide().getDesc().getRepositories().getRepository().size() == 1) {
-                Repository repository = eag.getArchguide().getDesc().getRepositories().getRepository().get(repositoryNb);
+//            if(eag.getArchguide().getDesc().getRepositories().getRepository().size() == 1) {
+            Repository repository = eag.getArchguide().getDesc().getRepositories().getRepository().get(repositoryNb);
+
+            if(repositoryNb > 0) {
+                if(StringUtils.isNotEmpty(repositoryNameTf.getText())) {
+                    repository.getRepositoryName().setContent(repositoryNameTf.getText());
+                    mainTabbedPane.setTitleAt(repositoryNb, repositoryNameTf.getText());
+                } else {
+                    repository.setRepositoryName(null);
+                }
+                if(!repositoryRoleTypeCombo.getSelectedItem().equals("---")) {
+                    repository.getRepositoryRole().setValue((String)repositoryRoleTypeCombo.getSelectedItem());
+                } else {
+                    repository.setRepositoryRole(null);
+                }
+            }
+
                 repository.getLocation().clear();
 
                 String defaultCountry = "";
@@ -573,7 +610,7 @@ public class EagContactPanel extends EagPanels {
                         hasChanged = true;
                     }
                 }
-            }
+//            }
 
             if(!errors.isEmpty()) {
                 throw new Eag2012FormException("Errors in validation of EAG 2012");

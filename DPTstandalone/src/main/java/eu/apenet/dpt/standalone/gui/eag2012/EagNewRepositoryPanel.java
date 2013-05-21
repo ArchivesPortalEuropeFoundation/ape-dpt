@@ -44,17 +44,34 @@ public class EagNewRepositoryPanel extends EagPanels {
             repository.getWebpage().add(new Webpage());
             repository.setTimetable(new Timetable());
             repository.getTimetable().getOpening().add(new Opening());
+            repository.setAccess(new Access());
+            repository.getAccess().setQuestion("yes");
+            repository.getAccessibility().add(new Accessibility());
+            repository.getAccessibility().get(0).setQuestion("yes");
+        }
+        JScrollPane scrollPane = null;
+        if(repositoryNb == 0) {
+            scrollPane = new JScrollPane(new EagInstitutionPanel(eag, tabbedPane, mainTabbedPane, eag2012Frame, model, isNew, labels, countrycode, mainagencycode, repositoryNb).buildEditorPanel(null));
+            scrollPane.getVerticalScrollBar().setUnitIncrement(20);
+            tabbedPane.add(labels.getString("eag2012.yourInstitutionTab"), scrollPane);
+            tabbedPane.setEnabledAt(0, true);
+            tabbedPane.add(labels.getString("eag2012.identityTab"), null);
+            tabbedPane.setEnabledAt(1, false);
+            tabbedPane.add(labels.getString("eag2012.contactTab"), null);
+            tabbedPane.setEnabledAt(2, false);
+        } else {
+            scrollPane = new JScrollPane(new EagContactPanel(eag, tabbedPane, mainTabbedPane, eag2012Frame, model, labels, repositoryNb).buildEditorPanel(null));
+            scrollPane.getVerticalScrollBar().setUnitIncrement(20);
+            tabbedPane.add(labels.getString("eag2012.yourInstitutionTab"), null);
+            tabbedPane.setEnabledAt(0, false);
+            tabbedPane.add(labels.getString("eag2012.identityTab"), null);
+            tabbedPane.setEnabledAt(1, false);
+            tabbedPane.add(labels.getString("eag2012.contactTab"), scrollPane);
+            tabbedPane.setEnabledAt(2, true);
+            tabbedPane.setSelectedIndex(2);
         }
 
-        JScrollPane institutionPane = new JScrollPane(new EagInstitutionPanel(eag, tabbedPane, mainTabbedPane, eag2012Frame, model, isNew, labels, countrycode, mainagencycode, repositoryNb).buildEditorPanel(null));
-        institutionPane.getVerticalScrollBar().setUnitIncrement(20);
-        tabbedPane.add(labels.getString("eag2012.yourInstitutionTab"), institutionPane);
-        tabbedPane.setEnabledAt(0, true);
 //        tabbedPane.setTitleAt(); //todo use for renaming the repository tabs with their real names
-        tabbedPane.add(labels.getString("eag2012.identityTab"), null);
-        tabbedPane.setEnabledAt(1, false);
-        tabbedPane.add(labels.getString("eag2012.contactTab"), null);
-        tabbedPane.setEnabledAt(2, false);
         tabbedPane.add(labels.getString("eag2012.accessAndServicesTab"), null);
         tabbedPane.setEnabledAt(3, false);
         tabbedPane.add(labels.getString("eag2012.descriptionTab"), null);

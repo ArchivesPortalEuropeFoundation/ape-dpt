@@ -380,7 +380,7 @@ public class EagInstitutionPanel extends EagPanels {
 //        }
 
 
-        JButton addRepositoryBtn = new ButtonEag("eag2012.addRepositoryTabButton");
+        JButton addRepositoryBtn = new ButtonEag(labels.getString("eag2012.addRepositoryTabButton"));
         builder.add(addRepositoryBtn, cc.xy (1, rowNb));
         addRepositoryBtn.addActionListener(new AddRepositoryTabButton());
 
@@ -399,10 +399,10 @@ public class EagInstitutionPanel extends EagPanels {
         setNextRow();
         builder.addSeparator("", cc.xyw(1, rowNb, 7));
         setNextRow();
-        JButton previousInstitutionTabBtn = new ButtonEag("eag2012.previousInstitutionBtn");
+        JButton previousInstitutionTabBtn = new ButtonEag(labels.getString("eag2012.previousInstitutionBtn"));
         previousInstitutionTabBtn.addActionListener(new PreviousInstitutionTabBtnAction(eag, tabbedPane, model));
         builder.add(previousInstitutionTabBtn, cc.xy(1, rowNb));
-        JButton nextInstitutionTabBtn = new ButtonEag("eag2012.nextInstitutionBtn");
+        JButton nextInstitutionTabBtn = new ButtonEag(labels.getString("eag2012.nextInstitutionBtn"));
         nextInstitutionTabBtn.addActionListener(new NextInstitutionTabBtnAction(eag, tabbedPane, model));
         builder.add(nextInstitutionTabBtn, cc.xy(5, rowNb));
 
@@ -429,6 +429,7 @@ public class EagInstitutionPanel extends EagPanels {
     public class AddRepositoryTabButton implements ActionListener {
         public void actionPerformed(ActionEvent actionEvent) {
             mainTabbedPane.add("eag2012.newInstitution1", new EagNewRepositoryPanel(eag, null, mainTabbedPane, eag2012Frame, model, labels, mainTabbedPane.getTabCount()).buildInstitutionTabbedPane(isNew, countrycode, mainagencycode));
+            mainTabbedPane.setEnabledAt(mainTabbedPane.getTabCount() - 1, false);
         }
     }
 

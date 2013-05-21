@@ -1,4 +1,4 @@
-package eu.apenet.dpt.standalone.gui.eag2012;
+package eu.apenet.dpt.utils.eag2012.namespace;
 
 import com.sun.xml.bind.marshaller.NamespacePrefixMapper;
 
