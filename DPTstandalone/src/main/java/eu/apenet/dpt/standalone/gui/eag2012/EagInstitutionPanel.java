@@ -390,7 +390,7 @@ public class EagInstitutionPanel extends EagPanels {
 
         JButton nextTabBtn = new ButtonEag(labels.getString("eag2012.nextTabButton"));
         builder.add(nextTabBtn, cc.xy (5, rowNb));
-        nextTabBtn.addActionListener(new NextTabBtnAction(eag, tabbedPane, model));
+        nextTabBtn.addActionListener(new NextTabBtnAction());
 
         setNextRow();
         JButton exitBtn = new ButtonEag(labels.getString("eag2012.exitButton"));
@@ -461,28 +461,9 @@ public class EagInstitutionPanel extends EagPanels {
         }
     }
 
-    public class NextTabBtnAction extends UpdateEagObject {
-        NextTabBtnAction(Eag eag, JTabbedPane tabbedPane, ProfileListModel model) {
-            super(eag, tabbedPane, model);
-        }
-
-        @Override
+    public class NextTabBtnAction implements ActionListener {
         public void actionPerformed(ActionEvent actionEvent) {
-            try {
-                super.updateEagObject(true);
-
-                if(model == null)
-                    LOG.info("The model is null, we can not add the EAG to the list...");
-
-                reloadTabbedPanel(new EagIdentityPanel(eag, tabbedPane, mainTabbedPane, eag2012Frame, model, labels, repositoryNb).buildEditorPanel(errors), 1);
-                tabbedPane.setEnabledAt(1, true);
-                tabbedPane.setEnabledAt(0, false);
-            } catch (Eag2012FormException e) {
-                if(model == null)
-                    LOG.info("The model is null, we can not add the EAG to the list...");
-
-                reloadTabbedPanel(new EagInstitutionPanel(eag, tabbedPane, mainTabbedPane, eag2012Frame, model, isNew, labels, repositoryNb).buildEditorPanel(errors), 0);
-            }
+            tabbedPane.setSelectedIndex(tabbedPane.getSelectedIndex() + 1);
         }
     }
 
@@ -491,7 +472,6 @@ public class EagInstitutionPanel extends EagPanels {
             super(eag, tabbedPane, model);
         }
 
-        @Override
         public void actionPerformed(ActionEvent actionEvent) {
             try {
                 super.updateEagObject(true);
@@ -501,7 +481,6 @@ public class EagInstitutionPanel extends EagPanels {
                     mainTabbedPane.setEnabledAt(currentTabIndex, false);
                     mainTabbedPane.setEnabledAt(currentTabIndex+1, true);
                     mainTabbedPane.setSelectedIndex(currentTabIndex+1);
-                    reloadTabbedPanel(new EagContactPanel(eag, tabbedPane, mainTabbedPane, eag2012Frame, model, labels, repositoryNb).buildEditorPanel(errors), 2);
                 }
             } catch (Eag2012FormException e) {
                 reloadTabbedPanel(new EagInstitutionPanel(eag, tabbedPane, mainTabbedPane, eag2012Frame, model, isNew, labels, repositoryNb).buildEditorPanel(errors), 0);
@@ -894,7 +873,7 @@ public class EagInstitutionPanel extends EagPanels {
         public void actionPerformed(ActionEvent actionEvent) {}
 
         public void stateChanged(ChangeEvent changeEvent) {
-            LOG.info("stateChanged " + tabbedPane.getChangeListeners().length);
+            LOG.info("stateChanged (mainTabbed index: " + mainTabbedPane.getSelectedIndex() + ")");
             if(click && !Eag2012Frame.firstTimeInTab) {
                 tabbedPane.removeChangeListener(this);
                 try {

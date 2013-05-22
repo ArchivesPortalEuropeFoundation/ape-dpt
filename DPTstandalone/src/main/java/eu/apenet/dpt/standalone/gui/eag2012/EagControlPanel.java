@@ -15,6 +15,7 @@ import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -131,11 +132,11 @@ public class EagControlPanel extends EagPanels {
 
         JButton previousTabBtn = new ButtonEag(labels.getString("eag2012.previousTabButton"));
         builder.add(previousTabBtn, cc.xy (3, rowNb));
-        previousTabBtn.addActionListener(new ChangeTabBtnAction(eag, tabbedPane, model, false));
+        previousTabBtn.addActionListener(new ChangeTabBtnAction(false));
 
         JButton nextTabBtn = new ButtonEag(labels.getString("eag2012.nextTabButton"));
         builder.add(nextTabBtn, cc.xy (5, rowNb));
-        nextTabBtn.addActionListener(new ChangeTabBtnAction(eag, tabbedPane, model, true));
+        nextTabBtn.addActionListener(new ChangeTabBtnAction(true));
 
         setNextRow();
         JButton saveBtn = new ButtonEag(labels.getString("eag2012.saveButton"));
@@ -258,30 +259,18 @@ public class EagControlPanel extends EagPanels {
         }
     }
 
-    public class ChangeTabBtnAction extends UpdateEagObject {
+    public class ChangeTabBtnAction implements ActionListener {
         private boolean isNextTab;
-        ChangeTabBtnAction(Eag eag, JTabbedPane tabbedPane, ProfileListModel model, boolean isNextTab) {
-            super(eag, tabbedPane, model);
+
+        ChangeTabBtnAction(boolean isNextTab) {
             this.isNextTab = isNextTab;
         }
 
-        @Override
         public void actionPerformed(ActionEvent actionEvent) {
-            try {
-                super.updateEagObject(false);
-
-                if(isNextTab) {
-                    reloadTabbedPanel(new EagRelationsPanel(eag, tabbedPane, mainTabbedPane, eag2012Frame, model, labels, repositoryNb).buildEditorPanel(errors), 6);
-                    tabbedPane.setEnabledAt(6, true);
-                    tabbedPane.setEnabledAt(5, false);
-                } else {
-                    reloadTabbedPanel(new EagDescriptionPanel(eag, tabbedPane, mainTabbedPane, eag2012Frame, model, labels, repositoryNb).buildEditorPanel(errors), 4);
-                    tabbedPane.setEnabledAt(4, true);
-                    tabbedPane.setEnabledAt(5, false);
-                }
-            } catch (Eag2012FormException e) {
-                reloadTabbedPanel(new EagControlPanel(eag, tabbedPane, mainTabbedPane, eag2012Frame, model, labels, repositoryNb).buildEditorPanel(errors), 5);
-            }
+            if(isNextTab)
+                tabbedPane.setSelectedIndex(tabbedPane.getSelectedIndex() + 1);
+            else
+                tabbedPane.setSelectedIndex(tabbedPane.getSelectedIndex() - 1);
         }
     }
 

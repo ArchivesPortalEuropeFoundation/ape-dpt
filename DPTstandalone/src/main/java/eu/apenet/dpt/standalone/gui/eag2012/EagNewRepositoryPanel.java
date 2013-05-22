@@ -50,7 +50,7 @@ public class EagNewRepositoryPanel extends EagPanels {
             repository.getAccessibility().add(new Accessibility());
             repository.getAccessibility().get(0).setQuestion("yes");
         }
-        JScrollPane scrollPane = null;
+        JScrollPane scrollPane;
         if(repositoryNb == 0) {
             scrollPane = new JScrollPane(new EagInstitutionPanel(eag, tabbedPane, mainTabbedPane, eag2012Frame, model, isNew, labels, countrycode, mainagencycode, repositoryNb).buildEditorPanel(null));
             scrollPane.getVerticalScrollBar().setUnitIncrement(20);
@@ -76,7 +76,9 @@ public class EagNewRepositoryPanel extends EagPanels {
             tabbedPane.setEnabledAt(1, false);
             tabbedPane.setEnabledAt(5, false);
             tabbedPane.setEnabledAt(6, false);
+            Eag2012Frame.firstTimeInTab = true;
             tabbedPane.setSelectedIndex(2);
+            Eag2012Frame.firstTimeInTab = true;
         }
 
         return tabbedPane;
