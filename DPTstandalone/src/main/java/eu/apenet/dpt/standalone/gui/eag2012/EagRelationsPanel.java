@@ -128,6 +128,8 @@ public class EagRelationsPanel extends EagPanels {
         addInstitutionRelation.addActionListener(new AddInstitutionRelationAction(eag, tabbedPane, model));
         setNextRow();
 
+        builder.addSeparator("", cc.xyw(1, rowNb, 7));
+        setNextRow();
 
         JButton exitBtn = new ButtonEag(labels.getString("eag2012.exitButton"));
         builder.add(exitBtn, cc.xy (1, rowNb));

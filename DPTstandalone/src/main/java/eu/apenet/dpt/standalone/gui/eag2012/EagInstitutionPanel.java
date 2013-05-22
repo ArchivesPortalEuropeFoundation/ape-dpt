@@ -379,6 +379,8 @@ public class EagInstitutionPanel extends EagPanels {
         setNextRow();
 //        }
 
+        builder.addSeparator("", cc.xyw(1, rowNb, 7));
+        setNextRow();
 
         JButton addRepositoryBtn = new ButtonEag(labels.getString("eag2012.addRepositoryTabButton"));
         builder.add(addRepositoryBtn, cc.xy (1, rowNb));

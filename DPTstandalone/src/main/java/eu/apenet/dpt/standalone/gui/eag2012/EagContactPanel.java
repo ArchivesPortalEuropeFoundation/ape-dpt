@@ -191,6 +191,8 @@ public class EagContactPanel extends EagPanels {
         builder.addLabel(labels.getString("eag2012.continentLabel") + "*",    cc.xy (1, rowNb));
         if(Arrays.asList(continents).contains(repository.getGeogarea().getValue())){
             continentCombo.setSelectedItem(repository.getGeogarea().getValue());
+        } else {
+            continentCombo.setSelectedItem("Europe");
         }
         builder.add(continentCombo, cc.xy (3, rowNb));
         setNextRow();
@@ -285,6 +287,9 @@ public class EagContactPanel extends EagPanels {
         JButton addWebpageBtn = new ButtonEag(labels.getString("eag2012.addWebpage"));
         addWebpageBtn.addActionListener(new AddWebpageAction(eag, tabbedPane, model));
         builder.add(addWebpageBtn, cc.xy(1, rowNb));
+        setNextRow();
+
+        builder.addSeparator("", cc.xyw(1, rowNb, 7));
         setNextRow();
 
         JButton exitBtn = new ButtonEag(labels.getString("eag2012.exitButton"));

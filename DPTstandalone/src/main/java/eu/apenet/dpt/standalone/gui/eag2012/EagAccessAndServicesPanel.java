@@ -802,6 +802,8 @@ public class EagAccessAndServicesPanel extends EagPanels {
         addOtherServicesBtn.addActionListener(new AddOtherServicesBtnAction(eag, tabbedPane, model));
         setNextRow();
 
+        builder.addSeparator("", cc.xyw(1, rowNb, 7));
+        setNextRow();
 
         JButton exitBtn = new ButtonEag(labels.getString("eag2012.exitButton"));
         builder.add(exitBtn, cc.xy (1, rowNb));

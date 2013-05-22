@@ -112,6 +112,7 @@ public class Eag2012Frame extends JFrame {
         this.setPreferredSize(frameDim);
         this.pack();
         this.setVisible(true);
+        this.setExtendedState(JFrame.MAXIMIZED_BOTH);
     }
 
     public void buildPanel(Eag eag, boolean isNew) {

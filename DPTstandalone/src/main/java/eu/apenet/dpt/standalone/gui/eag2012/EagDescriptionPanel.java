@@ -328,6 +328,8 @@ public class EagDescriptionPanel extends EagPanels {
         builder.add(extentTf, cc.xy(3, rowNb));
         setNextRow();
 
+        builder.addSeparator("", cc.xyw(1, rowNb, 7));
+        setNextRow();
 
         JButton exitBtn = new ButtonEag(labels.getString("eag2012.exitButton"));
         builder.add(exitBtn, cc.xy(1, rowNb));
