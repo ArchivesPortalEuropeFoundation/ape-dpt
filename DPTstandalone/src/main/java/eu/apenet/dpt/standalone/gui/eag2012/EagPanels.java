@@ -57,6 +57,7 @@ public abstract class EagPanels {
     protected ProfileListModel model;
     protected ResourceBundle labels;
     protected int repositoryNb;
+    protected boolean isDataValid;
 
     public EagPanels(Eag eag, JTabbedPane tabbedPane, JTabbedPane mainTabbedPane, JFrame eag2012Frame, ProfileListModel model, ResourceBundle labels, int repositoryNb) {
         this.eag2012Frame = eag2012Frame;

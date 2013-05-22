@@ -13,6 +13,8 @@ import eu.apenet.dpt.utils.eag2012.*;
 import org.apache.commons.lang.StringUtils;
 
 import javax.swing.*;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import java.awt.event.ActionEvent;
 import java.util.ArrayList;
 import java.util.List;
@@ -359,6 +361,8 @@ public class EagDescriptionPanel extends EagPanels {
         JButton nextInstitutionTabBtn = new ButtonEag(labels.getString("eag2012.nextInstitutionBtn"));
         nextInstitutionTabBtn.addActionListener(new NextInstitutionTabBtnAction(eag, tabbedPane, model));
         builder.add(nextInstitutionTabBtn, cc.xy(5, rowNb));
+
+        tabbedPane.addChangeListener(new TabChangeListener(eag, tabbedPane, model));
 
         return builder.getPanel();
     }
@@ -856,6 +860,37 @@ public class EagDescriptionPanel extends EagPanels {
             if (!errors.isEmpty()) {
                 throw new Eag2012FormException("Errors in validation of EAG 2012");
             }
+        }
+    }
+
+    public class TabChangeListener extends UpdateEagObject implements ChangeListener {
+        private boolean click;
+        public TabChangeListener(Eag eag, JTabbedPane tabbedPane, ProfileListModel model) {
+            super(eag, tabbedPane, model);
+            click = true;
+        }
+
+        @Override
+        public void actionPerformed(ActionEvent actionEvent) {}
+
+        public void stateChanged(ChangeEvent changeEvent) {
+            LOG.info("stateChanged");
+            if(click && !Eag2012Frame.firstTimeInTab) {
+                tabbedPane.removeChangeListener(this);
+                try {
+                    super.updateEagObject(false);
+                    LOG.info("Ok");
+                    Eag2012Frame.firstTimeInTab = true;
+                    EagPanels eagPanels = getCorrectEagPanels(tabbedPane.getSelectedIndex(), mainTabbedPane, eag2012Frame, labels, repositoryNb);
+                    reloadTabbedPanel(eagPanels.buildEditorPanel(errors), tabbedPane.getSelectedIndex());
+                } catch (Eag2012FormException e) {
+                    LOG.info("NOT Ok");
+                    EagPanels eagPanels = getCorrectEagPanels(4, mainTabbedPane, eag2012Frame, labels, repositoryNb);
+                    reloadTabbedPanel(eagPanels.buildEditorPanel(errors), 4);
+                }
+                click = false;
+            }
+            Eag2012Frame.firstTimeInTab = false;
         }
     }
 }

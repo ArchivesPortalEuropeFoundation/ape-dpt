@@ -38,6 +38,7 @@ public class Eag2012Frame extends JFrame {
     private static Date timeMaintenance;
     private String countrycode;
     private String mainagencycode;
+    public static boolean firstTimeInTab = true;
 
     public Eag2012Frame(File eagFile, boolean isEag2012, Dimension dimension, ProfileListModel model, ResourceBundle labels) throws Exception {
         String namespace = ReadXml.getXmlNamespace(eagFile);

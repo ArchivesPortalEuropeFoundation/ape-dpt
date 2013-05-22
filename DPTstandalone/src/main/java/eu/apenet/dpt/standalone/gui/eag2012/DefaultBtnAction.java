@@ -14,6 +14,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.util.List;
+import java.util.ResourceBundle;
 
 /**
  * User: Yoann Moranville
@@ -66,12 +67,23 @@ public abstract class DefaultBtnAction implements ActionListener {
         }
     }
 
+    protected EagPanels getCorrectEagPanels(int tabSelectedIndex, JTabbedPane mainTabbedPane, JFrame eag2012Frame, ResourceBundle labels, int repositoryNb) {
+        switch (tabSelectedIndex) {
+            case 0: return new EagInstitutionPanel(eag, tabbedPane, mainTabbedPane, eag2012Frame, model, false, labels, repositoryNb);
+            case 1: return new EagIdentityPanel(eag, tabbedPane, mainTabbedPane, eag2012Frame, model, labels, repositoryNb);
+            case 2: return new EagContactPanel(eag, tabbedPane, mainTabbedPane, eag2012Frame, model, labels, repositoryNb);
+            case 3: return new EagAccessAndServicesPanel(eag, tabbedPane, mainTabbedPane, eag2012Frame, model, labels, repositoryNb);
+            case 4: return new EagDescriptionPanel(eag, tabbedPane, mainTabbedPane, eag2012Frame, model, labels, repositoryNb);
+            case 5: return new EagControlPanel(eag, tabbedPane, mainTabbedPane, eag2012Frame, model, labels, repositoryNb);
+            case 6: return new EagRelationsPanel(eag, tabbedPane, mainTabbedPane, eag2012Frame, model, labels, repositoryNb);
+        }
+        return null;
+    }
+
     protected void reloadTabbedPanel(JComponent panel, int tabPosition) {
-        String labelTitle = tabbedPane.getTitleAt(tabPosition);
-        tabbedPane.remove(tabPosition);
         JScrollPane jScrollPane = new JScrollPane(panel);
         jScrollPane.getVerticalScrollBar().setUnitIncrement(20);
-        tabbedPane.insertTab(labelTitle, null, jScrollPane, "", tabPosition);
+        tabbedPane.setComponentAt(tabPosition, jScrollPane);
         tabbedPane.setSelectedIndex(tabPosition);
     }
 }
