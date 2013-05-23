@@ -78,7 +78,7 @@ public class EagNewRepositoryPanel extends EagPanels {
             tabbedPane.setEnabledAt(6, false);
             Eag2012Frame.firstTimeInTab = true;
             tabbedPane.setSelectedIndex(2);
-            Eag2012Frame.firstTimeInTab = true;
+            Eag2012Frame.firstTimeInTab = false;
         }
 
         return tabbedPane;
