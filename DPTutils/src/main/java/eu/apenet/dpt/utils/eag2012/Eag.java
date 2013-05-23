@@ -58,6 +58,8 @@ public class Eag {
     protected String base;
     @XmlAttribute(name = "lang", namespace = "http://www.w3.org/XML/1998/namespace")
     protected String lang;
+    @XmlAttribute(name = "schemaLocation", namespace = "http://www.w3.org/2001/XMLSchema-instance")
+    protected String schemaLocation;
 
     /**
      * Gets the value of the control property.
@@ -169,5 +171,13 @@ public class Eag {
 
     public void setLang(String lang) {
         this.lang = lang;
+    }
+
+    public String getSchemaLocation() {
+        return schemaLocation;
+    }
+
+    public void setSchemaLocation(String schemaLocation) {
+        this.schemaLocation = schemaLocation;
     }
 }

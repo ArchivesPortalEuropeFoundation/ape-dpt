@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<eag xmlns="http://www.archivesportaleurope.net/Portal/profiles/eag_2012/" schemaLocation="http://www.archivesportaleurope.net/Portal/profiles/eag_2012/ http://www.archivesportaleurope.net/Portal/profiles/eag_2012.xsd" audience="external">
+<eag xmlns="http://www.archivesportaleurope.net/Portal/profiles/eag_2012/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.archivesportaleurope.net/Portal/profiles/eag_2012/ http://www.archivesportaleurope.net/Portal/profiles/eag_2012.xsd" audience="external">
     <control>
         <recordId></recordId>
         <maintenanceAgency>
