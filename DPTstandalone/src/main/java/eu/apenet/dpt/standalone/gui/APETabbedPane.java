@@ -152,7 +152,7 @@ public class APETabbedPane extends JTabbedPane {
         convertEdmBtn.setPreferredSize(DEFAULT_BTN_DIMENSION);
         convertEdmBtn.setEnabled(false);
 
-        messageReportBtn.addActionListener(new MessageReportActionListener(retrieveFromDb, dataPreparationToolGUI.getXmlEadList(), dataPreparationToolGUI.getFileInstances(), labels, this));
+        messageReportBtn.addActionListener(new MessageReportActionListener(retrieveFromDb, dataPreparationToolGUI, dataPreparationToolGUI.getFileInstances(), labels, this));
         messageReportBtn.setPreferredSize(DEFAULT_BTN_DIMENSION);
         messageReportBtn.setEnabled(false);
 

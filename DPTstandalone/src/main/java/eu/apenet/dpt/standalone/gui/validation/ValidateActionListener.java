@@ -121,6 +121,7 @@ public class ValidateActionListener implements ActionListener {
                     fileInstance.setValidationErrors(labels.getString("validationSuccess"));
                     if(xsdObject.getFileType().equals(FileInstance.FileType.EAD)) {
                         dataPreparationToolGUI.enableEseConversionBtn();
+                        dataPreparationToolGUI.enableMessageReportBtns();
                         //Do a XML Quality check
                         InputStream xslIs = ValidateActionListener.class.getResourceAsStream("/xmlQuality/xmlQuality.xsl");
                         XmlQualityCheckerCall xmlQualityCheckerCall = new XmlQualityCheckerCall();

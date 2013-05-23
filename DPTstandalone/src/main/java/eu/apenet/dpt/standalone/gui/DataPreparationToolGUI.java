@@ -695,7 +695,7 @@ public class DataPreparationToolGUI extends JFrame {
                 xmlEadList.updateUI();
             }
         });
-        saveMessageReportItem.addActionListener(new MessageReportActionListener(retrieveFromDb, xmlEadList, fileInstances, labels, this));
+        saveMessageReportItem.addActionListener(new MessageReportActionListener(retrieveFromDb, this, fileInstances, labels, this));
         sendFilesWebDAV.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 throw new UnsupportedOperationException("Not supported yet.");
@@ -1375,6 +1375,7 @@ public class DataPreparationToolGUI extends JFrame {
 
         convertItem.setEnabled(false);
         validateItem.setEnabled(false);
+        saveMessageReportItem.setEnabled(false);
     }
 
     public void disableEditionTab() {
@@ -1408,6 +1409,11 @@ public class DataPreparationToolGUI extends JFrame {
         apePanel.getApeTabbedPane().enableConversionBtn();
         convertItem.setEnabled(true);
     }
+    
+    public void enableMessageReportBtns() {
+        apePanel.getApeTabbedPane().enableMessageReportBtn();
+        saveMessageReportItem.setEnabled(true);
+    }
 
     public void enableEseConversionBtn() {
         apePanel.getApeTabbedPane().enableConversionEseBtn();
@@ -1428,6 +1434,7 @@ public class DataPreparationToolGUI extends JFrame {
     private void enableAllBtnAndItems() {
         enableConversionBtns();
         enableValidationBtns();
+        enableMessageReportBtns();
         apePanel.getApeTabbedPane().enableConversionEseBtn();
     }
 

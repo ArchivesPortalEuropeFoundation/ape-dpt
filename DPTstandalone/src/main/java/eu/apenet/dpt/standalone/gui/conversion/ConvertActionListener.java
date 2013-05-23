@@ -111,6 +111,7 @@ public class ConvertActionListener implements ActionListener {
             dataPreparationToolGUI.enableRadioButtons();
             dataPreparationToolGUI.enableValidationBtns();
             dataPreparationToolGUI.enableConversionBtns();
+            dataPreparationToolGUI.enableMessageReportBtns();
             dataPreparationToolGUI.enableEditionTab();
         }
     }
@@ -184,6 +185,7 @@ public class ConvertActionListener implements ActionListener {
                 } else
                     apePanel.getApeTabbedPane().checkFlashingTab(APETabbedPane.TAB_CONVERSION, Utilities.FLASHING_RED_COLOR);
                 dataPreparationToolGUI.enableValidationBtns();
+                dataPreparationToolGUI.enableMessageReportBtns();
                 dataPreparationToolGUI.enableSaveBtn();
             } catch (Exception ex){
                 if(ex instanceof SaxonApiException)
