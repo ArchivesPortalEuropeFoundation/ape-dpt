@@ -56,7 +56,8 @@ public class APETabbedPane extends JTabbedPane {
     private JButton validateBtn;
     private JButton convertEseBtn;
     private JButton convertEdmBtn;
-    private JButton reportBtn;
+    private JButton validationReportBtn;
+    private JButton messageReportBtn;
 
     private JLabel stylesheetLabel;
     private JLabel schemaLabel;
@@ -96,12 +97,12 @@ public class APETabbedPane extends JTabbedPane {
 
     private void create() {
         validationErrors = new JTextArea();
-        reportBtn = new JButton();
+        validationReportBtn = new JButton();
         JPanel validationPanel = new JPanel(new BorderLayout());
         JPanel buttonPanel = new JPanel(new GridLayout(1, 5));
         buttonPanel.add(new JLabel(""));
         buttonPanel.add(new JLabel(""));
-        buttonPanel.add(reportBtn);
+        buttonPanel.add(validationReportBtn);
         buttonPanel.add(new JLabel(""));
         buttonPanel.add(new JLabel(""));
         validationPanel.add(buttonPanel, BorderLayout.NORTH);
@@ -117,6 +118,7 @@ public class APETabbedPane extends JTabbedPane {
         validateBtn = new JButton();
         convertEseBtn = new JButton();
         convertEdmBtn = new JButton();
+        messageReportBtn = new JButton();
 
         stylesheetLabel = new JLabel(labels.getString("summary.stylesheets.label") + ":");
         schemaLabel = new JLabel(labels.getString("summary.schemas.label") + ":");
@@ -150,13 +152,17 @@ public class APETabbedPane extends JTabbedPane {
         convertEdmBtn.setPreferredSize(DEFAULT_BTN_DIMENSION);
         convertEdmBtn.setEnabled(false);
 
+        messageReportBtn.addActionListener(new MessageReportActionListener(retrieveFromDb, dataPreparationToolGUI.getXmlEadList(), dataPreparationToolGUI.getFileInstances(), labels, this));
+        messageReportBtn.setPreferredSize(DEFAULT_BTN_DIMENSION);
+        messageReportBtn.setEnabled(false);
+
         validateBtn.addActionListener(new ValidateActionListener(dataPreparationToolGUI, this));
         validateBtn.setPreferredSize(DEFAULT_BTN_DIMENSION);
         validateBtn.setEnabled(false);
 
-        reportBtn.addActionListener(new DownloadReportActionListener(dataPreparationToolGUI));
-        reportBtn.setPreferredSize(DEFAULT_BTN_DIMENSION);
-        reportBtn.setEnabled(false);
+        validationReportBtn.addActionListener(new DownloadReportActionListener(dataPreparationToolGUI));
+        validationReportBtn.setPreferredSize(DEFAULT_BTN_DIMENSION);
+        validationReportBtn.setEnabled(false);
     }
 
     public void changeBackgroundColor(int tab, Color color) {
@@ -219,11 +225,17 @@ public class APETabbedPane extends JTabbedPane {
     public void disableConversionEdmBtn() {
         convertEdmBtn.setEnabled(false);
     }
-    public void enableReportBtn() {
-        reportBtn.setEnabled(true);
+    public void enableMessageReportBtn() {
+        messageReportBtn.setEnabled(true);
     }
-    public void disableReportBtn() {
-        reportBtn.setEnabled(false);
+    public void disableMessageReportBtn() {
+        messageReportBtn.setEnabled(false);
+    }
+    public void enableValidationReportBtn() {
+        validationReportBtn.setEnabled(true);
+    }
+    public void disableValidationReportBtn() {
+        validationReportBtn.setEnabled(false);
     }
 
     public void changeLanguage(ResourceBundle labels) {
@@ -237,7 +249,8 @@ public class APETabbedPane extends JTabbedPane {
         validateBtn.setText(labels.getString("validate"));
         convertEseBtn.setText(labels.getString("summary.convertEse.button"));
         convertEdmBtn.setText(labels.getString("summary.convertEdm.button"));
-        reportBtn.setText(labels.getString("dataquality.report.download"));
+        messageReportBtn.setText(labels.getString("summary.messageReport.button"));
+        validationReportBtn.setText(labels.getString("dataquality.report.download"));
 
         stylesheetLabel.setText(labels.getString("summary.stylesheets.label") + ":");
         schemaLabel.setText(labels.getString("summary.schemas.label") + ":");
@@ -288,6 +301,8 @@ public class APETabbedPane extends JTabbedPane {
         p.add(convertEseBtn);
         p.add(Box.createRigidArea(new Dimension(0, 10)));
         p.add(convertEdmBtn);
+        p.add(Box.createRigidArea(new Dimension(0, 10)));
+        p.add(messageReportBtn);
         return p;
     }
 
@@ -450,5 +465,9 @@ public class APETabbedPane extends JTabbedPane {
 
     public JButton getConvertEseBtn() {
         return convertEseBtn;
+    }
+
+    public JButton getMessageReportBtn() {
+        return messageReportBtn;
     }
 }

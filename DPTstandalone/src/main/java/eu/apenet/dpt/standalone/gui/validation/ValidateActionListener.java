@@ -147,7 +147,7 @@ public class ValidateActionListener implements ActionListener {
                         fileInstance.setValidationErrors(fileInstance.getValidationErrors() + writer.toString());
 
                         fileInstance.setXmlQualityErrors(createXmlQualityErrors(xmlQualityCheckerCall));
-                        apeTabbedPane.enableReportBtn();
+                        apeTabbedPane.enableValidationReportBtn();
                     }
                     apeTabbedPane.setValidationErrorText(fileInstance.getValidationErrors());
                     apeTabbedPane.checkFlashingTab(APETabbedPane.TAB_VALIDATION, Utilities.FLASHING_GREEN_COLOR);
