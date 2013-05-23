@@ -341,6 +341,7 @@ public class EagContactPanel extends EagPanels {
 
                 int currentTabIndex = mainTabbedPane.getSelectedIndex();
                 if(currentTabIndex+1 < mainTabbedPane.getTabCount()) {
+                    reloadTabbedPanel(new EagContactPanel(eag, tabbedPane, mainTabbedPane, eag2012Frame, model, labels, repositoryNb).buildEditorPanel(errors), 2);
                     mainTabbedPane.setEnabledAt(currentTabIndex, false);
                     mainTabbedPane.setEnabledAt(currentTabIndex+1, true);
                     mainTabbedPane.setSelectedIndex(currentTabIndex+1);
@@ -363,10 +364,10 @@ public class EagContactPanel extends EagPanels {
 
                 int currentTabIndex = mainTabbedPane.getSelectedIndex();
                 if(currentTabIndex > 0) {
+                    reloadTabbedPanel(new EagContactPanel(eag, tabbedPane, mainTabbedPane, eag2012Frame, model, labels, repositoryNb).buildEditorPanel(errors), 2);
                     mainTabbedPane.setEnabledAt(currentTabIndex, false);
                     mainTabbedPane.setEnabledAt(currentTabIndex-1, true);
                     mainTabbedPane.setSelectedIndex(currentTabIndex-1);
-                    reloadTabbedPanel(new EagInstitutionPanel(eag, tabbedPane, mainTabbedPane, eag2012Frame, model, false, labels, repositoryNb-1).buildEditorPanel(errors), 0);
                 }
             } catch (Eag2012FormException e) {
                 reloadTabbedPanel(new EagContactPanel(eag, tabbedPane, mainTabbedPane, eag2012Frame, model, labels, repositoryNb).buildEditorPanel(errors), 2);

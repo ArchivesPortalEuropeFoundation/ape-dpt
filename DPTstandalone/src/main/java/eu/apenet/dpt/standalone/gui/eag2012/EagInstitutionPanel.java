@@ -475,6 +475,7 @@ public class EagInstitutionPanel extends EagPanels {
 
                 int currentTabIndex = mainTabbedPane.getSelectedIndex();
                 if(currentTabIndex+1 < mainTabbedPane.getTabCount()) {
+                    reloadTabbedPanel(new EagInstitutionPanel(eag, tabbedPane, mainTabbedPane, eag2012Frame, model, isNew, labels, repositoryNb).buildEditorPanel(errors), 0);
                     mainTabbedPane.setEnabledAt(currentTabIndex, false);
                     mainTabbedPane.setEnabledAt(currentTabIndex+1, true);
                     mainTabbedPane.setSelectedIndex(currentTabIndex+1);
