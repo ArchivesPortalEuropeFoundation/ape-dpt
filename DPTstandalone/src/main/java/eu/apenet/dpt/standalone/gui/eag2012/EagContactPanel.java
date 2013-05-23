@@ -630,8 +630,8 @@ public class EagContactPanel extends EagPanels {
 
         public void stateChanged(ChangeEvent changeEvent) {
             LOG.info("stateChanged (mainTabbed index: " + mainTabbedPane.getSelectedIndex() + ")");
+            tabbedPane.removeChangeListener(this);
             if(click && !Eag2012Frame.firstTimeInTab) {
-                tabbedPane.removeChangeListener(this);
                 try {
                     super.updateEagObject(false);
                     LOG.info("Ok");

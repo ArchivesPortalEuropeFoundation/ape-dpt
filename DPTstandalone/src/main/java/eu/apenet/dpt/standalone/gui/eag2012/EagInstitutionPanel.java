@@ -407,6 +407,7 @@ public class EagInstitutionPanel extends EagPanels {
         nextInstitutionTabBtn.addActionListener(new NextInstitutionTabBtnAction(eag, tabbedPane, model));
         builder.add(nextInstitutionTabBtn, cc.xy(5, rowNb));
 
+        LOG.info("Add listener");
         tabbedPane.addChangeListener(new TabChangeListener(eag, tabbedPane, model));
 
         return builder.getPanel();
@@ -849,9 +850,10 @@ public class EagInstitutionPanel extends EagPanels {
         public void actionPerformed(ActionEvent actionEvent) {}
 
         public void stateChanged(ChangeEvent changeEvent) {
-            LOG.info("stateChanged (mainTabbed index: " + mainTabbedPane.getSelectedIndex() + ")");
+            LOG.info("stateChanged (mainTabbed index: " + mainTabbedPane.getSelectedIndex() + ") + (changeListener NB: " + tabbedPane.getChangeListeners().length + ")");tabbedPane.removeChangeListener(this);
+            LOG.info("Remove listener");
+            tabbedPane.removeChangeListener(this);
             if(click && !Eag2012Frame.firstTimeInTab) {
-                tabbedPane.removeChangeListener(this);
                 try {
                     super.updateEagObject(false);
                     LOG.info("Ok");
