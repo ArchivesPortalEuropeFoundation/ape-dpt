@@ -850,10 +850,11 @@ public class EagInstitutionPanel extends EagPanels {
         public void actionPerformed(ActionEvent actionEvent) {}
 
         public void stateChanged(ChangeEvent changeEvent) {
-            LOG.info("stateChanged (mainTabbed index: " + mainTabbedPane.getSelectedIndex() + ") + (changeListener NB: " + tabbedPane.getChangeListeners().length + ")");tabbedPane.removeChangeListener(this);
-            LOG.info("Remove listener");
-            tabbedPane.removeChangeListener(this);
+            LOG.info("stateChanged (mainTabbed index: " + mainTabbedPane.getSelectedIndex() + ") + (changeListener NB: " + tabbedPane.getChangeListeners().length + ")");
+            LOG.info(click + " - " + Eag2012Frame.firstTimeInTab);
             if(click && !Eag2012Frame.firstTimeInTab) {
+                LOG.info("Remove listener");
+                tabbedPane.removeChangeListener(this);
                 try {
                     super.updateEagObject(false);
                     LOG.info("Ok");

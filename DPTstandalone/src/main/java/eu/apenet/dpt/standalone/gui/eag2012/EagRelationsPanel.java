@@ -313,8 +313,8 @@ public class EagRelationsPanel extends EagPanels {
 
         public void stateChanged(ChangeEvent changeEvent) {
             LOG.info("stateChanged");
-            tabbedPane.removeChangeListener(this);
             if(click && !Eag2012Frame.firstTimeInTab) {
+                tabbedPane.removeChangeListener(this);
                 try {
                     super.updateEagObject(false);
                     LOG.info("Ok");
