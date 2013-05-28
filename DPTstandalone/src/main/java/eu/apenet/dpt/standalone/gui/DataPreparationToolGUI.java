@@ -726,6 +726,7 @@ public class DataPreparationToolGUI extends JFrame {
                                 convertEseSelectionBtn.setEnabled(false);
                             }
                             disableAllBtnAndItems();
+                            saveMessageReportItem.setEnabled(true);
                             changeInfoInGUI("");
                         } else {
                             convertAndValidateBtn.setEnabled(false);
