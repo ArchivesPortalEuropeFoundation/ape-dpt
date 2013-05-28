@@ -8,7 +8,7 @@
 		<relativePath>..</relativePath>
     </parent>
     <artifactId>DPTutils</artifactId>
-    <packaging>pom</packaging>
+    <packaging>jar</packaging>
     <name>DPT Utilities</name>
     <build>
         <plugins>
