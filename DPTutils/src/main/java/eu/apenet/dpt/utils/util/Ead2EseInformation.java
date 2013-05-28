@@ -48,6 +48,7 @@ public class Ead2EseInformation {
     }
 
     public Ead2EseInformation(File fileToRead, String databaseRoleType, String archdescRepository) throws IOException, SAXException, ParserConfigurationException {
+        this();
         this.archdescRepository = archdescRepository;
         this.alternativeLanguages = new TreeSet<String>();
         determineDaoInformation(fileToRead, databaseRoleType);
@@ -95,6 +96,7 @@ public class Ead2EseInformation {
     }
 
     private String determineRepository(Node daoNode, Document doc) {
+        LOG.info("determineRepository has been called");
         String result = "";
         Node didNode = daoNode.getParentNode();
         NodeList repositories = doc.getElementsByTagName("repository");
