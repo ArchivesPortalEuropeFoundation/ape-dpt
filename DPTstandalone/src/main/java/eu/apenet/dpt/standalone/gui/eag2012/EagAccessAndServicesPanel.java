@@ -1289,6 +1289,10 @@ public class EagAccessAndServicesPanel extends EagPanels {
                         }
                     }
                 }*/
+            if(repository.getServices() == null)
+                repository.setServices(new Services());
+            if(repository.getServices().getSearchroom() == null)
+                repository.getServices().setSearchroom(new Searchroom());
 
             Searchroom searchroom = repository.getServices().getSearchroom();
             boolean hasContactInfo = false;
@@ -1303,7 +1307,7 @@ public class EagAccessAndServicesPanel extends EagPanels {
                     searchroom.getContact().getTelephone().add(telephone);
                     hasContactInfo = true;
                 }
-            } else if(!searchroom.getContact().getTelephone().isEmpty()) {
+            } else if(searchroom.getContact() != null && !searchroom.getContact().getTelephone().isEmpty()) {
                 searchroom.getContact().getTelephone().remove(0);
                 if(searchroom.getContact().getTelephone().size() > 0)
                     hasContactInfo = true;
