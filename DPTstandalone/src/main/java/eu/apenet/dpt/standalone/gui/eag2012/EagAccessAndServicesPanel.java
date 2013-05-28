@@ -1048,7 +1048,12 @@ public class EagAccessAndServicesPanel extends EagPanels {
                 super.updateEagObject(false);
             } catch (Eag2012FormException e) {
             }
-            eag.getArchguide().getDesc().getRepositories().getRepository().get(repositoryNb).getServices().getRecreationalServices().getExhibition().add(new Exhibition());
+            
+            if(eag.getArchguide().getDesc().getRepositories().getRepository().get(repositoryNb).getServices() != null){
+                eag.getArchguide().getDesc().getRepositories().getRepository().get(repositoryNb).getServices().getRecreationalServices().getExhibition().add(new Exhibition());
+            } else {
+                JOptionPane.showMessageDialog(eag2012Frame, labels.getString("eag2012.fillServiceBeforeAddingAnother"));
+            }
             reloadTabbedPanel(new EagAccessAndServicesPanel(eag, tabbedPane, mainTabbedPane, eag2012Frame, model, labels, repositoryNb).buildEditorPanel(errors), 3);
         }
     }
@@ -1063,7 +1068,12 @@ public class EagAccessAndServicesPanel extends EagPanels {
                 super.updateEagObject(false);
             } catch (Eag2012FormException e) {
             }
-            eag.getArchguide().getDesc().getRepositories().getRepository().get(repositoryNb).getServices().getRecreationalServices().getToursSessions().add(new ToursSessions());
+            
+            if(eag.getArchguide().getDesc().getRepositories().getRepository().get(repositoryNb).getServices() != null){
+                eag.getArchguide().getDesc().getRepositories().getRepository().get(repositoryNb).getServices().getRecreationalServices().getToursSessions().add(new ToursSessions());
+            } else {
+                JOptionPane.showMessageDialog(eag2012Frame, labels.getString("eag2012.fillServiceBeforeAddingAnother"));
+            }
             reloadTabbedPanel(new EagAccessAndServicesPanel(eag, tabbedPane, mainTabbedPane, eag2012Frame, model, labels, repositoryNb).buildEditorPanel(errors), 3);
         }
     }
@@ -1078,7 +1088,11 @@ public class EagAccessAndServicesPanel extends EagPanels {
                 super.updateEagObject(false);
             } catch (Eag2012FormException e) {
             }
-            eag.getArchguide().getDesc().getRepositories().getRepository().get(repositoryNb).getServices().getRecreationalServices().getOtherServices().add(new OtherServices());
+            if(eag.getArchguide().getDesc().getRepositories().getRepository().get(repositoryNb).getServices() != null){
+                eag.getArchguide().getDesc().getRepositories().getRepository().get(repositoryNb).getServices().getRecreationalServices().getOtherServices().add(new OtherServices());
+            } else {
+                JOptionPane.showMessageDialog(eag2012Frame, labels.getString("eag2012.fillServiceBeforeAddingAnother"));
+            }
             reloadTabbedPanel(new EagAccessAndServicesPanel(eag, tabbedPane, mainTabbedPane, eag2012Frame, model, labels, repositoryNb).buildEditorPanel(errors), 3);
         }
     }
@@ -1115,11 +1129,16 @@ public class EagAccessAndServicesPanel extends EagPanels {
                 super.updateEagObject(false);
             } catch (Eag2012FormException e) {
             }
-            Reproductionser reproductionser = eag.getArchguide().getDesc().getRepositories().getRepository().get(repositoryNb).getServices().getTechservices().getReproductionser();
-            if(reproductionser.getDescriptiveNote() == null) {
-                reproductionser.setDescriptiveNote(new DescriptiveNote());
+
+            if(eag.getArchguide().getDesc().getRepositories().getRepository().get(repositoryNb).getServices() != null){
+                Reproductionser reproductionser = eag.getArchguide().getDesc().getRepositories().getRepository().get(repositoryNb).getServices().getTechservices().getReproductionser();
+                if(reproductionser.getDescriptiveNote() == null) {
+                    reproductionser.setDescriptiveNote(new DescriptiveNote());
+                }
+                reproductionser.getDescriptiveNote().getP().add(new P());
+            } else {
+                JOptionPane.showMessageDialog(eag2012Frame, labels.getString("eag2012.fillDescriptionBeforeAddingAnother"));
             }
-            reproductionser.getDescriptiveNote().getP().add(new P());
             reloadTabbedPanel(new EagAccessAndServicesPanel(eag, tabbedPane, mainTabbedPane, eag2012Frame, model, labels, repositoryNb).buildEditorPanel(errors), 3);
         }
     }
@@ -1135,11 +1154,16 @@ public class EagAccessAndServicesPanel extends EagPanels {
                 super.updateEagObject(false);
             } catch (Eag2012FormException e) {
             }
-            Restorationlab restorationlab = eag.getArchguide().getDesc().getRepositories().getRepository().get(repositoryNb).getServices().getTechservices().getRestorationlab();
-            if(restorationlab.getDescriptiveNote() == null) {
-                restorationlab.setDescriptiveNote(new DescriptiveNote());
+            
+            if(eag.getArchguide().getDesc().getRepositories().getRepository().get(repositoryNb).getServices() != null){
+                Restorationlab restorationlab = eag.getArchguide().getDesc().getRepositories().getRepository().get(repositoryNb).getServices().getTechservices().getRestorationlab();
+                if(restorationlab.getDescriptiveNote() == null) {
+                    restorationlab.setDescriptiveNote(new DescriptiveNote());
+                }
+                restorationlab.getDescriptiveNote().getP().add(new P());
+            } else {
+                JOptionPane.showMessageDialog(eag2012Frame, labels.getString("eag2012.fillDescriptionBeforeAddingAnother"));
             }
-            restorationlab.getDescriptiveNote().getP().add(new P());
             reloadTabbedPanel(new EagAccessAndServicesPanel(eag, tabbedPane, mainTabbedPane, eag2012Frame, model, labels, repositoryNb).buildEditorPanel(errors), 3);
         }
     }
