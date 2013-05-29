@@ -186,7 +186,7 @@ http://purl.org/dc/terms/ http://www.dublincore.org/schemas/xmls/qdc/dcterms.xsd
                     <xsl:apply-templates select="$didnode/unitid"/>
                 </dc:identifier>
                 <xsl:choose>
-                    <xsl:when test='$useExistingRepository'>
+                    <xsl:when test="$useExistingRepository='true'">
                         <xsl:choose>
                             <xsl:when test="$didnode/repository">
                                 <xsl:apply-templates select="$didnode/repository"/>
@@ -339,7 +339,7 @@ http://purl.org/dc/terms/ http://www.dublincore.org/schemas/xmls/qdc/dcterms.xsd
                                         </xsl:call-template>
                                     </xsl:when>
                                     <xsl:otherwise>
-                                        <xsl:if test='$inheritOrigination = "true" and fn:string-length($inheritedOriginations) > 0'>
+                                        <xsl:if test="$inheritOrigination = 'true' and fn:string-length($inheritedOriginations) > 0">
                                             <xsl:copy-of select="$inheritedOriginations"/>
                                         </xsl:if>
                                     </xsl:otherwise>
@@ -368,7 +368,7 @@ http://purl.org/dc/terms/ http://www.dublincore.org/schemas/xmls/qdc/dcterms.xsd
                                         </xsl:call-template>
                                     </xsl:when>
                                     <xsl:otherwise>
-                                        <xsl:if test='$inheritCustodhist = "true" and fn:string-length($inheritedCustodhists) > 0'>
+                                        <xsl:if test="$inheritCustodhist = 'true' and fn:string-length($inheritedCustodhists) > 0">
                                             <xsl:copy-of select="$inheritedCustodhists"/>
                                         </xsl:if>
                                     </xsl:otherwise>
@@ -389,7 +389,7 @@ http://purl.org/dc/terms/ http://www.dublincore.org/schemas/xmls/qdc/dcterms.xsd
                                         </xsl:call-template>
                                     </xsl:when>
                                     <xsl:otherwise>
-                                        <xsl:if test='$inheritAltformavail = "true" and fn:string-length($inheritedAltformavails) > 0'>
+                                        <xsl:if test="$inheritAltformavail = 'true' and fn:string-length($inheritedAltformavails) > 0">
                                             <xsl:copy-of select="$inheritedAltformavails"/>
                                         </xsl:if>
                                     </xsl:otherwise>
@@ -410,7 +410,7 @@ http://purl.org/dc/terms/ http://www.dublincore.org/schemas/xmls/qdc/dcterms.xsd
                                         </xsl:call-template>
                                     </xsl:when>
                                     <xsl:otherwise>
-                                        <xsl:if test='$inheritControlaccess = "true" and fn:string-length($inheritedControlaccesses) > 0'>
+                                        <xsl:if test="$inheritControlaccess = 'true' and fn:string-length($inheritedControlaccesses) > 0">
                                             <xsl:copy-of select="$inheritedControlaccesses"/>
                                         </xsl:if>
                                     </xsl:otherwise>
@@ -472,7 +472,7 @@ http://purl.org/dc/terms/ http://www.dublincore.org/schemas/xmls/qdc/dcterms.xsd
                                 </xsl:call-template>
                             </xsl:when>
                             <xsl:otherwise>
-                                <xsl:if test='$inheritOrigination = "true" and fn:string-length($inheritedOriginations) > 0'>
+                                <xsl:if test="$inheritOrigination = 'true' and fn:string-length($inheritedOriginations) > 0">
                                     <xsl:copy-of select="$inheritedOriginations"/>
                                 </xsl:if>
                             </xsl:otherwise>
@@ -485,7 +485,7 @@ http://purl.org/dc/terms/ http://www.dublincore.org/schemas/xmls/qdc/dcterms.xsd
                                 </xsl:call-template>
                             </xsl:when>
                             <xsl:otherwise>
-                                <xsl:if test='$inheritCustodhist = "true" and fn:string-length($inheritedCustodhists) > 0'>
+                                <xsl:if test="$inheritCustodhist = 'true' and fn:string-length($inheritedCustodhists) > 0">
                                     <xsl:copy-of select="$inheritedCustodhists"/>
                                 </xsl:if>
                             </xsl:otherwise>
@@ -497,7 +497,7 @@ http://purl.org/dc/terms/ http://www.dublincore.org/schemas/xmls/qdc/dcterms.xsd
                                 </xsl:call-template>
                             </xsl:when>
                             <xsl:otherwise>
-                                <xsl:if test='$inheritAltformavail = "true" and fn:string-length($inheritedAltformavails) > 0'>
+                                <xsl:if test="$inheritAltformavail = 'true' and fn:string-length($inheritedAltformavails) > 0">
                                     <xsl:copy-of select="$inheritedAltformavails"/>
                                 </xsl:if>
                             </xsl:otherwise>
@@ -509,7 +509,7 @@ http://purl.org/dc/terms/ http://www.dublincore.org/schemas/xmls/qdc/dcterms.xsd
                                 </xsl:call-template>
                             </xsl:when>
                             <xsl:otherwise>
-                                <xsl:if test='$inheritControlaccess = "true" and fn:string-length($inheritedControlaccesses) > 0'>
+                                <xsl:if test="$inheritControlaccess = 'true' and fn:string-length($inheritedControlaccesses) > 0">
                                     <xsl:copy-of select="$inheritedControlaccesses"/>
                                 </xsl:if>
                             </xsl:otherwise>
@@ -525,7 +525,7 @@ http://purl.org/dc/terms/ http://www.dublincore.org/schemas/xmls/qdc/dcterms.xsd
                             <xsl:with-param name="langmaterials" select="$didnode/langmaterial"></xsl:with-param>
                         </xsl:call-template>								
                     </xsl:when>
-                    <xsl:when test='$inheritLanguage = "true"'>
+                    <xsl:when test="$inheritLanguage = 'true'">
                         <xsl:choose>
                             <xsl:when test='fn:string-length($inheritedLanguages) > 0'>
                                 <xsl:copy-of select="$inheritedLanguages"/>
@@ -537,7 +537,7 @@ http://purl.org/dc/terms/ http://www.dublincore.org/schemas/xmls/qdc/dcterms.xsd
                             </xsl:otherwise>
                         </xsl:choose>
                     </xsl:when>
-                    <xsl:when test='$inheritFromParent'>
+                    <xsl:when test="$inheritFromParent">
                         <xsl:choose>
                             <xsl:when test='$parentcnode/did/langmaterial'>
                                 <xsl:call-template name="language">
@@ -570,7 +570,7 @@ http://purl.org/dc/terms/ http://www.dublincore.org/schemas/xmls/qdc/dcterms.xsd
                 </xsl:choose>
                 
                 <xsl:choose>
-                    <xsl:when test='$useExistingDaoRole'>
+                    <xsl:when test="$useExistingDaoRole='true'">
                         <xsl:choose>
                             <xsl:when test="./@xlink:role">
                                 <dc:type>
@@ -693,7 +693,7 @@ http://purl.org/dc/terms/ http://www.dublincore.org/schemas/xmls/qdc/dcterms.xsd
                     <xsl:value-of select="$europeana_provider"/>
                 </europeana:provider>
                 <xsl:choose>
-                    <xsl:when test='$useExistingDaoRole'>
+                    <xsl:when test="$useExistingDaoRole='true'">
                         <xsl:choose>
                             <xsl:when test=' "TEXT" eq fn:string(@xlink:role)'>
                                 <europeana:type>
@@ -778,7 +778,7 @@ http://purl.org/dc/terms/ http://www.dublincore.org/schemas/xmls/qdc/dcterms.xsd
                 </europeana:rights>
                 
                 <xsl:choose>
-                    <xsl:when test='$useExistingRepository'>
+                    <xsl:when test="$useExistingRepository='true'">
                         <xsl:choose>
                             <xsl:when test="$didnode/repository">
                                 <xsl:apply-templates select="$didnode/repository" mode="useExistingDataProvider"/>
@@ -930,7 +930,7 @@ http://purl.org/dc/terms/ http://www.dublincore.org/schemas/xmls/qdc/dcterms.xsd
     </xsl:template>
     <xsl:template match='unitdate'>
         <xsl:choose>
-            <xsl:when test='$useISODates="true"'>
+            <xsl:when test="$useISODates='true'">
                 <xsl:choose>
                     <xsl:when test='./@era="ce" and ./@normal'> 
                         <xsl:analyze-string select="./@normal" 
@@ -1159,7 +1159,7 @@ http://purl.org/dc/terms/ http://www.dublincore.org/schemas/xmls/qdc/dcterms.xsd
     </xsl:template>
     <xsl:template match='date'>
         <xsl:choose>
-            <xsl:when test='$useISODates="true"'>
+            <xsl:when test="$useISODates='true'">
                 <xsl:choose>
                     <xsl:when test='./@era="ce" and ./@normal'> 
                         <xsl:analyze-string select="./@normal" 
