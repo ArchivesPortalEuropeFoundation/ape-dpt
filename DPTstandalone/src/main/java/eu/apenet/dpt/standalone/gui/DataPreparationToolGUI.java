@@ -773,6 +773,8 @@ public class DataPreparationToolGUI extends JFrame {
                         apePanel.getApeTabbedPane().disableConversionBtn();
                         apePanel.getApeTabbedPane().disableValidationBtn();
                         apePanel.getApeTabbedPane().disableConversionEseBtn();
+                        apePanel.getApeTabbedPane().disableMessageReportBtn();
+                        saveMessageReportItem.setEnabled(false);
                         convertAndValidateBtn.setEnabled(false);
                         validateSelectionBtn.setEnabled(false);
                         if (eseList.getSelectedValues().length > 1) {
@@ -782,7 +784,7 @@ public class DataPreparationToolGUI extends JFrame {
                         } else {
                             apePanel.getApeTabbedPane().enableConversionEdmBtn();
                             convertEseSelectionBtn.setEnabled(false);
-                            changeInfoInGUI(((File) eseList.getSelectedValue()).getName());
+                            //changeInfoInGUI(((File) eseList.getSelectedValue()).getName());
                             if (apePanel.getApeTabbedPane().getSelectedIndex() == APETabbedPane.TAB_EDITION) {
                                 apePanel.getApeTabbedPane().createEditionTree(((File) eseList.getSelectedValue()));
                             }
