@@ -756,7 +756,8 @@ public class EagInstitutionPanel extends EagPanels {
             }
             repository.getAccessibility().get(0).setQuestion(facilitiesForDisabledCombo.getSelectedItem().toString());
 
-            eag.setRelations(new Relations());
+            if(eag.getRelations() == null)
+                eag.setRelations(new Relations());
             if(eag.getRelations().getResourceRelation().size() > 0) {
                 if(StringUtils.isNotEmpty(refInstitutionHoldingsGuideTf.getText()) && !refInstitutionHoldingsGuideTf.getText().equals(eag.getRelations().getResourceRelation().get(0).getHref())) {
                     eag.getRelations().getResourceRelation().get(0).setHref(refInstitutionHoldingsGuideTf.getText());
