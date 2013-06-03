@@ -58,6 +58,7 @@ public class EseOptionsPanel extends JPanel {
     private static final String EUROPEANA_RIGHTS_PAID = "Paid access";
     private static final String EUROPEANA_RIGHTS_RESTRICTED = "Restricted access";
     private static final String EUROPEANA_RIGHTS_UNKNOWN = "Unknown";
+    private static final String LANGUAGES = "languages";
     private String archdescRepository = null;
     private ResourceBundle labels;
     private RetrieveFromDb retrieveFromDb;
@@ -86,6 +87,7 @@ public class EseOptionsPanel extends JPanel {
     private Ead2EseInformation ead2EseInformation;
     private JCheckBox useExistingRepoCheckbox;
     private JCheckBox useExistingDaoRoleCheckbox;
+    private JPanel languageBoxPanel = new LanguageBoxPanel();
 
     public EseOptionsPanel(ResourceBundle labels, DataPreparationToolGUI dataPreparationToolGUI, JFrame parent, APETabbedPane apeTabbedPane, boolean batch) {
         super(new BorderLayout());
@@ -115,7 +117,6 @@ public class EseOptionsPanel extends JPanel {
         CardLayout cardLayout = (CardLayout) extraLicenseCardLayoutPanel.getLayout();
         cardLayout.show(extraLicenseCardLayoutPanel, EMPTY_PANEL);
 
-
         JPanel panel = new JPanel(new GridLayout(1, 1));
         panel.add(new Label(labels.getString("ese.mandatoryFieldsInfo")));
         panel.add(new Label(""));
@@ -133,7 +134,6 @@ public class EseOptionsPanel extends JPanel {
         useExistingRepoCheckbox = new JCheckBox(labels.getString("ese.takeFromFileRepository"));
         useExistingRepoCheckbox.setSelected(true);
         useExistingRepoCheckbox.addItemListener(new ItemListener() {
-
             public void itemStateChanged(ItemEvent e) {
                 //empty method on purpose
             }
@@ -215,7 +215,6 @@ public class EseOptionsPanel extends JPanel {
         useExistingDaoRoleCheckbox = new JCheckBox(labels.getString("ese.takeFromFileDaoRole"));
         useExistingDaoRoleCheckbox.setSelected(true);
         useExistingDaoRoleCheckbox.addItemListener(new ItemListener() {
-
             public void itemStateChanged(ItemEvent e) {
             }
         });
@@ -286,29 +285,31 @@ public class EseOptionsPanel extends JPanel {
         panel.setBorder(BLACK_LINE);
         formPanel.add(panel);
 
-        panel = new JPanel(new GridLayout(1, 3));
-        panel.add(new Label(labels.getString("ese.inheritLanguage") + ":" + "*"));
+        JPanel languagePanel = new JPanel(new GridLayout(1, 3));
+        languagePanel.add(new Label(labels.getString("ese.inheritLanguage") + ":" + "*"));
         JPanel rbPanel = new JPanel(new GridLayout(3, 1));
         inheritLanguageGroup = new ButtonGroup();
         radioButton = new JRadioButton(labels.getString("ese.yes"));
         radioButton.setActionCommand(YES);
+        radioButton.addActionListener(new ChangePanelActionListener(languageBoxPanel));
         inheritLanguageGroup.add(radioButton);
         rbPanel.add(radioButton);
         radioButton = new JRadioButton(labels.getString("ese.no"), true);
         radioButton.setActionCommand(NO);
+        radioButton.addActionListener(new ChangePanelActionListener(languageBoxPanel));
         inheritLanguageGroup.add(radioButton);
         rbPanel.add(radioButton);
-        radioButton = new JRadioButton(labels.getString("ese.provide") + ":");
+        radioButton = new JRadioButton(labels.getString("ese.provide"));
         radioButton.setActionCommand(PROVIDE);
+        radioButton.addActionListener(new ChangePanelActionListener(languageBoxPanel));
         inheritLanguageGroup.add(radioButton);
         rbPanel.add(radioButton);
-        panel.add(rbPanel);
+        languagePanel.add(rbPanel, BorderLayout.WEST);
 
-        languageList = new JList(getAllLanguages());
-        languageList.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
-        panel.add(new JScrollPane(languageList));
-        panel.setBorder(GREY_LINE);
-        formPanel.add(panel);
+        languageBoxPanel.setVisible(false);
+        languagePanel.add(languageBoxPanel, BorderLayout.EAST);
+        languagePanel.setBorder(BLACK_LINE);
+        formPanel.add(languagePanel);
 
         JPanel mainLicensePanel = new JPanel(new BorderLayout());
         panel = new JPanel(new GridLayout(4, 2));
@@ -464,9 +465,9 @@ public class EseOptionsPanel extends JPanel {
                 } else if (btn.getActionCommand().equals(PROVIDE)) {
                     StringBuilder result = new StringBuilder();
                     Object[] languageValues = languageList.getSelectedValues();
-                    for(int i=0; i < languageValues.length; i++){
+                    for (int i = 0; i < languageValues.length; i++) {
                         result.append(languages.get(languageValues[i].toString()));
-                        if(languageValues.length > 0 && i < (languageValues.length - 1)){
+                        if (languageValues.length > 0 && i < (languageValues.length - 1)) {
                             result.append(" ");
                         }
                     }
@@ -566,8 +567,9 @@ public class EseOptionsPanel extends JPanel {
         }
 
         if (StringUtils.isEmpty(dataProviderTextArea.getText())) {
-            if (!useExistingRepoCheckbox.isSelected())
+            if (!useExistingRepoCheckbox.isSelected()) {
                 throw new Exception("dataProviderTextField is empty");
+            }
         }
 
         if (StringUtils.isEmpty(providerTextArea.getText())) {
@@ -607,18 +609,26 @@ public class EseOptionsPanel extends JPanel {
 
     public class ChangePanelActionListener implements ActionListener {
 
-        private JPanel extraLicenseCardLayoutPanel;
+        private JPanel extraCardLayoutPanel;
 
-        ChangePanelActionListener(JPanel extraLicenseCardLayoutPanel) {
-            this.extraLicenseCardLayoutPanel = extraLicenseCardLayoutPanel;
+        ChangePanelActionListener(JPanel extraCardLayoutPanel) {
+            this.extraCardLayoutPanel = extraCardLayoutPanel;
         }
 
         public void actionPerformed(ActionEvent actionEvent) {
-            CardLayout cardLayout = (CardLayout) extraLicenseCardLayoutPanel.getLayout();
-            if (actionEvent.getActionCommand().equals(CREATIVE_COMMONS_CC0) || actionEvent.getActionCommand().equals(CREATIVE_COMMONS_PUBLIC_DOMAIN_MARK)) {
-                cardLayout.show(extraLicenseCardLayoutPanel, EMPTY_PANEL);
-            } else {
-                cardLayout.show(extraLicenseCardLayoutPanel, actionEvent.getActionCommand());
+            if (actionEvent.getActionCommand().equals(YES) || actionEvent.getActionCommand().equals(NO)) {
+                languageBoxPanel.setVisible(false);
+            } else if (actionEvent.getActionCommand().equals(PROVIDE)) {
+                languageBoxPanel.setVisible(true);
+            }
+
+            if (extraCardLayoutPanel.getLayout() instanceof CardLayout) {
+                CardLayout cardLayout = (CardLayout) extraCardLayoutPanel.getLayout();
+                if (actionEvent.getActionCommand().equals(CREATIVE_COMMONS_CC0) || actionEvent.getActionCommand().equals(CREATIVE_COMMONS_PUBLIC_DOMAIN_MARK)) {
+                    cardLayout.show(extraCardLayoutPanel, EMPTY_PANEL);
+                } else if (actionEvent.getActionCommand().equals(CREATIVE_COMMONS) || actionEvent.getActionCommand().equals(EUROPEANA_RIGHTS_STATEMENTS)) {
+                    cardLayout.show(extraCardLayoutPanel, actionEvent.getActionCommand());
+                }
             }
         }
     }
@@ -779,6 +789,16 @@ public class EseOptionsPanel extends JPanel {
             String[] rights = {EUROPEANA_RIGHTS_FREE, EUROPEANA_RIGHTS_PAID, EUROPEANA_RIGHTS_RESTRICTED, EUROPEANA_RIGHTS_UNKNOWN};
             europeanaRightsComboBox = new JComboBox(rights);
             add(europeanaRightsComboBox);
+        }
+    }
+
+    private class LanguageBoxPanel extends JPanel {
+
+        LanguageBoxPanel() {
+            super(new GridLayout(1, 1));
+            languageList = new JList(getAllLanguages());
+            languageList.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
+            add(new JScrollPane(languageList));
         }
     }
 
