@@ -1091,31 +1091,35 @@
     <xsl:template match="repository/address/addressline" mode="copy fonds intermediate lowest">
         <addressline>
             <xsl:apply-templates select="node()" mode="#current" />
-            <!--<xsl:if test="../../extref/corpname">-->
-            <!--<xsl:value-of select="../../extref/corpname"/>-->
-            <!--<xsl:if test="../../extref/@href">-->
-            <!--<xsl:text> (</xsl:text><xsl:value-of select="extref/@href"/><xsl:text>)</xsl:text>-->
-            <!--</xsl:if>-->
-            <!--</xsl:if>-->
+            <xsl:if test="../../extref/corpname">
+                <xsl:value-of select="../../extref/corpname"/>
+                <xsl:if test="../../extref/@href">
+                    <xsl:text> (</xsl:text><xsl:value-of select="extref/@href"/><xsl:text>)</xsl:text>
+                </xsl:if>
+            </xsl:if>
         </addressline>
     </xsl:template>
 
     <!-- Used for the ALs -->
     <xsl:template match="repository/extref" mode="copy fonds intermediate lowest">
-        <extref>
-            <xsl:if test="@href">
-                <xsl:attribute name="xlink:href" select="@href"/>
-            </xsl:if>
-            <xsl:if test="@xlink:href">
-                <xsl:attribute name="xlink:href" select="@xlink:href"/>
-            </xsl:if>
-            <xsl:apply-templates select="node()" mode="#current"/>
-        </extref>
+        <xsl:if test="not(../../address/addressline)">
+            <extref>
+                <xsl:if test="@href">
+                    <xsl:attribute name="xlink:href" select="@href"/>
+                </xsl:if>
+                <xsl:if test="@xlink:href">
+                    <xsl:attribute name="xlink:href" select="@xlink:href"/>
+                </xsl:if>
+                <xsl:apply-templates select="node()" mode="#current"/>
+            </extref>
+        </xsl:if>
     </xsl:template>
 
-    <!--<xsl:template match="repository/extref/corpname" mode="fonds intermediate lowest">-->
-    <!--<xsl:apply-templates select="node()" mode="#current"/>-->
-    <!--</xsl:template>-->
+    <xsl:template match="repository/extref/corpname" mode="fonds intermediate lowest">
+        <xsl:if test="not(../../address/addressline)">
+            <xsl:apply-templates select="node()" mode="#current"/>
+        </xsl:if>
+    </xsl:template>
 
     <!-- copy fonds intermediate lowest: physloc -->
     <xsl:template match="physloc" mode="copy fonds intermediate lowest">
