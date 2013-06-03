@@ -14,18 +14,18 @@
 
     <xsl:template match="/">
         <xsl:choose>
-            <xsl:when test="//*:eadid/text()">
+            <xsl:when test="/*:ead/*:eadheader/*:eadid/text()">
                 <xsl:choose>
                     <xsl:when test="$addXMLNS = 'true'">
                         <c level="item" xmlns="urn:isbn:1-931666-22-9" xmlns:xlink="http://www.w3.org/1999/xlink">
                             <did>
-                                <xsl:if test="//*:archdesc/*:did/*:unitid[@type='call number']">
+                                <xsl:if test="/*:ead/*:archdesc/*:did/*:unitid[@type='call number']">
                                     <unitid encodinganalog="3.1.1"><xsl:value-of select="//*:archdesc/*:did/*:unitid[@type='call number']/text()"/></unitid>
                                 </xsl:if>
-                                <xsl:if test="//*:archdesc/*:did/*:unittitle[not(@type='short')]">
+                                <xsl:if test="/*:ead/*:archdesc/*:did/*:unittitle[not(@type='short')]">
                                     <unittitle encodinganalog="3.1.2"><xsl:value-of select="//*:archdesc/*:did/*:unittitle[not(@type='short')]/text()"/></unittitle>
                                 </xsl:if>
-                                <xsl:for-each select="//*:archdesc/*:did/*:unitdate">
+                                <xsl:for-each select="/*:ead/*:archdesc/*:did/*:unitdate">
                                     <unitdate>
                                         <xsl:attribute name="calendar" select="'gregorian'"/>
                                         <xsl:attribute name="era" select="'ce'"/>
@@ -42,7 +42,7 @@
                             <otherfindaid>
                                 <p>
                                     <extref>
-                                        <xsl:attribute name="xlink:href" select="//*:eadid/text()"/>
+                                        <xsl:attribute name="xlink:href" select="/*:ead/*:eadheader/*:eadid/text()"/>
                                     </extref>
                                 </p>
                             </otherfindaid>
@@ -51,13 +51,13 @@
                     <xsl:otherwise>
                         <c level="item">
                             <did>
-                                <xsl:if test="//*:archdesc/*:did/*:unitid[@type='call number']">
-                                    <unitid encodinganalog="3.1.1"><xsl:value-of select="//*:archdesc/*:did/*:unitid[@type='call number']/text()"/></unitid>
+                                <xsl:if test="/*:ead/*:archdesc/*:did/*:unitid[@type='call number']">
+                                    <unitid encodinganalog="3.1.1"><xsl:value-of select="/*:ead/*:archdesc/*:did/*:unitid[@type='call number']/text()"/></unitid>
                                 </xsl:if>
-                                <xsl:if test="//*:archdesc/*:did/*:unittitle[not(@type='short')]">
-                                    <unittitle encodinganalog="3.1.2"><xsl:value-of select="//*:archdesc/*:did/*:unittitle[not(@type='short')]/text()"/></unittitle>
+                                <xsl:if test="/*:ead/*:archdesc/*:did/*:unittitle[not(@type='short')]">
+                                    <unittitle encodinganalog="3.1.2"><xsl:value-of select="/*:ead/*:archdesc/*:did/*:unittitle[not(@type='short')]/text()"/></unittitle>
                                 </xsl:if>
-                                <xsl:for-each select="//*:archdesc/*:did/*:unitdate">
+                                <xsl:for-each select="/*:ead/*:archdesc/*:did/*:unitdate">
                                     <unitdate>
                                         <xsl:attribute name="calendar" select="'gregorian'"/>
                                         <xsl:attribute name="era" select="'ce'"/>
@@ -74,7 +74,7 @@
                             <otherfindaid>
                                 <p>
                                     <extref>
-                                        <xsl:attribute name="xlink:href" select="//*:eadid/text()"/>
+                                        <xsl:attribute name="xlink:href" select="/*:ead/*:eadheader/*:eadid/text()"/>
                                     </extref>
                                 </p>
                             </otherfindaid>
