@@ -19,9 +19,14 @@
                     <xsl:when test="$addXMLNS = 'true'">
                         <c level="item" xmlns="urn:isbn:1-931666-22-9" xmlns:xlink="http://www.w3.org/1999/xlink">
                             <did>
-                                <xsl:if test="/*:ead/*:archdesc/*:did/*:unitid[@type='call number']">
-                                    <unitid encodinganalog="3.1.1"><xsl:value-of select="//*:archdesc/*:did/*:unitid[@type='call number']/text()"/></unitid>
-                                </xsl:if>
+                            	<xsl:choose>
+                            		<xsl:when test="/*:ead/*:archdesc/*:did/*:unitid[@type='call number']">
+                            			<unitid encodinganalog="3.1.1"><xsl:value-of select="/*:ead/*:archdesc/*:did/*:unitid[@type='call number']/text()"/></unitid>
+                            		</xsl:when>
+                            		<xsl:when test="/*:ead/*:archdesc/*:did/*:unitid">
+                            			<unitid encodinganalog="3.1.1"><xsl:value-of select="/*:ead/*:archdesc/*:did/*:unitid/text()"/></unitid>
+                            		</xsl:when>                            	
+                            	</xsl:choose>
                                 <xsl:if test="/*:ead/*:archdesc/*:did/*:unittitle[not(@type='short')]">
                                     <unittitle encodinganalog="3.1.2"><xsl:value-of select="//*:archdesc/*:did/*:unittitle[not(@type='short')]/text()"/></unittitle>
                                 </xsl:if>
@@ -51,9 +56,14 @@
                     <xsl:otherwise>
                         <c level="item">
                             <did>
-                                <xsl:if test="/*:ead/*:archdesc/*:did/*:unitid[@type='call number']">
-                                    <unitid encodinganalog="3.1.1"><xsl:value-of select="/*:ead/*:archdesc/*:did/*:unitid[@type='call number']/text()"/></unitid>
-                                </xsl:if>
+                            	<xsl:choose>
+                            		<xsl:when test="/*:ead/*:archdesc/*:did/*:unitid[@type='call number']">
+                            			<unitid encodinganalog="3.1.1"><xsl:value-of select="/*:ead/*:archdesc/*:did/*:unitid[@type='call number']/text()"/></unitid>
+                            		</xsl:when>
+                            		<xsl:when test="/*:ead/*:archdesc/*:did/*:unitid">
+                            			<unitid encodinganalog="3.1.1"><xsl:value-of select="/*:ead/*:archdesc/*:did/*:unitid/text()"/></unitid>
+                            		</xsl:when>                            	
+                            	</xsl:choose>
                                 <xsl:if test="/*:ead/*:archdesc/*:did/*:unittitle[not(@type='short')]">
                                     <unittitle encodinganalog="3.1.2"><xsl:value-of select="/*:ead/*:archdesc/*:did/*:unittitle[not(@type='short')]/text()"/></unittitle>
                                 </xsl:if>
