@@ -21,10 +21,10 @@
                             <did>
                             	<xsl:choose>
                             		<xsl:when test="/*:ead/*:archdesc/*:did/*:unitid[@type='call number']">
-                            			<unitid encodinganalog="3.1.1"><xsl:value-of select="/*:ead/*:archdesc/*:did/*:unitid[@type='call number']/text()"/></unitid>
+                            			<unitid encodinganalog="3.1.1" type="call number"><xsl:value-of select="/*:ead/*:archdesc/*:did/*:unitid[@type='call number']/text()"/></unitid>
                             		</xsl:when>
                             		<xsl:when test="/*:ead/*:archdesc/*:did/*:unitid">
-                            			<unitid encodinganalog="3.1.1"><xsl:value-of select="/*:ead/*:archdesc/*:did/*:unitid/text()"/></unitid>
+                            			<unitid encodinganalog="3.1.1" type="call number"><xsl:value-of select="/*:ead/*:archdesc/*:did/*:unitid/text()"/></unitid>
                             		</xsl:when>                            	
                             	</xsl:choose>
                                 <xsl:if test="/*:ead/*:archdesc/*:did/*:unittitle[not(@type='short')]">
@@ -58,10 +58,10 @@
                             <did>
                             	<xsl:choose>
                             		<xsl:when test="/*:ead/*:archdesc/*:did/*:unitid[@type='call number']">
-                            			<unitid encodinganalog="3.1.1"><xsl:value-of select="/*:ead/*:archdesc/*:did/*:unitid[@type='call number']/text()"/></unitid>
+                            			<unitid encodinganalog="3.1.1" type="call number"><xsl:value-of select="/*:ead/*:archdesc/*:did/*:unitid[@type='call number']/text()"/></unitid>
                             		</xsl:when>
                             		<xsl:when test="/*:ead/*:archdesc/*:did/*:unitid">
-                            			<unitid encodinganalog="3.1.1"><xsl:value-of select="/*:ead/*:archdesc/*:did/*:unitid/text()"/></unitid>
+                            			<unitid encodinganalog="3.1.1" type="call number"><xsl:value-of select="/*:ead/*:archdesc/*:did/*:unitid/text()"/></unitid>
                             		</xsl:when>                            	
                             	</xsl:choose>
                                 <xsl:if test="/*:ead/*:archdesc/*:did/*:unittitle[not(@type='short')]">
