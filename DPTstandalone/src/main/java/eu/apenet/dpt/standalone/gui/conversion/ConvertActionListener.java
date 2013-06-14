@@ -192,8 +192,8 @@ public class ConvertActionListener implements ActionListener {
             } catch (Exception ex){
                 if(ex instanceof SaxonApiException)
                     LOG.info(xslMessages.toString());
-                apePanel.getApeTabbedPane().setConversionErrorText(labels.getString("conversionException") + "\n\n-------------\n" + ex.getMessage());
-                fileInstance.setConversionErrors(labels.getString("conversionException") + "\n\n-------------\n" + ex.getMessage());
+                apePanel.getApeTabbedPane().setConversionErrorText(labels.getString("conversionException") + "\r\n\r\n-------------\r\n" + ex.getMessage());
+                fileInstance.setConversionErrors(labels.getString("conversionException") + "\r\n\r\n-------------\r\n" + ex.getMessage());
                 apePanel.getApeTabbedPane().checkFlashingTab(APETabbedPane.TAB_CONVERSION, Utilities.FLASHING_RED_COLOR);
                 LOG.error("Error when converting a file", ex);
             } finally {

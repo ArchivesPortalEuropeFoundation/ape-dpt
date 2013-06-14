@@ -105,7 +105,7 @@ public class ValidateSelectionActionListener extends ApexActionListener {
                             fileInstance.setLastOperation(FileInstance.Operation.VALIDATE);
                         } catch (Exception ex){
                             fileInstance.setValid(false);
-                            fileInstance.setValidationErrors(labels.getString("validationException") + "\n\n-------------\n" + ex.getMessage());
+                            fileInstance.setValidationErrors(labels.getString("validationException") + "\r\n\r\n-------------\r\n" + ex.getMessage());
                             LOG.error("Error when validating", ex);
                         } finally {
                             summaryWorking.stop();

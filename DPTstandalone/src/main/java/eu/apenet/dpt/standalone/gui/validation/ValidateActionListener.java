@@ -128,20 +128,20 @@ public class ValidateActionListener implements ActionListener {
                         TransformationTool.createTransformation(is2, null, xslIs, null, true, true, null, false, xmlQualityCheckerCall);
 
                         StringWriter writer = new StringWriter();
-                        writer.append("\n");
-                        writer.append("\n");
+                        writer.append("\r\n");
+                        writer.append("\r\n");
                         writer.append("----- ");
                         writer.append(labels.getString("dataquality.title"));
                         writer.append(" -----");
-                        writer.append("\n");
+                        writer.append("\r\n");
                         writer.append(MessageFormat.format(labels.getString("dataquality.missing.unittitle"), "(unittitle)"));
                         writer.append(" ");
                         writer.append(Integer.toString(xmlQualityCheckerCall.getCounterUnittitle()));
-                        writer.append("\n");
+                        writer.append("\r\n");
                         writer.append(MessageFormat.format(labels.getString("dataquality.missing.unitdate"), "(unitdate@normal)"));
                         writer.append(" ");
                         writer.append(Integer.toString(xmlQualityCheckerCall.getCounterUnitdate()));
-                        writer.append("\n");
+                        writer.append("\r\n");
                         writer.append(MessageFormat.format(labels.getString("dataquality.missing.dao"), "(dao@xlink:role)"));
                         writer.append(" ");
                         writer.append(Integer.toString(xmlQualityCheckerCall.getCounterDao()));
@@ -163,7 +163,7 @@ public class ValidateActionListener implements ActionListener {
                     apeTabbedPane.checkFlashingTab(APETabbedPane.TAB_VALIDATION, Utilities.FLASHING_RED_COLOR);
                 }
             } catch(Exception ex){
-                fileInstance.setValidationErrors(labels.getString("validationException") + "\n\n-------------\n" + ex.getMessage());
+                fileInstance.setValidationErrors(labels.getString("validationException") + "\r\n\r\n-------------\r\n" + ex.getMessage());
                 fileInstance.setValid(false);
                 apeTabbedPane.setValidationErrorText(fileInstance.getValidationErrors());
                 apeTabbedPane.checkFlashingTab(APETabbedPane.TAB_VALIDATION, Utilities.FLASHING_RED_COLOR);
