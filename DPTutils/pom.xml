@@ -4,7 +4,7 @@
     <parent>
 		<artifactId>DPT-project</artifactId>
 		<groupId>eu.apenet</groupId>
-		<version>1.3.2</version>
+		<version>1.3.3-SNAPSHOT</version>
 		<relativePath>..</relativePath>
     </parent>
     <artifactId>DPTutils</artifactId>
