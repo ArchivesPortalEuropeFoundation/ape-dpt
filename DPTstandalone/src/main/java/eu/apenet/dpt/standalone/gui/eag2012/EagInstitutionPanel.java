@@ -94,7 +94,11 @@ public class EagInstitutionPanel extends EagPanels {
 
         int sizeEvents = eag.getControl().getMaintenanceHistory().getMaintenanceEvent().size();
         if(sizeEvents == 0) {
-            personTf = new JTextField("");
+            if(StringUtils.isNotEmpty(Eag2012Frame.getPersonResponsible())) {
+                personTf = new JTextField(Eag2012Frame.getPersonResponsible());
+            } else {
+                personTf = new JTextField("");
+            }
         } else {
             MaintenanceEvent event = eag.getControl().getMaintenanceHistory().getMaintenanceEvent().get(sizeEvents - 1);
             personTf = new JTextField(event.getAgent().getContent());
@@ -407,32 +411,13 @@ public class EagInstitutionPanel extends EagPanels {
         nextInstitutionTabBtn.addActionListener(new NextInstitutionTabBtnAction(eag, tabbedPane, model));
         builder.add(nextInstitutionTabBtn, cc.xy(5, rowNb));
 
-        LOG.info("Add listener");
-        tabbedPane.addChangeListener(new TabChangeListener(eag, tabbedPane, model));
+        if(tabbedPane.getChangeListeners().length < 2) {
+            LOG.info("Add listener");
+            tabbedPane.addChangeListener(new TabChangeListener(eag, tabbedPane, model));
+        }
 
         return builder.getPanel();
     }
-
-//    public class SaveForUpdateOnlyActionListener extends UpdateEagObject {
-//        SaveForUpdateOnlyActionListener(Eag eag, JTabbedPane jTabbedPane, ProfileListModel model) {
-//            super(eag, jTabbedPane, model);
-//        }
-//
-//        @Override
-//        public void actionPerformed(ActionEvent actionEvent) {
-//            try {
-//                super.updateEagObject(true);
-//                LOG.info("1 good");
-////                reloadTabbedPanel(new EagIdentityPanel(eag, tabbedPane, mainTabbedPane, eag2012Frame, model, labels, repositoryNb).buildEditorPanel(errors), 1);
-//                isDataValid = true;
-//            } catch (Eag2012FormException e) {
-//                LOG.info("1 not good");
-////                EagInstitutionPanel eagInstitutionPanel = new EagInstitutionPanel(eag, tabbedPane, mainTabbedPane, eag2012Frame, model, isNew, labels, repositoryNb);
-////                reloadTabbedPanel(eagInstitutionPanel.buildEditorPanel(errors), 0);
-//                isDataValid = false;
-//            }
-//        }
-//    }
 
     public class SaveBtnAction extends UpdateEagObject {
         SaveBtnAction(Eag eag, JTabbedPane tabbedPane, ProfileListModel model) {
@@ -549,6 +534,9 @@ public class EagInstitutionPanel extends EagPanels {
             errors = new ArrayList<String>();
 
             boolean hasChanged = false;
+            if(StringUtils.isNotEmpty(personTf.getText())) {
+                Eag2012Frame.setPersonResponsible(personTf.getText());
+            }
             if(save) {
                 if(Eag2012Frame.getTimeMaintenance() == null)
                     Eag2012Frame.setTimeMaintenance(new Date());
@@ -786,7 +774,7 @@ public class EagInstitutionPanel extends EagPanels {
 
             for(int i = 0; i < eag.getControl().getMaintenanceHistory().getMaintenanceEvent().size(); i ++) {
                 MaintenanceEvent maintenanceEvent = eag.getControl().getMaintenanceHistory().getMaintenanceEvent().get(i);
-                if(StringUtils.isEmpty(maintenanceEvent.getAgent().getContent()) && StringUtils.isEmpty(maintenanceEvent.getEventDateTime().getStandardDateTime())) {
+                if(StringUtils.isEmpty(maintenanceEvent.getAgent().getContent()) && StringUtils.isEmpty(maintenanceEvent.getEventDateTime().getStandardDateTime()) && save) {
                     if(eag.getControl().getMaintenanceHistory().getMaintenanceEvent().size() == 1) {
                         Date date = new Date();
                         SimpleDateFormat format = new SimpleDateFormat("dd.MM.yyyy");
