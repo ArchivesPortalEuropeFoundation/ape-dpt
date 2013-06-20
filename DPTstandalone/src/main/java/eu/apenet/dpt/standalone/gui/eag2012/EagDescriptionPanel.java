@@ -671,6 +671,12 @@ public class EagDescriptionPanel extends EagPanels {
 
             int counterRepositorhistoryTfs = 0;
             if (repositoryHistoryTfs.size() > 0) {
+                if(repository.getRepositorhist() == null) {
+                    repository.setRepositorhist(new Repositorhist());
+                }
+                if(repository.getRepositorhist().getDescriptiveNote() == null) {
+                    repository.getRepositorhist().setDescriptiveNote(new DescriptiveNote());
+                }
                 repository.getRepositorhist().getDescriptiveNote().getP().clear();
                 for (TextAreaWithLanguage textAreaWithLanguage : repositoryHistoryTfs) {
                     if (StringUtils.isNotEmpty(textAreaWithLanguage.getTextValue())) {
@@ -691,6 +697,9 @@ public class EagDescriptionPanel extends EagPanels {
             }
             boolean repositoryFoundationExists = false;
             if (repositoryFoundationTfs.size() > 0) {
+                if(repository.getRepositorfound() == null) {
+                    repository.setRepositorfound(new Repositorfound());
+                }
                 repository.getRepositorfound().getRule().clear();
                 for (TextFieldWithLanguage textFieldWithLanguage : repositoryFoundationTfs) {
                     if (StringUtils.isNotEmpty(textFieldWithLanguage.getTextValue())) {
@@ -711,6 +720,9 @@ public class EagDescriptionPanel extends EagPanels {
             }
             boolean repositorySuppressionExists = false;
             if (repositorySuppressionTfs.size() > 0) {
+                if(repository.getRepositorsup() == null) {
+                    repository.setRepositorsup(new Repositorsup());
+                }
                 repository.getRepositorsup().getRule().clear();
                 for (TextFieldWithLanguage textFieldWithLanguage : repositorySuppressionTfs) {
                     if (StringUtils.isNotEmpty(textFieldWithLanguage.getTextValue())) {
