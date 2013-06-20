@@ -709,7 +709,11 @@ public class EagInstitutionPanel extends EagPanels {
             if(StringUtils.isNotEmpty(webpageTf.getText())) {
                 if(repository.getWebpage().size() == 0)
                     repository.getWebpage().add(new Webpage());
-                repository.getWebpage().get(0).setHref(webpageTf.getText());
+                if(!StringUtils.startsWithAny(webpageTf.getText(), webPrefixes)){
+                    repository.getWebpage().get(0).setHref("http://" + webpageTf.getText().trim());
+                } else {
+                    repository.getWebpage().get(0).setHref(webpageTf.getText());
+                }
                 hasChanged = true;
                 if(StringUtils.isNotEmpty(webpageTitleTf.getText()) && !webpageTitleTf.getText().equals(repository.getWebpage().get(0).getContent())) {
                     repository.getWebpage().get(0).setContent(webpageTitleTf.getText());
@@ -766,7 +770,11 @@ public class EagInstitutionPanel extends EagPanels {
                 eag.setRelations(new Relations());
             if(eag.getRelations().getResourceRelation().size() > 0) {
                 if(StringUtils.isNotEmpty(refInstitutionHoldingsGuideTf.getText()) && !refInstitutionHoldingsGuideTf.getText().equals(eag.getRelations().getResourceRelation().get(0).getHref())) {
-                    eag.getRelations().getResourceRelation().get(0).setHref(refInstitutionHoldingsGuideTf.getText());
+                    if(!StringUtils.startsWithAny(refInstitutionHoldingsGuideTf.getText(), webPrefixes)){
+                        eag.getRelations().getResourceRelation().get(0).setHref("http://" + refInstitutionHoldingsGuideTf.getText().trim());
+                    } else {
+                        eag.getRelations().getResourceRelation().get(0).setHref(refInstitutionHoldingsGuideTf.getText());
+                    }
                     hasChanged = true;
                 }
 

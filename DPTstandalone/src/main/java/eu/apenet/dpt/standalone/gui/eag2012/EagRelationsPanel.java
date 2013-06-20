@@ -272,7 +272,11 @@ public class EagRelationsPanel extends EagPanels {
                 if(StringUtils.isNotEmpty(resourceRelationType.getWebsiteValue())) {
                     ResourceRelation resourceRelation = new ResourceRelation();
                     resourceRelation.setResourceRelationType(resourceRelationType.getTypeRelationsValue());
-                    resourceRelation.setHref(resourceRelationType.getWebsiteValue());
+                    if(!StringUtils.startsWithAny(resourceRelationType.getWebsiteValue(), webPrefixes)){
+                        resourceRelation.setHref("http://" + resourceRelationType.getWebsiteValue().trim());
+                    } else {
+                        resourceRelation.setHref(resourceRelationType.getWebsiteValue());
+                    }
                     if(resourceRelation.getRelationEntry() == null)
                         resourceRelation.setRelationEntry(new RelationEntry());
                     resourceRelation.getRelationEntry().setContent(resourceRelationType.getTitleAndIdValue());
@@ -293,7 +297,11 @@ public class EagRelationsPanel extends EagPanels {
                 if(StringUtils.isNotEmpty(resourceRelationType.getWebsiteValue())) {
                     EagRelation eagRelation = new EagRelation();
                     eagRelation.setEagRelationType(resourceRelationType.getTypeRelationsValue());
-                    eagRelation.setHref(resourceRelationType.getWebsiteValue());
+                    if(!StringUtils.startsWithAny(resourceRelationType.getWebsiteValue(), webPrefixes)){
+                        eagRelation.setHref("http://" + resourceRelationType.getWebsiteValue().trim());
+                    } else {
+                        eagRelation.setHref(resourceRelationType.getWebsiteValue());
+                    }
                     RelationEntry relationEntry = new RelationEntry();
                     relationEntry.setContent(resourceRelationType.getTitleAndIdValue());
                     eagRelation.getRelationEntry().add(relationEntry);

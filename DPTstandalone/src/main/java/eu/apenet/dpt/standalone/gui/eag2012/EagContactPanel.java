@@ -616,7 +616,11 @@ public class EagContactPanel extends EagPanels {
                     JTextField fieldTitle = webpageTitleTfs.get(i);
                     if(StringUtils.isNotEmpty(field.getText())) {
                         Webpage webpage = new Webpage();
-                        webpage.setHref(field.getText());
+                        if(!StringUtils.startsWithAny(field.getText(), webPrefixes)){
+                            webpage.setHref("http://" + field.getText().trim());
+                        } else {
+                            webpage.setHref(field.getText());
+                        }
                         if(StringUtils.isNotEmpty(fieldTitle.getText()))
                             webpage.setContent(fieldTitle.getText());
                         else

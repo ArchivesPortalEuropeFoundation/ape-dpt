@@ -1269,7 +1269,11 @@ public class EagAccessAndServicesPanel extends EagPanels {
                         directions.getContent().add(textAreaWithLanguage.getTextValue());
                         if(StringUtils.isNotEmpty(textAreaWithLanguage.getExtraValue())) {
                             Citation citation = new Citation();
-                            citation.setHref(textAreaWithLanguage.getExtraValue());
+                            if(!StringUtils.startsWithAny(textAreaWithLanguage.getExtraValue(), webPrefixes)){
+                                citation.setHref("http://" + textAreaWithLanguage.getExtraValue().trim());
+                            } else {
+                                citation.setHref(textAreaWithLanguage.getExtraValue());
+                            }
                             directions.getContent().add(citation);
                         }
                         repository.getDirections().add(directions);
@@ -1299,7 +1303,11 @@ public class EagAccessAndServicesPanel extends EagPanels {
                         termsOfUse.setLang(textAreaWithLanguage.getLanguage());
                         termsOfUse.setContent(textAreaWithLanguage.getTextValue());
                         if(StringUtils.isNotEmpty(textAreaWithLanguage.getExtraValue())) {
-                            termsOfUse.setHref(textAreaWithLanguage.getExtraValue());
+                            if(!StringUtils.startsWithAny(textAreaWithLanguage.getExtraValue(), webPrefixes)){
+                                termsOfUse.setHref("http://" + textAreaWithLanguage.getExtraValue().trim());
+                            } else {
+                                termsOfUse.setHref(textAreaWithLanguage.getExtraValue());
+                            }
                         }
                         repository.getAccess().getTermsOfUse().add(termsOfUse);
                         hasChanged = true;
@@ -1373,10 +1381,18 @@ public class EagAccessAndServicesPanel extends EagPanels {
 
             if(StringUtils.isNotEmpty(webpageSearchroomTf.getText())) {
                 if(!searchroom.getWebpage().isEmpty()) {
-                    searchroom.getWebpage().get(0).setHref(webpageSearchroomTf.getText());
+                    if(!StringUtils.startsWithAny(webpageSearchroomTf.getText(), webPrefixes)){
+                        searchroom.getWebpage().get(0).setHref("http://" + webpageSearchroomTf.getText().trim());
+                    } else {
+                        searchroom.getWebpage().get(0).setHref(webpageSearchroomTf.getText());
+                    }
                 } else {
                     Webpage webpage = new Webpage();
-                    webpage.setHref(webpageSearchroomTf.getText());
+                    if(!StringUtils.startsWithAny(webpageSearchroomTf.getText(), webPrefixes)){
+                        webpage.setHref("http://" + webpageSearchroomTf.getText().trim());
+                    } else {
+                        webpage.setHref(webpageSearchroomTf.getText());
+                    }
                     searchroom.getWebpage().add(webpage);
                 }
                 if(StringUtils.isNotEmpty(webpageTitleSearchroomTf.getText())) {
@@ -1439,7 +1455,11 @@ public class EagAccessAndServicesPanel extends EagPanels {
                         ReadersTicket readersTicket = new ReadersTicket();
                         readersTicket.setLang(textFieldWithLanguage.getLanguage());
                         readersTicket.setContent(textFieldWithLanguage.getTextValue());
-                        readersTicket.setHref(textFieldWithLanguage.getExtraValue());
+                        if(!StringUtils.startsWithAny(textFieldWithLanguage.getExtraValue(), webPrefixes)){
+                            readersTicket.setHref("http://" + textFieldWithLanguage.getExtraValue().trim());
+                        } else {
+                            readersTicket.setHref(textFieldWithLanguage.getExtraValue());
+                        }
                         searchroom.getReadersTicket().add(readersTicket);
                         hasChanged = true;
                         hasSearchRoomInfo = true;
@@ -1454,7 +1474,11 @@ public class EagAccessAndServicesPanel extends EagPanels {
                         AdvancedOrders advancedOrders = new AdvancedOrders();
                         advancedOrders.setLang(textFieldWithLanguage.getLanguage());
                         advancedOrders.setContent(textFieldWithLanguage.getTextValue());
-                        advancedOrders.setHref(textFieldWithLanguage.getExtraValue());
+                        if(!StringUtils.startsWithAny(textFieldWithLanguage.getExtraValue(), webPrefixes)){
+                                advancedOrders.setHref("http://" + textFieldWithLanguage.getExtraValue().trim());
+                            } else {
+                                advancedOrders.setHref(textFieldWithLanguage.getExtraValue());
+                            }
                         searchroom.getAdvancedOrders().add(advancedOrders);
                         hasChanged = true;
                         hasSearchRoomInfo = true;
@@ -1535,7 +1559,11 @@ public class EagAccessAndServicesPanel extends EagPanels {
             libraryExists = hasLibraryContactInfo;
 
             if(StringUtils.isNotEmpty(webpageLibraryTf.getText())) {
-                library.getWebpage().get(0).setHref(webpageLibraryTf.getText());
+                if(!StringUtils.startsWithAny(webpageLibraryTf.getText(), webPrefixes)){
+                    library.getWebpage().get(0).setHref("http://" + webpageLibraryTf.getText().trim());
+                } else {
+                    library.getWebpage().get(0).setHref(webpageLibraryTf.getText());
+                }
                 if(StringUtils.isNotEmpty(webpageTitleLibraryTf.getText())) {
                     library.getWebpage().get(0).setContent(webpageTitleLibraryTf.getText());
                 }
@@ -1651,7 +1679,11 @@ public class EagAccessAndServicesPanel extends EagPanels {
             restorationLabExists = restorationLabExists || hasRestorationlabContactInfo;
 
             if(StringUtils.isNotEmpty(webpageRestorationlabTf.getText())) {
-                restorationlab.getWebpage().get(0).setHref(webpageRestorationlabTf.getText());
+                if(!StringUtils.startsWithAny(webpageRestorationlabTf.getText(), webPrefixes)){
+                    restorationlab.getWebpage().get(0).setHref("http://" + webpageRestorationlabTf.getText().trim());
+                } else {
+                    restorationlab.getWebpage().get(0).setHref(webpageRestorationlabTf.getText());
+                }
                 if(StringUtils.isNotEmpty(webpageTitleRestorationlabTf.getText())) {
                     restorationlab.getWebpage().get(0).setContent(webpageTitleRestorationlabTf.getText());
                 }
@@ -1730,7 +1762,11 @@ public class EagAccessAndServicesPanel extends EagPanels {
             }
 
             if(StringUtils.isNotEmpty(webpageReproductionServiceTf.getText())) {
-                reproductionser.getWebpage().get(0).setHref(webpageReproductionServiceTf.getText());
+                if(!StringUtils.startsWithAny(webpageReproductionServiceTf.getText(), webPrefixes)){
+                    reproductionser.getWebpage().get(0).setHref("http://" + webpageReproductionServiceTf.getText().trim());
+                } else {
+                    reproductionser.getWebpage().get(0).setHref(webpageReproductionServiceTf.getText());
+                }
                 if(StringUtils.isNotEmpty(webpageTitleReproductionServiceTf.getText())) {
                     reproductionser.getWebpage().get(0).setContent(webpageTitleReproductionServiceTf.getText());
                 }
@@ -1799,7 +1835,11 @@ public class EagAccessAndServicesPanel extends EagPanels {
                         exhibition.getDescriptiveNote().getP().get(0).setContent(textAreaWithLanguage.getTextValue());
                         if(StringUtils.isNotEmpty(textAreaWithLanguage.getExtraValue())) {
                             exhibition.setWebpage(new Webpage());
-                            exhibition.getWebpage().setHref(textAreaWithLanguage.getExtraValue());
+                            if(!StringUtils.startsWithAny(textAreaWithLanguage.getExtraValue(), webPrefixes)){
+                                exhibition.getWebpage().setHref("http://" + textAreaWithLanguage.getExtraValue().trim());
+                            } else {
+                                exhibition.getWebpage().setHref(textAreaWithLanguage.getExtraValue());
+                            }
                             exhibition.getWebpage().setContent(textAreaWithLanguage.getSecondExtraValue());
                         }
                         recreationalServices.getExhibition().add(exhibition);
@@ -1821,7 +1861,11 @@ public class EagAccessAndServicesPanel extends EagPanels {
                         toursSessions.getDescriptiveNote().getP().get(0).setContent(textAreaWithLanguage.getTextValue());
                         if(StringUtils.isNotEmpty(textAreaWithLanguage.getExtraValue())) {
                             toursSessions.setWebpage(new Webpage());
-                            toursSessions.getWebpage().setHref(textAreaWithLanguage.getExtraValue());
+                            if(!StringUtils.startsWithAny(textAreaWithLanguage.getExtraValue(), webPrefixes)){
+                                toursSessions.getWebpage().setHref("http://" + textAreaWithLanguage.getExtraValue().trim());
+                            } else {
+                                toursSessions.getWebpage().setHref(textAreaWithLanguage.getExtraValue());
+                            }
                             toursSessions.getWebpage().setContent(textAreaWithLanguage.getSecondExtraValue());
                         }
                         recreationalServices.getToursSessions().add(toursSessions);
@@ -1843,7 +1887,11 @@ public class EagAccessAndServicesPanel extends EagPanels {
                         otherServices.getDescriptiveNote().getP().get(0).setContent(textAreaWithLanguage.getTextValue());
                         if(StringUtils.isNotEmpty(textAreaWithLanguage.getExtraValue())) {
                             otherServices.setWebpage(new Webpage());
-                            otherServices.getWebpage().setHref(textAreaWithLanguage.getExtraValue());
+                            if(!StringUtils.startsWithAny(textAreaWithLanguage.getExtraValue(), webPrefixes)){
+                                otherServices.getWebpage().setHref("http://" + textAreaWithLanguage.getExtraValue().trim());
+                            } else {
+                                otherServices.getWebpage().setHref(textAreaWithLanguage.getExtraValue());
+                            }
                             otherServices.getWebpage().setContent(textAreaWithLanguage.getSecondExtraValue());
                         }
                         recreationalServices.getOtherServices().add(otherServices);
