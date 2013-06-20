@@ -199,7 +199,7 @@
                         <xsl:value-of select="*[name()='description_level']/@value"/>
                     </xsl:variable>
                     <xsl:attribute name="level">
-                        <xsl:if test="$level='SUB-FONDS' or $level='FONDS'">
+                        <xsl:if test="$level='SUB-FONDS' or $level='FONDS' or $level='SUB-SUB-FONDS'">
                             <xsl:value-of select="'fonds'"/>
                         </xsl:if>
                         <xsl:if test="$level='SERIES' or $level='SUB-SERIES'">
@@ -311,6 +311,16 @@
                         </xsl:call-template>
                     </xsl:attribute>
                 </xsl:when>
+                <xsl:otherwise>
+                    <xsl:variable name="normal">
+                        <xsl:value-of select="ape:normalizeDate(normalize-space(.))"/>
+                    </xsl:variable>
+                    <xsl:if test="normalize-space($normal)">
+                        <xsl:attribute name="normal">
+                            <xsl:value-of select="$normal"/>
+                        </xsl:attribute>
+                    </xsl:if>
+                </xsl:otherwise>
             </xsl:choose>
             <xsl:value-of select="." />
         </unitdate>
