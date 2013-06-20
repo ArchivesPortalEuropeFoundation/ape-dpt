@@ -249,7 +249,6 @@ public class EagInstitutionPanel extends EagPanels {
                 setNextRow();
             }
         }
-        LOG.info("Size of locationType: " + locationFields.size());
 
         if(hasMinimumOneVisitorAddress) {
             JButton addNewVisitorTranslationAddressBtn = new ButtonEag(labels.getString("eag2012.addVisitorTranslationAddress"), true);
@@ -549,7 +548,6 @@ public class EagInstitutionPanel extends EagPanels {
         }
 
         protected void updateEagObject(boolean save) throws Eag2012FormException {
-            LOG.info("Start of save: " + locationFields.size());
             errors = new ArrayList<String>();
 
             boolean hasChanged = false;
@@ -659,7 +657,6 @@ public class EagInstitutionPanel extends EagPanels {
             repository.getLocation().clear();
 
             String defaultCountry = "";
-            LOG.info(locationFields.size());
             for(LocationType locationType : locationFields) {
                 if(StringUtils.isNotEmpty(locationType.getCountryTfValue())) {
                     defaultCountry = locationType.getCountryTfValue();
@@ -667,7 +664,6 @@ public class EagInstitutionPanel extends EagPanels {
                 Location location = locationType.getLocation(defaultCountry);
                 errors.addAll(locationType.getErrors());
                 if(location != null) {
-                    LOG.info("Adding one location");
                     repository.getLocation().add(location);
                 }
             }
