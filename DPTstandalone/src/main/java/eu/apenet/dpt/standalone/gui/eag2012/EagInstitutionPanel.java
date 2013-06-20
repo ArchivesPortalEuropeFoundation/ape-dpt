@@ -193,7 +193,6 @@ public class EagInstitutionPanel extends EagPanels {
         for(Location location : repository.getLocation()) {
             boolean isPostal = false;
             LocationType locationType = new LocationType(location);
-            locationFields.add(locationType);
             if(StringUtils.isEmpty(location.getLocalType()) || location.getLocalType().equals("visitors address")) {
                 locationType.setLocalType("visitors address");
                 builder.addSeparator(labels.getString("eag2012.visitorsAddress"), cc.xyw(1, rowNb, 7));
@@ -204,6 +203,7 @@ public class EagInstitutionPanel extends EagPanels {
                 isPostal = true;
                 hasMinimumOnePostalAddress = true;
             }
+            locationFields.add(locationType);
             setNextRow();
 
             String mandatoryStar = "*";
@@ -249,6 +249,7 @@ public class EagInstitutionPanel extends EagPanels {
                 setNextRow();
             }
         }
+        LOG.info("Size of locationType: " + locationFields.size());
 
         if(hasMinimumOneVisitorAddress) {
             JButton addNewVisitorTranslationAddressBtn = new ButtonEag(labels.getString("eag2012.addVisitorTranslationAddress"), true);
@@ -394,7 +395,7 @@ public class EagInstitutionPanel extends EagPanels {
 
         JButton nextTabBtn = new ButtonEag(labels.getString("eag2012.nextTabButton"));
         builder.add(nextTabBtn, cc.xy (5, rowNb));
-        nextTabBtn.addActionListener(new NextTabBtnAction());
+        nextTabBtn.addActionListener(new NextTabBtnAction(eag, tabbedPane, model));
 
         setNextRow();
         JButton exitBtn = new ButtonEag(labels.getString("eag2012.exitButton"));
@@ -411,10 +412,10 @@ public class EagInstitutionPanel extends EagPanels {
         nextInstitutionTabBtn.addActionListener(new NextInstitutionTabBtnAction(eag, tabbedPane, model));
         builder.add(nextInstitutionTabBtn, cc.xy(5, rowNb));
 
-        if(tabbedPane.getChangeListeners().length < 2) {
-            LOG.info("Add listener");
-            tabbedPane.addChangeListener(new TabChangeListener(eag, tabbedPane, model));
-        }
+//        if(tabbedPane.getChangeListeners().length < 2) {
+//            LOG.info("Add listener");
+//            tabbedPane.addChangeListener(new TabChangeListener(eag, tabbedPane, model));
+//        }
 
         return builder.getPanel();
     }
@@ -444,10 +445,27 @@ public class EagInstitutionPanel extends EagPanels {
         }
     }
 
-    public class NextTabBtnAction implements ActionListener {
-        public void actionPerformed(ActionEvent actionEvent) {
-            tabbedPane.setSelectedIndex(tabbedPane.getSelectedIndex() + 1);
+    public class NextTabBtnAction extends UpdateEagObject {
+        NextTabBtnAction(Eag eag, JTabbedPane tabbedPane, ProfileListModel model) {
+            super(eag, tabbedPane, model);
         }
+
+        @Override
+        public void actionPerformed(ActionEvent actionEvent) {
+            try {
+                super.updateEagObject(true);
+                reloadTabbedPanel(new EagIdentityPanel(eag, tabbedPane, mainTabbedPane, eag2012Frame, model, labels, repositoryNb).buildEditorPanel(errors), 1);
+                tabbedPane.setEnabledAt(1, true);
+                tabbedPane.setEnabledAt(0, false);
+            } catch (Eag2012FormException e) {
+                reloadTabbedPanel(new EagInstitutionPanel(eag, tabbedPane, mainTabbedPane, eag2012Frame, model, isNew, labels, repositoryNb).buildEditorPanel(errors), 0);
+            }
+        }
+
+//        public void actionPerformed(ActionEvent actionEvent) {
+//            LOG.info("NextTabBtn: " + locationFields.size());
+//            tabbedPane.setSelectedIndex(tabbedPane.getSelectedIndex() + 1);
+//        }
     }
 
     public class NextInstitutionTabBtnAction extends UpdateEagObject {
@@ -531,6 +549,7 @@ public class EagInstitutionPanel extends EagPanels {
         }
 
         protected void updateEagObject(boolean save) throws Eag2012FormException {
+            LOG.info("Start of save: " + locationFields.size());
             errors = new ArrayList<String>();
 
             boolean hasChanged = false;
@@ -640,14 +659,17 @@ public class EagInstitutionPanel extends EagPanels {
             repository.getLocation().clear();
 
             String defaultCountry = "";
+            LOG.info(locationFields.size());
             for(LocationType locationType : locationFields) {
                 if(StringUtils.isNotEmpty(locationType.getCountryTfValue())) {
                     defaultCountry = locationType.getCountryTfValue();
                 }
                 Location location = locationType.getLocation(defaultCountry);
                 errors.addAll(locationType.getErrors());
-                if(location != null)
+                if(location != null) {
+                    LOG.info("Adding one location");
                     repository.getLocation().add(location);
+                }
             }
 
 
@@ -828,36 +850,37 @@ public class EagInstitutionPanel extends EagPanels {
         }
     }
 
-    public class TabChangeListener extends UpdateEagObject implements ChangeListener {
-        private boolean click;
-        public TabChangeListener(Eag eag, JTabbedPane tabbedPane, ProfileListModel model) {
-            super(eag, tabbedPane, model);
-            click = true;
-        }
-
-        @Override
-        public void actionPerformed(ActionEvent actionEvent) {}
-
-        public void stateChanged(ChangeEvent changeEvent) {
-            LOG.info("stateChanged (mainTabbed index: " + mainTabbedPane.getSelectedIndex() + ") + (changeListener NB: " + tabbedPane.getChangeListeners().length + ")");
-            LOG.info(click + " - " + Eag2012Frame.firstTimeInTab);
-            if(click && !Eag2012Frame.firstTimeInTab) {
-                LOG.info("Remove listener");
-                tabbedPane.removeChangeListener(this);
-                try {
-                    super.updateEagObject(false);
-                    LOG.info("Ok");
-                    Eag2012Frame.firstTimeInTab = true;
-                    EagPanels eagPanels = getCorrectEagPanels(tabbedPane.getSelectedIndex(), mainTabbedPane, eag2012Frame, labels, repositoryNb);
-                    reloadTabbedPanel(eagPanels.buildEditorPanel(errors), tabbedPane.getSelectedIndex());
-                } catch (Eag2012FormException e) {
-                    LOG.info("NOT Ok");
-                    EagPanels eagPanels = getCorrectEagPanels(0, mainTabbedPane, eag2012Frame, labels, repositoryNb);
-                    reloadTabbedPanel(eagPanels.buildEditorPanel(errors), 0);
-                }
-                click = false;
-            }
-            Eag2012Frame.firstTimeInTab = false;
-        }
-    }
+//    public class TabChangeListener extends UpdateEagObject implements ChangeListener {
+//        private boolean click;
+//        public TabChangeListener(Eag eag, JTabbedPane tabbedPane, ProfileListModel model) {
+//            super(eag, tabbedPane, model);
+//            click = true;
+//        }
+//
+//        @Override
+//        public void actionPerformed(ActionEvent actionEvent) {}
+//
+//        public void stateChanged(ChangeEvent changeEvent) {
+//            LOG.info("Tab listener: " + locationFields.size());
+//            LOG.debug("stateChanged (mainTabbed index: " + mainTabbedPane.getSelectedIndex() + ") + (changeListener NB: " + tabbedPane.getChangeListeners().length + ")");
+//            LOG.debug(click + " - " + Eag2012Frame.firstTimeInTab);
+//            if(click && !Eag2012Frame.firstTimeInTab) {
+//                LOG.debug("Remove listener");
+//                tabbedPane.removeChangeListener(this);
+//                try {
+//                    super.updateEagObject(true);
+//                    LOG.debug("Ok");
+//                    Eag2012Frame.firstTimeInTab = true;
+//                    EagPanels eagPanels = getCorrectEagPanels(tabbedPane.getSelectedIndex(), mainTabbedPane, eag2012Frame, labels, repositoryNb);
+//                    reloadTabbedPanel(eagPanels.buildEditorPanel(errors), tabbedPane.getSelectedIndex());
+//                } catch (Eag2012FormException e) {
+//                    LOG.debug("NOT Ok");
+//                    EagPanels eagPanels = getCorrectEagPanels(0, mainTabbedPane, eag2012Frame, labels, repositoryNb);
+//                    reloadTabbedPanel(eagPanels.buildEditorPanel(errors), 0);
+//                }
+//                click = false;
+//            }
+//            Eag2012Frame.firstTimeInTab = false;
+//        }
+//    }
 }
