@@ -5,6 +5,7 @@ import com.jgoodies.forms.layout.CellConstraints;
 import com.jgoodies.forms.layout.FormLayout;
 import eu.apenet.dpt.standalone.gui.ProfileListModel;
 import eu.apenet.dpt.standalone.gui.Utilities;
+import static eu.apenet.dpt.standalone.gui.eag2012.EagPanels.createErrorLabel;
 import eu.apenet.dpt.standalone.gui.eag2012.SwingStructures.ResourceRelationType;
 import eu.apenet.dpt.utils.eag2012.*;
 import org.apache.commons.lang.StringUtils;
@@ -79,6 +80,15 @@ public class EagRelationsPanel extends EagPanels {
             builder.addLabel(labels.getString("eag2012.typeRelation"), cc.xy(5, rowNb));
             builder.add(resourceRelationType.getTypeRelations(), cc.xy(7, rowNb));
             setNextRow();
+            if(errors.contains("resourceRelationTypes")) {
+                if(StringUtils.isNotBlank(resourceRelationType.getWebsite().getText()) && !StringUtils.startsWithAny(resourceRelationType.getWebsite().getText(), webPrefixes)){
+                    builder.add(createErrorLabel(labels.getString("eag2012.errors.webpageProtocol")),          cc.xy(1, rowNb));
+                    setNextRow();
+                }
+            } else if(StringUtils.isNotBlank(resourceRelationType.getWebsite().getText()) && !StringUtils.startsWithAny(resourceRelationType.getWebsite().getText(), webPrefixes)){
+                builder.add(createErrorLabel(labels.getString("eag2012.errors.webpageProtocol")),          cc.xy(1, rowNb));
+                setNextRow();
+            }
 
             builder.addLabel(labels.getString("eag2012.titleIdRelatedMaterial"), cc.xy(1, rowNb));
             builder.add(resourceRelationType.getTitleAndId(), cc.xy(3, rowNb));
@@ -115,6 +125,15 @@ public class EagRelationsPanel extends EagPanels {
             builder.addLabel(labels.getString("eag2012.typeRelation"), cc.xy(5, rowNb));
             builder.add(resourceRelationType.getTypeRelations(), cc.xy(7, rowNb));
             setNextRow();
+            if(errors.contains("institutionRelationTypes")) {
+                if(StringUtils.isNotBlank(resourceRelationType.getWebsite().getText()) && !StringUtils.startsWithAny(resourceRelationType.getWebsite().getText(), webPrefixes)){
+                    builder.add(createErrorLabel(labels.getString("eag2012.errors.webpageProtocol")),          cc.xy(1, rowNb));
+                    setNextRow();
+                }
+            } else if(StringUtils.isNotBlank(resourceRelationType.getWebsite().getText()) && !StringUtils.startsWithAny(resourceRelationType.getWebsite().getText(), webPrefixes)){
+                builder.add(createErrorLabel(labels.getString("eag2012.errors.webpageProtocol")),          cc.xy(1, rowNb));
+                setNextRow();
+            }
 
             builder.addLabel(labels.getString("eag2012.nameIdRelatedInstitution"), cc.xy(1, rowNb));
             builder.add(resourceRelationType.getTitleAndId(), cc.xy(3, rowNb));
@@ -272,11 +291,9 @@ public class EagRelationsPanel extends EagPanels {
                 if(StringUtils.isNotEmpty(resourceRelationType.getWebsiteValue())) {
                     ResourceRelation resourceRelation = new ResourceRelation();
                     resourceRelation.setResourceRelationType(resourceRelationType.getTypeRelationsValue());
-                    if(!StringUtils.startsWithAny(resourceRelationType.getWebsiteValue(), webPrefixes)){
-                        resourceRelation.setHref("http://" + resourceRelationType.getWebsiteValue().trim());
-                    } else {
-                        resourceRelation.setHref(resourceRelationType.getWebsiteValue());
-                    }
+                    resourceRelation.setHref(resourceRelationType.getWebsiteValue());
+                    if(!StringUtils.startsWithAny(resourceRelationType.getWebsiteValue(), webPrefixes))
+                            errors.add("resourceRelationTypes");
                     if(resourceRelation.getRelationEntry() == null)
                         resourceRelation.setRelationEntry(new RelationEntry());
                     resourceRelation.getRelationEntry().setContent(resourceRelationType.getTitleAndIdValue());
@@ -297,11 +314,9 @@ public class EagRelationsPanel extends EagPanels {
                 if(StringUtils.isNotEmpty(resourceRelationType.getWebsiteValue())) {
                     EagRelation eagRelation = new EagRelation();
                     eagRelation.setEagRelationType(resourceRelationType.getTypeRelationsValue());
-                    if(!StringUtils.startsWithAny(resourceRelationType.getWebsiteValue(), webPrefixes)){
-                        eagRelation.setHref("http://" + resourceRelationType.getWebsiteValue().trim());
-                    } else {
-                        eagRelation.setHref(resourceRelationType.getWebsiteValue());
-                    }
+                    eagRelation.setHref(resourceRelationType.getWebsiteValue());
+                    if(!StringUtils.startsWithAny(resourceRelationType.getWebsiteValue(), webPrefixes))
+                            errors.add("institutionRelationTypes");
                     RelationEntry relationEntry = new RelationEntry();
                     relationEntry.setContent(resourceRelationType.getTitleAndIdValue());
                     eagRelation.getRelationEntry().add(relationEntry);

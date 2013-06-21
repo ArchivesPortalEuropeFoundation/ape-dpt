@@ -5,6 +5,7 @@ import com.jgoodies.forms.layout.CellConstraints;
 import com.jgoodies.forms.layout.FormLayout;
 import eu.apenet.dpt.standalone.gui.ProfileListModel;
 import eu.apenet.dpt.standalone.gui.Utilities;
+import static eu.apenet.dpt.standalone.gui.eag2012.EagPanels.createErrorLabel;
 
 import eu.apenet.dpt.standalone.gui.eag2012.SwingStructures.LocationType;
 import eu.apenet.dpt.utils.eag2012.*;
@@ -286,6 +287,15 @@ public class EagContactPanel extends EagPanels {
             builder.addLabel(labels.getString("eag2012.linkTitleLabel"),             cc.xy (5, rowNb));
             builder.add(webpageTitleTf,                                            cc.xy (7, rowNb));
             setNextRow();
+            if(errors.contains("webpageTfs")) {
+                if(StringUtils.isNotBlank(webpageTf.getText()) && !StringUtils.startsWithAny(webpageTf.getText(), webPrefixes)){
+                    builder.add(createErrorLabel(labels.getString("eag2012.errors.webpageProtocol")),          cc.xy(1, rowNb));
+                    setNextRow();
+                }
+            } else if(StringUtils.isNotBlank(webpageTf.getText()) && !StringUtils.startsWithAny(webpageTf.getText(), webPrefixes)){
+                builder.add(createErrorLabel(labels.getString("eag2012.errors.webpageProtocol")),          cc.xy(1, rowNb));
+                setNextRow();
+            }
         }
         JButton addWebpageBtn = new ButtonEag(labels.getString("eag2012.addWebpage"));
         addWebpageBtn.addActionListener(new AddWebpageAction(eag, tabbedPane, model));
@@ -616,11 +626,9 @@ public class EagContactPanel extends EagPanels {
                     JTextField fieldTitle = webpageTitleTfs.get(i);
                     if(StringUtils.isNotEmpty(field.getText())) {
                         Webpage webpage = new Webpage();
-                        if(!StringUtils.startsWithAny(field.getText(), webPrefixes)){
-                            webpage.setHref("http://" + field.getText().trim());
-                        } else {
-                            webpage.setHref(field.getText());
-                        }
+                        webpage.setHref(field.getText());
+                        if(!StringUtils.startsWithAny(field.getText(), webPrefixes))
+                            errors.add("webpageTfs");
                         if(StringUtils.isNotEmpty(fieldTitle.getText()))
                             webpage.setContent(fieldTitle.getText());
                         else

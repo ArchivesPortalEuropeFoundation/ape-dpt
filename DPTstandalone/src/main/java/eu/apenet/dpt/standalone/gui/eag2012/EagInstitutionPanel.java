@@ -5,6 +5,7 @@ import com.jgoodies.forms.layout.CellConstraints;
 import com.jgoodies.forms.layout.FormLayout;
 import eu.apenet.dpt.standalone.gui.ProfileListModel;
 import eu.apenet.dpt.standalone.gui.Utilities;
+import static eu.apenet.dpt.standalone.gui.eag2012.EagPanels.createErrorLabel;
 import eu.apenet.dpt.standalone.gui.eag2012.SwingStructures.LocationType;
 import eu.apenet.dpt.standalone.gui.eag2012.SwingStructures.TextFieldWithCheckbox;
 import eu.apenet.dpt.standalone.gui.eag2012.SwingStructures.TextFieldWithLanguage;
@@ -319,7 +320,11 @@ public class EagInstitutionPanel extends EagPanels {
         builder.addLabel(labels.getString("eag2012.linkTitleLabel"),             cc.xy (5, rowNb));
         builder.add(webpageTitleTf,                                            cc.xy (7, rowNb));
         setNextRow();
-
+        if((StringUtils.isNotBlank(webpageTf.getText()) && !StringUtils.startsWithAny(webpageTf.getText(), webPrefixes)) || errors.contains("webpageTf")) {
+            builder.add(createErrorLabel(labels.getString("eag2012.errors.webpageProtocol")),          cc.xy(1, rowNb));
+            setNextRow();
+        }
+        
         if(repository.getTimetable().getOpening().size() == 0) {
             repository.getTimetable().getOpening().add(new Opening());
         }
@@ -383,6 +388,10 @@ public class EagInstitutionPanel extends EagPanels {
         builder.addLabel(labels.getString("eag2012.linkTitleLabel"),             cc.xy (5, rowNb));
         builder.add(refInstitutionHoldingsGuideTitleTf, cc.xy(7, rowNb));
         setNextRow();
+        if((StringUtils.isNotBlank(refInstitutionHoldingsGuideTf.getText()) && !StringUtils.startsWithAny(refInstitutionHoldingsGuideTf.getText(), webPrefixes)) || errors.contains("refInstitutionHoldingsGuideTf")) {
+            builder.add(createErrorLabel(labels.getString("eag2012.errors.webpageProtocol")),          cc.xy(1, rowNb));
+            setNextRow();
+        }
 //        }
 
         builder.addSeparator("", cc.xyw(1, rowNb, 7));
@@ -709,11 +718,9 @@ public class EagInstitutionPanel extends EagPanels {
             if(StringUtils.isNotEmpty(webpageTf.getText())) {
                 if(repository.getWebpage().size() == 0)
                     repository.getWebpage().add(new Webpage());
-                if(!StringUtils.startsWithAny(webpageTf.getText(), webPrefixes)){
-                    repository.getWebpage().get(0).setHref("http://" + webpageTf.getText().trim());
-                } else {
-                    repository.getWebpage().get(0).setHref(webpageTf.getText());
-                }
+                repository.getWebpage().get(0).setHref(webpageTf.getText());
+                if(!StringUtils.startsWithAny(webpageTf.getText(), webPrefixes))
+                    errors.add("webpageTf");
                 hasChanged = true;
                 if(StringUtils.isNotEmpty(webpageTitleTf.getText()) && !webpageTitleTf.getText().equals(repository.getWebpage().get(0).getContent())) {
                     repository.getWebpage().get(0).setContent(webpageTitleTf.getText());
@@ -770,11 +777,9 @@ public class EagInstitutionPanel extends EagPanels {
                 eag.setRelations(new Relations());
             if(eag.getRelations().getResourceRelation().size() > 0) {
                 if(StringUtils.isNotEmpty(refInstitutionHoldingsGuideTf.getText()) && !refInstitutionHoldingsGuideTf.getText().equals(eag.getRelations().getResourceRelation().get(0).getHref())) {
-                    if(!StringUtils.startsWithAny(refInstitutionHoldingsGuideTf.getText(), webPrefixes)){
-                        eag.getRelations().getResourceRelation().get(0).setHref("http://" + refInstitutionHoldingsGuideTf.getText().trim());
-                    } else {
-                        eag.getRelations().getResourceRelation().get(0).setHref(refInstitutionHoldingsGuideTf.getText());
-                    }
+                    eag.getRelations().getResourceRelation().get(0).setHref(refInstitutionHoldingsGuideTf.getText());
+                    if(!StringUtils.startsWithAny(refInstitutionHoldingsGuideTf.getText(), webPrefixes))
+                        errors.add("refInstitutionHoldingsGuideTf");
                     hasChanged = true;
                 }
 
