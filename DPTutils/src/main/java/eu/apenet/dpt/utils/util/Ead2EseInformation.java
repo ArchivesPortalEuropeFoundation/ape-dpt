@@ -51,6 +51,11 @@ public class Ead2EseInformation {
         this();
         this.archdescRepository = archdescRepository;
         this.alternativeLanguages = new TreeSet<String>();
+        LOG.info("File to read: " + fileToRead.getName());
+        LOG.info("Database role type: " + databaseRoleType);
+        languageCode = "";
+        repository = "";
+        roleType = databaseRoleType;
         determineDaoInformation(fileToRead, databaseRoleType);
     }
 
@@ -68,9 +73,12 @@ public class Ead2EseInformation {
         if (nodelist.getLength() != 0) {
             int counter = 0;
             do {
-                if (languageCode != null && repository != null && roleType != null) {
-                    break;
-                }
+                // NOT SURE WHY THESE LINES WERE THERE, COMMENTING THEM OUT
+                //
+                // if (languageCode != null && repository != null && roleType != null) {
+                //    LOG.info("mjerks");
+                //    break;
+                //}
                 Node daoNode = nodelist.item(counter);
                 roleType = determineRoleType(daoNode, databaseRoleType);
                 repository = determineRepository(daoNode, doc);
