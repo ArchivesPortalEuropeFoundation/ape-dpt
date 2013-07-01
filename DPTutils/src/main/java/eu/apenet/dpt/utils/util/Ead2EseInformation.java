@@ -51,8 +51,6 @@ public class Ead2EseInformation {
         this();
         this.archdescRepository = archdescRepository;
         this.alternativeLanguages = new TreeSet<String>();
-        LOG.info("File to read: " + fileToRead.getName());
-        LOG.info("Database role type: " + databaseRoleType);
         languageCode = "";
         repository = "";
         roleType = databaseRoleType;
@@ -104,7 +102,6 @@ public class Ead2EseInformation {
     }
 
     private String determineRepository(Node daoNode, Document doc) {
-        LOG.info("determineRepository has been called");
         String result = "";
         Node didNode = daoNode.getParentNode();
         NodeList repositories = doc.getElementsByTagName("repository");
