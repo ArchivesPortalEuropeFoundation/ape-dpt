@@ -7,10 +7,8 @@ import org.xml.sax.SAXException;
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.TreeSet;
-import java.util.logging.Level;
 import org.apache.log4j.Logger;
 
 /**
@@ -51,34 +49,28 @@ public class Ead2EseInformation {
         this();
         this.archdescRepository = archdescRepository;
         this.alternativeLanguages = new TreeSet<String>();
-        languageCode = "";
-        repository = "";
-        roleType = databaseRoleType;
-        determineDaoInformation(fileToRead, databaseRoleType);
+        this.languageCode = "";
+        this.repository = "";
+        this.roleType = databaseRoleType;
+        this.determineDaoInformation(fileToRead);
     }
 
     public Ead2EseInformation() {
-        languageCode = "";
-        repository = "";
-        roleType = "";
-        archdescRepository = "";
-        alternativeLanguages =  new TreeSet<String>();
+        this.languageCode = "";
+        this.repository = "";
+        this.roleType = "";
+        this.archdescRepository = "";
+        this.alternativeLanguages =  new TreeSet<String>();
     }
 
-    private void determineDaoInformation(File fileToRead, String databaseRoleType) throws IOException, SAXException, ParserConfigurationException {
+    private void determineDaoInformation(File fileToRead) throws IOException, SAXException, ParserConfigurationException {
         Document doc = XMLUtil.convertXMLToDocument(new FileInputStream(fileToRead));
         NodeList nodelist = doc.getElementsByTagName("dao");
         if (nodelist.getLength() != 0) {
             int counter = 0;
             do {
-                // NOT SURE WHY THESE LINES WERE THERE, COMMENTING THEM OUT
-                //
-                // if (languageCode != null && repository != null && roleType != null) {
-                //    LOG.info("mjerks");
-                //    break;
-                //}
                 Node daoNode = nodelist.item(counter);
-                roleType = determineRoleType(daoNode, databaseRoleType);
+                roleType = determineRoleType(daoNode);
                 repository = determineRepository(daoNode, doc);
                 languageCode = determineLanguageCode(daoNode, doc);
                 counter++;
@@ -86,11 +78,7 @@ public class Ead2EseInformation {
         }
     }
 
-    private String determineRoleType(Node daoNode, String databaseRoleType) {
-        if (!databaseRoleType.equals("UNSPECIFIED") && databaseRoleType != null) {
-            return databaseRoleType;
-        }
-
+    private String determineRoleType(Node daoNode) {
         NamedNodeMap attributes = daoNode.getAttributes();
         for (int i = 0; i < attributes.getLength(); i++) {
             Node attribute = attributes.getNamedItem("xlink:role");
@@ -159,12 +147,6 @@ public class Ead2EseInformation {
                         }
                     }
                 }
-                /*                if (languageNode.getParentNode().getParentNode().getNodeName().equals("c")) {
-                 Node cNode = languageNode.getParentNode().getParentNode();
-                 while (!cNode.getParentNode().getNodeName().equals("ead")) {
-                       
-                 }
-                 }*/
                 else {
                     NamedNodeMap attributes = languageNode.getAttributes();
                     for (int i = 0; i < attributes.getLength(); i++) {
