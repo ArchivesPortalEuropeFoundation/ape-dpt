@@ -965,7 +965,7 @@
         
             <xs:sequence>
                 <xs:element name="restorationlab" type="restorationlab" minOccurs="0"/>
-                <xs:element name="reproductionser" type="reproductionser"/>
+                <xs:element name="reproductionser" type="reproductionser" minOccurs="0"/>
             </xs:sequence>
         
     </xs:complexType>
