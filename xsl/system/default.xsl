@@ -2861,6 +2861,9 @@
                             <xsl:when test="normalize-space(@id)">
                                 <xsl:value-of select="normalize-space(@id)"/>
                             </xsl:when>
+                            <xsl:when test="normalize-space(child::*[name()='did']/@id)">
+                                <xsl:value-of select="normalize-space(child::*[name()='did']/@id)"/>
+                            </xsl:when>
                             <xsl:otherwise>
                                 <xsl:value-of select="generate-id()"/>
                             </xsl:otherwise>
