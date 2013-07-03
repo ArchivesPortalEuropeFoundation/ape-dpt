@@ -770,14 +770,23 @@ public class EagDescriptionPanel extends EagPanels {
                     }
                 }
             }
+
+            if (StringUtils.isNotEmpty(repositoryAreaTf.getText())) {
+                counterBuildingTfs++;
+                repository.getBuildinginfo().getRepositorarea().getNum().setContent(repositoryAreaTf.getText());
+            } else {
+                repository.getBuildinginfo().setRepositorarea(null);
+            }
+
+            if (StringUtils.isNotEmpty(lengthShelfTf.getText())) {
+                counterBuildingTfs++;
+                repository.getBuildinginfo().getLengthshelf().getNum().setContent(lengthShelfTf.getText());
+            } else {
+                repository.getBuildinginfo().setLengthshelf(null);
+            }
+
             if (counterBuildingTfs == 0)
                 repository.setBuildinginfo(null);
-
-            if (StringUtils.isNotEmpty(repositoryAreaTf.getText()))
-                repository.getBuildinginfo().getRepositorarea().getNum().setContent(repositoryAreaTf.getText());
-
-            if (StringUtils.isNotEmpty(lengthShelfTf.getText()))
-                repository.getBuildinginfo().getLengthshelf().getNum().setContent(lengthShelfTf.getText());
 
 
             int counterForHoldingsTfs = 0;
