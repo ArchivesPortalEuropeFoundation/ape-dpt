@@ -1,15 +1,20 @@
 package eu.apenet.dpt.utils.util;
 
-import eu.apenet.dpt.utils.ead2ese.XMLUtil;
-import org.w3c.dom.*;
 import org.xml.sax.SAXException;
 
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.TreeSet;
+import javax.xml.parsers.SAXParser;
+import javax.xml.parsers.SAXParserFactory;
 import org.apache.log4j.Logger;
+import org.xml.sax.Attributes;
+import org.xml.sax.InputSource;
+import org.xml.sax.XMLReader;
+import org.xml.sax.helpers.DefaultHandler;
 
 /**
  * User: Yoann Moranville Date: 15/04/2013
@@ -40,7 +45,7 @@ public class Ead2EseInformation {
     public String getArchdescRepository() {
         return archdescRepository;
     }
-    
+
     public TreeSet<String> getAlternativeLanguages() {
         return alternativeLanguages;
     }
@@ -60,105 +65,100 @@ public class Ead2EseInformation {
         this.repository = "";
         this.roleType = "";
         this.archdescRepository = "";
-        this.alternativeLanguages =  new TreeSet<String>();
+        this.alternativeLanguages = new TreeSet<String>();
     }
 
     private void determineDaoInformation(File fileToRead) throws IOException, SAXException, ParserConfigurationException {
-        Document doc = XMLUtil.convertXMLToDocument(new FileInputStream(fileToRead));
-        NodeList nodelist = doc.getElementsByTagName("dao");
-        if (nodelist.getLength() != 0) {
-            int counter = 0;
-            do {
-                Node daoNode = nodelist.item(counter);
-                roleType = determineRoleType(daoNode);
-                repository = determineRepository(daoNode, doc);
-                languageCode = determineLanguageCode(daoNode, doc);
-                counter++;
-            } while ((languageCode == null || repository == null || roleType == null) && counter < nodelist.getLength());
+        SAXParserFactory spf = SAXParserFactory.newInstance();
+        SAXParser sp = spf.newSAXParser();
+        XMLReader xr = sp.getXMLReader();
+        EadContentHandler myContentHandler = new EadContentHandler();
+        xr.setContentHandler(myContentHandler);
+        xr.parse(new InputSource(new InputStreamReader(new FileInputStream(fileToRead), "UTF-8")));
+
+        if (roleType == null) {
+            roleType = "UNSPECIFIED";
         }
     }
 
-    private String determineRoleType(Node daoNode) {
-        NamedNodeMap attributes = daoNode.getAttributes();
-        for (int i = 0; i < attributes.getLength(); i++) {
-            Node attribute = attributes.getNamedItem("xlink:role");
-            if (attribute != null) {
-                return attribute.getTextContent();
+    private class EadContentHandler extends DefaultHandler {
+
+        private boolean inArchdesc = false;
+        private boolean inDid = false;
+        private boolean inRepository = false;
+        private boolean hasDao = false;
+        //flags for first occuring type and DAO in XML
+        private boolean typeRetrieved = false;
+        private boolean daoRetrieved = false;
+
+        @Override
+        public void startElement(String namespaceURI, String localName,
+                String qName, Attributes atts) throws SAXException {
+
+            if (qName.equals("archdesc")) {
+                this.inArchdesc = true;
+            } else if (qName.equals("did")) {
+                this.inDid = true;
+            } else if (qName.equals("dao")) {
+                this.hasDao = true;
+                if (typeRetrieved == false) {
+                    roleType = atts.getValue("xlink:role");
+                    typeRetrieved = true;
+                }
+            } else if (qName.equals("repository")) {
+                this.inRepository = true;
+            } else if (qName.equals("language")) {
+                if (this.inDid) {
+                    if (languageCode.equals("")) {
+                        languageCode = atts.getValue("langcode");
+                    }
+                } else {
+                    alternativeLanguages.add(atts.getValue("langcode"));
+                }
             }
         }
-        return "";
-    }
 
-    private String determineRepository(Node daoNode, Document doc) {
-        String result = "";
-        Node didNode = daoNode.getParentNode();
-        NodeList repositories = doc.getElementsByTagName("repository");
-        if (repositories.getLength() != 0) {
-            int counter = 0;
-            do {
-                Node repositoryNode = repositories.item(counter);
-                if (repositoryNode instanceof Element) {
-                    if (((Element) repositoryNode).getParentNode().getParentNode().getNodeName().equals("c") && ((Element) repositoryNode).getParentNode() == didNode) {
-                        int index = 0;
-                        while (index < ((Element) repositoryNode).getTextContent().length()) {
-                            if (((Element) repositoryNode).getTextContent().charAt(index) >= ' ') {
-                                index++;
-                            } else {
-                                break;
-                            }
-                        }
-                        return ((Element) repositoryNode).getTextContent().substring(0, index);
-                    }
-
-                    if (((Element) repositoryNode).getParentNode().getParentNode().getNodeName().equals("archdesc")) {
-                        int index = 0;
-                        while (index < ((Element) repositoryNode).getTextContent().length()) {
-                            if (((Element) repositoryNode).getTextContent().charAt(index) >= ' ') {
-                                index++;
-                            } else {
-                                break;
-                            }
-                        }
-                        if (archdescRepository == null) {
-                            archdescRepository = ((Element) repositoryNode).getTextContent().substring(0, index);
-                        }
-                    }
-                }
-                counter++;
-            } while (counter < repositories.getLength());
+        @Override
+        public void endElement(String namespaceURI, String localName, String qName)
+                throws SAXException {
+            if (qName.equals("archdesc")) {
+                this.inArchdesc = false;
+            } else if (qName.equals("did")) {
+                this.inDid = false;
+                this.hasDao = false;
+            } else if (qName.equals("dao")) {
+                // Nothing to do here
+            } else if (qName.equals("repository")) {
+                this.inRepository = false;
+            } else if (qName.equals("language")) {
+                // Nothing to do here
+            }
         }
-        return result;
-    }
 
-    private String determineLanguageCode(Node daoNode, Document doc) {
-        String result = null;
-        Node didNode = daoNode.getParentNode();
-        NodeList languages = doc.getElementsByTagName("language");
-        if (languages.getLength() != 0) {
-            int counter = 0;
-            do {
-                Node languageNode = languages.item(counter);
-                if (languageNode.getParentNode().getParentNode() == didNode) {
-                    NamedNodeMap attributes = languageNode.getAttributes();
-                    for (int i = 0; i < attributes.getLength(); i++) {
-                        Node attribute = attributes.item(i);
-                        if (attribute.getNodeName().equals("langcode")) {
-                            result = attribute.getTextContent();
-                        }
+        @Override
+        public void characters(char ch[], int start, int length) {
+            if (this.inRepository) {
+                int index = 0;
+                String textBetween = new String(ch, start, length);
+                while (index < textBetween.length()) {
+                    if (textBetween.charAt(index) >= ' ') {
+                        index++;
+                    } else {
+                        break;
                     }
                 }
-                else {
-                    NamedNodeMap attributes = languageNode.getAttributes();
-                    for (int i = 0; i < attributes.getLength(); i++) {
-                        Node attribute = attributes.item(i);
-                        if (attribute.getNodeName().equals("langcode")) {
-                            alternativeLanguages.add(attribute.getTextContent());
-                        }
+                if (this.hasDao) {
+                    if (daoRetrieved == false) {
+                        repository = textBetween.substring(0, index);
+                        daoRetrieved = true;
                     }
                 }
-                counter++;
-            } while (result == null && counter < languages.getLength());
+                if (this.inArchdesc) {
+                    if (archdescRepository == null || archdescRepository.equals("")) {
+                        archdescRepository = textBetween.substring(0, index);
+                    }
+                }
+            }
         }
-        return result;
     }
 }
