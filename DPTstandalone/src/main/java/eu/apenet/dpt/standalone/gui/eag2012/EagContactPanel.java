@@ -630,8 +630,6 @@ public class EagContactPanel extends EagPanels {
                             errors.add("webpageTfs");
                         if(StringUtils.isNotEmpty(fieldTitle.getText()))
                             webpage.setContent(fieldTitle.getText());
-                        else
-                            webpage.setContent(field.getText());
                         repository.getWebpage().add(webpage);
                         hasChanged = true;
                     }

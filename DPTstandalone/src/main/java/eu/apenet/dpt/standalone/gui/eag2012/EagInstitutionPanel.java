@@ -724,8 +724,6 @@ public class EagInstitutionPanel extends EagPanels {
                 hasChanged = true;
                 if(StringUtils.isNotEmpty(webpageTitleTf.getText()) && !webpageTitleTf.getText().equals(repository.getWebpage().get(0).getContent())) {
                     repository.getWebpage().get(0).setContent(webpageTitleTf.getText());
-                } else if(StringUtils.isBlank(repository.getWebpage().get(0).getContent())) {
-                    repository.getWebpage().get(0).setContent(webpageTf.getText());
                 }
             } else if(repository.getWebpage().size() > 0) {
                 repository.getWebpage().remove(0);
