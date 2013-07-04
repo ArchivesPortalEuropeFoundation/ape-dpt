@@ -531,7 +531,6 @@ public class EagContactPanel extends EagPanels {
             }
             Repository repository = eag.getArchguide().getDesc().getRepositories().getRepository().get(repositoryNb);
             Webpage webpage = new Webpage();
-            webpage.setContent("Go to our homepage");
             repository.getWebpage().add(webpage);
 
             reloadTabbedPanel(new EagContactPanel(eag, tabbedPane, mainTabbedPane, eag2012Frame, model, labels, repositoryNb).buildEditorPanel(errors), 2);
