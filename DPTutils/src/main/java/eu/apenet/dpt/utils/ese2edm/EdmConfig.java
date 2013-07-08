@@ -16,6 +16,7 @@ public class EdmConfig implements Serializable {
 
     private static final long serialVersionUID = -3232731426711003838L;
     private XMLTransformer transformerXML2XML;
+    private XMLTransformer transformerXML2HTML;
     
     private String edmIdentifier;
     private String prefixUrl;
@@ -95,5 +96,12 @@ public class EdmConfig implements Serializable {
         } else {
             return string;
         }
+    }
+    
+    public XMLTransformer getTransformerXML2HTML() {
+        if (transformerXML2HTML == null) {
+            transformerXML2HTML = new XMLTransformer("/ese2edm/edm2html.xslt", null);
+        }
+        return transformerXML2HTML;
     }
 }
