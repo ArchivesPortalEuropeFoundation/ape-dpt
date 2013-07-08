@@ -117,9 +117,9 @@ public class ValidateActionListener implements ActionListener {
                 if (exceptions == null || exceptions.isEmpty()){
                     if(fileInstance.getCurrentLocation() == null || fileInstance.getCurrentLocation().equals(""))
                         fileInstance.setCurrentLocation(file.getAbsolutePath());
-                    fileInstance.setValid(true);
-                    fileInstance.setValidationErrors(labels.getString("validationSuccess"));
-                    if(xsdObject.getFileType().equals(FileInstance.FileType.EAD)) {
+                    if(xsdObject.getFileType().equals(FileInstance.FileType.EAD) && xsdObject.getName().equals("apeEAD")) {
+                        fileInstance.setValid(true);
+                        fileInstance.setValidationErrors(labels.getString("validationSuccess"));
                         dataPreparationToolGUI.enableEseConversionBtn();
                         dataPreparationToolGUI.enableMessageReportBtns();
                         //Do a XML Quality check
@@ -149,6 +149,10 @@ public class ValidateActionListener implements ActionListener {
 
                         fileInstance.setXmlQualityErrors(createXmlQualityErrors(xmlQualityCheckerCall));
                         apeTabbedPane.enableValidationReportBtn();
+                    } else {
+                       if(!fileInstance.isConverted())
+                           dataPreparationToolGUI.enableConversionBtns();
+                       dataPreparationToolGUI.enableValidationBtns();
                     }
                     apeTabbedPane.setValidationErrorText(fileInstance.getValidationErrors());
                     apeTabbedPane.checkFlashingTab(APETabbedPane.TAB_VALIDATION, Utilities.FLASHING_GREEN_COLOR);
