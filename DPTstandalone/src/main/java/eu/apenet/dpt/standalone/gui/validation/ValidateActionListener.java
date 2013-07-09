@@ -5,6 +5,7 @@ import eu.apenet.dpt.standalone.gui.xsdaddition.XsdObject;
 import eu.apenet.dpt.utils.service.DocumentValidation;
 import eu.apenet.dpt.utils.service.TransformationTool;
 import eu.apenet.dpt.utils.util.XmlChecker;
+import eu.apenet.dpt.utils.util.Xsd_enum;
 import eu.apenet.dpt.utils.util.extendxsl.XmlQualityCheckerCall;
 import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
@@ -102,24 +103,36 @@ public class ValidateActionListener implements ActionListener {
 
                         output.transform(new DOMSource(document.getFirstChild()), new StreamResult(file2));
                         is2 = FileUtils.openInputStream(file2);
-                        exceptions = DocumentValidation.xmlValidation(FileUtils.openInputStream(file2), schemaPath, xsdObject.isXsd11());
+                        if(xsdObject.getName().equals(Xsd_enum.DTD_EAD_2002.getReadableName())) {
+                            exceptions = DocumentValidation.xmlValidationAgainstDtd(file2.getAbsolutePath(), schemaPath);
+                        } else {
+                            exceptions = DocumentValidation.xmlValidation(FileUtils.openInputStream(file2), schemaPath, xsdObject.isXsd11());
+                        }
                     } catch (Exception ex){
                         LOG.error("Error when taking the XML tree and validating it", ex);
                         throw new RuntimeException(ex);
                     }
                 } else if(!fileInstance.isConverted()) {
                     is2 = FileUtils.openInputStream(file);
-                    exceptions = DocumentValidation.xmlValidation(FileUtils.openInputStream(file), schemaPath, xsdObject.isXsd11());
+                    if(xsdObject.getName().equals(Xsd_enum.DTD_EAD_2002.getReadableName())) {
+                        exceptions = DocumentValidation.xmlValidationAgainstDtd(file.getAbsolutePath(), schemaPath);
+                    } else {
+                        exceptions = DocumentValidation.xmlValidation(FileUtils.openInputStream(file), schemaPath, xsdObject.isXsd11());
+                    }
                 } else {
                     is2 = FileUtils.openInputStream(new File(fileInstance.getCurrentLocation()));
-                    exceptions = DocumentValidation.xmlValidation(FileUtils.openInputStream(new File(fileInstance.getCurrentLocation())), schemaPath, xsdObject.isXsd11());
+                    if(xsdObject.getName().equals(Xsd_enum.DTD_EAD_2002.getReadableName())) {
+                        exceptions = DocumentValidation.xmlValidationAgainstDtd(new File(fileInstance.getCurrentLocation()).getAbsolutePath(), schemaPath);
+                    } else {
+                        exceptions = DocumentValidation.xmlValidation(FileUtils.openInputStream(new File(fileInstance.getCurrentLocation())), schemaPath, xsdObject.isXsd11());
+                    }
                 }
                 if (exceptions == null || exceptions.isEmpty()){
                     if(fileInstance.getCurrentLocation() == null || fileInstance.getCurrentLocation().equals(""))
                         fileInstance.setCurrentLocation(file.getAbsolutePath());
+                    fileInstance.setValid(true);
+                    fileInstance.setValidationErrors(labels.getString("validationSuccess"));
                     if(xsdObject.getFileType().equals(FileInstance.FileType.EAD) && xsdObject.getName().equals("apeEAD")) {
-                        fileInstance.setValid(true);
-                        fileInstance.setValidationErrors(labels.getString("validationSuccess"));
                         dataPreparationToolGUI.enableEseConversionBtn();
                         dataPreparationToolGUI.enableMessageReportBtns();
                         //Do a XML Quality check

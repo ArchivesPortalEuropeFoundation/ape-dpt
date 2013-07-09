@@ -1,16 +1,23 @@
 package eu.apenet.dpt.utils.service;
 
 import eu.apenet.dpt.utils.util.APEXmlCatalogResolver;
+import eu.apenet.dpt.utils.util.DTDReplacer;
 import eu.apenet.dpt.utils.util.DiscardDtdEntityResolver;
 import eu.apenet.dpt.utils.util.Xsd_enum;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
+import org.w3c.dom.Document;
 import org.xml.sax.*;
 import org.xml.sax.helpers.DefaultHandler;
 import org.xml.sax.helpers.XMLReaderFactory;
 
 import javax.xml.XMLConstants;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.stream.*;
+import javax.xml.stream.events.XMLEvent;
 import javax.xml.transform.stream.StreamSource;
 import javax.xml.validation.SchemaFactory;
 import javax.xml.validation.Schema;
@@ -114,6 +121,21 @@ public class DocumentValidation {
 
     public static List<SAXParseException> xmlValidation(String filePath, URL schemaPath, boolean isXsd11) throws SAXException, IOException {
         return xmlValidation(new File(filePath), schemaPath, isXsd11);
+    }
+
+    public static List<SAXParseException> xmlValidationAgainstDtd(String filePath, URL dtdFile) throws ParserConfigurationException, IOException, SAXException {
+        DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
+        documentBuilderFactory.setValidating(true);
+        DocumentBuilder builder = documentBuilderFactory.newDocumentBuilder();
+        DTDReplacer dtdReplacer = new DTDReplacer("ead", dtdFile);
+        builder.setEntityResolver(dtdReplacer);
+        ErrorHandler errorHandler = new ErrorHandler();
+        builder.setErrorHandler(errorHandler);
+        builder.parse(filePath);
+        if (!errorHandler.exceptions.isEmpty()) {
+            return errorHandler.exceptions;
+        }
+        return null;
     }
 
     private static Schema getSchema(List<URL> schemaURLs, boolean isXsd11) throws SAXException {

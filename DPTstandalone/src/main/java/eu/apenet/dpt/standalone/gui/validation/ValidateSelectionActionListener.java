@@ -9,6 +9,7 @@ import eu.apenet.dpt.standalone.gui.progress.ApexActionListener;
 import eu.apenet.dpt.standalone.gui.progress.ProgressFrame;
 import eu.apenet.dpt.utils.service.DocumentValidation;
 import eu.apenet.dpt.utils.util.XmlChecker;
+import eu.apenet.dpt.utils.util.Xsd_enum;
 import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
 import org.xml.sax.SAXParseException;
@@ -88,17 +89,25 @@ public class ValidateSelectionActionListener extends ApexActionListener {
                             XsdObject xsdObject = fileInstance.getValidationSchema();
                             if(fileInstance.isConverted()){
                                 InputStream is = FileUtils.openInputStream(new File(fileInstance.getCurrentLocation()));
-                                exceptions = DocumentValidation.xmlValidation(is, Utilities.getUrlPathXsd(xsdObject), xsdObject.isXsd11());
+                                if(xsdObject.getName().equals(Xsd_enum.DTD_EAD_2002.getReadableName())) {
+                                    exceptions = DocumentValidation.xmlValidationAgainstDtd(new File(fileInstance.getCurrentLocation()).getAbsolutePath(), Utilities.getUrlPathXsd(xsdObject));
+                                } else {
+                                    exceptions = DocumentValidation.xmlValidation(is, Utilities.getUrlPathXsd(xsdObject), xsdObject.isXsd11());
+                                }
                             } else {
-                                exceptions = DocumentValidation.xmlValidation(FileUtils.openInputStream(file), Utilities.getUrlPathXsd(xsdObject), xsdObject.isXsd11());
+                                if(xsdObject.getName().equals(Xsd_enum.DTD_EAD_2002.getReadableName())) {
+                                    exceptions = DocumentValidation.xmlValidationAgainstDtd(file.getAbsolutePath(), Utilities.getUrlPathXsd(xsdObject));
+                                } else {
+                                    exceptions = DocumentValidation.xmlValidation(FileUtils.openInputStream(file), Utilities.getUrlPathXsd(xsdObject), xsdObject.isXsd11());
+                                }
                             }
                             if (exceptions == null || exceptions.isEmpty()){
                                 if(fileInstance.getCurrentLocation() == null || fileInstance.getCurrentLocation().equals(""))
                                     fileInstance.setCurrentLocation(file.getAbsolutePath());
-                                if(xsdObject.getFileType().equals(FileInstance.FileType.EAD) && xsdObject.getName().equals("apeEAD")) {
+//                                if(xsdObject.getFileType().equals(FileInstance.FileType.EAD) && xsdObject.getName().equals("apeEAD")) {
                                     fileInstance.setValid(true);
                                     fileInstance.setValidationErrors(labels.getString("validationSuccess"));
-                                }
+//                                }
                             } else {
                                 String errors = Utilities.stringFromList(exceptions);
                                 fileInstance.setValidationErrors(errors);

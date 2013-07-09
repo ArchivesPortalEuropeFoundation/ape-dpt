@@ -12,7 +12,8 @@ public enum Xsd_enum {
     XSD1_0_APE_SCHEMA("apeEAD (XSD 1.0)", "apeEAD_XSD1.0.xsd"),
     XSD_EAC_SCHEMA("EAC-CPF", "cpf.xsd"),
     XSD_EAG_SCHEMA("EAG 0.2", "eag.xsd"),
-    XSD_EAG_2012_SCHEMA("EAG 2012", "eag_2012.xsd");
+    XSD_EAG_2012_SCHEMA("EAG 2012", "eag_2012.xsd"),
+    DTD_EAD_2002("EAD 2002 DTD", "dtd/ead.dtd");
 
     private String path;
     private String readableName;
