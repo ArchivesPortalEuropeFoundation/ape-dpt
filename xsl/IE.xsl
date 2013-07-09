@@ -122,7 +122,9 @@
 			</eadid>
             <filedesc>
                 <titlestmt>
-                    <titleproper />
+                    <titleproper>
+                        <xsl:value-of select="child::*[1][name()='record']/*[name()='title']/text()"/>
+                    </titleproper>
                 </titlestmt>
             </filedesc>
             <xsl:if test="descendant::*[name()='rules_convention'][1]">
