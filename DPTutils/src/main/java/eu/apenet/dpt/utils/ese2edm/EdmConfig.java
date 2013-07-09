@@ -83,7 +83,7 @@ public class EdmConfig implements Serializable {
 			properties = new Properties();
 			properties.put("edm_identifier", getString(getEdmIdentifier()));
 			properties.put("prefix_url", getString(getPrefixUrl()));
-                        String repCodeAfterReplacement = getRepositoryCode().replace('/', '_');
+                        String repCodeAfterReplacement = getString(getRepositoryCode()).replace('/', '_');
 			properties.put("repository_code", getString(repCodeAfterReplacement));
 			properties.put("xml_type_name", getString(getXmlTypeName()));
         }
@@ -100,7 +100,7 @@ public class EdmConfig implements Serializable {
     
     public XMLTransformer getTransformerXML2HTML() {
         if (transformerXML2HTML == null) {
-            transformerXML2HTML = new XMLTransformer("/ese2edm/edm2html.xslt", null);
+            transformerXML2HTML = new XMLTransformer("/ese2edm/edm2html.xslt", getProperties());
         }
         return transformerXML2HTML;
     }
