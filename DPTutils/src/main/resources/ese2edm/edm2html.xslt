@@ -71,7 +71,7 @@
                                 </xsl:variable>							
                                 <tr>
                                     <xsl:variable name="filename"
-                                                  select="concat($outputdir, '/',$dirname, '/', position(), '%20',fn:replace(./dc:identifier, '[\\/\*\?:\|%@\[\] \n\t\r]', '_'),'.html')" />
+                                                  select="concat($dirname, '/', position(), '%20',fn:replace(./dc:identifier, '[\\/\*\?:\|%@\[\] \n\t\r]', '_'),'.html')" />
                                     <td>
                                         <a href="{$filename}" target="main">
                                             <xsl:value-of select="./dc:identifier" />
