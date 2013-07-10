@@ -1628,7 +1628,7 @@ public class EagAccessAndServicesPanel extends EagPanels {
 
             if(StringUtils.isNotEmpty(webpageLibraryTf.getText())) {
                 library.getWebpage().get(0).setHref(webpageLibraryTf.getText());
-                if(!StringUtils.startsWithAny(webpageSearchroomTf.getText(), webPrefixes))
+                if(!StringUtils.startsWithAny(webpageLibraryTf.getText(), webPrefixes))
                         errors.add("webpageLibraryTf");
                 if(StringUtils.isNotEmpty(webpageTitleLibraryTf.getText())) {
                     library.getWebpage().get(0).setContent(webpageTitleLibraryTf.getText());
