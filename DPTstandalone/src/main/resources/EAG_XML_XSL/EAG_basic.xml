@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<eag audience="external" xmlns="http://www.archivesportaleurope.net/Portal/profiles/eag_2012/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.archivesportaleurope.net/Portal/profiles/eag_2012/ http://www.archivesportaleurope.net/Portal/profiles/eag_2012.xsd">
+   <eagheader status="draft" langencoding="iso639-2b" scriptencoding="iso15924"
+   dateencoding="iso8601" countryencoding="iso3166-1" repositoryencoding="iso15511">
+      <eagid/>
+      <mainhist>
+         <mainevent maintype="create">
+            <date/>
+         </mainevent>
+      </mainhist>
+   </eagheader>
+   <archguide>
+      <identity>
+         <repositorid/>
+         <autform/>
+         <parform/>
+      </identity>
+      <desc>
+         <geogarea>Europe</geogarea>
+         <country/>
+         <municipality/>
+         <street/>
+         <postalcode/>
+         <telephone/>
+         <email href="">Mail to </email>
+         <webpage href="">Homepage of the institution</webpage>
+      </desc>
+   </archguide>
+</eag>

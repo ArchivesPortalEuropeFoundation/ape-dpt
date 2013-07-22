@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<parent>
+		<groupId>eu.apenet</groupId>
+		<artifactId>DPT-project</artifactId>
+		<version>1.3.11-SNAPSHOT</version>
+		<relativePath>..</relativePath>
+	</parent>
+	<modelVersion>4.0.0</modelVersion>
+	<artifactId>DPTstandalone</artifactId>
+	<name>DPT Standalone mapping tool</name>
+	<packaging>jar</packaging>
+	<organization>
+		<name>APEnet project</name>
+		<url>http://www.apenet.eu/</url>
+	</organization>
+	<url>http://www.apenet.eu/</url>
+	<build>
+		<!--release of current TOOL version: mvn clean release:prepare release:perform 
+			release:clean clean -->
+        <!-- native2ascii to convert i18n files-->
+		<plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>2.3.2</version>
+                <configuration>
+                    <archive>
+                        <manifest>
+                            <addClasspath>true</addClasspath>
+                            <classpathPrefix>lib/</classpathPrefix>
+                            <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+                            <addDefaultSpecificationEntries>true</addDefaultSpecificationEntries>
+                            <mainClass>eu.apenet.dpt.standalone.gui.DataPreparationToolGUI</mainClass>
+                        </manifest>
+                        <manifestEntries>
+                            <organization-url>${project.organization.url}</organization-url>
+                            <url>${project.url}</url>
+                        </manifestEntries>
+                    </archive>
+                </configuration>
+            </plugin>
+			<plugin>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<configuration>
+					<source>1.6</source>
+					<target>1.6</target>
+				</configuration>
+			</plugin>
+            <plugin>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <version>2.1</version>
+                <configuration>
+                    <descriptorRefs>
+                        <descriptorRef>jar-with-dependencies</descriptorRef>
+                    </descriptorRefs>
+                    <finalName>APE_data_preparation_tool</finalName>
+                    <archive>
+                        <manifest>
+                            <mainClass>eu.apenet.dpt.standalone.gui.DataPreparationToolGUI</mainClass>
+                        </manifest>
+                    </archive>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>make-my-jar-with-dependencies</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+		</plugins>
+	</build>
+	<profiles>
+		<profile>
+			<id>Deploy</id>
+			<activation>
+				<activeByDefault>false</activeByDefault>
+			</activation>
+			<build>
+				<plugins>
+                    <!--<plugin>-->
+                        <!--<groupId>org.codehaus.mojo</groupId>-->
+                        <!--<artifactId>latex-maven-plugin</artifactId>-->
+                        <!--<version>1.0</version>-->
+                        <!--<executions>-->
+                            <!--<execution>-->
+                                <!--<goals>-->
+                                    <!--<goal>latex</goal>-->
+                                <!--</goals>-->
+                                <!--<phase>package</phase>-->
+                                <!--<configuration>-->
+                                    <!--<binariesPath>/usr/texbin</binariesPath>-->
+                                    <!--<docsRoot>src/main/resources/documentation</docsRoot>-->
+                                <!--</configuration>-->
+                            <!--</execution>-->
+                        <!--</executions>-->
+                    <!--</plugin>-->
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-antrun-plugin</artifactId>
+                        <version>1.4</version>
+                        <executions>
+                            <execution>
+                                <id>first</id>
+                                <phase>package</phase>
+                                <goals>
+                                    <goal>run</goal>
+                                </goals>
+                                <configuration>
+                                    <tasks>
+                                        <mkdir dir="target/production/" />
+                                        <mkdir dir="target/production/xsl/" />
+                                        <mkdir dir="target/production/xsl/system/" />
+                                        <copy todir="target/production/" verbose="true">
+                                            <fileset dir="src/main/resources/production/" />
+                                        </copy>
+                                        <copy verbose="true" file="../xsl/system/default.xsl" todir="target/production/xsl/system/" />
+                                        <copy verbose="true" file="../xsl/system/frontmatter.xsl" todir="target/production/xsl/system/" />
+                                        <copy verbose="true" file="../xsl/system/levels.xsl" todir="target/production/xsl/system/" />
+                                        <copy verbose="true" file="../xsl/system/before.xsl" todir="target/production/xsl/system/" />
+                                        <copy verbose="true" file="../xsl/system/languages.xml" todir="target/production/xsl/system/" />
+                                        <copy verbose="true" file="../xsl/system/eag2eag2012.xsl" todir="target/production/xsl/system/" />
+                                        <copy verbose="true" file="../xsl/system/dateconversion.xml" todir="target/production/xsl/system/" />
+                                        <copy verbose="true" file="src/main/resources/documentation/manual.pdf" tofile="target/production/APE_data_preparation_tool_${project.version}_manual.pdf" />
+                                        <!--<copy verbose="true" file="target/manual.pdf" tofile="target/production/APE_data_preparation_tool_${project.version}_manual.pdf" />-->
+                                        <copy file="target/APE_data_preparation_tool-jar-with-dependencies.jar" todir="target/production/" verbose="true" />
+                                        <zip destfile="target/APE_data_preparation_tool_${project.version}.zip" basedir="target/production/" />
+                                        <delete dir="target/production/" />
+                                    </tasks>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+				</plugins>
+			</build>
+		</profile>
+	</profiles>
+	<dependencies>
+		<dependency>
+			<groupId>eu.apenet</groupId>
+			<artifactId>DPTutils</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.derby</groupId>
+			<artifactId>derby</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.swinglabs</groupId>
+			<artifactId>swingx</artifactId>
+		</dependency>
+        <dependency>
+            <groupId>com.jgoodies</groupId>
+            <artifactId>forms</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.jgoodies</groupId>
+            <artifactId>commons</artifactId>
+        </dependency>
+        <!--<dependency>-->
+            <!--<groupId>javax.xml.bind</groupId>-->
+            <!--<artifactId>jaxb-api</artifactId>-->
+        <!--</dependency>-->
+        <dependency>
+            <groupId>com.sun.xml.bind</groupId>
+            <artifactId>jaxb-impl</artifactId>
+        </dependency>
+        <!--<dependency>-->
+            <!--<groupId>org.eclipse.persistence</groupId>-->
+            <!--<artifactId>org.eclipse.persistence.moxy</artifactId>-->
+        <!--</dependency>-->
+	</dependencies>
+</project>
