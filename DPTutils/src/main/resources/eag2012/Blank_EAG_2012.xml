@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<eag xmlns="http://www.archivesportaleurope.net/Portal/profiles/eag_2012/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.archivesportaleurope.net/Portal/profiles/eag_2012/ http://www.archivesportaleurope.net/Portal/profiles/eag_2012.xsd" audience="external">
+    <control>
+        <recordId></recordId>
+        <maintenanceAgency>
+            <agencyCode></agencyCode>
+            <agencyName></agencyName>
+        </maintenanceAgency>
+        <maintenanceStatus>new</maintenanceStatus>
+        <maintenanceHistory>
+            <!--<maintenanceEvent>-->
+                <!--<agent></agent>-->
+                <!--<agentType>human</agentType>-->
+                <!--<eventDateTime standardDateTime=""></eventDateTime>-->
+                <!--<eventType>created</eventType>-->
+            <!--</maintenanceEvent>-->
+        </maintenanceHistory>
+        <conventionDeclaration>
+            <abbreviation>EAG</abbreviation>
+            <citation>EAG (Encoded Archival Guide) 2012</citation>
+        </conventionDeclaration>
+        <conventionDeclaration>
+            <abbreviation>ISDIAH</abbreviation>
+            <citation>International Standard for Describing Institutions with Archival Holdings</citation>
+        </conventionDeclaration>
+        <conventionDeclaration>
+            <abbreviation>ISO 639-2b</abbreviation>
+            <citation>Codes for the representation of names of languages — Part 2: Alpha-3 code</citation>
+        </conventionDeclaration>
+        <conventionDeclaration>
+            <abbreviation>ISO 3166-1</abbreviation>
+            <citation>Codes for the representation of names of countries and their subdivisions – Part 1: Country codes</citation>
+        </conventionDeclaration>
+        <conventionDeclaration>
+            <abbreviation>ISO 8601</abbreviation>
+            <citation>Data elements and interchange formats – Information interchange – Representation of dates and times</citation>
+        </conventionDeclaration>
+        <conventionDeclaration>
+            <abbreviation>ISO 15511</abbreviation>
+            <citation>International Standard Identifier for Libraries and Related Organisations</citation>
+        </conventionDeclaration>
+        <conventionDeclaration>
+            <abbreviation>ISO 15924</abbreviation>
+            <citation>Codes for the representation of names of scripts</citation>
+        </conventionDeclaration>
+    </control>
+    <archguide>
+        <identity>
+            <repositorid countrycode="" />
+            <autform></autform>
+        </identity>
+        <desc>
+            <repositories>
+                <repository>
+                    <geogarea></geogarea>
+                    <location>
+                        <country></country>
+                        <municipalityPostalcode></municipalityPostalcode>
+                        <street></street>
+                    </location>
+                    <telephone></telephone>
+                    <email href=""></email>
+                    <webpage href=""></webpage>
+                    <timetable>
+                        <opening></opening>
+                    </timetable>
+                </repository>
+            </repositories>
+        </desc>
+    </archguide>
+</eag>

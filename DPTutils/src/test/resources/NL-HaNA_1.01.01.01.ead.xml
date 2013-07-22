@@ -1,0 +1,2541 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 20070827 -->
+<!DOCTYPE ead PUBLIC "+//ISBN 1-931666-00-8//DTD ead.dtd (Encoded Archival Description (EAD) Version 2002)//EN" "http://www.nationaalarchief.nl/collectie/ead/ead.dtd">
+<ead audience="external">
+	<eadheader countryencoding="iso3166-1" dateencoding="iso8601" langencoding="iso639-2b" scriptencoding="iso15924" repositoryencoding="iso15511" findaidstatus="unverified-full-draft">
+		<eadid countrycode="NL" mainagencycode="NL-HaNA" publicid="-//Nationaal Archief//TEXT (NL-HaNA::1.01.01.01::Regeringsarchieven Geünieerde Provinciën I, 1576-1588)//NL" urn="1.01.01.01.ead.xml">1.01.01.01</eadid>
+		<filedesc>
+			<titlestmt>
+				<titleproper>Inventaris van het archief van de Staten-Generaal, 1576-1588</titleproper>
+				<author>
+		    C.H. van Marle, 1976
+		  </author>
+			</titlestmt>
+			<publicationstmt>
+				<publisher>Nationaal Archief, Den Haag</publisher>
+				<date normal="1976" era="ce" calendar="gregorian">(c) 1976</date>
+			</publicationstmt>
+		</filedesc>
+		<profiledesc>
+			<creation audience="internal">Deze digitale toegang is in <date normal="2006" era="ce" calendar="gregorian">2006</date> vervaardigd door het Nationaal Archief op basis van de richtlijn <title linktype="simple">Het gebruik van Encoded Archival Description op het Nationaal Archief versie 1.7.1</title>. Eindredactie: Jaap van Rijswijck, <date normal="20070301" era="ce" calendar="gregorian">20070301</date>
+			</creation>
+			<langusage>This finding aid is written in <language langcode="dut" scriptcode="Latn">Dutch</language>.</langusage>
+			<descrules audience="internal">Deze toegang is vervaardigd met inachtneming van de volgende richtlijnen: 
+                  <bibref linktype="simple">
+					<title linktype="simple">Leidraad bij de lessen in het ordenen en beschrijven van archieven</title>, Rijks Archiefschool, Utrecht 1974</bibref>;
+                  <bibref linktype="simple">
+					<title linktype="simple">Archivistische Terminologie</title>, Rijks Archiefschool, Utrecht 1975</bibref>.
+                </descrules>
+		</profiledesc>
+		<revisiondesc audience="internal">
+			<change>
+				<date normal="" era="ce" calendar="gregorian"/>
+				<item/>
+			</change>
+		</revisiondesc>
+	</eadheader>
+	<archdesc level="fonds" type="inventory">
+		<did>
+			<head>Beschrijving van het archief</head>
+			<unittitle label="Naam archiefblok: ">Regeringsarchieven Geünieerde Provinciën I, 1576-1588</unittitle>
+			<unittitle type="short">Regeringsarchieven I</unittitle>
+			<unitdate label="Periode: " type="inclusive" normal="1576/1588" era="ce" calendar="gregorian">1576-1588</unitdate>
+			<unitid label="Archiefbloknummer: " repositorycode="NL-HaNA" countrycode="NL">12</unitid>
+			<physdesc label="Omvang: ">
+				<extent unit="meter">2.3 meter; </extent>
+				<extent unit="files">239 inventarisnummers</extent>
+			</physdesc>
+			<langmaterial label="Taal van het archiefmateriaal: ">Het merendeel der stukken is in het <language langcode="dut" scriptcode="Latn">Nederlands</language>. Een klein gedeelte is gesteld in talen als het <language langcode="fre" scriptcode="Latn">Frans</language>, het <language langcode="eng" scriptcode="Latn">Engels</language> en het <language langcode="ger" scriptcode="Latn">Duits</language>.</langmaterial>
+			<materialspec label="Soort archiefmateriaal: ">Normale geschreven documenten. De Nederlandse stukken van voor ca. 1700 zijn geschreven in het gotische cursiefschrift, met name in de Oud-Hollandse klerkencursief.</materialspec>
+			<repository label="Archiefbewaarplaats: ">Nationaal Archief, Den Haag</repository>
+			<physloc/>
+			<origination label="Archiefvormers: ">
+				<corpname> Engeland, Gezant</corpname>
+			</origination>
+			<origination>
+				<corpname>Frankrijk, Gezant</corpname>
+			</origination>
+			<origination>
+				<corpname>Oud Archief Suriname: Gouvernementssecretarie</corpname>
+			</origination>
+			<origination>
+				<corpname>Willem I, Prins van Oranje</corpname>
+			</origination>
+			<abstract label="Samenvatting van de inhoud van het archief: ">Bevat archieven afkomstig van de griffie, de Hoogduitse Secretarie en de Audience van de Staten-Generaal uit de periode 1576-1588. Het archief van de griffie bevat resoluties van de Staten-Generaal, correspondentie (o.a. Duitse, Franse en Engelse zaken), verdragen en ratificaties, commissiebrieven, correspondentie met en stukken betreffende de landvoogden Don Juan, de hertog van Anjou, Matthias van Oostenrijk en Leycester, stukken betreffende de aanbieding van de soevereiniteit aan resp. de koning van Frankrijk en de koningin van Groot-Brittannië en stukken betreffende militaire zaken. Bevat tevens stukken afkomstig uit het archief van de prins Willem van Oranje.<lb/>Het archief van de Hoogduitse Secretarie betreft Duitstalige correspondentie met Duitse vorsten en steden en stukken betreffende Oost-Friesland. Het archief van de Audience bevat voornamelijk minuten van commissies, akten en plakkaten en stukken afkomstig van Jan Asseliers als gedeputeerde naar Frankrijk</abstract>
+		</did>
+		<descgrp type="context">
+			<head>Archiefvorming</head>
+			<bioghist>
+				<head>Geschiedenis van de archiefvormer</head>
+				<chronlist>
+					<chronitem>
+						<date normal="15760925" era="ce" calendar="gregorian">1576 sept. 25 </date>
+						<event>De Staten van Brabant, Vlaanderen en Henegouwen komen te Brussel, op verzoek van de Raad van State bijeen. </event>
+					</chronitem>
+					<chronitem>
+						<date normal="15761108" era="ce" calendar="gregorian">1576 nov. 8 </date>
+						<event>Pacificatie van Gent. Holland en Zeeland sluiten zich bij de bovengenoemde gewesten aan; het wordt nu gebruikelijk de bri even te ondertekenen met "étata généraux du Pays Bas", "Generale Staten" en "généralité" (resolutie Staten Generaal 14 november 1576).</event>
+					</chronitem>
+					<chronitem>
+						<date normal="1576-11/15781001" era="ce" calendar="gregorian">1576 nov. - 1578 okt. 1</date>
+						<event>Don Juan van Oostenrijk gouverneur-generaal.</event>
+					</chronitem>
+					<chronitem>
+						<date normal="1577-01" era="ce" calendar="gregorian">1577 jan.</date>
+						<event>Eerste Unie van Brussel, de afgevaardigden van de Staten Generaal bekrachtigen nogmaals de Pacificatie van Gent. </event>
+					</chronitem>
+					<chronitem>
+						<date normal="1577-02" era="ce" calendar="gregorian">1577 febr.</date>
+						<event>Don Juan tekent het "Eeuwig Edict" en sluit een verdrag met de Staten Generaal, waarbij hij onder meer de Pacificatie erkent. </event>
+					</chronitem>
+					<chronitem>
+						<date normal="1577-09" era="ce" calendar="gregorian">1577 sept.</date>
+						<eventgrp>
+							<event>De Staten Generaal verklaren Don Juan niet langer te erkennen, en Matthias, aartshertog van Oostenrijk voortaan als gouverneur - generaal te beschouwen.</event>
+							<event>Tweede of nadere Unie van Brussel: De Staten Generaal verbinden zich tot handhaving van de Pacificatie. </event>
+						</eventgrp>
+					</chronitem>
+					<chronitem>
+						<date normal="1578-01" era="ce" calendar="gregorian">1578 jan. </date>
+						<event>Matthias houdt zijn intocht in Brussel, met Willem van Oranie als zijn luitenant; er wordt een nieuwe Raad van State aangesteld. </event>
+					</chronitem>
+					<chronitem>
+						<date normal="15781001" era="ce" calendar="gregorian">1578 okt. 1</date>
+						<event>Dood van Don Juan, zijn taak wordt overgenomen door Alexander Farnese, hertog van Parma. </event>
+					</chronitem>
+					<chronitem>
+						<date normal="15790123" era="ce" calendar="gregorian">1579 jan. 23 </date>
+						<event>Ondertekening van de Unie van Utrecht door afgevaardigden van Gelre, Holland, Zeeland, Utrecht en de Ommelanden; veel Vlaamse en Brabantse steden sluiten zich in de volgende maanden hierbij aan.</event>
+					</chronitem>
+					<chronitem>
+						<date normal="1580-03" era="ce" calendar="gregorian">1580 maart </date>
+						<event>"Verraad" van Rennenberg, Groningen en de Ommelanden komen weer onder de koning. Ook Henegouwen, Artois en de kastellanijen van Rijssel, Douai en Orchies geven zich over aan Parma; deze gewesten sturen geen afgevaardigden meer naar de vergadering van de Staten Generaal; de Staten Generaal komen om redenen van veiligheid in de noordelijke gewesten bijeen.</event>
+					</chronitem>
+				</chronlist>
+			</bioghist>
+		</descgrp>
+		<descgrp type="content_and_structure">
+			<head>Inhoud en structuur van het archief</head>
+			<controlaccess audience="internal">
+				<subject source="ABS_rubriek"/>
+				<subject source="ABS_trefwoord">1.01</subject>
+			</controlaccess>
+			<scopecontent>
+				<head>Inhoud</head>
+				<p>Regeringsarchieven Geünieerde Provinciën I, 1576-1588</p>
+			</scopecontent>
+		</descgrp>
+		<descgrp type="access_and_use">
+			<head>Aanwijzingen voor de gebruiker</head>
+			<accessrestrict id="accessrestrict">
+				<head>Openbaarheidsbeperkingen</head>
+				<p>Alle archiefbescheiden behorend tot het archiefblok zijn volledig openbaar.</p>
+				<legalstatus>De rechtstitel is (nog) onbekend</legalstatus>
+			</accessrestrict>
+			<userestrict>
+				<head>Beperkingen aan het gebruik</head>
+				<p>Reproductie van originele bescheiden uit dit archief is, behoudens de algemene regels die gelden voor het kopiëren van stukken, niet aan beperkingen onderhevig. Er zijn geen beperkingen krachtens het auteursrecht.</p>
+			</userestrict>
+			<phystech type="ABS">
+				<head>Materiële beperkingen</head>
+				<p/>
+			</phystech>
+			<otherfindaid>
+				<head>Andere toegang</head>
+				<p>Deze toegang vervangt een eerdere inventaris: R. Bijlsma 'De regeeringsarchieven der Geüniëerde en der Nader Geüniëerde Nederlandsche Provinciën 1576 september - 1588 mei' ('s-Gravenhage 1926). De inleiding hiervan bevat een schat aan informatie over de bestuurlijke organisatie en werking van het archief. Een exemplaar van deze inventaris is beschikbaar in de bibliotheek van het Nationaal Archief (signatuur: 47 C 24).</p>
+			</otherfindaid>
+			<odd type="application_instruction">
+				<head>Aanvraaginstructie</head>
+				<p>Archiefstukken kunnen worden aangevraagd of gereserveerd via de terminals in de studiezaal van het Nationaal Archief te Den Haag. U dient daarbij de volgende gegevens in te vullen: 
+          <list type="ordered" numeration="arabic">
+						<item>uw bezoekersnummer,</item>
+						<item>uw tafelnummer,</item>
+						<item>het nummer van de toegang van het archief (ook de puntjes overnemen), nl.: <num type="eadid">1.01.01.01</num>,</item>
+						<item>en het inventarisnummer, het oranje nummer voor de beschrijving van de archiefstukken.</item>
+					</list>
+     Reserveren kunt u ook online door gebruik te maken van het <extref linktype="simple" href="http://www.nationaalarchief.nl/collectie/bestellen/resarchiefstuk.asp" actuate="onrequest" show="new">digitale reserveringsformulier</extref>.
+        </p>
+			</odd>
+			<prefercite>
+				<head>Citeerinstructie</head>
+				<p>Bij het citeren in annotatie en verantwoording dient het archief tenminste éénmaal volledig en zonder afkortingen te worden vermeld. Daarna kan worden volstaan met verkorte aanhaling.</p>
+				<p>VOLLEDIG: <lb/>Nationaal Archief, Den Haag, Regeringsarchieven Geünieerde Provinciën I, 1576-1588, nummer toegang 1.01.01.01, inventarisnummer ... </p>
+				<p>VERKORT: <lb/>NL-HaNA, Regeringsarchieven I, 1.01.01.01, inv.nr. ... </p>
+			</prefercite>
+		</descgrp>
+		<descgrp type="allied_materials">
+			<head>Verwant materiaal</head>
+			<altformavail type="ABS">
+				<head>Beschikbaarheid van kopieën</head>
+				<p/>
+			</altformavail>
+		</descgrp>
+		<dsc type="combined">
+			<head>Beschrijving van de series en archiefbestanddelen</head>
+			<c01 level="subfonds">
+				<did>
+					<unitid type="series_code">A</unitid>
+					<unittitle>Archief van de griffie</unittitle>
+				</did>
+				<c02 level="series">
+					<did>
+						<unitid type="series_code">A1</unitid>
+						<unittitle>delen en banden</unittitle>
+					</did>
+					<c03 level="otherlevel" otherlevel="filegrp">
+						<did>
+							<unitid>14-15</unitid>
+							<unittitle>Kladresoluties</unittitle>
+						</did>
+						<c04 level="file">
+							<did>
+								<unitid>14A</unitid>
+								<unittitle>
+									<unitdate normal="15771009/15771024" era="ce" calendar="gregorian">1577 oktober 9 - 1577 oktober 24</unitdate>
+								</unittitle>
+								<physdesc>3 omslagen</physdesc>
+							</did>
+							<custodhist>
+								<p> dubbel, door telkens twee secretarissen bijgehouden</p>
+							</custodhist>
+							<scopecontent>
+								<p>De teksten lopen echter door elkaar en zijn niet te scheiden; deze katernen lagen los in S.G.3</p>
+							</scopecontent>
+						</c04>
+						<c04 level="file">
+							<did>
+								<unitid>14C</unitid>
+								<unittitle>
+									<unitdate normal="15780420/15780424" era="ce" calendar="gregorian">1578 april 20- 1578 april 24</unitdate>
+								</unittitle>
+								<physdesc>1 katern</physdesc>
+							</did>
+						</c04>
+						<c04 level="file">
+							<did>
+								<unitid>15</unitid>
+								<unittitle>
+									<unitdate normal="15820910/15830429" era="ce" calendar="gregorian">1582 september 10 - 1583 april 29</unitdate>
+								</unittitle>
+								<unittitle>
+									<unitdate normal="15830823/15830914" era="ce" calendar="gregorian">1583 augustus 23 -1583 september 14</unitdate>
+								</unittitle>
+								<physdesc>1 pak</physdesc>
+							</did>
+							<custodhist>
+								<p> gehouden door de griffier</p>
+							</custodhist>
+						</c04>
+					</c03>
+				</c02>
+				<c02 level="series">
+					<did>
+						<unitid type="series_code">A2</unitid>
+						<unittitle>Losse stukken</unittitle>
+					</did>
+					<c03 level="subseries">
+						<did>
+							<unitid type="series_code">A.2.1</unitid>
+							<unittitle>1576 september - 1581 augustus</unittitle>
+						</did>
+						<c04 level="otherlevel" otherlevel="filegrp">
+							<did>
+								<unitid>46</unitid>
+								<unittitle>tractaat van Unie, door de Staten-generaal, vergaderd te Brussel, gesloten met agreatie van de Raad van State. origineel en afschrift</unittitle>
+								<unitdate normal="15770109" era="ce" calendar="gregorian">1577 januari 9</unitdate>
+								<physdesc>1 charter en 1 katern</physdesc>
+							</did>
+							<c05 level="file">
+								<did>
+									<unitid>46A</unitid>
+									<unittitle>Bestanddeel 1.</unittitle>
+								</did>
+							</c05>
+							<c05 level="file">
+								<did>
+									<unitid>46B</unitid>
+									<unittitle>Bestanddeel 2.</unittitle>
+								</did>
+							</c05>
+						</c04>
+						<c04 level="file">
+							<did>
+								<unitid>47</unitid>
+								<unittitle>Tractaat van vrede, in de vorm van eeuwig edict gesloten door Philips, koning van Spanje en de Staten Generaal, getekend door Don Juan van Oostenrijk op 1577 februari 12 en door de Staten Generaal, de Raad van State , de ambassadeurs van de keizer en de gedelegeerden van de hertog van Gulik</unittitle>
+								<unitdate normal="15770217" era="ce" calendar="gregorian">1577 februari 17</unitdate>
+								<physdesc>1 charter</physdesc>
+							</did>
+						</c04>
+						<c04 level="file">
+							<did>
+								<unitid>48</unitid>
+								<unittitle>Brief van Henri Gouffier, heer van Bonyvet aan de Staten generaal</unittitle>
+								<unitdate normal="15770217" era="ce" calendar="gregorian">1577 februari 17</unitdate>
+								<physdesc>1 stuk</physdesc>
+							</did>
+						</c04>
+						<c04 level="file">
+							<did>
+								<unitid>49</unitid>
+								<unittitle>Rekening van Isaac Coebel, commies ter admiraliteit van Zeeland, wegens de penningen voor de equipage van 6 gewapende galeien in Zeeland, met documenten en bijgaande request met bijlagen (behandeld in de vergaderingen der Staten Generaal van </unittitle>
+								<unitdate normal="15770215/15770403" era="ce" calendar="gregorian">1577 februari 25 en 1577 april 3</unitdate>
+								<physdesc>1 dossier</physdesc>
+							</did>
+							<scopecontent>
+								<p> In dorso gemerkt 126</p>
+							</scopecontent>
+						</c04>
+						<c04 level="file">
+							<did>
+								<unitid>50A</unitid>
+								<unittitle>Gecasseerde verbandbrief der Staten Generaal tot betaling der regimenten van de graaf van Bossu, de graaf van megen en de baron van Hierges</unittitle>
+								<unitdate normal="15761126" era="ce" calendar="gregorian">1576 november 26</unitdate>
+								<physdesc>1 charter</physdesc>
+							</did>
+						</c04>
+						<c04 level="file">
+							<did>
+								<unitid>50B</unitid>
+								<unittitle>Gecasseerde brieven van obligaties de Staten Gneraal tot betaling van de graaf van Bossu, de graaf van Megen en de baron van Hierges, als kolonels en van de kapiteinen en het krijgsvolk van hun regimenten voetvolk</unittitle>
+								<unitdate normal="15761208" era="ce" calendar="gregorian">1576 december 8</unitdate>
+								<physdesc>3 charters</physdesc>
+							</did>
+						</c04>
+						<c04 level="file">
+							<did>
+								<unitid>50C</unitid>
+								<unittitle>Gecasseerde brief van obligatie der Staten Generaal tot betaling van Nicolaes van Amstenrode, commandeur ven Bernessem, ritmeester over 400 paarden</unittitle>
+								<unitdate normal="15770411" era="ce" calendar="gregorian">1577 april 11</unitdate>
+								<physdesc>1 charter</physdesc>
+							</did>
+						</c04>
+						<c04 level="file">
+							<did>
+								<unitid>50D</unitid>
+								<unittitle>Gecasseerde brieven van obligatie der Staten Generaal tot betaling van ritmeesters over 50 paarden onder de ritmeester Nicolaes van Amstenrode</unittitle>
+								<unitdate normal="15770411" era="ce" calendar="gregorian">1577 april 11</unitdate>
+								<physdesc>7 charters</physdesc>
+							</did>
+						</c04>
+						<c04 level="otherlevel" otherlevel="filegrp">
+							<did>
+								<unitid>51-52</unitid>
+								<unittitle>Ingekomen brieven van-, en minuten van uitgaande brieven aan Don Juan, benevens andere stukken betreffende de met hem gevoerde onderhandelingen</unittitle>
+								<unitdate normal="15770627/15770802" era="ce" calendar="gregorian">1577 juni 27 - 1577 augustus 2</unitdate>
+							</did>
+							<c05 level="file">
+								<did>
+									<unitid>51</unitid>
+									<unittitle>
+										<unitdate normal="15770627/15770802" era="ce" calendar="gregorian">1577 juni 27 - 1577 augustus 2</unitdate>
+									</unittitle>
+									<physdesc>1 pak</physdesc>
+								</did>
+							</c05>
+							<c05 level="file">
+								<did>
+									<unitid>52</unitid>
+									<unittitle>
+										<unitdate normal="15770725/15770802" era="ce" calendar="gregorian">1577 juli 25 - 1577 augustus 2</unitdate>
+									</unittitle>
+									<physdesc>1 omslag</physdesc>
+								</did>
+							</c05>
+						</c04>
+						<c04 level="file">
+							<did>
+								<unitid>53</unitid>
+								<unittitle>Minuut van uitgaande brief van de Staten Generaal aan de koning van Spanje met het verzoek met het verzoek Don Juan door een andere gouverneur-generaal te vervangen</unittitle>
+								<unitdate normal="15770908" era="ce" calendar="gregorian">1577 september 8</unitdate>
+								<physdesc>1 stuk</physdesc>
+							</did>
+						</c04>
+						<c04 level="file">
+							<did>
+								<unitid>54</unitid>
+								<unittitle>Stukken betreffende de onderhandelingen met Don Juan</unittitle>
+								<unitdate normal="15770904/15770927" era="ce" calendar="gregorian">1577 september 4 - 1577 september 27</unitdate>
+								<physdesc>1 omslag</physdesc>
+							</did>
+						</c04>
+						<c04 level="file">
+							<did>
+								<unitid>55</unitid>
+								<unittitle>Vertaling uit het Spaans in het Frans van de onderschepte brieven door Don Juan gezonden aan de kolonels der Hoogduitse voetknechten Frondsberg en Fugger, en aan de magistraat van Antwerpen</unittitle>
+								<unitdate normal="15770716/15770808" era="ce" calendar="gregorian">1577 juli 16 - 1577 augustus 8</unitdate>
+								<physdesc>1 bundel</physdesc>
+							</did>
+						</c04>
+						<c04 level="file">
+							<did>
+								<unitid>58</unitid>
+								<unittitle>Copie-brieven der Staten Generaal aan de koningin-moeder van Frankrijk en aan de hertog van Alençon </unittitle>
+								<unitdate normal="15761017/15770408" era="ce" calendar="gregorian">1576 oktober 17, 1577 april 8</unitdate>
+								<physdesc>2 stukken</physdesc>
+							</did>
+						</c04>
+						<c04 level="file">
+							<did>
+								<unitid>59</unitid>
+								<unittitle>Copie-brieven der Staten Generaal betreffende de onderhandelingen met de prins van Oranje</unittitle>
+								<unitdate normal="15770217/15770509" era="ce" calendar="gregorian">1577 februari 7 - 1577 mei 9</unitdate>
+								<physdesc>1 omslag</physdesc>
+							</did>
+						</c04>
+						<c04 level="file">
+							<did>
+								<unitid>60</unitid>
+								<unittitle>Copie-brief der Staten Generaal aan de prins van Oranje, met copie-instructie voor de gemachtigden tot de met hem te voeren onderhandelingen</unittitle>
+								<unitdate normal="15770919" era="ce" calendar="gregorian">1577 september 19</unitdate>
+								<physdesc>2 stukken</physdesc>
+							</did>
+						</c04>
+						<c04 level="file">
+							<did>
+								<unitid>61</unitid>
+								<unittitle>Copie-brieven van de koning en de koningin-moeder van Frankrijk aan de Staten Generaal</unittitle>
+								<unitdate normal="15771117" era="ce" calendar="gregorian">1577 november 17</unitdate>
+								<physdesc>2 stukken</physdesc>
+							</did>
+						</c04>
+						<c04 level="file">
+							<did>
+								<unitid>62</unitid>
+								<unittitle>Copie-brief van Balthasar Schetz, heer van Hoboken, uit Madrid aan de Staten Generaal</unittitle>
+								<unitdate normal="15780129" era="ce" calendar="gregorian">1578 januari 29</unitdate>
+								<physdesc>1 stuk</physdesc>
+							</did>
+						</c04>
+						<c04 level="file">
+							<did>
+								<unitid>63</unitid>
+								<unittitle>Voorstel van de keizer aan de Staten Generaal</unittitle>
+								<unitdate normal="157805" era="ce" calendar="gregorian">1578 mei</unitdate>
+								<physdesc>1 katern</physdesc>
+							</did>
+						</c04>
+						<c04 level="file">
+							<did>
+								<unitid>64</unitid>
+								<unittitle>Minuut-tractaat van de Staten Generaal met de hertog van Anjou, Alençon etc. gearresteerd ter vergadering van</unittitle>
+								<unitdate normal="15780813" era="ce" calendar="gregorian">1578 augustus 13</unitdate>
+								<physdesc>1 katern</physdesc>
+							</did>
+						</c04>
+						<c04 level="file">
+							<did>
+								<unitid>65</unitid>
+								<unittitle>Tractaat van de Staten Generaal met de hertog van Anjou</unittitle>
+								<unitdate normal="15780813" era="ce" calendar="gregorian">1578 augustus 13</unitdate>
+								<physdesc>1 katern</physdesc>
+							</did>
+						</c04>
+						<c04 level="file">
+							<did>
+								<unitid>66</unitid>
+								<unittitle>Acte van ratificatie van de Hertog van Anjou op het tractaat van 13 augustus 1578</unittitle>
+								<unitdate normal="15780820" era="ce" calendar="gregorian">1578 augustus 20</unitdate>
+								<physdesc>1 katern</physdesc>
+							</did>
+						</c04>
+						<c04 level="file">
+							<did>
+								<unitid>67</unitid>
+								<unittitle>Notitie betreffende de verdeling van de heffing van 84.000 ponden Arthois boven de 360.000 ponden, te doen op de domeinen voor het tractement van aartshertog Mattias</unittitle>
+								<unitdate normal="157811" era="ce" calendar="gregorian">(1578 november).</unitdate>
+								<physdesc>1 stuk</physdesc>
+							</did>
+						</c04>
+						<c04 level="file">
+							<did>
+								<unitid>68</unitid>
+								<unittitle>Brief met bijlage van Cornelis Weellemans, oud-griffier der Staten Generaal, aan de Staten Generaal</unittitle>
+								<unitdate normal="15790119" era="ce" calendar="gregorian">1579 januari 19</unitdate>
+								<physdesc>1 stuk</physdesc>
+							</did>
+						</c04>
+						<c04 level="file">
+							<did>
+								<unitid>69</unitid>
+								<unittitle>Concept-instructie voor de Gedeputeerden naar de hertog van Anjou</unittitle>
+								<unitdate normal="15790129" era="ce" calendar="gregorian">1579 januari 29</unitdate>
+								<physdesc>1 stuk</physdesc>
+							</did>
+						</c04>
+						<c04 level="file">
+							<did>
+								<unitid>70</unitid>
+								<unittitle>Lijst van stukken, overgelegd in de vergadering der Staten Generaal van, opgemaakt ten dienste van de lias van deze stukken</unittitle>
+								<unitdate normal="15791125/15791231" era="ce" calendar="gregorian">25 november - 31 december 1579</unitdate>
+								<physdesc>1 stuk</physdesc>
+							</did>
+						</c04>
+						<c04 level="file">
+							<did>
+								<unitid>71</unitid>
+								<unittitle>Akte van eedsaflegging door de gedeputeerden der Staten gGneraal</unittitle>
+								<unitdate normal="15800514" era="ce" calendar="gregorian">1580 mei 14</unitdate>
+								<physdesc>1 charter</physdesc>
+							</did>
+						</c04>
+						<c04 level="file">
+							<did>
+								<unitid>72A</unitid>
+								<unittitle>Ingekomen stukken en minuten van uitgaande stukken</unittitle>
+								<unitdate normal="15800502/15800527" era="ce" calendar="gregorian">1580 mei 2 - 1580 mei 27</unitdate>
+								<physdesc>5 stukken en 1 lias</physdesc>
+							</did>
+						</c04>
+						<c04 level="file">
+							<did>
+								<unitid>72B</unitid>
+								<unittitle>Copie van een brief van L. de Provyns en Noël de Caron aan de Staten Generaal betreffende de voorbereidingen voor de komst van de gedeputeerden van de Staten Generaal naar de hertog van Alençon</unittitle>
+								<unitdate normal="15800607" era="ce" calendar="gregorian">1580 juni 7</unitdate>
+								<physdesc>1 stuk</physdesc>
+							</did>
+						</c04>
+						<c04 level="file">
+							<did>
+								<unitid>72C</unitid>
+								<unittitle>Akte van indemniteit van de Staten Generaal voor kooplieden van Antwerpen in verband me een geldlening van hen aan de Staten Generaal ter grootte van 200.000 gulden tot betaling de militie</unittitle>
+								<unitdate normal="15800630" era="ce" calendar="gregorian">1580 juni 30</unitdate>
+								<physdesc>1 charter</physdesc>
+							</did>
+						</c04>
+						<c04 level="file">
+							<did>
+								<unitid>73</unitid>
+								<unittitle>Schriftuur namens aartshertog Matthias door de prins van Epinoy overgelverd aan de Staten Generaal</unittitle>
+								<unitdate normal="15800722" era="ce" calendar="gregorian">1580 juli 22</unitdate>
+								<physdesc>1 stuk</physdesc>
+							</did>
+						</c04>
+						<c04 level="file">
+							<did>
+								<unitid>74</unitid>
+								<unittitle>Stukken betreffende de remonstrantie van Don Antonio van Portugal</unittitle>
+								<unitdate normal="15800510/15800804" era="ce" calendar="gregorian">1580 mei 10 - 1580 augustus 4</unitdate>
+								<physdesc>1 omslag</physdesc>
+							</did>
+						</c04>
+						<c04 level="file">
+							<did>
+								<unitid>75</unitid>
+								<unittitle>Minuut van een brief van de Straten Generaal aan de Staten van Gelderland, Holland, Utrecht en Vlaanderen</unittitle>
+								<unitdate normal="15800801" era="ce" calendar="gregorian">1580 augustus 1</unitdate>
+								<physdesc>1 stuk</physdesc>
+							</did>
+						</c04>
+						<c04 level="file">
+							<did>
+								<unitid>76</unitid>
+								<unittitle>Brieven van de Staten van Overijssel, Elbertus Leoninus en van de prins van Oranje aan de Staten Generaal.</unittitle>
+								<unitdate normal="15800731/15800820" era="ce" calendar="gregorian">1580 juli 30, 1580 augustus 19 en 1580 augustus 20</unitdate>
+								<physdesc>3 stukken</physdesc>
+							</did>
+						</c04>
+						<c04 level="file">
+							<did>
+								<unitid>77</unitid>
+								<unittitle>Akte van commissie der Staten van Friesland voor hun gedeputeerden ter Staten Generaal</unittitle>
+								<unitdate normal="15810315" era="ce" calendar="gregorian">1581 maart 15</unitdate>
+								<physdesc>1 stuk</physdesc>
+							</did>
+						</c04>
+						<c04 level="file">
+							<did>
+								<unitid>78A</unitid>
+								<unittitle>Akte van ratificatie van de hertog van Anjou op het in de tekst geïnserreerde accoord met de Staten Generaal, gesloten op 19 september 1580</unittitle>
+								<unitdate normal="15810123" era="ce" calendar="gregorian">1581 januari 23</unitdate>
+								<physdesc>1 charter</physdesc>
+							</did>
+						</c04>
+						<c04 level="file">
+							<did>
+								<unitid>79</unitid>
+								<unittitle>Verklaring van de hertog van Anjou betreffende de artikelen 15 en 16 van het op 19 september 1580 met de Staten Generaal gesloten accoord met in de tekst geinserreerd de belofte van de koning van Frankrijk tot hulp en bijstand dd. 1580 december 26</unittitle>
+								<unitdate normal="15810123" era="ce" calendar="gregorian">1581 januari 23</unitdate>
+								<physdesc>1 charter</physdesc>
+							</did>
+						</c04>
+						<c04 level="otherlevel" otherlevel="filegrp">
+							<did>
+								<unitid>80A-80D</unitid>
+								<unittitle>Stukken betreffende de resignatie van het gouvernement door aartshertog Matthias</unittitle>
+							</did>
+							<c05 level="file">
+								<did>
+									<unitid>80A</unitid>
+									<unittitle>Brief van Matthias tot credentie van Leoninus, De La Mouillerie en Asseliers. <unitdate normal="15810515" era="ce" calendar="gregorian">1581 mei 15</unitdate>
+									</unittitle>
+									<physdesc>3 stukken, 1 charter</physdesc>
+								</did>
+							</c05>
+							<c05 level="file">
+								<did>
+									<unitid>80B</unitid>
+									<unittitle>Akte van resignatie van het vouvernement door aartshertog Matthias. <unitdate normal="15810515" era="ce" calendar="gregorian">1581 mei 15</unitdate>
+									</unittitle>
+									<physdesc>1 charter</physdesc>
+								</did>
+							</c05>
+							<c05 level="file">
+								<did>
+									<unitid>80C</unitid>
+									<unittitle>Concept-akte van acceptatie door de Staten Generaal van de resignatie van het gouvenement door Matthias. <unitdate normal="15810712" era="ce" calendar="gregorian">1581 juli 12</unitdate>
+									</unittitle>
+								</did>
+							</c05>
+							<c05 level="file">
+								<did>
+									<unitid>80D</unitid>
+									<unittitle>resolutie de Staten Generaal tot begifitging van aartshertog Mattias met een jaarlijkse lijfrente van 50.000 gulden. <unitdate normal="15810730" era="ce" calendar="gregorian">1581 juli 30</unitdate>
+									</unittitle>
+								</did>
+								<scopecontent>
+									<p> gemerkt J.L.M. en N.</p>
+								</scopecontent>
+							</c05>
+						</c04>
+						<c04 level="file">
+							<did>
+								<unitid>81</unitid>
+								<unittitle>Copie van de minuut van de akte van acceptatie door de Staten Generaal, van de resignatie der Raden van State, en van die der secretarissen van de Raad, Jan van Asseliers, audiencier, en Nicasius de Sille</unittitle>
+								<unitdate normal="15810619" era="ce" calendar="gregorian">1581 juni 19</unitdate>
+								<physdesc>1 stuk</physdesc>
+							</did>
+						</c04>
+						<c04 level="file">
+							<did>
+								<unitid>82</unitid>
+								<unittitle>Gecasseerde akte, waarbij de Staten Generaal aan de hertog van Anjou bij wijze van grtuiteit 100.000 ponden Vlaams accoderen</unittitle>
+								<unitdate normal="15810729" era="ce" calendar="gregorian">1581 juli 29</unitdate>
+								<physdesc>1 charter</physdesc>
+							</did>
+						</c04>
+						<c04 level="file">
+							<did>
+								<unitid>83</unitid>
+								<unittitle>Gecasseerde verbandbrief van de Staten Generaal tot onderlinge vrijwaring wegens de bovengenoemde som, geaccodeerd aan de hertog van Anjou, en tot vaststelling van de quoten in die som</unittitle>
+								<unitdate normal="15890729" era="ce" calendar="gregorian">1581 juli 29</unitdate>
+								<physdesc>1 charter</physdesc>
+							</did>
+						</c04>
+					</c03>
+					<c03 level="subseries">
+						<did>
+							<unitid type="series_code">A.2.2</unitid>
+							<unittitle>1582 januari - 1588 mei</unittitle>
+						</did>
+						<c04 level="subseries">
+							<did>
+								<unitid type="series_code">A2.2.1</unitid>
+								<unittitle>Stukken betreffende de vergadering der Staten Generaal</unittitle>
+							</did>
+							<c05 level="otherlevel" otherlevel="filegrp">
+								<did>
+									<unitid>84A-84C</unitid>
+									<unittitle>Akten van commissie, overgegeven dor de gedeputeerden, comparerend ter vergadering der Staten Generaal, benevens enkele bijbehorende brieven</unittitle>
+								</did>
+								<phystech>
+									<p> deze stukken zijn zwaar beschadigd</p>
+								</phystech>
+								<c06 level="file">
+									<did>
+										<unitid>84A</unitid>
+										<unittitle>
+											<unitdate normal="15820618/15830326" era="ce" calendar="gregorian">1582 juni 18 - 1583 maart 26</unitdate>
+										</unittitle>
+										<physdesc>1 pak</physdesc>
+									</did>
+								</c06>
+								<c06 level="file">
+									<did>
+										<unitid>84B</unitid>
+										<unittitle>
+											<unitdate normal="15830701/15831107" era="ce" calendar="gregorian">1583 juli 1 - 1583 november 7</unitdate>
+										</unittitle>
+										<physdesc>1 omslag</physdesc>
+									</did>
+								</c06>
+								<c06 level="file">
+									<did>
+										<unitid>84C</unitid>
+										<unittitle>
+											<unitdate normal="15840523" era="ce" calendar="gregorian">1584 mei 23</unitdate>
+										</unittitle>
+										<physdesc>1 charter</physdesc>
+									</did>
+								</c06>
+							</c05>
+							<c05 level="file">
+								<did>
+									<unitid>85</unitid>
+									<unittitle>Akte van eedsaflegging door gedeputeerden ter Staten Generaal</unittitle>
+									<unitdate normal="15861022" era="ce" calendar="gregorian">1586 oktober 22</unitdate>
+									<physdesc>1 charter</physdesc>
+								</did>
+							</c05>
+						</c04>
+						<c04 level="subseries">
+							<did>
+								<unitid type="series_code">A.2.2.2</unitid>
+								<unittitle>Stukken betreffende de aanbieding der soevereiniteit aan de koning van Frankrijk</unittitle>
+							</did>
+							<c05 level="otherlevel" otherlevel="filegrp">
+								<did>
+									<unitid>86-88</unitid>
+									<unittitle>Stukken overgegeven aan de Staten Generaal door de teruggekeerde deputatie naar de koning van Frankrijk, ingevolge de op het rapport van haar verrichtingen genomen resolutie der Staten Generaal van </unittitle>
+									<unitdate normal="15850409" era="ce" calendar="gregorian">9 april 1585</unitdate>
+								</did>
+								<c06 level="file">
+									<did>
+										<unitid>86A</unitid>
+										<unittitle>Artikelen houdende aanbieding van de soevereiniteit aan de koning van Frankrijk. <unitdate normal="15841203" era="ce" calendar="gregorian">1584 december 3</unitdate>
+										</unittitle>
+										<physdesc>5 stukken</physdesc>
+									</did>
+								</c06>
+								<c06 level="file">
+									<did>
+										<unitid>86B</unitid>
+										<unittitle>Stukken betreffende verscheidene bepalingen van de artikelen, meegegeven aan de gedeputeerden naar de koning van Frankrijk. <unitdate normal="15841203" era="ce" calendar="gregorian">1584 december 3</unitdate>
+										</unittitle>
+										<physdesc>5 stukken</physdesc>
+									</did>
+								</c06>
+								<c06 level="file">
+									<did>
+										<unitid>86C</unitid>
+										<unittitle>Brieven van machtiging voor de gedeputeerden der Staten Generaal naar de koning van Frankrijk. <unitdate normal="15841116" era="ce" calendar="gregorian">1584 november 16</unitdate>
+										</unittitle>
+										<physdesc>3 charters</physdesc>
+									</did>
+								</c06>
+								<c06 level="file">
+									<did>
+										<unitid>86D</unitid>
+										<unittitle>Copie-instructie voor de gedeputeerden der Staten Generaal naar de koning van Frankrijk. <unitdate normal="15841203" era="ce" calendar="gregorian">1584 december 3</unitdate>
+										</unittitle>
+										<physdesc>1 katern</physdesc>
+									</did>
+								</c06>
+								<c06 level="file">
+									<did>
+										<unitid>87</unitid>
+										<unittitle>Brief van de koning van Frankrijk aan de gedeputeerden der Staten Generaal naar Frankrijk. <unitdate normal="15850111" era="ce" calendar="gregorian">1585 januari 11</unitdate>
+										</unittitle>
+										<physdesc>1 stuk</physdesc>
+									</did>
+								</c06>
+								<c06 level="file">
+									<did>
+										<unitid>88</unitid>
+										<unittitle>Artikelen, door de gedeputeerden der Staten Generaal aangebodenaan de konng van Frankrijk, zoals deze door hen waren gemodereerd; met bijgevoegde verklaring der gedeputeerden van Utrecht en Friesland (aangeboden op <unitdate normal="15850211" era="ce" calendar="gregorian">11 februari 1585</unitdate>).</unittitle>
+										<physdesc>1 stuk</physdesc>
+									</did>
+								</c06>
+							</c05>
+							<c05 level="file">
+								<did>
+									<unitid>89A</unitid>
+									<unittitle>Copie-brief met bijlage van de gedeputeerden naar Frankrijk aan de Staten Generaal</unittitle>
+									<unitdate normal="15850119" era="ce" calendar="gregorian">1585 januari 19</unitdate>
+									<physdesc>1 stuk</physdesc>
+								</did>
+							</c05>
+							<c05 level="file">
+								<did>
+									<unitid>89B</unitid>
+									<unittitle>Copie-brieven van de koning van Frankrijk en van De Sorbies des Pruneaux aan de gedeputeerden naar Frankrijk</unittitle>
+									<unitdate normal="15850111/15850119" era="ce" calendar="gregorian">1585 januari 11 - 1585 januari 19</unitdate>
+									<physdesc>3 stukken</physdesc>
+								</did>
+							</c05>
+						</c04>
+						<c04 level="subseries">
+							<did>
+								<unitid type="series_code">A.2.2.3</unitid>
+								<unittitle>Stukken betreffende de betrekkingen met Engeland en de graaf van Leycester</unittitle>
+							</did>
+							<c05 level="otherlevel" otherlevel="filegrp">
+								<did>
+									<unitid>90A-90E</unitid>
+									<unittitle>Ingekomen stukken en minuten van uitgaaande stukken betreffende Egelse zaken</unittitle>
+									<unitdate normal="1584/1588" era="ce" calendar="gregorian">1584-1588</unitdate>
+									<physdesc>3 pakken, 2 stukken</physdesc>
+								</did>
+								<processinfo>
+									<p> de liassen Engeland 1584-1590 en 1588-1590 (S.G. oud 6895 en 7144) zijn bij de inventarisatie van Japikse samengevoegd tot de nieuwe nrs. St. Gen. 5880, 5881 en 5882 en niet meer te scheiden. De pakken zijn uitgeplitst naar jaar en volgens de oude ordening gerangschikt op afzenders en exhibitadata; de minuten liggen per jaar achterin de pakken.</p>
+								</processinfo>
+								<c06 level="file">
+									<did>
+										<unitid>90A</unitid>
+										<unittitle>Brief met bijlagen van Joachim Ortell en Jaques Grijse, gedeputeerden der Staten Generaal. <unitdate normal="15841208" era="ce" calendar="gregorian">1584 december 8</unitdate>
+										</unittitle>
+										<physdesc>5 stukken</physdesc>
+									</did>
+								</c06>
+								<c06 level="file">
+									<did>
+										<unitid>90B</unitid>
+										<unittitle>
+											<unitdate normal="15850409/15851221" era="ce" calendar="gregorian">1585 april 9 - 1585 december 21</unitdate>
+										</unittitle>
+									</did>
+								</c06>
+								<c06 level="file">
+									<did>
+										<unitid>90C</unitid>
+										<unittitle>Brief van koningin Elisabeth dd. <unitdate normal="15860205" era="ce" calendar="gregorian">1586 februari 5</unitdate> en copie van een brief van Jcob Valcke aan de raad van State dd. <unitdate normal="15861223" era="ce" calendar="gregorian">1586 dececmber 23</unitdate>.</unittitle>
+										<physdesc>2 stukken</physdesc>
+									</did>
+								</c06>
+								<c06 level="file">
+									<did>
+										<unitid>90D</unitid>
+										<unittitle>
+											<unitdate normal="15870112/15871209" era="ce" calendar="gregorian">1587 januari 12 - 1587 december 9</unitdate>
+										</unittitle>
+									</did>
+								</c06>
+								<c06 level="file">
+									<did>
+										<unitid>90E</unitid>
+										<unittitle>
+											<unitdate normal="15880101/15881213" era="ce" calendar="gregorian">1588 januari 1 - 1588 december 13</unitdate>
+										</unittitle>
+									</did>
+								</c06>
+							</c05>
+							<c05 level="otherlevel" otherlevel="filegrp">
+								<did>
+									<unitid>92-94</unitid>
+									<unittitle>Ingekomen stukken en minuten van uitgaande stukken betreffende Engelse zaken, merendeels geregistreerd in het register "Engelandt"</unittitle>
+									<unitdate normal="1585/1588" era="ce" calendar="gregorian">1585-1588</unitdate>
+								</did>
+								<c06 level="file">
+									<did>
+										<unitid>92</unitid>
+										<unittitle>
+											<unitdate normal="158506/158612" era="ce" calendar="gregorian">1585 juni - 1586 februari; 1586 november - december</unitdate>
+										</unittitle>
+										<physdesc>1 pak</physdesc>
+									</did>
+								</c06>
+								<c06 level="file">
+									<did>
+										<unitid>93</unitid>
+										<unittitle>
+											<unitdate normal="158701/158712" era="ce" calendar="gregorian">1587 januari - december</unitdate>
+										</unittitle>
+										<physdesc>1 pak</physdesc>
+									</did>
+								</c06>
+								<c06 level="file">
+									<did>
+										<unitid>94</unitid>
+										<unittitle>
+											<unitdate normal="158801/158804" era="ce" calendar="gregorian">1588 januari - april</unitdate>
+										</unittitle>
+										<physdesc>1 pak</physdesc>
+									</did>
+								</c06>
+							</c05>
+							<c05 level="file">
+								<did>
+									<unitid>95A</unitid>
+									<unittitle>Concept-artikelen van aanbieding der souvereiniteit aan de koningin van Engeland, gearresteerd 1585 april 18 en andermaal gelezen 1585 mei 8, 1 Frans en 1 Nederlands exemplaar.</unittitle>
+									<physdesc>2 stukken</physdesc>
+								</did>
+							</c05>
+							<c05 level="file">
+								<did>
+									<unitid>95B</unitid>
+									<unittitle>Minuut-artikelen als voren gelezen 1585 juni 1 en gearresteerd 1585 juni 4; 1 Frans en 1 nederlands exemplaar.</unittitle>
+									<physdesc>2 stukken</physdesc>
+								</did>
+							</c05>
+							<c05 level="file">
+								<did>
+									<unitid>95C</unitid>
+									<unittitle>Concept-akte van procuratie voor de gedeputeerden naar Engeland ter aanbieding van de soevereiniteit aan de koningin.</unittitle>
+									<unitdate era="ce" calendar="gregorian">z.d.</unitdate>
+									<physdesc>1 stuk</physdesc>
+								</did>
+							</c05>
+							<c05 level="file">
+								<did>
+									<unitid>96</unitid>
+									<unittitle>Concept- en copie-akten van machtiging van de Staten Generaal an van de Staten der provinciën voor de gedeputeerden naar Engeland ter aanbieding van de soevereiniteit aan de koningin en het verzoek tot protectie en assistentie.</unittitle>
+									<unitdate normal="158504/158506" era="ce" calendar="gregorian">1585 april - juni</unitdate>
+									<physdesc>1 dossier</physdesc>
+								</did>
+							</c05>
+							<c05 level="file">
+								<did>
+									<unitid>97</unitid>
+									<unittitle>Stukken behorende tot de bescheiden, overgegeven aan de Staten Generaal door de terugkerende deputatie na het uitbrengen van haar rapport ter vergadering van 2 september 1585.</unittitle>
+									<unitdate normal="158503/158508" era="ce" calendar="gregorian">1585 maart -1585 augustus</unitdate>
+									<physdesc>1 pak</physdesc>
+								</did>
+								<altformavail>
+									<p> met lijst van de stukken; het origineel van dezze lijst bevindt zich in 1-90</p>
+								</altformavail>
+								<scopecontent>
+									<p>Enkele stukken ontbreken</p>
+								</scopecontent>
+							</c05>
+							<c05 level="file">
+								<did>
+									<unitid>98</unitid>
+									<unittitle>Akten van machtiging door de Staten Generaal voor de gedeputeerden naar de koningin van Engeland tot aanbieding van de soevereiniteit, tot het afleggen en tot het in ontvangst nemen van de eed op nakoming van de met de koningin vast te stellen artikelen.</unittitle>
+									<unitdate normal="15850606" era="ce" calendar="gregorian">1585 juni 6</unitdate>
+									<physdesc>3 charters</physdesc>
+								</did>
+							</c05>
+							<c05 level="file">
+								<did>
+									<unitid>99</unitid>
+									<unittitle>Akte van machtiging door de koningin van Engeland voor haar commissarissen om te onderhandelen met de gedeputeerden der Staten Generaal.</unittitle>
+									<unitdate normal="15850808" era="ce" calendar="gregorian">1585 augustus 8 (juli 29, St. Agliae)</unitdate>
+									<physdesc>1 charter</physdesc>
+								</did>
+							</c05>
+							<c05 level="file">
+								<did>
+									<unitid>100</unitid>
+									<unittitle>Provisioneel tractaat van secours, door de konngin van Engeland gesloten met de Staten Generaal.</unittitle>
+									<unitdate normal="15850812" era="ce" calendar="gregorian">1585 augustus 12 (augustus 2 St. Angliae)</unitdate>
+									<physdesc>1 charter</physdesc>
+								</did>
+							</c05>
+							<c05 level="file">
+								<did>
+									<unitid>101A</unitid>
+									<unittitle>Tractaat van secours door de koningin van Engeland gesloten met de Staten Generaal.</unittitle>
+									<unitdate normal="15850820" era="ce" calendar="gregorian">1585 augustus 20 (augustus 10 St. Angliae)</unitdate>
+									<physdesc>1 charter</physdesc>
+								</did>
+							</c05>
+							<c05 level="file">
+								<did>
+									<unitid>102</unitid>
+									<unittitle>Akte van belofte der koningin van Engeland tot het zenden van vermeerderd secours.</unittitle>
+									<unitdate normal="15850914" era="ce" calendar="gregorian">1585 september 14 (september 4 St Angliae)</unitdate>
+									<physdesc>1 charter</physdesc>
+								</did>
+							</c05>
+							<c05 level="file">
+								<did>
+									<unitid>103</unitid>
+									<unittitle>Akte van ratificatie der Staten Generaal op het tractaat van secours, gesloten met de koningin van Engeland.</unittitle>
+									<unitdate normal="15851002" era="ce" calendar="gregorian">1585 oktober 2</unitdate>
+									<physdesc>1 charter</physdesc>
+								</did>
+							</c05>
+							<c05 level="file">
+								<did>
+									<unitid>104</unitid>
+									<unittitle>Akte van indemniteit der Staten Generaal voor de stad Vlissingen wegens het met de koningin van Engeland gesloten tractaat van secours.</unittitle>
+									<unitdate normal="15851011" era="ce" calendar="gregorian">1585 oktober 11</unitdate>
+									<physdesc>1 charter</physdesc>
+								</did>
+							</c05>
+							<c05 level="file">
+								<did>
+									<unitid>105</unitid>
+									<unittitle>Minuut-akten van indemniteit voor de Staten van Holland, de regering van Den Briel, de Staten van Zeeland, de regering an Vlissingen, en graaf Maurits van Nassau, markgraaf van Vlissingen, wegens de Engelse bezetting van Den Briel, Vlissingen en Rammekens.</unittitle>
+									<unitdate normal="15851011" era="ce" calendar="gregorian">1585 oktober 11</unitdate>
+									<physdesc>1 bundel</physdesc>
+								</did>
+							</c05>
+							<c05 level="file">
+								<did>
+									<unitid>106</unitid>
+									<unittitle>Brieven door de gedeputeerden naar de koningin van Engeland aan de Staten Generaal, 1585 oktober 18; en minuut van de brief van de Staten Generaal aan de gedeputeerden.</unittitle>
+									<unitdate normal="15851011" era="ce" calendar="gregorian">1585 oktober 11</unitdate>
+									<physdesc>3 stukken</physdesc>
+								</did>
+							</c05>
+							<c05 level="file">
+								<did>
+									<unitid>107</unitid>
+									<unittitle>Verbalen van de verrichtingen van de, na het vertrek van de merendeel der deputatie op 27 augustus 1585, in Engeland achtergebleven gedeputeerden, overgegeven ter vergadering der Staten generaal van 1585 december 3, en 4.</unittitle>
+									<physdesc>2 katernen aaneengehecht</physdesc>
+								</did>
+							</c05>
+							<c05 level="file">
+								<did>
+									<unitid>108</unitid>
+									<unittitle>Brief van de koningin van Engeland aan de Staten Generaal, kennis gevend van de aanstelling van de graaf van Leycester tot opperbevelhebber over het secours.</unittitle>
+									<unitdate normal="15851210" era="ce" calendar="gregorian">1585 december 10 (1585 november 30 St. Angliae)</unitdate>
+									<physdesc>1 stuk</physdesc>
+								</did>
+							</c05>
+							<c05 level="file">
+								<did>
+									<unitid>109</unitid>
+									<unittitle>Lijst van stukken betreffende Engelse zaken over 6 - 10 januari 1586, opgemaakt door de agent ramet.</unittitle>
+									<physdesc>1 stuk</physdesc>
+								</did>
+							</c05>
+							<c05 level="file">
+								<did>
+									<unitid>110</unitid>
+									<unittitle>Akte van overdracht van het gouverneur- en kapitein-generaalschap aan de graaf van Leycester.</unittitle>
+									<unitdate normal="15860201" era="ce" calendar="gregorian">1586 februari 1</unitdate>
+									<physdesc>1 charter</physdesc>
+								</did>
+							</c05>
+							<c05 level="file">
+								<did>
+									<unitid>111</unitid>
+									<unittitle>Akte van goedkeuring van de middelen tot oorlogsvoering aan de graaf van Leycester.</unittitle>
+									<unitdate normal="15860201" era="ce" calendar="gregorian">1586 februari 1</unitdate>
+									<physdesc>1 charter</physdesc>
+								</did>
+							</c05>
+							<c05 level="file">
+								<did>
+									<unitid>112</unitid>
+									<unittitle>Akte van eedsaflegging door de graaf van Leycester.</unittitle>
+									<unitdate normal="15860204" era="ce" calendar="gregorian">1586 februari 4</unitdate>
+									<physdesc>1 charter</physdesc>
+								</did>
+							</c05>
+							<c05 level="file">
+								<did>
+									<unitid>113</unitid>
+									<unittitle>Formulieren van eden, af te leggen door de Staten Generaal aan Leycester, en door de Rade van Staten aan de Staten Generaal.</unittitle>
+									<unitdate normal="158602" era="ce" calendar="gregorian">(1586 februari)</unitdate>
+									<physdesc>2 stukken</physdesc>
+								</did>
+							</c05>
+							<c05 level="otherlevel" otherlevel="filegrp">
+								<did>
+									<unitid>116-118</unitid>
+									<unittitle>Stukken behorende tot de bescheiden, overgegeven aande Staten Generaal door de teruggekeerde deputatie naar de koningin van Engeland, na het uitbrengen van haar rapport ter vergadering van </unittitle>
+									<unitdate normal="15870401" era="ce" calendar="gregorian">1 april 1587</unitdate>
+								</did>
+								<c06 level="file">
+									<did>
+										<unitid>116</unitid>
+										<unittitle>Stukken over de periode <unitdate normal="158511/158702" era="ce" calendar="gregorian">1585 november - 1587 februari.</unitdate>
+										</unittitle>
+										<physdesc>
+											<physfacet> 2 stukken zijn gedrukt</physfacet>
+										</physdesc>
+										<physdesc>1 pak</physdesc>
+									</did>
+								</c06>
+								<c06 level="file">
+									<did>
+										<unitid>117</unitid>
+										<unittitle>Akte van machtiging der Staten Generaal voor de gedeputeerden naar Engeland om 50.000 tot 60.000 pond sterling te leen te verzoeken en verhoging van het secours te vragen van 10.000 votknechten en 2000 paarden. <unitdate normal="15861101" era="ce" calendar="gregorian">1586 november 1.</unitdate>
+										</unittitle>
+										<physdesc>1 charter</physdesc>
+									</did>
+								</c06>
+								<c06 level="file">
+									<did>
+										<unitid>118</unitid>
+										<unittitle>Akte van machtiging der Staten Generaal voor de gedeputeerden naar de koningin vam Engeland tot aanbieding der soevereiniteit. <unitdate normal="15870112" era="ce" calendar="gregorian">1587 januari 12.</unitdate>
+										</unittitle>
+										<physdesc>1 charter</physdesc>
+									</did>
+								</c06>
+							</c05>
+							<c05 level="file">
+								<did>
+									<unitid>119</unitid>
+									<unittitle>Bewijs van acquit voor de griffier Aerssens wegens depechering van een ordonnantie van 12.000 gulden ten behoeve van Leycester dd. 29 december 1587.</unittitle>
+									<unitdate normal="15870112" era="ce" calendar="gregorian">1587 januari 12</unitdate>
+									<physdesc>1 lias</physdesc>
+								</did>
+							</c05>
+							<c05 level="file">
+								<did>
+									<unitid>120</unitid>
+									<unittitle>Akte van renuntatie door de graaf van Leycester van het gouverneur- en kapitein-generaalschap, getekend te Londen 1587 december 17 en overgegeven ter vergadering der Staten generaal.</unittitle>
+									<unitdate normal="15880401" era="ce" calendar="gregorian">1588 april 1</unitdate>
+									<physdesc>1 stuk</physdesc>
+								</did>
+							</c05>
+							<c05 level="file">
+								<did>
+									<unitid>121</unitid>
+									<unittitle>Stukken betreffende de vordering van de kolonels en wijlen Sir Philip Sidney.</unittitle>
+									<unitdate normal="158803/158804" era="ce" calendar="gregorian">1588 maart-april</unitdate>
+									<physdesc>1 omslag</physdesc>
+								</did>
+							</c05>
+						</c04>
+						<c04 level="subseries">
+							<did>
+								<unitid type="series_code">A.2.2.4</unitid>
+								<unittitle>Stukken betreffende verschillende onderwerpen</unittitle>
+							</did>
+							<c05 level="file">
+								<did>
+									<unitid>122A</unitid>
+									<unittitle>Stukken betreffende het different tussen Utrecht, Friesland en Mechelen over de voorrang in de vergadering, overlegd ingevolge de resolutie der Staten Generaal van 26 september 1582 en behandeld op</unittitle>
+									<unitdate normal="15821103" era="ce" calendar="gregorian">3 november 1582</unitdate>
+									<physdesc>1 dossier</physdesc>
+								</did>
+							</c05>
+							<c05 level="file">
+								<did>
+									<unitid>122B</unitid>
+									<unittitle>Extract uit een resolutie van de Staten Generaal dd. 26 mei 1581, betreffende het voorzitten en voorstemmen in de vergadering.</unittitle>
+									<unitdate normal="15810526" era="ce" calendar="gregorian">26 mei 1581</unitdate>
+									<physdesc>1 stuk</physdesc>
+								</did>
+								<scopecontent>
+									<p> Waarschijnlijk retroactum bij de stukken genoemd onder 122A</p>
+								</scopecontent>
+							</c05>
+							<c05 level="file">
+								<did>
+									<unitid>123</unitid>
+									<unittitle>Brief van Don Antonio, koning van Portugal ter credentie van Pedro Doro.</unittitle>
+									<unitdate normal="15811125" era="ce" calendar="gregorian">1581 november 25</unitdate>
+									<physdesc>1 stuk</physdesc>
+								</did>
+							</c05>
+							<c05 level="file">
+								<did>
+									<unitid>124</unitid>
+									<unittitle>Staten van inkomsten en lasten van de domeinen in de landen van Herwaartsover over de jaren 1567-1570 en over het jaar 1582, overgeleverd door het college van Financiën aan de Staten Generaal op</unittitle>
+									<unitdate normal="15821110" era="ce" calendar="gregorian">10 november 1582</unitdate>
+									<physdesc>2 katernen</physdesc>
+								</did>
+							</c05>
+							<c05 level="file">
+								<did>
+									<unitid>125</unitid>
+									<unittitle>Stukken betreffende de Sonttol, met retroacta 1452-1571, bijeengebracht door mr. L. de Casembroot ten behoeve van de resolutie van de Staten Generaal van 29 november 1582.</unittitle>
+									<unitdate normal="158112/158212" era="ce" calendar="gregorian">1581 december - 1582 december</unitdate>
+									<physdesc>1 pak</physdesc>
+								</did>
+							</c05>
+							<c05 level="file">
+								<did>
+									<unitid>126</unitid>
+									<unittitle>Stukken betreffende de vorderingen van Duitse solliciteurs wegens gelden, voorschoten voor de betaling van troepen, wapenleveranties enz. </unittitle>
+									<unitdate normal="158203/158212" era="ce" calendar="gregorian">1582 maart - december</unitdate>
+									<physdesc>1 omslag</physdesc>
+								</did>
+							</c05>
+							<c05 level="otherlevel" otherlevel="filegrp">
+								<did>
+									<unitid>127A-C</unitid>
+									<unittitle>Ingekomen stukken en minuten van uitgaande stukken</unittitle>
+									<unitdate normal="15830131/15830910" era="ce" calendar="gregorian">1583 januari 31 - 1583 september 10</unitdate>
+								</did>
+								<c06 level="file">
+									<did>
+										<unitid>127A</unitid>
+										<unittitle>Minuten. <unitdate normal="15830131/15830228" era="ce" calendar="gregorian">1583 januari 31 - 1583 februari 28</unitdate>
+										</unittitle>
+										<physdesc>1 pak</physdesc>
+									</did>
+								</c06>
+								<c06 level="file">
+									<did>
+										<unitid>127B</unitid>
+										<unittitle>Ingekomen stukken en enkele minuten. <unitdate normal="15830131/15830228" era="ce" calendar="gregorian">1583 januari 31 - 1583 februari 28</unitdate>
+										</unittitle>
+										<physdesc>1 pak</physdesc>
+									</did>
+								</c06>
+								<c06 level="file">
+									<did>
+										<unitid>127C</unitid>
+										<unittitle>Ingekmen stukken. <unitdate normal="15830315/15830910" era="ce" calendar="gregorian">1583 maart 15 - 1583 september 10</unitdate>
+										</unittitle>
+										<physdesc>1 omslag</physdesc>
+									</did>
+								</c06>
+							</c05>
+							<c05 level="file">
+								<did>
+									<unitid>128</unitid>
+									<unittitle>Copie-brief van de Staten Gneraal aan maarschalk De Biron</unittitle>
+									<unitdate normal="15830408" era="ce" calendar="gregorian">1583 april 8</unitdate>
+									<physdesc>1 stuk</physdesc>
+								</did>
+							</c05>
+							<c05 level="file">
+								<did>
+									<unitid>129</unitid>
+									<unittitle>Stukken betreffende de vorderingen van graaf Philips van Hohenlohe, met retroacta sedert juli 1581.</unittitle>
+									<physdesc>1 omslag</physdesc>
+								</did>
+							</c05>
+							<c05 level="file">
+								<did>
+									<unitid>130</unitid>
+									<unittitle>Minuut van een brief van de te Middelburg aanwezige gedeputeerden van de Staten Generaal aan Gelderland, Utrecht en Vlaanderen.</unittitle>
+									<unitdate normal="15830816" era="ce" calendar="gregorian">1583 augustus 16</unitdate>
+									<physdesc>1 stuk</physdesc>
+								</did>
+							</c05>
+							<c05 level="file">
+								<did>
+									<unitid>131</unitid>
+									<unittitle>Copie-project der te heffen gemene middelen, opgesteld door de gedeputeerden der Geünieerde Provinciën aan de Oostzijde der Maze.</unittitle>
+									<unitdate normal="15830705" era="ce" calendar="gregorian">1583 juli 5</unitdate>
+									<physdesc>1 katern</physdesc>
+								</did>
+							</c05>
+							<c05 level="file">
+								<did>
+									<unitid>132</unitid>
+									<unittitle>Rapport der gecommitteerden van de landraad beoosten Maze betreffende de onderhandelingen met Gerlich Rademaker c.s. over vorderingen wegens wapen-leveranties aan de generaliteit.</unittitle>
+									<unitdate normal="15831024/15831102" era="ce" calendar="gregorian">1583 oktober 24 (ex. 1583 november 2)</unitdate>
+									<physdesc>1 stuk</physdesc>
+								</did>
+							</c05>
+							<c05 level="file">
+								<did>
+									<unitid>133</unitid>
+									<unittitle>brief van Keizer Rudolf aan de regering der stad Gent, aanradend tot verzoening met de koning van Spanje, en aanbiedend daarbij als bemiddelaar op te treden.</unittitle>
+									<unitdate normal="15831025" era="ce" calendar="gregorian">1583 oktober 25</unitdate>
+									<physdesc>1 stuk</physdesc>
+								</did>
+							</c05>
+							<c05 level="file">
+								<did>
+									<unitid>134</unitid>
+									<unittitle>Request van Gerlich Rademaker, burger van Aken, tevens voor Godhardt Frelenburch, burger van Keulen, aan de landraad beoosten Maze.</unittitle>
+									<unitdate normal="158402" era="ce" calendar="gregorian">1584 febrauri</unitdate>
+									<physdesc>1 stuk</physdesc>
+								</did>
+							</c05>
+							<c05 level="file">
+								<did>
+									<unitid>135</unitid>
+									<unittitle>Brief van de prins van Oranje aan de Staten Generaal tot geleide van het bijgaand request van Jaques de Blaire, kapitein in het Schotse regiment van kolonel Stuart.</unittitle>
+									<unitdate normal="15840216" era="ce" calendar="gregorian">1584 februari 16</unitdate>
+									<physdesc>2 stukken</physdesc>
+								</did>
+							</c05>
+							<c05 level="file">
+								<did>
+									<unitid>136</unitid>
+									<unittitle>Copie- brief van de regering van Gent aan die van Brussel.</unittitle>
+									<unitdate normal="15840312" era="ce" calendar="gregorian">1584 maart 12</unitdate>
+									<physdesc>1 stuk</physdesc>
+								</did>
+							</c05>
+							<c05 level="otherlevel" otherlevel="filegrp">
+								<did>
+									<unitid>137-138</unitid>
+									<unittitle>Stukken betreffende de neutraliteitsverklaring van graaf Willem van den Berg</unittitle>
+									<unitdate normal="158403/158404" era="ce" calendar="gregorian">1584 maart - april</unitdate>
+								</did>
+								<c06 level="file">
+									<did>
+										<unitid>137</unitid>
+										<unittitle>Stukken over de periode <unitdate normal="158403/158404" era="ce" calendar="gregorian">1584 maart - april</unitdate>
+										</unittitle>
+										<physdesc>1 omslag</physdesc>
+									</did>
+								</c06>
+								<c06 level="file">
+									<did>
+										<unitid>138</unitid>
+										<unittitle>Accoord tussen de Staten Generaal en graaf Willem van den berg. <unitdate normal="15840315" era="ce" calendar="gregorian">1584 maart 15</unitdate>
+										</unittitle>
+										<physdesc>1 charter</physdesc>
+									</did>
+								</c06>
+							</c05>
+							<c05 level="file">
+								<did>
+									<unitid>139</unitid>
+									<unittitle>Provisioneel redres van de lijst van licenten, door de Staten Generaal gearresteerd op</unittitle>
+									<unitdate normal="15840425" era="ce" calendar="gregorian">24 april 1584</unitdate>
+									<physdesc>1 stuk</physdesc>
+								</did>
+							</c05>
+							<c05 level="file">
+								<did>
+									<unitid>140</unitid>
+									<unittitle>Bijlagen tot de rekenng en verantwoording van ontvangsten en uitgaven over juli 1578 - april 1582 door de audiencier Jan van Asseliers aan de Staten Generaal overgegeven op 24 april en gearresteerd ter vergadering van 28 april 1584.</unittitle>
+									<physdesc>1 lias</physdesc>
+								</did>
+							</c05>
+							<c05 level="file">
+								<did>
+									<unitid>141</unitid>
+									<unittitle>Rekening en verantwoording van de ontvangen den uitgaven van de Raad van State over februari 1579 - april 1582 met begeleidende brief, door de secretaris van die raad Nicasius de Sille aan de Staten Generaal overgegeven op 24 april 1582 en gearresteerd ter vergadering van 28 april 1584.</unittitle>
+									<physdesc>1 bundel</physdesc>
+								</did>
+							</c05>
+							<c05 level="file">
+								<did>
+									<unitid>142</unitid>
+									<unittitle>Uitspraak de Staten Generaal in het geschil tussen de landraad beoosten Maze em de Staten van Overijssel over de verdingen of brandschatting 30 april 1584, met acceptatie door gedeputeerden der Staten van Overijssel.</unittitle>
+									<unitdate normal="15840505" era="ce" calendar="gregorian">1584 mei 5</unitdate>
+									<physdesc>1 stuk</physdesc>
+								</did>
+							</c05>
+							<c05 level="file">
+								<did>
+									<unitid>143</unitid>
+									<unittitle>Afschriften van stukken betreffende de repartitie van de Nadergeünieerde provinciën in 1579, vervaardigd in 1584.</unittitle>
+									<physdesc>1 omslag</physdesc>
+								</did>
+							</c05>
+							<c05 level="file">
+								<did>
+									<unitid>144</unitid>
+									<unittitle>Copie van het antwoord gegeven door Johan, graaf van Oostfriesland aan de gedeputeerden van de prins van Oranje en de Staten Generaal.</unittitle>
+									<unitdate normal="15840518" era="ce" calendar="gregorian">1584 mei 18</unitdate>
+									<physdesc>1 stuk</physdesc>
+								</did>
+							</c05>
+							<c05 level="file">
+								<did>
+									<unitid>145</unitid>
+									<unittitle>Copie-brief van de regering van de stad Deventer aan de Raden van State beoosten Maze.</unittitle>
+									<unitdate normal="15841207" era="ce" calendar="gregorian">1584 december 7 (1584 november 27 Oude stijl)</unitdate>
+									<physdesc>1 stuk</physdesc>
+								</did>
+							</c05>
+							<c05 level="file">
+								<did>
+									<unitid>146</unitid>
+									<unittitle>Brief met bijlage, van de gedeputeerden van de Staten van Brabant aan de Staten generaal.</unittitle>
+									<unitdate normal="15841213" era="ce" calendar="gregorian">1584 december 13</unitdate>
+									<physdesc>2 stukken</physdesc>
+								</did>
+							</c05>
+							<c05 level="file">
+								<did>
+									<unitid>147</unitid>
+									<unittitle>Extract-resolutie der Staten Generaal betreffende het zegel van de Generaliteit. Gewaarmerkt door de griffier Aerssens</unittitle>
+									<unitdate normal="15841213" era="ce" calendar="gregorian">1584 december 13</unitdate>
+									<physdesc>1 stuk</physdesc>
+								</did>
+							</c05>
+							<c05 level="file">
+								<did>
+									<unitid>148</unitid>
+									<unittitle>Requesten met bijlagen om het ambt van postmeester-generaal in de Nederlanden</unittitle>
+									<unitdate normal="158501/158502" era="ce" calendar="gregorian">1585 januari - februari</unitdate>
+									<physdesc>1 dossier</physdesc>
+								</did>
+							</c05>
+							<c05 level="file">
+								<did>
+									<unitid>149</unitid>
+									<unittitle>Remonstrantie van de agent van Don Antonio, koning van Portugal, naar aanleiding van het te lande ontstane ongenoegen over het opbrengen van Hollandse en Zeeuwse schepen, met akten van procuratie; overgegeven aan de Staten Generaal op</unittitle>
+									<unitdate normal="15850208" era="ce" calendar="gregorian">8 februari 1585</unitdate>
+									<physdesc>1 bundel</physdesc>
+								</did>
+							</c05>
+							<c05 level="file">
+								<did>
+									<unitid>150</unitid>
+									<unittitle>Extract-resoluties van graaf Maurits en Raden van State in Zeeland btereffende de luitenant-admiraal Bloys van Treslong.</unittitle>
+									<unitdate normal="158502" era="ce" calendar="gregorian">1585 februari</unitdate>
+									<physdesc>1 bundel</physdesc>
+								</did>
+								<phystech>
+									<p> Deze stukken zijn zwaar beschadigd.</p>
+								</phystech>
+							</c05>
+							<c05 level="file">
+								<did>
+									<unitid>151</unitid>
+									<unittitle>Request van Jacob Roelofsz. en Frederic Roelofsz., kooplieden te Amsterdam, benevens hun compagnons, aan de Staten Generaal; met bijlagen.</unittitle>
+									<unitdate normal="158503" era="ce" calendar="gregorian">1585 maart</unitdate>
+									<physdesc>1 dossier</physdesc>
+								</did>
+							</c05>
+							<c05 level="file">
+								<did>
+									<unitid>152</unitid>
+									<unittitle>Contract tussen raden van State aan de oostzijde der Maze am George Everhard, graaf van Solms, om boven zijn vendel van 400 manschappen nog aan te nemen 600 Dutse knechten in 2 vendels, met copie.</unittitle>
+									<unitdate normal="15850328" era="ce" calendar="gregorian">1585 maart 28</unitdate>
+									<physdesc>2 stukken</physdesc>
+								</did>
+							</c05>
+							<c05 level="file">
+								<did>
+									<unitid>153</unitid>
+									<unittitle>Copie-commissie van de Staten Generaal voor mr. Dirk van der Does tot het administreren der middelen geaccodeerd tot betaling van de schulden, gemaakt bij de heren van de Nadere Unie en Landraad dd. 26 februari 1585. Copie van </unittitle>
+									<unitdate normal="15850405" era="ce" calendar="gregorian">5 april 1585</unitdate>
+									<physdesc>1 stuk</physdesc>
+								</did>
+							</c05>
+							<c05 level="file">
+								<did>
+									<unitid>154</unitid>
+									<unittitle>Stukken, ingekomen van de koning van Polen, de regering der stad Danzig, en van Joseph Saroels, oud-griffier van de Kamer der Beden, en minuut-uitgaande brief betreffende de vorderingen van kapitein Nicolaas Weyth van Macklendorff en betreffende andere personen in Polen.</unittitle>
+									<unitdate normal="158210/158409" era="ce" calendar="gregorian">1582 ooktober - 1584 september</unitdate>
+									<physdesc>1 omslag</physdesc>
+								</did>
+							</c05>
+							<c05 level="file">
+								<did>
+									<unitid>155</unitid>
+									<unittitle>Onderschepte vijandelijke brieven</unittitle>
+									<physdesc>4 stukken</physdesc>
+								</did>
+								<phystech>
+									<p> Deze stukken zjn zwaar beschadigd</p>
+								</phystech>
+								<c06 level="otherlevel" otherlevel="subfile">
+									<did>
+										<unitid>---</unitid>
+										<unittitle>van Adolf van Cartenbach aan de graaf van Mansfeld. <unitdate normal="15830503" era="ce" calendar="gregorian">1585 mei 3</unitdate>
+										</unittitle>
+									</did>
+								</c06>
+								<c06 level="otherlevel" otherlevel="subfile">
+									<did>
+										<unitid>---</unitid>
+										<unittitle>van Janes van Cigogna aan zijn broer de commissaris Cigogna, <unitdate era="ce" calendar="gregorian">z.d.</unitdate>
+										</unittitle>
+									</did>
+								</c06>
+								<c06 level="otherlevel" otherlevel="subfile">
+									<did>
+										<unitid>---</unitid>
+										<unittitle>van Camille Sachini aan ? <unitdate normal="15850426" era="ce" calendar="gregorian">1585 april 26</unitdate>
+										</unittitle>
+									</did>
+								</c06>
+							</c05>
+							<c05 level="file">
+								<did>
+									<unitid>156</unitid>
+									<unittitle>Copie-rkening van de audiencier en eerste secretaris van de Raad van State Jan van Asseliers over juli 1578 - april 1582, overgelegd bij het request van de weduwe Asseliers an de Staten Generaal van juni 1585.</unittitle>
+									<physdesc>1 katern</physdesc>
+								</did>
+							</c05>
+							<c05 level="otherlevel" otherlevel="filegrp">
+								<did>
+									<unitid>157-159</unitid>
+									<unittitle>Stukken betreffende het ronselen van Duitse ruiterij en voetvolk door de graaf van Nieuwenaar en overste Marten Schenck, voor het ontzet van Antwerpen</unittitle>
+									<unitdate normal="158507/158508" era="ce" calendar="gregorian">1585 juli- augustus</unitdate>
+								</did>
+								<c06 level="file">
+									<did>
+										<unitid>157</unitid>
+										<unittitle>Copie van de raming van de kosten van de Duitse ruiterij en het voetvolk, met apostille van de Raden van State beoosten Maze. <unitdate normal="15850708" era="ce" calendar="gregorian">1585 juli 8</unitdate>
+										</unittitle>
+									</did>
+								</c06>
+								<c06 level="file">
+									<did>
+										<unitid>158</unitid>
+										<unittitle>Extract-resolutie van de Raden van State beoosten Maze van 8 juli 1585, minuut-formulier der brieven van vrijwaring voor de steden, welke zich verplicht hebben tot betaling der 1000 Duitse ruiteren, aan te nemen door graaf van Nieuwenaar en overste Marten Schenck. <unitdate normal="15850826" era="ce" calendar="gregorian">1585 augustus 26</unitdate>
+										</unittitle>
+										<physdesc>2 stukken</physdesc>
+									</did>
+								</c06>
+								<c06 level="file">
+									<did>
+										<unitid>159</unitid>
+										<unittitle>Copie-lijsten van voetvolk ter bezetting avn de steden en andere plaatsen, vastgesteld door de Raden van State beoosten de Maze en gedeputeerde Staten van Holland, vergaderd te Utrecht. <unitdate normal="15850709" era="ce" calendar="gregorian">1585 juli 9</unitdate>
+										</unittitle>
+										<physdesc>1 stuk</physdesc>
+									</did>
+								</c06>
+							</c05>
+							<c05 level="file">
+								<did>
+									<unitid>160</unitid>
+									<unittitle>Brief van de landraad beoosten Maze aan de Staten Generaal betreffende de requesten van Gerlich Rademacher, en Godhardt Frelenburch, koopman te Keulen c.s.; met bijlagen.</unittitle>
+									<unitdate normal="15850716" era="ce" calendar="gregorian">1585 juli 16</unitdate>
+									<physdesc>1 omslag</physdesc>
+								</did>
+							</c05>
+							<c05 level="file">
+								<did>
+									<unitid>161</unitid>
+									<unittitle>Brieven van Raden van State beoosten Maze aan de Staten Generaal. met bijlagen.</unittitle>
+									<unitdate normal="15850902/15851110" era="ce" calendar="gregorian">1585 september 2, en 1585 november 10</unitdate>
+									<physdesc>1 omslag</physdesc>
+								</did>
+							</c05>
+							<c05 level="file">
+								<did>
+									<unitid>162</unitid>
+									<unittitle>Brief van graaf Maurits en Raden van State aan de Staten Generaal.</unittitle>
+									<unitdate normal="15851005" era="ce" calendar="gregorian">1585 oktober 5</unitdate>
+									<physdesc>1 stuk</physdesc>
+								</did>
+							</c05>
+							<c05 level="file">
+								<did>
+									<unitid>163</unitid>
+									<unittitle>Stukken betreffende het geschil tussen Johan Baptista Schoti als gemachtigde van enige kooplieden en Steven Perret, collecteur der convoyen in Gelderland wegens door collecteur in beslaggenomen en door de Raad beoosten Maze verbeurd verklaard goud- en zilverdraad.</unittitle>
+									<unitdate normal="158510/158511" era="ce" calendar="gregorian">1585 oktober - november</unitdate>
+									<physdesc>1 dossier</physdesc>
+								</did>
+							</c05>
+							<c05 level="file">
+								<did>
+									<unitid>164</unitid>
+									<unittitle>Stukken betreffende het geschil tussen Gillis Wolfswinckel, collecteur van de convoyen te Antwerpen en Charles de Beaulieu, commissaris-generaal van de convoyen.</unittitle>
+									<unitdate normal="1585" era="ce" calendar="gregorian">1585</unitdate>
+									<physdesc>1 dossier</physdesc>
+								</did>
+							</c05>
+							<c05 level="file">
+								<did>
+									<unitid>165</unitid>
+									<unittitle>Ingekomen stukken en minuten van uitgaande stukken.</unittitle>
+									<unitdate normal="15860103/15860219" era="ce" calendar="gregorian">1586 januari 3 - 1586 februari 19</unitdate>
+									<physdesc>1 pak</physdesc>
+								</did>
+							</c05>
+							<c05 level="file">
+								<did>
+									<unitid>166</unitid>
+									<unittitle>Brief van de hertog van Joyeuse aan de Staten Generaal.</unittitle>
+									<unitdate normal="15851225" era="ce" calendar="gregorian">1585 december 25</unitdate>
+									<physdesc>1 stuk</physdesc>
+								</did>
+							</c05>
+							<c05 level="file">
+								<did>
+									<unitid>167</unitid>
+									<unittitle>Brief van Bertrand Combes te Wessel aan de Staten Generaal.</unittitle>
+									<unitdate normal="15860121" era="ce" calendar="gregorian">1586 januari 21 (rec. januari 27)</unitdate>
+									<physdesc>1 stuk</physdesc>
+								</did>
+							</c05>
+							<c05 level="file">
+								<did>
+									<unitid>168</unitid>
+									<unittitle>brief van de altsgraaf Johan Casimir aan de Staten Generaal.</unittitle>
+									<unitdate normal="15841217" era="ce" calendar="gregorian">1584 december 17 (rec. 1586 februari 8)</unitdate>
+									<physdesc>1 stuk</physdesc>
+								</did>
+							</c05>
+							<c05 level="otherlevel" otherlevel="filegrp">
+								<did>
+									<unitid>169-170</unitid>
+									<unittitle>Stukken betreffende de griffier , de agent, en andere ambtenaren der Staten Generaal.</unittitle>
+									<unitdate normal="1583/1586" era="ce" calendar="gregorian">1583-1586</unitdate>
+								</did>
+								<c06 level="file">
+									<did>
+										<unitid>169</unitid>
+										<unittitle>Rekening en verantwoording van ontvangsten en uitgaven van de griffier M. de Hennin over 6 juli 1582 - 1 december 1583, overgelegd aan de Staten Genaraal op 21 december 1585 en gearresteerd op<unitdate normal="15840326" era="ce" calendar="gregorian"> 26 maart 1584.</unitdate>
+										</unittitle>
+										<physdesc>1 katern</physdesc>
+									</did>
+								</c06>
+								<c06 level="file">
+									<did>
+										<unitid>170</unitid>
+										<unittitle>Stukken betreffende ambten en salarissen van ambtenaren in dienst van de Staten Generaal. <unitdate normal="158301/158602" era="ce" calendar="gregorian">1583 januari - 1586 februari</unitdate>
+										</unittitle>
+										<physdesc>1 omslag</physdesc>
+									</did>
+								</c06>
+							</c05>
+							<c05 level="file">
+								<did>
+									<unitid>171</unitid>
+									<unittitle>Rekening en verantwoording door de ingezetenen van het dorp Baerle en idem door de ingezetenen van Haage wegens hun maandelijkse contributie en repartitie in het fouragegeld</unittitle>
+									<unitdate normal="158602" era="ce" calendar="gregorian">1586 februari</unitdate>
+									<physdesc>2 stukken</physdesc>
+								</did>
+							</c05>
+							<c05 level="file">
+								<did>
+									<unitid>172</unitid>
+									<unittitle>Brief van de magistraat van Zürich aan graaf Maurits en de Raden van State betreffende de vrijheren van Hohensaxen</unittitle>
+									<unitdate normal="15850904" era="ce" calendar="gregorian">1585 september 4</unitdate>
+									<physdesc>1 stuk</physdesc>
+								</did>
+								<scopecontent>
+									<p> Zie resolutie Staten Generaal dd. 5 mei 1586</p>
+								</scopecontent>
+							</c05>
+							<c05 level="file">
+								<did>
+									<unitid>174</unitid>
+									<unittitle>Brief van de graaf van Leycester aan de magistraat van Tholen</unittitle>
+									<unitdate normal="15860610" era="ce" calendar="gregorian">1586 juni 10</unitdate>
+									<physdesc>1 stuk</physdesc>
+								</did>
+							</c05>
+							<c05 level="file">
+								<did>
+									<unitid>175</unitid>
+									<unittitle>Request met bijlage van de gemene reders van de vlieboot "de Waterhont", schipper Crijn Cornelisz. te Brielle, aan de Staten Generaal</unittitle>
+									<unitdate normal="15860628" era="ce" calendar="gregorian">1586 juni 28</unitdate>
+									<physdesc>2 stukken</physdesc>
+								</did>
+							</c05>
+							<c05 level="file">
+								<did>
+									<unitid>176</unitid>
+									<unittitle>Stukken betreffende de munt van Don Antonio van Portugal te Gorichem; bij apostille van de Raad van State van 10 juni 1586 aan de Staten Generaal ter behandeling gegeven</unittitle>
+									<unitdate normal="1585/1586" era="ce" calendar="gregorian">1585-1586</unitdate>
+									<physdesc>1 dossier</physdesc>
+								</did>
+							</c05>
+							<c05 level="file">
+								<did>
+									<unitid>177</unitid>
+									<unittitle>Ingekomen stukken van gecommitteerden van de landsraad beoosten Maze aan de Staten Generaal</unittitle>
+									<unitdate normal="158601/158607" era="ce" calendar="gregorian">1586 januari - 1586 juli</unitdate>
+									<physdesc>1 omslag</physdesc>
+								</did>
+							</c05>
+							<c05 level="file">
+								<did>
+									<unitid>178</unitid>
+									<unittitle>Kwitantie van Michiel van Stelant voor de griffier der Staten generaal, wegens een door hem ontvangen ordonnantie van betaling van zijn traktement als edelman van de artillerie. Met bijlagen</unittitle>
+									<unitdate normal="15860718" era="ce" calendar="gregorian">1586 juli 18</unitdate>
+									<physdesc>1 dossier</physdesc>
+								</did>
+							</c05>
+							<c05 level="file">
+								<did>
+									<unitid>179</unitid>
+									<unittitle>Brief van de Staten van Holland aan de Staten Generaal</unittitle>
+									<unitdate normal="15860729" era="ce" calendar="gregorian">1586 juli 29</unitdate>
+									<physdesc>1 stuk</physdesc>
+								</did>
+							</c05>
+							<c05 level="file">
+								<did>
+									<unitid>180</unitid>
+									<unittitle>Tweede rekening van Gerard van Poelgeest, super-intendant-generaal van de vivres in de Nader geünieerde provinciën over februari 1580 - 1582, overgeleverd aan de gecommitteerden van de landraad beoosten Maze op 9 januari 1586 en gearresteerd op 18 oktober 1586</unittitle>
+									<physdesc>1 deel</physdesc>
+								</did>
+							</c05>
+							<c05 level="file">
+								<did>
+									<unitid>181</unitid>
+									<unittitle>Brief van de gedeputeerden der Staten Generaal naar Leycester,aan de Staten Generaal , 1 november 1586, copie-brief van de magistraat van Utrecht aan de Staten Generaal</unittitle>
+									<unitdate normal="15861103" era="ce" calendar="gregorian">1586 november 3</unitdate>
+									<physdesc>2 stukken</physdesc>
+								</did>
+							</c05>
+							<c05 level="file">
+								<did>
+									<unitid>182</unitid>
+									<unittitle>Brief van Leycester en Raden ter begeleiding van het request van Nicolaes Gruel, aan de Staten Generaal</unittitle>
+									<unitdate normal="15870103" era="ce" calendar="gregorian">1587 januari 3</unitdate>
+									<physdesc>2 stukken</physdesc>
+								</did>
+							</c05>
+							<c05 level="file">
+								<did>
+									<unitid>183</unitid>
+									<unittitle>Accoord tussen de Raad van State (met consent en ten overstaan der Staten Generaal) en de graaf van Nieuwenaar en Meurs benevens de overige Officieren van 2000 geronselde ruiters, betreffende hun vorderingen</unittitle>
+									<unitdate normal="15870201" era="ce" calendar="gregorian">1587 februari 1</unitdate>
+									<physdesc>1 charter</physdesc>
+								</did>
+							</c05>
+							<c05 level="file">
+								<did>
+									<unitid>184</unitid>
+									<unittitle>Rekeningen der uitgaven van de tresorier der troepen van de koningin van Engeland in de Nederlanden, Richard Huddlesdon, over 1585 augustus - 1586 oktober, door de Staten Generaal nagezien ter vergadering van 9 februari 1587</unittitle>
+									<physdesc>3 stukken</physdesc>
+								</did>
+							</c05>
+							<c05 level="file">
+								<did>
+									<unitid>185</unitid>
+									<unittitle>Akte van indemniteit door John Smith, Engelse koopman, gegeven aan de Staten Generaal</unittitle>
+									<unitdate normal="15870228" era="ce" calendar="gregorian">1587 februari 28</unitdate>
+									<physdesc>1 stuk</physdesc>
+								</did>
+							</c05>
+							<c05 level="file">
+								<did>
+									<unitid>186</unitid>
+									<unittitle>Copie-commissie voor Johann Philips, vrijheer van Hohensaxen, als bevelhebber over krijgsvolk in verschillende steden en sterkten van Gelderland en Overijssel gelegen</unittitle>
+									<unitdate normal="15870305" era="ce" calendar="gregorian">dd. 5 maart 1587</unitdate>
+									<physdesc>1 stuk</physdesc>
+								</did>
+							</c05>
+							<c05 level="file">
+								<did>
+									<unitid>187</unitid>
+									<unittitle>Minuut-commissie voor Johan Junius de Jonge, ridder, heer van Crabbendijcke, als gezant naar Duitse vorsten</unittitle>
+									<unitdate normal="15870319" era="ce" calendar="gregorian">1587 maart 19</unitdate>
+									<physdesc>1 stuk</physdesc>
+								</did>
+							</c05>
+							<c05 level="file">
+								<did>
+									<unitid>188</unitid>
+									<unittitle>Akte van Johann Philips, graaf Falckenstein zu Obersteyn, zich verbindend door de Staten Generaal op zijn soldij te laten korten de prijs van wapens, door hem ontvangen van de Staten Generaal voor 3000 Hoogduitse krijgsknechten</unittitle>
+									<unitdate normal="15870412" era="ce" calendar="gregorian">1587 april 12</unitdate>
+									<physdesc>1 stuk</physdesc>
+								</did>
+							</c05>
+							<c05 level="file">
+								<did>
+									<unitid>189</unitid>
+									<unittitle>Vidimus van de brief door Hessel Aysma, president vn het hof van Friesland, geschreven aan Gerard Prounick, gezegd Van Deventer dd. 8 maart 1587</unittitle>
+									<unitdate normal="15870422" era="ce" calendar="gregorian">1587 april 22</unitdate>
+									<physdesc>1 stuk</physdesc>
+								</did>
+							</c05>
+							<c05 level="file">
+								<did>
+									<unitid>190</unitid>
+									<unittitle>Copie van en bijlagen bij het request van Charles de Liévin, heer van Famars, oud-gouverneur van Mechelen</unittitle>
+									<unitdate normal="158704" era="ce" calendar="gregorian">(1587 april)</unitdate>
+									<physdesc>1 omslag</physdesc>
+								</did>
+							</c05>
+							<c05 level="file">
+								<did>
+									<unitid>191</unitid>
+									<unittitle>Remonstrantie van de Raden der Admiraliteit in Zuid-Holland en van de commies-generaal der convoyen in dit kwartier, aan Zijne Excellentie en Raden van State overgegeven in de vergadering der Staten Generaal van, met bijlage</unittitle>
+									<unitdate normal="15870220" era="ce" calendar="gregorian">20 februari 1587</unitdate>
+									<physdesc>2 stukken</physdesc>
+									<unittitle>Remonstrantie van Charles de Beaulieu, commies-generaal der convoyen aan de Raden der Admiraliteiten in Holland en Zeeland, met de beschikking van deze Raden avn, met bijlagen</unittitle>
+									<unitdate normal="15870221" era="ce" calendar="gregorian">21 februari 1587</unitdate>
+									<physdesc>3 stukken</physdesc>
+									<unittitle>Remonstrantie van Aelbert Cornelisz. Comans en van de commies-generaal der convoyen in het kwartier van Zuid-Holland, overgegeven in de vergadering der Staten Generaal van</unittitle>
+									<unitdate normal="15870501" era="ce" calendar="gregorian">1 mei 1587</unitdate>
+									<physdesc>1 stuk</physdesc>
+									<unittitle>Request van de commiezen-generaal der convoyen aan Zijne Excellentie, met diens beschikking van, met bijlagen</unittitle>
+									<unitdate normal="15870502" era="ce" calendar="gregorian">2 mei 1587</unitdate>
+									<physdesc>2 stukken</physdesc>
+								</did>
+							</c05>
+							<c05 level="file">
+								<did>
+									<unitid>192</unitid>
+									<unittitle>Brief van de Staten Generaal aan de magistraat van Lubeck</unittitle>
+									<unitdate normal="15870519" era="ce" calendar="gregorian">1587 mei 19</unitdate>
+									<physdesc>1 stuk</physdesc>
+								</did>
+							</c05>
+							<c05 level="file">
+								<did>
+									<unitid>193</unitid>
+									<unittitle>Brief van Marten Schenck begeleidende de requesten van Reynier van Lent</unittitle>
+									<unitdate normal="15870522" era="ce" calendar="gregorian">1587 mei 22</unitdate>
+									<physdesc>3 stukken</physdesc>
+								</did>
+							</c05>
+							<c05 level="file">
+								<did>
+									<unitid>194</unitid>
+									<unittitle>Memorie van Johannes Thijllius secretaris van de graaf van Nieuwenaar aan de Staten Generaal</unittitle>
+									<unitdate normal="15870603" era="ce" calendar="gregorian">1587 juni 3</unitdate>
+									<unittitle>Stukken, overgelegd aan de Staten Generaal door de graaf van Nieuwenaar en de Raad van State, met bijgaande lijst op</unittitle>
+									<unitdate normal="15870617" era="ce" calendar="gregorian">17 juni 1587</unitdate>
+									<physdesc>1 dossier</physdesc>
+								</did>
+							</c05>
+							<c05 level="file">
+								<did>
+									<unitid>195</unitid>
+									<unittitle>Staten van de accoorden betreffende en van de verplichtingen van de aangeslagen goederen in de Meierij van Den Bosch opgemaakt door Wouter Leyten, ontvanger der geestelijke en geconfiskeerde goederen in het kwartier van Den Bosch over</unittitle>
+									<unitdate normal="158506/158706" era="ce" calendar="gregorian">juni 1585 - juni 1587</unitdate>
+									<physdesc>2 stukken</physdesc>
+								</did>
+							</c05>
+							<c05 level="file">
+								<did>
+									<unitid>196</unitid>
+									<unittitle>Staten van de oorlogsschepen onder de admiraliteiten van Zuid-Holland en van Noord-Holland, met opgave van grootte, geschut, bemanning, soldij, mondkost en onderhoud, door deze admiraliteiten gezonden aan de admiraal-generaal, graaf Maurits van Nassau (in verband met het verzoek van Don Antonio van Portugal om assistentie in oorlogsschepen) bij brieven van </unittitle>
+									<unitdate normal="15870618/15870620" era="ce" calendar="gregorian">18 en 20 juni 1587</unitdate>
+									<physdesc>1 dossier</physdesc>
+								</did>
+							</c05>
+							<c05 level="file">
+								<did>
+									<unitid>197</unitid>
+									<unittitle>Rol der compagnie ruiters onder generaal Norris, aan de Staten Generaal toegezonden door de griffier van de kamer der thesaurie bij brief van</unittitle>
+									<unitdate normal="15870614" era="ce" calendar="gregorian">14 juni 1587</unitdate>
+									<physdesc>2 stukken</physdesc>
+								</did>
+							</c05>
+							<c05 level="file">
+								<did>
+									<unitid>199</unitid>
+									<unittitle>Brief van gecommitteerde Raden der Staten van Holland aan de Staten Generaal</unittitle>
+									<unitdate normal="15870731" era="ce" calendar="gregorian">1587 juli 31</unitdate>
+									<physdesc>1 stuk</physdesc>
+								</did>
+							</c05>
+							<c05 level="file">
+								<did>
+									<unitid>200</unitid>
+									<unittitle>Stukken, overgegeven aan de Staten Generaal door de teruggekeerde deputatie naar de koning van Denemarken na het uitbrengen van haar rapport ter vergadering van </unittitle>
+									<unitdate normal="15870803" era="ce" calendar="gregorian">3 augustus 1587</unitdate>
+									<physdesc>1 omslag</physdesc>
+								</did>
+							</c05>
+							<c05 level="file">
+								<did>
+									<unitid>201</unitid>
+									<unittitle>Stukken betreffende het verzoek van de gedeputeerden van de grote visserij en haringvaart van Holland om tegen licent langs Rijn en Maas haring uit te voeren</unittitle>
+									<unitdate normal="158708" era="ce" calendar="gregorian">1587 augustus</unitdate>
+									<physdesc>1 dossier</physdesc>
+								</did>
+							</c05>
+							<c05 level="file">
+								<did>
+									<unitid>202</unitid>
+									<unittitle>Memorie van de graaf van Nieuwenaar en Meurs aan de Staten Generaal wegens de door hem in krijgsdienst gemaakte onkosten, met afschrift</unittitle>
+									<unitdate normal="15871022" era="ce" calendar="gregorian">(1587 oktober 22)</unitdate>
+									<physdesc>2 stukken</physdesc>
+								</did>
+							</c05>
+							<c05 level="file">
+								<did>
+									<unitid>203</unitid>
+									<unittitle>Brief van Aelbert Cornelisz. Comans, gewezen ontvanger-generaal der geünieerde provinciën aan de Staten Generaal</unittitle>
+									<unitdate normal="15871202" era="ce" calendar="gregorian">1587 december 2</unitdate>
+									<physdesc>1 stuk</physdesc>
+								</did>
+							</c05>
+							<c05 level="file">
+								<did>
+									<unitid>204</unitid>
+									<unittitle>Remonstrantie van Hendrick van der Veecken, commies-generaal der convoyen aan de Staten Generaal</unittitle>
+									<unitdate normal="1587" era="ce" calendar="gregorian">1587</unitdate>
+									<physdesc>1 stuk</physdesc>
+								</did>
+							</c05>
+							<c05 level="file">
+								<did>
+									<unitid>205</unitid>
+									<unittitle>Ingekomen stukken en minuten van uitgaande stukken</unittitle>
+									<unitdate normal="158801/158805" era="ce" calendar="gregorian">1588 januari-1588 mei</unitdate>
+									<physdesc>1 pak</physdesc>
+								</did>
+							</c05>
+							<c05 level="file">
+								<did>
+									<unitid>206</unitid>
+									<unittitle>Staten van gelden, uitgegeven door de tresorie van de koningin van Engeland en van de graaf van Leycester ten behoeve van de Nederlanden over 1585-1587, overgegeven aan de Staten Generaal op</unittitle>
+									<unitdate normal="15880107" era="ce" calendar="gregorian">7 januari 1588</unitdate>
+									<physdesc>2 stukken</physdesc>
+								</did>
+							</c05>
+							<c05 level="file">
+								<did>
+									<unitid>207</unitid>
+									<unittitle>Staat van de ruiters en soldaten ter bezetting van de steden en forten der Verenigde Nederlanden door de Staten Generaal en de Raad van State gearresteeerd</unittitle>
+									<unitdate normal="15880123" era="ce" calendar="gregorian">23 januari 1588</unitdate>
+									<physdesc>1 stuk</physdesc>
+								</did>
+							</c05>
+							<c05 level="file">
+								<did>
+									<unitid>208</unitid>
+									<unittitle>Remonstrantie, houdende voorstellen ten dienste van het land, opgesteld door de Raad van State op</unittitle>
+									<unitdate normal="15880115" era="ce" calendar="gregorian">15 januari 1588</unitdate>
+									<physdesc>1 bundel</physdesc>
+								</did>
+								<scopecontent>
+									<p> als bijlage: copie-memorie voor Joachim Ortell ter mededeling aan de koning van Engeland, de graaf van Leycester en de Raad van Hare Majesteit, opgesteld door de Raad van State op 16 januari 1588</p>
+								</scopecontent>
+								<scopecontent>
+									<p> als bijlage: copie-concept op het beleid van de kamer van de Tresorie, opgesteld door de Raad van State, overgegeven aan de Staten Generaal op 26 januari 1588</p>
+								</scopecontent>
+							</c05>
+							<c05 level="file">
+								<did>
+									<unitid>209</unitid>
+									<unittitle>Minuut van de akte van indemniteit van de Staten Generaal voor de graaf van Nieuwenaar en Meurs wegens de door de Staten Generaal gelaste inname van Meppen in Munster; met Nederlandse vertaling van de Duitse tekst</unittitle>
+									<unitdate normal="15880128" era="ce" calendar="gregorian">(1588 januari 28)</unitdate>
+									<physdesc>2 stukken</physdesc>
+								</did>
+							</c05>
+							<c05 level="file">
+								<did>
+									<unitid>211</unitid>
+									<unittitle>Minuut-resolutie van de Staten Generaal betreffende de remonstrantie der baanderheren, edelen en steden van Brabant, houdende de zijde der geünieerde Nederlanden</unittitle>
+									<unitdate normal="15880211" era="ce" calendar="gregorian">1588 februari 11</unitdate>
+									<physdesc>1 stuk</physdesc>
+								</did>
+							</c05>
+							<c05 level="file">
+								<did>
+									<unitid>212</unitid>
+									<unittitle>Minuut-akte van sauvergarde ven de Staten Generaal voor de kooplieden ven de Portugese natie in de Nederlanden residerende,</unittitle>
+									<unitdate normal="15880211" era="ce" calendar="gregorian">1588 februari 11</unitdate>
+									<unittitle>met copie- van de akte van sauvergarde</unittitle>
+									<unitdate normal="15880619" era="ce" calendar="gregorian">dd. 19 juni 1588</unitdate>
+									<physdesc>2 stukken</physdesc>
+								</did>
+							</c05>
+							<c05 level="file">
+								<did>
+									<unitid>213</unitid>
+									<unittitle>Extract-resolutie der Staten van Utrecht van <unitdate normal="15880210" era="ce" calendar="gregorian">10 februari 1588</unitdate> overgegeven aan de Staten Generaal op</unittitle>
+									<unitdate normal="15880222" era="ce" calendar="gregorian">22 februari 1588</unitdate>
+									<physdesc>1 stuk</physdesc>
+								</did>
+							</c05>
+							<c05 level="file">
+								<did>
+									<unitid>214</unitid>
+									<unittitle>Memorie van de Raad van State met bijlagen, overgegeven aan de Staten Generaal</unittitle>
+									<unitdate normal="15880226" era="ce" calendar="gregorian">1588 februari 26</unitdate>
+									<physdesc>1 dossier</physdesc>
+								</did>
+							</c05>
+							<c05 level="file">
+								<did>
+									<unitid>215</unitid>
+									<unittitle>Brief van Taffin de la Prée, agent in Frankrijk, aan de Raad van State. 1588 februari 12, ontvangen door de Staten Generaal </unittitle>
+									<unitdate normal="15880310" era="ce" calendar="gregorian">10 maart 1588</unitdate>
+									<physdesc>1 stuk</physdesc>
+								</did>
+							</c05>
+							<c05 level="file">
+								<did>
+									<unitid>216</unitid>
+									<unittitle>Copie-verklaring van de koning van Frnakrijk betreffende de uitvoering van zijn edict van juli 1585 over de hereniging van zijn onderdanen bij de Rooms-Katholieke kerk</unittitle>
+									<unitdate normal="15870420" era="ce" calendar="gregorian">1587 april 20</unitdate>
+									<physdesc>1 stuk</physdesc>
+								</did>
+							</c05>
+							<c05 level="file">
+								<did>
+									<unitid>217</unitid>
+									<unittitle>Stukken betreffende de klachten van het merendeel der edelen en ridderschap van het land van Utrecht over de nieuwigheden, voornamelijk door de magistraat van de stad Utrecht ingevoerd</unittitle>
+									<unitdate normal="158709/158803" era="ce" calendar="gregorian">1587 september - 1588 maart</unitdate>
+									<physdesc>1 dossier</physdesc>
+								</did>
+							</c05>
+							<c05 level="file">
+								<did>
+									<unitid>218</unitid>
+									<unittitle>Stukken betreffende de betaling van de ruiters in het garnizoen van Doesburg</unittitle>
+									<unitdate normal="158803/158804" era="ce" calendar="gregorian">1588 maart - april</unitdate>
+									<physdesc>1 dossier</physdesc>
+								</did>
+							</c05>
+							<c05 level="file">
+								<did>
+									<unitid>219</unitid>
+									<unittitle>Minuut-plakkaat betreffende de instelling van een generale regering</unittitle>
+									<unitdate normal="15880412" era="ce" calendar="gregorian">1588 april 12</unitdate>
+									<physdesc>1 katern</physdesc>
+								</did>
+							</c05>
+							<c05 level="otherlevel" otherlevel="filegrp">
+								<did>
+									<unitid>221-222</unitid>
+									<unittitle>Stukken betreffende een subsidie voor de koning van Navarre</unittitle>
+									<unitdate normal="1588" era="ce" calendar="gregorian">1588</unitdate>
+								</did>
+								<c06 level="file">
+									<did>
+										<unitid>221</unitid>
+										<unittitle>Brief van de koning van Navarre aan de Staten Generaal, <unitdate normal="15880310" era="ce" calendar="gregorian">1588 maart 10</unitdate>, ontvangen <unitdate normal="15880505" era="ce" calendar="gregorian">1588 mei 5</unitdate>
+										</unittitle>
+										<physdesc>1 stuk</physdesc>
+									</did>
+								</c06>
+								<c06 level="file">
+									<did>
+										<unitid>222</unitid>
+										<unittitle>Stukken, overgegeven door l'Hopital du Fay, gezant van de koning van Navarre <unitdate normal="15880505" era="ce" calendar="gregorian">1588 mei 5</unitdate>
+										</unittitle>
+										<physdesc>1 dossier</physdesc>
+									</did>
+									<relatedmaterial>
+										<p> in loketkas Frankrijk nr. 6 bevinden zich stukken betreffende deze zaak van 17 mei 1588 - 30 oktober 1589</p>
+									</relatedmaterial>
+								</c06>
+							</c05>
+						</c04>
+					</c03>
+				</c02>
+				<c02 level="series">
+					<did>
+						<unitid type="series_code">A.3</unitid>
+						<unittitle>Gedeponeerde stukken</unittitle>
+					</did>
+					<c03 level="otherlevel" otherlevel="filegrp">
+						<did>
+							<unitid>223-224</unitid>
+							<unittitle>Stukken behorend tot het archief van de Prins van Oranje en de Raad nevens hem, voor Holland, Zeeland en Utrecht</unittitle>
+						</did>
+						<c04 level="file">
+							<did>
+								<unitid>223A</unitid>
+								<unittitle>Brieven van Willem, hertog van Gulik, Kleef en Berg aan Prins Willem van Oranje.<unitdate normal="15810721/15810722" era="ce" calendar="gregorian">1581 juli 20 en 1581 juli 22</unitdate>
+								</unittitle>
+								<physdesc>2 stukken</physdesc>
+							</did>
+						</c04>
+						<c04 level="file">
+							<did>
+								<unitid>223B</unitid>
+								<unittitle>Ingekomen brieven aan en minuten van uitgaande stukken van de Prins van Oranje en zijn Raad van State.<unitdate normal="158203" era="ce" calendar="gregorian">1582 maart</unitdate>
+								</unittitle>
+								<physdesc>1 omslag</physdesc>
+							</did>
+						</c04>
+						<c04 level="file">
+							<did>
+								<unitid>223C</unitid>
+								<unittitle>Copieën van brieven van de Sorbies les Pruneaux aan de Staten Generaal en aan de Prins van Oranje dd. <unitdate normal="15830221" era="ce" calendar="gregorian">21 februari 1583</unitdate> waarvan hij, blijkens een aantekening van hemzelf dd. 3 maart 1584, de originelen in bezit had.</unittitle>
+								<physdesc>2 stukken</physdesc>
+							</did>
+						</c04>
+						<c04 level="file">
+							<did>
+								<unitid>223D</unitid>
+								<unittitle>Minuut-brief van de Raad nevens Zijne Excellentie betreffende de inning van penningen, verschuldigd door zeepzieders te Amsterdam.<unitdate normal="15840602" era="ce" calendar="gregorian">1584 juni 2</unitdate>
+								</unittitle>
+								<physdesc>1 stuk</physdesc>
+							</did>
+						</c04>
+						<c04 level="file">
+							<did>
+								<unitid>223E</unitid>
+								<unittitle>Brief van de Magistraat van Amsterdam aan de prins van Oranje betreffende licenten tot uitvoer naar Duinkerken, Grevelingen en Nieuwpoort, met bijlage.<unitdate normal="15840602" era="ce" calendar="gregorian">1584 juni 2</unitdate>
+								</unittitle>
+								<physdesc>2 stukken</physdesc>
+							</did>
+						</c04>
+						<c04 level="file">
+							<did>
+								<unitid>224</unitid>
+								<unittitle>Verklaring van Laurens Jacobsz., gecommitteerd tot de ontvang van licenten binnen Amsterdam ten behoeve van Adriaan Jansz. van Akersloot.<unitdate normal="15840611" era="ce" calendar="gregorian">1584 juni 11</unitdate>
+								</unittitle>
+								<physdesc>1 stuk</physdesc>
+							</did>
+						</c04>
+					</c03>
+				</c02>
+			</c01>
+			<c01 level="subfonds">
+				<did>
+					<unitid type="series_code">B</unitid>
+					<unittitle>Archief van de Hoogduitse secretarie</unittitle>
+				</did>
+				<c02 level="series">
+					<did>
+						<unitid type="series_code">B.1</unitid>
+						<unittitle>stukken 1577-1581</unittitle>
+					</did>
+					<c03 level="otherlevel" otherlevel="filegrp">
+						<did>
+							<unitid>226-239</unitid>
+							<unittitle>Ingekomen Hoogduitse stukken en enige minuten van uitgaande stukken</unittitle>
+							<unitdate normal="157708/158104" era="ce" calendar="gregorian">1577 augustus - 1581 april</unitdate>
+						</did>
+						<c04 level="file">
+							<did>
+								<unitid>226</unitid>
+								<unittitle>Brieven uit Lingen, <unitdate normal="15780114" era="ce" calendar="gregorian">1578 januari 14  </unitdate>
+								</unittitle>
+								<unittitle>Overijssel,<unitdate normal="15780123" era="ce" calendar="gregorian">1578 januari 23</unitdate>
+								</unittitle>
+								<unittitle>Nijmeegse kwartier,<unitdate normal="15790917" era="ce" calendar="gregorian">1579 september 17</unitdate>
+								</unittitle>
+								<physdesc>3 stukken</physdesc>
+							</did>
+						</c04>
+						<c04 level="otherlevel" otherlevel="filegrp">
+							<did>
+								<unitid>227-228</unitid>
+								<unittitle>Stukken voornamelijk betreffende Duitse krijgslieden in statendienst, garnizoenen en benoemingen</unittitle>
+							</did>
+							<c05 level="file">
+								<did>
+									<unitid>227A</unitid>
+									<unittitle>
+										<unitdate normal="15780322/15781224" era="ce" calendar="gregorian">1578 maart 22 - 1578 december 24</unitdate>
+									</unittitle>
+									<physdesc>1 omslag</physdesc>
+								</did>
+							</c05>
+							<c05 level="file">
+								<did>
+									<unitid>227B</unitid>
+									<unittitle>
+										<unitdate normal="15790112/15791027" era="ce" calendar="gregorian">1579 januari 12 - 1579 oktober 27</unitdate>
+									</unittitle>
+									<physdesc>1 omslag</physdesc>
+								</did>
+							</c05>
+							<c05 level="file">
+								<did>
+									<unitid>228A</unitid>
+									<unittitle>
+										<unitdate normal="15800107/15801230" era="ce" calendar="gregorian">1580 januari 7 - 1580 december 30</unitdate>
+									</unittitle>
+									<physdesc>1 omslag</physdesc>
+								</did>
+							</c05>
+							<c05 level="file">
+								<did>
+									<unitid>228B</unitid>
+									<unittitle>
+										<unitdate normal="15810605" era="ce" calendar="gregorian">1581 juni 5</unitdate>
+									</unittitle>
+									<physdesc>1 stuk</physdesc>
+								</did>
+							</c05>
+						</c04>
+						<c04 level="otherlevel" otherlevel="filegrp">
+							<did>
+								<unitid>229-239</unitid>
+								<unittitle>Ingekomen brieven van:</unittitle>
+							</did>
+							<c05 level="file">
+								<did>
+									<unitid>229</unitid>
+									<unittitle>Adolf, hertog van Sleeswijk-Holstein,<unitdate normal="15790313" era="ce" calendar="gregorian">1579 maart 13</unitdate>
+									</unittitle>
+									<unittitle>Frederik, koning van Denemarken,<unitdate normal="157909" era="ce" calendar="gregorian">1579 september ?</unitdate>
+									</unittitle>
+									<physdesc>2 stukken</physdesc>
+								</did>
+							</c05>
+							<c05 level="file">
+								<did>
+									<unitid>230</unitid>
+									<unittitle>Krijgsvorsten, gelegerd in Brabant, geschreven te Maagdenburg <unitdate normal="15800301" era="ce" calendar="gregorian">1580 maart 1</unitdate>; met bijlage</unittitle>
+									<unittitle>Idem, geadresseerd aan aartshertog Matthias, <unitdate normal="15800301" era="ce" calendar="gregorian">1580 maart 1</unitdate>
+									</unittitle>
+									<physdesc>3 stukken</physdesc>
+								</did>
+							</c05>
+							<c05 level="file">
+								<did>
+									<unitid>231</unitid>
+									<unittitle>Johan Casismir, pfaltsgraaf en hertog in Beieren. <unitdate normal="15780727/15810923" era="ce" calendar="gregorian">1578 juli 27 - 1581 september 23</unitdate>
+									</unittitle>
+									<physdesc>1 omslag</physdesc>
+								</did>
+								<scopecontent>
+									<p> de omslag bevat stukken van 1578 juli 27 - 1578 december 23; de latere stukken ontbreken</p>
+								</scopecontent>
+							</c05>
+							<c05 level="file">
+								<did>
+									<unitid>232</unitid>
+									<unittitle>De stad Lubeck, <unitdate normal="158009" era="ce" calendar="gregorian">1580 september ?</unitdate>
+									</unittitle>
+									<physdesc>1 stuk</physdesc>
+								</did>
+							</c05>
+							<c05 level="file">
+								<did>
+									<unitid>233</unitid>
+									<unittitle>Willem, hertog van Gulik, Kleef en Berg. <unitdate normal="15800117/15810103" era="ce" calendar="gregorian">1578 januari 17 - 1581 januari 3</unitdate>
+									</unittitle>
+									<physdesc>6 stukken</physdesc>
+								</did>
+							</c05>
+							<c05 level="file">
+								<did>
+									<unitid>234</unitid>
+									<unittitle>De stad Keulen, de Westfaalse Kreits, en Ernst, elect van Luik. <unitdate normal="157810/15810405" era="ce" calendar="gregorian">1578 oktober ? - 1581 april 5</unitdate>
+									</unittitle>
+									<physdesc>5 stukken</physdesc>
+								</did>
+							</c05>
+							<c05 level="file">
+								<did>
+									<unitid>235</unitid>
+									<unittitle>De keizer, en de keizerlijke gedelegeerden tot de vredehandel in Keulen. <unitdate normal="15790616/15800729" era="ce" calendar="gregorian">1579 juni 16 - 1580 juli 29</unitdate>
+									</unittitle>
+									<physdesc>5 stukken</physdesc>
+								</did>
+							</c05>
+							<c05 level="file">
+								<did>
+									<unitid>236</unitid>
+									<unittitle>Magnus, hertog van Saksen, geschreven in Bremen, <unitdate normal="157811" era="ce" calendar="gregorian">1578 november?</unitdate>
+									</unittitle>
+									<unittitle>de vier keurvorsten aan de Rijn. <unitdate normal="15791008" era="ce" calendar="gregorian">1579 oktober 8</unitdate>
+									</unittitle>
+									<physdesc>2 stukken</physdesc>
+								</did>
+							</c05>
+							<c05 level="file">
+								<did>
+									<unitid>237</unitid>
+									<unittitle>Willem, hertog van Beverwijk en Luneburg, <unitdate normal="15800211" era="ce" calendar="gregorian">1580 februari 11</unitdate>
+									</unittitle>
+									<unittitle>de stad brunswijk, <unitdate normal="158009" era="ce" calendar="gregorian">1580 september?</unitdate>
+									</unittitle>
+									<physdesc>2 stukken</physdesc>
+								</did>
+							</c05>
+							<c05 level="file">
+								<did>
+									<unitid>238</unitid>
+									<unittitle>De steden Neurenberg en Frankfurt, <unitdate normal="158007/158009" era="ce" calendar="gregorian">1580 juli? - 1580 sepetember ?</unitdate>
+									</unittitle>
+									<physdesc>2 charters en 2 stukken</physdesc>
+								</did>
+							</c05>
+							<c05 level="file">
+								<did>
+									<unitid>239</unitid>
+									<unittitle>De stad Danzig, <unitdate normal="15771229" era="ce" calendar="gregorian">1577 december 29</unitdate>
+									</unittitle>
+									<unittitle>Stefan, koning van Polen, <unitdate normal="15800628" era="ce" calendar="gregorian">1580 juni 28</unitdate>
+									</unittitle>
+									<physdesc>2 stukken</physdesc>
+								</did>
+							</c05>
+						</c04>
+					</c03>
+					<c03 level="otherlevel" otherlevel="filegrp">
+						<did>
+							<unitid>240-241</unitid>
+							<unittitle>Antwoorden door de keizer, de keurvorst van Saksen en de keurvorst van Brandenburg meegegeven aan Adolf, graaf van Nieuwenaar en Meurs, als afgezant van aartshertog Mattias aan de Staten Generaal</unittitle>
+							<unitdate normal="157805/157806" era="ce" calendar="gregorian">1578 mei - juni</unitdate>
+						</did>
+						<c04 level="file">
+							<did>
+								<unitid>240</unitid>
+								<unittitle>Antwoord van de keizer, <unitdate normal="15780621" era="ce" calendar="gregorian">1578 juni 21</unitdate>
+								</unittitle>
+								<physdesc/>
+							</did>
+							<scopecontent>
+								<p> gemerkt " S" </p>
+							</scopecontent>
+						</c04>
+						<c04 level="file">
+							<did>
+								<unitid>241</unitid>
+								<unittitle>Antwoorden van de keurvorsten. <unitdate normal="15780508/15780514" era="ce" calendar="gregorian">1578 mei 8 en 1578 mei 14</unitdate>
+								</unittitle>
+								<physdesc>2 stukken</physdesc>
+							</did>
+							<scopecontent>
+								<p>gemerkt 'T' en 'V'</p>
+							</scopecontent>
+						</c04>
+					</c03>
+				</c02>
+				<c02 level="series">
+					<did>
+						<unitid type="series_code">B.2</unitid>
+						<unittitle>stukken 1582-1588</unittitle>
+					</did>
+					<c03 level="otherlevel" otherlevel="filegrp">
+						<did>
+							<unitid>243-245</unitid>
+							<unittitle>Ingekomen Hoogduitse stukken</unittitle>
+							<unitdate normal="158203/158304" era="ce" calendar="gregorian">1582 maart 1583 april</unitdate>
+						</did>
+						<c04 level="file">
+							<did>
+								<unitid>243</unitid>
+								<unittitle>Memorie van klachten van de Westfaalse Kreits over het Staatse krijgsvolk in het land van Kleef; met bijlagen. <unitdate normal="158203" era="ce" calendar="gregorian">1582 maart</unitdate>
+								</unittitle>
+								<physdesc>1 bundel</physdesc>
+							</did>
+						</c04>
+						<c04 level="file">
+							<did>
+								<unitid>244</unitid>
+								<unittitle>Brief van de bisschop van Luik.<unitdate normal="15820625" era="ce" calendar="gregorian">1582 juni 25</unitdate>
+								</unittitle>
+								<physdesc>1 stuk</physdesc>
+							</did>
+						</c04>
+						<c04 level="file">
+							<did>
+								<unitid>245</unitid>
+								<unittitle>Brieven van Willem, hertog van Gulik, Kleef en Berg. <unitdate normal="15830301/15830418" era="ce" calendar="gregorian">1583 maart 1; 1583 april 18</unitdate>, met bijlagen</unittitle>
+								<physdesc>1 charter en 2 stukken</physdesc>
+							</did>
+						</c04>
+					</c03>
+					<c03 level="otherlevel" otherlevel="filegrp">
+						<did>
+							<unitid>246-251</unitid>
+							<unittitle>Ingekomen Hoogduitse stukken en enkele minuten van uitgaande stukken</unittitle>
+							<unitdate normal="158307/158709" era="ce" calendar="gregorian">1583 juli - 1587 september</unitdate>
+						</did>
+						<c04 level="otherlevel" otherlevel="filegrp">
+							<did>
+								<unitid>246-247</unitid>
+								<unittitle>Stukken voornamelijk betreffende Duitse krijgslieden in statendienst</unittitle>
+							</did>
+							<c05 level="file">
+								<did>
+									<unitid>246</unitid>
+									<unittitle>
+										<unitdate normal="15831023/15831224" era="ce" calendar="gregorian">1583 oktober 23 - 1583 december 24</unitdate>
+									</unittitle>
+									<physdesc>1 omslag</physdesc>
+								</did>
+								<scopecontent>
+									<p> Hierbij bevindt zich een minuut van een brief van secretaris Johan van Langen te Antwerpen aan de prins van Oranje, 24 augustus 1583</p>
+								</scopecontent>
+							</c05>
+							<c05 level="file">
+								<did>
+									<unitid>247</unitid>
+									<unittitle>
+										<unitdate normal="158401/158412" era="ce" calendar="gregorian">1584 januari - april; 1584 augustus - december</unitdate>
+									</unittitle>
+									<physdesc>1 omslag</physdesc>
+								</did>
+							</c05>
+						</c04>
+						<c04 level="otherlevel" otherlevel="filegrp">
+							<did>
+								<unitid>248-251</unitid>
+								<unittitle>Ingekomen brieven van:</unittitle>
+							</did>
+							<c05 level="file">
+								<did>
+									<unitid>248</unitid>
+									<unittitle>Johan Casimir, pfaltsgraaf aan de Rijn. <unitdate normal="15840502/15870912" era="ce" calendar="gregorian">1584 mei 2 en 1587 september 12</unitdate>
+									</unittitle>
+									<physdesc>2 stukken</physdesc>
+								</did>
+							</c05>
+							<c05 level="file">
+								<did>
+									<unitid>249</unitid>
+									<unittitle>Willem, hertog van Gulik, Kleef en Berg; de Raad van de hertog van Gulik; de steden Rees, Xanten en Wesel. <unitdate normal="15831125/15831229" era="ce" calendar="gregorian">1583 november 25 - 1583 december 29</unitdate>
+									</unittitle>
+									<physdesc>1 omslag</physdesc>
+								</did>
+							</c05>
+							<c05 level="file">
+								<did>
+									<unitid>250</unitid>
+									<unittitle>Gebhardt, elect van Keulen, Ernst, elect van Keulen, bisschop van Luik en, de stad Keulen. <unitdate normal="15830825/15841229" era="ce" calendar="gregorian">1583 augustus 25 - 1584 december 29</unitdate>
+									</unittitle>
+									<physdesc>1 omslag</physdesc>
+								</did>
+							</c05>
+							<c05 level="file">
+								<did>
+									<unitid>251</unitid>
+									<unittitle>Aken, <unitdate normal="15841008" era="ce" calendar="gregorian">8 oktober 1584</unitdate>
+									</unittitle>
+								</did>
+								<odd>
+									<p> dir stuk ontbreekt</p>
+								</odd>
+							</c05>
+						</c04>
+					</c03>
+					<c03 level="otherlevel" otherlevel="filegrp">
+						<did>
+							<unitid>252-253</unitid>
+							<unittitle>Stukken betreffende Oostfriese zaken</unittitle>
+							<unitdate normal="158405/158602" era="ce" calendar="gregorian">1584 mei - 1586 februari</unitdate>
+						</did>
+						<c04 level="file">
+							<did>
+								<unitid>252</unitid>
+								<unittitle>
+									<unitdate normal="158405/158511" era="ce" calendar="gregorian">1584 mei 1585- november</unitdate>
+								</unittitle>
+								<physdesc>1 omslag</physdesc>
+							</did>
+						</c04>
+						<c04 level="file">
+							<did>
+								<unitid>253</unitid>
+								<unittitle>
+									<unitdate normal="158512/158602" era="ce" calendar="gregorian">1585 december - 1586 februari</unitdate>
+								</unittitle>
+								<physdesc>1 omslag</physdesc>
+							</did>
+						</c04>
+					</c03>
+				</c02>
+			</c01>
+			<c01 level="subfonds">
+				<did>
+					<unitid type="series_code">C</unitid>
+					<unittitle>Archief van de audience</unittitle>
+				</did>
+				<c02 level="file">
+					<did>
+						<unitid>254</unitid>
+						<unittitle>Stukken van de audience</unittitle>
+					</did>
+					<c03 level="otherlevel" otherlevel="subfile">
+						<did>
+							<unitid>254A</unitid>
+							<unittitle>Minuut-akte van acceptatie der Raden van State en van die der secretarissen van de Raad, Doctor Jan van Asseliers, audiencier en Nicasius de Sille. <unitdate normal="15810619" era="ce" calendar="gregorian">1581 juni 19</unitdate>, met afschrift der minuut-akte</unittitle>
+							<physdesc>2 stukken</physdesc>
+						</did>
+					</c03>
+					<c03 level="otherlevel" otherlevel="subfile">
+						<did>
+							<unitid>254B</unitid>
+							<unittitle>Akte van acceptatie der resignatie. <unitdate normal="15810619" era="ce" calendar="gregorian">1581 juni 19</unitdate>, met afschrift der akte en extract-resolutie der Staten Generaal van 19 juni 1581 betreffende het verzoek om de akte van acceptatie</unittitle>
+							<physdesc>3 stukken</physdesc>
+						</did>
+					</c03>
+					<c03 level="otherlevel" otherlevel="subfile">
+						<did>
+							<unitid>254C</unitid>
+							<unittitle>Minuut-octrooi van de Staten Generaal voor de stad Brussel om geestelijke goederen te vervreemden. <unitdate normal="15810621" era="ce" calendar="gregorian">1581 juni 21</unitdate> ("niet ge-ëxpedieert")</unittitle>
+							<physdesc>1 stuk</physdesc>
+						</did>
+					</c03>
+					<c03 level="otherlevel" otherlevel="subfile">
+						<did>
+							<unitid>254D</unitid>
+							<unittitle>Minuut-plakkaat van de Staten Generaal betreffende het arresteren der goederen van personen, met de vijand of in neutrale plaatsen zijnde.  <unitdate normal="15810628" era="ce" calendar="gregorian">1581 juni 28</unitdate> ("niet geëxpedieert") </unittitle>
+							<physdesc>1 stuk</physdesc>
+						</did>
+					</c03>
+					<c03 level="otherlevel" otherlevel="subfile">
+						<did>
+							<unitid>254E</unitid>
+							<unittitle>Minuut-commissie van de Staten Generaal tot het vernieuwen van de Wet in steden van Vlaanderen. <unitdate normal="15810603" era="ce" calendar="gregorian">1581 juni 3</unitdate>
+							</unittitle>
+							<physdesc>4 stukken</physdesc>
+						</did>
+					</c03>
+					<c03 level="otherlevel" otherlevel="subfile">
+						<did>
+							<unitid>254F</unitid>
+							<unittitle>Minuut-commissiën van de Staten Generaal voor Raden, kanselier en secretarissen ter kanselarij van Gelderland. <unitdate normal="15810706" era="ce" calendar="gregorian">1581 juli 6</unitdate>
+							</unittitle>
+							<physdesc>3 stukken</physdesc>
+						</did>
+					</c03>
+					<c03 level="otherlevel" otherlevel="subfile">
+						<did>
+							<unitid>254G</unitid>
+							<unittitle>Minuut-plakkaat van de Staten Generaal betreffende de vervallen-verklaring van de koning van Spanje van de overheid over Nederland. <unitdate normal="15810626" era="ce" calendar="gregorian">1581 juni 26</unitdate>
+							</unittitle>
+							<physdesc>1 omslag</physdesc>
+						</did>
+					</c03>
+					<c03 level="otherlevel" otherlevel="subfile">
+						<did>
+							<unitid>254H</unitid>
+							<unittitle>Minuut-formulier van de afzwering van de koning van Spanje <unitdate normal="15810729" era="ce" calendar="gregorian">1581 juli 29</unitdate>, met copie-eedsformulier, vastgesteld door de Staten van Holland.</unittitle>
+							<physdesc>3 stukken</physdesc>
+						</did>
+					</c03>
+					<c03 level="otherlevel" otherlevel="subfile">
+						<did>
+							<unitid>254I</unitid>
+							<unittitle>Minuut-commissie voor de leden an de landraad "in quartieren aan dese sijde van de Maze" (= Oostzijde van de Maze), benevens de lijst der commissiën met clausule van provisie en der absolute commissiën. <unitdate normal="15810801" era="ce" calendar="gregorian">1581 augustus 1</unitdate>
+							</unittitle>
+							<physdesc>2 stukken</physdesc>
+						</did>
+					</c03>
+					<c03 level="otherlevel" otherlevel="subfile">
+						<did>
+							<unitid>254J</unitid>
+							<unittitle>Minuut-brief der Staten Generaal aan Gelderland en Overijssel over de benoeming van de leden van de landraad van Overmaze. <unitdate normal="15810801" era="ce" calendar="gregorian">1581 augustus 1</unitdate>
+							</unittitle>
+							<physdesc>1 stuk</physdesc>
+						</did>
+					</c03>
+					<c03 level="otherlevel" otherlevel="subfile">
+						<did>
+							<unitid>254K</unitid>
+							<unittitle>Minuut-brieven van de gouverneurs en gewestelijke regeringscolleges betreffende de vervallen-verklaring van de koning van Spanje en betreffende de goederen der personen, met de vijand of in neutrale landen zijnde. <unitdate normal="15810802" era="ce" calendar="gregorian">1581 augustus 2</unitdate>
+							</unittitle>
+							<physdesc>2 stukken</physdesc>
+						</did>
+						<odd>
+							<p> deze stukken behoorden tot 1 lias</p>
+						</odd>
+					</c03>
+				</c02>
+				<c02 level="file">
+					<did>
+						<unitid>255</unitid>
+						<unittitle>Minuut-commissie voor Gerard van Poelgeest als super-intendant en commis-generaal der vivres in de Landen van Overmaze</unittitle>
+						<unitdate normal="158304" era="ce" calendar="gregorian">(1583 april ?)</unitdate>
+						<physdesc>1 stuk</physdesc>
+					</did>
+				</c02>
+				<c02 level="file">
+					<did>
+						<unitid>256</unitid>
+						<unittitle>Minuut-akte van surséance en attermitatie voor de stad Mechelen</unittitle>
+						<unitdate normal="15830503" era="ce" calendar="gregorian">3 mei 1583</unitdate>
+						<unittitle>Minuten, opgesteld ter audience te Antwerpen in opdracht van het college van financiën en domaienen, en van de Secrete Raad</unittitle>
+						<unitdate normal="158303/158305" era="ce" calendar="gregorian">1583 maart - mei</unitdate>
+						<unittitle>Minuut-commissie, uitgegeven in opdracht van de hertog van Anjou, voor Jan van der Haghen als "souldoyer" van het kasteel van Vilvoorde, ; met retro-actum van 19 november 1558</unittitle>
+						<unitdate normal="15830527" era="ce" calendar="gregorian">27 mei 1583</unitdate>
+						<unittitle>Minuut-commissie, uitgegeven in opdracht van de hertog van Anjou, voor Jerome Boote als ordinair-secretaris bij de Raad van Barbant</unittitle>
+						<unitdate normal="15830627" era="ce" calendar="gregorian">27 juni 1583</unitdate>
+						<physdesc>1 omslag</physdesc>
+					</did>
+					<odd>
+						<p> deze minuten onbreken</p>
+					</odd>
+				</c02>
+				<c02 level="file">
+					<did>
+						<unitid>257A</unitid>
+						<unittitle>Copieën van brieven van de hertog van Anjou aan de Staten Generaal van 24 september 1583, 9 oktober en 22 oktober in Nederlandse vertaling; minuut-brief aan de magistraat van Brussel</unittitle>
+						<unitdate normal="15831125" era="ce" calendar="gregorian">1583 november 25</unitdate>
+						<physdesc>2 stukken</physdesc>
+					</did>
+				</c02>
+				<c02 level="file">
+					<did>
+						<unitid>257B</unitid>
+						<unittitle>Minuten van requesten aan de hertog van Anjou, door Asseliers opgesteld voor Raphael Cromwell, luitenant-kolonel bij het regiment van wijlen Thomas Cetton</unittitle>
+						<unitdate normal="158305" era="ce" calendar="gregorian">(1583 mei)</unitdate>
+						<unittitle>voor Willem Renton, Schots kapitein en luitenant van kolonel Stuart</unittitle>
+						<unitdate normal="158305" era="ce" calendar="gregorian">(1583 mei)</unitdate>
+						<unittitle>Minuut-request van Jehan dÁsseliers aan de hertog van Anjou</unittitle>
+						<unitdate normal="158306" era="ce" calendar="gregorian">(1583 juni)</unitdate>
+						<unittitle>Minuut- en copie-commissiebrieven en brieven van de hertog van Anjou te Duinkerken</unittitle>
+						<unitdate normal="158306" era="ce" calendar="gregorian">(1583 juni)</unitdate>
+						<physdesc>1 omslag</physdesc>
+					</did>
+					<scopecontent>
+						<p> Hierbij bevindt zich een brief van Nicolaes Bruyninck aan Asseliers. 1583 december 9</p>
+					</scopecontent>
+				</c02>
+				<c02 level="file">
+					<did>
+						<unitid>258</unitid>
+						<unittitle>Minuten en brieven , commissies en plakkaten van de Staten Generaal <unitdate normal="15840518/15840625" era="ce" calendar="gregorian">1584 mei 18 - 1584 juni 25</unitdate>
+						</unittitle>
+						<physdesc>1 omslag</physdesc>
+					</did>
+					<scopecontent>
+						<p> Hierbij bevindt zich: minuut van een request van Lancelot Boote, klerk ter audience, aan de Staten Generaal, 1584</p>
+					</scopecontent>
+					<processinfo>
+						<p> Bij de inventarisatie van het archief van de Staten Generaal door Japikse zijn de stukken uit lias lopende 1582'' en 1584 samengevoegd en in dit archief geplaatst onder nr. 258, nr. 259 is daarbij vervallen</p>
+					</processinfo>
+				</c02>
+				<c02 level="file">
+					<did>
+						<unitid>260</unitid>
+						<unittitle>Ingekomen brieven en minuten van uitgaande brieven van de heer de la Mouillerie en Asseliers, gedeputeerden der Staten Generaal naar Frankrijk</unittitle>
+						<unitdate normal="158401/158406" era="ce" calendar="gregorian">1584 januari - 1584 juni</unitdate>
+						<physdesc>1 omslag</physdesc>
+					</did>
+					<processinfo>
+						<p> bij inventarisatie van het archief door Japikse zijn de stukken uit lias lopende 1582'' en 1584 samengevoegd en in dit archief geplaatst onder nr. 260. Nr. 261 is daarbij vervallen.</p>
+					</processinfo>
+				</c02>
+			</c01>
+		</dsc>
+	</archdesc>
+</ead>
