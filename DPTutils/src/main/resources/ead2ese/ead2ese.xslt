@@ -835,7 +835,10 @@ http://purl.org/dc/terms/ http://www.dublincore.org/schemas/xmls/qdc/dcterms.xsd
     </xsl:template>
     <xsl:template match='unitid'>
         <xsl:if test='@type="call number"'>
-            <xsl:value-of select="fn:replace(normalize-space(.), '[\n\t\r]', '')"/>
+            <xsl:variable name="normalized_unitid">
+                <xsl:value-of select="fn:replace(normalize-space(.), '[\n\t\r]', '')"/>
+            </xsl:variable>
+            <xsl:value-of select="fn:replace($normalized_unitid, ' ', '_')"/>
         </xsl:if>		
     </xsl:template>
     
@@ -1081,7 +1084,7 @@ http://purl.org/dc/terms/ http://www.dublincore.org/schemas/xmls/qdc/dcterms.xsd
                     <xsl:with-param name="custodhists" select="/ead/archdesc/custodhist" />
                 </xsl:call-template>
             </xsl:if>
-            <dc:type>TEXT</dc:type>
+            <dc:subject>Finding aid</dc:subject>
             <xsl:choose>
                 <xsl:when test='/ead/archdesc/did/langmaterial'>
                     <xsl:call-template name="language">
