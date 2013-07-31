@@ -42,11 +42,11 @@
         <!-- Provider aggregation -->
         <ore:Aggregation>
             <xsl:attribute name="rdf:about">
-                <xsl:value-of select="concat('aggregation_', dc:identifier[1])"/>
+                <xsl:value-of select="concat('aggregation_', fn:replace(dc:identifier[1], ' ', '_'))"/>
             </xsl:attribute>
             <edm:aggregatedCHO>
                 <xsl:attribute name="rdf:resource">
-                    <xsl:value-of select="concat('providedCHO_', dc:identifier[1])"/>
+                    <xsl:value-of select="concat('providedCHO_', fn:replace(dc:identifier[1], ' ', '_'))"/>
                 </xsl:attribute>
             </edm:aggregatedCHO>
             <xsl:for-each select='europeana:dataProvider'>
@@ -117,7 +117,7 @@
         <!-- Provided Cultural Heritage Object -->
         <edm:ProvidedCHO>
             <xsl:attribute name="rdf:about">
-                <xsl:value-of select="concat('providedCHO_', dc:identifier[1])"/>
+                <xsl:value-of select="concat('providedCHO_', fn:replace(dc:identifier[1], ' ', '_'))"/>
             </xsl:attribute>
             <dc:identifier>
                 <xsl:choose>
@@ -133,24 +133,23 @@
             <xsl:call-template name="mapChoProperties"/>
             <xsl:if test='position() > 1'>
                 <dcterms:isPartOf>
-                    <xsl:value-of select="concat('providedCHO_', $eadid)"/>
+                    <xsl:attribute name="rdf:resource">
+                        <xsl:value-of select="concat('providedCHO_', $eadid)"/>
+                    </xsl:attribute>
                 </dcterms:isPartOf>
             </xsl:if>
             <xsl:if test='preceding-sibling::record[1]/dcterms:alternative eq dcterms:alternative'>
                 <edm:isNextInSequence>
                     <xsl:attribute name="rdf:resource">
-                        <xsl:value-of select="concat('providedCHO_', preceding-sibling::record[1]/dc:identifier[1])" />
+                        <xsl:value-of select="concat('providedCHO_', preceding-sibling::record[1]/fn:replace(dc:identifier[1], ' ', '_'))" />
                     </xsl:attribute>
                 </edm:isNextInSequence>
             </xsl:if>
             <dc:subject>
                 <xsl:if test='position() > 1'>
                     <xsl:attribute name="rdf:resource">
-                        <xsl:value-of select="concat('context_', dc:identifier[1])"/>
+                        <xsl:value-of select="concat('context_', fn:replace(dc:identifier[1], ' ', '_'))"/>
                     </xsl:attribute>
-                </xsl:if>
-                <xsl:if test='position() = 1'>
-                    <xsl:text>Finding aid</xsl:text>
                 </xsl:if>
             </dc:subject>
 
@@ -213,7 +212,7 @@
         <xsl:if test='dcterms:alternative'>
             <skos:Concept>
                 <xsl:attribute name="rdf:about">
-                    <xsl:value-of select="concat('context_', dc:identifier[1])"/>
+                    <xsl:value-of select="concat('context_', fn:replace(dc:identifier[1], ' ', '_'))"/>
                 </xsl:attribute>
                 <xsl:for-each select="dcterms:alternative">
                     <skos:prefLabel>
