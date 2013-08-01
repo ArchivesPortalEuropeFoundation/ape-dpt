@@ -1,6 +1,8 @@
 package eu.apenet.dpt.standalone.gui.hgcreation;
 
 import eu.apenet.dpt.standalone.gui.*;
+import eu.apenet.dpt.standalone.gui.adhoc.QueryComponent;
+import eu.apenet.dpt.standalone.gui.db.DBUtil;
 import eu.apenet.dpt.standalone.gui.db.RetrieveFromDb;
 import org.apache.log4j.Logger;
 
@@ -17,6 +19,7 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.io.*;
 import java.util.*;
+import java.util.List;
 
 /**
  * User: Yoann Moranville
@@ -56,7 +59,7 @@ public class CreateHGListener implements ActionListener {
     }
 
     public void actionPerformed(ActionEvent e){
-        createHGDialog = new JDialog(dataPreparationToolGUI, labels.getString("hgCreationFrame"), true);
+        createHGDialog = new JDialog(dataPreparationToolGUI, labels.getString("hgCreationFrame"), Dialog.ModalityType.DOCUMENT_MODAL);
 
         createHGDialog.setPreferredSize(new Dimension(parent.getWidth(), parent.getHeight())); //getContentPane()???
 
@@ -338,7 +341,7 @@ public class CreateHGListener implements ActionListener {
         public void doActionEditLevel(final DefaultMutableTreeNode cLevelTreeObject){
             final CLevelTreeObject obj = (CLevelTreeObject)cLevelTreeObject.getUserObject();
 
-            final JDialog editLevelFrame = new JDialog(createHGDialog, labels.getString("edit"), false);
+            final JDialog editLevelFrame = new JDialog(createHGDialog, labels.getString("edit"), Dialog.ModalityType.MODELESS);
             editLevelFrame.setAlwaysOnTop(true);
             editLevelFrame.setPreferredSize(new Dimension(parent.getWidth() /2, parent.getHeight() /2)); //getContentPane
             editLevelFrame.setLocation((parent.getWidth() - parent.getWidth() /2)/2, (parent.getHeight() - parent.getHeight() /2)/2);

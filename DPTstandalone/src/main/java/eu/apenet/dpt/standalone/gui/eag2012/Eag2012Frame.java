@@ -36,7 +36,6 @@ public class Eag2012Frame extends JFrame {
     private ResourceBundle labels;
     private static boolean used;
     private static Date timeMaintenance;
-    private static String personResponsible;
     private String countrycode;
     private String mainagencycode;
     public static boolean firstTimeInTab = true;
@@ -89,7 +88,6 @@ public class Eag2012Frame extends JFrame {
 
     public void createFrame(InputStream eagStream, boolean isNew) {
         timeMaintenance = null;
-        personResponsible = null;
         inUse(true);
         addWindowListener(new WindowAdapter() {
             public void windowClosing(WindowEvent e) {
@@ -151,13 +149,5 @@ public class Eag2012Frame extends JFrame {
 
     public static void setTimeMaintenance(Date timeMaintenance) {
         Eag2012Frame.timeMaintenance = timeMaintenance;
-    }
-
-    public static String getPersonResponsible() {
-        return personResponsible;
-    }
-
-    public static void setPersonResponsible(String personResponsible) {
-        Eag2012Frame.personResponsible = personResponsible;
     }
 }

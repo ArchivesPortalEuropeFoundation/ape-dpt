@@ -1,6 +1,5 @@
 package eu.apenet.dpt.utils.service.stax;
 
-import org.apache.commons.lang.StringUtils;
 import org.codehaus.stax2.XMLInputFactory2;
 import org.codehaus.stax2.XMLStreamReader2;
 
@@ -68,7 +67,7 @@ public class StaxTransformationTool implements Runnable {
                         break;
                     case XMLEvent.CHARACTERS:
                     case XMLEvent.CDATA:
-                        if(isInsideNodeEadid && !StringUtils.isWhitespace(input.getText()))
+                        if(isInsideNodeEadid)
                             eadidExists = true;
                         if(isInsideNodeUnitid)
                             unitid = input.getText();

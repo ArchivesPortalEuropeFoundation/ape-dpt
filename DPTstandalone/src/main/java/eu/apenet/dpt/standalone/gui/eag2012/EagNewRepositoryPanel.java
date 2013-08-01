@@ -61,13 +61,6 @@ public class EagNewRepositoryPanel extends EagPanels {
             tabbedPane.add(labels.getString("eag2012.descriptionTab"), null);
             tabbedPane.add(labels.getString("eag2012.controlTab"), null);
             tabbedPane.add(labels.getString("eag2012.relationsTab"), null);
-            tabbedPane.setEnabledAt(0, true);
-            tabbedPane.setEnabledAt(1, false);
-            tabbedPane.setEnabledAt(2, false);
-            tabbedPane.setEnabledAt(3, false);
-            tabbedPane.setEnabledAt(4, false);
-            tabbedPane.setEnabledAt(5, false);
-            tabbedPane.setEnabledAt(6, false);
         } else {
             scrollPane = new JScrollPane(new EagContactPanel(eag, tabbedPane, mainTabbedPane, eag2012Frame, model, labels, repositoryNb).buildEditorPanel(null));
             scrollPane.getVerticalScrollBar().setUnitIncrement(20);
@@ -78,11 +71,9 @@ public class EagNewRepositoryPanel extends EagPanels {
             tabbedPane.add(labels.getString("eag2012.descriptionTab"), null);
             tabbedPane.add(labels.getString("eag2012.controlTab"), null);
             tabbedPane.add(labels.getString("eag2012.relationsTab"), null);
+
             tabbedPane.setEnabledAt(0, false);
             tabbedPane.setEnabledAt(1, false);
-            tabbedPane.setEnabledAt(2, true);
-            tabbedPane.setEnabledAt(3, false);
-            tabbedPane.setEnabledAt(4, false);
             tabbedPane.setEnabledAt(5, false);
             tabbedPane.setEnabledAt(6, false);
             Eag2012Frame.firstTimeInTab = true;

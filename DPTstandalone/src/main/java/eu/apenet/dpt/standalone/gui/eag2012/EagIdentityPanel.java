@@ -222,11 +222,11 @@ public class EagIdentityPanel extends EagPanels {
 
         JButton previousTabBtn = new ButtonEag(labels.getString("eag2012.previousTabButton"));
         builder.add(previousTabBtn, cc.xy (3, rowNb));
-        previousTabBtn.addActionListener(new ChangeTabBtnAction(eag, tabbedPane, model, false));
+        previousTabBtn.addActionListener(new ChangeTabBtnAction(false));
 
         JButton nextTabBtn = new ButtonEag(labels.getString("eag2012.nextTabButton"));
         builder.add(nextTabBtn, cc.xy (5, rowNb));
-        nextTabBtn.addActionListener(new ChangeTabBtnAction(eag, tabbedPane, model, true));
+        nextTabBtn.addActionListener(new ChangeTabBtnAction(true));
 
         setNextRow();
         JButton saveBtn = new ButtonEag(labels.getString("eag2012.saveButton"));
@@ -240,10 +240,7 @@ public class EagIdentityPanel extends EagPanels {
         nextInstitutionTabBtn.addActionListener(new NextInstitutionTabBtnAction(eag, tabbedPane, model));
         builder.add(nextInstitutionTabBtn, cc.xy(5, rowNb));
 
-//        if(tabbedPane.getChangeListeners().length < 2) {
-//            LOG.info("Add listener");
-//            tabbedPane.addChangeListener(new TabChangeListener(eag, tabbedPane, model));
-//        }
+        tabbedPane.addChangeListener(new TabChangeListener(eag, tabbedPane, model));
 
         return builder.getPanel();
     }
@@ -420,30 +417,18 @@ public class EagIdentityPanel extends EagPanels {
         }
     }
 
-    public class ChangeTabBtnAction extends UpdateEagObject {
+    public class ChangeTabBtnAction implements ActionListener {
         private boolean isNextTab;
-        ChangeTabBtnAction(Eag eag, JTabbedPane tabbedPane, ProfileListModel model, boolean isNextTab) {
-            super(eag, tabbedPane, model);
+
+        ChangeTabBtnAction(boolean isNextTab) {
             this.isNextTab = isNextTab;
         }
 
-        @Override
         public void actionPerformed(ActionEvent actionEvent) {
-            try {
-                super.updateEagObject(false);
-
-                if(isNextTab) {
-                    reloadTabbedPanel(new EagContactPanel(eag, tabbedPane, mainTabbedPane, eag2012Frame, model, labels, repositoryNb).buildEditorPanel(errors), 2);
-                    tabbedPane.setEnabledAt(2, true);
-                    tabbedPane.setEnabledAt(1, false);
-                } else {
-                    reloadTabbedPanel(new EagInstitutionPanel(eag, tabbedPane, mainTabbedPane, eag2012Frame, model, false, labels, repositoryNb).buildEditorPanel(errors), 0);
-                    tabbedPane.setEnabledAt(0, true);
-                    tabbedPane.setEnabledAt(1, false);
-                }
-            } catch (Eag2012FormException e) {
-                reloadTabbedPanel(new EagIdentityPanel(eag, tabbedPane, mainTabbedPane, eag2012Frame, model, labels, repositoryNb).buildEditorPanel(errors), 1);
-            }
+            if(isNextTab)
+                tabbedPane.setSelectedIndex(tabbedPane.getSelectedIndex() + 1);
+            else
+                tabbedPane.setSelectedIndex(tabbedPane.getSelectedIndex() - 1);
         }
     }
 
@@ -583,34 +568,34 @@ public class EagIdentityPanel extends EagPanels {
         }
     }
 
-//    public class TabChangeListener extends UpdateEagObject implements ChangeListener {
-//        private boolean click;
-//        public TabChangeListener(Eag eag, JTabbedPane tabbedPane, ProfileListModel model) {
-//            super(eag, tabbedPane, model);
-//            click = true;
-//        }
-//
-//        @Override
-//        public void actionPerformed(ActionEvent actionEvent) {}
-//
-//        public void stateChanged(ChangeEvent changeEvent) {
-//            LOG.info("stateChanged");
-//            if(click && !Eag2012Frame.firstTimeInTab) {
-//                tabbedPane.removeChangeListener(this);
-//                try {
-//                    super.updateEagObject(false);
-//                    LOG.info("Ok");
-//                    Eag2012Frame.firstTimeInTab = true;
-//                    EagPanels eagPanels = getCorrectEagPanels(tabbedPane.getSelectedIndex(), mainTabbedPane, eag2012Frame, labels, repositoryNb);
-//                    reloadTabbedPanel(eagPanels.buildEditorPanel(errors), tabbedPane.getSelectedIndex());
-//                } catch (Eag2012FormException e) {
-//                    LOG.info("NOT Ok");
-//                    EagPanels eagPanels = getCorrectEagPanels(1, mainTabbedPane, eag2012Frame, labels, repositoryNb);
-//                    reloadTabbedPanel(eagPanels.buildEditorPanel(errors), 1);
-//                }
-//                click = false;
-//            }
-//            Eag2012Frame.firstTimeInTab = false;
-//        }
-//    }
+    public class TabChangeListener extends UpdateEagObject implements ChangeListener {
+        private boolean click;
+        public TabChangeListener(Eag eag, JTabbedPane tabbedPane, ProfileListModel model) {
+            super(eag, tabbedPane, model);
+            click = true;
+        }
+
+        @Override
+        public void actionPerformed(ActionEvent actionEvent) {}
+
+        public void stateChanged(ChangeEvent changeEvent) {
+            LOG.info("stateChanged");
+            tabbedPane.removeChangeListener(this);
+            if(click && !Eag2012Frame.firstTimeInTab) {
+                try {
+                    super.updateEagObject(false);
+                    LOG.info("Ok");
+                    Eag2012Frame.firstTimeInTab = true;
+                    EagPanels eagPanels = getCorrectEagPanels(tabbedPane.getSelectedIndex(), mainTabbedPane, eag2012Frame, labels, repositoryNb);
+                    reloadTabbedPanel(eagPanels.buildEditorPanel(errors), tabbedPane.getSelectedIndex());
+                } catch (Eag2012FormException e) {
+                    LOG.info("NOT Ok");
+                    EagPanels eagPanels = getCorrectEagPanels(1, mainTabbedPane, eag2012Frame, labels, repositoryNb);
+                    reloadTabbedPanel(eagPanels.buildEditorPanel(errors), 1);
+                }
+                click = false;
+            }
+            Eag2012Frame.firstTimeInTab = false;
+        }
+    }
 }

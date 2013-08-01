@@ -8,12 +8,12 @@
         </maintenanceAgency>
         <maintenanceStatus>new</maintenanceStatus>
         <maintenanceHistory>
-            <!--<maintenanceEvent>-->
-                <!--<agent></agent>-->
-                <!--<agentType>human</agentType>-->
-                <!--<eventDateTime standardDateTime=""></eventDateTime>-->
-                <!--<eventType>created</eventType>-->
-            <!--</maintenanceEvent>-->
+            <maintenanceEvent>
+                <agent></agent>
+                <agentType>human</agentType>
+                <eventDateTime standardDateTime=""></eventDateTime>
+                <eventType>created</eventType>
+            </maintenanceEvent>
         </maintenanceHistory>
         <conventionDeclaration>
             <abbreviation>EAG</abbreviation>

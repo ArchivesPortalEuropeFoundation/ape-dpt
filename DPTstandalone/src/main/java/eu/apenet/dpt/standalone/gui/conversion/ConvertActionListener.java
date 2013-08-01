@@ -91,13 +91,11 @@ public class ConvertActionListener implements ActionListener {
                         eadidQueryComponent = new EadidQueryComponent(labels);
                     }
                     int result = JOptionPane.showConfirmDialog(parent, eadidQueryComponent.getMainPanel(), labels.getString("enterEADID"), JOptionPane.OK_CANCEL_OPTION);
-                    while (StringUtils.isEmpty(eadidQueryComponent.getEntryEadid()) && result != JOptionPane.CANCEL_OPTION && result != JOptionPane.CLOSED_OPTION )
+                    while (StringUtils.isEmpty(eadidQueryComponent.getEntryEadid()) && result != JOptionPane.CANCEL_OPTION )
                         result = JOptionPane.showConfirmDialog(parent, eadidQueryComponent.getMainPanel(), labels.getString("enterEADID"), JOptionPane.OK_CANCEL_OPTION);
                     if(result == JOptionPane.OK_OPTION)
                         eadid = eadidQueryComponent.getEntryEadid();
                     if(result == JOptionPane.CANCEL_OPTION)
-                        doTransformation = false;
-                    if(result == JOptionPane.CLOSED_OPTION)
                         doTransformation = false;
                 }
             }
@@ -192,8 +190,8 @@ public class ConvertActionListener implements ActionListener {
             } catch (Exception ex){
                 if(ex instanceof SaxonApiException)
                     LOG.info(xslMessages.toString());
-                apePanel.getApeTabbedPane().setConversionErrorText(labels.getString("conversionException") + "\r\n\r\n-------------\r\n" + ex.getMessage());
-                fileInstance.setConversionErrors(labels.getString("conversionException") + "\r\n\r\n-------------\r\n" + ex.getMessage());
+                apePanel.getApeTabbedPane().setConversionErrorText(labels.getString("conversionException") + "\n\n-------------\n" + ex.getMessage());
+                fileInstance.setConversionErrors(labels.getString("conversionException") + "\n\n-------------\n" + ex.getMessage());
                 apePanel.getApeTabbedPane().checkFlashingTab(APETabbedPane.TAB_CONVERSION, Utilities.FLASHING_RED_COLOR);
                 LOG.error("Error when converting a file", ex);
             } finally {

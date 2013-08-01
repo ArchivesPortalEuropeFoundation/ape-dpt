@@ -52,21 +52,21 @@ public class DownloadReportActionListener implements ActionListener {
         builder.append("----- ");
         builder.append(labels.getString("dataquality.title"));
         builder.append(" -----");
-        builder.append("\r\n");
+        builder.append("\n");
         builder.append(MessageFormat.format(labels.getString("dataquality.missing.unittitle"), "(unittitle)"));
         builder.append(" ");
         builder.append(Integer.toString(map.get("unittitle").size()));
-        builder.append("\r\n");
+        builder.append("\n");
         builder.append(MessageFormat.format(labels.getString("dataquality.missing.unitdate"), "(unitdate@normal)"));
         builder.append(" ");
         builder.append(Integer.toString(map.get("unitdate").size()));
-        builder.append("\r\n");
+        builder.append("\n");
         builder.append(MessageFormat.format(labels.getString("dataquality.missing.dao"), "(dao@xlink:role)"));
         builder.append(" ");
         builder.append(Integer.toString(map.get("dao").size()));
 
-        builder.append("\r\n");
-        builder.append("\r\n");
+        builder.append("\n");
+        builder.append("\n");
 
         for(String key : map.keySet()) {
             if(map.get(key).size() > 0) {
@@ -77,7 +77,7 @@ public class DownloadReportActionListener implements ActionListener {
                 } else if(key.equals("dao")) {
                     builder.append("--- ").append(MessageFormat.format(labels.getString("dataquality.report.dao"), "(dao@xlink:role)")).append(" ---");
                 }
-                builder.append("\r\n");
+                builder.append("\n");
                 for(String id : map.get(key).keySet()) {
                     builder.append(id);
                     if(!map.get(key).get(id)) {
@@ -85,7 +85,7 @@ public class DownloadReportActionListener implements ActionListener {
                         builder.append(labels.getString("dataquality.report.idxml"));
                         builder.append(")");
                     }
-                    builder.append("\r\n");
+                    builder.append("\n");
                 }
             }
         }

@@ -58,7 +58,6 @@ public class EseOptionsPanel extends JPanel {
     private static final String EUROPEANA_RIGHTS_PAID = "Paid access";
     private static final String EUROPEANA_RIGHTS_RESTRICTED = "Restricted access";
     private static final String EUROPEANA_RIGHTS_UNKNOWN = "Unknown";
-    private static final String LANGUAGES = "languages";
     private String archdescRepository = null;
     private ResourceBundle labels;
     private RetrieveFromDb retrieveFromDb;
@@ -87,7 +86,6 @@ public class EseOptionsPanel extends JPanel {
     private Ead2EseInformation ead2EseInformation;
     private JCheckBox useExistingRepoCheckbox;
     private JCheckBox useExistingDaoRoleCheckbox;
-    private JPanel languageBoxPanel = new LanguageBoxPanel();
 
     public EseOptionsPanel(ResourceBundle labels, DataPreparationToolGUI dataPreparationToolGUI, JFrame parent, APETabbedPane apeTabbedPane, boolean batch) {
         super(new BorderLayout());
@@ -117,6 +115,7 @@ public class EseOptionsPanel extends JPanel {
         CardLayout cardLayout = (CardLayout) extraLicenseCardLayoutPanel.getLayout();
         cardLayout.show(extraLicenseCardLayoutPanel, EMPTY_PANEL);
 
+
         JPanel panel = new JPanel(new GridLayout(1, 1));
         panel.add(new Label(labels.getString("ese.mandatoryFieldsInfo")));
         panel.add(new Label(""));
@@ -134,6 +133,7 @@ public class EseOptionsPanel extends JPanel {
         useExistingRepoCheckbox = new JCheckBox(labels.getString("ese.takeFromFileRepository"));
         useExistingRepoCheckbox.setSelected(true);
         useExistingRepoCheckbox.addItemListener(new ItemListener() {
+
             public void itemStateChanged(ItemEvent e) {
                 //empty method on purpose
             }
@@ -215,6 +215,7 @@ public class EseOptionsPanel extends JPanel {
         useExistingDaoRoleCheckbox = new JCheckBox(labels.getString("ese.takeFromFileDaoRole"));
         useExistingDaoRoleCheckbox.setSelected(true);
         useExistingDaoRoleCheckbox.addItemListener(new ItemListener() {
+
             public void itemStateChanged(ItemEvent e) {
             }
         });
@@ -285,31 +286,29 @@ public class EseOptionsPanel extends JPanel {
         panel.setBorder(BLACK_LINE);
         formPanel.add(panel);
 
-        JPanel languagePanel = new JPanel(new GridLayout(1, 3));
-        languagePanel.add(new Label(labels.getString("ese.inheritLanguage") + ":" + "*"));
+        panel = new JPanel(new GridLayout(1, 3));
+        panel.add(new Label(labels.getString("ese.inheritLanguage") + ":" + "*"));
         JPanel rbPanel = new JPanel(new GridLayout(3, 1));
         inheritLanguageGroup = new ButtonGroup();
         radioButton = new JRadioButton(labels.getString("ese.yes"));
         radioButton.setActionCommand(YES);
-        radioButton.addActionListener(new ChangePanelActionListener(languageBoxPanel));
         inheritLanguageGroup.add(radioButton);
         rbPanel.add(radioButton);
         radioButton = new JRadioButton(labels.getString("ese.no"), true);
         radioButton.setActionCommand(NO);
-        radioButton.addActionListener(new ChangePanelActionListener(languageBoxPanel));
         inheritLanguageGroup.add(radioButton);
         rbPanel.add(radioButton);
-        radioButton = new JRadioButton(labels.getString("ese.provide"));
+        radioButton = new JRadioButton(labels.getString("ese.provide") + ":");
         radioButton.setActionCommand(PROVIDE);
-        radioButton.addActionListener(new ChangePanelActionListener(languageBoxPanel));
         inheritLanguageGroup.add(radioButton);
         rbPanel.add(radioButton);
-        languagePanel.add(rbPanel, BorderLayout.WEST);
+        panel.add(rbPanel);
 
-        languageBoxPanel.setVisible(false);
-        languagePanel.add(languageBoxPanel, BorderLayout.EAST);
-        languagePanel.setBorder(BLACK_LINE);
-        formPanel.add(languagePanel);
+        languageList = new JList(getAllLanguages());
+        languageList.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
+        panel.add(new JScrollPane(languageList));
+        panel.setBorder(GREY_LINE);
+        formPanel.add(panel);
 
         JPanel mainLicensePanel = new JPanel(new BorderLayout());
         panel = new JPanel(new GridLayout(4, 2));
@@ -465,9 +464,9 @@ public class EseOptionsPanel extends JPanel {
                 } else if (btn.getActionCommand().equals(PROVIDE)) {
                     StringBuilder result = new StringBuilder();
                     Object[] languageValues = languageList.getSelectedValues();
-                    for (int i = 0; i < languageValues.length; i++) {
+                    for(int i=0; i < languageValues.length; i++){
                         result.append(languages.get(languageValues[i].toString()));
-                        if (languageValues.length > 0 && i < (languageValues.length - 1)) {
+                        if(languageValues.length > 0 && i < (languageValues.length - 1)){
                             result.append(" ");
                         }
                     }
@@ -511,13 +510,13 @@ public class EseOptionsPanel extends JPanel {
         } else if (type.equals(EUROPEANA_RIGHTS_STATEMENTS)) {
             String europeanaRights = europeanaRightsComboBox.getSelectedItem().toString();
             if (europeanaRights.equals(EUROPEANA_RIGHTS_FREE)) {
-                return "http://www.europeana.eu/portal/rights/rr-f/";
+                return "http://www.europeana.eu/rights/rr-f/";
             } else if (europeanaRights.equals(EUROPEANA_RIGHTS_PAID)) {
-                return "http://www.europeana.eu/portal/rights/rr-p/";
+                return "http://www.europeana.eu/rights/rr-p/";
             } else if (europeanaRights.equals(EUROPEANA_RIGHTS_RESTRICTED)) {
-                return "http://www.europeana.eu/portal/rights/rr-r/";
+                return "http://www.europeana.eu/rights/rr-r/";
             } else {
-                return "http://www.europeana.eu/portal/rights/unknown/";
+                return "http://www.europeana.eu/rights/unknown/";
             }
         } else if (type.equals(CREATIVE_COMMONS_CC0)) {
             return "http://creativecommons.org/publicdomain/zero/1.0/";
@@ -567,9 +566,8 @@ public class EseOptionsPanel extends JPanel {
         }
 
         if (StringUtils.isEmpty(dataProviderTextArea.getText())) {
-            if (!useExistingRepoCheckbox.isSelected()) {
+            if (!useExistingRepoCheckbox.isSelected())
                 throw new Exception("dataProviderTextField is empty");
-            }
         }
 
         if (StringUtils.isEmpty(providerTextArea.getText())) {
@@ -609,26 +607,18 @@ public class EseOptionsPanel extends JPanel {
 
     public class ChangePanelActionListener implements ActionListener {
 
-        private JPanel extraCardLayoutPanel;
+        private JPanel extraLicenseCardLayoutPanel;
 
-        ChangePanelActionListener(JPanel extraCardLayoutPanel) {
-            this.extraCardLayoutPanel = extraCardLayoutPanel;
+        ChangePanelActionListener(JPanel extraLicenseCardLayoutPanel) {
+            this.extraLicenseCardLayoutPanel = extraLicenseCardLayoutPanel;
         }
 
         public void actionPerformed(ActionEvent actionEvent) {
-            if (actionEvent.getActionCommand().equals(YES) || actionEvent.getActionCommand().equals(NO)) {
-                languageBoxPanel.setVisible(false);
-            } else if (actionEvent.getActionCommand().equals(PROVIDE)) {
-                languageBoxPanel.setVisible(true);
-            }
-
-            if (extraCardLayoutPanel.getLayout() instanceof CardLayout) {
-                CardLayout cardLayout = (CardLayout) extraCardLayoutPanel.getLayout();
-                if (actionEvent.getActionCommand().equals(CREATIVE_COMMONS_CC0) || actionEvent.getActionCommand().equals(CREATIVE_COMMONS_PUBLIC_DOMAIN_MARK)) {
-                    cardLayout.show(extraCardLayoutPanel, EMPTY_PANEL);
-                } else if (actionEvent.getActionCommand().equals(CREATIVE_COMMONS) || actionEvent.getActionCommand().equals(EUROPEANA_RIGHTS_STATEMENTS)) {
-                    cardLayout.show(extraCardLayoutPanel, actionEvent.getActionCommand());
-                }
+            CardLayout cardLayout = (CardLayout) extraLicenseCardLayoutPanel.getLayout();
+            if (actionEvent.getActionCommand().equals(CREATIVE_COMMONS_CC0) || actionEvent.getActionCommand().equals(CREATIVE_COMMONS_PUBLIC_DOMAIN_MARK)) {
+                cardLayout.show(extraLicenseCardLayoutPanel, EMPTY_PANEL);
+            } else {
+                cardLayout.show(extraLicenseCardLayoutPanel, actionEvent.getActionCommand());
             }
         }
     }
@@ -792,16 +782,6 @@ public class EseOptionsPanel extends JPanel {
         }
     }
 
-    private class LanguageBoxPanel extends JPanel {
-
-        LanguageBoxPanel() {
-            super(new GridLayout(1, 1));
-            languageList = new JList(getAllLanguages());
-            languageList.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
-            add(new JScrollPane(languageList));
-        }
-    }
-
     private enum CreativeCommons {
 
         UNPORTED("Unported", "", "3.0"),
@@ -862,7 +842,7 @@ public class EseOptionsPanel extends JPanel {
         UGANDA("Uganda", "ug", "3.0"),
         UNITED_STATES("United States", "us", "3.0"),
         VIETNAM("Vietnam", "vn", "3.0");
-        private static final String URL_START = "http://creativecommons.org/licenses/{0}/";
+        private static final String URL_START = "http://creativecommons.org/license/{0}/";
         private static final String URL_SEP = "/";
         private String countryName;
         private String countryCode;

@@ -60,14 +60,14 @@ public class LevelTreeActions {
             output.setOutputProperty(javax.xml.transform.OutputKeys.INDENT, "yes");
             output.setOutputProperty(javax.xml.transform.OutputKeys.OMIT_XML_DECLARATION, "yes");
             output.setOutputProperty("{http://xml.apache.org/xslt}indent-amount","2");
-            output.transform(new DOMSource(doc.getFirstChild()), new StreamResult(new File(Utilities.TEMP_DIR + ".hg_creation.xml")));
+            output.transform(new DOMSource(doc.getFirstChild()), new StreamResult(new File("/tmp/test.xml")));
 
             File outputFile = new File(Utilities.TEMP_DIR + "temp_HG.xml");
             File finalFile = new File(Utilities.TEMP_DIR + "Holdings_Guide_" + globalIdentifier + "_" + obj.getId() + ".xml");
             finalFile.deleteOnExit();
 
             FileUtils.writeStringToFile(outputFile, HoldingsGuideCreationUtils.eadDeclaration(obj.getName(), obj.getId(), countryCode, globalIdentifier, DataPreparationToolGUI.VERSION_NB), "UTF-8");
-            fileUtil.writeToFile(fileUtil.readFileAsString_linebreak(Utilities.TEMP_DIR + ".hg_creation.xml"), Utilities.TEMP_DIR + outputFile.getName(), true);
+            fileUtil.writeToFile(fileUtil.readFileAsString_linebreak("/tmp/test.xml"), Utilities.TEMP_DIR + outputFile.getName(), true);
             fileUtil.writeToFile(HoldingsGuideCreationUtils.endDeclaration(), Utilities.TEMP_DIR + outputFile.getName(), true);
 
             TransformationTool.createTransformation(fileUtil.readFileAsInputStream(outputFile), finalFile, FileUtils.openInputStream(Utilities.BEFORE_XSL_FILE), null, true, true, null, true, null);

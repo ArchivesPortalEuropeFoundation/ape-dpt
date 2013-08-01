@@ -60,22 +60,22 @@ public class MessageReportActionListener implements ActionListener {
             filename = filename.startsWith("temp_") ? filename.replace("temp_", "") : filename;
 
             if (!fileInstance.getConversionErrors().isEmpty() || !fileInstance.getValidationErrors().isEmpty() || !fileInstance.getEuropeanaConversionErrors().isEmpty()) {
-                stringBuffer.append("========================================\r\n");
+                stringBuffer.append("========================================\n");
                 stringBuffer.append(filename);
-                stringBuffer.append("\r\n");
-                stringBuffer.append("========================================\r\n");
+                stringBuffer.append("\n");
+                stringBuffer.append("========================================\n");
             }
             if (!fileInstance.getConversionErrors().isEmpty()) {
                 stringBuffer.append(fileInstance.getConversionErrors());
-                stringBuffer.append("\r\n");
+                stringBuffer.append("\n");
             }
             if (!fileInstance.getValidationErrors().isEmpty()) {
                 stringBuffer.append(fileInstance.getValidationErrors());
-                stringBuffer.append("\r\n");
+                stringBuffer.append("\n");
             }
             if (!fileInstance.getEuropeanaConversionErrors().isEmpty()) {
                 stringBuffer.append(fileInstance.getEuropeanaConversionErrors());
-                stringBuffer.append("\r\n");
+                stringBuffer.append("\n");
             }
         }
         try {

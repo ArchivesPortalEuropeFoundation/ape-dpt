@@ -22,8 +22,8 @@
         </xsl:variable>		
         <xsl:variable name="listfilename" select="concat($outputdir, '/list.html')" />
         <xsl:variable name="firstfilename" select="concat($outputdir, '/', $firstfiledirname, '/1 ',fn:replace(/rdf:RDF/edm:ProvidedCHO[1]/dc:identifier, '[\\/\*\?:\|%@\[\] \n\t\r]', '_'),'.html')" />
-        <xsl:variable name="webfirstfilename" select="concat('htmlPreview.action?eseId=', $eseId,'&amp;path=',$outputdir, '/', $firstfiledirname, '/1%20',fn:replace(/rdf:RDF/edm:ProvidedCHO[1]/dc:identifier, '[\\/\*\?:\|%@\[\] \n\t\r]', '_'),'.html')" />				
-        <xsl:variable name="weblistfilename" select="concat('htmlPreview.action?eseId=', $eseId,'&amp;path=', $outputdir, '/list.html')" />
+        <xsl:variable name="webfirstfilename" select="concat('htmlPreview?eseId=', $eseId,'&amp;path=',$outputdir, '/', $firstfiledirname, '/1%20',fn:replace(/rdf:RDF/edm:ProvidedCHO[1]/dc:identifier, '[\\/\*\?:\|%@\[\] \n\t\r]', '_'),'.html')" />				
+        <xsl:variable name="weblistfilename" select="concat('htmlPreview?eseId=', $eseId,'&amp;path=', $outputdir, '/list.html')" />
 
         <html>
             <head>
@@ -71,7 +71,7 @@
                                 </xsl:variable>							
                                 <tr>
                                     <xsl:variable name="filename"
-                                                  select="concat('htmlPreview.action?eseId=', $eseId,'&amp;path=',$outputdir, '/',$dirname, '/', position(), '%20',fn:replace(./dc:identifier, '[\\/\*\?:\|%@\[\] \n\t\r]', '_'),'.html')" />
+                                                  select="concat('htmlPreview?eseId=', $eseId,'&amp;path=',$outputdir, '/',$dirname, '/', position(), '%20',fn:replace(./dc:identifier, '[\\/\*\?:\|%@\[\] \n\t\r]', '_'),'.html')" />
                                     <td>
                                         <a href="{$filename}" target="main">
                                             <xsl:value-of select="./dc:identifier" />

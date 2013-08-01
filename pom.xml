@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <groupId>eu.archivesportaleurope.dpt</groupId>
+    <groupId>eu.apenet</groupId>
     <artifactId>DPT-project</artifactId>
-    <version>2013-07-SNAPSHOT</version>
+    <version>2013-06-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>APE DPT tool Project</name>
     <description>Maven Project for building the DPT tools</description>
@@ -47,8 +47,8 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>2.3.1</version>
                 <configuration>
-                    <source>1.6</source>
-                    <target>1.6</target>
+                    <source>1.5</source>
+                    <target>1.5</target>
                 </configuration>
             </plugin>
             <plugin>
@@ -179,7 +179,7 @@
                 <version>1.4.0</version>
             </dependency>
             <dependency>
-               	<groupId>eu.archivesportaleurope.dpt</groupId>
+                <groupId>eu.apenet</groupId>
                 <artifactId>DPTutils</artifactId>
                 <version>${project.version}</version>
             </dependency>

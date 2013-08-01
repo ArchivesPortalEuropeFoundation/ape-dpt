@@ -43,7 +43,6 @@ public abstract class EagPanels {
     protected final String[] yesOrNo = {"yes", "no"};
     protected final String[] photographAllowance = {"---", "depending on the material", "no", "yes", "yes (without flash)"};
     protected final String[] repositoryRoles = {"---", "Branch", "Head quarter", "Interim archive"};
-    protected final String[] webPrefixes = {"http://", "https://", "ftp://"};
 
     protected JComboBox continentCombo = new JComboBox(continents);
     protected JComboBox accessiblePublicCombo = new JComboBox(yesOrNo);

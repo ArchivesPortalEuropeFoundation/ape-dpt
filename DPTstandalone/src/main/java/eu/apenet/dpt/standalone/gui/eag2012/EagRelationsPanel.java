@@ -5,7 +5,6 @@ import com.jgoodies.forms.layout.CellConstraints;
 import com.jgoodies.forms.layout.FormLayout;
 import eu.apenet.dpt.standalone.gui.ProfileListModel;
 import eu.apenet.dpt.standalone.gui.Utilities;
-import static eu.apenet.dpt.standalone.gui.eag2012.EagPanels.createErrorLabel;
 import eu.apenet.dpt.standalone.gui.eag2012.SwingStructures.ResourceRelationType;
 import eu.apenet.dpt.utils.eag2012.*;
 import org.apache.commons.lang.StringUtils;
@@ -80,15 +79,6 @@ public class EagRelationsPanel extends EagPanels {
             builder.addLabel(labels.getString("eag2012.typeRelation"), cc.xy(5, rowNb));
             builder.add(resourceRelationType.getTypeRelations(), cc.xy(7, rowNb));
             setNextRow();
-            if(errors.contains("resourceRelationTypes")) {
-                if(StringUtils.isNotBlank(resourceRelationType.getWebsite().getText()) && !StringUtils.startsWithAny(resourceRelationType.getWebsite().getText(), webPrefixes)){
-                    builder.add(createErrorLabel(labels.getString("eag2012.errors.webpageProtocol")),          cc.xy(1, rowNb));
-                    setNextRow();
-                }
-            } else if(StringUtils.isNotBlank(resourceRelationType.getWebsite().getText()) && !StringUtils.startsWithAny(resourceRelationType.getWebsite().getText(), webPrefixes)){
-                builder.add(createErrorLabel(labels.getString("eag2012.errors.webpageProtocol")),          cc.xy(1, rowNb));
-                setNextRow();
-            }
 
             builder.addLabel(labels.getString("eag2012.titleIdRelatedMaterial"), cc.xy(1, rowNb));
             builder.add(resourceRelationType.getTitleAndId(), cc.xy(3, rowNb));
@@ -125,15 +115,6 @@ public class EagRelationsPanel extends EagPanels {
             builder.addLabel(labels.getString("eag2012.typeRelation"), cc.xy(5, rowNb));
             builder.add(resourceRelationType.getTypeRelations(), cc.xy(7, rowNb));
             setNextRow();
-            if(errors.contains("institutionRelationTypes")) {
-                if(StringUtils.isNotBlank(resourceRelationType.getWebsite().getText()) && !StringUtils.startsWithAny(resourceRelationType.getWebsite().getText(), webPrefixes)){
-                    builder.add(createErrorLabel(labels.getString("eag2012.errors.webpageProtocol")),          cc.xy(1, rowNb));
-                    setNextRow();
-                }
-            } else if(StringUtils.isNotBlank(resourceRelationType.getWebsite().getText()) && !StringUtils.startsWithAny(resourceRelationType.getWebsite().getText(), webPrefixes)){
-                builder.add(createErrorLabel(labels.getString("eag2012.errors.webpageProtocol")),          cc.xy(1, rowNb));
-                setNextRow();
-            }
 
             builder.addLabel(labels.getString("eag2012.nameIdRelatedInstitution"), cc.xy(1, rowNb));
             builder.add(resourceRelationType.getTitleAndId(), cc.xy(3, rowNb));
@@ -159,7 +140,7 @@ public class EagRelationsPanel extends EagPanels {
 
         JButton previousTabBtn = new ButtonEag(labels.getString("eag2012.previousTabButton"));
         builder.add(previousTabBtn, cc.xy (3, rowNb));
-        previousTabBtn.addActionListener(new PreviousTabBtnAction(eag, tabbedPane, model));
+        previousTabBtn.addActionListener(new PreviousTabBtnAction());
 
         JButton saveBtn = new ButtonEag(labels.getString("eag2012.saveButton"));
         builder.add(saveBtn, cc.xy (5, rowNb));
@@ -172,10 +153,7 @@ public class EagRelationsPanel extends EagPanels {
         nextInstitutionTabBtn.addActionListener(new NextInstitutionTabBtnAction(eag, tabbedPane, model));
         builder.add(nextInstitutionTabBtn, cc.xy(5, rowNb));
 
-//        if(tabbedPane.getChangeListeners().length < 2) {
-//            LOG.info("Add listener");
-//            tabbedPane.addChangeListener(new TabChangeListener(eag, tabbedPane, model));
-//        }
+        tabbedPane.addChangeListener(new TabChangeListener(eag, tabbedPane, model));
 
         return builder.getPanel();
     }
@@ -238,22 +216,9 @@ public class EagRelationsPanel extends EagPanels {
         }
     }
 
-    public class PreviousTabBtnAction extends UpdateEagObject {
-        PreviousTabBtnAction(Eag eag, JTabbedPane tabbedPane, ProfileListModel model) {
-            super(eag, tabbedPane, model);
-        }
-
-        @Override
+    public class PreviousTabBtnAction implements ActionListener {
         public void actionPerformed(ActionEvent actionEvent) {
-            try {
-                super.updateEagObject(false);
-
-                reloadTabbedPanel(new EagControlPanel(eag, tabbedPane, mainTabbedPane, eag2012Frame, model, labels, repositoryNb).buildEditorPanel(errors), 5);
-                tabbedPane.setEnabledAt(5, true);
-                tabbedPane.setEnabledAt(6, false);
-            } catch (Eag2012FormException e) {
-                reloadTabbedPanel(new EagRelationsPanel(eag, tabbedPane, mainTabbedPane, eag2012Frame, model, labels, repositoryNb).buildEditorPanel(errors), 6);
-            }
+            tabbedPane.setSelectedIndex(tabbedPane.getSelectedIndex() - 1);
         }
     }
 
@@ -292,8 +257,6 @@ public class EagRelationsPanel extends EagPanels {
                     ResourceRelation resourceRelation = new ResourceRelation();
                     resourceRelation.setResourceRelationType(resourceRelationType.getTypeRelationsValue());
                     resourceRelation.setHref(resourceRelationType.getWebsiteValue());
-                    if(!StringUtils.startsWithAny(resourceRelationType.getWebsiteValue(), webPrefixes))
-                            errors.add("resourceRelationTypes");
                     if(resourceRelation.getRelationEntry() == null)
                         resourceRelation.setRelationEntry(new RelationEntry());
                     resourceRelation.getRelationEntry().setContent(resourceRelationType.getTitleAndIdValue());
@@ -315,8 +278,6 @@ public class EagRelationsPanel extends EagPanels {
                     EagRelation eagRelation = new EagRelation();
                     eagRelation.setEagRelationType(resourceRelationType.getTypeRelationsValue());
                     eagRelation.setHref(resourceRelationType.getWebsiteValue());
-                    if(!StringUtils.startsWithAny(resourceRelationType.getWebsiteValue(), webPrefixes))
-                            errors.add("institutionRelationTypes");
                     RelationEntry relationEntry = new RelationEntry();
                     relationEntry.setContent(resourceRelationType.getTitleAndIdValue());
                     eagRelation.getRelationEntry().add(relationEntry);
@@ -340,34 +301,34 @@ public class EagRelationsPanel extends EagPanels {
             }
         }
     }
-//    public class TabChangeListener extends UpdateEagObject implements ChangeListener {
-//        private boolean click;
-//        public TabChangeListener(Eag eag, JTabbedPane tabbedPane, ProfileListModel model) {
-//            super(eag, tabbedPane, model);
-//            click = true;
-//        }
-//
-//        @Override
-//        public void actionPerformed(ActionEvent actionEvent) {}
-//
-//        public void stateChanged(ChangeEvent changeEvent) {
-//            LOG.info("stateChanged");
-//            if(click && !Eag2012Frame.firstTimeInTab) {
-//                tabbedPane.removeChangeListener(this);
-//                try {
-//                    super.updateEagObject(false);
-//                    LOG.info("Ok");
-//                    Eag2012Frame.firstTimeInTab = true;
-//                    EagPanels eagPanels = getCorrectEagPanels(tabbedPane.getSelectedIndex(), mainTabbedPane, eag2012Frame, labels, repositoryNb);
-//                    reloadTabbedPanel(eagPanels.buildEditorPanel(errors), tabbedPane.getSelectedIndex());
-//                } catch (Eag2012FormException e) {
-//                    LOG.info("NOT Ok");
-//                    EagPanels eagPanels = getCorrectEagPanels(6, mainTabbedPane, eag2012Frame, labels, repositoryNb);
-//                    reloadTabbedPanel(eagPanels.buildEditorPanel(errors), 6);
-//                }
-//                click = false;
-//            }
-//            Eag2012Frame.firstTimeInTab = false;
-//        }
-//    }
+    public class TabChangeListener extends UpdateEagObject implements ChangeListener {
+        private boolean click;
+        public TabChangeListener(Eag eag, JTabbedPane tabbedPane, ProfileListModel model) {
+            super(eag, tabbedPane, model);
+            click = true;
+        }
+
+        @Override
+        public void actionPerformed(ActionEvent actionEvent) {}
+
+        public void stateChanged(ChangeEvent changeEvent) {
+            LOG.info("stateChanged");
+            tabbedPane.removeChangeListener(this);
+            if(click && !Eag2012Frame.firstTimeInTab) {
+                try {
+                    super.updateEagObject(false);
+                    LOG.info("Ok");
+                    Eag2012Frame.firstTimeInTab = true;
+                    EagPanels eagPanels = getCorrectEagPanels(tabbedPane.getSelectedIndex(), mainTabbedPane, eag2012Frame, labels, repositoryNb);
+                    reloadTabbedPanel(eagPanels.buildEditorPanel(errors), tabbedPane.getSelectedIndex());
+                } catch (Eag2012FormException e) {
+                    LOG.info("NOT Ok");
+                    EagPanels eagPanels = getCorrectEagPanels(6, mainTabbedPane, eag2012Frame, labels, repositoryNb);
+                    reloadTabbedPanel(eagPanels.buildEditorPanel(errors), 6);
+                }
+                click = false;
+            }
+            Eag2012Frame.firstTimeInTab = false;
+        }
+    }
 }

@@ -103,7 +103,7 @@ public class ConvertEseActionListener extends ApexActionListener {
                                 EdmConfig edmConfig = edmListener.fillConfig();
                                 try {
                                     SwingUtilities.invokeLater(new TransformEdm(edmConfig, file, dataPreparationToolGUI));
-                                    apePanel.getApeTabbedPane().appendEseConversionErrorText(MessageFormat.format(labels.getString("edm.convertedAndSaved"), file.getAbsolutePath(), retrieveFromDb.retrieveDefaultSaveFolder()) + "\r\n");
+                                    apePanel.getApeTabbedPane().appendEseConversionErrorText(MessageFormat.format(labels.getString("edm.convertedAndSaved"), file.getAbsolutePath(), retrieveFromDb.retrieveDefaultSaveFolder()) + "\n");
                                     apePanel.getApeTabbedPane().checkFlashingTab(APETabbedPane.TAB_ESE, Utilities.FLASHING_GREEN_COLOR);
                                 } catch (Exception ex) {
                                     LOG.error(ex);

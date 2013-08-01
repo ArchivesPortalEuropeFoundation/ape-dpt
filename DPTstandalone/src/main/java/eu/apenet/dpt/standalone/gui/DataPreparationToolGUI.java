@@ -726,7 +726,6 @@ public class DataPreparationToolGUI extends JFrame {
                                 convertEseSelectionBtn.setEnabled(false);
                             }
                             disableAllBtnAndItems();
-                            saveMessageReportItem.setEnabled(true);
                             changeInfoInGUI("");
                         } else {
                             convertAndValidateBtn.setEnabled(false);
@@ -773,8 +772,6 @@ public class DataPreparationToolGUI extends JFrame {
                         apePanel.getApeTabbedPane().disableConversionBtn();
                         apePanel.getApeTabbedPane().disableValidationBtn();
                         apePanel.getApeTabbedPane().disableConversionEseBtn();
-                        apePanel.getApeTabbedPane().disableMessageReportBtn();
-                        saveMessageReportItem.setEnabled(false);
                         convertAndValidateBtn.setEnabled(false);
                         validateSelectionBtn.setEnabled(false);
                         if (eseList.getSelectedValues().length > 1) {
@@ -784,7 +781,7 @@ public class DataPreparationToolGUI extends JFrame {
                         } else {
                             apePanel.getApeTabbedPane().enableConversionEdmBtn();
                             convertEseSelectionBtn.setEnabled(false);
-                            //changeInfoInGUI(((File) eseList.getSelectedValue()).getName());
+                            changeInfoInGUI(((File) eseList.getSelectedValue()).getName());
                             if (apePanel.getApeTabbedPane().getSelectedIndex() == APETabbedPane.TAB_EDITION) {
                                 apePanel.getApeTabbedPane().createEditionTree(((File) eseList.getSelectedValue()));
                             }
@@ -1026,7 +1023,7 @@ public class DataPreparationToolGUI extends JFrame {
 
                 if (fileInstance.getValidationSchema().equals(Utilities.getXsdObjectFromPath(Xsd_enum.XSD_EAG_SCHEMA.getPath())) || fileInstance.getValidationSchema().equals(Utilities.getXsdObjectFromPath(Xsd_enum.XSD_EAG_2012_SCHEMA.getPath()))) {
                     fileInstance.setFileType(FileInstance.FileType.EAG);
-                } else if (fileInstance.getValidationSchema().equals(Utilities.getXsdObjectFromPath(Xsd_enum.XSD_EAC_SCHEMA.getPath())) || fileInstance.getValidationSchema().equals(Utilities.getXsdObjectFromPath(Xsd_enum.XSD_APE_EAC_SCHEMA.getPath()))) {
+                } else if (fileInstance.getValidationSchema().equals(Utilities.getXsdObjectFromPath(Xsd_enum.XSD_EAC_SCHEMA.getPath()))) {
                     fileInstance.setFileType(FileInstance.FileType.EAC_CPF);
                 }
 
