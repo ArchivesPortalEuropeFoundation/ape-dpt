@@ -1,7 +1,7 @@
 package eu.apenet.dpt.standalone.gui.eag2012.SwingStructures;
 
 import javax.swing.*;
-import java.util.Arrays;
+import java.util.*;
 
 /**
  * User: Yoann Moranville
@@ -10,8 +10,21 @@ import java.util.Arrays;
  * @author Yoann Moranville
  */
 public class ResourceRelationType {
-    private static final String[] resourceRelations = {"creatorOf", "subjectOf", "other"};
-    private static final String[] institutionRelations = {"hierarchical-child", "hierarchical-parent", "temporal-earlier", "temporal-later", "associative"};
+    private static Map<String, String> resourceRelationMap;
+    private static Map<String, String> institutionRelationMap;
+    static {
+        resourceRelationMap = new HashMap<String, String>();
+        resourceRelationMap.put("creator of", "creatorOf");
+        resourceRelationMap.put("subject of", "subjectOf");
+        resourceRelationMap.put("other", "other");
+
+        institutionRelationMap = new HashMap<String, String>();
+        institutionRelationMap.put("hierarchical (child)", "hierarchical-child");
+        institutionRelationMap.put("hierarchical (parent)", "hierarchical-parent");
+        institutionRelationMap.put("temporal (earlier)", "temporal-earlier");
+        institutionRelationMap.put("temporal (later)", "temporal-later");
+        institutionRelationMap.put("associative", "associative");
+    }
 
     private JComboBox typeRelations;
     private JTextField website;
@@ -22,15 +35,25 @@ public class ResourceRelationType {
         website = new JTextField(websiteDesc);
         titleAndId = new JTextField(titleIdValue);
         description = new TextAreaWithLanguage(descriptionOfRel, langOfDesc);
+        String keySelected;
         if(isResourceRelation) {
-            typeRelations = new JComboBox(resourceRelations);
-            if(Arrays.asList(resourceRelations).contains(typeRelationValue))
-                typeRelations.setSelectedItem(typeRelationValue);
+            typeRelations = new JComboBox(resourceRelationMap.keySet().toArray(new String[]{}));
+            if((keySelected = getKeyOfSet(resourceRelationMap, typeRelationValue)) != null)
+                typeRelations.setSelectedItem(keySelected);
         } else {
-            typeRelations = new JComboBox(institutionRelations);
-            if(Arrays.asList(institutionRelations).contains(typeRelationValue))
-                typeRelations.setSelectedItem(typeRelationValue);
+            typeRelations = new JComboBox(institutionRelationMap.keySet().toArray(new String[]{}));
+            if((keySelected = getKeyOfSet(institutionRelationMap, typeRelationValue)) != null)
+                typeRelations.setSelectedItem(keySelected);
         }
+    }
+
+    public String getKeyOfSet(Map<String, String> set, String current) {
+        for(String key : set.keySet()) {
+            if(set.get(key).equals(current)) {
+                return key;
+            }
+        }
+        return null;
     }
 
     public JTextField getWebsite() {
@@ -50,8 +73,11 @@ public class ResourceRelationType {
     }
 
     public String getTypeRelationsValue() {
-        if(Arrays.asList(resourceRelations).contains((String) typeRelations.getSelectedItem()) || Arrays.asList(institutionRelations).contains((String) typeRelations.getSelectedItem()))
-            return (String)typeRelations.getSelectedItem();
+        if(resourceRelationMap.get((String) typeRelations.getSelectedItem()) != null) {
+            return resourceRelationMap.get((String) typeRelations.getSelectedItem());
+        } else if(institutionRelationMap.get((String) typeRelations.getSelectedItem()) != null) {
+            return institutionRelationMap.get((String) typeRelations.getSelectedItem());
+        }
         return null;
     }
 

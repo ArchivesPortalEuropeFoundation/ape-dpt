@@ -679,8 +679,9 @@
 
     <!-- Here begin something for NL--> <!--todo: Ok, this WILL need to be changed, here we pass other info that are not sent to the user but instead are just discarded-->
     <!-- descgrp -->
+
     <xsl:template match="archdesc/descgrp[not(@type='appendices')]" mode="copy">
-        <xsl:apply-templates select="bibliography | bioghist | custodhist | custodhist/acqinfo | accruals | appraisal | arrangement | originalsloc | processinfo | scopecontent | accessrestrict | userestrict | otherfindaid | prefercite | separatedmaterial | odd | controlaccess | phystech | relatedmaterial" mode="copy"/>
+        <xsl:apply-templates select="bibliography | bioghist | custodhist | custodhist/acqinfo | accruals | appraisal | arrangement | originalsloc | processinfo | scopecontent | accessrestrict | userestrict | otherfindaid | prefercite | separatedmaterial | odd | controlaccess | phystech | relatedmaterial | index" mode="copy"/>
     </xsl:template>
 
     <!-- descgrp/bioghist -->
@@ -759,6 +760,18 @@
             <xsl:apply-templates select="altformavail/altformavail/*" mode="nested"/>
         </altformavail>
     </xsl:template>
+    <!--<xsl:template match="archdesc/descgrp[@type='allied_materials'][originalsloc]" priority="10" mode="copy">-->
+        <!--<originalsloc encodinganalog="3.5.1">-->
+            <!--<xsl:apply-templates select="originalsloc/node() except originalsloc/originalsloc" mode="copy"/>-->
+            <!--<xsl:apply-templates select="originalsloc/originalsloc/*" mode="nested"/>-->
+        <!--</originalsloc>-->
+    <!--</xsl:template>-->
+    <!--<xsl:template match="archdesc/descgrp[@type='allied_materials'][separatedmaterial]" priority="10" mode="copy">-->
+        <!--<originalsloc encodinganalog="3.5.1">-->
+            <!--<xsl:apply-templates select="originalsloc/node() except originalsloc/originalsloc" mode="copy"/>-->
+            <!--<xsl:apply-templates select="originalsloc/originalsloc/*" mode="nested"/>-->
+        <!--</originalsloc>-->
+    <!--</xsl:template>-->
 
     <!-- descgrp/relatedmaterial -->
     <xsl:template match="archdesc/descgrp/relatedmaterial" mode="copy">
@@ -784,6 +797,12 @@
     <!-- descgrp[@type='appendices'] -->
     <xsl:template match="archdesc/descgrp[@type='appendices']" mode="copy">
         <xsl:apply-templates select="fileplan | index | odd" mode="copy"/>
+    </xsl:template>
+
+    <xsl:template match="archdesc/descgrp[@type='content_and_structure']/controlaccess[@audience='internal']" mode="copy"/>
+
+    <xsl:template match="archdesc/descgrp[@type='access_and_use']/phystech">
+        <xsl:apply-templates select="phystech" mode="copy"/>
     </xsl:template>
 
     <!--End of the NL descgrp-->
@@ -1091,31 +1110,35 @@
     <xsl:template match="repository/address/addressline" mode="copy fonds intermediate lowest">
         <addressline>
             <xsl:apply-templates select="node()" mode="#current" />
-            <!--<xsl:if test="../../extref/corpname">-->
-            <!--<xsl:value-of select="../../extref/corpname"/>-->
-            <!--<xsl:if test="../../extref/@href">-->
-            <!--<xsl:text> (</xsl:text><xsl:value-of select="extref/@href"/><xsl:text>)</xsl:text>-->
-            <!--</xsl:if>-->
-            <!--</xsl:if>-->
+            <xsl:if test="../../extref/corpname">
+                <xsl:value-of select="../../extref/corpname"/>
+                <xsl:if test="../../extref/@href">
+                    <xsl:text> (</xsl:text><xsl:value-of select="extref/@href"/><xsl:text>)</xsl:text>
+                </xsl:if>
+            </xsl:if>
         </addressline>
     </xsl:template>
 
     <!-- Used for the ALs -->
     <xsl:template match="repository/extref" mode="copy fonds intermediate lowest">
-        <extref>
-            <xsl:if test="@href">
-                <xsl:attribute name="xlink:href" select="@href"/>
-            </xsl:if>
-            <xsl:if test="@xlink:href">
-                <xsl:attribute name="xlink:href" select="@xlink:href"/>
-            </xsl:if>
-            <xsl:apply-templates select="node()" mode="#current"/>
-        </extref>
+        <xsl:if test="not(../../address/addressline)">
+            <extref>
+                <xsl:if test="@href">
+                    <xsl:attribute name="xlink:href" select="@href"/>
+                </xsl:if>
+                <xsl:if test="@xlink:href">
+                    <xsl:attribute name="xlink:href" select="@xlink:href"/>
+                </xsl:if>
+                <xsl:apply-templates select="node()" mode="#current"/>
+            </extref>
+        </xsl:if>
     </xsl:template>
 
-    <!--<xsl:template match="repository/extref/corpname" mode="fonds intermediate lowest">-->
-    <!--<xsl:apply-templates select="node()" mode="#current"/>-->
-    <!--</xsl:template>-->
+    <xsl:template match="repository/extref/corpname" mode="fonds intermediate lowest">
+        <xsl:if test="not(../../address/addressline)">
+            <xsl:apply-templates select="node()" mode="#current"/>
+        </xsl:if>
+    </xsl:template>
 
     <!-- copy fonds intermediate lowest: physloc -->
     <xsl:template match="physloc" mode="copy fonds intermediate lowest">
@@ -1619,9 +1642,12 @@
 
     <!--ITEM//*-->
     <!-- #all -->
-    <xsl:template match="processinfo/list/item//* | relatedmaterial/list/item//* | relatedmaterial/p/list/item//* | bioghist/list/item//* | appraisal/list/item//* | accruals/list/item//* | odd/list/item//* | accessrestrict[not(ancestor::accessrestrict)]/list/item//* | userestrict/list/item//* | altformavail/list/item//* | otherfindaid/list/item//* | custodhist/list/item//* | bibliography/list/item//*" mode="copy fonds intermediate lowest nested">
+    <xsl:template match="processinfo/list/item//* | relatedmaterial/list/item//* | relatedmaterial/p/list/item//* | bioghist/list/item//* | appraisal/list/item//* | accruals/list/item//* | odd/list/item//* | odd/p/list/item//*[not(local-name='extref')] | accessrestrict[not(ancestor::accessrestrict)]/list/item//* | userestrict/list/item//* | altformavail/list/item//* | otherfindaid/list/item//* | custodhist/list/item//* | bibliography/list/item//*" mode="copy fonds intermediate lowest nested">
         <xsl:value-of select="text()" />
     </xsl:template>
+    <!--<xsl:template match="odd/p/list/item/extref">-->
+        <!--<xsl:value-of select="@href"/>-->
+    <!--</xsl:template>-->
     <!-- archdesc and c@fonds -->
     <xsl:template match="acqinfo/list/item//* | acqinfo/p/list/item//* | separatedmaterial/list/item//* | prefercite/list/item//* | arrangement/list/item//* | arrangement/p/list/item//* | originalsloc/list/item//* | fileplan/list/item//*" mode="copy fonds nested">
         <xsl:value-of select="text()" />
@@ -2642,7 +2668,7 @@
 
     <!-- all: unittitle/unitdate -->
     <xsl:template match="unittitle/unitdate" mode="#all">
-        <xsl:apply-templates select="node()" mode="#current"/>
+        <xsl:text> </xsl:text><xsl:apply-templates select="node()" mode="#current"/><xsl:text> </xsl:text>
     </xsl:template>
 
     <!-- all: unittitle/archref -->
@@ -2856,6 +2882,9 @@
                         <xsl:choose>
                             <xsl:when test="normalize-space(@id)">
                                 <xsl:value-of select="normalize-space(@id)"/>
+                            </xsl:when>
+                            <xsl:when test="normalize-space(child::*[name()='did']/@id)">
+                                <xsl:value-of select="normalize-space(child::*[name()='did']/@id)"/>
                             </xsl:when>
                             <xsl:otherwise>
                                 <xsl:value-of select="generate-id()"/>

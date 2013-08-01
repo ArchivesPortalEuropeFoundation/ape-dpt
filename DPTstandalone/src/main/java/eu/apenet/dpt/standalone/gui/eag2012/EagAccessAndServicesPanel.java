@@ -5,6 +5,7 @@ import com.jgoodies.forms.layout.CellConstraints;
 import com.jgoodies.forms.layout.FormLayout;
 import eu.apenet.dpt.standalone.gui.ProfileListModel;
 import eu.apenet.dpt.standalone.gui.Utilities;
+import static eu.apenet.dpt.standalone.gui.eag2012.EagPanels.createErrorLabel;
 
 import eu.apenet.dpt.standalone.gui.eag2012.SwingStructures.TextAreaWithLanguage;
 import eu.apenet.dpt.standalone.gui.eag2012.SwingStructures.TextFieldWithLanguage;
@@ -169,6 +170,15 @@ public class EagAccessAndServicesPanel extends EagPanels {
             builder.addLabel(labels.getString("eag2012.linkLabel"), cc.xy(1, rowNb));
             builder.add(textAreaWithLanguage.getExtraField(), cc.xy(3, rowNb));
             setNextRow();
+            if(errors.contains("travellingDirectionsTfs")) {
+                if(StringUtils.isNotBlank(textAreaWithLanguage.getExtraField().getText()) && !StringUtils.startsWithAny(textAreaWithLanguage.getExtraField().getText(), webPrefixes)){
+                    builder.add(createErrorLabel(labels.getString("eag2012.errors.webpageProtocol")),          cc.xy(1, rowNb));
+                    setNextRow();
+                }
+            } else if(StringUtils.isNotBlank(textAreaWithLanguage.getExtraField().getText()) && !StringUtils.startsWithAny(textAreaWithLanguage.getExtraField().getText(), webPrefixes)){
+                builder.add(createErrorLabel(labels.getString("eag2012.errors.webpageProtocol")),          cc.xy(1, rowNb));
+                setNextRow();
+            }
         }
 
         JButton addTravellingDirectionsBtn = new ButtonEag(labels.getString("eag2012.addTravellingDirectionsButton"));
@@ -219,6 +229,15 @@ public class EagAccessAndServicesPanel extends EagPanels {
             builder.addLabel(labels.getString("eag2012.linkLabel"), cc.xy(1, rowNb));
             builder.add(textAreaWithLanguage.getExtraField(), cc.xy(3, rowNb));
             setNextRow();
+            if(errors.contains("termsOfUseTfs")) {
+                if(StringUtils.isNotBlank(textAreaWithLanguage.getExtraField().getText()) && !StringUtils.startsWithAny(textAreaWithLanguage.getExtraField().getText(), webPrefixes)){
+                    builder.add(createErrorLabel(labels.getString("eag2012.errors.webpageProtocol")),          cc.xy(1, rowNb));
+                    setNextRow();
+                }
+            } else if(StringUtils.isNotBlank(textAreaWithLanguage.getExtraField().getText()) && !StringUtils.startsWithAny(textAreaWithLanguage.getExtraField().getText(), webPrefixes)){
+                builder.add(createErrorLabel(labels.getString("eag2012.errors.webpageProtocol")),          cc.xy(1, rowNb));
+                setNextRow();
+            }
         }
 
         builder.addLabel(labels.getString("eag2012.disabledAccessLabel") + "*", cc.xy(1, rowNb));
@@ -287,7 +306,11 @@ public class EagAccessAndServicesPanel extends EagPanels {
         webpageTitleSearchroomTf = new JTextField(searchroom.getWebpage().get(0).getContent());
         builder.add(webpageTitleSearchroomTf,    cc.xy (7, rowNb));
         setNextRow();
-
+        if((StringUtils.isNotBlank(webpageSearchroomTf.getText()) && !StringUtils.startsWithAny(webpageSearchroomTf.getText(), webPrefixes)) || errors.contains("webpageSearchroomTf")) {
+            builder.add(createErrorLabel(labels.getString("eag2012.errors.webpageProtocol")),          cc.xy(1, rowNb));
+            setNextRow();
+        }
+        
         if(searchroom.getWorkPlaces() == null)
             searchroom.setWorkPlaces(new WorkPlaces());
         builder.addLabel(labels.getString("eag2012.workplaces"),    cc.xy (1, rowNb));
@@ -369,6 +392,15 @@ public class EagAccessAndServicesPanel extends EagPanels {
             builder.addLabel(labels.getString("eag2012.linkLabel"), cc.xy(1, rowNb));
             builder.add(textFieldWithLanguage.getExtraField(),                                            cc.xy (3, rowNb));
             setNextRow();
+            if(errors.contains("readersticketSearchroomTfs")) {
+                if(StringUtils.isNotBlank(textFieldWithLanguage.getExtraField().getText()) && !StringUtils.startsWithAny(textFieldWithLanguage.getExtraField().getText(), webPrefixes)){
+                    builder.add(createErrorLabel(labels.getString("eag2012.errors.webpageProtocol")),          cc.xy(1, rowNb));
+                    setNextRow();
+                }
+            } else if(StringUtils.isNotBlank(textFieldWithLanguage.getExtraField().getText()) && !StringUtils.startsWithAny(textFieldWithLanguage.getExtraField().getText(), webPrefixes)){
+                builder.add(createErrorLabel(labels.getString("eag2012.errors.webpageProtocol")),          cc.xy(1, rowNb));
+                setNextRow();
+            }
         }
         JButton addReadersticketBtn = new ButtonEag(labels.getString("eag2012.addReadersticketButton"));
         builder.add(addReadersticketBtn, cc.xy (1, rowNb));
@@ -390,6 +422,15 @@ public class EagAccessAndServicesPanel extends EagPanels {
             builder.addLabel(labels.getString("eag2012.linkLabel"), cc.xy(1, rowNb));
             builder.add(textFieldWithLanguage.getExtraField(),                                            cc.xy (3, rowNb));
             setNextRow();
+            if(errors.contains("advancedordersSearchroomTfs")) {
+                if(StringUtils.isNotBlank(textFieldWithLanguage.getExtraField().getText()) && !StringUtils.startsWithAny(textFieldWithLanguage.getExtraField().getText(), webPrefixes)){
+                    builder.add(createErrorLabel(labels.getString("eag2012.errors.webpageProtocol")),          cc.xy(1, rowNb));
+                    setNextRow();
+                }
+            } else if(StringUtils.isNotBlank(textFieldWithLanguage.getExtraField().getText()) && !StringUtils.startsWithAny(textFieldWithLanguage.getExtraField().getText(), webPrefixes)){
+                builder.add(createErrorLabel(labels.getString("eag2012.errors.webpageProtocol")),          cc.xy(1, rowNb));
+                setNextRow();
+            }
         }
         JButton addAdvancedordersBtn = new ButtonEag(labels.getString("eag2012.addAdvancedordersButton"));
         builder.add(addAdvancedordersBtn, cc.xy (1, rowNb));
@@ -462,7 +503,11 @@ public class EagAccessAndServicesPanel extends EagPanels {
         webpageTitleLibraryTf = new JTextField(library.getWebpage().get(0).getContent());
         builder.add(webpageTitleLibraryTf,    cc.xy (7, rowNb));
         setNextRow();
-
+        if((StringUtils.isNotBlank(webpageLibraryTf.getText()) && !StringUtils.startsWithAny(webpageLibraryTf.getText(), webPrefixes)) || errors.contains("webpageLibraryTf")) {
+            builder.add(createErrorLabel(labels.getString("eag2012.errors.webpageProtocol")),          cc.xy(1, rowNb));
+            setNextRow();
+        }
+        
         if(library.getMonographicpub() == null) {
             Monographicpub monographicpub = new Monographicpub();
             Num num = new Num();
@@ -577,7 +622,11 @@ public class EagAccessAndServicesPanel extends EagPanels {
         webpageTitleRestorationlabTf = new JTextField(restorationlab.getWebpage().get(0).getContent());
         builder.add(webpageTitleRestorationlabTf,    cc.xy (7, rowNb));
         setNextRow();
-
+        if((StringUtils.isNotBlank(webpageRestorationlabTf.getText()) && !StringUtils.startsWithAny(webpageRestorationlabTf.getText(), webPrefixes)) || errors.contains("webpageRestorationlabTf")) {
+            builder.add(createErrorLabel(labels.getString("eag2012.errors.webpageProtocol")),          cc.xy(1, rowNb));
+            setNextRow();
+        }
+        
 
 
         builder.addSeparator(labels.getString("eag2012.reproductionService"), cc.xyw(1, rowNb, 7));
@@ -638,7 +687,11 @@ public class EagAccessAndServicesPanel extends EagPanels {
         webpageTitleReproductionServiceTf = new JTextField(reproductionser.getWebpage().get(0).getContent());
         builder.add(webpageTitleReproductionServiceTf,    cc.xy (7, rowNb));
         setNextRow();
-
+        if((StringUtils.isNotBlank(webpageReproductionServiceTf.getText()) && !StringUtils.startsWithAny(webpageReproductionServiceTf.getText(), webPrefixes)) || errors.contains("webpageReproductionServiceTf")) {
+            builder.add(createErrorLabel(labels.getString("eag2012.errors.webpageProtocol")),          cc.xy(1, rowNb));
+            setNextRow();
+        }
+        
         builder.addLabel(labels.getString("eag2012.microformServices"), cc.xy(1, rowNb));
         if(reproductionser.getMicroformser() == null)
             reproductionser.setMicroformser(new Microformser());
@@ -734,6 +787,15 @@ public class EagAccessAndServicesPanel extends EagPanels {
             builder.addLabel(labels.getString("eag2012.linkTitleLabel"), cc.xy(5, rowNb));
             builder.add(exhibitionTf.getSecondExtraField(),                                            cc.xy (7, rowNb));
             setNextRow();
+            if(errors.contains("exhibitionTfs")) {
+                if(StringUtils.isNotBlank(exhibitionTf.getExtraField().getText()) && !StringUtils.startsWithAny(exhibitionTf.getExtraField().getText(), webPrefixes)){
+                    builder.add(createErrorLabel(labels.getString("eag2012.errors.webpageProtocol")),          cc.xy(1, rowNb));
+                    setNextRow();
+                }
+            } else if(StringUtils.isNotBlank(exhibitionTf.getExtraField().getText()) && !StringUtils.startsWithAny(exhibitionTf.getExtraField().getText(), webPrefixes)){
+                builder.add(createErrorLabel(labels.getString("eag2012.errors.webpageProtocol")),          cc.xy(1, rowNb));
+                setNextRow();
+            }
         }
         JButton addExhibitionsBtn = new ButtonEag(labels.getString("eag2012.addExhibitionsButton"));
         builder.add(addExhibitionsBtn, cc.xy (1, rowNb));
@@ -766,6 +828,15 @@ public class EagAccessAndServicesPanel extends EagPanels {
             builder.addLabel(labels.getString("eag2012.linkTitleLabel"), cc.xy(5, rowNb));
             builder.add(textAreaWithLanguage.getSecondExtraField(),                                            cc.xy (7, rowNb));
             setNextRow();
+            if(errors.contains("toursAndSessionsTfs")) {
+                if(StringUtils.isNotBlank(textAreaWithLanguage.getExtraField().getText()) && !StringUtils.startsWithAny(textAreaWithLanguage.getExtraField().getText(), webPrefixes)){
+                    builder.add(createErrorLabel(labels.getString("eag2012.errors.webpageProtocol")),          cc.xy(1, rowNb));
+                    setNextRow();
+                }
+            } else if(StringUtils.isNotBlank(textAreaWithLanguage.getExtraField().getText()) && !StringUtils.startsWithAny(textAreaWithLanguage.getExtraField().getText(), webPrefixes)){
+                builder.add(createErrorLabel(labels.getString("eag2012.errors.webpageProtocol")),          cc.xy(1, rowNb));
+                setNextRow();
+            }
         }
         JButton addToursSessionsBtn = new ButtonEag(labels.getString("eag2012.addToursSessionsButton"));
         builder.add(addToursSessionsBtn, cc.xy (1, rowNb));
@@ -799,6 +870,15 @@ public class EagAccessAndServicesPanel extends EagPanels {
             builder.addLabel(labels.getString("eag2012.linkTitleLabel"), cc.xy(5, rowNb));
             builder.add(otherServicesTf.getSecondExtraField(),                                            cc.xy (7, rowNb));
             setNextRow();
+            if(errors.contains("otherServicesTfs")) {
+                if(StringUtils.isNotBlank(otherServicesTf.getExtraField().getText()) && !StringUtils.startsWithAny(otherServicesTf.getExtraField().getText(), webPrefixes)){
+                    builder.add(createErrorLabel(labels.getString("eag2012.errors.webpageProtocol")),          cc.xy(1, rowNb));
+                    setNextRow();
+                }
+            } else if(StringUtils.isNotBlank(otherServicesTf.getExtraField().getText()) && !StringUtils.startsWithAny(otherServicesTf.getExtraField().getText(), webPrefixes)){
+                builder.add(createErrorLabel(labels.getString("eag2012.errors.webpageProtocol")),          cc.xy(1, rowNb));
+                setNextRow();
+            }
         }
         JButton addOtherServicesBtn = new ButtonEag(labels.getString("eag2012.addOtherServicesButton"));
         builder.add(addOtherServicesBtn, cc.xy (1, rowNb));
@@ -814,11 +894,11 @@ public class EagAccessAndServicesPanel extends EagPanels {
 
         JButton previousTabBtn = new ButtonEag(labels.getString("eag2012.previousTabButton"));
         builder.add(previousTabBtn, cc.xy (3, rowNb));
-        previousTabBtn.addActionListener(new ChangeTabBtnAction(false));
+        previousTabBtn.addActionListener(new ChangeTabBtnAction(eag, tabbedPane, model, false));
 
         JButton nextTabBtn = new ButtonEag(labels.getString("eag2012.nextTabButton"));
         builder.add(nextTabBtn, cc.xy (5, rowNb));
-        nextTabBtn.addActionListener(new ChangeTabBtnAction(true));
+        nextTabBtn.addActionListener(new ChangeTabBtnAction(eag, tabbedPane, model, true));
 
         setNextRow();
         JButton saveBtn = new ButtonEag(labels.getString("eag2012.saveButton"));
@@ -835,7 +915,10 @@ public class EagAccessAndServicesPanel extends EagPanels {
         nextInstitutionTabBtn.addActionListener(new NextInstitutionTabBtnAction(eag, tabbedPane, model));
         builder.add(nextInstitutionTabBtn, cc.xy(5, rowNb));
 
-        tabbedPane.addChangeListener(new TabChangeListener(eag, tabbedPane, model));
+//        if(tabbedPane.getChangeListeners().length < 2) {
+//            LOG.info("Add listener");
+//            tabbedPane.addChangeListener(new TabChangeListener(eag, tabbedPane, model));
+//        }
 
         return builder.getPanel();
     }
@@ -1048,7 +1131,12 @@ public class EagAccessAndServicesPanel extends EagPanels {
                 super.updateEagObject(false);
             } catch (Eag2012FormException e) {
             }
-            eag.getArchguide().getDesc().getRepositories().getRepository().get(repositoryNb).getServices().getRecreationalServices().getExhibition().add(new Exhibition());
+            
+            if(eag.getArchguide().getDesc().getRepositories().getRepository().get(repositoryNb).getServices() != null){
+                eag.getArchguide().getDesc().getRepositories().getRepository().get(repositoryNb).getServices().getRecreationalServices().getExhibition().add(new Exhibition());
+            } else {
+                JOptionPane.showMessageDialog(eag2012Frame, labels.getString("eag2012.fillServiceBeforeAddingAnother"));
+            }
             reloadTabbedPanel(new EagAccessAndServicesPanel(eag, tabbedPane, mainTabbedPane, eag2012Frame, model, labels, repositoryNb).buildEditorPanel(errors), 3);
         }
     }
@@ -1063,7 +1151,12 @@ public class EagAccessAndServicesPanel extends EagPanels {
                 super.updateEagObject(false);
             } catch (Eag2012FormException e) {
             }
-            eag.getArchguide().getDesc().getRepositories().getRepository().get(repositoryNb).getServices().getRecreationalServices().getToursSessions().add(new ToursSessions());
+            
+            if(eag.getArchguide().getDesc().getRepositories().getRepository().get(repositoryNb).getServices() != null){
+                eag.getArchguide().getDesc().getRepositories().getRepository().get(repositoryNb).getServices().getRecreationalServices().getToursSessions().add(new ToursSessions());
+            } else {
+                JOptionPane.showMessageDialog(eag2012Frame, labels.getString("eag2012.fillServiceBeforeAddingAnother"));
+            }
             reloadTabbedPanel(new EagAccessAndServicesPanel(eag, tabbedPane, mainTabbedPane, eag2012Frame, model, labels, repositoryNb).buildEditorPanel(errors), 3);
         }
     }
@@ -1078,7 +1171,11 @@ public class EagAccessAndServicesPanel extends EagPanels {
                 super.updateEagObject(false);
             } catch (Eag2012FormException e) {
             }
-            eag.getArchguide().getDesc().getRepositories().getRepository().get(repositoryNb).getServices().getRecreationalServices().getOtherServices().add(new OtherServices());
+            if(eag.getArchguide().getDesc().getRepositories().getRepository().get(repositoryNb).getServices() != null){
+                eag.getArchguide().getDesc().getRepositories().getRepository().get(repositoryNb).getServices().getRecreationalServices().getOtherServices().add(new OtherServices());
+            } else {
+                JOptionPane.showMessageDialog(eag2012Frame, labels.getString("eag2012.fillServiceBeforeAddingAnother"));
+            }
             reloadTabbedPanel(new EagAccessAndServicesPanel(eag, tabbedPane, mainTabbedPane, eag2012Frame, model, labels, repositoryNb).buildEditorPanel(errors), 3);
         }
     }
@@ -1115,11 +1212,16 @@ public class EagAccessAndServicesPanel extends EagPanels {
                 super.updateEagObject(false);
             } catch (Eag2012FormException e) {
             }
-            Reproductionser reproductionser = eag.getArchguide().getDesc().getRepositories().getRepository().get(repositoryNb).getServices().getTechservices().getReproductionser();
-            if(reproductionser.getDescriptiveNote() == null) {
-                reproductionser.setDescriptiveNote(new DescriptiveNote());
+
+            if(eag.getArchguide().getDesc().getRepositories().getRepository().get(repositoryNb).getServices() != null){
+                Reproductionser reproductionser = eag.getArchguide().getDesc().getRepositories().getRepository().get(repositoryNb).getServices().getTechservices().getReproductionser();
+                if(reproductionser.getDescriptiveNote() == null) {
+                    reproductionser.setDescriptiveNote(new DescriptiveNote());
+                }
+                reproductionser.getDescriptiveNote().getP().add(new P());
+            } else {
+                JOptionPane.showMessageDialog(eag2012Frame, labels.getString("eag2012.fillDescriptionBeforeAddingAnother"));
             }
-            reproductionser.getDescriptiveNote().getP().add(new P());
             reloadTabbedPanel(new EagAccessAndServicesPanel(eag, tabbedPane, mainTabbedPane, eag2012Frame, model, labels, repositoryNb).buildEditorPanel(errors), 3);
         }
     }
@@ -1135,11 +1237,16 @@ public class EagAccessAndServicesPanel extends EagPanels {
                 super.updateEagObject(false);
             } catch (Eag2012FormException e) {
             }
-            Restorationlab restorationlab = eag.getArchguide().getDesc().getRepositories().getRepository().get(repositoryNb).getServices().getTechservices().getRestorationlab();
-            if(restorationlab.getDescriptiveNote() == null) {
-                restorationlab.setDescriptiveNote(new DescriptiveNote());
+            
+            if(eag.getArchguide().getDesc().getRepositories().getRepository().get(repositoryNb).getServices() != null){
+                Restorationlab restorationlab = eag.getArchguide().getDesc().getRepositories().getRepository().get(repositoryNb).getServices().getTechservices().getRestorationlab();
+                if(restorationlab.getDescriptiveNote() == null) {
+                    restorationlab.setDescriptiveNote(new DescriptiveNote());
+                }
+                restorationlab.getDescriptiveNote().getP().add(new P());
+            } else {
+                JOptionPane.showMessageDialog(eag2012Frame, labels.getString("eag2012.fillDescriptionBeforeAddingAnother"));
             }
-            restorationlab.getDescriptiveNote().getP().add(new P());
             reloadTabbedPanel(new EagAccessAndServicesPanel(eag, tabbedPane, mainTabbedPane, eag2012Frame, model, labels, repositoryNb).buildEditorPanel(errors), 3);
         }
     }
@@ -1162,18 +1269,30 @@ public class EagAccessAndServicesPanel extends EagPanels {
         }
     }
 
-    public class ChangeTabBtnAction implements ActionListener {
+    public class ChangeTabBtnAction extends UpdateEagObject {
         private boolean isNextTab;
-
-        ChangeTabBtnAction(boolean isNextTab) {
+        ChangeTabBtnAction(Eag eag, JTabbedPane tabbedPane, ProfileListModel model, boolean isNextTab) {
+            super(eag, tabbedPane, model);
             this.isNextTab = isNextTab;
         }
 
+        @Override
         public void actionPerformed(ActionEvent actionEvent) {
-            if(isNextTab)
-                tabbedPane.setSelectedIndex(tabbedPane.getSelectedIndex() + 1);
-            else
-                tabbedPane.setSelectedIndex(tabbedPane.getSelectedIndex() - 1);
+            try {
+                super.updateEagObject(false);
+
+                if(isNextTab) {
+                    reloadTabbedPanel(new EagDescriptionPanel(eag, tabbedPane, mainTabbedPane, eag2012Frame, model, labels, repositoryNb).buildEditorPanel(errors), 4);
+                    tabbedPane.setEnabledAt(4, true);
+                    tabbedPane.setEnabledAt(3, false);
+                } else {
+                    reloadTabbedPanel(new EagContactPanel(eag, tabbedPane, mainTabbedPane, eag2012Frame, model, labels, repositoryNb).buildEditorPanel(errors), 2);
+                    tabbedPane.setEnabledAt(2, true);
+                    tabbedPane.setEnabledAt(3, false);
+                }
+            } catch (Eag2012FormException e) {
+                reloadTabbedPanel(new EagAccessAndServicesPanel(eag, tabbedPane, mainTabbedPane, eag2012Frame, model, labels, repositoryNb).buildEditorPanel(errors), 3);
+            }
         }
     }
 
@@ -1231,6 +1350,8 @@ public class EagAccessAndServicesPanel extends EagPanels {
                         if(StringUtils.isNotEmpty(textAreaWithLanguage.getExtraValue())) {
                             Citation citation = new Citation();
                             citation.setHref(textAreaWithLanguage.getExtraValue());
+                            if(!StringUtils.startsWithAny(textAreaWithLanguage.getExtraValue(), webPrefixes))
+                                errors.add("travellingDirectionsTfs");
                             directions.getContent().add(citation);
                         }
                         repository.getDirections().add(directions);
@@ -1261,6 +1382,8 @@ public class EagAccessAndServicesPanel extends EagPanels {
                         termsOfUse.setContent(textAreaWithLanguage.getTextValue());
                         if(StringUtils.isNotEmpty(textAreaWithLanguage.getExtraValue())) {
                             termsOfUse.setHref(textAreaWithLanguage.getExtraValue());
+                            if(!StringUtils.startsWithAny(textAreaWithLanguage.getExtraValue(), webPrefixes))
+                                errors.add("termsOfUseTfs");
                         }
                         repository.getAccess().getTermsOfUse().add(termsOfUse);
                         hasChanged = true;
@@ -1289,6 +1412,10 @@ public class EagAccessAndServicesPanel extends EagPanels {
                         }
                     }
                 }*/
+            if(repository.getServices() == null)
+                repository.setServices(new Services());
+            if(repository.getServices().getSearchroom() == null)
+                repository.getServices().setSearchroom(new Searchroom());
 
             Searchroom searchroom = repository.getServices().getSearchroom();
             boolean hasContactInfo = false;
@@ -1303,7 +1430,7 @@ public class EagAccessAndServicesPanel extends EagPanels {
                     searchroom.getContact().getTelephone().add(telephone);
                     hasContactInfo = true;
                 }
-            } else if(!searchroom.getContact().getTelephone().isEmpty()) {
+            } else if(searchroom.getContact() != null && !searchroom.getContact().getTelephone().isEmpty()) {
                 searchroom.getContact().getTelephone().remove(0);
                 if(searchroom.getContact().getTelephone().size() > 0)
                     hasContactInfo = true;
@@ -1331,10 +1458,14 @@ public class EagAccessAndServicesPanel extends EagPanels {
             if(StringUtils.isNotEmpty(webpageSearchroomTf.getText())) {
                 if(!searchroom.getWebpage().isEmpty()) {
                     searchroom.getWebpage().get(0).setHref(webpageSearchroomTf.getText());
+                    if(!StringUtils.startsWithAny(webpageSearchroomTf.getText(), webPrefixes))
+                        errors.add("webpageSearchroomTf");
                 } else {
                     Webpage webpage = new Webpage();
                     webpage.setHref(webpageSearchroomTf.getText());
                     searchroom.getWebpage().add(webpage);
+                    if(!StringUtils.startsWithAny(webpageSearchroomTf.getText(), webPrefixes))
+                        errors.add("webpageSearchroomTf");
                 }
                 if(StringUtils.isNotEmpty(webpageTitleSearchroomTf.getText())) {
                     searchroom.getWebpage().get(0).setContent(webpageTitleSearchroomTf.getText());
@@ -1397,6 +1528,8 @@ public class EagAccessAndServicesPanel extends EagPanels {
                         readersTicket.setLang(textFieldWithLanguage.getLanguage());
                         readersTicket.setContent(textFieldWithLanguage.getTextValue());
                         readersTicket.setHref(textFieldWithLanguage.getExtraValue());
+                        if(!StringUtils.startsWithAny(textFieldWithLanguage.getExtraValue(), webPrefixes))
+                                errors.add("readersticketSearchroomTfs");
                         searchroom.getReadersTicket().add(readersTicket);
                         hasChanged = true;
                         hasSearchRoomInfo = true;
@@ -1412,6 +1545,8 @@ public class EagAccessAndServicesPanel extends EagPanels {
                         advancedOrders.setLang(textFieldWithLanguage.getLanguage());
                         advancedOrders.setContent(textFieldWithLanguage.getTextValue());
                         advancedOrders.setHref(textFieldWithLanguage.getExtraValue());
+                        if(!StringUtils.startsWithAny(textFieldWithLanguage.getExtraValue(), webPrefixes))
+                                errors.add("advancedordersSearchroomTfs");
                         searchroom.getAdvancedOrders().add(advancedOrders);
                         hasChanged = true;
                         hasSearchRoomInfo = true;
@@ -1493,6 +1628,8 @@ public class EagAccessAndServicesPanel extends EagPanels {
 
             if(StringUtils.isNotEmpty(webpageLibraryTf.getText())) {
                 library.getWebpage().get(0).setHref(webpageLibraryTf.getText());
+                if(!StringUtils.startsWithAny(webpageLibraryTf.getText(), webPrefixes))
+                        errors.add("webpageLibraryTf");
                 if(StringUtils.isNotEmpty(webpageTitleLibraryTf.getText())) {
                     library.getWebpage().get(0).setContent(webpageTitleLibraryTf.getText());
                 }
@@ -1609,6 +1746,8 @@ public class EagAccessAndServicesPanel extends EagPanels {
 
             if(StringUtils.isNotEmpty(webpageRestorationlabTf.getText())) {
                 restorationlab.getWebpage().get(0).setHref(webpageRestorationlabTf.getText());
+                if(!StringUtils.startsWithAny(webpageRestorationlabTf.getText(), webPrefixes))
+                        errors.add("webpageRestorationlabTf");
                 if(StringUtils.isNotEmpty(webpageTitleRestorationlabTf.getText())) {
                     restorationlab.getWebpage().get(0).setContent(webpageTitleRestorationlabTf.getText());
                 }
@@ -1688,6 +1827,8 @@ public class EagAccessAndServicesPanel extends EagPanels {
 
             if(StringUtils.isNotEmpty(webpageReproductionServiceTf.getText())) {
                 reproductionser.getWebpage().get(0).setHref(webpageReproductionServiceTf.getText());
+                if(!StringUtils.startsWithAny(webpageReproductionServiceTf.getText(), webPrefixes))
+                        errors.add("webpageReproductionServiceTf");
                 if(StringUtils.isNotEmpty(webpageTitleReproductionServiceTf.getText())) {
                     reproductionser.getWebpage().get(0).setContent(webpageTitleReproductionServiceTf.getText());
                 }
@@ -1757,6 +1898,8 @@ public class EagAccessAndServicesPanel extends EagPanels {
                         if(StringUtils.isNotEmpty(textAreaWithLanguage.getExtraValue())) {
                             exhibition.setWebpage(new Webpage());
                             exhibition.getWebpage().setHref(textAreaWithLanguage.getExtraValue());
+                            if(!StringUtils.startsWithAny(textAreaWithLanguage.getExtraValue(), webPrefixes))
+                                errors.add("exhibitionTfs");
                             exhibition.getWebpage().setContent(textAreaWithLanguage.getSecondExtraValue());
                         }
                         recreationalServices.getExhibition().add(exhibition);
@@ -1779,6 +1922,8 @@ public class EagAccessAndServicesPanel extends EagPanels {
                         if(StringUtils.isNotEmpty(textAreaWithLanguage.getExtraValue())) {
                             toursSessions.setWebpage(new Webpage());
                             toursSessions.getWebpage().setHref(textAreaWithLanguage.getExtraValue());
+                            if(!StringUtils.startsWithAny(textAreaWithLanguage.getExtraValue(), webPrefixes))
+                                errors.add("toursAndSessionsTfs");
                             toursSessions.getWebpage().setContent(textAreaWithLanguage.getSecondExtraValue());
                         }
                         recreationalServices.getToursSessions().add(toursSessions);
@@ -1801,6 +1946,8 @@ public class EagAccessAndServicesPanel extends EagPanels {
                         if(StringUtils.isNotEmpty(textAreaWithLanguage.getExtraValue())) {
                             otherServices.setWebpage(new Webpage());
                             otherServices.getWebpage().setHref(textAreaWithLanguage.getExtraValue());
+                            if(!StringUtils.startsWithAny(textAreaWithLanguage.getExtraValue(), webPrefixes))
+                                errors.add("otherServicesTfs");
                             otherServices.getWebpage().setContent(textAreaWithLanguage.getSecondExtraValue());
                         }
                         recreationalServices.getOtherServices().add(otherServices);
@@ -1826,34 +1973,34 @@ public class EagAccessAndServicesPanel extends EagPanels {
         }
     }
 
-    public class TabChangeListener extends UpdateEagObject implements ChangeListener {
-        private boolean click;
-        public TabChangeListener(Eag eag, JTabbedPane tabbedPane, ProfileListModel model) {
-            super(eag, tabbedPane, model);
-            click = true;
-        }
-
-        @Override
-        public void actionPerformed(ActionEvent actionEvent) {}
-
-        public void stateChanged(ChangeEvent changeEvent) {
-            LOG.info("stateChanged");
-            tabbedPane.removeChangeListener(this);
-            if(click && !Eag2012Frame.firstTimeInTab) {
-                try {
-                    super.updateEagObject(false);
-                    LOG.info("Ok");
-                    Eag2012Frame.firstTimeInTab = true;
-                    EagPanels eagPanels = getCorrectEagPanels(tabbedPane.getSelectedIndex(), mainTabbedPane, eag2012Frame, labels, repositoryNb);
-                    reloadTabbedPanel(eagPanels.buildEditorPanel(errors), tabbedPane.getSelectedIndex());
-                } catch (Eag2012FormException e) {
-                    LOG.info("NOT Ok");
-                    EagPanels eagPanels = getCorrectEagPanels(3, mainTabbedPane, eag2012Frame, labels, repositoryNb);
-                    reloadTabbedPanel(eagPanels.buildEditorPanel(errors), 3);
-                }
-                click = false;
-            }
-            Eag2012Frame.firstTimeInTab = false;
-        }
-    }
+//    public class TabChangeListener extends UpdateEagObject implements ChangeListener {
+//        private boolean click;
+//        public TabChangeListener(Eag eag, JTabbedPane tabbedPane, ProfileListModel model) {
+//            super(eag, tabbedPane, model);
+//            click = true;
+//        }
+//
+//        @Override
+//        public void actionPerformed(ActionEvent actionEvent) {}
+//
+//        public void stateChanged(ChangeEvent changeEvent) {
+//            LOG.info("stateChanged");
+//            if(click && !Eag2012Frame.firstTimeInTab) {
+//                tabbedPane.removeChangeListener(this);
+//                try {
+//                    super.updateEagObject(false);
+//                    LOG.info("Ok");
+//                    Eag2012Frame.firstTimeInTab = true;
+//                    EagPanels eagPanels = getCorrectEagPanels(tabbedPane.getSelectedIndex(), mainTabbedPane, eag2012Frame, labels, repositoryNb);
+//                    reloadTabbedPanel(eagPanels.buildEditorPanel(errors), tabbedPane.getSelectedIndex());
+//                } catch (Eag2012FormException e) {
+//                    LOG.info("NOT Ok");
+//                    EagPanels eagPanels = getCorrectEagPanels(3, mainTabbedPane, eag2012Frame, labels, repositoryNb);
+//                    reloadTabbedPanel(eagPanels.buildEditorPanel(errors), 3);
+//                }
+//                click = false;
+//            }
+//            Eag2012Frame.firstTimeInTab = false;
+//        }
+//    }
 }

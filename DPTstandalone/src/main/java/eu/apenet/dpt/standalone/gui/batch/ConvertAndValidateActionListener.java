@@ -168,7 +168,7 @@ public class ConvertAndValidateActionListener extends ApexActionListener {
                                         break;
 
                                 } catch (Exception e) {
-                                    fileInstance.setConversionErrors(labels.getString("conversionException") + "\n\n-------------\n" + e.getMessage());
+                                    fileInstance.setConversionErrors(labels.getString("conversionException") + "\r\n\r\n-------------\r\n" + e.getMessage());
                                     throw new Exception("Error when converting " + file.getName(), e);
                                 }
 
@@ -197,7 +197,7 @@ public class ConvertAndValidateActionListener extends ApexActionListener {
                                     fileInstance.setLastOperation(FileInstance.Operation.VALIDATE);
                                 } catch (Exception ex){
                                     fileInstance.setValid(false);
-                                    fileInstance.setValidationErrors(labels.getString("validationException") + "\n\n-------------\n" + ex.getMessage());
+                                    fileInstance.setValidationErrors(labels.getString("validationException") + "\r\n\r\n-------------\r\n" + ex.getMessage());
                                     throw new Exception("Error when validating", ex);
                                 }
                             } catch (Exception e) {
