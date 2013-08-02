@@ -58,13 +58,13 @@ public class EagControlPanel extends EagPanels {
 
         rowNb = 1;
 
-        builder.addLabel(labels.getString("eag2012.idUsedInApeLabel") + "*", cc.xy(1, rowNb));
+        builder.addLabel(labels.getString("eag2012.commons.idUsedInApe") + "*", cc.xy(1, rowNb));
         JTextField recordIdTf = new JTextField(eag.getControl().getRecordId().getValue());
         recordIdTf.setEnabled(false);
         builder.add(recordIdTf, cc.xy(3, rowNb));
         setNextRow();
 
-        builder.addLabel(labels.getString("eag2012.personInstitutionResponsible"), cc.xy(1, rowNb));
+        builder.addLabel(labels.getString("eag2012.commons.personResponsible"), cc.xy(1, rowNb));
         int sizeEvents = eag.getControl().getMaintenanceHistory().getMaintenanceEvent().size();
         if(sizeEvents > 0) {
             MaintenanceEvent event = eag.getControl().getMaintenanceHistory().getMaintenanceEvent().get(sizeEvents - 1);
@@ -74,12 +74,12 @@ public class EagControlPanel extends EagPanels {
         }
         personInstitutionRespTf.getTextField().setEnabled(false);
         builder.add(personInstitutionRespTf.getTextField(), cc.xy(3, rowNb));
-        builder.addLabel(labels.getString("eag2012.language"), cc.xy(5, rowNb));
+        builder.addLabel(labels.getString("eag2012.commons.language"), cc.xy(5, rowNb));
         builder.add(personInstitutionRespTf.getLanguageBox(), cc.xy(7, rowNb));
         setNextRow();
 
-        builder.addSeparator(labels.getString("eag2012.usedLanguages"), cc.xyw(1, rowNb, 3));
-        JButton addLanguagesBtn = new ButtonEag(labels.getString("eag2012.addLanguagesButton"));
+        builder.addSeparator(labels.getString("eag2012.control.usedLanguages"), cc.xyw(1, rowNb, 3));
+        JButton addLanguagesBtn = new ButtonEag(labels.getString("eag2012.control.addFurtherLangsAnsScripts"));
         builder.add(addLanguagesBtn, cc.xy(5, rowNb));
         addLanguagesBtn.addActionListener(new AddLanguagesBtnAction(eag, tabbedPane, model));
         setNextRow();
@@ -95,17 +95,17 @@ public class EagControlPanel extends EagPanels {
         int i = 0;
         languageWithScriptTfs = new ArrayList<LanguageWithScript>(eag.getControl().getLanguageDeclarations().getLanguageDeclaration().size());
         for(LanguageDeclaration languageDeclaration : eag.getControl().getLanguageDeclarations().getLanguageDeclaration()) {
-            builder.addLabel(labels.getString("eag2012.language"),    cc.xy (1, rowNb));
+            builder.addLabel(labels.getString("eag2012.commons.language"),    cc.xy (1, rowNb));
             LanguageWithScript languageWithScript = new LanguageWithScript(languageDeclaration.getLanguage().getLanguageCode(), languageDeclaration.getScript().getScriptCode());
             languageWithScriptTfs.add(languageWithScript);
             builder.add(languageWithScript.getLanguageBox(),                     cc.xy (3, rowNb));
-            builder.addLabel(labels.getString("eag2012.script"),    cc.xy (5, rowNb));
+            builder.addLabel(labels.getString("eag2012.control.descriptionScript"),    cc.xy (5, rowNb));
             builder.add(languageWithScript.getScriptBox(), cc.xy(7, rowNb));
             setNextRow();
         }
 
-        builder.addSeparator(labels.getString("eag2012.usedConventions"), cc.xyw(1, rowNb, 3));
-        JButton addConventionBtn = new ButtonEag(labels.getString("eag2012.addConventionButton"));
+        builder.addSeparator(labels.getString("eag2012.control.conventions"), cc.xyw(1, rowNb, 3));
+        JButton addConventionBtn = new ButtonEag(labels.getString("eag2012.commons.addCnventions"));
         builder.add(addConventionBtn, cc.xy(5, rowNb));
         addConventionBtn.addActionListener(new AddConventionBtnAction(eag, tabbedPane, model));
         setNextRow();
@@ -114,11 +114,11 @@ public class EagControlPanel extends EagPanels {
             eag.getControl().getConventionDeclaration().add(new ConventionDeclaration());
         rulesConventionTfs = new ArrayList<TextFieldWithLanguage>(eag.getControl().getConventionDeclaration().size());
         for(ConventionDeclaration conventionDeclaration : eag.getControl().getConventionDeclaration()) {
-            builder.addLabel(labels.getString("eag2012.abbreviation"),    cc.xy (1, rowNb));
+            builder.addLabel(labels.getString("eag2012.control.abbreviation"),    cc.xy (1, rowNb));
             TextFieldWithLanguage textFieldWithLanguage = new TextFieldWithLanguage(conventionDeclaration.getAbbreviation().getContent(), "", conventionDeclaration.getCitation().get(0).getContent());
             rulesConventionTfs.add(textFieldWithLanguage);
             builder.add(textFieldWithLanguage.getTextField(),                     cc.xy (3, rowNb));
-            builder.addLabel(labels.getString("eag2012.fullname"),    cc.xy (5, rowNb));
+            builder.addLabel(labels.getString("eag2012.control.fullName"),    cc.xy (5, rowNb));
             builder.add(textFieldWithLanguage.getExtraField(),                     cc.xy (7, rowNb));
             setNextRow();
         }
@@ -126,27 +126,27 @@ public class EagControlPanel extends EagPanels {
         builder.addSeparator("", cc.xyw(1, rowNb, 7));
         setNextRow();
 
-        JButton exitBtn = new ButtonEag(labels.getString("eag2012.exitButton"));
+        JButton exitBtn = new ButtonEag(labels.getString("eag2012.commons.exit"));
         builder.add(exitBtn, cc.xy (1, rowNb));
         exitBtn.addActionListener(new ExitBtnAction());
 
-        JButton previousTabBtn = new ButtonEag(labels.getString("eag2012.previousTabButton"));
+        JButton previousTabBtn = new ButtonEag(labels.getString("eag2012.commons.previousTab"));
         builder.add(previousTabBtn, cc.xy (3, rowNb));
         previousTabBtn.addActionListener(new ChangeTabBtnAction(eag, tabbedPane, model, false));
 
-        JButton nextTabBtn = new ButtonEag(labels.getString("eag2012.nextTabButton"));
+        JButton nextTabBtn = new ButtonEag(labels.getString("eag2012.commons.nextTab"));
         builder.add(nextTabBtn, cc.xy (5, rowNb));
         nextTabBtn.addActionListener(new ChangeTabBtnAction(eag, tabbedPane, model, true));
 
         setNextRow();
-        JButton saveBtn = new ButtonEag(labels.getString("eag2012.saveButton"));
+        JButton saveBtn = new ButtonEag(labels.getString("eag2012.commons.save"));
         builder.add(saveBtn, cc.xy (5, rowNb));
         saveBtn.addActionListener(new SaveBtnAction(eag, tabbedPane, model));
 
         setNextRow();
         builder.addSeparator("", cc.xyw(1, rowNb, 7));
         setNextRow();
-        JButton nextInstitutionTabBtn = new ButtonEag(labels.getString("eag2012.nextInstitutionBtn"));
+        JButton nextInstitutionTabBtn = new ButtonEag(labels.getString("eag2012.controls.nextInstitution"));
         nextInstitutionTabBtn.addActionListener(new NextInstitutionTabBtnAction(eag, tabbedPane, model));
         builder.add(nextInstitutionTabBtn, cc.xy(5, rowNb));
 
