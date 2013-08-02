@@ -1081,7 +1081,7 @@ http://purl.org/dc/terms/ http://www.dublincore.org/schemas/xmls/qdc/dcterms.xsd
                     <xsl:with-param name="custodhists" select="/ead/archdesc/custodhist" />
                 </xsl:call-template>
             </xsl:if>
-            <dc:type>TEXT</dc:type>
+            <dc:subject>Finding aid</dc:subject>
             <xsl:choose>
                 <xsl:when test='/ead/archdesc/did/langmaterial'>
                     <xsl:call-template name="language">

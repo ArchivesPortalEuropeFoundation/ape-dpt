@@ -42,11 +42,11 @@
         <!-- Provider aggregation -->
         <ore:Aggregation>
             <xsl:attribute name="rdf:about">
-                <xsl:value-of select="dc:identifier[1]"/>
+                <xsl:value-of select="concat('aggregation_', fn:replace(dc:identifier[1], ' ', '_'))"/>
             </xsl:attribute>
             <edm:aggregatedCHO>
                 <xsl:attribute name="rdf:resource">
-                    <xsl:value-of select="dc:identifier[1]"/>
+                    <xsl:value-of select="concat('providedCHO_', fn:replace(dc:identifier[1], ' ', '_'))"/>
                 </xsl:attribute>
             </edm:aggregatedCHO>
             <xsl:for-each select='europeana:dataProvider'>
@@ -62,16 +62,18 @@
                 </edm:isShownBy>
             </xsl:for-each>
             <edm:isShownAt>
-                <xsl:choose>
-                    <xsl:when test='string-length(europeana:isShownAt) > 0'>
-                        <xsl:value-of select="europeana:isShownAt"/>
-                    </xsl:when>
-                    <xsl:otherwise>
-                        <xsl:if test='position() = 1'>
-                            <xsl:value-of select="concat($prefix_url, '/', $repository_code, '/', $xml_type_name, '/', substring-after($eadid, '_'))"/>
-                        </xsl:if>
-                    </xsl:otherwise>
-                </xsl:choose>
+                <xsl:attribute name="rdf:resource">
+                    <xsl:choose>
+                        <xsl:when test='string-length(europeana:isShownAt) > 0'>
+                            <xsl:value-of select="europeana:isShownAt"/>
+                        </xsl:when>
+                        <xsl:otherwise>
+                            <xsl:if test='position() = 1'>
+                                <xsl:value-of select="concat($prefix_url, '/', $repository_code, '/', $xml_type_name, '/', substring-after($eadid, '_'))"/>
+                            </xsl:if>
+                        </xsl:otherwise>
+                    </xsl:choose>
+                </xsl:attribute>
             </edm:isShownAt>
             <!--            <xsl:choose>
                 <xsl:when test='position() = 1'>
@@ -115,7 +117,7 @@
         <!-- Provided Cultural Heritage Object -->
         <edm:ProvidedCHO>
             <xsl:attribute name="rdf:about">
-                <xsl:value-of select="dc:identifier[1]"/>
+                <xsl:value-of select="concat('providedCHO_', fn:replace(dc:identifier[1], ' ', '_'))"/>
             </xsl:attribute>
             <dc:identifier>
                 <xsl:choose>
@@ -131,16 +133,26 @@
             <xsl:call-template name="mapChoProperties"/>
             <xsl:if test='position() > 1'>
                 <dcterms:isPartOf>
-                    <xsl:value-of select="$eadid"/>
+                    <xsl:attribute name="rdf:resource">
+                        <xsl:value-of select="concat('providedCHO_', $eadid)"/>
+                    </xsl:attribute>
                 </dcterms:isPartOf>
             </xsl:if>
             <xsl:if test='preceding-sibling::record[1]/dcterms:alternative eq dcterms:alternative'>
                 <edm:isNextInSequence>
                     <xsl:attribute name="rdf:resource">
-                        <xsl:value-of select="preceding-sibling::record[1]/dc:identifier[1]" />
+                        <xsl:value-of select="concat('providedCHO_', preceding-sibling::record[1]/fn:replace(dc:identifier[1], ' ', '_'))" />
                     </xsl:attribute>
                 </edm:isNextInSequence>
             </xsl:if>
+            <dc:subject>
+                <xsl:if test='position() > 1'>
+                    <xsl:attribute name="rdf:resource">
+                        <xsl:value-of select="concat('context_', fn:replace(dc:identifier[1], ' ', '_'))"/>
+                    </xsl:attribute>
+                </xsl:if>
+            </dc:subject>
+
         </edm:ProvidedCHO>
 
         <!-- Web Resource information -->
@@ -200,7 +212,7 @@
         <xsl:if test='dcterms:alternative'>
             <skos:Concept>
                 <xsl:attribute name="rdf:about">
-                    <xsl:value-of select="dc:identifier[1]"/>
+                    <xsl:value-of select="concat('context_', fn:replace(dc:identifier[1], ' ', '_'))"/>
                 </xsl:attribute>
                 <xsl:for-each select="dcterms:alternative">
                     <skos:prefLabel>
@@ -315,11 +327,11 @@
             </xsl:call-template>
         </xsl:for-each>		
 
-        <xsl:for-each select="dc:type">
+        <!--<xsl:for-each select="dc:type">
             <xsl:call-template name="create_property">
                 <xsl:with-param name="tgt_property">dc:type</xsl:with-param>
             </xsl:call-template>
-        </xsl:for-each>		
+        </xsl:for-each>-->
         <!-- ================================================================================
            ITEMS BELOW THIS LINE ARE NOT USED IN apeESE, BUT KEPT FOR POSSIBLE FUTURE CHANGES
         ================================================================================= -->
@@ -431,11 +443,11 @@
             </edm:type>
         </xsl:for-each>		
 
-        <xsl:for-each select="europeana:unstored">
+        <!--<xsl:for-each select="europeana:unstored">
             <edm:unstored>
                 <xsl:value-of select="."/>
             </edm:unstored>
-        </xsl:for-each>
+        </xsl:for-each>-->
     </xsl:template>
 	
 	

@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<parent>
-	    <groupId>eu.archivesportaleurope.dpt</groupId>
-	    <artifactId>DPT-project</artifactId>
-	    <version>2013-07-Multi-Language-SNAPSHOT</version>
+		<groupId>eu.apenet</groupId>
+		<artifactId>DPT-project</artifactId>
+		<version>2013-07-Multi-Language-SNAPSHOT</version>
 		<relativePath>..</relativePath>
 	</parent>
 	<modelVersion>4.0.0</modelVersion>
@@ -11,10 +11,10 @@
 	<name>DPT Standalone mapping tool</name>
 	<packaging>jar</packaging>
 	<organization>
-		<name>APEx project</name>
-		<url>http://www.apex-project.eu/</url>
+		<name>APEnet project</name>
+		<url>http://www.apenet.eu/</url>
 	</organization>
-		<url>http://www.apex-project.eu/</url>
+	<url>http://www.apenet.eu/</url>
 	<build>
 		<!--release of current TOOL version: mvn clean release:prepare release:perform 
 			release:clean clean -->
@@ -140,7 +140,7 @@
 	</profiles>
 	<dependencies>
 		<dependency>
-			<groupId>eu.archivesportaleurope.dpt</groupId>
+			<groupId>eu.apenet</groupId>
 			<artifactId>DPTutils</artifactId>
 		</dependency>
 		<dependency>
