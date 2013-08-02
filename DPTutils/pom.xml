@@ -3,8 +3,8 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
 		<artifactId>DPT-project</artifactId>
-		<groupId>eu.apenet</groupId>
-		<version>2013-06-SNAPSHOT</version>
+		<groupId>eu.archivesportaleurope.dpt</groupId>
+		<version>2013-07-SNAPSHOT</version>
 		<relativePath>..</relativePath>
     </parent>
     <artifactId>DPTutils</artifactId>
