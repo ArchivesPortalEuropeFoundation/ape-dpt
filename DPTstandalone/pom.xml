@@ -140,7 +140,7 @@
 	</profiles>
 	<dependencies>
 		<dependency>
-			<groupId>eu.apenet</groupId>
+			<groupId>eu.archivesportaleurope.dpt</groupId>
 			<artifactId>DPTutils</artifactId>
 		</dependency>
 		<dependency>

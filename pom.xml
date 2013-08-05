@@ -179,7 +179,7 @@
                 <version>1.4.0</version>
             </dependency>
             <dependency>
-                <groupId>eu.apenet</groupId>
+                <groupId>eu.archivesportaleurope.dpt</groupId>
                 <artifactId>DPTutils</artifactId>
                 <version>${project.version}</version>
             </dependency>
