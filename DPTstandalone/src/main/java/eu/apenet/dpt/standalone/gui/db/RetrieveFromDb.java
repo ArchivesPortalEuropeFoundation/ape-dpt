@@ -185,7 +185,7 @@ public class RetrieveFromDb {
                 if(connection.getResponseCode() == 200){
                     LOG.info("New version available...");
                     if(JOptionPane.showConfirmDialog(contentPane, textNewAvailableVersion) == 0){
-                        BareBonesBrowserLaunch.openURL("http://dpt.archivesportaleurope.net/APE_data_preparation_tool_" + versionNb + ".zip");
+                        BareBonesBrowserLaunch.openURL("http://www.apex-project.eu/index.php/outcomes/52-public/about-the-project/outcomes/36-tools-and-manuals");
                         System.exit(0);
                     }
                 }
