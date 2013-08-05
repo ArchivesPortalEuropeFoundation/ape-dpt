@@ -27,6 +27,7 @@ public class Ead2EseInformation {
     private String languageCode;
     private String repository;
     private String roleType;
+    private StringBuilder archdescValue = new StringBuilder();        
     private String archdescRepository;
     private TreeSet<String> alternativeLanguages;
 
@@ -106,6 +107,7 @@ public class Ead2EseInformation {
                     typeRetrieved = true;
                 }
             } else if (qName.equals("repository")) {
+                LOG.info("Entered repository");
                 this.inRepository = true;
             } else if (qName.equals("language")) {
                 if (this.inDid) {
@@ -130,6 +132,7 @@ public class Ead2EseInformation {
                 // Nothing to do here
             } else if (qName.equals("repository")) {
                 this.inRepository = false;
+                LOG.info("exited repository");
             } else if (qName.equals("language")) {
                 // Nothing to do here
             }
@@ -139,7 +142,9 @@ public class Ead2EseInformation {
         public void characters(char ch[], int start, int length) {
             if (this.inRepository) {
                 int index = 0;
+                LOG.info(length);
                 String textBetween = new String(ch, start, length);
+                LOG.info(textBetween);
                 while (index < textBetween.length()) {
                     if (textBetween.charAt(index) >= ' ') {
                         index++;
@@ -154,9 +159,11 @@ public class Ead2EseInformation {
                     }
                 }
                 if (this.inArchdesc) {
-                    if (archdescRepository == null || archdescRepository.equals("")) {
-                        archdescRepository = textBetween.substring(0, index);
-                    }
+                    //if (archdescRepository == null || archdescRepository.equals("")) {
+                    //    archdescRepository = textBetween.substring(0, index);
+                    //}
+                    archdescValue.append(textBetween.substring(0, index));
+                    archdescRepository = archdescValue.toString();
                 }
             }
         }
