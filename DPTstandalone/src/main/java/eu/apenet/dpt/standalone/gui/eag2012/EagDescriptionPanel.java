@@ -72,7 +72,7 @@ public class EagDescriptionPanel extends EagPanels {
 
         Repository repository = eag.getArchguide().getDesc().getRepositories().getRepository().get(repositoryNb);
 
-        builder.addSeparator(labels.getString("eag2012.repositoryDescription"), cc.xyw(1, rowNb, 7));
+        builder.addSeparator(labels.getString("eag2012.description.repositoryDescription"), cc.xyw(1, rowNb, 7));
         setNextRow();
 
         if (repository.getRepositorhist() == null) {
@@ -84,15 +84,15 @@ public class EagDescriptionPanel extends EagPanels {
         }
         repositoryHistoryTfs = new ArrayList<TextAreaWithLanguage>(repository.getRepositorhist().getDescriptiveNote().getP().size());
         for (P p : repository.getRepositorhist().getDescriptiveNote().getP()) {
-            builder.addLabel(labels.getString("eag2012.historyOfArchive"), cc.xy(1, rowNb));
+            builder.addLabel(labels.getString("eag2012.description.epositoryHistory"), cc.xy(1, rowNb));
             TextAreaWithLanguage textAreaWithLanguage = new TextAreaWithLanguage(p.getContent(), p.getLang());
             repositoryHistoryTfs.add(textAreaWithLanguage);
             builder.add(textAreaWithLanguage.getTextField(), cc.xy(3, rowNb));
-            builder.addLabel(labels.getString("eag2012.language"), cc.xy(5, rowNb));
+            builder.addLabel(labels.getString("eag2012.commons.language"), cc.xy(5, rowNb));
             builder.add(textAreaWithLanguage.getLanguageBox(), cc.xy(7, rowNb));
             setNextRow();
         }
-        JButton addRepositorhistDescriptionBtn = new ButtonEag(labels.getString("eag2012.addHistoryDescriptionButton"));
+        JButton addRepositorhistDescriptionBtn = new ButtonEag(labels.getString("eag2012.isil.addHistoryDescription"));
         builder.add(addRepositorhistDescriptionBtn, cc.xy(1, rowNb));
         addRepositorhistDescriptionBtn.addActionListener(new EagDescriptionPanel.AddRepositorhistDescriptionBtnAction(eag, tabbedPane, model));
         setNextRow();
@@ -107,7 +107,7 @@ public class EagDescriptionPanel extends EagPanels {
             repository.getRepositorfound().getRule().add(new Rule());
         }
 
-        builder.addLabel(labels.getString("eag2012.dateArchiveFoundation"), cc.xy(1, rowNb));
+        builder.addLabel(labels.getString("eag2012.description.foundationDate"), cc.xy(1, rowNb));
         repositoryFoundationDateTf = new JTextField(repository.getRepositorfound().getDate().getContent());
         builder.add(repositoryFoundationDateTf, cc.xy(3, rowNb));
         setNextRow();
@@ -116,13 +116,13 @@ public class EagDescriptionPanel extends EagPanels {
         for (Rule rule : repository.getRepositorfound().getRule()) {
             TextFieldWithLanguage textFieldWithLanguage = new TextFieldWithLanguage(rule.getContent(), rule.getLang());
             repositoryFoundationTfs.add(textFieldWithLanguage);
-            builder.addLabel(labels.getString("eag2012.archiveFoundingAct"), cc.xy(1, rowNb));
+            builder.addLabel(labels.getString("eag2012.description.ruleOfRepositoryFoundation"), cc.xy(1, rowNb));
             builder.add(textFieldWithLanguage.getTextField(), cc.xy(3, rowNb));
-            builder.addLabel(labels.getString("eag2012.language"), cc.xy(5, rowNb));
+            builder.addLabel(labels.getString("eag2012.commons.language"), cc.xy(5, rowNb));
             builder.add(textFieldWithLanguage.getLanguageBox(), cc.xy(7, rowNb));
             setNextRow();
         }
-        JButton addRuleFoundationBtn = new ButtonEag(labels.getString("eag2012.addRuleButton"));
+        JButton addRuleFoundationBtn = new ButtonEag(labels.getString("eag2012.control.addRule"));
         builder.add(addRuleFoundationBtn, cc.xy(1, rowNb));
         addRuleFoundationBtn.addActionListener(new AddRuleFoundationBtnAction(eag, tabbedPane, model));
         setNextRow();
@@ -137,7 +137,7 @@ public class EagDescriptionPanel extends EagPanels {
             repository.getRepositorsup().getRule().add(new Rule());
         }
 
-        builder.addLabel(labels.getString("eag2012.dateArchiveClosure"), cc.xy(1, rowNb));
+        builder.addLabel(labels.getString("eag2012.description.dateArchiveClosure"), cc.xy(1, rowNb));
         repositorySuppressionDateTf = new JTextField(repository.getRepositorsup().getDate().getContent());
         builder.add(repositorySuppressionDateTf, cc.xy(3, rowNb));
         setNextRow();
@@ -146,18 +146,18 @@ public class EagDescriptionPanel extends EagPanels {
         for (Rule rule : repository.getRepositorsup().getRule()) {
             TextFieldWithLanguage textFieldWithLanguage = new TextFieldWithLanguage(rule.getContent(), rule.getLang());
             repositorySuppressionTfs.add(textFieldWithLanguage);
-            builder.addLabel(labels.getString("eag2012.archiveClosureAct"), cc.xy(1, rowNb));
+            builder.addLabel(labels.getString("eag2012.description.ruleOfRepositorySuppression"), cc.xy(1, rowNb));
             builder.add(textFieldWithLanguage.getTextField(), cc.xy(3, rowNb));
-            builder.addLabel(labels.getString("eag2012.language"), cc.xy(5, rowNb));
+            builder.addLabel(labels.getString("eag2012.commons.language"), cc.xy(5, rowNb));
             builder.add(textFieldWithLanguage.getLanguageBox(), cc.xy(7, rowNb));
             setNextRow();
         }
-        JButton addRuleSuppressionBtn = new ButtonEag(labels.getString("eag2012.addRuleButton"));
+        JButton addRuleSuppressionBtn = new ButtonEag(labels.getString("eag2012.control.addRule"));
         builder.add(addRuleSuppressionBtn, cc.xy(1, rowNb));
         addRuleSuppressionBtn.addActionListener(new AddRuleSuppressionBtnAction(eag, tabbedPane, model));
         setNextRow();
 
-        builder.addSeparator(labels.getString("eag2012.administrativeStructure"), cc.xyw(1, rowNb, 7));
+        builder.addSeparator(labels.getString("eag2012.description.administrativeStructure"), cc.xyw(1, rowNb, 7));
         setNextRow();
 
         if (repository.getAdminhierarchy() == null) {
@@ -168,20 +168,20 @@ public class EagDescriptionPanel extends EagPanels {
         }
         unitAdministrativeStructureTfs = new ArrayList<TextAreaWithLanguage>(repository.getAdminhierarchy().getAdminunit().size());
         for (Adminunit adminunit : repository.getAdminhierarchy().getAdminunit()) {
-            builder.addLabel(labels.getString("eag2012.unitAdministrativeStructure"), cc.xy(1, rowNb));
+            builder.addLabel(labels.getString("eag2012.description.unitOfAdministrativeStructure"), cc.xy(1, rowNb));
             TextAreaWithLanguage textAreaWithLanguage = new TextAreaWithLanguage(adminunit.getContent(), adminunit.getLang());
             unitAdministrativeStructureTfs.add(textAreaWithLanguage);
             builder.add(textAreaWithLanguage.getTextField(), cc.xy(3, rowNb));
-            builder.addLabel(labels.getString("eag2012.language"), cc.xy(5, rowNb));
+            builder.addLabel(labels.getString("eag2012.commons.language"), cc.xy(5, rowNb));
             builder.add(textAreaWithLanguage.getLanguageBox(), cc.xy(7, rowNb));
             setNextRow();
         }
-        JButton addUnitAdministrativeStructureBtn = new ButtonEag(labels.getString("eag2012.addUnitAdministrativeStructureButton"));
+        JButton addUnitAdministrativeStructureBtn = new ButtonEag(labels.getString("eag2012.description.addAdministrationUnits"));
         builder.add(addUnitAdministrativeStructureBtn, cc.xy(1, rowNb));
         addUnitAdministrativeStructureBtn.addActionListener(new EagDescriptionPanel.AddUnitAdministrativeStructureBtnAction(eag, tabbedPane, model));
         setNextRow();
 
-        builder.addSeparator(labels.getString("eag2012.buildingDescription"), cc.xyw(1, rowNb, 7));
+        builder.addSeparator(labels.getString("eag2012.description.buildingDescription"), cc.xyw(1, rowNb, 7));
         setNextRow();
 
         if (repository.getBuildinginfo() == null) {
@@ -196,15 +196,15 @@ public class EagDescriptionPanel extends EagPanels {
         }
         buildingTfs = new ArrayList<TextAreaWithLanguage>(repository.getBuildinginfo().getBuilding().getDescriptiveNote().getP().size());
         for (P p : repository.getBuildinginfo().getBuilding().getDescriptiveNote().getP()) {
-            builder.addLabel(labels.getString("eag2012.building"), cc.xy(1, rowNb));
+            builder.addLabel(labels.getString("eag2012.description.building"), cc.xy(1, rowNb));
             TextAreaWithLanguage textAreaWithLanguage = new TextAreaWithLanguage(p.getContent(), p.getLang());
             buildingTfs.add(textAreaWithLanguage);
             builder.add(textAreaWithLanguage.getTextField(), cc.xy(3, rowNb));
-            builder.addLabel(labels.getString("eag2012.language"), cc.xy(5, rowNb));
+            builder.addLabel(labels.getString("eag2012.commons.language"), cc.xy(5, rowNb));
             builder.add(textAreaWithLanguage.getLanguageBox(), cc.xy(7, rowNb));
             setNextRow();
         }
-        JButton addBuildingDescriptionBtn = new ButtonEag(labels.getString("eag2012.addBuildingDescriptionButton"));
+        JButton addBuildingDescriptionBtn = new ButtonEag(labels.getString("eag2012.isil.addBuildingDescription"));
         builder.add(addBuildingDescriptionBtn, cc.xy(1, rowNb));
         addBuildingDescriptionBtn.addActionListener(new EagDescriptionPanel.AddBuildingDescriptionBtnAction(eag, tabbedPane, model));
         setNextRow();
@@ -216,7 +216,7 @@ public class EagDescriptionPanel extends EagPanels {
             repositorarea.setNum(num);
             repository.getBuildinginfo().setRepositorarea(repositorarea);
         }
-        builder.addLabel(labels.getString("eag2012.repositoryArea"), cc.xy(1, rowNb));
+        builder.addLabel(labels.getString("eag2012.description.repositoryArea"), cc.xy(1, rowNb));
         repositoryAreaTf = new JTextField(repository.getBuildinginfo().getRepositorarea().getNum().getContent());
         builder.add(repositoryAreaTf, cc.xy(3, rowNb));
         setNextRow();
@@ -228,13 +228,13 @@ public class EagDescriptionPanel extends EagPanels {
             lengthshelf.setNum(num);
             repository.getBuildinginfo().setLengthshelf(lengthshelf);
         }
-        builder.addLabel(labels.getString("eag2012.lengthShelf"), cc.xy(1, rowNb));
+        builder.addLabel(labels.getString("eag2012.description.lengthShelf"), cc.xy(1, rowNb));
         lengthShelfTf = new JTextField(repository.getBuildinginfo().getLengthshelf().getNum().getContent());
         builder.add(lengthShelfTf, cc.xy(3, rowNb));
         setNextRow();
 
 
-        builder.addSeparator(labels.getString("eag2012.holdingDescription"), cc.xyw(1, rowNb, 7));
+        builder.addSeparator(labels.getString("eag2012.description.holdingDescription"), cc.xyw(1, rowNb, 7));
         setNextRow();
 
         if (repository.getHoldings() == null) {
@@ -259,20 +259,20 @@ public class EagDescriptionPanel extends EagPanels {
         }
         archivalAndOthersTfs = new ArrayList<TextAreaWithLanguage>(repository.getHoldings().getDescriptiveNote().getP().size());
         for (P p : repository.getHoldings().getDescriptiveNote().getP()) {
-            builder.addLabel(labels.getString("eag2012.archivalAndOtherHoldings"), cc.xy(1, rowNb));
+            builder.addLabel(labels.getString("eag2012.description.archivalAndOtherHoldings"), cc.xy(1, rowNb));
             TextAreaWithLanguage textAreaWithLanguage = new TextAreaWithLanguage(p.getContent(), p.getLang());
             archivalAndOthersTfs.add(textAreaWithLanguage);
             builder.add(textAreaWithLanguage.getTextField(), cc.xy(3, rowNb));
-            builder.addLabel(labels.getString("eag2012.language"), cc.xy(5, rowNb));
+            builder.addLabel(labels.getString("eag2012.commons.language"), cc.xy(5, rowNb));
             builder.add(textAreaWithLanguage.getLanguageBox(), cc.xy(7, rowNb));
             setNextRow();
         }
-        JButton addArchivalAndOthersDescriptionBtn = new ButtonEag(labels.getString("eag2012.addArchivalAndOtherHoldingsDescriptionButton"));
+        JButton addArchivalAndOthersDescriptionBtn = new ButtonEag(labels.getString("eag2012.isil.addArchivalAndOtherHoldingsDescription"));
         builder.add(addArchivalAndOthersDescriptionBtn, cc.xy(1, rowNb));
         addArchivalAndOthersDescriptionBtn.addActionListener(new EagDescriptionPanel.AddArchivalAndOthersDescriptionBtnAction(eag, tabbedPane, model));
         setNextRow();
 
-        builder.addSeparator(labels.getString("eag2012.yearsOfHoldings"), cc.xy(1, rowNb));
+        builder.addSeparator(labels.getString("eag2012.description.yearsOfTheHoldings"), cc.xy(1, rowNb));
         setNextRow();
 
         if (repository.getHoldings().getDateSet() != null) {
@@ -287,15 +287,15 @@ public class EagDescriptionPanel extends EagPanels {
                 if (dateObj instanceof Date) {
                     TextFieldWithDate textFieldWithDate = new TextFieldWithDate("", "", "", "", ((Date)dateObj).getContent());
                     holdingsYearsTfs.add(textFieldWithDate);
-                    builder.addLabel(labels.getString("eag2012.yearLabel"), cc.xy(1, rowNb));
+                    builder.addLabel(labels.getString("eag2012.commons.year"), cc.xy(1, rowNb));
                     builder.add(textFieldWithDate.getDateField(), cc.xy(3, rowNb));
                 }
                 if (dateObj instanceof DateRange) {
                     TextFieldWithDate textFieldWithDate = new TextFieldWithDate("", "", ((DateRange)dateObj).getFromDate().getContent(), ((DateRange)dateObj).getToDate().getContent(), "");
                     holdingsYearsTfs.add(textFieldWithDate);
-                    builder.addLabel(labels.getString("eag2012.yearLabel") + " " + labels.getString("eag2012.fromLabel"), cc.xy(1, rowNb));
+                    builder.addLabel(labels.getString("eag2012.commons.year") + " " + labels.getString("eag2012.commons.from"), cc.xy(1, rowNb));
                     builder.add(textFieldWithDate.getFromDateField(), cc.xy(3, rowNb));
-                    builder.addLabel(labels.getString("eag2012.toLabel"), cc.xy(5, rowNb));
+                    builder.addLabel(labels.getString("eag2012.commons.to"), cc.xy(5, rowNb));
                     builder.add(textFieldWithDate.getToDateField(), cc.xy(7, rowNb));
                 }
                 setNextRow();
@@ -305,28 +305,28 @@ public class EagDescriptionPanel extends EagPanels {
             if (repository.getHoldings().getDate() != null) {
                 TextFieldWithDate textFieldWithDate = new TextFieldWithDate("", "", "", "", repository.getHoldings().getDate().getContent());
                 holdingsYearsTfs.add(textFieldWithDate);
-                builder.addLabel(labels.getString("eag2012.yearLabel"), cc.xy(1, rowNb));
+                builder.addLabel(labels.getString("eag2012.commons.year"), cc.xy(1, rowNb));
                 builder.add(textFieldWithDate.getDateField(), cc.xy(3, rowNb));
                 setNextRow();
             }
             if (repository.getHoldings().getDateRange() != null) {
                 TextFieldWithDate textFieldWithDate = new TextFieldWithDate("", "", repository.getHoldings().getDateRange().getFromDate().getContent(), repository.getHoldings().getDateRange().getToDate().getContent(), "");
                 holdingsYearsTfs.add(textFieldWithDate);
-                builder.addLabel(labels.getString("eag2012.yearLabel") + " " + labels.getString("eag2012.fromLabel"), cc.xy(1, rowNb));
+                builder.addLabel(labels.getString("eag2012.commons.year") + " " + labels.getString("eag2012.commons.from"), cc.xy(1, rowNb));
                 builder.add(textFieldWithDate.getFromDateField(), cc.xy(3, rowNb));
-                builder.addLabel(labels.getString("eag2012.toLabel"), cc.xy(5, rowNb));
+                builder.addLabel(labels.getString("eag2012.commons.to"), cc.xy(5, rowNb));
                 builder.add(textFieldWithDate.getToDateField(), cc.xy(7, rowNb));
                 setNextRow();
             }
         }
-        JButton addSingleYearBtn = new ButtonEag(labels.getString("eag2012.addYearButton"));
+        JButton addSingleYearBtn = new ButtonEag(labels.getString("eag2012.commons.addYearButton"));
         addSingleYearBtn.addActionListener(new AddSingleYearAction(eag, tabbedPane, model));
         builder.add(addSingleYearBtn, cc.xy(1, rowNb));
-        JButton addYearRangeBtn = new ButtonEag(labels.getString("eag2012.addYearRangeButton"));
+        JButton addYearRangeBtn = new ButtonEag(labels.getString("eag2012.commons.addYearRangeButton"));
         addYearRangeBtn.addActionListener(new AddYearRangeAction(eag, tabbedPane, model));
         builder.add(addYearRangeBtn, cc.xy(3, rowNb));
         setNextRow();
-        builder.addLabel(labels.getString("eag2012.extent"), cc.xy(1, rowNb));
+        builder.addLabel(labels.getString("eag2012.description.extent"), cc.xy(1, rowNb));
         extentTf = new JTextField(repository.getHoldings().getExtent().getNum().getContent());
         builder.add(extentTf, cc.xy(3, rowNb));
         setNextRow();
@@ -334,32 +334,32 @@ public class EagDescriptionPanel extends EagPanels {
         builder.addSeparator("", cc.xyw(1, rowNb, 7));
         setNextRow();
 
-        JButton exitBtn = new ButtonEag(labels.getString("eag2012.exitButton"));
+        JButton exitBtn = new ButtonEag(labels.getString("eag2012.commons.exit"));
         builder.add(exitBtn, cc.xy(1, rowNb));
         exitBtn.addActionListener(new EagPanels.ExitBtnAction());
 
-        JButton previousTabBtn = new ButtonEag(labels.getString("eag2012.previousTabButton"));
+        JButton previousTabBtn = new ButtonEag(labels.getString("eag2012.commons.previousTab"));
         builder.add(previousTabBtn, cc.xy(3, rowNb));
         previousTabBtn.addActionListener(new EagDescriptionPanel.ChangeTabBtnAction(eag, tabbedPane, model, false));
 
         if(repositoryNb == 0) {
-            JButton nextTabBtn = new ButtonEag(labels.getString("eag2012.nextTabButton"));
+            JButton nextTabBtn = new ButtonEag(labels.getString("eag2012.commons.nextTab"));
             builder.add(nextTabBtn, cc.xy(5, rowNb));
             nextTabBtn.addActionListener(new EagDescriptionPanel.ChangeTabBtnAction(eag, tabbedPane, model, true));
         }
 
         setNextRow();
-        JButton saveBtn = new ButtonEag(labels.getString("eag2012.saveButton"));
+        JButton saveBtn = new ButtonEag(labels.getString("eag2012.commons.save"));
         builder.add(saveBtn, cc.xy(5, rowNb));
         saveBtn.addActionListener(new EagDescriptionPanel.SaveBtnAction(eag, tabbedPane, model));
 
         setNextRow();
         builder.addSeparator("", cc.xyw(1, rowNb, 7));
         setNextRow();
-        JButton previousInstitutionTabBtn = new ButtonEag(labels.getString("eag2012.previousInstitutionBtn"));
+        JButton previousInstitutionTabBtn = new ButtonEag(labels.getString("eag2012.controls.previousInstitution"));
         previousInstitutionTabBtn.addActionListener(new PreviousInstitutionTabBtnAction(eag, tabbedPane, model));
         builder.add(previousInstitutionTabBtn, cc.xy(1, rowNb));
-        JButton nextInstitutionTabBtn = new ButtonEag(labels.getString("eag2012.nextInstitutionBtn"));
+        JButton nextInstitutionTabBtn = new ButtonEag(labels.getString("eag2012.controls.nextInstitution"));
         nextInstitutionTabBtn.addActionListener(new NextInstitutionTabBtnAction(eag, tabbedPane, model));
         builder.add(nextInstitutionTabBtn, cc.xy(5, rowNb));
 

@@ -60,7 +60,7 @@ public class EagRelationsPanel extends EagPanels {
             eag.setRelations(new Relations());
         Relations relations = eag.getRelations();
 
-        builder.addSeparator(labels.getString("eag2012.resourceRelations"), cc.xyw(1, rowNb, 7));
+        builder.addSeparator(labels.getString("eag2012.relations.resourceRelations"), cc.xyw(1, rowNb, 7));
         setNextRow();
 
         resourceRelationTypes = new ArrayList<ResourceRelationType>(relations.getResourceRelation().size());
@@ -75,9 +75,9 @@ public class EagRelationsPanel extends EagPanels {
             ResourceRelationType resourceRelationType = new ResourceRelationType(resourceRelation.getResourceRelationType(), resourceRelation.getHref(), resourceRelation.getRelationEntry().getContent(), resourceRelation.getDescriptiveNote().getP().get(0).getContent(), resourceRelation.getDescriptiveNote().getP().get(0).getLang(), true);
             resourceRelationTypes.add(resourceRelationType);
 
-            builder.addLabel(labels.getString("eag2012.linkToResourceRelation"), cc.xy(1, rowNb));
+            builder.addLabel(labels.getString("eag2012.relations.linkToResourceRelation"), cc.xy(1, rowNb));
             builder.add(resourceRelationType.getWebsite(), cc.xy(3, rowNb));
-            builder.addLabel(labels.getString("eag2012.typeRelation"), cc.xy(5, rowNb));
+            builder.addLabel(labels.getString("eag2012.relations.typeOfRelation"), cc.xy(5, rowNb));
             builder.add(resourceRelationType.getTypeRelations(), cc.xy(7, rowNb));
             setNextRow();
             if(errors.contains("resourceRelationTypes")) {
@@ -90,22 +90,22 @@ public class EagRelationsPanel extends EagPanels {
                 setNextRow();
             }
 
-            builder.addLabel(labels.getString("eag2012.titleIdRelatedMaterial"), cc.xy(1, rowNb));
+            builder.addLabel(labels.getString("eag2012.relations.titleOfRelatedMaterial"), cc.xy(1, rowNb));
             builder.add(resourceRelationType.getTitleAndId(), cc.xy(3, rowNb));
             setNextRow();
 
-            builder.addLabel(labels.getString("eag2012.descriptionOfRelation"), cc.xy(1, rowNb));
+            builder.addLabel(labels.getString("eag2012.relations.descriptionOfRelation"), cc.xy(1, rowNb));
             builder.add(resourceRelationType.getDescription().getTextField(), cc.xy(3, rowNb));
-            builder.addLabel(labels.getString("eag2012.language"), cc.xy(5, rowNb));
+            builder.addLabel(labels.getString("eag2012.commons.language"), cc.xy(5, rowNb));
             builder.add(resourceRelationType.getDescription().getLanguageBox(), cc.xy(7, rowNb));
             setNextRow();
         }
-        JButton addResourceRelation = new ButtonEag(labels.getString("eag2012.addResourceRelationBtn"));
+        JButton addResourceRelation = new ButtonEag(labels.getString("eag2012.relations.addNewResourceRelation"));
         builder.add(addResourceRelation, cc.xy (1, rowNb));
         addResourceRelation.addActionListener(new AddResourceRelationAction(eag, tabbedPane, model));
         setNextRow();
 
-        builder.addSeparator(labels.getString("eag2012.institutionRelations"), cc.xyw(1, rowNb, 7));
+        builder.addSeparator(labels.getString("eag2012.relations.institutionRelation"), cc.xyw(1, rowNb, 7));
         setNextRow();
 
         institutionRelationTypes = new ArrayList<ResourceRelationType>(relations.getEagRelation().size());
@@ -120,9 +120,9 @@ public class EagRelationsPanel extends EagPanels {
             ResourceRelationType resourceRelationType = new ResourceRelationType(eagRelation.getEagRelationType(), eagRelation.getHref(), eagRelation.getRelationEntry().get(0).getContent(), eagRelation.getDescriptiveNote().getP().get(0).getContent(), eagRelation.getDescriptiveNote().getP().get(0).getLang(), false);
             institutionRelationTypes.add(resourceRelationType);
 
-            builder.addLabel(labels.getString("eag2012.linkToInstitutionRelation"), cc.xy(1, rowNb));
+            builder.addLabel(labels.getString("eag2012.relations.websiteOfDescription"), cc.xy(1, rowNb));
             builder.add(resourceRelationType.getWebsite(), cc.xy(3, rowNb));
-            builder.addLabel(labels.getString("eag2012.typeRelation"), cc.xy(5, rowNb));
+            builder.addLabel(labels.getString("eag2012.relations.typeOfRelation"), cc.xy(5, rowNb));
             builder.add(resourceRelationType.getTypeRelations(), cc.xy(7, rowNb));
             setNextRow();
             if(errors.contains("institutionRelationTypes")) {
@@ -135,17 +135,17 @@ public class EagRelationsPanel extends EagPanels {
                 setNextRow();
             }
 
-            builder.addLabel(labels.getString("eag2012.nameIdRelatedInstitution"), cc.xy(1, rowNb));
+            builder.addLabel(labels.getString("eag2012.relations.nameIdRelatedInstitution"), cc.xy(1, rowNb));
             builder.add(resourceRelationType.getTitleAndId(), cc.xy(3, rowNb));
             setNextRow();
 
-            builder.addLabel(labels.getString("eag2012.descriptionOfRelation"), cc.xy(1, rowNb));
+            builder.addLabel(labels.getString("eag2012.relations.descriptionOfRelation"), cc.xy(1, rowNb));
             builder.add(resourceRelationType.getDescription().getTextField(), cc.xy(3, rowNb));
-            builder.addLabel(labels.getString("eag2012.language"), cc.xy(5, rowNb));
+            builder.addLabel(labels.getString("eag2012.commons.language"), cc.xy(5, rowNb));
             builder.add(resourceRelationType.getDescription().getLanguageBox(), cc.xy(7, rowNb));
             setNextRow();
         }
-        JButton addInstitutionRelation = new ButtonEag(labels.getString("eag2012.addInstitutionRelationBtn"));
+        JButton addInstitutionRelation = new ButtonEag(labels.getString("eag2012.relations.addNewInstitutionRelation"));
         builder.add(addInstitutionRelation, cc.xy (1, rowNb));
         addInstitutionRelation.addActionListener(new AddInstitutionRelationAction(eag, tabbedPane, model));
         setNextRow();
@@ -153,22 +153,22 @@ public class EagRelationsPanel extends EagPanels {
         builder.addSeparator("", cc.xyw(1, rowNb, 7));
         setNextRow();
 
-        JButton exitBtn = new ButtonEag(labels.getString("eag2012.exitButton"));
+        JButton exitBtn = new ButtonEag(labels.getString("eag2012.commons.exit"));
         builder.add(exitBtn, cc.xy (1, rowNb));
         exitBtn.addActionListener(new ExitBtnAction());
 
-        JButton previousTabBtn = new ButtonEag(labels.getString("eag2012.previousTabButton"));
+        JButton previousTabBtn = new ButtonEag(labels.getString("eag2012.commons.previousTab"));
         builder.add(previousTabBtn, cc.xy (3, rowNb));
         previousTabBtn.addActionListener(new PreviousTabBtnAction(eag, tabbedPane, model));
 
-        JButton saveBtn = new ButtonEag(labels.getString("eag2012.saveButton"));
+        JButton saveBtn = new ButtonEag(labels.getString("eag2012.commons.save"));
         builder.add(saveBtn, cc.xy (5, rowNb));
         saveBtn.addActionListener(new SaveBtnAction(eag, tabbedPane, model));
 
         setNextRow();
         builder.addSeparator("", cc.xyw(1, rowNb, 7));
         setNextRow();
-        JButton nextInstitutionTabBtn = new ButtonEag(labels.getString("eag2012.nextInstitutionBtn"));
+        JButton nextInstitutionTabBtn = new ButtonEag(labels.getString("eag2012.controls.nextInstitution"));
         nextInstitutionTabBtn.addActionListener(new NextInstitutionTabBtnAction(eag, tabbedPane, model));
         builder.add(nextInstitutionTabBtn, cc.xy(5, rowNb));
 

@@ -525,11 +525,11 @@ public class DataPreparationToolGUI extends JFrame {
                             if (ReadXml.isEagFile(eagFile)) {
                                 new Eag2012Frame(eagFile, false, getContentPane().getSize(), (ProfileListModel) getXmlEadList().getModel(), labels);
                             } else {
-                                JOptionPane.showMessageDialog(rootPane, labels.getString("eag2012.notAnEagFile"));
+                                JOptionPane.showMessageDialog(rootPane, labels.getString("eag2012.errors.notAnEagFile"));
                             }
                         } catch (SAXException ex) {
                             if (ex instanceof SAXParseException) {
-                                JOptionPane.showMessageDialog(rootPane, labels.getString("eag2012.notAnEagFile"));
+                                JOptionPane.showMessageDialog(rootPane, labels.getString("eag2012.errors.notAnEagFile"));
                             }
                             java.util.logging.Logger.getLogger(DataPreparationToolGUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
                         } catch (IOException ex) {
@@ -560,11 +560,11 @@ public class DataPreparationToolGUI extends JFrame {
                             if (ReadXml.isEagFile(eagFile)) {
                                 new Eag2012Frame(eagFile, true, getContentPane().getSize(), (ProfileListModel) getXmlEadList().getModel(), labels);
                             } else {
-                                JOptionPane.showMessageDialog(rootPane, labels.getString("eag2012.notAnEagFile"));
+                                JOptionPane.showMessageDialog(rootPane, labels.getString("eag2012.errors.notAnEagFile"));
                             }
                         } catch (SAXException ex) {
                             if (ex instanceof SAXParseException) {
-                                JOptionPane.showMessageDialog(rootPane, labels.getString("eag2012.notAnEagFile"));
+                                JOptionPane.showMessageDialog(rootPane, labels.getString("eag2012.errors.notAnEagFile"));
                             }
                             java.util.logging.Logger.getLogger(DataPreparationToolGUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
                         } catch (IOException ex) {

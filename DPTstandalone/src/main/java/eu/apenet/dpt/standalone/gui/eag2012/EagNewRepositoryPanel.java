@@ -54,13 +54,13 @@ public class EagNewRepositoryPanel extends EagPanels {
         if(repositoryNb == 0) {
             scrollPane = new JScrollPane(new EagInstitutionPanel(eag, tabbedPane, mainTabbedPane, eag2012Frame, model, isNew, labels, countrycode, mainagencycode, repositoryNb).buildEditorPanel(null));
             scrollPane.getVerticalScrollBar().setUnitIncrement(20);
-            tabbedPane.add(labels.getString("eag2012.yourInstitutionTab"), scrollPane);
-            tabbedPane.add(labels.getString("eag2012.identityTab"), null);
-            tabbedPane.add(labels.getString("eag2012.contactTab"), null);
-            tabbedPane.add(labels.getString("eag2012.accessAndServicesTab"), null);
-            tabbedPane.add(labels.getString("eag2012.descriptionTab"), null);
-            tabbedPane.add(labels.getString("eag2012.controlTab"), null);
-            tabbedPane.add(labels.getString("eag2012.relationsTab"), null);
+            tabbedPane.add(labels.getString("eag2012.tab.yourInstitution"), scrollPane);
+            tabbedPane.add(labels.getString("eag2012.tab.identity"), null);
+            tabbedPane.add(labels.getString("eag2012.tab.contact"), null);
+            tabbedPane.add(labels.getString("eag2012.tab.accessAndServices"), null);
+            tabbedPane.add(labels.getString("eag2012.tab.description"), null);
+            tabbedPane.add(labels.getString("eag2012.tab.control"), null);
+            tabbedPane.add(labels.getString("eag2012.tab.relations"), null);
             tabbedPane.setEnabledAt(0, true);
             tabbedPane.setEnabledAt(1, false);
             tabbedPane.setEnabledAt(2, false);
@@ -71,13 +71,13 @@ public class EagNewRepositoryPanel extends EagPanels {
         } else {
             scrollPane = new JScrollPane(new EagContactPanel(eag, tabbedPane, mainTabbedPane, eag2012Frame, model, labels, repositoryNb).buildEditorPanel(null));
             scrollPane.getVerticalScrollBar().setUnitIncrement(20);
-            tabbedPane.add(labels.getString("eag2012.yourInstitutionTab"), null);
-            tabbedPane.add(labels.getString("eag2012.identityTab"), null);
-            tabbedPane.add(labels.getString("eag2012.contactTab"), scrollPane);
-            tabbedPane.add(labels.getString("eag2012.accessAndServicesTab"), null);
-            tabbedPane.add(labels.getString("eag2012.descriptionTab"), null);
-            tabbedPane.add(labels.getString("eag2012.controlTab"), null);
-            tabbedPane.add(labels.getString("eag2012.relationsTab"), null);
+            tabbedPane.add(labels.getString("eag2012.tab.yourInstitution"), null);
+            tabbedPane.add(labels.getString("eag2012.tab.identity"), null);
+            tabbedPane.add(labels.getString("eag2012.tab.contact"), scrollPane);
+            tabbedPane.add(labels.getString("eag2012.tab.accessAndServices"), null);
+            tabbedPane.add(labels.getString("eag2012.tab.description"), null);
+            tabbedPane.add(labels.getString("eag2012.tab.control"), null);
+            tabbedPane.add(labels.getString("eag2012.tab.relations"), null);
             tabbedPane.setEnabledAt(0, false);
             tabbedPane.setEnabledAt(1, false);
             tabbedPane.setEnabledAt(2, true);
