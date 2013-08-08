@@ -19,6 +19,19 @@
                     <target>1.6</target>
                 </configuration>
             </plugin>
+            <plugin>
+                <artifactId>maven-jar-plugin</artifactId>
+                <configuration>
+                    <resources>
+                    	<resource>
+                    		<directory>src/main/resources/i18n</directory>
+                    		<includes>
+                    			<include>**/*properties</include>
+                    		</includes>
+                    	</resource>
+                    </resources>
+                </configuration>
+            </plugin>
         </plugins>
     </build>
     <dependencies>

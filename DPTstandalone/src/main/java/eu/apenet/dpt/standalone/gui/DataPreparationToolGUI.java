@@ -161,6 +161,7 @@ public class DataPreparationToolGUI extends JFrame {
     private void setupTool() {
         Locale currentLocale = Locale.getDefault();
         labels = ResourceBundle.getBundle("i18n/apeBundle", currentLocale);
+        ResourceBundle.getBundle("i18n/eag2012", currentLocale);
 
         retrieveFromDb = new RetrieveFromDb();
         apePanel = new APEPanel(labels, getContentPane(), this, retrieveFromDb);
