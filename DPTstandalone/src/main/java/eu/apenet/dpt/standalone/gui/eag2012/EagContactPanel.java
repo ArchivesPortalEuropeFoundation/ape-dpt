@@ -8,6 +8,7 @@ import eu.apenet.dpt.standalone.gui.Utilities;
 import static eu.apenet.dpt.standalone.gui.eag2012.EagPanels.createErrorLabel;
 
 import eu.apenet.dpt.standalone.gui.eag2012.SwingStructures.LocationType;
+import eu.apenet.dpt.standalone.gui.eag2012.SwingStructures.TextFieldWithLanguage;
 import eu.apenet.dpt.utils.eag2012.*;
 import org.apache.commons.lang.StringUtils;
 
@@ -28,7 +29,7 @@ import java.util.ResourceBundle;
  * @author Yoann Moranville
  */
 public class EagContactPanel extends EagPanels {
-    private JTextField repositoryNameTf;
+    private List<TextFieldWithLanguage> repositoryNameTfs;
     private JComboBox repositoryRoleTypeCombo = new JComboBox(repositoryRoles);
 
     private List<LocationType> locationFields;
@@ -71,20 +72,27 @@ public class EagContactPanel extends EagPanels {
         Repository repository = eag.getArchguide().getDesc().getRepositories().getRepository().get(repositoryNb);
 
         if(repositoryNb > 0) {
-            if(repository.getRepositoryName() == null)
-                repository.setRepositoryName(new RepositoryName());
-            repositoryNameTf = new JTextField(repository.getRepositoryName().getContent());
-            builder.addLabel(labels.getString("eag2012.nameOfRepository"), cc.xy(1, rowNb));
-            builder.add(repositoryNameTf, cc.xy(3, rowNb));
-
             if(repository.getRepositoryRole() == null)
                 repository.setRepositoryRole(new RepositoryRole());
             if(Arrays.asList(repositoryRoles).contains(repository.getRepositoryRole().getValue()))
                 repositoryRoleTypeCombo.setSelectedItem(repository.getRepositoryRole().getValue());
-            builder.addLabel(labels.getString("eag2012.roleRepository"), cc.xy(5, rowNb));
-            builder.add(repositoryRoleTypeCombo, cc.xy(7, rowNb));
+            builder.addLabel(labels.getString("eag2012.roleRepository"), cc.xy(1, rowNb));
+            builder.add(repositoryRoleTypeCombo, cc.xy(3, rowNb));
 
             setNextRow();
+
+            if(repository.getRepositoryName().size() == 0)
+                repository.getRepositoryName().add(new RepositoryName());
+            repositoryNameTfs = new ArrayList<TextFieldWithLanguage>(repository.getRepositoryName().size());
+            for(RepositoryName repositoryName : repository.getRepositoryName()) {
+                builder.addLabel(labels.getString("eag2012.nameOfRepository"), cc.xy(1, rowNb));
+                TextFieldWithLanguage textFieldWithLanguage = new TextFieldWithLanguage(repositoryName.getContent(), repositoryName.getLang());
+                repositoryNameTfs.add(textFieldWithLanguage);
+                builder.add(textFieldWithLanguage.getTextField(), cc.xy(3, rowNb));
+                builder.addLabel(labels.getString("eag2012.language"), cc.xy(5, rowNb));
+                builder.add(textFieldWithLanguage.getLanguageBox(), cc.xy(7, rowNb));
+                setNextRow();
+            }
         }
 
         boolean hasMinimumOnePostalAddress = false;
@@ -553,12 +561,18 @@ public class EagContactPanel extends EagPanels {
             Repository repository = eag.getArchguide().getDesc().getRepositories().getRepository().get(repositoryNb);
 
             if(repositoryNb > 0) {
-                if(StringUtils.isNotEmpty(repositoryNameTf.getText())) {
-                    repository.getRepositoryName().setContent(repositoryNameTf.getText());
-                    mainTabbedPane.setTitleAt(repositoryNb, repositoryNameTf.getText());
-                } else {
-                    repository.setRepositoryName(null);
+                if(repositoryNameTfs.size() > 0) {
+                    repository.getRepositoryName().clear();
+                    for(TextFieldWithLanguage textFieldWithLanguage : repositoryNameTfs) {
+                        if(StringUtils.isNotEmpty(textFieldWithLanguage.getTextValue())) {
+                            RepositoryName repositoryName = new RepositoryName();
+                            repositoryName.setContent(textFieldWithLanguage.getTextValue());
+                            repositoryName.setLang(textFieldWithLanguage.getLanguage());
+                            repository.getRepositoryName().add(repositoryName);
+                        }
+                    }
                 }
+
                 if(!repositoryRoleTypeCombo.getSelectedItem().equals("---")) {
                     repository.getRepositoryRole().setValue((String)repositoryRoleTypeCombo.getSelectedItem());
                 } else {
@@ -569,11 +583,13 @@ public class EagContactPanel extends EagPanels {
                 repository.getLocation().clear();
 
                 String defaultCountry = "";
+//                int locationNb = 0;
                 for(LocationType locationType : locationFields) {
+//                    locationNb++;
                     if(StringUtils.isNotEmpty(locationType.getCountryTfValue())) {
                         defaultCountry = locationType.getCountryTfValue();
                     }
-                    Location location = locationType.getLocation(defaultCountry);
+                    Location location = locationType.getLocation(defaultCountry);//, locationNb);
                     errors.addAll(locationType.getErrors());
                     if(location != null)
                         repository.getLocation().add(location);

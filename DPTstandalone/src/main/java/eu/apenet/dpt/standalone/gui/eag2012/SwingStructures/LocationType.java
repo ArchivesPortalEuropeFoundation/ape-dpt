@@ -137,7 +137,7 @@ public class LocationType {
         return errors;
     }
 
-    public Location getLocation(String defaultCountry) {
+    public Location getLocation(String defaultCountry) {//, int locationNb) {
         boolean isPostal = localType.equals("postal address");
         errors = new ArrayList<String>();
         Location location = new Location();
@@ -148,9 +148,9 @@ public class LocationType {
             location.getStreet().setLang(getStreetTfLanguage());
         } else {
             if(!isPostal)
-                errors.add("streetTf");
+                errors.add("streetTf");//_" + locationNb);
             else
-                location.setStreet(null);
+                location.setStreet(null); //wrong
         }
         if(StringUtils.isNotEmpty(getCityTfValue())) {
             location.setMunicipalityPostalcode(new MunicipalityPostalcode());
@@ -158,9 +158,9 @@ public class LocationType {
             location.getMunicipalityPostalcode().setLang(getCityTfLanguage());
         } else {
             if(!isPostal)
-                errors.add("cityTf");
+                errors.add("cityTf");//_" + locationNb);
             else
-                location.setMunicipalityPostalcode(null);
+                location.setMunicipalityPostalcode(null); //wrong
         }
         if(StringUtils.isNotEmpty(getCountryTfValue())) {
             location.setCountry(new Country());
@@ -168,7 +168,7 @@ public class LocationType {
             location.getCountry().setLang(getCountryTfLanguage());
         } else {
             if(!isPostal)
-                errors.add("countryTf");
+                errors.add("countryTf");//_" + locationNb);
             else {
                 Country country = new Country();
                 country.setContent(defaultCountry);
