@@ -2152,7 +2152,7 @@
 
     <!-- copy: dsc/head -->
     <xsl:template match="dsc/head" mode="copy">
-        <xsl:if test="preceding-sibling::* > 0 or following-sibling::* > 0">
+        <xsl:if test="preceding-sibling::* or following-sibling::*">
             <head>
                 <xsl:value-of select="." />
             </head>
