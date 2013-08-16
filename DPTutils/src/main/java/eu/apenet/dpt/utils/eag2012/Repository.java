@@ -117,7 +117,10 @@ public class Repository {
      *     
      */
     public List<RepositoryName> getRepositoryName() {
-        return repositoryName;
+        if (repositoryName == null) {
+            repositoryName = new ArrayList<RepositoryName>();
+        }
+        return this.repositoryName;
     }
 
     /**
