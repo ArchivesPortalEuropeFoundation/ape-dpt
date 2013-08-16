@@ -93,6 +93,10 @@ public class EagContactPanel extends EagPanels {
                 builder.add(textFieldWithLanguage.getLanguageBox(), cc.xy(7, rowNb));
                 setNextRow();
             }
+            JButton addNewRepositoryNameBtn = new ButtonEag(labels.getString("eag2012.addNameOfRepository"));
+            addNewRepositoryNameBtn.addActionListener(new AddRepositoryNameAction(eag, tabbedPane, model));
+            builder.add(addNewRepositoryNameBtn, cc.xy(3, rowNb));
+            setNextRow();
         }
 
         boolean hasMinimumOnePostalAddress = false;
@@ -544,6 +548,25 @@ public class EagContactPanel extends EagPanels {
             reloadTabbedPanel(new EagContactPanel(eag, tabbedPane, mainTabbedPane, eag2012Frame, model, labels, repositoryNb).buildEditorPanel(errors), 2);
         }
     }
+    public class AddRepositoryNameAction extends UpdateEagObject {
+        AddRepositoryNameAction(Eag eag, JTabbedPane tabbedPane, ProfileListModel model) {
+            super(eag, tabbedPane, model);
+        }
+
+        @Override
+        public void actionPerformed(ActionEvent actionEvent) {
+            try {
+                super.updateEagObject(false);
+            } catch (Eag2012FormException e) {
+
+            }
+            Repository repository = eag.getArchguide().getDesc().getRepositories().getRepository().get(repositoryNb);
+            RepositoryName repositoryName = new RepositoryName();
+            repository.getRepositoryName().add(repositoryName);
+
+            reloadTabbedPanel(new EagContactPanel(eag, tabbedPane, mainTabbedPane, eag2012Frame, model, labels, repositoryNb).buildEditorPanel(errors), 2);
+        }
+    }
 
     public abstract class UpdateEagObject extends DefaultBtnAction {
 
@@ -561,10 +584,15 @@ public class EagContactPanel extends EagPanels {
             Repository repository = eag.getArchguide().getDesc().getRepositories().getRepository().get(repositoryNb);
 
             if(repositoryNb > 0) {
+                boolean passedFirstName = false;
                 if(repositoryNameTfs.size() > 0) {
                     repository.getRepositoryName().clear();
                     for(TextFieldWithLanguage textFieldWithLanguage : repositoryNameTfs) {
                         if(StringUtils.isNotEmpty(textFieldWithLanguage.getTextValue())) {
+                            if(!passedFirstName) {
+                                passedFirstName = true;
+                                mainTabbedPane.setTitleAt(repositoryNb, textFieldWithLanguage.getTextValue());
+                            }
                             RepositoryName repositoryName = new RepositoryName();
                             repositoryName.setContent(textFieldWithLanguage.getTextValue());
                             repositoryName.setLang(textFieldWithLanguage.getLanguage());
