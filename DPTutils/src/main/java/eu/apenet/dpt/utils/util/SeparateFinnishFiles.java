@@ -68,7 +68,6 @@ public class SeparateFinnishFiles {
         XMLStreamReader2 input = xmlif.createXMLStreamReader(file);
 
         String currentId = "";
-        String eadidIdentifier = "";
         boolean isInsideRecord = false;
         boolean isInsideId = false;
 
@@ -135,17 +134,12 @@ public class SeparateFinnishFiles {
 
     private void writeNameElement(XMLStreamReader xmlReader, XMLStreamWriter xmlWriter) throws XMLStreamException {
         if (xmlWriter != null){
-            String eadidId = "";
             QName element = xmlReader.getName();
             xmlWriter.writeStartElement(element.getPrefix(), element.getLocalPart(), element.getNamespaceURI());
             for (int i=0; i < xmlReader.getAttributeCount(); i++){
                 if(!xmlReader.getAttributeLocalName(i).equals("schemaLocation"))
                     xmlWriter.writeAttribute(xmlReader.getAttributePrefix(i), xmlReader.getAttributeNamespace(i), xmlReader.getAttributeLocalName(i), xmlReader.getAttributeValue(i));
-                if(xmlReader.getLocalName().equals("eadid") && xmlReader.getAttributeLocalName(i).equals("identifier"))
-                    eadidId = xmlReader.getAttributeValue(i);
             }
-            if(!eadidId.equals(""))
-                xmlWriter.writeCharacters(eadidId);
         }
     }
 
