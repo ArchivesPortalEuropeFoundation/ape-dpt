@@ -111,7 +111,7 @@ public class Ead2EseInformation {
                 this.inRepository = true;
             } else if (qName.equals("language")) {
                 if (this.inDid) {
-                    if (languageCode.equals("")) {
+                    if ("".equals(languageCode)) {
                         languageCode = atts.getValue("langcode");
                     }
                 } else {
