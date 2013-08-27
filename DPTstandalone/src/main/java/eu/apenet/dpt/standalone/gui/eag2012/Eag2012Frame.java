@@ -124,8 +124,8 @@ public class Eag2012Frame extends JFrame {
         mainTabbedPane.putClientProperty("jgoodies.noContentBorder", Boolean.TRUE);
         mainTabbedPane.add(labels.getString("eag2012.yourinstitution.institution"), new EagNewRepositoryPanel(eag, null, mainTabbedPane, this, model, labels, 0).buildInstitutionTabbedPane(isNew, countrycode, mainagencycode));
         for(int i = 1; i < eag.getArchguide().getDesc().getRepositories().getRepository().size(); i++) {
-            if(eag.getArchguide().getDesc().getRepositories().getRepository().get(i).getRepositoryName() != null && StringUtils.isNotEmpty(eag.getArchguide().getDesc().getRepositories().getRepository().get(i).getRepositoryName().getContent())) {
-                String name = eag.getArchguide().getDesc().getRepositories().getRepository().get(i).getRepositoryName().getContent();
+            if(eag.getArchguide().getDesc().getRepositories().getRepository().get(i).getRepositoryName().size() >0 && StringUtils.isNotEmpty(eag.getArchguide().getDesc().getRepositories().getRepository().get(i).getRepositoryName().get(0).getContent())) {
+                String name = eag.getArchguide().getDesc().getRepositories().getRepository().get(i).getRepositoryName().get(0).getContent();
                 mainTabbedPane.add(name, new EagNewRepositoryPanel(eag, null, mainTabbedPane, this, model, labels, i).buildInstitutionTabbedPane(isNew, countrycode, mainagencycode));
             } else {
                 mainTabbedPane.add(labels.getString("eag2012.tab.extraRepository") + " " + i, new EagNewRepositoryPanel(eag, null, mainTabbedPane, this, model, labels, i).buildInstitutionTabbedPane(isNew, countrycode, mainagencycode));

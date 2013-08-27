@@ -191,7 +191,9 @@ public class EagInstitutionPanel extends EagPanels {
         boolean hasMinimumOnePostalAddress = false;
         boolean hasMinimumOneVisitorAddress = false;
         locationFields = new ArrayList<LocationType>(repository.getLocation().size());
+//        int locationNb = 0;
         for(Location location : repository.getLocation()) {
+//            locationNb++;
             boolean isPostal = false;
             LocationType locationType = new LocationType(location);
             if(StringUtils.isEmpty(location.getLocalType()) || location.getLocalType().equals("visitors address")) {
@@ -215,7 +217,7 @@ public class EagInstitutionPanel extends EagPanels {
             builder.add(locationType.getStreetTf().getTextField(),                               cc.xy (3, rowNb));
             builder.addLabel(labels.getString("eag2012.commons.language"),    cc.xy (5, rowNb));
             builder.add(locationType.getStreetTf().getLanguageBox(),                               cc.xy (7, rowNb));
-            if(errors.contains("streetTf") && StringUtils.isEmpty(locationType.getStreetTfValue())) {
+            if(errors.contains("streetTf")/*_" + locationNb)*/ && StringUtils.isEmpty(locationType.getStreetTfValue())) {
                 setNextRow();
                 builder.add(createErrorLabel(labels.getString("eag2012.errors.street")),          cc.xy (1, rowNb));
             }
@@ -226,7 +228,7 @@ public class EagInstitutionPanel extends EagPanels {
             builder.add(locationType.getCityTf().getTextField(),                               cc.xy (3, rowNb));
             builder.addLabel(labels.getString("eag2012.commons.language"),    cc.xy (5, rowNb));
             builder.add(locationType.getCityTf().getLanguageBox(),                               cc.xy (7, rowNb));
-            if(errors.contains("cityTf") && StringUtils.isEmpty(locationType.getCityTfValue())) {
+            if(errors.contains("cityTf")/*_" + locationNb)*/ && StringUtils.isEmpty(locationType.getCityTfValue())) {
                 setNextRow();
                 builder.add(createErrorLabel(labels.getString("eag2012.errors.city")),          cc.xy (1, rowNb));
             }
@@ -237,7 +239,7 @@ public class EagInstitutionPanel extends EagPanels {
                 builder.add(locationType.getCountryTf().getTextField(), cc.xy (3, rowNb));
                 builder.addLabel(labels.getString("eag2012.commons.language"),    cc.xy (5, rowNb));
                 builder.add(locationType.getCountryTf().getLanguageBox(),                               cc.xy (7, rowNb));
-                if(errors.contains("countryTf") && StringUtils.isEmpty(locationType.getCountryTfValue())) {
+                if(errors.contains("countryTf")/*_" + locationNb)*/ && StringUtils.isEmpty(locationType.getCountryTfValue())) {
                     setNextRow();
                     builder.add(createErrorLabel(labels.getString("eag2012.errors.country")),          cc.xy (1, rowNb));
                 }
@@ -666,11 +668,13 @@ public class EagInstitutionPanel extends EagPanels {
             repository.getLocation().clear();
 
             String defaultCountry = "";
+//            int locationNb = 0;
             for(LocationType locationType : locationFields) {
+//                locationNb++;
                 if(StringUtils.isNotEmpty(locationType.getCountryTfValue())) {
                     defaultCountry = locationType.getCountryTfValue();
                 }
-                Location location = locationType.getLocation(defaultCountry);
+                Location location = locationType.getLocation(defaultCountry);//, locationNb);
                 errors.addAll(locationType.getErrors());
                 if(location != null) {
                     repository.getLocation().add(location);
