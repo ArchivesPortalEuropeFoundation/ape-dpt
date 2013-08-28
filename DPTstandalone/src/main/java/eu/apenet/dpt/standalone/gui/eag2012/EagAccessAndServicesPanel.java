@@ -1449,6 +1449,9 @@ public class EagAccessAndServicesPanel extends EagPanels {
                 if(StringUtils.isNotEmpty(emailTitleSearchroomTf.getText())) {
                     searchroom.getContact().getEmail().get(0).setContent(emailTitleSearchroomTf.getText());
                 }
+                if(StringUtils.isEmpty(emailTitleSearchroomTf.getText()) && searchroom.getContact().getEmail().get(0).getContent() != null){
+                    searchroom.getContact().getEmail().get(0).setContent(null);
+                }
             } else if(!searchroom.getContact().getEmail().isEmpty()) {
                 searchroom.getContact().getEmail().remove(0);
                 if(searchroom.getContact().getEmail().size() > 0)
@@ -1469,6 +1472,9 @@ public class EagAccessAndServicesPanel extends EagPanels {
                 }
                 if(StringUtils.isNotEmpty(webpageTitleSearchroomTf.getText())) {
                     searchroom.getWebpage().get(0).setContent(webpageTitleSearchroomTf.getText());
+                }
+                if(StringUtils.isEmpty(webpageTitleSearchroomTf.getText()) && searchroom.getWebpage().get(0).getContent() != null){
+                    searchroom.getWebpage().get(0).setContent(null);
                 }
             } else if(!searchroom.getWebpage().isEmpty()) {
                 searchroom.getWebpage().remove(0);
@@ -1615,6 +1621,9 @@ public class EagAccessAndServicesPanel extends EagPanels {
                 if(StringUtils.isNotEmpty(emailTitleLibraryTf.getText())) {
                     library.getContact().getEmail().get(0).setContent(emailTitleLibraryTf.getText());
                 }
+                if(StringUtils.isEmpty(emailTitleLibraryTf.getText()) && library.getContact().getEmail().get(0).getContent() != null){
+                    library.getContact().getEmail().get(0).setContent(null);
+                }
             } else if(!library.getContact().getEmail().isEmpty()) {
                 library.getContact().getEmail().remove(0);
                 if(library.getContact().getEmail().size() > 0)
@@ -1632,6 +1641,9 @@ public class EagAccessAndServicesPanel extends EagPanels {
                         errors.add("webpageLibraryTf");
                 if(StringUtils.isNotEmpty(webpageTitleLibraryTf.getText())) {
                     library.getWebpage().get(0).setContent(webpageTitleLibraryTf.getText());
+                }
+                if(StringUtils.isEmpty(webpageTitleLibraryTf.getText()) && library.getWebpage().get(0).getContent() != null){
+                    library.getWebpage().get(0).setContent(null);
                 }
                 libraryExists = true;
             } else if(library.getWebpage().size() > 0) {
@@ -1733,6 +1745,9 @@ public class EagAccessAndServicesPanel extends EagPanels {
                 if(StringUtils.isNotEmpty(emailTitleRestorationlabTf.getText())) {
                     restorationlab.getContact().getEmail().get(0).setContent(emailTitleRestorationlabTf.getText());
                 }
+                if(StringUtils.isEmpty(emailTitleRestorationlabTf.getText()) && restorationlab.getContact().getEmail().get(0).getContent() != null){
+                    restorationlab.getContact().getEmail().get(0).setContent(null);
+                }
             } else if(!restorationlab.getContact().getEmail().isEmpty()) {
                 restorationlab.getContact().getEmail().remove(0);
                 if(restorationlab.getContact().getEmail().size() > 0)
@@ -1750,6 +1765,9 @@ public class EagAccessAndServicesPanel extends EagPanels {
                         errors.add("webpageRestorationlabTf");
                 if(StringUtils.isNotEmpty(webpageTitleRestorationlabTf.getText())) {
                     restorationlab.getWebpage().get(0).setContent(webpageTitleRestorationlabTf.getText());
+                }
+                if(StringUtils.isEmpty(webpageTitleRestorationlabTf.getText()) && restorationlab.getWebpage().get(0).getContent() != null){
+                    restorationlab.getWebpage().get(0).setContent(null);
                 }
                 restorationLabExists = true;
             } else if(restorationlab.getWebpage().size() > 0) {
@@ -1812,6 +1830,9 @@ public class EagAccessAndServicesPanel extends EagPanels {
                 if(StringUtils.isNotEmpty(emailTitleReproductionServiceTf.getText())) {
                     reproductionser.getContact().getEmail().get(0).setContent(emailTitleReproductionServiceTf.getText());
                 }
+                if(StringUtils.isEmpty(emailTitleReproductionServiceTf.getText()) && reproductionser.getContact().getEmail().get(0).getContent() != null){
+                    reproductionser.getContact().getEmail().get(0).setContent(null);
+                }
             } else if(!reproductionser.getContact().getEmail().isEmpty()) {
                 reproductionser.getContact().getEmail().remove(0);
                 if(reproductionser.getContact().getEmail().size() > 0)
@@ -1831,6 +1852,9 @@ public class EagAccessAndServicesPanel extends EagPanels {
                         errors.add("webpageReproductionServiceTf");
                 if(StringUtils.isNotEmpty(webpageTitleReproductionServiceTf.getText())) {
                     reproductionser.getWebpage().get(0).setContent(webpageTitleReproductionServiceTf.getText());
+                }
+                if(StringUtils.isEmpty(webpageTitleReproductionServiceTf.getText()) && reproductionser.getWebpage().get(0).getContent() != null){
+                    reproductionser.getWebpage().get(0).setContent(null);
                 }
             } else if(reproductionser.getWebpage().size() > 0) {
                 reproductionser.getWebpage().remove(0);
