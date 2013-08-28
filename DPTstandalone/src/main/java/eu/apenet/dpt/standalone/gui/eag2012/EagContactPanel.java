@@ -89,7 +89,7 @@ public class EagContactPanel extends EagPanels {
                 TextFieldWithLanguage textFieldWithLanguage = new TextFieldWithLanguage(repositoryName.getContent(), repositoryName.getLang());
                 repositoryNameTfs.add(textFieldWithLanguage);
                 builder.add(textFieldWithLanguage.getTextField(), cc.xy(3, rowNb));
-                builder.addLabel(labels.getString("eag2012.language"), cc.xy(5, rowNb));
+                builder.addLabel(labels.getString("eag2012.commons.language"), cc.xy(5, rowNb));
                 builder.add(textFieldWithLanguage.getLanguageBox(), cc.xy(7, rowNb));
                 setNextRow();
             }
