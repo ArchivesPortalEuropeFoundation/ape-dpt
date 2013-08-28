@@ -93,7 +93,7 @@ public class EagContactPanel extends EagPanels {
                 builder.add(textFieldWithLanguage.getLanguageBox(), cc.xy(7, rowNb));
                 setNextRow();
             }
-            JButton addNewRepositoryNameBtn = new ButtonEag(labels.getString("eag2012.commons.addNameOfRepository"));
+            JButton addNewRepositoryNameBtn = new ButtonEag(labels.getString("eag2012.contact.addNameOfRepository"));
             addNewRepositoryNameBtn.addActionListener(new AddRepositoryNameAction(eag, tabbedPane, model));
             builder.add(addNewRepositoryNameBtn, cc.xy(3, rowNb));
             setNextRow();
@@ -245,7 +245,7 @@ public class EagContactPanel extends EagPanels {
             faxTfs.add(faxTf);
             builder.add(faxTf, cc.xy (3, rowNb));
             if(i++ == 0) {
-                JButton addFaxBtn = new ButtonEag(labels.getString("eag2012.addFaxNumbers"));
+                JButton addFaxBtn = new ButtonEag(labels.getString("eag2012.contact.addFaxNumbers"));
                 addFaxBtn.addActionListener(new AddFaxAction(eag, tabbedPane, model));
                 builder.add(addFaxBtn, cc.xy(5, rowNb));
             }
