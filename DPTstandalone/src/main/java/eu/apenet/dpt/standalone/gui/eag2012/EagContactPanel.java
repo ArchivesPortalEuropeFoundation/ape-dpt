@@ -93,7 +93,7 @@ public class EagContactPanel extends EagPanels {
                 builder.add(textFieldWithLanguage.getLanguageBox(), cc.xy(7, rowNb));
                 setNextRow();
             }
-            JButton addNewRepositoryNameBtn = new ButtonEag(labels.getString("eag2012.addNameOfRepository"));
+            JButton addNewRepositoryNameBtn = new ButtonEag(labels.getString("eag2012.commons.addNameOfRepository"));
             addNewRepositoryNameBtn.addActionListener(new AddRepositoryNameAction(eag, tabbedPane, model));
             builder.add(addNewRepositoryNameBtn, cc.xy(3, rowNb));
             setNextRow();
