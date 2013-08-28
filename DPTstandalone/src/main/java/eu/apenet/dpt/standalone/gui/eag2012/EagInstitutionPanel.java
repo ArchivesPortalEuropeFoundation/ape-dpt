@@ -202,7 +202,7 @@ public class EagInstitutionPanel extends EagPanels {
                 isPostal = false;
                 hasMinimumOneVisitorAddress = true;
             } else if (location.getLocalType().equals("postal address")) {
-                builder.addSeparator(labels.getString("eag2012.yourinstitution.postalAddress"), cc.xyw(1, rowNb, 7));
+                builder.addSeparator(labels.getString("eag2012.commons.postalAddress"), cc.xyw(1, rowNb, 7));
                 isPostal = true;
                 hasMinimumOnePostalAddress = true;
             }
