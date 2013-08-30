@@ -1455,7 +1455,9 @@ public class DataPreparationToolGUI extends JFrame {
 
         public void actionPerformed(ActionEvent e) {
             if (Arrays.asList(LANGUAGES_OF_TOOL).contains(e.getActionCommand())) {
-                labels = ResourceBundlesWrapper.getBundle("i18n/apeBundle", new Locale(e.getActionCommand()));
+//                labels = ResourceBundlesWrapper.getBundle("i18n/apeBundle", new Locale(e.getActionCommand()));
+                String[] basenames = {"i18n/apeBundle","i18n/eag2012"};
+                labels = new ResourceBundlesWrapper(basenames,new Locale(e.getActionCommand()));
             }
             changeAllTextLg();
         }
