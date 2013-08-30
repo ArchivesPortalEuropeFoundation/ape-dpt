@@ -5,6 +5,7 @@ import com.jgoodies.forms.layout.CellConstraints;
 import com.jgoodies.forms.layout.FormLayout;
 import eu.apenet.dpt.standalone.gui.ProfileListModel;
 import eu.apenet.dpt.standalone.gui.Utilities;
+import static eu.apenet.dpt.standalone.gui.eag2012.EagPanels.LOG;
 import static eu.apenet.dpt.standalone.gui.eag2012.EagPanels.createErrorLabel;
 import eu.apenet.dpt.standalone.gui.eag2012.SwingStructures.LocationType;
 import eu.apenet.dpt.standalone.gui.eag2012.SwingStructures.TextFieldWithCheckbox;
@@ -529,6 +530,7 @@ public class EagInstitutionPanel extends EagPanels {
 
         @Override
         public void actionPerformed(ActionEvent actionEvent) {
+            boolean emptyFields = false;
             try {
                 super.updateEagObject(false);
             } catch (Eag2012FormException e) {
@@ -536,18 +538,36 @@ public class EagInstitutionPanel extends EagPanels {
 //                    System.out.println(error);
 //                }
             }
-
-            Location location = new Location();
-            if(isPostal) {
-                location.setLocalType("postal address");
-            } else {
-                location.setLocalType("visitors address");
+            LocationType visitorLocationType = null;
+            int counter = locationFields.size() - 1;
+            while(visitorLocationType == null && counter >= 0){
+                if(!isPostal && visitorLocationType == null){
+                    if(locationFields.get(counter).getLocalType().equals("visitors address")){
+                        visitorLocationType = locationFields.get(counter);
+                    }
+                }
+                counter--;
             }
-            location.setCountry(new Country());
-            location.setStreet(new Street());
-            location.setMunicipalityPostalcode(new MunicipalityPostalcode());
-
-            eag.getArchguide().getDesc().getRepositories().getRepository().get(repositoryNb).getLocation().add(location);
+            if(!isPostal){
+                if(visitorLocationType.getStreetTfValue().isEmpty() || visitorLocationType.getCityTfValue().isEmpty() || visitorLocationType.getCountryTfValue().isEmpty()){
+                    emptyFields = true;
+                }
+            }
+            if(emptyFields != true){
+                Location location = new Location();
+                if(isPostal) {
+                    location.setLocalType("postal address");
+                } else {
+                    location.setLocalType("visitors address");
+                }
+                location.setCountry(new Country());
+                location.setStreet(new Street());
+                location.setMunicipalityPostalcode(new MunicipalityPostalcode());
+                
+                eag.getArchguide().getDesc().getRepositories().getRepository().get(repositoryNb).getLocation().add(location);
+            } else {
+                JOptionPane.showMessageDialog(tabbedPane, "Please fill out empty fields before adding another address");
+            }
             reloadTabbedPanel(new EagInstitutionPanel(eag, tabbedPane, mainTabbedPane, eag2012Frame, model, isNew, labels, repositoryNb).buildEditorPanel(errors), 0);
         }
     }
