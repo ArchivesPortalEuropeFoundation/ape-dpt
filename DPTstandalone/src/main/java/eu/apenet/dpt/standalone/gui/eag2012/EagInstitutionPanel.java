@@ -211,7 +211,7 @@ public class EagInstitutionPanel extends EagPanels {
             setNextRow();
 
             String mandatoryStar = "*";
-            if(isPostal)
+            if(isPostal || location != repository.getLocation().get(0))
                 mandatoryStar = "";
 
             builder.addLabel(labels.getString("eag2012.commons.street") + mandatoryStar,    cc.xy (1, rowNb));
@@ -236,7 +236,7 @@ public class EagInstitutionPanel extends EagPanels {
             setNextRow();
 
             if(!isPostal) {
-                builder.addLabel(labels.getString("eag2012.commons.country") + "*",    cc.xy (1, rowNb));
+                builder.addLabel(labels.getString("eag2012.commons.country") + mandatoryStar,    cc.xy (1, rowNb));
                 builder.add(locationType.getCountryTf().getTextField(), cc.xy (3, rowNb));
                 builder.addLabel(labels.getString("eag2012.commons.language"),    cc.xy (5, rowNb));
                 builder.add(locationType.getCountryTf().getLanguageBox(),                               cc.xy (7, rowNb));
@@ -565,8 +565,6 @@ public class EagInstitutionPanel extends EagPanels {
                 location.setMunicipalityPostalcode(new MunicipalityPostalcode());
                 
                 eag.getArchguide().getDesc().getRepositories().getRepository().get(repositoryNb).getLocation().add(location);
-            } else {
-                JOptionPane.showMessageDialog(tabbedPane, "Please fill out empty fields before adding another address");
             }
             reloadTabbedPanel(new EagInstitutionPanel(eag, tabbedPane, mainTabbedPane, eag2012Frame, model, isNew, labels, repositoryNb).buildEditorPanel(errors), 0);
         }
