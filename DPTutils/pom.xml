@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
 		<artifactId>DPT-project</artifactId>
-		<groupId>eu.apenet</groupId>
+		<groupId>eu.archivesportaleurope.dpt</groupId>
 		<version>2013-07-Multi-Language-SNAPSHOT</version>
 		<relativePath>..</relativePath>
     </parent>

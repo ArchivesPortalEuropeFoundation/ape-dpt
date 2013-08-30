@@ -81,7 +81,7 @@ import javax.xml.bind.annotation.XmlType;
 @XmlRootElement(name = "repository")
 public class Repository {
 
-    protected RepositoryName repositoryName;
+    protected List<RepositoryName> repositoryName;
     protected RepositoryRole repositoryRole;
     @XmlElement(required = true)
     protected Geogarea geogarea;
@@ -116,8 +116,11 @@ public class Repository {
      *     {@link RepositoryName }
      *     
      */
-    public RepositoryName getRepositoryName() {
-        return repositoryName;
+    public List<RepositoryName> getRepositoryName() {
+        if (repositoryName == null) {
+            repositoryName = new ArrayList<RepositoryName>();
+        }
+        return this.repositoryName;
     }
 
     /**
@@ -128,7 +131,7 @@ public class Repository {
      *     {@link RepositoryName }
      *     
      */
-    public void setRepositoryName(RepositoryName value) {
+    public void setRepositoryName(List<RepositoryName> value) {
         this.repositoryName = value;
     }
 

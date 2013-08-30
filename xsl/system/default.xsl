@@ -96,6 +96,9 @@
             <xsl:when test="parent::altformavail"/>
             <xsl:otherwise>
                 <xsl:choose>
+                    <xsl:when test="(parent::accessrestrict or parent::bioghist) and normalize-space(.)"> <!--If file contains elements without p but directly text in it-->
+                        <p><xsl:value-of select="."/></p>
+                    </xsl:when>
                     <xsl:when test="contains(., '&#xa;')">
                         <xsl:value-of select="translate(normalize-space(.), '&#xa;', ' ')"/>
                     </xsl:when>
@@ -122,7 +125,7 @@
         <xsl:choose>
             <xsl:when test="parent::bibref or parent::extref" />
             <xsl:when test="parent::corpname or parent::origination or parent::physfacet or parent::persname or parent::head or parent::titleproper or parent::unitdate or parent::unittitle"> <!--unittitle here is a hack - better fix it in the display xsl of portal/dashboard-->
-                <xsl:value-of select="normalize-space(.)"/>
+                <xsl:value-of select="normalize-space(.)"/><xsl:text> </xsl:text>
             </xsl:when>
             <xsl:when test="@render='bold' or @render='italic'">
                 <emph>
@@ -133,7 +136,7 @@
                 </emph>
             </xsl:when>
             <xsl:otherwise>
-                <xsl:value-of select="normalize-space(.)"/>
+                <xsl:value-of select="normalize-space(.)"/><xsl:text> </xsl:text>
             </xsl:otherwise>
         </xsl:choose>
     </xsl:template>
@@ -643,7 +646,7 @@
     </xsl:template>
 
     <!-- All p/persname, p/geogname and p/date are just discarded, we take the data but not the elements -->
-    <xsl:template match="p/persname | p/geogname | p/date | p/name | p/subject" mode="#all">
+    <xsl:template match="p/persname | p/geogname | p/corpname | p/title | p/date | p/name | p/subject" mode="#all">
         <xsl:value-of select="normalize-space(.)"/>
     </xsl:template>
 
@@ -2127,7 +2130,7 @@
             <xsl:otherwise>
                 <xsl:for-each select="geogname|subject|famname|persname|corpname|occupation|genreform|function|title|p|name">
                     <xsl:element name="{local-name()}" namespace="urn:isbn:1-931666-22-9">
-                        <xsl:value-of select="node()"/>
+                        <xsl:apply-templates select="node()" mode="#current"/>
                     </xsl:element>
                 </xsl:for-each>
             </xsl:otherwise>
@@ -2149,9 +2152,11 @@
 
     <!-- copy: dsc/head -->
     <xsl:template match="dsc/head" mode="copy">
-        <head>
-            <xsl:value-of select="." />
-        </head>
+        <xsl:if test="preceding-sibling::* or following-sibling::*">
+            <head>
+                <xsl:value-of select="." />
+            </head>
+        </xsl:if>
     </xsl:template>
 
     <!-- copy: dsc/p -->
@@ -2206,7 +2211,7 @@
             <xsl:when test="$countrycode='NL' and ../../@otherlevel='subfile'">
                 <xsl:apply-templates select="../../../did/unitid" mode="#current"/>
             </xsl:when>
-            <xsl:when test="(@type='call number' or @type='ABS' or @type='bestellnummer' or @type='series_code' or @type='reference' or @type='Sygnatura' or @type='REFERENCE_CODE' or @type='cote-de-consultation' or @type='cote-groupee' or @type='identifiant' or @type='cote' or (not(@type))) and text()[string-length(normalize-space(.)) ge 1]"><!-- and not(preceding-sibling::unitid) and not(following-sibling::unitid)-->
+            <xsl:when test="(@type='call number' or @type='ABS' or @type='bestellnummer' or @type='series_code' or @type='reference' or @type='Sygnatura' or @type='REFERENCE_CODE' or @type='cote-de-consultation' or @type='cote-groupee' or @type='identifiant' or @type='cote' or @type='persistent' or (not(@type))) and text()[string-length(normalize-space(.)) ge 1]"><!-- and not(preceding-sibling::unitid) and not(following-sibling::unitid)-->
                 <xsl:choose>
                     <xsl:when test="@countrycode and @repositorycode">
                         <xsl:choose>
@@ -2232,7 +2237,14 @@
                                     <xsl:if test="extptr">
                                         <xsl:apply-templates select="extptr" mode="#current"/>
                                     </xsl:if>
-                                    <xsl:value-of select="concat(concat(concat(concat(@countrycode,'/'),@repositorycode), '/'), .)"/>
+                                    <xsl:choose>
+                                        <xsl:when test="starts-with(., concat(concat(@countrycode,'/'),@repositorycode))">
+                                            <xsl:value-of select="text()"/>
+                                        </xsl:when>
+                                        <xsl:otherwise>
+                                            <xsl:value-of select="concat(concat(concat(concat(@countrycode,'/'),@repositorycode), '/'), .)"/>
+                                        </xsl:otherwise>
+                                    </xsl:choose>
                                 </unitid>
                             </xsl:otherwise>
                         </xsl:choose>
@@ -2517,6 +2529,9 @@
             </xsl:if>
             <xsl:if test="@*:title!=''">
                 <xsl:attribute name="xlink:title" select="@*:title"/>
+            </xsl:if>
+            <xsl:if test="not(@title) and not(@*:title) and daodesc/p/text()">
+                <xsl:attribute name="xlink:title" select="daodesc/p/text()"/>
             </xsl:if>
             <xsl:call-template name="daoDigitalType" />
         </dao>

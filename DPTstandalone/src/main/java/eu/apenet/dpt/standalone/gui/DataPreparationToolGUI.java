@@ -16,6 +16,7 @@ import eu.apenet.dpt.standalone.gui.validation.ValidateActionListener;
 import eu.apenet.dpt.standalone.gui.validation.ValidateSelectionActionListener;
 import eu.apenet.dpt.standalone.gui.xsdaddition.XsdObject;
 import eu.apenet.dpt.utils.service.MultiResourceBundle;
+import eu.apenet.dpt.utils.service.ResourceBundlesWrapper;
 import eu.apenet.dpt.utils.util.ReadXml;
 import eu.apenet.dpt.utils.util.XmlChecker;
 import eu.apenet.dpt.utils.util.Xsd_enum;
@@ -161,9 +162,11 @@ public class DataPreparationToolGUI extends JFrame {
 
     private void setupTool() {
         Locale currentLocale = Locale.getDefault();
-//        labels = ResourceBundle.getBundle("i18n/apeBundle", currentLocale);
-//        ResourceBundle.getBundle("i18n/eag2012", currentLocale);
-        labels = new MultiResourceBundle("i18n/apeBundle","i18n/eag2012",currentLocale);
+//        labels = ResourceBundlesWrapper.getBundle("i18n/apeBundle", currentLocale);
+//        ResourceBundle.getBudle("i18n/eag2012", currentLocale);
+//        labels = new MultiResourceBundle("i18n/apeBundle","i18n/eag2012",currentLocale);
+        String[] basenames = {"i18n/apeBundle","i18n/eag2012"};
+        labels = new ResourceBundlesWrapper(basenames,currentLocale);
         
         retrieveFromDb = new RetrieveFromDb();
         apePanel = new APEPanel(labels, getContentPane(), this, retrieveFromDb);
@@ -1452,7 +1455,7 @@ public class DataPreparationToolGUI extends JFrame {
 
         public void actionPerformed(ActionEvent e) {
             if (Arrays.asList(LANGUAGES_OF_TOOL).contains(e.getActionCommand())) {
-                labels = ResourceBundle.getBundle("i18n/apeBundle", new Locale(e.getActionCommand()));
+                labels = ResourceBundlesWrapper.getBundle("i18n/apeBundle", new Locale(e.getActionCommand()));
             }
             changeAllTextLg();
         }

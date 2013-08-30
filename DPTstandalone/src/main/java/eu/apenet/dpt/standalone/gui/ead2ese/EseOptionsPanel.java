@@ -34,10 +34,13 @@ import java.util.logging.Level;
  * User: Yoann Moranville Date: 17/11/2011
  *
  * @author Yoann Moranville
+ * @author Stefan Papp
  */
 public class EseOptionsPanel extends JPanel {
 
     private static final Logger LOG = Logger.getLogger(EseOptionsPanel.class);
+    private static final String MINIMAL = "minimal";
+    private static final String FULL = "full";
     private static final String TEXT = "TEXT";
     private static final String IMAGE = "IMAGE";
     private static final String VIDEO = "VIDEO";
@@ -58,7 +61,6 @@ public class EseOptionsPanel extends JPanel {
     private static final String EUROPEANA_RIGHTS_PAID = "Paid access";
     private static final String EUROPEANA_RIGHTS_RESTRICTED = "Restricted access";
     private static final String EUROPEANA_RIGHTS_UNKNOWN = "Unknown";
-    private static final String LANGUAGES = "languages";
     private String archdescRepository = null;
     private ResourceBundle labels;
     private RetrieveFromDb retrieveFromDb;
@@ -66,6 +68,7 @@ public class EseOptionsPanel extends JPanel {
     private List<File> selectedIndices;
     private JFrame parent;
     private APETabbedPane apeTabbedPane;
+    private ButtonGroup conversionModeGroup;
     private ButtonGroup typeGroup;
     private ButtonGroup inheritParentGroup;
     private ButtonGroup inheritOriginationGroup;
@@ -76,7 +79,7 @@ public class EseOptionsPanel extends JPanel {
     private JComboBox europeanaRightsComboBox;
     private JTextArea contextTextArea;
     private JTextArea dataProviderTextArea;
-    private JTextArea providerTextArea;
+//    private JTextArea providerTextArea;
     private JList languageList;
     private JTextArea additionalRightsTextArea;
     private Map<String, String> languages;
@@ -88,6 +91,22 @@ public class EseOptionsPanel extends JPanel {
     private JCheckBox useExistingRepoCheckbox;
     private JCheckBox useExistingDaoRoleCheckbox;
     private JPanel languageBoxPanel = new LanguageBoxPanel();
+    private String conversionMode = MINIMAL;
+    private JPanel hierarchyPrefixPanel;
+    private JPanel inheritParentPanel;
+    private JPanel inheritOriginationPanel;
+    private JPanel inheritLanguagePanel;
+    private JCheckBox hierarchyPrefixCheckbox;
+    private JCheckBox inheritParentCheckbox;
+    private JCheckBox inheritOriginationCheckbox;
+    private JCheckBox inheritLanguageCheckbox;
+    private JRadioButton inhParYesRadioButton;
+    private JRadioButton inhParNoRadioButton;
+    private JRadioButton inhOriYesRadioButton;
+    private JRadioButton inhOriNoRadioButton;
+    private JRadioButton inhLanYesRadioButton;
+    private JRadioButton inhLanNoRadioButton;
+    private JRadioButton inhLanProvideRadioButton;
 
     public EseOptionsPanel(ResourceBundle labels, DataPreparationToolGUI dataPreparationToolGUI, JFrame parent, APETabbedPane apeTabbedPane, boolean batch) {
         super(new BorderLayout());
@@ -117,7 +136,27 @@ public class EseOptionsPanel extends JPanel {
         CardLayout cardLayout = (CardLayout) extraLicenseCardLayoutPanel.getLayout();
         cardLayout.show(extraLicenseCardLayoutPanel, EMPTY_PANEL);
 
-        JPanel panel = new JPanel(new GridLayout(1, 1));
+        JPanel panel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        conversionModeGroup = new ButtonGroup();
+        JRadioButton radioButton;
+
+        panel.add(new Label("Please choose a conversion mode"));
+        radioButton = new JRadioButton("minimal");
+        radioButton.setActionCommand(MINIMAL);
+        radioButton.setSelected(true);
+        radioButton.addActionListener(new ConversionModeListener());
+        conversionModeGroup.add(radioButton);
+        panel.add(radioButton);
+        radioButton = new JRadioButton("full");
+        radioButton.setActionCommand(FULL);
+        radioButton.addActionListener(new ConversionModeListener());
+        conversionModeGroup.add(radioButton);
+        panel.add(radioButton);
+
+        panel.setBorder(BLACK_LINE);
+        formPanel.add(panel);
+
+        panel = new JPanel(new GridLayout(1, 1));
         panel.add(new Label(labels.getString("ese.mandatoryFieldsInfo")));
         panel.add(new Label(""));
         panel.setBorder(BLACK_LINE);
@@ -161,21 +200,20 @@ public class EseOptionsPanel extends JPanel {
         panel.setBorder(BLACK_LINE);
         formPanel.add(panel);
 
-        panel = new JPanel(new GridLayout(1, 3));
-        panel.add(new Label(labels.getString("ese.provider") + ":" + "*"));
-        providerTextArea = new JTextArea();
-        providerTextArea.setLineWrap(true);
-        providerTextArea.setWrapStyleWord(true);
-        JScrollPane ptaScrollPane = new JScrollPane(providerTextArea);
-        ptaScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
-        panel.add(ptaScrollPane);
-        panel.add(new Label(""));
-        panel.setBorder(BLACK_LINE);
-        formPanel.add(panel);
-
+        /*        panel = new JPanel(new GridLayout(1, 3));
+         panel.add(new Label(labels.getString("ese.provider") + ":" + "*"));
+         providerTextArea = new JTextArea();
+         providerTextArea.setLineWrap(true);
+         providerTextArea.setWrapStyleWord(true);
+         JScrollPane ptaScrollPane = new JScrollPane(providerTextArea);
+         ptaScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+         panel.add(ptaScrollPane);
+         panel.add(new Label(""));
+         panel.setBorder(BLACK_LINE);
+         formPanel.add(panel);
+         */
         panel = new JPanel(new GridLayout(5, 3));
         typeGroup = new ButtonGroup();
-        JRadioButton radioButton;
 
         panel.add(new Label(labels.getString("ese.type") + ":" + "*"));
         String currentRoleType;
@@ -189,6 +227,7 @@ public class EseOptionsPanel extends JPanel {
             radioButton.setSelected(true);
         }
         radioButton.setActionCommand(TEXT);
+        radioButton.addActionListener(new ConversionModeListener());
         typeGroup.add(radioButton);
         panel.add(radioButton);
         panel.add(new JLabel(""));
@@ -199,6 +238,7 @@ public class EseOptionsPanel extends JPanel {
             radioButton.setSelected(true);
         }
         radioButton.setActionCommand(IMAGE);
+        radioButton.addActionListener(new ConversionModeListener());
         typeGroup.add(radioButton);
         panel.add(radioButton);
         panel.add(new JLabel(""));
@@ -209,6 +249,7 @@ public class EseOptionsPanel extends JPanel {
             radioButton.setSelected(true);
         }
         radioButton.setActionCommand(VIDEO);
+        radioButton.addActionListener(new ConversionModeListener());
         typeGroup.add(radioButton);
         panel.add(radioButton);
 
@@ -226,6 +267,7 @@ public class EseOptionsPanel extends JPanel {
             radioButton.setSelected(true);
         }
         radioButton.setActionCommand(SOUND);
+        radioButton.addActionListener(new ConversionModeListener());
         typeGroup.add(radioButton);
         panel.add(radioButton);
         panel.add(new JLabel(""));
@@ -236,80 +278,13 @@ public class EseOptionsPanel extends JPanel {
             radioButton.setSelected(true);
         }
         radioButton.setActionCommand(THREE_D);
+        radioButton.addActionListener(new ConversionModeListener());
         typeGroup.add(radioButton);
         panel.add(radioButton);
         panel.add(new JLabel(""));
 
         panel.setBorder(GREY_LINE);
         formPanel.add(panel);
-
-        panel = new JPanel(new GridLayout(1, 3));
-        panel.add(new Label(labels.getString("ese.hierarchyPrefix") + ":"));
-        contextTextArea = new JTextArea(labels.getString("ese.hierarchyPrefixDefault") + ":");
-        contextTextArea.setLineWrap(true);
-        contextTextArea.setWrapStyleWord(true);
-        JScrollPane ctaScrollPane = new JScrollPane(contextTextArea);
-        ctaScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
-        panel.add(ctaScrollPane);
-        panel.add(new Label(""));
-        panel.setBorder(BLACK_LINE);
-        formPanel.add(panel);
-
-        panel = new JPanel(new GridLayout(2, 3));
-        panel.add(new Label(labels.getString("ese.inheritParent") + ":" + "*"));
-        inheritParentGroup = new ButtonGroup();
-        radioButton = new JRadioButton(labels.getString("ese.yes"));
-        radioButton.setActionCommand(YES);
-        inheritParentGroup.add(radioButton);
-        panel.add(radioButton);
-        panel.add(new JLabel(""));
-        radioButton = new JRadioButton(labels.getString("ese.no"), true);
-        radioButton.setActionCommand(NO);
-        inheritParentGroup.add(radioButton);
-        panel.add(radioButton);
-        panel.setBorder(GREY_LINE);
-        formPanel.add(panel);
-
-        panel = new JPanel(new GridLayout(2, 3));
-        panel.add(new Label(labels.getString("ese.inheritOrigination") + ":" + "*"));
-        inheritOriginationGroup = new ButtonGroup();
-        radioButton = new JRadioButton(labels.getString("ese.yes"));
-        radioButton.setActionCommand(YES);
-        inheritOriginationGroup.add(radioButton);
-        panel.add(radioButton);
-        panel.add(new JLabel(""));
-        radioButton = new JRadioButton(labels.getString("ese.no"), true);
-        radioButton.setActionCommand(NO);
-        inheritOriginationGroup.add(radioButton);
-        panel.add(radioButton);
-        panel.setBorder(BLACK_LINE);
-        formPanel.add(panel);
-
-        JPanel languagePanel = new JPanel(new GridLayout(1, 3));
-        languagePanel.add(new Label(labels.getString("ese.inheritLanguage") + ":" + "*"));
-        JPanel rbPanel = new JPanel(new GridLayout(3, 1));
-        inheritLanguageGroup = new ButtonGroup();
-        radioButton = new JRadioButton(labels.getString("ese.yes"));
-        radioButton.setActionCommand(YES);
-        radioButton.addActionListener(new ChangePanelActionListener(languageBoxPanel));
-        inheritLanguageGroup.add(radioButton);
-        rbPanel.add(radioButton);
-        radioButton = new JRadioButton(labels.getString("ese.no"), true);
-        radioButton.setActionCommand(NO);
-        radioButton.addActionListener(new ChangePanelActionListener(languageBoxPanel));
-        inheritLanguageGroup.add(radioButton);
-        rbPanel.add(radioButton);
-        radioButton = new JRadioButton(labels.getString("ese.provide"));
-        radioButton.setActionCommand(PROVIDE);
-        radioButton.addActionListener(new ChangePanelActionListener(languageBoxPanel));
-        inheritLanguageGroup.add(radioButton);
-        rbPanel.add(radioButton);
-        languagePanel.add(rbPanel, BorderLayout.WEST);
-
-        languageBoxPanel.setVisible(false);
-        languagePanel.add(languageBoxPanel, BorderLayout.EAST);
-        languagePanel.setBorder(BLACK_LINE);
-        formPanel.add(languagePanel);
 
         JPanel mainLicensePanel = new JPanel(new BorderLayout());
         panel = new JPanel(new GridLayout(4, 2));
@@ -354,6 +329,145 @@ public class EseOptionsPanel extends JPanel {
         panel.add(artaScrollPane);
         panel.setBorder(GREY_LINE);
         formPanel.add(panel);
+
+        hierarchyPrefixPanel = new JPanel(new GridLayout(1, 3));
+        hierarchyPrefixCheckbox = new JCheckBox(labels.getString("ese.hierarchyPrefix") + ":");
+        hierarchyPrefixCheckbox.setSelected(true);
+        hierarchyPrefixCheckbox.addItemListener(new ItemListener() {
+            @Override
+            public void itemStateChanged(ItemEvent e) {
+                if (e.getStateChange() == ItemEvent.SELECTED) {
+                    contextTextArea.setEnabled(true);
+                }
+                if (e.getStateChange() == ItemEvent.DESELECTED) {
+                    contextTextArea.setEnabled(false);
+                }
+            }
+        });
+        hierarchyPrefixPanel.add(hierarchyPrefixCheckbox);
+        contextTextArea = new JTextArea(labels.getString("ese.hierarchyPrefixDefault") + ":");
+        contextTextArea.setLineWrap(true);
+        contextTextArea.setWrapStyleWord(true);
+        JScrollPane ctaScrollPane = new JScrollPane(contextTextArea);
+        ctaScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+        hierarchyPrefixPanel.add(ctaScrollPane);
+        hierarchyPrefixPanel.add(new Label(""));
+        hierarchyPrefixPanel.setBorder(BLACK_LINE);
+        hierarchyPrefixPanel.setVisible(false);
+        formPanel.add(hierarchyPrefixPanel);
+
+        inheritParentPanel = new JPanel(new GridLayout(2, 3));
+        inheritParentCheckbox = new JCheckBox(labels.getString("ese.inheritParent") + ":" + "*");
+        inheritParentCheckbox.setSelected(true);
+        inheritParentCheckbox.addItemListener(new ItemListener() {
+            @Override
+            public void itemStateChanged(ItemEvent e) {
+                if (e.getStateChange() == ItemEvent.SELECTED) {
+                    inhParYesRadioButton.setEnabled(true);
+                    inhParNoRadioButton.setEnabled(true);
+                }
+                if (e.getStateChange() == ItemEvent.DESELECTED) {
+                    inhParYesRadioButton.setEnabled(false);
+                    inhParNoRadioButton.setEnabled(false);
+                }
+            }
+        });
+        inheritParentPanel.add(inheritParentCheckbox);
+        inheritParentGroup = new ButtonGroup();
+        inhParYesRadioButton = new JRadioButton(labels.getString("ese.yes"));
+        inhParYesRadioButton.setActionCommand(YES);
+        inheritParentGroup.add(inhParYesRadioButton);
+        inheritParentPanel.add(inhParYesRadioButton);
+        inheritParentPanel.add(new JLabel(""));
+        inhParNoRadioButton = new JRadioButton(labels.getString("ese.no"), true);
+        inhParNoRadioButton.setActionCommand(NO);
+        inheritParentGroup.add(inhParNoRadioButton);
+        inheritParentPanel.add(inhParNoRadioButton);
+        inheritParentPanel.setBorder(GREY_LINE);
+        inheritParentPanel.setVisible(false);
+        formPanel.add(inheritParentPanel);
+
+        inheritOriginationPanel = new JPanel(new GridLayout(2, 3));
+        inheritOriginationCheckbox = new JCheckBox(labels.getString("ese.inheritOrigination") + ":" + "*");
+        inheritOriginationCheckbox.setSelected(true);
+        inheritOriginationCheckbox.addItemListener(new ItemListener() {
+            @Override
+            public void itemStateChanged(ItemEvent e) {
+                if (e.getStateChange() == ItemEvent.SELECTED) {
+                    inhOriYesRadioButton.setEnabled(true);
+                    inhOriNoRadioButton.setEnabled(true);
+                }
+                if (e.getStateChange() == ItemEvent.DESELECTED) {
+                    inhOriYesRadioButton.setEnabled(false);
+                    inhOriNoRadioButton.setEnabled(false);
+                }
+            }
+        });
+        inheritOriginationPanel.add(inheritOriginationCheckbox);
+        inheritOriginationGroup = new ButtonGroup();
+        inhOriYesRadioButton = new JRadioButton(labels.getString("ese.yes"));
+        inhOriYesRadioButton.setActionCommand(YES);
+        inheritOriginationGroup.add(inhOriYesRadioButton);
+        inheritOriginationPanel.add(inhOriYesRadioButton);
+        inheritOriginationPanel.add(new JLabel(""));
+        inhOriNoRadioButton = new JRadioButton(labels.getString("ese.no"), true);
+        inhOriNoRadioButton.setActionCommand(NO);
+        inheritOriginationGroup.add(inhOriNoRadioButton);
+        inheritOriginationPanel.add(inhOriNoRadioButton);
+        inheritOriginationPanel.setBorder(BLACK_LINE);
+        inheritOriginationPanel.setVisible(false);
+        formPanel.add(inheritOriginationPanel);
+
+        inheritLanguagePanel = new JPanel(new GridLayout(1, 3));
+        inheritLanguageCheckbox = new JCheckBox(labels.getString("ese.inheritLanguage") + ":" + "*");
+        inheritLanguageCheckbox.setSelected(true);
+        inheritLanguageCheckbox.addItemListener(new ItemListener() {
+            @Override
+            public void itemStateChanged(ItemEvent e) {
+                if (e.getStateChange() == ItemEvent.SELECTED) {
+                    inhLanYesRadioButton.setEnabled(true);
+                    inhLanNoRadioButton.setEnabled(true);
+                    inhLanProvideRadioButton.setEnabled(true);
+                }
+                if (e.getStateChange() == ItemEvent.DESELECTED) {
+                    if (TEXT.equals(typeGroup.getSelection().getActionCommand())) {
+                        JOptionPane.showMessageDialog(parent, labels.getString("ese.textNeedsLanguage"));
+                    } else {
+                        inhLanYesRadioButton.setEnabled(false);
+                        inhLanNoRadioButton.setEnabled(false);
+                        inhLanProvideRadioButton.setEnabled(false);
+                    }
+                }
+            }
+        });
+        inheritLanguagePanel.add(inheritLanguageCheckbox);
+        JPanel rbPanel = new JPanel(new GridLayout(3, 1));
+        inheritLanguageGroup = new ButtonGroup();
+        inhLanYesRadioButton = new JRadioButton(labels.getString("ese.yes"));
+        inhLanYesRadioButton.setActionCommand(YES);
+        inhLanYesRadioButton.addActionListener(new ChangePanelActionListener(languageBoxPanel));
+        inheritLanguageGroup.add(inhLanYesRadioButton);
+        rbPanel.add(inhLanYesRadioButton);
+        inhLanNoRadioButton = new JRadioButton(labels.getString("ese.no"), true);
+        inhLanNoRadioButton.setActionCommand(NO);
+        inhLanNoRadioButton.addActionListener(new ChangePanelActionListener(languageBoxPanel));
+        inheritLanguageGroup.add(inhLanNoRadioButton);
+        rbPanel.add(inhLanNoRadioButton);
+        inhLanProvideRadioButton = new JRadioButton(labels.getString("ese.provide"));
+        inhLanProvideRadioButton.setActionCommand(PROVIDE);
+        inhLanProvideRadioButton.addActionListener(new ChangePanelActionListener(languageBoxPanel));
+        inheritLanguageGroup.add(inhLanProvideRadioButton);
+        rbPanel.add(inhLanProvideRadioButton);
+        inheritLanguagePanel.add(rbPanel, BorderLayout.WEST);
+        languageBoxPanel.setVisible(false);
+        inheritLanguagePanel.add(languageBoxPanel, BorderLayout.EAST);
+        inheritLanguagePanel.setBorder(BLACK_LINE);
+        if (currentRoleType.equals("TEXT")) {
+            inheritLanguagePanel.setVisible(true);
+        } else {
+            inheritLanguagePanel.setVisible(false);
+        }
+        formPanel.add(inheritLanguagePanel);
 
         JButton createEseBtn = new JButton(labels.getString("ese.createEseBtn"));
         JButton cancelBtn = new JButton(labels.getString("ese.cancelBtn"));
@@ -419,7 +533,7 @@ public class EseOptionsPanel extends JPanel {
         }
 
         config.setDataProvider(dataProviderTextArea.getText());
-        config.setProvider(providerTextArea.getText());
+        config.setProvider("Archives Portal Europe");
 
         Enumeration<AbstractButton> enumeration = typeGroup.getElements();
         while (enumeration.hasMoreElements()) {
@@ -438,7 +552,7 @@ public class EseOptionsPanel extends JPanel {
         enumeration = inheritParentGroup.getElements();
         while (enumeration.hasMoreElements()) {
             AbstractButton btn = enumeration.nextElement();
-            if (btn.isSelected() && btn.getActionCommand().equals(YES)) {
+            if (FULL.equals(conversionMode) && inheritParentCheckbox.isSelected() && btn.isSelected() && btn.getActionCommand().equals(YES)) {
                 config.setInheritElementsFromFileLevel(true);
             }
         }
@@ -447,7 +561,7 @@ public class EseOptionsPanel extends JPanel {
         enumeration = inheritOriginationGroup.getElements();
         while (enumeration.hasMoreElements()) {
             AbstractButton btn = enumeration.nextElement();
-            if (btn.isSelected() && btn.getActionCommand().equals(YES)) {
+            if (FULL.equals(conversionMode) && inheritOriginationCheckbox.isSelected() && btn.isSelected() && btn.getActionCommand().equals(YES)) {
                 config.setInheritOrigination(true);
                 config.setInheritCustodhist(true);
                 config.setInheritAltformavail(true);
@@ -459,7 +573,7 @@ public class EseOptionsPanel extends JPanel {
         enumeration = inheritLanguageGroup.getElements();
         while (enumeration.hasMoreElements()) {
             AbstractButton btn = enumeration.nextElement();
-            if (btn.isSelected()) {
+            if (inheritLanguageCheckbox.isSelected() && btn.isSelected()) {
                 if (btn.getActionCommand().equals(YES)) {
                     config.setInheritLanguage(true);
                 } else if (btn.getActionCommand().equals(PROVIDE)) {
@@ -476,7 +590,8 @@ public class EseOptionsPanel extends JPanel {
             }
         }
 
-        if (contextTextArea != null && StringUtils.isNotEmpty(contextTextArea.getText())) {
+        config.setContextInformationPrefix(labels.getString("ese.hierarchyPrefixDefault") + ":");
+        if (FULL.equals(conversionMode) && hierarchyPrefixCheckbox.isSelected() && contextTextArea != null && StringUtils.isNotEmpty(contextTextArea.getText())) {
             config.setContextInformationPrefix(contextTextArea.getText());
         }
 
@@ -572,10 +687,10 @@ public class EseOptionsPanel extends JPanel {
             }
         }
 
-        if (StringUtils.isEmpty(providerTextArea.getText())) {
-            throw new Exception("providerTextField is empty");
-        }
-
+        /*        if (StringUtils.isEmpty(providerTextArea.getText())) {
+         throw new Exception("providerTextField is empty");
+         }
+         */
         if (licenseGroup == null) {
             throw new Exception("licenseGroup is null");
         } else if (!isRadioBtnChecked(licenseGroup)) {
@@ -584,7 +699,7 @@ public class EseOptionsPanel extends JPanel {
 
         if (typeGroup.getSelection().getActionCommand().equals(TEXT)) {
             if (inheritLanguageGroup.getSelection().getActionCommand().equals(NO) && ead2EseInformation.getLanguageCode() == null) {
-                JOptionPane.showMessageDialog(parent, "Digital object type TEXT requires language inheritance. Please either select one of the options below or provide a language in the configuration window.");
+                JOptionPane.showMessageDialog(parent, labels.getString("ese.textNeedsLanguage"));
                 throw new Exception("selected type requires language inheritance");
             }
         }
@@ -605,6 +720,22 @@ public class EseOptionsPanel extends JPanel {
         if (ead2EseInformation.getArchdescRepository() != null) {
             archdescRepository = ead2EseInformation.getArchdescRepository();
         }
+    }
+
+    public JPanel getHierarchyPrefixPanel() {
+        return hierarchyPrefixPanel;
+    }
+
+    public JPanel getInheritParentPanel() {
+        return inheritParentPanel;
+    }
+
+    public JPanel getInheritOriginationPanel() {
+        return inheritOriginationPanel;
+    }
+
+    public JPanel getInheritLanguagePanel() {
+        return inheritLanguagePanel;
     }
 
     public class ChangePanelActionListener implements ActionListener {
@@ -958,14 +1089,42 @@ public class EseOptionsPanel extends JPanel {
         }
     }
 
-    private class CheckboxItemListener implements ItemListener {
+    private class OptionalCheckboxItemListener implements ItemListener {
 
+        @Override
         public void itemStateChanged(ItemEvent e) {
             if (e.getStateChange() == ItemEvent.DESELECTED) {
                 dataProviderTextArea.setText("");
             }
             if (e.getStateChange() == ItemEvent.SELECTED) {
                 dataProviderTextArea.setText(archdescRepository);
+            }
+        }
+    }
+
+    private class ConversionModeListener implements ActionListener {
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            if (MINIMAL.equals(e.getActionCommand())) {
+                conversionMode = MINIMAL;
+                hierarchyPrefixPanel.setVisible(false);
+                inheritOriginationPanel.setVisible(false);
+                inheritParentPanel.setVisible(false);
+            }
+            if (FULL.equals(e.getActionCommand())) {
+                conversionMode = FULL;
+                hierarchyPrefixPanel.setVisible(true);
+                inheritOriginationPanel.setVisible(true);
+                inheritParentPanel.setVisible(true);
+            }
+            if (FULL.equals(conversionMode) || (MINIMAL.equals(conversionMode) && (TEXT.equals(e.getActionCommand()) || TEXT.equals(typeGroup.getSelection().getActionCommand())))) {
+                inheritLanguagePanel.setVisible(true);
+            } else {
+                inheritLanguagePanel.setVisible(false);
+            }
+            if (TEXT.equals(e.getActionCommand())){
+                inheritLanguageCheckbox.setSelected(true);
             }
         }
     }
