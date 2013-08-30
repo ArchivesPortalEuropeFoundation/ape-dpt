@@ -114,15 +114,27 @@ public class LocationType {
     public JTextField getLatitudeTf() {
         return latitudeTf;
     }
+    public void setLatitudeTf(JTextField textField) {
+        this.latitudeTf = textField;
+    }
     public String getLatitudeTfValue() {
         return latitudeTf.getText();
+    }
+    public void setLatitudeTfValue(String value) {
+        this.getLatitudeTf().setText(value);
     }
 
     public JTextField getLongitudeTf() {
         return longitudeTf;
     }
+    public void setLongitudeTf(JTextField textField) {
+        this.longitudeTf = textField;
+    }
     public String getLongitudeTfValue() {
         return longitudeTf.getText();
+    }
+    public void setLongitudeTfValue(String value) {
+        this.getLongitudeTf().setText(value);
     }
 
     public String getLocalType() {
@@ -147,20 +159,20 @@ public class LocationType {
             location.getStreet().setContent(getStreetTfValue());
             location.getStreet().setLang(getStreetTfLanguage());
         } else {
-            if(!isPostal)
+            //if(!isPostal)
                 errors.add("streetTf");//_" + locationNb);
-            else
-                location.setStreet(null); //wrong
+            //else
+            //    location.setStreet(null); //wrong
         }
         if(StringUtils.isNotEmpty(getCityTfValue())) {
             location.setMunicipalityPostalcode(new MunicipalityPostalcode());
             location.getMunicipalityPostalcode().setContent(getCityTfValue());
             location.getMunicipalityPostalcode().setLang(getCityTfLanguage());
         } else {
-            if(!isPostal)
+            //if(!isPostal)
                 errors.add("cityTf");//_" + locationNb);
-            else
-                location.setMunicipalityPostalcode(null); //wrong
+            //else
+            //    location.setMunicipalityPostalcode(null); //wrong
         }
         if(StringUtils.isNotEmpty(getCountryTfValue())) {
             location.setCountry(new Country());
@@ -202,6 +214,10 @@ public class LocationType {
             location.setLongitude(getLongitudeTfValue());
         }
 
+        if(getLocalType().equals("visitors address") && StringUtils.isEmpty(getCityTfValue()) && StringUtils.isEmpty(getStreetTfValue()) && StringUtils.isEmpty(getCountryTfValue())) {
+            errors = new ArrayList<String>();
+            return null;
+        }
         if(getLocalType().equals("postal address") && StringUtils.isEmpty(getCityTfValue()) && StringUtils.isEmpty(getStreetTfValue())) {
             errors = new ArrayList<String>();
             return null;
