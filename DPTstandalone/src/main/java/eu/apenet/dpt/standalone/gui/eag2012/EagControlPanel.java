@@ -78,10 +78,7 @@ public class EagControlPanel extends EagPanels {
         builder.add(personInstitutionRespTf.getLanguageBox(), cc.xy(7, rowNb));
         setNextRow();
 
-        builder.addSeparator(labels.getString("eag2012.control.usedLanguages"), cc.xyw(1, rowNb, 3));
-        JButton addLanguagesBtn = new ButtonEag(labels.getString("eag2012.control.addFurtherLangsAnsScripts"));
-        builder.add(addLanguagesBtn, cc.xy(5, rowNb));
-        addLanguagesBtn.addActionListener(new AddLanguagesBtnAction(eag, tabbedPane, model));
+        builder.addSeparator(labels.getString("eag2012.control.usedLanguages"), cc.xyw(1, rowNb, 7));
         setNextRow();
 
         if(eag.getControl().getLanguageDeclarations() == null)
@@ -103,11 +100,13 @@ public class EagControlPanel extends EagPanels {
             builder.add(languageWithScript.getScriptBox(), cc.xy(7, rowNb));
             setNextRow();
         }
-
-        builder.addSeparator(labels.getString("eag2012.control.conventions"), cc.xyw(1, rowNb, 3));
-        JButton addConventionBtn = new ButtonEag(labels.getString("eag2012.commons.addCnventions"));
-        builder.add(addConventionBtn, cc.xy(5, rowNb));
-        addConventionBtn.addActionListener(new AddConventionBtnAction(eag, tabbedPane, model));
+        
+        JButton addLanguagesBtn = new ButtonEag(labels.getString("eag2012.control.addFurtherLangsAnsScripts"));
+        builder.add(addLanguagesBtn, cc.xy(5, rowNb));
+        addLanguagesBtn.addActionListener(new AddLanguagesBtnAction(eag, tabbedPane, model));
+        setNextRow();
+        
+        builder.addSeparator(labels.getString("eag2012.control.conventions"), cc.xyw(1, rowNb, 7));
         setNextRow();
 
         if(eag.getControl().getConventionDeclaration().size() == 0)
@@ -122,6 +121,11 @@ public class EagControlPanel extends EagPanels {
             builder.add(textFieldWithLanguage.getExtraField(),                     cc.xy (7, rowNb));
             setNextRow();
         }
+
+        JButton addConventionBtn = new ButtonEag(labels.getString("eag2012.commons.addCnventions"));
+        builder.add(addConventionBtn, cc.xy(5, rowNb));
+        addConventionBtn.addActionListener(new AddConventionBtnAction(eag, tabbedPane, model));
+        setNextRow();
 
         builder.addSeparator("", cc.xyw(1, rowNb, 7));
         setNextRow();
