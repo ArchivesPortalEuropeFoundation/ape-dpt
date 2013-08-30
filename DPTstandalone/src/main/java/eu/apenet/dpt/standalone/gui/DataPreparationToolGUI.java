@@ -15,7 +15,7 @@ import eu.apenet.dpt.standalone.gui.hgcreation.*;
 import eu.apenet.dpt.standalone.gui.validation.ValidateActionListener;
 import eu.apenet.dpt.standalone.gui.validation.ValidateSelectionActionListener;
 import eu.apenet.dpt.standalone.gui.xsdaddition.XsdObject;
-import eu.apenet.dpt.utils.service.MultiResourceBundle;
+//import eu.apenet.dpt.utils.service.MultiResourceBundle;
 import eu.apenet.dpt.utils.service.ResourceBundlesWrapper;
 import eu.apenet.dpt.utils.util.ReadXml;
 import eu.apenet.dpt.utils.util.XmlChecker;
