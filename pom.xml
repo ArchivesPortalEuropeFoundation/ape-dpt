@@ -3,13 +3,13 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>eu.archivesportaleurope.dpt</groupId>
     <artifactId>DPT-project</artifactId>
-    <version>2013-08</version>
+    <version>2013-09-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>APE DPT tool Project</name>
     <description>Maven Project for building the DPT tools</description>
 	<scm>
-		<connection>scm:svn:https://build.archivesportaleurope.net/svn/apex-dpt/tags/DPT-project-2013-08</connection>
-		<developerConnection>scm:svn:https://build.archivesportaleurope.net/svn/apex-dpt/tags/DPT-project-2013-08</developerConnection>
+		<connection>scm:svn:https://build.archivesportaleurope.net/svn/apex-dpt/trunk</connection>
+		<developerConnection>scm:svn:https://build.archivesportaleurope.net/svn/apex-dpt/trunk</developerConnection>
 	</scm>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
