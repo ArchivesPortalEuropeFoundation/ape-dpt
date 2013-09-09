@@ -275,16 +275,7 @@
         <date />
         <item>Converted_apeEAD_version_<xsl:value-of select="$versionnb"/></item>
     </xsl:template>
-    <xsl:template match="revisiondesc/list" mode="copy">
-        <!--<list>-->
-            <!--<xsl:apply-templates mode="#current"/>-->
-        <!--</list>-->
-    </xsl:template>
-    <!--<xsl:template match="revisiondesc/list/item" mode="copy">-->
-        <!--<item>-->
-            <!--<xsl:apply-templates mode="#current"/>-->
-        <!--</item>-->
-    <!--</xsl:template>-->
+    <xsl:template match="revisiondesc/list" mode="copy"/>
 
     <!-- eadid -->
     <xsl:template match="eadid" name="addEadid" mode="copy">
