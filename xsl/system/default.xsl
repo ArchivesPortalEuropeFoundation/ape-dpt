@@ -229,6 +229,23 @@
             <xsl:if test="normalize-space($versionnb)">
                 <xsl:call-template name="revisiondesc_change"/>
             </xsl:if>
+            <xsl:for-each select="list/item">
+                <change>
+                    <date>
+                        <xsl:if test="date">
+                            <xsl:attribute name="calendar" select="'gregorian'"/>
+                            <xsl:attribute name="era" select="'ce'"/>
+                            <xsl:for-each select="date">
+                                <xsl:call-template name="normalizeDate" />
+                            </xsl:for-each>
+                            <xsl:value-of select="date/text()"/>
+                        </xsl:if>
+                    </date>
+                    <item>
+                        <xsl:apply-templates select="node()" mode="#current"/>
+                    </item>
+                </change>
+            </xsl:for-each>
         </revisiondesc>
     </xsl:template>
     <xsl:template match="revisiondesc/change" mode="copy">
@@ -258,6 +275,7 @@
         <date />
         <item>Converted_apeEAD_version_<xsl:value-of select="$versionnb"/></item>
     </xsl:template>
+    <xsl:template match="revisiondesc/list" mode="copy"/>
 
     <!-- eadid -->
     <xsl:template match="eadid" name="addEadid" mode="copy">
