@@ -70,7 +70,7 @@ public class DateConversionXMLFilehandler {
                 String xmlString = result.getWriter().toString();
                 FileUtils.writeStringToFile(file, xmlString, "UTF-8");
             } catch (IOException e) {
-                LOG.error("We could not use the date conversion XML file, most likely it was not found, cause: " + e.getMessage());
+//                LOG.error("We could not use the date conversion XML file, most likely it was not found, cause: " + e.getMessage());
             }
         } catch (TransformerException ex) {
         } catch (ParserConfigurationException ex) {
