@@ -3,7 +3,6 @@ package eu.apenet.dpt.utils.ead2ese;
 import java.io.File;
 import java.io.Serializable;
 import java.util.Properties;
-
 import org.apache.commons.lang.StringUtils;
 
 public class EseConfig implements Serializable {
@@ -30,6 +29,7 @@ public class EseConfig implements Serializable {
     private String rightsAdditionalInformation;
     private String dataProvider;
     private boolean useExistingDaoRole;
+    private boolean useExistingLanguage;
     private boolean useExistingRepository;
     private Properties properties;
 
@@ -209,6 +209,14 @@ public class EseConfig implements Serializable {
         this.useExistingRepository = useExistingRepository;
     }
 
+    public boolean isUseExistingLanguage() {
+        return useExistingLanguage;
+    }
+
+    public void setUseExistingLanguage(boolean useExistingLanguage) {
+        this.useExistingLanguage = useExistingLanguage;
+    }
+
     public XMLTransformer getTransformerXML2XML() {
         if (transformerXML2XML == null) {
             transformerXML2XML = new XMLTransformer("/ead2ese/ead2ese.xslt", getProperties());
@@ -235,6 +243,7 @@ public class EseConfig implements Serializable {
             properties.put("inheritControlaccess", getString(new Boolean(isInheritControlaccess()).toString()));
             properties.put("contextInformationPrefix", getString(getContextInformationPrefix()));
             properties.put("useExistingDaoRole", getString(new Boolean(isUseExistingDaoRole()).toString()));
+            properties.put("useExistingLanguage", getString(new Boolean(isUseExistingLanguage()).toString()));
             properties.put("useExistingRepository", getString(new Boolean(isUseExistingRepository()).toString()));
         }
         return properties;
