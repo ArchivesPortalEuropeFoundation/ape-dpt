@@ -149,7 +149,7 @@ public class LocationType {
         return errors;
     }
 
-    public Location getLocation(String defaultCountry) {//, int locationNb) {
+    public Location getLocation(String defaultCountry, boolean isFirst) {
         boolean isPostal = localType.equals("postal address");
         errors = new ArrayList<String>();
         Location location = new Location();
@@ -214,7 +214,7 @@ public class LocationType {
             location.setLongitude(getLongitudeTfValue());
         }
 
-        if(getLocalType().equals("visitors address") && StringUtils.isEmpty(getCityTfValue()) && StringUtils.isEmpty(getStreetTfValue()) && StringUtils.isEmpty(getCountryTfValue())) {
+        if(!isFirst && getLocalType().equals("visitors address") && StringUtils.isEmpty(getCityTfValue()) && StringUtils.isEmpty(getStreetTfValue()) && StringUtils.isEmpty(getCountryTfValue())) {
             errors = new ArrayList<String>();
             return null;
         }

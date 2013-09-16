@@ -611,13 +611,13 @@ public class EagContactPanel extends EagPanels {
                 repository.getLocation().clear();
 
                 String defaultCountry = "";
-//                int locationNb = 0;
+                boolean isFirst = true;
                 for(LocationType locationType : locationFields) {
-//                    locationNb++;
                     if(StringUtils.isNotEmpty(locationType.getCountryTfValue())) {
                         defaultCountry = locationType.getCountryTfValue();
                     }
-                    Location location = locationType.getLocation(defaultCountry);//, locationNb);
+                    Location location = locationType.getLocation(defaultCountry, isFirst);
+                    isFirst = false;
                     errors.addAll(locationType.getErrors());
                     if(location != null)
                         repository.getLocation().add(location);
