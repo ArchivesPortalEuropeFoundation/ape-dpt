@@ -17,6 +17,7 @@
     <xsl:param name="contextInformationPrefix"></xsl:param>
     <xsl:param name="useExistingDaoRole"></xsl:param>
     <xsl:param name="useExistingRepository"></xsl:param>
+    <xsl:param name="minimalConversion"></xsl:param>
     
     <xsl:template match="/">
         <metadata xsi:schemaLocation="http://www.europeana.eu/schemas/ese/ http://www.europeana.eu/schemas/ese/ESE-V3.4.xsd

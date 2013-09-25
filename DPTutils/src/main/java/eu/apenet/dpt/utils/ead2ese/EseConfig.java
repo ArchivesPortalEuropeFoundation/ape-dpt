@@ -31,6 +31,7 @@ public class EseConfig implements Serializable {
     private String dataProvider;
     private boolean useExistingDaoRole;
     private boolean useExistingRepository;
+    private boolean minimalConversion;
     private Properties properties;
 
     public EseConfig() {
@@ -216,6 +217,20 @@ public class EseConfig implements Serializable {
         return transformerXML2XML;
     }
 
+    /**
+	 * @return the minimalConversion
+	 */
+	public boolean isMinimalConversion() {
+		return this.minimalConversion;
+	}
+
+	/**
+	 * @param minimalConversion the minimalConversion to set
+	 */
+	public void setMinimalConversion(boolean minimalConversion) {
+		this.minimalConversion = minimalConversion;
+	}
+
     public Properties getProperties() {
         if (properties == null) {
             properties = new Properties();
@@ -236,11 +251,12 @@ public class EseConfig implements Serializable {
             properties.put("contextInformationPrefix", getString(getContextInformationPrefix()));
             properties.put("useExistingDaoRole", getString(new Boolean(isUseExistingDaoRole()).toString()));
             properties.put("useExistingRepository", getString(new Boolean(isUseExistingRepository()).toString()));
+            properties.put("minimalConversion", getString(new Boolean(isMinimalConversion()).toString()));
         }
         return properties;
     }
 
-    public XMLTransformer getTransformerXML2HTML() {
+	public XMLTransformer getTransformerXML2HTML() {
         if (transformerXML2HTML == null) {
             transformerXML2HTML = new XMLTransformer("/ead2ese/ese2html.xslt", null);
         }

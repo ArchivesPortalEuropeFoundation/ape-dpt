@@ -606,6 +606,13 @@ public class EseOptionsPanel extends JPanel {
         if (additionalRightsTextArea != null && StringUtils.isNotEmpty(additionalRightsTextArea.getText())) {
             config.setRightsAdditionalInformation(additionalRightsTextArea.getText());
         }
+
+        if (MINIMAL.equals(conversionMode)) {
+        	config.setMinimalConversion(true);
+        } else {
+        	config.setMinimalConversion(false);
+        }
+
         return config;
     }
 

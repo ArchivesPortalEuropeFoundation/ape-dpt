@@ -23,6 +23,7 @@
     <xsl:param name="prefix_url"></xsl:param>
     <xsl:param name="repository_code"></xsl:param>
     <xsl:param name="xml_type_name"></xsl:param>
+    <xsl:param name="minimalConversion"></xsl:param>
     
     <!--variable for identifying the eadid, stored at /metadata/record[1]/dc:identifier-->
     <xsl:variable name="eadid" select="/metadata/record[1]/dc:identifier[1]" />
@@ -119,16 +120,18 @@
             <xsl:attribute name="rdf:about">
                 <xsl:value-of select="concat('providedCHO_', fn:replace(dc:identifier[1], ' ', '_'))"/>
             </xsl:attribute>
-            <dc:identifier>
-                <xsl:choose>
-                    <xsl:when test='position() = 1'>
-                        <xsl:value-of select="dc:identifier[2]"/>
-                    </xsl:when>
-                    <xsl:otherwise>
-                        <xsl:value-of select="dc:identifier[1]"/>
-                    </xsl:otherwise>
-                </xsl:choose>
-            </dc:identifier>
+            <xsl:if test="$minimalConversion != 'true'">
+	            <dc:identifier>
+	                <xsl:choose>
+	                    <xsl:when test='position() = 1'>
+	                        <xsl:value-of select="dc:identifier[2]"/>
+	                    </xsl:when>
+	                    <xsl:otherwise>
+	                        <xsl:value-of select="dc:identifier[1]"/>
+	                    </xsl:otherwise>
+	                </xsl:choose>
+	            </dc:identifier>
+	            </xsl:if>
             <!-- deal with "other" corresponding properties -->
             <xsl:call-template name="mapChoProperties"/>
             <xsl:if test='position() > 1'>
@@ -148,7 +151,12 @@
             <dc:subject>
                 <xsl:if test='position() > 1'>
                     <xsl:attribute name="rdf:resource">
-                        <xsl:value-of select="concat('context_', fn:replace(dc:identifier[1], ' ', '_'))"/>
+            			<xsl:if test="$minimalConversion != 'true'">
+                        	<xsl:value-of select="concat('context_', fn:replace(dc:identifier[1], ' ', '_'))"/>
+                        </xsl:if>
+                        <xsl:if test="$minimalConversion = 'true'">
+                        	<xsl:text>Archival unit</xsl:text>
+                        </xsl:if>
                     </xsl:attribute>
                 </xsl:if>
             </dc:subject>
@@ -209,18 +217,20 @@
         </xsl:if>
     
         <!-- Simple Knowledge Organization System -> Concept -->
-        <xsl:if test='dcterms:alternative'>
-            <skos:Concept>
-                <xsl:attribute name="rdf:about">
-                    <xsl:value-of select="concat('context_', fn:replace(dc:identifier[1], ' ', '_'))"/>
-                </xsl:attribute>
-                <xsl:for-each select="dcterms:alternative">
-                    <skos:prefLabel>
-                        <xsl:value-of select="."/>
-                    </skos:prefLabel>
-                </xsl:for-each>
-            </skos:Concept>
-        </xsl:if>
+        <xsl:if test="$minimalConversion != 'true'">
+	        <xsl:if test='dcterms:alternative'>
+	            <skos:Concept>
+	                <xsl:attribute name="rdf:about">
+	                    <xsl:value-of select="concat('context_', fn:replace(dc:identifier[1], ' ', '_'))"/>
+	                </xsl:attribute>
+	                <xsl:for-each select="dcterms:alternative">
+	                    <skos:prefLabel>
+	                        <xsl:value-of select="."/>
+	                    </skos:prefLabel>
+	                </xsl:for-each>
+	            </skos:Concept>
+	        </xsl:if>
+	    </xsl:if>
             
     </xsl:template>
         
@@ -237,17 +247,22 @@
             </xsl:call-template>
         </xsl:for-each>		
         -->	
-        <xsl:for-each select="dc:publisher">
-            <xsl:call-template name="create_property">
-                <xsl:with-param name="tgt_property">dc:publisher</xsl:with-param>
-            </xsl:call-template>
-        </xsl:for-each>		
+        
+		<xsl:if test="$minimalConversion != 'true'">
+			<xsl:for-each select="dc:publisher">
+            	<xsl:call-template name="create_property">
+                	<xsl:with-param name="tgt_property">dc:publisher</xsl:with-param>
+            	</xsl:call-template>
+        	</xsl:for-each>
+        </xsl:if>		
 
-        <xsl:for-each select="dcterms:issued">
-            <xsl:call-template name="create_property">
-                <xsl:with-param name="tgt_property">dcterms:issued</xsl:with-param>
-            </xsl:call-template>
-        </xsl:for-each>		
+        <xsl:if test="$minimalConversion != 'true'">
+	        <xsl:for-each select="dcterms:issued">
+	            <xsl:call-template name="create_property">
+	                <xsl:with-param name="tgt_property">dcterms:issued</xsl:with-param>
+	            </xsl:call-template>
+	        </xsl:for-each>		
+	    </xsl:if>
 
         <xsl:for-each select="dc:title">
             <xsl:call-template name="create_property">
@@ -255,11 +270,13 @@
             </xsl:call-template>
         </xsl:for-each>
 		
-        <xsl:for-each select="dc:description">
-            <xsl:call-template name="create_property">
-                <xsl:with-param name="tgt_property">dc:description</xsl:with-param>
-            </xsl:call-template>
-        </xsl:for-each>
+        <xsl:if test="$minimalConversion != 'true'">
+	        <xsl:for-each select="dc:description">
+	            <xsl:call-template name="create_property">
+	                <xsl:with-param name="tgt_property">dc:description</xsl:with-param>
+	            </xsl:call-template>
+	        </xsl:for-each>
+	    </xsl:if>
 		
         <xsl:for-each select="dc:format">
             <xsl:call-template name="create_property">
@@ -291,11 +308,13 @@
             </xsl:call-template>
         </xsl:for-each>		
 
-        <xsl:for-each select="dc:date">
-            <xsl:call-template name="create_property">
-                <xsl:with-param name="tgt_property">dc:date</xsl:with-param>
-            </xsl:call-template>
-        </xsl:for-each>		
+        <xsl:if test="$minimalConversion != 'true'">
+	        <xsl:for-each select="dc:date">
+	            <xsl:call-template name="create_property">
+	                <xsl:with-param name="tgt_property">dc:date</xsl:with-param>
+	            </xsl:call-template>
+	        </xsl:for-each>
+     	</xsl:if>
 		
         <xsl:for-each select="dcterms:hasFormat">
             <xsl:call-template name="create_property">

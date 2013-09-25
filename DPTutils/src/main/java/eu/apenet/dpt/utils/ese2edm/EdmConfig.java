@@ -22,6 +22,7 @@ public class EdmConfig implements Serializable {
     private String prefixUrl;
     private String repositoryCode;
     private String xmlTypeName;
+    private boolean minimalConversion;
     private Properties properties;
 
     private boolean transferToFileOutput;
@@ -78,6 +79,20 @@ public class EdmConfig implements Serializable {
             transformerXML2XML = new XMLTransformer("/ese2edm/ese2edm_1.xslt", getProperties());
     }
 
+    /**
+	 * @return the minimalConversion
+	 */
+	public boolean isMinimalConversion() {
+		return this.minimalConversion;
+	}
+
+	/**
+	 * @param minimalConversion the minimalConversion to set
+	 */
+	public void setMinimalConversion(boolean minimalConversion) {
+		this.minimalConversion = minimalConversion;
+	}
+
     public Properties getProperties() {
         if (properties == null) {
 			properties = new Properties();
@@ -86,6 +101,7 @@ public class EdmConfig implements Serializable {
                         String repCodeAfterReplacement = getString(getRepositoryCode()).replace('/', '_');
 			properties.put("repository_code", getString(repCodeAfterReplacement));
 			properties.put("xml_type_name", getString(getXmlTypeName()));
+			properties.put("minimalConversion", getString(new Boolean(isMinimalConversion()).toString()));
         }
         return properties;
     }
