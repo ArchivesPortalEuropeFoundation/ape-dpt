@@ -113,7 +113,7 @@
     <!-- lb is almost allowed everywhere -->
     <xsl:template match="lb" mode="#all">
         <xsl:choose>
-            <xsl:when test="parent::unitdate or parent::emph or parent::origination or parent::physdesc or parent::entry or parent::item or parent::head or parent::physfacet or parent::bibref or parent::langusage"><xsl:text> - </xsl:text></xsl:when>
+            <xsl:when test="parent::unitdate or parent::emph or parent::origination or parent::physdesc or parent::entry or parent::item or parent::head or parent::physfacet or parent::bibref or parent::langusage or parent::title or parent::dimensions"><xsl:text> - </xsl:text></xsl:when>
             <xsl:otherwise>
                 <lb />
             </xsl:otherwise>
@@ -1274,7 +1274,7 @@
     </xsl:template>
 
     <!-- relatedmaterial/archref -->
-    <xsl:template match="relatedmaterial/archref" mode="copy fonds intermediate lowest nested">
+    <xsl:template match="relatedmaterial/archref | relatedmaterial/ref" mode="copy fonds intermediate lowest nested">
         <p>
             <xsl:for-each select="./title">
                 <xsl:apply-templates mode="#current"/>
@@ -1282,6 +1282,9 @@
             <extref>
                 <xsl:if test="@*:href!='' and not(contains(@*:href, '['))">
                     <xsl:attribute name="xlink:href" select="@*:href"/>
+                </xsl:if>
+                <xsl:if test="@*:target!=''">
+                    <xsl:attribute name="xlink:href" select="@*:target"/>
                 </xsl:if>
                 <xsl:if test="@*:title!=''">
                     <xsl:attribute name="xlink:title" select="@*:title"/>
@@ -1337,6 +1340,22 @@
         <otherfindaid encodinganalog="3.4.5">
             <xsl:apply-templates select="node() except otherfindaid" mode="#current"/>
             <xsl:apply-templates select="otherfindaid/*" mode="nested"/>
+            <xsl:for-each select="list/item">
+                <p>
+                    <extref>
+                        <xsl:attribute name="xlink:href">
+                            <xsl:choose>
+                                <xsl:when test="contains(archref/@href, '.xml')">
+                                    <xsl:value-of select="substring-before(tokenize(archref/@href, '/')[last()], '.xml')"/>
+                                </xsl:when>
+                                <xsl:otherwise>
+                                    <xsl:value-of select="tokenize(archref/@href, '/')[last()]"/>
+                                </xsl:otherwise>
+                            </xsl:choose>
+                        </xsl:attribute>
+                    </extref>
+                </p>
+            </xsl:for-each>
         </otherfindaid>
     </xsl:template>
 
@@ -1593,21 +1612,23 @@
                 </table>
             </xsl:when>
             <xsl:otherwise>
-                <list>
-                    <xsl:if test="@type='ordered' or @type='marked'">
-                        <xsl:attribute name="type" select="@type"/>
-                    </xsl:if>
-                    <xsl:if test="@type='simple'">
-                        <xsl:attribute name="type" select="'marked'"/>
-                    </xsl:if>
-                    <xsl:if test="@type='ordered'">
-                        <xsl:attribute name="numeration" select="'arabic'"/>
-                    </xsl:if>
-                    <xsl:if test="not(./item)">
-                        <item/>
-                    </xsl:if>
-                    <xsl:apply-templates select="node()" mode="#current"/>
-                </list>
+                <xsl:if test="not(parent::otherfindaid and item/archref[@href])">
+                    <list>
+                        <xsl:if test="@type='ordered' or @type='marked'">
+                            <xsl:attribute name="type" select="@type"/>
+                        </xsl:if>
+                        <xsl:if test="@type='simple'">
+                            <xsl:attribute name="type" select="'marked'"/>
+                        </xsl:if>
+                        <xsl:if test="@type='ordered'">
+                            <xsl:attribute name="numeration" select="'arabic'"/>
+                        </xsl:if>
+                        <xsl:if test="not(./item)">
+                            <item/>
+                        </xsl:if>
+                        <xsl:apply-templates select="node()" mode="#current"/>
+                    </list>
+                </xsl:if>
             </xsl:otherwise>
         </xsl:choose>
     </xsl:template>
@@ -2136,9 +2157,11 @@
             <xsl:when test="not(ancestor::controlaccess)">
                 <controlaccess>                                                                                                                           <!--../index/indexentry//geogname | ../index/indexentry//subject | ../index/indexentry//famname | ../index/indexentry//persname | ../index/indexentry//corpname | ../index/indexentry//occupation | ../index/indexentry//genreform | ../index/indexentry//function | ../index/indexentry//title | ../index/indexentry//name-->
                     <xsl:for-each select="geogname | subject | famname | persname | corpname | occupation | genreform | function | title | p | head | name | indexentry//geogname | indexentry//subject | indexentry//famname | indexentry//persname | indexentry//corpname | indexentry//occupation | indexentry//genreform | indexentry//function | indexentry//title | indexentry//name">
-                        <xsl:element name="{local-name()}" namespace="urn:isbn:1-931666-22-9">
-                            <xsl:apply-templates select="node()" mode="#current"/>
-                        </xsl:element>
+                        <xsl:if test="not(local-name()='genreform' and @type='typir')">
+                            <xsl:element name="{local-name()}" namespace="urn:isbn:1-931666-22-9">
+                                <xsl:apply-templates select="node()" mode="#current"/>
+                            </xsl:element>
+                        </xsl:if>
                     </xsl:for-each>
                     <xsl:for-each select="controlaccess">
                         <xsl:call-template name="controlaccess"/>
@@ -2147,9 +2170,11 @@
             </xsl:when>
             <xsl:otherwise>
                 <xsl:for-each select="geogname|subject|famname|persname|corpname|occupation|genreform|function|title|p|name">
-                    <xsl:element name="{local-name()}" namespace="urn:isbn:1-931666-22-9">
-                        <xsl:apply-templates select="node()" mode="#current"/>
-                    </xsl:element>
+                    <xsl:if test="not(local-name()='genreform' and @type='typir')">
+                        <xsl:element name="{local-name()}" namespace="urn:isbn:1-931666-22-9">
+                            <xsl:apply-templates select="node()" mode="#current"/>
+                        </xsl:element>
+                    </xsl:if>
                 </xsl:for-each>
             </xsl:otherwise>
         </xsl:choose>
@@ -2229,7 +2254,7 @@
             <xsl:when test="$countrycode='NL' and ../../@otherlevel='subfile'">
                 <xsl:apply-templates select="../../../did/unitid" mode="#current"/>
             </xsl:when>
-            <xsl:when test="(@type='call number' or @type='ABS' or @type='bestellnummer' or @type='series_code' or @type='reference' or @type='Sygnatura' or @type='REFERENCE_CODE' or @type='cote-de-consultation' or @type='cote-groupee' or @type='identifiant' or @type='cote' or @type='persistent' or (not(@type))) and text()[string-length(normalize-space(.)) ge 1]"><!-- and not(preceding-sibling::unitid) and not(following-sibling::unitid)-->
+            <xsl:when test="(@type='call number' or @type='ABS' or @type='bestellnummer' or @type='series_code' or @type='reference' or @type='Sygnatura' or @type='REFERENCE_CODE' or @type='cote-de-consultation' or @type='cote-groupee' or @type='identifiant' or @type='cote' or @type='persistent' or (not(@type))) and (text()[string-length(normalize-space(.)) ge 1] or exists(extptr))"><!-- and not(preceding-sibling::unitid) and not(following-sibling::unitid)-->
                 <xsl:choose>
                     <xsl:when test="@countrycode and @repositorycode">
                         <xsl:choose>
@@ -2828,7 +2853,7 @@
                         <xsl:when test="parent::c[@otherlevel='groupe-de-fonds' or @otherlevel='groupe_de_fonds' or not(@level)]">
                             <xsl:value-of select="'subseries'"/>
                         </xsl:when>
-                        <xsl:when test="not(@level) and parent::c[@otherlevel='sous-sous-serie-organique' or @otherlevel='recordgrp']">
+                        <xsl:when test="not(@level) and (parent::c[@otherlevel='sous-sous-serie-organique' or @otherlevel='recordgrp'] or child::c[@otherlevel='sous-sous-serie-organique'])">
                             <xsl:value-of select="'subseries'"/>
                         </xsl:when>
                         <xsl:otherwise>
@@ -2854,7 +2879,7 @@
                 </xsl:when>
                 <xsl:when test="@level='otherlevel'">
                     <xsl:choose>
-                        <xsl:when test="@otherlevel='filegrp' or @otherlevel=' filegrp' or @otherlevel='filegroup' or @otherlevel='file' or @otherlevel='subseries' or @otherlevel='subsubseries' or @otherlevel='sous-serie' or @otherlevel='sous-sous-serie' or @otherlevel='sous-sous-sous-serie' or @otherlevel='sous-sous-sous-sous-série' or @otherlevel='subsubsubseries' or @otherlevel='subsubsusbseries' or @otherlevel='subsubsubsubseries' or @otherlevel='sous-sous-série' or @otherlevel='sous-sous-sous-série' or @otherlevel='partie-de-subgp' or @otherlevel='partie-de-subgrp' or @otherlevel='partie-de-sbgrp' or @otherlevel='subsubsubsubsubseries' or @otherlevel='sous-série' or @otherlevel='sous-dossiers'">
+                        <xsl:when test="@otherlevel='filegrp' or @otherlevel=' filegrp' or @otherlevel='filegroup' or @otherlevel='file' or @otherlevel='subseries' or @otherlevel='subsubseries' or @otherlevel='sous-serie' or @otherlevel='sous-sous-serie' or @otherlevel='sous-sous-sous-serie' or @otherlevel='sous-sous-sous-sous-série' or @otherlevel='subsubsubseries' or @otherlevel='subsubsusbseries' or @otherlevel='subsubsubsubseries' or @otherlevel='sous-sous-série' or @otherlevel='sous-sous-sous-série' or @otherlevel='partie-de-subgp' or @otherlevel='partie-de-subgrp' or @otherlevel='partie-de-sbgrp' or @otherlevel='subsubsubsubsubseries' or @otherlevel='sous-série' or @otherlevel='sous-dossiers' or @otherlevel='sous-sous-serie-organique' or @otherlevel='sous-sous-sous-serie-organique'">
                             <xsl:value-of select="'subseries'"/>
                         </xsl:when>
                         <xsl:when test="((@otherlevel='groupe-de-fonds' or @otherlevel='groupe_de_fonds') and not(parent::c[not(@level) or @level='file' or @otherlevel='groupe-de-fonds' or @otherlevel='groupe_de_fonds'])) or @otherlevel='SF' or @otherlevel='sous-fonds' or @otherlevel='sous-sous-fonds'">
