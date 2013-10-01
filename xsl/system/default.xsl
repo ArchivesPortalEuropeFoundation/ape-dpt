@@ -224,29 +224,36 @@
 
     <!-- revisiondesc -->
     <xsl:template match="revisiondesc" mode="copy">
-        <revisiondesc>
-            <xsl:apply-templates select="node()" mode="#current"/>
-            <xsl:if test="normalize-space($versionnb)">
-                <xsl:call-template name="revisiondesc_change"/>
-            </xsl:if>
-            <xsl:for-each select="list/item">
-                <change>
-                    <date>
-                        <xsl:if test="date">
-                            <xsl:attribute name="calendar" select="'gregorian'"/>
-                            <xsl:attribute name="era" select="'ce'"/>
-                            <xsl:for-each select="date">
-                                <xsl:call-template name="normalizeDate" />
-                            </xsl:for-each>
-                            <xsl:value-of select="date/text()"/>
-                        </xsl:if>
-                    </date>
-                    <item>
-                        <xsl:apply-templates select="node()" mode="#current"/>
-                    </item>
-                </change>
-            </xsl:for-each>
-        </revisiondesc>
+        <xsl:choose>
+            <xsl:when test="@audience='internal'">
+                <xsl:call-template name="revisiondesc_ape"/>
+            </xsl:when>
+            <xsl:otherwise>
+                <revisiondesc>
+                    <xsl:apply-templates select="node()" mode="#current"/>
+                    <xsl:if test="normalize-space($versionnb)">
+                        <xsl:call-template name="revisiondesc_change"/>
+                    </xsl:if>
+                    <xsl:for-each select="list/item">
+                        <change>
+                            <date>
+                                <xsl:if test="date">
+                                    <xsl:attribute name="calendar" select="'gregorian'"/>
+                                    <xsl:attribute name="era" select="'ce'"/>
+                                    <xsl:for-each select="date">
+                                        <xsl:call-template name="normalizeDate" />
+                                    </xsl:for-each>
+                                    <xsl:value-of select="date/text()"/>
+                                </xsl:if>
+                            </date>
+                            <item>
+                                <xsl:apply-templates select="node()" mode="#current"/>
+                            </item>
+                        </change>
+                    </xsl:for-each>
+                </revisiondesc>
+            </xsl:otherwise>
+        </xsl:choose>
     </xsl:template>
     <xsl:template match="revisiondesc/change" mode="copy">
         <change>
@@ -532,19 +539,21 @@
 
     <!-- profiledesc/creation -->
     <xsl:template match="profiledesc/creation" mode="copy">
-        <creation>
-            <xsl:for-each select="descendant::text()">
-                <xsl:value-of select="concat(normalize-space(.), ' ')"/>
-            </xsl:for-each>
-            <!--<xsl:for-each select="date[1]">-->
-            <!--<date>-->
-            <!--<xsl:attribute name="calendar" select="'gregorian'"/>-->
-            <!--<xsl:attribute name="era" select="'ce'"/>-->
-            <!--<xsl:call-template name="normalizeDate"/>-->
-            <!--<xsl:value-of select="normalize-space(.)"/>-->
-            <!--</date>-->
-            <!--</xsl:for-each>-->
-        </creation>
+        <xsl:if test="not(@audience='internal')">
+            <creation>
+                <xsl:for-each select="descendant::text()">
+                    <xsl:value-of select="concat(normalize-space(.), ' ')"/>
+                </xsl:for-each>
+                <!--<xsl:for-each select="date[1]">-->
+                <!--<date>-->
+                <!--<xsl:attribute name="calendar" select="'gregorian'"/>-->
+                <!--<xsl:attribute name="era" select="'ce'"/>-->
+                <!--<xsl:call-template name="normalizeDate"/>-->
+                <!--<xsl:value-of select="normalize-space(.)"/>-->
+                <!--</date>-->
+                <!--</xsl:for-each>-->
+            </creation>
+        </xsl:if>
     </xsl:template>
 
     <!-- profiledesc/langusage -->
@@ -604,12 +613,14 @@
     </xsl:template>
 
     <xsl:template match="profiledesc/descrules" mode="copy">
-        <descrules>
-            <xsl:if test="@audience">
-                <xsl:attribute name="audience" select="@audience"/>
-            </xsl:if>
-            <xsl:apply-templates select="node()" mode="#current"/>
-        </descrules>
+        <xsl:if test="not(@audience='internal')">
+            <descrules>
+                <xsl:if test="@audience">
+                    <xsl:attribute name="audience" select="@audience"/>
+                </xsl:if>
+                <xsl:apply-templates select="node()" mode="#current"/>
+            </descrules>
+        </xsl:if>
     </xsl:template>
 
     <xsl:template match="descrules//*" mode="copy">
@@ -1696,12 +1707,12 @@
     </xsl:template>
 
     <xsl:template match="processinfo/p/note | separatedmaterial/p/note | bioghist/p/note | arrangement/p/note | acqinfo/p/note | accruals/p/note | custodhist/p/note" mode="copy fonds intermediate lowest nested">
-        <xsl:text>(</xsl:text><xsl:apply-templates select="p/text()" mode="#current"/><xsl:text>)</xsl:text>
+        <xsl:text> (</xsl:text><xsl:apply-templates select="p/text()" mode="#current"/><xsl:text>) </xsl:text>
     </xsl:template>
 
     <xsl:template match="bioghist/note" mode="copy fonds intermediate lowest nested">
         <p>
-            <xsl:text>(</xsl:text><xsl:apply-templates select="p/text()" mode="#current"/><xsl:text>)</xsl:text>
+            <xsl:text> (</xsl:text><xsl:apply-templates select="p/text()" mode="#current"/><xsl:text>) </xsl:text>
         </p>
     </xsl:template>
 
@@ -1883,12 +1894,12 @@
 
     <!-- copy fonds intermediate: scopecontent/p/note -->
     <xsl:template match="scopecontent/p/note" mode="copy fonds intermediate lowest nested">
-        <xsl:text>(</xsl:text><xsl:apply-templates select="p/text()" mode="#current"/><xsl:text>)</xsl:text>
+        <xsl:text> (</xsl:text><xsl:apply-templates select="p/text()" mode="#current"/><xsl:text>) </xsl:text>
     </xsl:template>
 
     <xsl:template match="scopecontent/note | odd/note" mode="copy fonds intermediate lowest nested">
         <p>
-            <xsl:text>(</xsl:text><xsl:apply-templates select="p/text()" mode="#current"/><xsl:text>)</xsl:text>
+            <xsl:text> (</xsl:text><xsl:apply-templates select="p/text()" mode="#current"/><xsl:text>) </xsl:text>
         </p>
     </xsl:template>
 
@@ -2180,6 +2191,18 @@
         </xsl:choose>
     </xsl:template>
 
+    <xsl:template name="createControlaccess">
+        <controlaccess>
+            <xsl:for-each select="./did/unittitle and ./bibref">
+                <xsl:for-each select="geogname | subject | famname | persname | corpname | occupation | genreform | function">
+                    <xsl:element name="{local-name()}" namespace="urn:isbn:1-931666-22-9">
+                        <xsl:apply-templates select="node()" mode="#current"/>
+                    </xsl:element>
+                </xsl:for-each>
+            </xsl:for-each>
+        </controlaccess>
+    </xsl:template>
+
 
     <!-- copy: dsc -->
     <xsl:template match="dsc" mode="copy">
@@ -2465,6 +2488,10 @@
                         <xsl:attribute name="xlink:title" select="@label"/>
                         <xsl:attribute name="xlink:role" select="'IMAGE'"/>
                     </xsl:when>
+                    <xsl:when test="@label='reference' and daodesc/p/text()">
+                        <xsl:attribute name="xlink:title" select="daodesc/p/text()"/>
+                        <xsl:attribute name="xlink:role" select="'UNSPECIFIED'"/>
+                    </xsl:when>
                     <xsl:otherwise>
                         <xsl:attribute name="xlink:title" select="@label"/>
                         <xsl:attribute name="xlink:role" select="'UNSPECIFIED'"/>
@@ -2504,6 +2531,9 @@
                     </xsl:if>
                     <xsl:if test="not(@title) and not(@*:title) and ../daodesc[@label='reference']/p/text()">
                         <xsl:attribute name="xlink:title" select="../daodesc[@label='reference']/p/text()"/>
+                    </xsl:if>
+                    <xsl:if test="not(@title) and not(@*:title) and .[@label='reference']/daodesc/p/text()">
+                        <xsl:attribute name="xlink:title" select=".[@label='reference']/daodesc/p/text()"/>
                     </xsl:if>
                     <xsl:call-template name="daoRoleType"/>
                 </dao>
@@ -2968,6 +2998,9 @@
                     <xsl:if test="$level='fonds'">
                         <xsl:attribute name="encodinganalog" select="'3.1.4'"/>
                         <xsl:apply-templates mode="fonds"/>
+                    </xsl:if>
+                    <xsl:if test="not(controlaccess) and not(did/controlaccess) and not(index) and not(did/index)">
+                        <xsl:call-template name="createControlaccess"/>
                     </xsl:if>
                 </c>
             </xsl:otherwise>
