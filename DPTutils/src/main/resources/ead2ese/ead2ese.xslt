@@ -1056,7 +1056,7 @@ http://purl.org/dc/terms/ http://www.dublincore.org/schemas/xmls/qdc/dcterms.xsd
     <xsl:template name="generateRecordForEad">
         <record>
             <dc:identifier>
-                <xsl:value-of select="/ead/eadheader/eadid/@identifier"/>
+                <xsl:value-of select="/ead/eadheader/eadid"/>
             </dc:identifier>
             <dc:identifier>
                 <xsl:value-of select="normalize-space(/ead/archdesc/did/unitid)"/>

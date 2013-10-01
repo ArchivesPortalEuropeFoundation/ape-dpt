@@ -28,7 +28,7 @@
     <!--variable for identifying the eadid, stored at /metadata/record[1]/dc:identifier-->
     <xsl:variable name="eadid" select="/metadata/record[1]/dc:identifier[1]" />
     <!--variable for base path of document identifiers-->
-    <xsl:variable name="id_base" select="concat($prefix_url, '/' , $repository_code, '/', $xml_type_name, '/', substring-after($eadid, '_'))" />
+    <xsl:variable name="id_base" select="concat($prefix_url, '/' , $repository_code, '/', $xml_type_name, '/', $eadid)" />
     
     <!-- template matching the root node and creating the RDF start tag -->
     <xsl:template match="/">
@@ -70,7 +70,7 @@
                         </xsl:when>
                         <xsl:otherwise>
                             <xsl:if test='position() = 1'>
-                                <xsl:value-of select="concat($prefix_url, '/', $repository_code, '/', $xml_type_name, '/', substring-after($eadid, '_'))"/>
+                                <xsl:value-of select="concat($prefix_url, '/', $repository_code, '/', $xml_type_name, '/', $eadid)"/>
                             </xsl:if>
                         </xsl:otherwise>
                     </xsl:choose>
@@ -137,7 +137,7 @@
             <xsl:if test='position() > 1'>
                 <dcterms:isPartOf>
                     <xsl:attribute name="rdf:resource">
-                        <xsl:value-of select="concat('providedCHO_', $eadid)"/>
+                        <xsl:value-of select="concat('providedCHO_', $repository_code, '_', $eadid)"/>
                     </xsl:attribute>
                 </dcterms:isPartOf>
             </xsl:if>
@@ -172,7 +172,7 @@
                     </xsl:when>
                     <xsl:otherwise>
                         <xsl:if test='position() = 1'>
-                            <xsl:value-of select="concat($prefix_url, '/', $repository_code, '/', $xml_type_name, '/', substring-after($eadid, '_'))"/>
+                            <xsl:value-of select="concat($prefix_url, '/', $repository_code, '/', $xml_type_name, '/', $eadid)"/>
                         </xsl:if>
                     </xsl:otherwise>
                 </xsl:choose>
