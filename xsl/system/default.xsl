@@ -2191,17 +2191,18 @@
         </xsl:choose>
     </xsl:template>
 
-    <xsl:template name="createControlaccess">
-        <controlaccess>
-            <xsl:for-each select="./did/unittitle and ./bibref">
-                <xsl:for-each select="geogname | subject | famname | persname | corpname | occupation | genreform | function">
-                    <xsl:element name="{local-name()}" namespace="urn:isbn:1-931666-22-9">
-                        <xsl:apply-templates select="node()" mode="#current"/>
-                    </xsl:element>
-                </xsl:for-each>
-            </xsl:for-each>
-        </controlaccess>
-    </xsl:template>
+    <!--<xsl:template name="createControlaccess">-->
+        <!--<xsl:param name="context" />-->
+        <!--<controlaccess>-->
+            <!--<xsl:for-each select="$context/did/unittitle and $context/bibref">-->
+                <!--<xsl:for-each select="geogname | subject | famname | persname | corpname | occupation | genreform | function">-->
+                    <!--<xsl:element name="{local-name()}" namespace="urn:isbn:1-931666-22-9">-->
+                        <!--<xsl:apply-templates select="node()" mode="#current"/>-->
+                    <!--</xsl:element>-->
+                <!--</xsl:for-each>-->
+            <!--</xsl:for-each>-->
+        <!--</controlaccess>-->
+    <!--</xsl:template>-->
 
 
     <!-- copy: dsc -->
@@ -2999,9 +3000,11 @@
                         <xsl:attribute name="encodinganalog" select="'3.1.4'"/>
                         <xsl:apply-templates mode="fonds"/>
                     </xsl:if>
-                    <xsl:if test="not(controlaccess) and not(did/controlaccess) and not(index) and not(did/index)">
-                        <xsl:call-template name="createControlaccess"/>
-                    </xsl:if>
+                    <!--<xsl:if test="not(controlaccess) and not(did/controlaccess) and not(index) and not(did/index)">-->
+                        <!--<xsl:call-template name="createControlaccess">-->
+                            <!--<xsl:with-param name="context" select="."/>-->
+                        <!--</xsl:call-template>-->
+                    <!--</xsl:if>-->
                 </c>
             </xsl:otherwise>
         </xsl:choose>
