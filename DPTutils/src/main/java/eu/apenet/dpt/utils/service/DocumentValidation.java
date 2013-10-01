@@ -127,7 +127,7 @@ public class DocumentValidation {
         DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
         documentBuilderFactory.setValidating(true);
         DocumentBuilder builder = documentBuilderFactory.newDocumentBuilder();
-        DTDReplacer dtdReplacer = new DTDReplacer("ead", dtdFile);
+        DTDReplacer dtdReplacer = new DTDReplacer("ead", "+//ISBN 1-931666-00-8//DTD ead.dtd (Encoded Archival Description (EAD) Version 2002)//EN", dtdFile);
         builder.setEntityResolver(dtdReplacer);
         ErrorHandler errorHandler = new ErrorHandler();
         builder.setErrorHandler(errorHandler);

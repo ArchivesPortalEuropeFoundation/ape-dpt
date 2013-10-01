@@ -16,15 +16,17 @@ import java.net.URL;
 public class DTDReplacer implements EntityResolver {
 
     private String systemId = null;
+    private String publicId = null;
     private URL substitute = null;
 
-    public DTDReplacer(String systemId, URL substitute) {
+    public DTDReplacer(String systemId, String publicId, URL substitute) {
         this.systemId = systemId;
+        this.publicId = publicId;
         this.substitute = substitute;
     }
 
     public InputSource resolveEntity(String publicId, String systemId) throws SAXException, IOException {
-        if(this.systemId.equals(systemId)) {
+        if(this.systemId.equals(systemId) || (systemId != null && systemId.endsWith(this.systemId + ".dtd")) || this.publicId.equals(publicId)) {
             return new InputSource(substitute.openStream());
         }
         return null;
