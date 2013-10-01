@@ -180,11 +180,11 @@ public class RetrieveFromDb {
 
         if(doCheckUpdate){
             try {
-                URL url = new URL("http://www.archivesportaleurope.net/Portal/dptupate/version?versionNb=" + versionNb);
+                URL url = new URL("http://www.archivesportaleurope.net/Portal/dptupdate/version?versionNb=" + versionNb);
                 HttpURLConnection connection = (HttpURLConnection) url.openConnection();
                 if(connection.getResponseCode() == 200){
                     LOG.info("New version available...");
-                    if(JOptionPane.showConfirmDialog(contentPane, textNewAvailableVersion) == 0){
+                    if(JOptionPane.showConfirmDialog(contentPane, textNewAvailableVersion) == 0) {
                         BareBonesBrowserLaunch.openURL("http://www.apex-project.eu/index.php/outcomes/52-public/about-the-project/outcomes/36-tools-and-manuals");
                         System.exit(0);
                     }

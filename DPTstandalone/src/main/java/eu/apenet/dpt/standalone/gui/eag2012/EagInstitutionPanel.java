@@ -530,7 +530,6 @@ public class EagInstitutionPanel extends EagPanels {
 
         @Override
         public void actionPerformed(ActionEvent actionEvent) {
-            boolean emptyFields = false;
             try {
                 super.updateEagObject(false);
             } catch (Eag2012FormException e) {
@@ -538,22 +537,18 @@ public class EagInstitutionPanel extends EagPanels {
 //                    System.out.println(error);
 //                }
             }
-            LocationType visitorLocationType = null;
-            int counter = locationFields.size() - 1;
-            while(visitorLocationType == null && counter >= 0){
-                if(!isPostal && visitorLocationType == null){
-                    if(locationFields.get(counter).getLocalType().equals("visitors address")){
-                        visitorLocationType = locationFields.get(counter);
+            int counter = locationFields.size();
+            if (counter > 1){
+                if (isPostal && locationFields.get(counter - 1).getLocalType().equals("postal address")) {
+                    reloadTabbedPanel(new EagInstitutionPanel(eag, tabbedPane, mainTabbedPane, eag2012Frame, model, isNew, labels, repositoryNb).buildEditorPanel(errors), 0);
+                }
+                if (!isPostal && locationFields.get(counter - 1).getLocalType().equals("visitors address")) {
+                    if(StringUtils.isBlank(locationFields.get(counter - 1).getCountryTfValue())){
+                        reloadTabbedPanel(new EagInstitutionPanel(eag, tabbedPane, mainTabbedPane, eag2012Frame, model, isNew, labels, repositoryNb).buildEditorPanel(errors), 0);
                     }
                 }
-                counter--;
             }
-            if(!isPostal){
-                if(visitorLocationType.getStreetTfValue().isEmpty() || visitorLocationType.getCityTfValue().isEmpty() || visitorLocationType.getCountryTfValue().isEmpty()){
-                    emptyFields = true;
-                }
-            }
-            if(emptyFields != true){
+            if(locationFields.get(counter - 1).getErrors() == null || locationFields.get(counter - 1).getErrors().isEmpty()){
                 Location location = new Location();
                 if(isPostal) {
                     location.setLocalType("postal address");
@@ -566,7 +561,9 @@ public class EagInstitutionPanel extends EagPanels {
                 
                 eag.getArchguide().getDesc().getRepositories().getRepository().get(repositoryNb).getLocation().add(location);
             }
-            reloadTabbedPanel(new EagInstitutionPanel(eag, tabbedPane, mainTabbedPane, eag2012Frame, model, isNew, labels, repositoryNb).buildEditorPanel(errors), 0);
+            if(locationFields.get(counter - 1).getErrors().isEmpty() ){
+                reloadTabbedPanel(new EagInstitutionPanel(eag, tabbedPane, mainTabbedPane, eag2012Frame, model, isNew, labels, repositoryNb).buildEditorPanel(errors), 0);
+            }
         }
     }
 
@@ -686,13 +683,13 @@ public class EagInstitutionPanel extends EagPanels {
             repository.getLocation().clear();
 
             String defaultCountry = "";
-//            int locationNb = 0;
+            boolean isFirst = true;
             for(LocationType locationType : locationFields) {
-//                locationNb++;
                 if(StringUtils.isNotEmpty(locationType.getCountryTfValue())) {
                     defaultCountry = locationType.getCountryTfValue();
                 }
-                Location location = locationType.getLocation(defaultCountry);//, locationNb);
+                Location location = locationType.getLocation(defaultCountry, isFirst);
+                isFirst = false;
                 errors.addAll(locationType.getErrors());
                 if(location != null) {
                     repository.getLocation().add(location);
