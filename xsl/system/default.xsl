@@ -2166,18 +2166,20 @@
         <xsl:choose>
             <xsl:when test="not(child::*)"/>
             <xsl:when test="not(ancestor::controlaccess)">
-                <controlaccess>                                                                                                                           <!--../index/indexentry//geogname | ../index/indexentry//subject | ../index/indexentry//famname | ../index/indexentry//persname | ../index/indexentry//corpname | ../index/indexentry//occupation | ../index/indexentry//genreform | ../index/indexentry//function | ../index/indexentry//title | ../index/indexentry//name-->
-                    <xsl:for-each select="geogname | subject | famname | persname | corpname | occupation | genreform | function | title | p | head | name | indexentry//geogname | indexentry//subject | indexentry//famname | indexentry//persname | indexentry//corpname | indexentry//occupation | indexentry//genreform | indexentry//function | indexentry//title | indexentry//name">
-                        <xsl:if test="not(local-name()='genreform' and @type='typir')">
-                            <xsl:element name="{local-name()}" namespace="urn:isbn:1-931666-22-9">
-                                <xsl:apply-templates select="node()" mode="#current"/>
-                            </xsl:element>
-                        </xsl:if>
-                    </xsl:for-each>
-                    <xsl:for-each select="controlaccess">
-                        <xsl:call-template name="controlaccess"/>
-                    </xsl:for-each>
-                </controlaccess>
+                <xsl:if test="child::genreform[@type='typir'] and count(child::*) &gt; 1">
+                    <controlaccess>                                                                                                                           <!--../index/indexentry//geogname | ../index/indexentry//subject | ../index/indexentry//famname | ../index/indexentry//persname | ../index/indexentry//corpname | ../index/indexentry//occupation | ../index/indexentry//genreform | ../index/indexentry//function | ../index/indexentry//title | ../index/indexentry//name-->
+                        <xsl:for-each select="geogname | subject | famname | persname | corpname | occupation | genreform | function | title | p | head | name | indexentry//geogname | indexentry//subject | indexentry//famname | indexentry//persname | indexentry//corpname | indexentry//occupation | indexentry//genreform | indexentry//function | indexentry//title | indexentry//name">
+                            <xsl:if test="not(local-name()='genreform' and @type='typir')">
+                                <xsl:element name="{local-name()}" namespace="urn:isbn:1-931666-22-9">
+                                    <xsl:apply-templates select="node()" mode="#current"/>
+                                </xsl:element>
+                            </xsl:if>
+                        </xsl:for-each>
+                        <xsl:for-each select="controlaccess">
+                            <xsl:call-template name="controlaccess"/>
+                        </xsl:for-each>
+                    </controlaccess>
+                </xsl:if>
             </xsl:when>
             <xsl:otherwise>
                 <xsl:for-each select="geogname|subject|famname|persname|corpname|occupation|genreform|function|title|p|name">
