@@ -124,7 +124,7 @@
     <xsl:template match="emph" mode="#all">
         <xsl:choose>
             <xsl:when test="parent::bibref or parent::extref" />
-            <xsl:when test="parent::corpname or parent::origination or parent::physfacet or parent::persname or parent::head or parent::titleproper or parent::unitdate or parent::unittitle"> <!--unittitle here is a hack - better fix it in the display xsl of portal/dashboard-->
+            <xsl:when test="parent::corpname or parent::origination or parent::physfacet or parent::persname or parent::head or parent::titleproper or parent::unitdate or parent::archref or parent::emph or parent::unittitle"> <!--unittitle here is a hack - better fix it in the display xsl of portal/dashboard-->
                 <xsl:value-of select="normalize-space(.)"/><xsl:text> </xsl:text>
             </xsl:when>
             <xsl:when test="@render='bold' or @render='italic'">
@@ -1595,7 +1595,20 @@
         <xsl:apply-templates select="list | chronlist | table" mode="#current"/>
     </xsl:template>
 
-    <xsl:template match="otherfindaid/p/archref" mode="fonds intermediate lowest">
+    <xsl:template match="otherfindaid/p/ref" mode="fonds intermediate lowest">
+        <xsl:apply-templates mode="#current"/>
+    </xsl:template>
+    <xsl:template match="otherfindaid/p/ref/archref/note | otherfindaid/p/ref/note" mode="fonds intermediate lowest">
+        <xsl:apply-templates mode="#current"/>
+    </xsl:template>
+    <xsl:template match="otherfindaid/p/ref/archref/note/p | otherfindaid/p/ref/note/p" mode="fonds intermediate lowest" priority="1">
+        <xsl:apply-templates mode="#current"/>
+    </xsl:template>
+    <xsl:template match="otherfindaid/p/ref/archref/note/p/emph | otherfindaid/p/ref/note/p/emph" mode="fonds intermediate lowest" priority="1">
+        <xsl:apply-templates mode="#current"/>
+    </xsl:template>
+
+    <xsl:template match="otherfindaid/p/archref | otherfindaid/p/ref/archref" mode="fonds intermediate lowest">
         <extref>
             <xsl:if test="@*:href">
                 <xsl:attribute name="xlink:href" select="@*:href"/>
