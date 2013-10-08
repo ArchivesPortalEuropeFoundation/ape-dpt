@@ -87,7 +87,7 @@ public class ConvertEseActionListener extends ApexActionListener {
                             threadRunner.start();
                             dataPreparationToolGUI.getEseList().setEnabled(false);
 
-                            FileInstance fileInstance = dataPreparationToolGUI.getFileInstances().get(file.getName());
+                            FileInstance fileInstance = dataPreparationToolGUI.getEseFileInstances().get(file.getName());
 
                             if (!fileInstance.isXml()) {
                                 fileInstance.setXml(XmlChecker.isXmlParseable(file) == null);

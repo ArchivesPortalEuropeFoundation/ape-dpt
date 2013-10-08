@@ -828,7 +828,8 @@ public class EseOptionsPanel extends JPanel {
                 } else {
                     fileInstance.setEseLocation(outputFile.getAbsolutePath());
                     if (StringUtils.isNotEmpty(fileInstance.getEseLocation())) {
-                        apeTabbedPane.getDataPreparationToolGUI().addEseFileToList(new File(fileInstance.getEseLocation()));
+                        fileInstance.setMinimalConverted(config.isMinimalConversion());
+                        apeTabbedPane.getDataPreparationToolGUI().addEseFileToList(new File(fileInstance.getEseLocation()), fileInstance);
                     }
                 }
             } catch (Exception e) {

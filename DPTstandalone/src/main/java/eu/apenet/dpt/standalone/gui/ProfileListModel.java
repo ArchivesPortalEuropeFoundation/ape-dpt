@@ -48,6 +48,13 @@ public class ProfileListModel extends AbstractListModel {
         fireIntervalAdded(this, 1, 1);
     }
 
+    public void addFile(File file, FileInstance fileInstanceToCopy){
+        FileInstance fileInstance = fileInstanceToCopy;
+        fileInstances.put(file.getName(), fileInstance);
+        listFiles.add(file);
+        fireIntervalAdded(this, 1, 1);
+    }
+
     public void addFileInstance(FileInstance fileInstanceToAdd, File fileToAdd) {
         fileInstances.put(fileInstanceToAdd.getName(), fileInstanceToAdd);
         listFiles.add(fileToAdd);

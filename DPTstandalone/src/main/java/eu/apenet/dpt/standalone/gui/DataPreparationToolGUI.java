@@ -142,6 +142,7 @@ public class DataPreparationToolGUI extends JFrame {
     public String defaultRoleType;
     private boolean continueLoop = true;
     private Map<String, FileInstance> fileInstances = new HashMap<String, FileInstance>();
+    private Map<String, FileInstance> eseFileInstances = new HashMap<String, FileInstance>();
     private List<String> langList;
     private List<String> levelList;
     private Point from;
@@ -225,9 +226,15 @@ public class DataPreparationToolGUI extends JFrame {
         xmlEadList.setDropTarget(new DropTarget(xmlEadList, new ListDropTargetListener(xmlEadList, from)));
         xmlEadListModel.setList(xmlEadList);
 
-        eseListModel = new ProfileListModel(fileInstances, this);
+        for (Map.Entry<String, FileInstance> entry : fileInstances.entrySet()) {
+            if(entry.getValue().isEse()){
+                LOG.info(entry.getValue().getEseLocation());
+                eseFileInstances.put(entry.getKey(), entry.getValue());
+            }            
+        }
+        eseListModel = new ProfileListModel(eseFileInstances, this);
         eseList = new JList(eseListModel);
-        eseList.setCellRenderer(new IconListCellRenderer(fileInstances));
+        eseList.setCellRenderer(new IconListCellRenderer(eseFileInstances));
         eseList.setDragEnabled(true);
 
         eseList.setTransferHandler(new ListTransferHandler());
@@ -907,11 +914,11 @@ public class DataPreparationToolGUI extends JFrame {
         return p;
     }
 
-    public void addEseFileToList(File file) {
+    public void addEseFileToList(File file, FileInstance fileInstance) {
         if (eseListModel.existsFile(file)) {
             eseListModel.removeFile(file);
         }
-        eseListModel.addFile(file);
+        eseListModel.addFile(file, fileInstance);
     }
 
     private JPanel createSouthWest() {
@@ -1373,6 +1380,10 @@ public class DataPreparationToolGUI extends JFrame {
 
     public Map<String, FileInstance> getFileInstances() {
         return fileInstances;
+    }
+
+    public Map<String, FileInstance> getEseFileInstances() {
+        return eseFileInstances;
     }
 
     public void disableAllBtnAndItems() {

@@ -48,7 +48,7 @@ public class ConvertEdmActionListener implements ActionListener {
     }
 
     public void actionPerformed(ActionEvent e) {
-        Map<String, FileInstance> fileInstances = dataPreparationToolGUI.getFileInstances();
+        Map<String, FileInstance> fileInstances = dataPreparationToolGUI.getEseFileInstances();
         JList list = dataPreparationToolGUI.getEseList();
         dataPreparationToolGUI.disableAllBtnAndItems();
         dataPreparationToolGUI.disableRadioButtons();
@@ -67,6 +67,7 @@ public class ConvertEdmActionListener implements ActionListener {
 
         apePanel.getApeTabbedPane().appendEseConversionErrorText(labels.getString("edm.conversionEdmStarted") + "\n");
         EdmConfig config = fillConfig();
+        config.setMinimalConversion(fileInstance.isMinimalConverted());
         try {
             SwingUtilities.invokeLater(new TransformEdm(config, file, dataPreparationToolGUI));
             apePanel.getApeTabbedPane().appendEseConversionErrorText(MessageFormat.format(labels.getString("edm.convertedAndSaved"), file.getAbsolutePath(), retrieveFromDb.retrieveDefaultSaveFolder()) + "\n");
