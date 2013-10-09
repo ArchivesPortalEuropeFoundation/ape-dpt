@@ -1286,7 +1286,7 @@ public class EagAccessAndServicesPanel extends EagPanels {
                     tabbedPane.setEnabledAt(4, true);
                     tabbedPane.setEnabledAt(3, false);
                 } else {
-                    reloadTabbedPanel(new EagContactPanel(eag, tabbedPane, mainTabbedPane, eag2012Frame, model, labels, repositoryNb).buildEditorPanel(errors), 2);
+                    reloadTabbedPanel(new EagContactPanel(eag, tabbedPane, mainTabbedPane, eag2012Frame, model, false, labels, repositoryNb).buildEditorPanel(errors), 2);
                     tabbedPane.setEnabledAt(2, true);
                     tabbedPane.setEnabledAt(3, false);
                 }
