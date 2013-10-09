@@ -20,11 +20,9 @@ import java.text.MessageFormat;
 import java.util.Map;
 import java.util.ResourceBundle;
 import javax.swing.JList;
+import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
 import org.apache.log4j.Logger;
-import org.w3c.dom.Document;
 
 /**
  *
@@ -47,6 +45,7 @@ public class ConvertEdmActionListener implements ActionListener {
         this.labels = dataPreparationToolGUI.getLabels();
     }
 
+    @Override
     public void actionPerformed(ActionEvent e) {
         Map<String, FileInstance> fileInstances = dataPreparationToolGUI.getEseFileInstances();
         JList list = dataPreparationToolGUI.getEseList();
@@ -72,6 +71,7 @@ public class ConvertEdmActionListener implements ActionListener {
             SwingUtilities.invokeLater(new TransformEdm(config, file, dataPreparationToolGUI));
             apePanel.getApeTabbedPane().appendEseConversionErrorText(MessageFormat.format(labels.getString("edm.convertedAndSaved"), file.getAbsolutePath(), retrieveFromDb.retrieveDefaultSaveFolder()) + "\n");
             apePanel.getApeTabbedPane().checkFlashingTab(APETabbedPane.TAB_ESE, Utilities.FLASHING_GREEN_COLOR);
+            JOptionPane.showMessageDialog(dataPreparationToolGUI.getContentPane(), MessageFormat.format(labels.getString("fileInOutput"), retrieveFromDb.retrieveDefaultSaveFolder()) + ".", labels.getString("fileSaved"), JOptionPane.INFORMATION_MESSAGE, Utilities.icon);
         } catch (Exception ex) {
             LOG.error(ex);
             apePanel.getApeTabbedPane().checkFlashingTab(APETabbedPane.TAB_ESE, Utilities.FLASHING_RED_COLOR);

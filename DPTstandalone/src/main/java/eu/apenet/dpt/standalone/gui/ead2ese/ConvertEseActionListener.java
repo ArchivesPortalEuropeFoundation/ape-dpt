@@ -121,6 +121,7 @@ public class ConvertEseActionListener extends ApexActionListener {
                             progressFrame.stop();
                         }
                         dataPreparationToolGUI.getFinalAct().run();
+                        JOptionPane.showMessageDialog(dataPreparationToolGUI.getContentPane(), MessageFormat.format(labels.getString("filesInOutput"), retrieveFromDb.retrieveDefaultSaveFolder()) + ".", labels.getString("fileSaved"), JOptionPane.INFORMATION_MESSAGE, Utilities.icon);
                         dataPreparationToolGUI.getEseList().clearSelection();
                         if (continueLoop) {
                             dataPreparationToolGUI.setResultAreaText(labels.getString("finished"));
