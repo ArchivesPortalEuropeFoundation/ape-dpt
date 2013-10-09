@@ -1110,13 +1110,29 @@ http://purl.org/dc/terms/ http://www.dublincore.org/schemas/xmls/qdc/dcterms.xsd
                 <xsl:value-of select="$europeana_rights"/>
             </europeana:rights>
             <xsl:choose>
-                <xsl:when test='/ead/archdesc/did/repository'>
-                    <xsl:apply-templates select='/ead/archdesc/did/repository' mode="useExistingDataProvider" />
+                <xsl:when test="$useExistingRepository='true'">
+                    <xsl:choose>
+                        <xsl:when test='/ead/archdesc/did/repository'>
+                            <xsl:apply-templates select='/ead/archdesc/did/repository' mode="useExistingDataProvider" />
+                        </xsl:when>
+                        <xsl:otherwise>
+                            <europeana:dataProvider>
+                                <xsl:value-of select="$europeana_dataprovider"/>
+                            </europeana:dataProvider>
+                        </xsl:otherwise>
+                    </xsl:choose>
                 </xsl:when>
                 <xsl:otherwise>
-                    <europeana:dataProvider>
-                        <xsl:value-of select="$europeana_dataprovider"/>
-                    </europeana:dataProvider>
+                    <xsl:choose>
+                        <xsl:when test="$europeana_dataprovider">
+                            <europeana:dataProvider>
+                                <xsl:value-of select="$europeana_dataprovider"/>
+                            </europeana:dataProvider>
+                        </xsl:when>
+                        <xsl:otherwise>
+                            <xsl:apply-templates select="/ead/archdesc/did/repository" mode="useExistingDataProvider" />
+                        </xsl:otherwise>
+                    </xsl:choose>
                 </xsl:otherwise>
             </xsl:choose>
             <!--<europeana:dataProvider>
