@@ -433,7 +433,7 @@ public class EagIdentityPanel extends EagPanels {
                 super.updateEagObject(false);
 
                 if(isNextTab) {
-                    reloadTabbedPanel(new EagContactPanel(eag, tabbedPane, mainTabbedPane, eag2012Frame, model, labels, repositoryNb).buildEditorPanel(errors), 2);
+                    reloadTabbedPanel(new EagContactPanel(eag, tabbedPane, mainTabbedPane, eag2012Frame, model, false, labels, repositoryNb).buildEditorPanel(errors), 2);
                     tabbedPane.setEnabledAt(2, true);
                     tabbedPane.setEnabledAt(1, false);
                 } else {
