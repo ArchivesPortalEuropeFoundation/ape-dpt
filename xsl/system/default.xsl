@@ -2360,11 +2360,11 @@
                                 </xsl:when>
                                 <xsl:otherwise>
                                     <xsl:choose>
-                                        <xsl:when test="starts-with(., //archdesc/did/unitid/text()) or //archdesc/did/unitid[@label='Cotes extrêmes']">
+                                        <xsl:when test="starts-with(., //archdesc/did/unitid[1]/text()) or //archdesc/did/unitid[@label='Cotes extrêmes']">
                                             <xsl:value-of select="text()"/>
                                         </xsl:when>
                                         <xsl:otherwise>
-                                            <xsl:value-of select="concat(//archdesc/did/unitid/text(), concat(' - ', .))"/>
+                                            <xsl:value-of select="concat(//archdesc/did/unitid[1]/text(), concat(' - ', .))"/>
                                         </xsl:otherwise>
                                     </xsl:choose>
                                 </xsl:otherwise>
@@ -2489,7 +2489,7 @@
         <xsl:choose>
             <xsl:when test="@label or @role">
                 <xsl:choose>
-                    <xsl:when test="@label='thumb' or @role='image_thumb' or @*:role='image_thumb'">
+                    <xsl:when test="@label='thumb' or @role='thumb' or @role='image_thumb' or @*:role='image_thumb'">
                         <xsl:attribute name="xlink:title" select="'thumbnail'"/>
                     </xsl:when>
                     <xsl:when test="@label = 'Document'">
@@ -2506,6 +2506,10 @@
                     </xsl:when>
                     <xsl:when test="@label='reference' and daodesc/p/text()">
                         <xsl:attribute name="xlink:title" select="daodesc/p/text()"/>
+                        <xsl:attribute name="xlink:role" select="'UNSPECIFIED'"/>
+                    </xsl:when>
+                    <xsl:when test="@role='reference' and ../daodesc/p/text()">
+                        <xsl:attribute name="xlink:title" select="../daodesc/p/text()"/>
                         <xsl:attribute name="xlink:role" select="'UNSPECIFIED'"/>
                     </xsl:when>
                     <xsl:otherwise>
@@ -2650,7 +2654,7 @@
         <xsl:apply-templates mode="#current"/>
     </xsl:template>
 
-    <xsl:template match="did/daogrp/daoloc" mode="fonds intermediate lowest">
+    <xsl:template match="did/daogrp/daoloc | did/daoloc" mode="fonds intermediate lowest">
         <xsl:choose>
             <xsl:when test="@actuate='user'">
                 <dao>
@@ -2677,6 +2681,15 @@
                     <xsl:call-template name="daoRoleType" />
                 </dao>
             </xsl:when>
+            <xsl:when test="@href">
+            <dao>
+                <xsl:attribute name="xlink:href" select="@href"/>
+                <xsl:if test="@title">
+                    <xsl:attribute name="xlink:title" select="@title"/>
+                </xsl:if>
+                <xsl:call-template name="daoRoleType" />
+            </dao>
+        </xsl:when>
             <xsl:otherwise>
                 <xsl:call-template name="excludeElement" />
             </xsl:otherwise>
@@ -2845,6 +2858,9 @@
                         <xsl:when test="child::c[not(@level)] or child::c[@otherlevel='partie-de-pièce']">
                             <xsl:value-of select="'file'"/>
                         </xsl:when>
+                        <xsl:when test="child::c[@level='file']">
+                            <xsl:value-of select="'subseries'"/>
+                        </xsl:when>
                         <xsl:otherwise>
                             <xsl:value-of select="'item'"/>
                         </xsl:otherwise>
@@ -2899,7 +2915,7 @@
                         <xsl:when test="parent::c[@otherlevel='groupe-de-fonds' or @otherlevel='groupe_de_fonds' or not(@level)]">
                             <xsl:value-of select="'subseries'"/>
                         </xsl:when>
-                        <xsl:when test="not(@level) and (parent::c[@otherlevel='sous-sous-serie-organique' or @otherlevel='recordgrp'] or child::c[@otherlevel='sous-sous-serie-organique'])">
+                        <xsl:when test="not(@level) and (parent::c[@otherlevel='sous-sous-serie-organique' or @otherlevel='recordgrp'] or child::c[@otherlevel='sous-sous-serie-organique'] or not(child::c))">
                             <xsl:value-of select="'subseries'"/>
                         </xsl:when>
                         <xsl:otherwise>
