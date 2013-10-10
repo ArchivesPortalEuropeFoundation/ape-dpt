@@ -16,7 +16,6 @@
     <xsl:param name="inheritControlaccess"></xsl:param>
     <xsl:param name="contextInformationPrefix"></xsl:param>
     <xsl:param name="useExistingDaoRole"></xsl:param>
-    <xsl:param name="useExistingLanguage"></xsl:param>
     <xsl:param name="useExistingRepository"></xsl:param>
     <xsl:param name="minimalConversion"></xsl:param>
     
@@ -518,63 +517,57 @@ http://purl.org/dc/terms/ http://www.dublincore.org/schemas/xmls/qdc/dcterms.xsd
                         </xsl:choose>
                     </xsl:otherwise>
                 </xsl:choose>
-						
+				
                 <xsl:choose>
-                    <xsl:when test="$useExistingLanguage = 'true'">			
+                    <xsl:when test="$didnode/langmaterial">
+                        <xsl:call-template name="language">
+                            <xsl:with-param name="langmaterials" select="$didnode/langmaterial"></xsl:with-param>
+                        </xsl:call-template>								
+                    </xsl:when>
+                    <xsl:when test="$inheritLanguage = 'true'">
                         <xsl:choose>
-                            <xsl:when test="$didnode/langmaterial">
-                                <xsl:call-template name="language">
-                                    <xsl:with-param name="langmaterials" select="$didnode/langmaterial"></xsl:with-param>
-                                </xsl:call-template>								
-                            </xsl:when>
-                            <xsl:when test="$inheritLanguage = 'true'">
-                                <xsl:choose>
-                                    <xsl:when test='fn:string-length($inheritedLanguages) > 0'>
-                                        <xsl:copy-of select="$inheritedLanguages"/>
-                                    </xsl:when>
-                                    <xsl:otherwise>
-                                        <xsl:for-each select="tokenize($language,' ')">
-                                            <dc:language>
-                                                <xsl:value-of select="."/>
-                                            </dc:language>
-                                        </xsl:for-each>
-                                    </xsl:otherwise>
-                                </xsl:choose>
-                            </xsl:when>
-                            <xsl:when test="$inheritFromParent">
-                                <xsl:choose>
-                                    <xsl:when test='$parentcnode/did/langmaterial'>
-                                        <xsl:call-template name="language">
-                                            <xsl:with-param name="langmaterials" select="$parentcnode/did/langmaterial"></xsl:with-param>
-                                        </xsl:call-template>
-                                    </xsl:when>
-                                    <xsl:otherwise>
-                                        <xsl:for-each select="tokenize($language,' ')">
-                                            <dc:language>
-                                                <xsl:value-of select="."/>
-                                            </dc:language>
-                                        </xsl:for-each>
-                                    </xsl:otherwise>
-                                </xsl:choose>							
+                            <xsl:when test='fn:string-length($inheritedLanguages) > 0'>
+                                <xsl:copy-of select="$inheritedLanguages"/>
                             </xsl:when>
                             <xsl:otherwise>
+                                <dc:language>
+                                    <xsl:text>unknown</xsl:text>
+                                </dc:language>
+                            </xsl:otherwise>
+                        </xsl:choose>
+                    </xsl:when>
+                    <xsl:when test="$inheritFromParent">
+                        <xsl:choose>
+                            <xsl:when test='$parentcnode/did/langmaterial'>
+                                <xsl:call-template name="language">
+                                    <xsl:with-param name="langmaterials" select="$parentcnode/did/langmaterial"></xsl:with-param>
+                                </xsl:call-template>
+                            </xsl:when>
+                            <xsl:otherwise>
+                                <dc:language>
+                                    <xsl:text>unknown</xsl:text>
+                                </dc:language>
+                            </xsl:otherwise>
+                        </xsl:choose>							
+                    </xsl:when>
+                    <xsl:otherwise>
+                        <xsl:choose>
+                            <xsl:when test="fn:string-length($language) > 0">
                                 <xsl:for-each select="tokenize($language,' ')">
                                     <dc:language>
                                         <xsl:value-of select="."/>
                                     </dc:language>
                                 </xsl:for-each>
-                            </xsl:otherwise>
+                            </xsl:when>
+                            <xsl:otherwise>
+                                <dc:language>
+                                    <xsl:text>unknown</xsl:text>
+                                </dc:language>
+                            </xsl:otherwise>																			
                         </xsl:choose>
-                    </xsl:when>
-                    <xsl:otherwise>
-                        <xsl:for-each select="tokenize($language,' ')">
-                            <dc:language>
-                                <xsl:value-of select="."/>
-                            </dc:language>
-                        </xsl:for-each>
                     </xsl:otherwise>
                 </xsl:choose>
-                
+
                 <xsl:choose>
                     <xsl:when test="$useExistingDaoRole='true'">
                         <xsl:choose>
@@ -857,7 +850,11 @@ http://purl.org/dc/terms/ http://www.dublincore.org/schemas/xmls/qdc/dcterms.xsd
                         <xsl:value-of select="$languageWithoutSpaces"/>
                     </xsl:when>
                     <xsl:otherwise>
-                        <xsl:text>unknown</xsl:text>
+	                    <xsl:for-each select="tokenize($language,' ')">
+	                        <dc:language>
+	                            <xsl:value-of select="."/>
+	                        </dc:language>
+	                    </xsl:for-each>
                     </xsl:otherwise>
                 </xsl:choose>
             </dc:language>

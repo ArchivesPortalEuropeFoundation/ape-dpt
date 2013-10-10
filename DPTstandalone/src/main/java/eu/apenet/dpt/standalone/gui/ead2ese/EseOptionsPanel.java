@@ -72,6 +72,7 @@ public class EseOptionsPanel extends JPanel {
     private ButtonGroup typeGroup;
     private ButtonGroup inheritParentGroup;
     private ButtonGroup inheritOriginationGroup;
+    private ButtonGroup inheritLanguageGroup;
     private ButtonGroup licenseGroup;
     private ButtonGroup creativeCommonsBtnGrp;
     private JComboBox creativeCommonsComboBox;
@@ -89,7 +90,6 @@ public class EseOptionsPanel extends JPanel {
     private Ead2EseInformation ead2EseInformation;
     private JCheckBox useExistingRepoCheckbox;
     private JCheckBox useExistingDaoRoleCheckbox;
-    private JCheckBox useExistingLanguageCheckbox;
     private JPanel languageBoxPanel = new LanguageBoxPanel();
     private String conversionMode = MINIMAL;
     private JPanel hierarchyPrefixPanel;
@@ -99,7 +99,6 @@ public class EseOptionsPanel extends JPanel {
     private JCheckBox hierarchyPrefixCheckbox;
     private JCheckBox inheritParentCheckbox;
     private JCheckBox inheritOriginationCheckbox;
-    private JCheckBox inheritLanguageCheckbox;
     private JRadioButton inhParYesRadioButton;
     private JRadioButton inhParNoRadioButton;
     private JRadioButton inhOriYesRadioButton;
@@ -286,17 +285,40 @@ public class EseOptionsPanel extends JPanel {
         panel.setBorder(GREY_LINE);
         formPanel.add(panel);
 
-        panel = new JPanel(new GridLayout(1, 3));
-        panel.add(new JLabel(labels.getString("ese.selectLanguage") + ":" + "*"));
-        panel.add(languageBoxPanel);
-        useExistingLanguageCheckbox = new JCheckBox(labels.getString("ese.takeFromFileLanguage"));
-        useExistingLanguageCheckbox.setSelected(true);
-        useExistingLanguageCheckbox.addItemListener(new ItemListener() {
-            public void itemStateChanged(ItemEvent e) {
-            }
-        });
-        panel.add(useExistingLanguageCheckbox);
-        formPanel.add(panel);
+        if (this.batch) {
+          panel = new JPanel(new GridLayout(1, 3));
+          panel.add(new Label(labels.getString("ese.selectLanguage") + ":" + "*"));
+          panel.add(languageBoxPanel);
+          panel.setBorder(BLACK_LINE);
+          formPanel.add(panel);
+        } else {
+	        inheritLanguagePanel = new JPanel(new GridLayout(1, 3));
+	        inheritLanguagePanel.add(new Label(labels.getString("ese.inheritLanguage") + ":" + "*"));
+
+	        JPanel rbPanel = new JPanel(new GridLayout(3, 1));
+	        inheritLanguageGroup = new ButtonGroup();
+	        inhLanYesRadioButton = new JRadioButton(labels.getString("ese.yes"));
+	        inhLanYesRadioButton.setActionCommand(YES);
+	        inhLanYesRadioButton.addActionListener(new ChangePanelActionListener(languageBoxPanel));
+	        inheritLanguageGroup.add(inhLanYesRadioButton);
+	        rbPanel.add(inhLanYesRadioButton);
+	        inhLanNoRadioButton = new JRadioButton(labels.getString("ese.no"), true);
+	        inhLanNoRadioButton.setActionCommand(NO);
+	        inhLanNoRadioButton.addActionListener(new ChangePanelActionListener(languageBoxPanel));
+	        inheritLanguageGroup.add(inhLanNoRadioButton);
+	        rbPanel.add(inhLanNoRadioButton);
+	        inhLanProvideRadioButton = new JRadioButton(labels.getString("ese.provide"));
+	        inhLanProvideRadioButton.setActionCommand(PROVIDE);
+	        inhLanProvideRadioButton.addActionListener(new ChangePanelActionListener(languageBoxPanel));
+	        inheritLanguageGroup.add(inhLanProvideRadioButton);
+	        rbPanel.add(inhLanProvideRadioButton);
+	        inheritLanguagePanel.add(rbPanel, BorderLayout.WEST);
+	        languageBoxPanel.setVisible(true);
+	        inheritLanguagePanel.add(languageBoxPanel, BorderLayout.EAST);
+	        inheritLanguagePanel.setBorder(BLACK_LINE);
+	        inheritLanguagePanel.setVisible(true);
+	        formPanel.add(inheritLanguagePanel);
+        }
 
         JPanel mainLicensePanel = new JPanel(new BorderLayout());
         panel = new JPanel(new GridLayout(4, 2));
@@ -530,23 +552,37 @@ public class EseOptionsPanel extends JPanel {
             }
         }
 
-        config.setUseExistingDaoRole(false);
-        if (useExistingDaoRoleCheckbox.isSelected()) {
-            config.setUseExistingDaoRole(true);
-        }
-
-        config.setInheritLanguage(true);
-        StringBuilder result = new StringBuilder();
-        Object[] languageValues = languageList.getSelectedValues();
-        for (int i = 0; i < languageValues.length; i++) {
-            result.append(languages.get(languageValues[i].toString()));
-            if (languageValues.length > 0 && i < (languageValues.length - 1)) {
-                result.append(" ");
+        config.setInheritLanguage(false);
+        if (this.batch) {
+        	StringBuilder result = new StringBuilder();
+            Object[] languageValues = languageList.getSelectedValues();
+            for (int i = 0; i < languageValues.length; i++) {
+                result.append(languages.get(languageValues[i].toString()));
+                if (languageValues.length > 0 && i < (languageValues.length - 1)) {
+                    result.append(" ");
+                }
             }
-        }
-        config.setLanguage(result.toString());
-        if(useExistingLanguageCheckbox.isSelected()){
-            config.setUseExistingLanguage(true);
+            config.setLanguage(result.toString());
+        } else {
+	        enumeration = inheritLanguageGroup.getElements();
+	        while (enumeration.hasMoreElements()) {
+	            AbstractButton btn = enumeration.nextElement();
+	            if (/*inheritLanguageCheckbox.isSelected() &&*/ btn.isSelected()) {
+	                if (btn.getActionCommand().equals(YES)) {
+	                    config.setInheritLanguage(true);
+	                } else if (btn.getActionCommand().equals(PROVIDE)) {
+	                    StringBuilder result = new StringBuilder();
+	                    Object[] languageValues = languageList.getSelectedValues();
+	                    for (int i = 0; i < languageValues.length; i++) {
+	                        result.append(languages.get(languageValues[i].toString()));
+	                        if (languageValues.length > 0 && i < (languageValues.length - 1)) {
+	                            result.append(" ");
+	                        }
+	                    }
+	                    config.setLanguage(result.toString());
+	                }
+	            }
+	        }
         }
 
         config.setContextInformationPrefix(labels.getString("ese.hierarchyPrefixDefault") + ":");
@@ -641,6 +677,39 @@ public class EseOptionsPanel extends JPanel {
             throw new Exception("inheritParentGroup is not checked");
         }
 
+        if (!this.batch) {
+	        if (inheritLanguageGroup == null) {
+	            throw new Exception("inheritLanguageGroup is null");
+	        } else if (!isRadioBtnChecked(inheritLanguageGroup)) {
+	            throw new Exception("inheritLanguageGroup is not checked");
+	        }
+
+        	if (this.inheritLanguageGroup.getSelection().getActionCommand().equalsIgnoreCase(EseOptionsPanel.PROVIDE)) {
+                if (this.languageBoxPanel == null) {
+                    throw new Exception("Provided language is null");
+                } else if (!((LanguageBoxPanel) this.languageBoxPanel).hasSelections()) {
+                    throw new Exception("No provided language selected");
+                }
+        	} else if (this.inheritLanguageGroup.getSelection().getActionCommand().equalsIgnoreCase(EseOptionsPanel.NO)) {
+        		if (this.ead2EseInformation.getLanguageCode() == null
+        				|| this.ead2EseInformation.getLanguageCode().isEmpty()) {
+        			throw new Exception("At least one DAO does not have an associated language");
+        		}
+        	} else if (this.inheritLanguageGroup.getSelection().getActionCommand().equalsIgnoreCase(EseOptionsPanel.YES)) {
+        		if (this.ead2EseInformation.getAlternativeLanguages() == null
+        				|| this.ead2EseInformation.getAlternativeLanguages().isEmpty()) {
+        			throw new Exception("The higher levels have not an associated language");
+        		}
+        	}
+
+        } else {
+          if (this.languageBoxPanel == null) {
+              throw new Exception("language is null");
+          } else if (!((LanguageBoxPanel) this.languageBoxPanel).hasSelections()) {
+              throw new Exception("no language selected");
+          }
+        }
+
         if (StringUtils.isEmpty(dataProviderTextArea.getText())) {
             if (!useExistingRepoCheckbox.isSelected()) {
                 throw new Exception("dataProviderTextField is empty");
@@ -655,12 +724,6 @@ public class EseOptionsPanel extends JPanel {
             throw new Exception("licenseGroup is null");
         } else if (!isRadioBtnChecked(licenseGroup)) {
             throw new Exception("licenseGroup is not checked");
-        }
-
-        if (languageBoxPanel == null) {
-            throw new Exception("language is null");
-        } else if (!((LanguageBoxPanel)languageBoxPanel).hasSelections()) {
-            throw new Exception("no language selected");
         }
     }
 
@@ -706,12 +769,6 @@ public class EseOptionsPanel extends JPanel {
         }
 
         public void actionPerformed(ActionEvent actionEvent) {
-            if (actionEvent.getActionCommand().equals(YES) || actionEvent.getActionCommand().equals(NO)) {
-                languageBoxPanel.setVisible(false);
-            } else if (actionEvent.getActionCommand().equals(PROVIDE)) {
-                languageBoxPanel.setVisible(true);
-            }
-
             if (extraCardLayoutPanel.getLayout() instanceof CardLayout) {
                 CardLayout cardLayout = (CardLayout) extraCardLayoutPanel.getLayout();
                 if (actionEvent.getActionCommand().equals(CREATIVE_COMMONS_CC0) || actionEvent.getActionCommand().equals(CREATIVE_COMMONS_PUBLIC_DOMAIN_MARK)) {

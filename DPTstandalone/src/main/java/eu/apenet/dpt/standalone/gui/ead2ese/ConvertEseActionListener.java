@@ -101,6 +101,7 @@ public class ConvertEseActionListener extends ApexActionListener {
                             if (fileInstance.isXml()) {
                                 ConvertEdmActionListener edmListener = new ConvertEdmActionListener(apePanel, dataPreparationToolGUI, apePanel);
                                 EdmConfig edmConfig = edmListener.fillConfig();
+                                edmConfig.setMinimalConversion(fileInstance.isMinimalConverted());
                                 try {
                                     SwingUtilities.invokeLater(new TransformEdm(edmConfig, file, dataPreparationToolGUI));
                                     apePanel.getApeTabbedPane().appendEseConversionErrorText(MessageFormat.format(labels.getString("edm.convertedAndSaved"), file.getAbsolutePath(), retrieveFromDb.retrieveDefaultSaveFolder()) + "\r\n");
