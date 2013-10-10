@@ -124,6 +124,10 @@ public class DocumentValidation {
     }
 
     public static List<SAXParseException> xmlValidationAgainstDtd(String filePath, URL dtdFile) throws ParserConfigurationException, IOException, SAXException {
+        if(filePath.startsWith("\\\\") || filePath.startsWith("//")){
+            String temp = filePath;
+            filePath ="file:///" + temp;
+        }
         DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
         documentBuilderFactory.setValidating(true);
         DocumentBuilder builder = documentBuilderFactory.newDocumentBuilder();
