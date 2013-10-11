@@ -104,10 +104,10 @@ public class ValidateSelectionActionListener extends ApexActionListener {
                             if (exceptions == null || exceptions.isEmpty()){
                                 if(fileInstance.getCurrentLocation() == null || fileInstance.getCurrentLocation().equals(""))
                                     fileInstance.setCurrentLocation(file.getAbsolutePath());
-//                                if(xsdObject.getFileType().equals(FileInstance.FileType.EAD) && xsdObject.getName().equals("apeEAD")) {
+                                if(xsdObject.getFileType().equals(FileInstance.FileType.EAD) && xsdObject.getName().equals("apeEAD")) {
                                     fileInstance.setValid(true);
                                     fileInstance.setValidationErrors(labels.getString("validationSuccess"));
-//                                }
+                                }
                             } else {
                                 String errors = Utilities.stringFromList(exceptions);
                                 fileInstance.setValidationErrors(errors);
