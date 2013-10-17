@@ -1,34 +1,60 @@
 package eu.apenet.dpt.utils.service;
 
-import eu.apenet.dpt.utils.util.DiscardDtdEntityResolver;
-import eu.apenet.dpt.utils.util.extendxsl.*;
-import net.sf.saxon.Controller;
-
-import javax.xml.transform.*;
-import javax.xml.transform.sax.SAXSource;
-import javax.xml.transform.stream.StreamSource;
-import java.io.*;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.FileWriter;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.io.StringWriter;
+import java.io.Writer;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.xml.transform.ErrorListener;
+import javax.xml.transform.Source;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.sax.SAXSource;
+import javax.xml.transform.stream.StreamSource;
+
+import net.sf.saxon.Controller;
 import net.sf.saxon.event.Receiver;
 import net.sf.saxon.lib.ExtensionFunctionCall;
-import net.sf.saxon.s9api.*;
+import net.sf.saxon.s9api.Processor;
+import net.sf.saxon.s9api.QName;
+import net.sf.saxon.s9api.Serializer;
+import net.sf.saxon.s9api.XdmAtomicValue;
+import net.sf.saxon.s9api.XsltCompiler;
+import net.sf.saxon.s9api.XsltExecutable;
+import net.sf.saxon.s9api.XsltTransformer;
 import net.sf.saxon.serialize.Emitter;
 import net.sf.saxon.serialize.MessageEmitter;
-import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.IOUtils;
+
 import org.apache.commons.io.output.NullOutputStream;
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
-import org.xml.sax.*;
+import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
+import org.xml.sax.SAXParseException;
+import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.XMLReaderFactory;
+
+import eu.apenet.dpt.utils.util.DiscardDtdEntityResolver;
+import eu.apenet.dpt.utils.util.extendxsl.CounterCLevel;
+import eu.apenet.dpt.utils.util.extendxsl.CounterCLevelCall;
+import eu.apenet.dpt.utils.util.extendxsl.DateNormalization;
+import eu.apenet.dpt.utils.util.extendxsl.FlagSet;
+import eu.apenet.dpt.utils.util.extendxsl.Oai2EadNormalization;
+import eu.apenet.dpt.utils.util.extendxsl.XmlQualityChecker;
+import eu.apenet.dpt.utils.util.extendxsl.XmlQualityCheckerCall;
 
 /**
  * User: yoann.moranville
  * Date: 4 dec. 2009
  */
 public class TransformationTool {
-    private static final Logger LOG = Logger.getLogger(TransformationTool.class);
+    private static final String CONVERTED_APE_EAD_VERSION = "Converted_apeEAD_version_";
+	private static final Logger LOG = Logger.getLogger(TransformationTool.class);
     private static final String CHARACTER_SET = "UTF-8";
     
     public static StringWriter createTransformation(InputStream inputStream, Writer writer, Source xsltSource, Map<String, String> parameters) throws SAXException {
@@ -212,7 +238,17 @@ public class TransformationTool {
                 transformer.setParameter(new QName(parameter), new XdmAtomicValue(parameters.get(parameter)));
             }
         }
-        //transformer.setParameter("loclanguage", "languages.xml");
+        transformer.setParameter(new QName("versionnb"), new XdmAtomicValue(getVersion()));
         return transformer;
+    }
+    public static String getVersion(){
+    	String version =  TransformationTool.class.getPackage().getImplementationVersion();
+        if (StringUtils.isEmpty(version)) {
+        	version= "DEV-VERSION";
+        } 
+        return version;
+    }
+    public static String getFullVersion(){
+    	 return CONVERTED_APE_EAD_VERSION + getVersion();
     }
 }
