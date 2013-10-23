@@ -29,32 +29,50 @@ public class Ead2EseInformation {
     private String roleType;
     private StringBuilder archdescValue = new StringBuilder();        
     private String archdescRepository;
-    private TreeSet<String> alternativeLanguages;
+    private TreeSet<String> languagesCodes;	// List of languages exist inside "<langusage>" element.
+    private TreeSet<String> alternativeLanguages;	// List of languages exist inside "<archdesc><langmaterial>" element.
+    private boolean languagesOnParent;	// Check the existence of languages in "<archdesc>" element.
+    private boolean languagesOnAllCLevels;	// Check the existence of languages in all "<c>" element.
 
     public String getLanguageCode() {
-        return languageCode;
+        return this.languageCode;
     }
 
     public String getRepository() {
-        return repository;
+        return this.repository;
     }
 
     public String getRoleType() {
-        return roleType;
+        return this.roleType;
     }
 
     public String getArchdescRepository() {
-        return archdescRepository;
+        return this.archdescRepository;
+    }
+
+    public TreeSet<String> getLanguagesCodes() {
+        return this.languagesCodes;
     }
 
     public TreeSet<String> getAlternativeLanguages() {
-        return alternativeLanguages;
+        return this.alternativeLanguages;
+    }
+
+    public boolean isLanguagesOnParent() {
+        return this.languagesOnParent;
+    }
+
+    public boolean isLanguagesOnAllCLevels() {
+        return this.languagesOnAllCLevels;
     }
 
     public Ead2EseInformation(File fileToRead, String databaseRoleType, String archdescRepository) throws IOException, SAXException, ParserConfigurationException {
         this();
         this.archdescRepository = archdescRepository;
+        this.languagesCodes = new TreeSet<String>();
         this.alternativeLanguages = new TreeSet<String>();
+        this.languagesOnParent = false;
+        this.languagesOnAllCLevels = true;
         this.languageCode = "";
         this.repository = "";
         this.roleType = databaseRoleType;
@@ -66,7 +84,10 @@ public class Ead2EseInformation {
         this.repository = "";
         this.roleType = "";
         this.archdescRepository = "";
+        this.languagesCodes = new TreeSet<String>();
         this.alternativeLanguages = new TreeSet<String>();
+        this.languagesOnParent = false;
+        this.languagesOnAllCLevels = true;
     }
 
     private void determineDaoInformation(File fileToRead) throws IOException, SAXException, ParserConfigurationException {
@@ -77,13 +98,14 @@ public class Ead2EseInformation {
         xr.setContentHandler(myContentHandler);
         xr.parse(new InputSource(new InputStreamReader(new FileInputStream(fileToRead), "UTF-8")));
 
-        if (roleType == null) {
-            roleType = "UNSPECIFIED";
+        if (this.roleType == null) {
+            this.roleType = "UNSPECIFIED";
         }
     }
 
     private class EadContentHandler extends DefaultHandler {
 
+    	private boolean inLangusage = false;
         private boolean inArchdesc = false;
         private boolean inDid = false;
         private boolean inRepository = false;
@@ -91,41 +113,62 @@ public class Ead2EseInformation {
         //flags for first occuring type and DAO in XML
         private boolean typeRetrieved = false;
         private boolean daoRetrieved = false;
+        private boolean languageOnCLevel; 
 
         @Override
         public void startElement(String namespaceURI, String localName,
                 String qName, Attributes atts) throws SAXException {
 
-            if (qName.equals("archdesc")) {
+        	if (qName.equals("langusage")) {
+                this.inLangusage = true;
+            } else if (qName.equals("archdesc")) {
                 this.inArchdesc = true;
             } else if (qName.equals("did")) {
                 this.inDid = true;
             } else if (qName.equals("dao")) {
                 this.hasDao = true;
-                if (typeRetrieved == false) {
+                if (this.typeRetrieved == false) {
                     roleType = atts.getValue("xlink:role");
-                    typeRetrieved = true;
+                    this.typeRetrieved = true;
                 }
+                languageOnCLevel = false;
             } else if (qName.equals("repository")) {
                 this.inRepository = true;
             } else if (qName.equals("language")) {
-                if (this.inDid) {
-                    if ("".equals(languageCode)) {
-                        languageCode = atts.getValue("langcode");
-                    }
-                } else {
-                    alternativeLanguages.add(atts.getValue("langcode"));
-                }
+            	// Check if the language is in element "<langusage>".
+            	if (this.inLangusage) {
+            		languagesCodes.add(atts.getValue("langcode"));
+            	} else if (this.inArchdesc && this.inDid && !this.hasDao) {
+                	// Check if the language is in element "<archdesc><langmaterial>".
+            		languagesOnParent = true;
+            		alternativeLanguages.add(atts.getValue("langcode"));
+            	} else if (this.inArchdesc && this.inDid && this.hasDao) {
+                	// Check if the language is in element "<c>".
+					if ("".equals(languageCode)) {
+						languageCode = atts.getValue("langcode");
+					}
+					this.languageOnCLevel = true;
+            	}
             }
         }
 
         @Override
         public void endElement(String namespaceURI, String localName, String qName)
                 throws SAXException {
-            if (qName.equals("archdesc")) {
+        	if (qName.equals("langusage")) {
+                this.inLangusage = false;
+            } else if (qName.equals("archdesc")) {
                 this.inArchdesc = false;
             } else if (qName.equals("did")) {
                 this.inDid = false;
+
+                // Set the value of no language present in all C Levels if necessary.
+                if (!this.languageOnCLevel
+                		&& this.hasDao) {
+                	languagesOnAllCLevels = false;
+                	LOG.debug("No language present in c level.");
+                }
+
                 this.hasDao = false;
             } else if (qName.equals("dao")) {
                 // Nothing to do here
@@ -149,9 +192,9 @@ public class Ead2EseInformation {
                     }
                 }
                 if (this.hasDao) {
-                    if (daoRetrieved == false) {
+                    if (this.daoRetrieved == false) {
                         repository = textBetween.substring(0, index);
-                        daoRetrieved = true;
+                        this.daoRetrieved = true;
                     }
                 }
                 if (this.inArchdesc) {

@@ -159,6 +159,11 @@
                         </xsl:if>
                     </xsl:attribute>
                 </xsl:if>
+                <xsl:if test="position() = 1">
+                    <xsl:attribute name="rdf:resource">
+                    	<xsl:text>Finding aid</xsl:text>
+                    </xsl:attribute>
+                </xsl:if>
             </dc:subject>
 
         </edm:ProvidedCHO>
@@ -302,11 +307,13 @@
             </xsl:call-template>
         </xsl:for-each>		
 		
-        <xsl:for-each select="dcterms:provenance">
-            <xsl:call-template name="create_property">
-                <xsl:with-param name="tgt_property">dcterms:provenance</xsl:with-param>
-            </xsl:call-template>
-        </xsl:for-each>		
+        <xsl:if test="$minimalConversion != 'true'">
+	        <xsl:for-each select="dcterms:provenance">
+	            <xsl:call-template name="create_property">
+	                <xsl:with-param name="tgt_property">dcterms:provenance</xsl:with-param>
+	            </xsl:call-template>
+	        </xsl:for-each>
+	    </xsl:if>
 
         <xsl:if test="$minimalConversion != 'true'">
 	        <xsl:for-each select="dc:date">
@@ -334,11 +341,13 @@
             </xsl:call-template>
         </xsl:for-each>
 		
-        <xsl:for-each select="dc:subject">
-            <xsl:call-template name="create_property">
-                <xsl:with-param name="tgt_property">dc:subject</xsl:with-param>
-            </xsl:call-template>
-        </xsl:for-each>		
+		<xsl:if test="position() > 1">
+	        <xsl:for-each select="dc:subject">
+	            <xsl:call-template name="create_property">
+	                <xsl:with-param name="tgt_property">dc:subject</xsl:with-param>
+	            </xsl:call-template>
+	        </xsl:for-each>		
+        </xsl:if>
 
         <xsl:for-each select="dc:language">
             <xsl:call-template name="create_property">

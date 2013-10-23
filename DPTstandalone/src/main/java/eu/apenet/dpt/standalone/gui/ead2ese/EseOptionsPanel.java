@@ -691,13 +691,11 @@ public class EseOptionsPanel extends JPanel {
                     throw new Exception("No provided language selected");
                 }
         	} else if (this.inheritLanguageGroup.getSelection().getActionCommand().equalsIgnoreCase(EseOptionsPanel.NO)) {
-        		if (this.ead2EseInformation.getLanguageCode() == null
-        				|| this.ead2EseInformation.getLanguageCode().isEmpty()) {
-        			throw new Exception("At least one DAO does not have an associated language");
+        		if (!this.ead2EseInformation.isLanguagesOnAllCLevels()) {
+        			throw new Exception("At least one DAO does not have an associated language. Please inherit the language or provide it manually");
         		}
         	} else if (this.inheritLanguageGroup.getSelection().getActionCommand().equalsIgnoreCase(EseOptionsPanel.YES)) {
-        		if (this.ead2EseInformation.getAlternativeLanguages() == null
-        				|| this.ead2EseInformation.getAlternativeLanguages().isEmpty()) {
+        		if (!this.ead2EseInformation.isLanguagesOnParent()) {
         			throw new Exception("The higher levels have not an associated language");
         		}
         	}

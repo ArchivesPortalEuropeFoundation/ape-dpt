@@ -530,9 +530,11 @@ http://purl.org/dc/terms/ http://www.dublincore.org/schemas/xmls/qdc/dcterms.xsd
                                 <xsl:copy-of select="$inheritedLanguages"/>
                             </xsl:when>
                             <xsl:otherwise>
-                                <dc:language>
-                                    <xsl:text>unknown</xsl:text>
-                                </dc:language>
+                                <xsl:for-each select="tokenize($language,' ')">
+                                    <dc:language>
+                                        <xsl:value-of select="."/>
+                                    </dc:language>
+                                </xsl:for-each>
                             </xsl:otherwise>
                         </xsl:choose>
                     </xsl:when>
@@ -544,9 +546,11 @@ http://purl.org/dc/terms/ http://www.dublincore.org/schemas/xmls/qdc/dcterms.xsd
                                 </xsl:call-template>
                             </xsl:when>
                             <xsl:otherwise>
-                                <dc:language>
-                                    <xsl:text>unknown</xsl:text>
-                                </dc:language>
+                                <xsl:for-each select="tokenize($language,' ')">
+                                    <dc:language>
+                                        <xsl:value-of select="."/>
+                                    </dc:language>
+                                </xsl:for-each>
                             </xsl:otherwise>
                         </xsl:choose>							
                     </xsl:when>
@@ -560,9 +564,11 @@ http://purl.org/dc/terms/ http://www.dublincore.org/schemas/xmls/qdc/dcterms.xsd
                                 </xsl:for-each>
                             </xsl:when>
                             <xsl:otherwise>
-                                <dc:language>
-                                    <xsl:text>unknown</xsl:text>
-                                </dc:language>
+                                <xsl:for-each select="tokenize($language,' ')">
+                                    <dc:language>
+                                        <xsl:value-of select="."/>
+                                    </dc:language>
+                                </xsl:for-each>
                             </xsl:otherwise>																			
                         </xsl:choose>
                     </xsl:otherwise>
