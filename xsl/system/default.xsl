@@ -766,8 +766,12 @@
     <!-- descgrp/odd -->
     <xsl:template match="archdesc/descgrp/odd" mode="copy">
         <odd encodinganalog="3.6.1">
-            <xsl:apply-templates select="node()" mode="copy"/>
+            <xsl:apply-templates select="node() except odd" mode="copy"/>
+            <xsl:apply-templates select="odd/*" mode="nested"/>
         </odd>
+    </xsl:template>
+    <xsl:template match="odd" mode="nested">
+        <xsl:apply-templates select="node()" mode="nested"/>
     </xsl:template>
 
     <!-- descgrp/appraisal -->
