@@ -458,6 +458,16 @@ public class EseOptionsPanel extends JPanel {
         createEseBtn.addActionListener(new CreateEseActionListener());
         cancelBtn.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
+                for (Map.Entry<String, FileInstance> entry : fileInstances.entrySet()) {
+                    FileInstance fileInstance = entry.getValue();
+                    fileInstance.setEse(false);
+                }
+                if(batch){
+                    dataPreparationToolGUI.enableAllBatchBtns();
+                } else {
+                    dataPreparationToolGUI.enableEseConversionBtn();
+                }
+                dataPreparationToolGUI.enableRadioButtons();
                 close();
             }
         });
@@ -946,7 +956,7 @@ public class EseOptionsPanel extends JPanel {
             languageList.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
             add(new JScrollPane(languageList));
         }
-        
+
         public boolean hasSelections(){
             return !languageList.isSelectionEmpty();
         }

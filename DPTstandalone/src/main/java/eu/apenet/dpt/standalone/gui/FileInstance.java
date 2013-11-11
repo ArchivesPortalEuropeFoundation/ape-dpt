@@ -91,8 +91,8 @@ public class FileInstance {
         return isEse;
     }
 
-    public void setEse() {
-        isEse = true;
+    public void setEse(boolean ese) {
+        isEse = ese;
     }
 
     public boolean isEdm() {
