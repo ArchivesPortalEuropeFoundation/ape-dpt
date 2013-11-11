@@ -90,6 +90,7 @@ public class EseOptionsPanel extends JPanel {
     private Ead2EseInformation ead2EseInformation;
     private JCheckBox useExistingRepoCheckbox;
     private JCheckBox useExistingDaoRoleCheckbox;
+    private JCheckBox useExistingLanguageCheckbox;
     private JPanel languageBoxPanel = new LanguageBoxPanel();
     private String conversionMode = MINIMAL;
     private JPanel hierarchyPrefixPanel;
@@ -289,35 +290,52 @@ public class EseOptionsPanel extends JPanel {
           panel = new JPanel(new GridLayout(1, 3));
           panel.add(new Label(labels.getString("ese.selectLanguage") + ":" + "*"));
           panel.add(languageBoxPanel);
+          useExistingLanguageCheckbox = new JCheckBox(labels.getString("ese.takeFromFileLanguage"));
+          useExistingLanguageCheckbox.setSelected(true);
+          useExistingLanguageCheckbox.addItemListener(new ItemListener() {
+              public void itemStateChanged(ItemEvent e) {
+                  //empty method on purpose
+              }
+          });
+          panel.add(useExistingLanguageCheckbox);
           panel.setBorder(BLACK_LINE);
           formPanel.add(panel);
         } else {
-	        inheritLanguagePanel = new JPanel(new GridLayout(1, 3));
-	        inheritLanguagePanel.add(new Label(labels.getString("ese.inheritLanguage") + ":" + "*"));
+            inheritLanguagePanel = new JPanel(new GridLayout(1, 3));
+            inheritLanguagePanel.add(new Label(labels.getString("ese.inheritLanguage") + ":" + "*"));
 
-	        JPanel rbPanel = new JPanel(new GridLayout(3, 1));
-	        inheritLanguageGroup = new ButtonGroup();
-	        inhLanYesRadioButton = new JRadioButton(labels.getString("ese.yes"));
-	        inhLanYesRadioButton.setActionCommand(YES);
-	        inhLanYesRadioButton.addActionListener(new ChangePanelActionListener(languageBoxPanel));
-	        inheritLanguageGroup.add(inhLanYesRadioButton);
-	        rbPanel.add(inhLanYesRadioButton);
-	        inhLanNoRadioButton = new JRadioButton(labels.getString("ese.no"), true);
-	        inhLanNoRadioButton.setActionCommand(NO);
-	        inhLanNoRadioButton.addActionListener(new ChangePanelActionListener(languageBoxPanel));
-	        inheritLanguageGroup.add(inhLanNoRadioButton);
-	        rbPanel.add(inhLanNoRadioButton);
-	        inhLanProvideRadioButton = new JRadioButton(labels.getString("ese.provide"));
-	        inhLanProvideRadioButton.setActionCommand(PROVIDE);
-	        inhLanProvideRadioButton.addActionListener(new ChangePanelActionListener(languageBoxPanel));
-	        inheritLanguageGroup.add(inhLanProvideRadioButton);
-	        rbPanel.add(inhLanProvideRadioButton);
-	        inheritLanguagePanel.add(rbPanel, BorderLayout.WEST);
-	        languageBoxPanel.setVisible(true);
-	        inheritLanguagePanel.add(languageBoxPanel, BorderLayout.EAST);
-	        inheritLanguagePanel.setBorder(BLACK_LINE);
-	        inheritLanguagePanel.setVisible(true);
-	        formPanel.add(inheritLanguagePanel);
+            JPanel rbPanel = new JPanel(new GridLayout(4, 1));
+            inheritLanguageGroup = new ButtonGroup();
+            inhLanYesRadioButton = new JRadioButton(labels.getString("ese.yes"));
+            inhLanYesRadioButton.setActionCommand(YES);
+            inhLanYesRadioButton.addActionListener(new ChangePanelActionListener(languageBoxPanel));
+            inheritLanguageGroup.add(inhLanYesRadioButton);
+            rbPanel.add(inhLanYesRadioButton);
+            inhLanNoRadioButton = new JRadioButton(labels.getString("ese.no"), true);
+            inhLanNoRadioButton.setActionCommand(NO);
+            inhLanNoRadioButton.addActionListener(new ChangePanelActionListener(languageBoxPanel));
+            inheritLanguageGroup.add(inhLanNoRadioButton);
+            rbPanel.add(inhLanNoRadioButton);
+            inhLanProvideRadioButton = new JRadioButton(labels.getString("ese.provide"));
+            inhLanProvideRadioButton.setActionCommand(PROVIDE);
+            inhLanProvideRadioButton.addActionListener(new ChangePanelActionListener(languageBoxPanel));
+            inheritLanguageGroup.add(inhLanProvideRadioButton);
+            rbPanel.add(inhLanProvideRadioButton);
+            useExistingLanguageCheckbox = new JCheckBox(labels.getString("ese.takeFromFileLanguage"));
+            useExistingLanguageCheckbox.setSelected(true);
+            useExistingLanguageCheckbox.addItemListener(new ItemListener() {
+                public void itemStateChanged(ItemEvent e) {
+                    //empty method on purpose
+                }
+            });
+            rbPanel.add(useExistingLanguageCheckbox);
+            inheritLanguagePanel.add(rbPanel, BorderLayout.WEST);
+
+            languageBoxPanel.setVisible(true);
+            inheritLanguagePanel.add(languageBoxPanel, BorderLayout.EAST);
+            inheritLanguagePanel.setBorder(BLACK_LINE);
+            inheritLanguagePanel.setVisible(true);
+            formPanel.add(inheritLanguagePanel);
         }
 
         JPanel mainLicensePanel = new JPanel(new BorderLayout());
@@ -593,6 +611,9 @@ public class EseOptionsPanel extends JPanel {
 	                }
 	            }
 	        }
+        }
+        if(useExistingLanguageCheckbox.isSelected()){
+            config.setUseExistingLanguage(true);
         }
 
         config.setContextInformationPrefix(labels.getString("ese.hierarchyPrefixDefault") + ":");
