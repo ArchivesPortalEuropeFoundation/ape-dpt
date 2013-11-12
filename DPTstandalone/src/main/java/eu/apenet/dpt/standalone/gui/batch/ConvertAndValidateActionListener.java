@@ -176,9 +176,11 @@ public class ConvertAndValidateActionListener extends ApexActionListener {
                                     counterThread.stop();
                                     threadProgress.interrupt();
                                 }
-                                if(counterMax > 0)
-                                    progressBar.setValue(counterMax);
-                                progressBar.setIndeterminate(true);
+                                if(progressBar != null) {
+                                    if(counterMax > 0)
+                                        progressBar.setValue(counterMax);
+                                    progressBar.setIndeterminate(true);
+                                }
 
                                 try {
                                     InputStream is = FileUtils.openInputStream(new File(fileInstance.getCurrentLocation()));
