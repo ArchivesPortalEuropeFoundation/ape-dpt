@@ -124,7 +124,7 @@
     <xsl:template match="emph" mode="#all">
         <xsl:choose>
             <xsl:when test="parent::bibref or parent::extref" />
-            <xsl:when test="parent::corpname or parent::origination or parent::physfacet or parent::persname or parent::head or parent::titleproper or parent::unitdate or parent::unittitle"> <!--unittitle here is a hack - better fix it in the display xsl of portal/dashboard-->
+            <xsl:when test="parent::corpname or parent::origination or parent::physfacet or parent::persname or parent::head or parent::titleproper or parent::unitdate or parent::archref or parent::emph or parent::unittitle"> <!--unittitle here is a hack - better fix it in the display xsl of portal/dashboard-->
                 <xsl:value-of select="normalize-space(.)"/><xsl:text> </xsl:text>
             </xsl:when>
             <xsl:when test="@render='bold' or @render='italic'">
@@ -1595,7 +1595,20 @@
         <xsl:apply-templates select="list | chronlist | table" mode="#current"/>
     </xsl:template>
 
-    <xsl:template match="otherfindaid/p/archref" mode="fonds intermediate lowest">
+    <xsl:template match="otherfindaid/p/ref" mode="fonds intermediate lowest">
+        <xsl:apply-templates mode="#current"/>
+    </xsl:template>
+    <xsl:template match="otherfindaid/p/ref/archref/note | otherfindaid/p/ref/note" mode="fonds intermediate lowest">
+        <xsl:apply-templates mode="#current"/>
+    </xsl:template>
+    <xsl:template match="otherfindaid/p/ref/archref/note/p | otherfindaid/p/ref/note/p" mode="fonds intermediate lowest" priority="1">
+        <xsl:apply-templates mode="#current"/>
+    </xsl:template>
+    <xsl:template match="otherfindaid/p/ref/archref/note/p/emph | otherfindaid/p/ref/note/p/emph" mode="fonds intermediate lowest" priority="1">
+        <xsl:apply-templates mode="#current"/>
+    </xsl:template>
+
+    <xsl:template match="otherfindaid/p/archref | otherfindaid/p/ref/archref" mode="fonds intermediate lowest">
         <extref>
             <xsl:if test="@*:href">
                 <xsl:attribute name="xlink:href" select="@*:href"/>
@@ -2280,7 +2293,7 @@
             <xsl:when test="$countrycode='NL' and ../../@otherlevel='subfile'">
                 <xsl:apply-templates select="../../../did/unitid" mode="#current"/>
             </xsl:when>
-            <xsl:when test="(@type='call number' or @type='ABS' or @type='bestellnummer' or @type='series_code' or @type='reference' or @type='Sygnatura' or @type='REFERENCE_CODE' or @type='cote-de-consultation' or @type='cote-groupee' or @type='identifiant' or @type='cote' or @type='persistent' or (not(@type))) and (text()[string-length(normalize-space(.)) ge 1] or exists(extptr))"><!-- and not(preceding-sibling::unitid) and not(following-sibling::unitid)-->
+            <xsl:when test="(@type='call number' or @type='ABS' or @type='bestellnummer' or @type='Bestellnummer' or @type='series_code' or @type='reference' or @type='Sygnatura' or @type='REFERENCE_CODE' or @type='cote-de-consultation' or @type='cote-groupee' or @type='identifiant' or @type='cote' or @type='persistent' or (not(@type))) and (text()[string-length(normalize-space(.)) ge 1] or exists(extptr))"><!-- and not(preceding-sibling::unitid) and not(following-sibling::unitid)-->
                 <xsl:choose>
                     <xsl:when test="@countrycode and @repositorycode">
                         <xsl:choose>
