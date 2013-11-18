@@ -421,8 +421,8 @@ public class CreateHGListener implements ActionListener {
                 checkInside = (TreeNode)(holdingsGuideTree.getModel().getRoot());
             for(int i = 0; i < checkInside.getChildCount(); i++) {
                 TreeNode child = checkInside.getChildAt(i);
-                if((CLevelTreeObject)((DefaultMutableTreeNode)child).getUserObject() == parent) {
-                    correctParentTreeNode = child;
+                if(((CLevelTreeObject)((DefaultMutableTreeNode)child).getUserObject()) == parent) {
+                    return child;
                 } else {
                     correctParentTreeNode = findTreeNode(child, parent);
                 }
