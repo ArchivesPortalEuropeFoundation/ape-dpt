@@ -123,6 +123,7 @@ public class CreateHGListener implements ActionListener {
                         ((LevelTreeModel) holdingsGuideTree.getModel()).removeNodeFromParent(node);
                         ((LevelTreeModel) holdingsGuideTree.getModel()).insertNodeInto(node, parentNode, index -1);
                         holdingsGuideTree.setSelectionPath(pp);
+                        switchBtn(true, index, parentNode.getChildCount());
                     }
                 }
                 //todo: this is a start for #228
@@ -156,6 +157,7 @@ public class CreateHGListener implements ActionListener {
                         ((LevelTreeModel) holdingsGuideTree.getModel()).removeNodeFromParent(node);
                         ((LevelTreeModel) holdingsGuideTree.getModel()).insertNodeInto(node, parentNode, index +1);
                         holdingsGuideTree.setSelectionPath(pp);
+                        switchBtn(false, index, parentNode.getChildCount());
                     }
                 }
                 //todo: this is a start for #228
@@ -233,6 +235,23 @@ public class CreateHGListener implements ActionListener {
         
         createHGDialog.pack();
         createHGDialog.setVisible(true);
+    }
+    public void switchBtn(boolean goUp, int index, int childCount) {
+        int switchInt = 1;
+        if(goUp)
+            switchInt = -1;
+
+        if(index + switchInt == childCount-1) {
+            buttonGoDown.setEnabled(false);
+        } else {
+            buttonGoDown.setEnabled(true);
+        }
+
+        if(index + switchInt == 0) {
+            buttonGoUp.setEnabled(false);
+        } else {
+            buttonGoUp.setEnabled(true);
+        }
     }
 
     public class HoldingsGuideTreeMouseListener implements MouseListener {
