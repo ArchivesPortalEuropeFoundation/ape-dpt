@@ -131,7 +131,7 @@
 	                    </xsl:otherwise>
 	                </xsl:choose>
 	            </dc:identifier>
-	            </xsl:if>
+            </xsl:if>
             <!-- deal with "other" corresponding properties -->
             <xsl:call-template name="mapChoProperties"/>
             <xsl:if test='position() > 1'>
@@ -282,31 +282,39 @@
 	            </xsl:call-template>
 	        </xsl:for-each>
 	    </xsl:if>
-		
-        <xsl:for-each select="dc:format">
-            <xsl:call-template name="create_property">
-                <xsl:with-param name="tgt_property">dc:format</xsl:with-param>
-            </xsl:call-template>
-        </xsl:for-each>
-		
-        <xsl:for-each select="dcterms:extent">
-            <xsl:call-template name="create_property">
-                <xsl:with-param name="tgt_property">dcterms:extent</xsl:with-param>
-            </xsl:call-template>
-        </xsl:for-each>
-		
-        <xsl:for-each select="dc:relation">
-            <xsl:call-template name="create_property">
-                <xsl:with-param name="tgt_property">dc:relation</xsl:with-param>
-            </xsl:call-template>
-        </xsl:for-each>		
 
-        <xsl:for-each select="dc:creator">
-            <xsl:call-template name="create_property">
-                <xsl:with-param name="tgt_property">dc:creator</xsl:with-param>
-            </xsl:call-template>
-        </xsl:for-each>		
-		
+		<xsl:if test="$minimalConversion != 'true'">
+	        <xsl:for-each select="dc:format">
+	            <xsl:call-template name="create_property">
+	                <xsl:with-param name="tgt_property">dc:format</xsl:with-param>
+	            </xsl:call-template>
+	        </xsl:for-each>
+	    </xsl:if>
+
+		<xsl:if test="$minimalConversion != 'true'">
+	        <xsl:for-each select="dcterms:extent">
+	            <xsl:call-template name="create_property">
+	                <xsl:with-param name="tgt_property">dcterms:extent</xsl:with-param>
+	            </xsl:call-template>
+	        </xsl:for-each>
+	    </xsl:if>
+
+		<xsl:if test="$minimalConversion != 'true'">
+	        <xsl:for-each select="dc:relation">
+	            <xsl:call-template name="create_property">
+	                <xsl:with-param name="tgt_property">dc:relation</xsl:with-param>
+	            </xsl:call-template>
+	        </xsl:for-each>
+	    </xsl:if>		
+
+		<xsl:if test="$minimalConversion != 'true'">
+	        <xsl:for-each select="dc:creator">
+	            <xsl:call-template name="create_property">
+	                <xsl:with-param name="tgt_property">dc:creator</xsl:with-param>
+	            </xsl:call-template>
+	        </xsl:for-each>
+	    </xsl:if>
+
         <xsl:if test="$minimalConversion != 'true'">
 	        <xsl:for-each select="dcterms:provenance">
 	            <xsl:call-template name="create_property">
@@ -322,25 +330,31 @@
 	            </xsl:call-template>
 	        </xsl:for-each>
      	</xsl:if>
-		
-        <xsl:for-each select="dcterms:hasFormat">
-            <xsl:call-template name="create_property">
-                <xsl:with-param name="tgt_property">dcterms:hasFormat</xsl:with-param>
-            </xsl:call-template>
-        </xsl:for-each>		
 
-        <xsl:for-each select="dc:coverage">
-            <xsl:call-template name="create_property">
-                <xsl:with-param name="tgt_property">dc:coverage</xsl:with-param>
-            </xsl:call-template>
-        </xsl:for-each>
-		
-        <xsl:for-each select="dcterms:spatial">
-            <xsl:call-template name="create_property">
-                <xsl:with-param name="tgt_property">dcterms:spatial</xsl:with-param>
-            </xsl:call-template>
-        </xsl:for-each>
-		
+		<xsl:if test="$minimalConversion != 'true'">
+	        <xsl:for-each select="dcterms:hasFormat">
+	            <xsl:call-template name="create_property">
+	                <xsl:with-param name="tgt_property">dcterms:hasFormat</xsl:with-param>
+	            </xsl:call-template>
+	        </xsl:for-each>
+	    </xsl:if>
+
+		<xsl:if test="$minimalConversion != 'true'">
+	        <xsl:for-each select="dc:coverage">
+	            <xsl:call-template name="create_property">
+	                <xsl:with-param name="tgt_property">dc:coverage</xsl:with-param>
+	            </xsl:call-template>
+	        </xsl:for-each>
+	    </xsl:if>
+
+		<xsl:if test="$minimalConversion != 'true'">
+	        <xsl:for-each select="dcterms:spatial">
+	            <xsl:call-template name="create_property">
+	                <xsl:with-param name="tgt_property">dcterms:spatial</xsl:with-param>
+	            </xsl:call-template>
+	        </xsl:for-each>
+	    </xsl:if>
+
 		<xsl:if test="position() > 1">
 	        <xsl:for-each select="dc:subject">
 	            <xsl:call-template name="create_property">
@@ -363,113 +377,146 @@
         <!-- ================================================================================
            ITEMS BELOW THIS LINE ARE NOT USED IN apeESE, BUT KEPT FOR POSSIBLE FUTURE CHANGES
         ================================================================================= -->
-        <xsl:for-each select="dc:contributor">
-            <xsl:call-template name="create_property">
-                <xsl:with-param name="tgt_property">dc:contributor</xsl:with-param>
-            </xsl:call-template>
-        </xsl:for-each>		
-		
-        <xsl:for-each select="dcterms:conformsTo">
-            <xsl:call-template name="create_property">
-                <xsl:with-param name="tgt_property">dcterms:conformsTo</xsl:with-param>
-            </xsl:call-template>
-        </xsl:for-each>		
 
-        <xsl:for-each select="dcterms:created">
-            <xsl:call-template name="create_property">
-                <xsl:with-param name="tgt_property">dcterms:created</xsl:with-param>
-            </xsl:call-template>
-        </xsl:for-each>		
-		
-        <xsl:for-each select="dcterms:hasPart">
-            <xsl:call-template name="create_property">
-                <xsl:with-param name="tgt_property">dcterms:hasPart</xsl:with-param>
-            </xsl:call-template>
-        </xsl:for-each>
+		<xsl:if test="$minimalConversion != 'true'">
+	        <xsl:for-each select="dc:contributor">
+	            <xsl:call-template name="create_property">
+	                <xsl:with-param name="tgt_property">dc:contributor</xsl:with-param>
+	            </xsl:call-template>
+	        </xsl:for-each>		
+	    </xsl:if>
 
-        <xsl:for-each select="dcterms:hasVersion">
-            <xsl:call-template name="create_property">
-                <xsl:with-param name="tgt_property">dcterms:hasVersion</xsl:with-param>
-            </xsl:call-template>
-        </xsl:for-each>
+		<xsl:if test="$minimalConversion != 'true'">
+	        <xsl:for-each select="dcterms:conformsTo">
+	            <xsl:call-template name="create_property">
+	                <xsl:with-param name="tgt_property">dcterms:conformsTo</xsl:with-param>
+	            </xsl:call-template>
+	        </xsl:for-each>
+	    </xsl:if>
 
-        <xsl:for-each select="dcterms:isFormatOf">
-            <xsl:call-template name="create_property">
-                <xsl:with-param name="tgt_property">dcterms:isFormatOf</xsl:with-param>
-            </xsl:call-template>
-        </xsl:for-each>
+		<xsl:if test="$minimalConversion != 'true'">
+	        <xsl:for-each select="dcterms:created">
+	            <xsl:call-template name="create_property">
+	                <xsl:with-param name="tgt_property">dcterms:created</xsl:with-param>
+	            </xsl:call-template>
+	        </xsl:for-each>
+	    </xsl:if>
+
+		<xsl:if test="$minimalConversion != 'true'">
+	        <xsl:for-each select="dcterms:hasPart">
+	            <xsl:call-template name="create_property">
+	                <xsl:with-param name="tgt_property">dcterms:hasPart</xsl:with-param>
+	            </xsl:call-template>
+	        </xsl:for-each>
+	    </xsl:if>
+
+		<xsl:if test="$minimalConversion != 'true'">
+	        <xsl:for-each select="dcterms:hasVersion">
+	            <xsl:call-template name="create_property">
+	                <xsl:with-param name="tgt_property">dcterms:hasVersion</xsl:with-param>
+	            </xsl:call-template>
+	        </xsl:for-each>
+	    </xsl:if>
+
+		<xsl:if test="$minimalConversion != 'true'">
+	        <xsl:for-each select="dcterms:isFormatOf">
+	            <xsl:call-template name="create_property">
+	                <xsl:with-param name="tgt_property">dcterms:isFormatOf</xsl:with-param>
+	            </xsl:call-template>
+	        </xsl:for-each>
+	    </xsl:if>
 
         <xsl:for-each select="dcterms:isPartOf">
             <xsl:call-template name="create_property">
                 <xsl:with-param name="tgt_property">dcterms:isPartOf</xsl:with-param>
             </xsl:call-template>
-        </xsl:for-each>		
-		
-        <xsl:for-each select="dcterms:isReferencedBy">
-            <xsl:call-template name="create_property">
-                <xsl:with-param name="tgt_property">dcterms:isReferencedBy</xsl:with-param>
-            </xsl:call-template>
         </xsl:for-each>
 
-        <xsl:for-each select="dcterms:isReplacedBy">
-            <xsl:call-template name="create_property">
-                <xsl:with-param name="tgt_property">dcterms:isReplacedBy</xsl:with-param>
-            </xsl:call-template>
-        </xsl:for-each>
+		<xsl:if test="$minimalConversion != 'true'">
+	        <xsl:for-each select="dcterms:isReferencedBy">
+	            <xsl:call-template name="create_property">
+	                <xsl:with-param name="tgt_property">dcterms:isReferencedBy</xsl:with-param>
+	            </xsl:call-template>
+	        </xsl:for-each>
+	    </xsl:if>
 
-        <xsl:for-each select="dcterms:isRequiredBy">
-            <xsl:call-template name="create_property">
-                <xsl:with-param name="tgt_property">dcterms:isRequiredBy</xsl:with-param>
-            </xsl:call-template>
-        </xsl:for-each>		
+		<xsl:if test="$minimalConversion != 'true'">
+	        <xsl:for-each select="dcterms:isReplacedBy">
+	            <xsl:call-template name="create_property">
+	                <xsl:with-param name="tgt_property">dcterms:isReplacedBy</xsl:with-param>
+	            </xsl:call-template>
+	        </xsl:for-each>
+	    </xsl:if>
 
-        <xsl:for-each select="dcterms:isVersionOf">
-            <xsl:call-template name="create_property">
-                <xsl:with-param name="tgt_property">dcterms:isVersionOf</xsl:with-param>
-            </xsl:call-template>
-        </xsl:for-each>
+		<xsl:if test="$minimalConversion != 'true'">
+	        <xsl:for-each select="dcterms:isRequiredBy">
+	            <xsl:call-template name="create_property">
+	                <xsl:with-param name="tgt_property">dcterms:isRequiredBy</xsl:with-param>
+	            </xsl:call-template>
+	        </xsl:for-each>
+	    </xsl:if>
 
-        <xsl:for-each select="dcterms:medium">
-            <xsl:call-template name="create_property">
-                <xsl:with-param name="tgt_property">dcterms:medium</xsl:with-param>
-            </xsl:call-template>
-        </xsl:for-each>		
-		
-        <xsl:for-each select="dcterms:references">
-            <xsl:call-template name="create_property">
-                <xsl:with-param name="tgt_property">dcterms:references</xsl:with-param>
-            </xsl:call-template>
-        </xsl:for-each>
+		<xsl:if test="$minimalConversion != 'true'">
+	        <xsl:for-each select="dcterms:isVersionOf">
+	            <xsl:call-template name="create_property">
+	                <xsl:with-param name="tgt_property">dcterms:isVersionOf</xsl:with-param>
+	            </xsl:call-template>
+	        </xsl:for-each>
+	    </xsl:if>
 
-        <xsl:for-each select="dcterms:replaces">
-            <xsl:call-template name="create_property">
-                <xsl:with-param name="tgt_property">dcterms:replaces</xsl:with-param>
-            </xsl:call-template>
-        </xsl:for-each>
+		<xsl:if test="$minimalConversion != 'true'">
+	        <xsl:for-each select="dcterms:medium">
+	            <xsl:call-template name="create_property">
+	                <xsl:with-param name="tgt_property">dcterms:medium</xsl:with-param>
+	            </xsl:call-template>
+	        </xsl:for-each>
+	    </xsl:if>
 
-        <xsl:for-each select="dcterms:requires">
-            <xsl:call-template name="create_property">
-                <xsl:with-param name="tgt_property">dcterms:requires</xsl:with-param>
-            </xsl:call-template>
-        </xsl:for-each>		
+		<xsl:if test="$minimalConversion != 'true'">
+	        <xsl:for-each select="dcterms:references">
+	            <xsl:call-template name="create_property">
+	                <xsl:with-param name="tgt_property">dcterms:references</xsl:with-param>
+	            </xsl:call-template>
+	        </xsl:for-each>
+	    </xsl:if>
 
-        <xsl:for-each select="dcterms:tableOfContents">
-            <xsl:call-template name="create_property">
-                <xsl:with-param name="tgt_property">dcterms:tableOfContents</xsl:with-param>
-            </xsl:call-template>
-        </xsl:for-each>
-                
-        <xsl:for-each select="dcterms:temporal">
-            <xsl:call-template name="create_property">
-                <xsl:with-param name="tgt_property">dcterms:temporal</xsl:with-param>
-            </xsl:call-template>
-        </xsl:for-each>		
-		
+		<xsl:if test="$minimalConversion != 'true'">
+	        <xsl:for-each select="dcterms:replaces">
+	            <xsl:call-template name="create_property">
+	                <xsl:with-param name="tgt_property">dcterms:replaces</xsl:with-param>
+	            </xsl:call-template>
+	        </xsl:for-each>
+	    </xsl:if>
+
+		<xsl:if test="$minimalConversion != 'true'">
+	        <xsl:for-each select="dcterms:requires">
+	            <xsl:call-template name="create_property">
+	                <xsl:with-param name="tgt_property">dcterms:requires</xsl:with-param>
+	            </xsl:call-template>
+	        </xsl:for-each>
+	    </xsl:if>
+
+		<xsl:if test="$minimalConversion != 'true'">
+	        <xsl:for-each select="dcterms:tableOfContents">
+	            <xsl:call-template name="create_property">
+	                <xsl:with-param name="tgt_property">dcterms:tableOfContents</xsl:with-param>
+	            </xsl:call-template>
+	        </xsl:for-each>
+	    </xsl:if>
+
+		<xsl:if test="$minimalConversion != 'true'">
+	        <xsl:for-each select="dcterms:temporal">
+	            <xsl:call-template name="create_property">
+	                <xsl:with-param name="tgt_property">dcterms:temporal</xsl:with-param>
+	            </xsl:call-template>
+	        </xsl:for-each>
+	    </xsl:if>
+
         <xsl:for-each select="europeana:type">
             <edm:type>
                 <xsl:value-of select="."/>
             </edm:type>
-        </xsl:for-each>		
+        </xsl:for-each>
 
         <!--<xsl:for-each select="europeana:unstored">
             <edm:unstored>
