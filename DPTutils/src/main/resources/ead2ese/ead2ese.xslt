@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xsl:stylesheet version="2.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"  xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:europeana="http://www.europeana.eu/schemas/ese/" xmlns:dcterms="http://purl.org/dc/terms/"  xmlns="http://www.europeana.eu/schemas/ese/" xpath-default-namespace="urn:isbn:1-931666-22-9" xmlns:fn="http://www.w3.org/2005/xpath-functions" xmlns:xlink="http://www.w3.org/1999/xlink" exclude-result-prefixes="xlink fn" >
-    <xsl:output method="xml" indent="yes" />  
+    <xsl:output method="xml" indent="yes" />
     <xsl:param name="europeana_provider"></xsl:param>
     <xsl:param name="europeana_dataprovider"></xsl:param>
     <xsl:param name="europeana_rights"></xsl:param>
@@ -17,13 +17,14 @@
     <xsl:param name="contextInformationPrefix"></xsl:param>
     <xsl:param name="useExistingDaoRole"></xsl:param>
     <xsl:param name="useExistingRepository"></xsl:param>
+    <xsl:param name="useExistingLanguage"></xsl:param>
     <xsl:param name="minimalConversion"></xsl:param>
-    
+
     <xsl:template match="/">
         <metadata xsi:schemaLocation="http://www.europeana.eu/schemas/ese/ http://www.europeana.eu/schemas/ese/ESE-V3.4.xsd
 http://purl.org/dc/elements/1.1/ http://www.dublincore.org/schemas/xmls/qdc/dc.xsd
 http://purl.org/dc/terms/ http://www.dublincore.org/schemas/xmls/qdc/dcterms.xsd">
-            <xsl:apply-templates select="/ead/archdesc"/>  
+            <xsl:apply-templates select="/ead/archdesc"/>
         </metadata>
     </xsl:template>
     <xsl:template match="archdesc">
@@ -40,31 +41,31 @@ http://purl.org/dc/terms/ http://www.dublincore.org/schemas/xmls/qdc/dcterms.xsd
                 <xsl:if test="./did/langmaterial">
                     <xsl:call-template name="language">
                         <xsl:with-param name="langmaterials" select="./did/langmaterial"></xsl:with-param>
-                    </xsl:call-template>	
-                </xsl:if>    	
+                    </xsl:call-template>
+                </xsl:if>
             </xsl:with-param>
             <!--   	<xsl:with-param name="inheritedCustodhists">
                     <xsl:if test="./custodhist">
                             <xsl:call-template name="custodhist">
                                 <xsl:with-param name="custodhists" select="./custodhist"></xsl:with-param>
-                            </xsl:call-template>	
-                    </xsl:if>    	
+                            </xsl:call-template>
+                    </xsl:if>
             </xsl:with-param>
             <xsl:with-param name="inheritedAltformavail">
                     <xsl:if test="./altformavail">
                         <xsl:call-template name="altformavail">
                             <xsl:with-param name="altformavails" select="./altformavail"></xsl:with-param>
                         </xsl:call-template>
-                    </xsl:if>    	
+                    </xsl:if>
             </xsl:with-param>-->
             <xsl:with-param name="inheritedControlaccesses">
                 <xsl:if test="./controlaccess">
                     <xsl:call-template name="controlaccess">
                         <xsl:with-param name="controlaccesses" select="./controlaccess"></xsl:with-param>
                     </xsl:call-template>
-                </xsl:if>    	
+                </xsl:if>
             </xsl:with-param>
-        </xsl:apply-templates>  
+        </xsl:apply-templates>
     </xsl:template>
     <xsl:template match="dsc">
         <xsl:param name="inheritedOriginations"/>
@@ -96,14 +97,14 @@ http://purl.org/dc/terms/ http://www.dublincore.org/schemas/xmls/qdc/dcterms.xsd
                 <xsl:otherwise>
                     <xsl:copy-of select="$inheritedOriginations"/>
                 </xsl:otherwise>
-            </xsl:choose>              
-        </xsl:variable>	
+            </xsl:choose>
+        </xsl:variable>
         <xsl:variable name="updatedInheritedLanguages">
             <xsl:choose>
                 <xsl:when test='$inheritLanguage = "true" and ./did/langmaterial'>
                     <xsl:call-template name="language">
                         <xsl:with-param name="langmaterials" select="./did/langmaterial"></xsl:with-param>
-                    </xsl:call-template>	
+                    </xsl:call-template>
                 </xsl:when>
                 <xsl:otherwise>
                     <xsl:copy-of select="$inheritedLanguages"/>
@@ -115,7 +116,7 @@ http://purl.org/dc/terms/ http://www.dublincore.org/schemas/xmls/qdc/dcterms.xsd
                 <xsl:when test='$inheritCustodhist = "true" and ./custodhist'>
                     <xsl:call-template name="custodhist">
                         <xsl:with-param name="custodhists" select="./custodhist"></xsl:with-param>
-                    </xsl:call-template>	
+                    </xsl:call-template>
                 </xsl:when>
                 <xsl:otherwise>
                     <xsl:copy-of select="$inheritedCustodhists"/>
@@ -139,7 +140,7 @@ http://purl.org/dc/terms/ http://www.dublincore.org/schemas/xmls/qdc/dcterms.xsd
                 <xsl:when test='$inheritControlaccess = "true" and ./controlaccess'>
                     <xsl:call-template name="controlaccess">
                         <xsl:with-param name="controlaccesses" select="./controlaccess"></xsl:with-param>
-                    </xsl:call-template>	
+                    </xsl:call-template>
                 </xsl:when>
                 <xsl:otherwise>
                     <xsl:copy-of select="$inheritedControlaccesses"/>
@@ -157,23 +158,23 @@ http://purl.org/dc/terms/ http://www.dublincore.org/schemas/xmls/qdc/dcterms.xsd
             </xsl:apply-templates>
         </xsl:if>
         <xsl:call-template name="addrecord">
-            <xsl:with-param name="currentnode" select="."/>		
+            <xsl:with-param name="currentnode" select="."/>
             <xsl:with-param name="inheritedOriginations" select="$updatedInheritedOriginations"/>
             <xsl:with-param name="inheritedLanguages" select="$updatedInheritedLanguages"/>
             <xsl:with-param name="inheritedCustodhists" select="$updatedInheritedCustodhists"/>
             <xsl:with-param name="inheritedAltformavails" select="$updatedInheritedAltformavails"/>
             <xsl:with-param name="inheritedControlaccesses" select="$updatedInheritedControlaccesses"/>
-        </xsl:call-template>	
+        </xsl:call-template>
     </xsl:template>
     <!-- This template creates a record if a element did/dao is found.-->
     <xsl:template name="addrecord">
         <xsl:param name="currentnode"/>
         <xsl:param name="inheritedOriginations"/>
         <xsl:param name="inheritedLanguages"/>
-        <xsl:param name="inheritedCustodhists"/>	
+        <xsl:param name="inheritedCustodhists"/>
         <xsl:param name="inheritedAltformavails"/>
         <xsl:param name="inheritedControlaccesses"/>
-        <!-- for each dao found, create a record element --> 
+        <!-- for each dao found, create a record element -->
         <!-- <xsl:for-each select='did/dao[not(@xlink:role="THUMBNAIL")]'>-->
         <xsl:for-each select='did/dao[not(@xlink:title="thumbnail")]'>
             <xsl:variable name="linkPosition" select="position()"/>
@@ -229,7 +230,7 @@ http://purl.org/dc/terms/ http://www.dublincore.org/schemas/xmls/qdc/dcterms.xsd
                         <xsl:variable name="parentdidnode" select="$parentcnode/did"/>
                         <xsl:variable name="parentofparentcnode" select="$parentcnode/parent::node()"/>
                         <dc:title>
-                            <xsl:value-of select="$parentcnode/did/unittitle[1]"/> >> 
+                            <xsl:value-of select="$parentcnode/did/unittitle[1]"/> >>
                             <xsl:value-of select="$didnode/unittitle"/>
                         </dc:title>
                         <dcterms:alternative>
@@ -273,7 +274,7 @@ http://purl.org/dc/terms/ http://www.dublincore.org/schemas/xmls/qdc/dcterms.xsd
                                     </dc:format>
                                 </xsl:if>
                             </xsl:otherwise>
-                        </xsl:choose>	
+                        </xsl:choose>
                         <xsl:choose>
                             <xsl:when test='$didnode/materialspec'>
                                 <dc:format>
@@ -287,7 +288,7 @@ http://purl.org/dc/terms/ http://www.dublincore.org/schemas/xmls/qdc/dcterms.xsd
                                     </dc:format>
                                 </xsl:if>
                             </xsl:otherwise>
-                        </xsl:choose>	
+                        </xsl:choose>
                         <xsl:choose>
                             <xsl:when test='$didnode/physdesc/extent'>
                                 <dcterms:extent>
@@ -325,7 +326,7 @@ http://purl.org/dc/terms/ http://www.dublincore.org/schemas/xmls/qdc/dcterms.xsd
                                     <xsl:apply-templates select="$parentcnode/bibliography/bibref"/>
                                 </xsl:if>
                             </xsl:otherwise>
-                        </xsl:choose>	
+                        </xsl:choose>
                         <xsl:choose>
                             <xsl:when test='$didnode/origination'>
                                 <xsl:call-template name="creator">
@@ -349,10 +350,10 @@ http://purl.org/dc/terms/ http://www.dublincore.org/schemas/xmls/qdc/dcterms.xsd
                         </xsl:choose>
                         <xsl:choose>
                             <xsl:when test='$didnode/unitdate'>
-                                <xsl:apply-templates select="$didnode/unitdate"/>	
+                                <xsl:apply-templates select="$didnode/unitdate"/>
                             </xsl:when>
                             <xsl:otherwise>
-                                <xsl:apply-templates select="$parentdidnode/unitdate"/>	
+                                <xsl:apply-templates select="$parentdidnode/unitdate"/>
                             </xsl:otherwise>
                         </xsl:choose>
                         <xsl:choose>
@@ -419,7 +420,7 @@ http://purl.org/dc/terms/ http://www.dublincore.org/schemas/xmls/qdc/dcterms.xsd
                             </xsl:otherwise>
                         </xsl:choose>
                     </xsl:when>
-                                        
+
                     <xsl:otherwise>
                         <dc:title>
                             <xsl:value-of select="$didnode/unittitle"/>
@@ -455,12 +456,12 @@ http://purl.org/dc/terms/ http://www.dublincore.org/schemas/xmls/qdc/dcterms.xsd
                         </xsl:if>
                         <xsl:if test="$didnode/physdesc/extent">
                             <dcterms:extent>
-                                <xsl:value-of select="$didnode/physdesc/extent"/> 
+                                <xsl:value-of select="$didnode/physdesc/extent"/>
                             </dcterms:extent>
                         </xsl:if>
                         <xsl:if test="$didnode/physdesc/dimensions">
                             <dcterms:extent>
-                                <xsl:value-of select="$didnode/physdesc/dimensions"/> 
+                                <xsl:value-of select="$didnode/physdesc/dimensions"/>
                             </dcterms:extent>
                         </xsl:if>
                         <xsl:if test="$cnode/bibliography/bibref">
@@ -517,59 +518,115 @@ http://purl.org/dc/terms/ http://www.dublincore.org/schemas/xmls/qdc/dcterms.xsd
                         </xsl:choose>
                     </xsl:otherwise>
                 </xsl:choose>
-				
+
                 <xsl:choose>
-                    <xsl:when test="$didnode/langmaterial">
-                        <xsl:call-template name="language">
-                            <xsl:with-param name="langmaterials" select="$didnode/langmaterial"></xsl:with-param>
-                        </xsl:call-template>								
-                    </xsl:when>
-                    <xsl:when test="$inheritLanguage = 'true'">
+                    <xsl:when test="$useExistingLanguage='true'">
                         <xsl:choose>
-                            <xsl:when test='fn:string-length($inheritedLanguages) > 0'>
-                                <xsl:copy-of select="$inheritedLanguages"/>
+                            <xsl:when test="$didnode/langmaterial">
+                                <xsl:call-template name="language">
+                                    <xsl:with-param name="langmaterials" select="$didnode/langmaterial"></xsl:with-param>
+                                </xsl:call-template>
+                            </xsl:when>
+                            <xsl:when test="$inheritLanguage = 'true'">
+                                <xsl:choose>
+                                    <xsl:when test='fn:string-length($inheritedLanguages) > 0'>
+                                        <xsl:copy-of select="$inheritedLanguages"/>
+                                    </xsl:when>
+                                    <xsl:otherwise>
+                                        <xsl:for-each select="tokenize($language,' ')">
+                                            <dc:language>
+                                                <xsl:value-of select="."/>
+                                            </dc:language>
+                                        </xsl:for-each>
+                                    </xsl:otherwise>
+                                </xsl:choose>
+                            </xsl:when>
+                            <xsl:when test="$inheritFromParent">
+                                <xsl:choose>
+                                    <xsl:when test='$parentcnode/did/langmaterial'>
+                                        <xsl:call-template name="language">
+                                            <xsl:with-param name="langmaterials" select="$parentcnode/did/langmaterial"></xsl:with-param>
+                                        </xsl:call-template>
+                                    </xsl:when>
+                                    <xsl:otherwise>
+                                        <xsl:for-each select="tokenize($language,' ')">
+                                            <dc:language>
+                                                <xsl:value-of select="."/>
+                                            </dc:language>
+                                        </xsl:for-each>
+                                    </xsl:otherwise>
+                                </xsl:choose>
                             </xsl:when>
                             <xsl:otherwise>
-                                <xsl:for-each select="tokenize($language,' ')">
-                                    <dc:language>
-                                        <xsl:value-of select="."/>
-                                    </dc:language>
-                                </xsl:for-each>
+                                <xsl:choose>
+                                    <xsl:when test="fn:string-length($language) > 0">
+                                        <xsl:for-each select="tokenize($language,' ')">
+                                            <dc:language>
+                                                <xsl:value-of select="."/>
+                                            </dc:language>
+                                        </xsl:for-each>
+                                    </xsl:when>
+                                    <xsl:otherwise>
+                                        <xsl:for-each select="tokenize($language,' ')">
+                                            <dc:language>
+                                                <xsl:value-of select="."/>
+                                            </dc:language>
+                                        </xsl:for-each>
+                                    </xsl:otherwise>
+                                </xsl:choose>
                             </xsl:otherwise>
                         </xsl:choose>
                     </xsl:when>
-                    <xsl:when test="$inheritFromParent">
-                        <xsl:choose>
-                            <xsl:when test='$parentcnode/did/langmaterial'>
-                                <xsl:call-template name="language">
-                                    <xsl:with-param name="langmaterials" select="$parentcnode/did/langmaterial"></xsl:with-param>
-                                </xsl:call-template>
-                            </xsl:when>
-                            <xsl:otherwise>
-                                <xsl:for-each select="tokenize($language,' ')">
-                                    <dc:language>
-                                        <xsl:value-of select="."/>
-                                    </dc:language>
-                                </xsl:for-each>
-                            </xsl:otherwise>
-                        </xsl:choose>							
-                    </xsl:when>
                     <xsl:otherwise>
                         <xsl:choose>
-                            <xsl:when test="fn:string-length($language) > 0">
-                                <xsl:for-each select="tokenize($language,' ')">
-                                    <dc:language>
-                                        <xsl:value-of select="."/>
-                                    </dc:language>
-                                </xsl:for-each>
+                            <xsl:when test="$inheritLanguage = 'true'">
+                                <xsl:choose>
+                                    <xsl:when test='fn:string-length($inheritedLanguages) > 0'>
+                                        <xsl:copy-of select="$inheritedLanguages"/>
+                                    </xsl:when>
+                                    <xsl:otherwise>
+                                        <xsl:for-each select="tokenize($language,' ')">
+                                            <dc:language>
+                                                <xsl:value-of select="."/>
+                                            </dc:language>
+                                        </xsl:for-each>
+                                    </xsl:otherwise>
+                                </xsl:choose>
+                            </xsl:when>
+                            <xsl:when test="$inheritFromParent">
+                                <xsl:choose>
+                                    <xsl:when test='$parentcnode/did/langmaterial'>
+                                        <xsl:call-template name="language">
+                                            <xsl:with-param name="langmaterials" select="$parentcnode/did/langmaterial"></xsl:with-param>
+                                        </xsl:call-template>
+                                    </xsl:when>
+                                    <xsl:otherwise>
+                                        <xsl:for-each select="tokenize($language,' ')">
+                                            <dc:language>
+                                                <xsl:value-of select="."/>
+                                            </dc:language>
+                                        </xsl:for-each>
+                                    </xsl:otherwise>
+                                </xsl:choose>
                             </xsl:when>
                             <xsl:otherwise>
-                                <xsl:for-each select="tokenize($language,' ')">
-                                    <dc:language>
-                                        <xsl:value-of select="."/>
-                                    </dc:language>
-                                </xsl:for-each>
-                            </xsl:otherwise>																			
+                                <xsl:choose>
+                                    <xsl:when test="fn:string-length($language) > 0">
+                                        <xsl:for-each select="tokenize($language,' ')">
+                                            <dc:language>
+                                                <xsl:value-of select="."/>
+                                            </dc:language>
+                                        </xsl:for-each>
+                                    </xsl:when>
+                                    <xsl:otherwise>
+                                        <xsl:for-each select="tokenize($language,' ')">
+                                            <dc:language>
+                                                <xsl:value-of select="."/>
+                                            </dc:language>
+                                        </xsl:for-each>
+                                    </xsl:otherwise>
+                                </xsl:choose>
+                            </xsl:otherwise>
                         </xsl:choose>
                     </xsl:otherwise>
                 </xsl:choose>
@@ -616,7 +673,7 @@ http://purl.org/dc/terms/ http://www.dublincore.org/schemas/xmls/qdc/dcterms.xsd
                         </xsl:choose>
                     </xsl:otherwise>
                 </xsl:choose>
-                	
+
                 <xsl:choose>
                     <xsl:when test="$inheritFromParent">
                         <xsl:variable name="parentofparentcnode" select="$parentcnode/parent::node()"/>
@@ -654,7 +711,7 @@ http://purl.org/dc/terms/ http://www.dublincore.org/schemas/xmls/qdc/dcterms.xsd
                                     <xsl:apply-templates select='$parentofparentcnode/phystech' />
                                 </xsl:if>
                             </xsl:otherwise>
-                        </xsl:choose>																																			
+                        </xsl:choose>
                     </xsl:when>
                     <xsl:otherwise>
                         <xsl:apply-templates select="$cnode/index/indexentry/geogname"/>
@@ -662,15 +719,15 @@ http://purl.org/dc/terms/ http://www.dublincore.org/schemas/xmls/qdc/dcterms.xsd
                             <dc:rights>
                                 <xsl:value-of select="$dc_rights"/>
                             </dc:rights>
-                        </xsl:if>						
+                        </xsl:if>
                         <xsl:if test='$cnode/bioghist'>
                             <xsl:apply-templates select='$cnode/bioghist' />
                         </xsl:if>
                         <xsl:if test='$cnode/phystech'>
                             <xsl:apply-templates select='$cnode/phystech' />
-                        </xsl:if>					
+                        </xsl:if>
                     </xsl:otherwise>
-                </xsl:choose>			
+                </xsl:choose>
 
                 <xsl:if test='/ead/archdesc/did/abstract[@encodinganalog="summary"]'>
                     <europeana:unstored>
@@ -679,17 +736,17 @@ http://purl.org/dc/terms/ http://www.dublincore.org/schemas/xmls/qdc/dcterms.xsd
                 </xsl:if>
 
                 <!-- <xsl:variable name="thumbnail" select='$didnode/dao[@xlink:role="THUMBNAIL"]'/>-->
-                <xsl:variable name="thumbnail" select='$didnode/dao[@xlink:title="thumbnail"]'/> 
-                <!-- if thumbnail exists --> 
+                <xsl:variable name="thumbnail" select='$didnode/dao[@xlink:title="thumbnail"]'/>
+                <!-- if thumbnail exists -->
                 <xsl:if test="$thumbnail">
-                    <!-- if more than one thumbnail exists --> 
+                    <!-- if more than one thumbnail exists -->
                     <europeana:object>
                         <xsl:choose>
                             <xsl:when test="count($thumbnail) >= $linkPosition">
                                 <xsl:value-of select="$thumbnail[$linkPosition]/@xlink:href"/>
                             </xsl:when>
                             <xsl:otherwise>
-                                <xsl:value-of select="$thumbnail[1]/@xlink:href" /> 
+                                <xsl:value-of select="$thumbnail[1]/@xlink:href" />
                             </xsl:otherwise>
                         </xsl:choose>
                     </europeana:object>
@@ -714,17 +771,17 @@ http://purl.org/dc/terms/ http://www.dublincore.org/schemas/xmls/qdc/dcterms.xsd
                                 <europeana:type>
                                     <xsl:text>SOUND</xsl:text>
                                 </europeana:type>
-                            </xsl:when>		
+                            </xsl:when>
                             <xsl:when test=' "VIDEO" eq fn:string(@xlink:role)'>
                                 <europeana:type>
                                     <xsl:text>VIDEO</xsl:text>
                                 </europeana:type>
-                            </xsl:when>									
+                            </xsl:when>
                             <xsl:when test=' "3D" eq fn:string(@xlink:role)'>
                                 <europeana:type>
                                     <xsl:text>3D</xsl:text>
                                 </europeana:type>
-                            </xsl:when>									
+                            </xsl:when>
                             <xsl:otherwise>
                                 <europeana:type>
                                     <xsl:value-of select="$europeana_type"/>
@@ -756,17 +813,17 @@ http://purl.org/dc/terms/ http://www.dublincore.org/schemas/xmls/qdc/dcterms.xsd
                                             <europeana:type>
                                                 <xsl:text>SOUND</xsl:text>
                                             </europeana:type>
-                                        </xsl:when>		
+                                        </xsl:when>
                                         <xsl:when test=' "VIDEO" eq fn:string(@xlink:role)'>
                                             <europeana:type>
                                                 <xsl:text>VIDEO</xsl:text>
                                             </europeana:type>
-                                        </xsl:when>									
+                                        </xsl:when>
                                         <xsl:when test=' "3D" eq fn:string(@xlink:role)'>
                                             <europeana:type>
                                                 <xsl:text>3D</xsl:text>
                                             </europeana:type>
-                                        </xsl:when>									
+                                        </xsl:when>
                                         <xsl:otherwise>
                                             <europeana:type>
                                                 <xsl:value-of select="$europeana_type"/>
@@ -777,11 +834,11 @@ http://purl.org/dc/terms/ http://www.dublincore.org/schemas/xmls/qdc/dcterms.xsd
                             </xsl:otherwise>
                         </xsl:choose>
                     </xsl:otherwise>
-                </xsl:choose>				
+                </xsl:choose>
                 <europeana:rights>
                     <xsl:value-of select="$europeana_rights"/>
                 </europeana:rights>
-                
+
                 <xsl:choose>
                     <xsl:when test="$useExistingRepository='true'">
                         <xsl:choose>
@@ -810,8 +867,8 @@ http://purl.org/dc/terms/ http://www.dublincore.org/schemas/xmls/qdc/dcterms.xsd
                             </xsl:otherwise>
                         </xsl:choose>
                     </xsl:otherwise>
-                </xsl:choose>                
-                
+                </xsl:choose>
+
                 <europeana:isShownAt>
                     <xsl:value-of select="@xlink:href"/>
                 </europeana:isShownAt>
@@ -827,7 +884,7 @@ http://purl.org/dc/terms/ http://www.dublincore.org/schemas/xmls/qdc/dcterms.xsd
                 <xsl:apply-templates select="/ead/eadheader/filedesc/titlestmt/titleproper[1]" mode="generaterelation"/>
                 <xsl:text> >> </xsl:text>
                 <xsl:apply-templates select="$archdesc/did/unittitle" mode="generaterelation"/>
-            </xsl:when>	
+            </xsl:when>
             <xsl:otherwise>
                 <xsl:call-template name="generaterelation">
                     <xsl:with-param name="node" select="$node/parent::node()"/>
@@ -835,15 +892,15 @@ http://purl.org/dc/terms/ http://www.dublincore.org/schemas/xmls/qdc/dcterms.xsd
                 <xsl:text> >> </xsl:text>
                 <xsl:apply-templates select="$node/did/unittitle[1]" mode="generaterelation"/>
             </xsl:otherwise>
-        </xsl:choose>				
+        </xsl:choose>
 
     </xsl:template>
     <xsl:template match='unitid'>
         <xsl:if test='@type="call number"'>
             <xsl:value-of select="fn:replace(normalize-space(.), '[\n\t\r]', '')"/>
-        </xsl:if>		
+        </xsl:if>
     </xsl:template>
-    
+
     <xsl:template name='language'>
         <xsl:param name="langmaterials"/>
         <xsl:for-each select="$langmaterials/language/@langcode">
@@ -856,11 +913,11 @@ http://purl.org/dc/terms/ http://www.dublincore.org/schemas/xmls/qdc/dcterms.xsd
                         <xsl:value-of select="$languageWithoutSpaces"/>
                     </xsl:when>
                     <xsl:otherwise>
-	                    <xsl:for-each select="tokenize($language,' ')">
-	                        <dc:language>
-	                            <xsl:value-of select="."/>
-	                        </dc:language>
-	                    </xsl:for-each>
+                        <xsl:for-each select="tokenize($language,' ')">
+                            <dc:language>
+                                <xsl:value-of select="."/>
+                            </dc:language>
+                        </xsl:for-each>
                     </xsl:otherwise>
                 </xsl:choose>
             </dc:language>
@@ -941,8 +998,8 @@ http://purl.org/dc/terms/ http://www.dublincore.org/schemas/xmls/qdc/dcterms.xsd
         <xsl:choose>
             <xsl:when test="$useISODates='true'">
                 <xsl:choose>
-                    <xsl:when test='./@era="ce" and ./@normal'> 
-                        <xsl:analyze-string select="./@normal" 
+                    <xsl:when test='./@era="ce" and ./@normal'>
+                        <xsl:analyze-string select="./@normal"
                                             regex="(\d\d\d\d(-\d\d(-\d\d)?)?)(/(\d\d\d\d(-\d\d(-\d\d)?)?))?">
                             <xsl:matching-substring>
                                 <xsl:variable name="startdate">
@@ -960,10 +1017,10 @@ http://purl.org/dc/terms/ http://www.dublincore.org/schemas/xmls/qdc/dcterms.xsd
                                     </xsl:if>
                                     <xsl:if test="fn:string-length($enddate) > 0">
                                         <xsl:value-of select="$enddate"/>
-                                    </xsl:if>	
-                                </dc:date>		        
-                            </xsl:matching-substring>    
-                        </xsl:analyze-string>		
+                                    </xsl:if>
+                                </dc:date>
+                            </xsl:matching-substring>
+                        </xsl:analyze-string>
                     </xsl:when>
                     <xsl:otherwise>
                         <xsl:if test='fn:string-length(normalize-space(.)) > 0'>
@@ -976,16 +1033,16 @@ http://purl.org/dc/terms/ http://www.dublincore.org/schemas/xmls/qdc/dcterms.xsd
                             <dc:date>
                                 <xsl:value-of select="$notNormalizedDate"/>
                             </dc:date>
-                        </xsl:if>	
+                        </xsl:if>
                     </xsl:otherwise>
-                </xsl:choose> 		
+                </xsl:choose>
             </xsl:when>
             <xsl:otherwise>
                 <xsl:if test='fn:string-length(normalize-space(.)) > 0'>
                     <dc:date>
                         <xsl:value-of select="normalize-space(.)"/>
                     </dc:date>
-                </xsl:if>	
+                </xsl:if>
             </xsl:otherwise>
         </xsl:choose>
     </xsl:template>
@@ -1000,19 +1057,19 @@ http://purl.org/dc/terms/ http://www.dublincore.org/schemas/xmls/qdc/dcterms.xsd
             </xsl:when>
             <xsl:when test=' "SOUND" eq fn:string($role)'>
                 <xsl:text>Sound</xsl:text>
-            </xsl:when>		
+            </xsl:when>
             <xsl:when test=' "VIDEO" eq fn:string($role)'>
                 <xsl:text>MovingImage</xsl:text>
-            </xsl:when>	
+            </xsl:when>
             <xsl:when test=' "3D" eq fn:string($role)'>
                 <xsl:text>PhysicalObject</xsl:text>
-            </xsl:when>	
+            </xsl:when>
             <xsl:otherwise>
                 <xsl:call-template name="convertToDcType">
                     <xsl:with-param name="role" select="$europeana_type"></xsl:with-param>
                 </xsl:call-template>
             </xsl:otherwise>
-        </xsl:choose>	
+        </xsl:choose>
     </xsl:template>
     <xsl:template name="altformavail">
         <xsl:param name="altformavails"/>
@@ -1037,7 +1094,7 @@ http://purl.org/dc/terms/ http://www.dublincore.org/schemas/xmls/qdc/dcterms.xsd
                 <dc:coverage>
                     <xsl:value-of select="."/>
                 </dc:coverage>
-            </xsl:for-each>	
+            </xsl:for-each>
             <xsl:for-each select="$controlaccesses/famname">
                 <dc:coverage>
                     <xsl:value-of select="."/>
@@ -1060,7 +1117,7 @@ http://purl.org/dc/terms/ http://www.dublincore.org/schemas/xmls/qdc/dcterms.xsd
             </xsl:for-each>
         </xsl:for-each>
     </xsl:template>
-    
+
     <xsl:template name="generateRecordForEad">
         <record>
             <dc:identifier>
@@ -1092,10 +1149,21 @@ http://purl.org/dc/terms/ http://www.dublincore.org/schemas/xmls/qdc/dcterms.xsd
             </xsl:if>
             <dc:subject>Finding aid</dc:subject>
             <xsl:choose>
-                <xsl:when test='/ead/archdesc/did/langmaterial'>
-                    <xsl:call-template name="language">
-                        <xsl:with-param name="langmaterials" select='/ead/archdesc/did/langmaterial' />
-                    </xsl:call-template>
+                <xsl:when test="$useExistingLanguage='true'">
+                    <xsl:choose>
+                        <xsl:when test='/ead/archdesc/did/langmaterial'>
+                            <xsl:call-template name="language">
+                                <xsl:with-param name="langmaterials" select='/ead/archdesc/did/langmaterial' />
+                            </xsl:call-template>
+                        </xsl:when>
+                        <xsl:otherwise>
+                            <xsl:for-each select="tokenize($language,' ')">
+                                <dc:language>
+                                    <xsl:value-of select="."/>
+                                </dc:language>
+                            </xsl:for-each>
+                        </xsl:otherwise>
+                    </xsl:choose>
                 </xsl:when>
                 <xsl:otherwise>
                     <xsl:for-each select="tokenize($language,' ')">
@@ -1105,6 +1173,7 @@ http://purl.org/dc/terms/ http://www.dublincore.org/schemas/xmls/qdc/dcterms.xsd
                     </xsl:for-each>
                 </xsl:otherwise>
             </xsl:choose>
+
             <europeana:provider>
                 <xsl:value-of select="$europeana_provider"/>
             </europeana:provider>
@@ -1155,7 +1224,7 @@ http://purl.org/dc/terms/ http://www.dublincore.org/schemas/xmls/qdc/dcterms.xsd
             <xsl:value-of select="fn:replace(normalize-space($content), '[\n\t\r]', '')"/>
         </dc:source>
     </xsl:template>
-    
+
     <xsl:template match="repository" mode="useExistingDataProvider">
         <xsl:if test='position() = 1'>
             <europeana:dataProvider>
@@ -1166,7 +1235,7 @@ http://purl.org/dc/terms/ http://www.dublincore.org/schemas/xmls/qdc/dcterms.xsd
             </europeana:dataProvider>
         </xsl:if>
     </xsl:template>
-    
+
     <xsl:template match="repository" mode="archdesc">
         <dc:source>
             <xsl:variable name='content'>
@@ -1175,7 +1244,7 @@ http://purl.org/dc/terms/ http://www.dublincore.org/schemas/xmls/qdc/dcterms.xsd
             <xsl:value-of select="fn:replace(normalize-space($content), '[\n\t\r]', '')"/>
         </dc:source>
     </xsl:template>
-    
+
     <xsl:template match='publisher'>
         <xsl:variable name="publisherContent">
             <xsl:value-of select="node()"/>
@@ -1188,8 +1257,8 @@ http://purl.org/dc/terms/ http://www.dublincore.org/schemas/xmls/qdc/dcterms.xsd
         <xsl:choose>
             <xsl:when test="$useISODates='true'">
                 <xsl:choose>
-                    <xsl:when test='./@era="ce" and ./@normal'> 
-                        <xsl:analyze-string select="./@normal" 
+                    <xsl:when test='./@era="ce" and ./@normal'>
+                        <xsl:analyze-string select="./@normal"
                                             regex="(\d\d\d\d(-\d\d(-\d\d)?)?)(/(\d\d\d\d(-\d\d(-\d\d)?)?))?">
                             <xsl:matching-substring>
                                 <xsl:variable name="startdate">
@@ -1207,10 +1276,10 @@ http://purl.org/dc/terms/ http://www.dublincore.org/schemas/xmls/qdc/dcterms.xsd
                                     </xsl:if>
                                     <xsl:if test="fn:string-length($enddate) > 0">
                                         <xsl:value-of select="$enddate"/>
-                                    </xsl:if>	
+                                    </xsl:if>
                                 </dcterms:issued>
-                            </xsl:matching-substring>    
-                        </xsl:analyze-string>		
+                            </xsl:matching-substring>
+                        </xsl:analyze-string>
                     </xsl:when>
                     <xsl:otherwise>
                         <xsl:if test='fn:string-length(normalize-space(.)) > 0'>
@@ -1223,16 +1292,16 @@ http://purl.org/dc/terms/ http://www.dublincore.org/schemas/xmls/qdc/dcterms.xsd
                             <dcterms:issued>
                                 <xsl:value-of select="$notNormalizedDate"/>
                             </dcterms:issued>
-                        </xsl:if>	
+                        </xsl:if>
                     </xsl:otherwise>
-                </xsl:choose> 		
+                </xsl:choose>
             </xsl:when>
             <xsl:otherwise>
                 <xsl:if test='fn:string-length(normalize-space(.)) > 0'>
                     <dcterms:issued>
                         <xsl:value-of select="normalize-space(.)"/>
                     </dcterms:issued>
-                </xsl:if>	
+                </xsl:if>
             </xsl:otherwise>
         </xsl:choose>
     </xsl:template>
@@ -1299,5 +1368,5 @@ http://purl.org/dc/terms/ http://www.dublincore.org/schemas/xmls/qdc/dcterms.xsd
     <xsl:template mode="bibref-only-nodecontent" match="name|title|imprint"/>
     <xsl:template match="list" />
     <xsl:template match="table" />
-    
+
 </xsl:stylesheet>
