@@ -26,10 +26,8 @@ public class LinkFormatChecker extends ExtensionFunctionDefinition {
 
     private static final StructuredQName FUNCTION_NAME = new StructuredQName("ape", "http://www.archivesportaleurope.net/functions", "checkLink");
     private static final Pattern URL_PATTERN = Pattern.compile("^(http|https|ftp)\\://[a-zA-Z0-9\\-\\.]+\\.[a-zA-Z]{2,3}(:[a-zA-Z0-9]*)?/?([a-zA-Z0-9\\-\\._\\?\\,\\'/\\\\\\+&amp;%\\$#\\=~])*$");
-    private String url;
 
-    public LinkFormatChecker(String url) {
-        this.url = url;
+    public LinkFormatChecker() {
     }
 
     @Override
@@ -49,15 +47,15 @@ public class LinkFormatChecker extends ExtensionFunctionDefinition {
 
     @Override
     public ExtensionFunctionCall makeCallExpression() {
-        return new LinkFormatCheckerCall(url);
+        return new LinkFormatCheckerCall();
     }
 
     public class LinkFormatCheckerCall extends ExtensionFunctionCall {
 
         private String url;
 
-        public LinkFormatCheckerCall(String url) {
-            this.url = url;
+        public LinkFormatCheckerCall() {
+
         }
 
         @Override
@@ -90,6 +88,6 @@ public class LinkFormatChecker extends ExtensionFunctionDefinition {
         } catch (Exception ex) {
             throw new RuntimeException(ex);
         }
-        return "Invalid link!";
+        return null;
     }
 }

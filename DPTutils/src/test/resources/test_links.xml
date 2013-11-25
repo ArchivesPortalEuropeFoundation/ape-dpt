@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<set>
+    <entry value="http://www.google.com" />
+    <entry value="https://www.google.com" />
+    <entry value="ftp://some.testserver.org" />
+    <entry value="www.google.com" />
+    <entry value="http://google.com" />
+    <entry value="google.com" />
+    <entry value="justSomeRandomWord" />
+    <entry value="1234567890" />
+    <entry value="#'@qwer§" />
+    <entry value="http://www.google.de#someAnchor" />
+</set>
