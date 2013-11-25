@@ -683,10 +683,10 @@
         <xsl:text> </xsl:text>
         <extref>
             <xsl:if test="@href">
-                <xsl:attribute name="xlink:href" select="@href"/>
+                <xsl:attribute name="xlink:href" select="ape:checkLink(@href)"/>
             </xsl:if>
             <xsl:if test="@*:href">
-                <xsl:attribute name="xlink:href" select="@*:href"/>
+                <xsl:attribute name="xlink:href" select="ape:checkLink(@*:href)"/>
             </xsl:if>
             <xsl:if test="@title">
                 <xsl:attribute name="xlink:title" select="@title"/>
@@ -1149,7 +1149,7 @@
             <xsl:if test="../../extref/corpname">
                 <xsl:value-of select="../../extref/corpname"/>
                 <xsl:if test="../../extref/@href">
-                    <xsl:text> (</xsl:text><xsl:value-of select="extref/@href"/><xsl:text>)</xsl:text>
+                    <xsl:text> (</xsl:text><xsl:value-of select="ape:checkLink(extref/@href)"/><xsl:text>)</xsl:text>
                 </xsl:if>
             </xsl:if>
         </addressline>
@@ -1160,10 +1160,10 @@
         <xsl:if test="not(../../address/addressline)">
             <extref>
                 <xsl:if test="@href">
-                    <xsl:attribute name="xlink:href" select="@href"/>
+                    <xsl:attribute name="xlink:href" select="ape:checkLink(@href)"/>
                 </xsl:if>
                 <xsl:if test="@xlink:href">
-                    <xsl:attribute name="xlink:href" select="@xlink:href"/>
+                    <xsl:attribute name="xlink:href" select="ape:checkLink(@xlink:href)"/>
                 </xsl:if>
                 <xsl:apply-templates select="node()" mode="#current"/>
             </extref>
@@ -1197,7 +1197,7 @@
     <xsl:template match="archdesc/did/dao" mode="copy">
         <dao>
             <xsl:if test="@*:href!=''">
-                <xsl:attribute name="xlink:href" select="@*:href"/>
+                <xsl:attribute name="xlink:href" select="ape:checkLink(@*:href)"/>
             </xsl:if>
             <xsl:if test="@*:title!=''">
                 <xsl:attribute name="xlink:title" select="@*:title"/>
@@ -1296,10 +1296,10 @@
             </xsl:for-each>
             <extref>
                 <xsl:if test="@*:href!='' and not(contains(@*:href, '['))">
-                    <xsl:attribute name="xlink:href" select="@*:href"/>
+                    <xsl:attribute name="xlink:href" select="ape:checkLink(@*:href)"/>
                 </xsl:if>
                 <xsl:if test="@*:target!=''">
-                    <xsl:attribute name="xlink:href" select="@*:target"/>
+                    <xsl:attribute name="xlink:href" select="ape:checkLink(@*:target)"/>
                 </xsl:if>
                 <xsl:if test="@*:title!=''">
                     <xsl:attribute name="xlink:title" select="@*:title"/>
@@ -1414,7 +1414,7 @@
     <xsl:template match="fileplan/p/archref" mode="copy fonds nested">
         <archref>
             <xsl:if test="@*:href!=''">
-                <xsl:attribute name="xlink:href" select="@*:href"/>
+                <xsl:attribute name="xlink:href" select="ape:checkLink(@*:href)"/>
             </xsl:if>
             <xsl:if test="@*:title!=''">
                 <xsl:attribute name="xlink:title" select="@*:title"/>
@@ -1468,7 +1468,7 @@
     <xsl:template match="bioghist[not(ancestor::dsc)]/dao" mode="copy nested">
         <dao>
             <xsl:if test="@*:href!=''">
-                <xsl:attribute name="xlink:href" select="@*:href"/>
+                <xsl:attribute name="xlink:href" select="ape:checkLink(@*:href)"/>
             </xsl:if>
             <xsl:if test="@*:title!=''">
                 <xsl:attribute name="xlink:title" select="@*:title"/>
@@ -1615,10 +1615,10 @@
     <xsl:template match="otherfindaid/p/archref | otherfindaid/p/ref/archref" mode="fonds intermediate lowest">
         <extref>
             <xsl:if test="@*:href">
-                <xsl:attribute name="xlink:href" select="@*:href"/>
+                <xsl:attribute name="xlink:href" select="ape:checkLink(@*:href)"/>
             </xsl:if>
             <xsl:if test="@href">
-                <xsl:attribute name="xlink:href" select="@href"/>
+                <xsl:attribute name="xlink:href" select="ape:checkLink(@href)"/>
             </xsl:if>
             <xsl:if test="@*:title">
                 <xsl:attribute name="xlink:title" select="@*:title"/>
@@ -1963,7 +1963,7 @@
     <xsl:template match="scopecontent/dao" mode="copy fonds intermediate lowest nested">
         <dao>
             <xsl:if test="@*:href!=''">
-                <xsl:attribute name="xlink:href" select="@*:href"/>
+                <xsl:attribute name="xlink:href" select="ape:checkLink(@*:href)"/>
             </xsl:if>
             <xsl:if test="@*:title!=''">
                 <xsl:attribute name="xlink:title" select="@*:title"/>
@@ -2009,10 +2009,10 @@
     <xsl:template match="bibliography/bibref" mode="copy fonds intermediate lowest">
         <bibref>
             <xsl:if test="@*:href">
-                <xsl:attribute name="xlink:href" select="@*:href"/>
+                <xsl:attribute name="xlink:href" select="ape:checkLink(@*:href)"/>
             </xsl:if>
             <xsl:if test="@href">
-                <xsl:attribute name="xlink:href" select="@href"/>
+                <xsl:attribute name="xlink:href" select="ape:checkLink(@href)"/>
             </xsl:if>
             <xsl:if test="@*:title">
                 <xsl:attribute name="xlink:title" select="@*:title"/>
@@ -2029,10 +2029,10 @@
             <xsl:if test="@href or @*:href">
                 <extref>
                     <xsl:if test="@*:href">
-                        <xsl:attribute name="xlink:href" select="@*:href"/>
+                        <xsl:attribute name="xlink:href" select="ape:checkLink(@*:href)"/>
                     </xsl:if>
                     <xsl:if test="@href">
-                        <xsl:attribute name="xlink:href" select="@href"/>
+                        <xsl:attribute name="xlink:href" select="ape:checkLink(@href)"/>
                     </xsl:if>
                     <xsl:if test="@*:title">
                         <xsl:attribute name="xlink:title" select="@*:title"/>
@@ -2054,10 +2054,10 @@
             <xsl:if test="@href or @*:href">
                 <extref>
                     <xsl:if test="@*:href">
-                        <xsl:attribute name="xlink:href" select="@*:href"/>
+                        <xsl:attribute name="xlink:href" select="ape:checkLink(@*:href)"/>
                     </xsl:if>
                     <xsl:if test="@href">
-                        <xsl:attribute name="xlink:href" select="@href"/>
+                        <xsl:attribute name="xlink:href" select="ape:checkLink(@href)"/>
                     </xsl:if>
                     <xsl:if test="@*:title">
                         <xsl:attribute name="xlink:title" select="@*:title"/>
@@ -2102,10 +2102,10 @@
     <xsl:template match="otherfindaid/bibref/extref | relatedmaterial/bibref/extref" mode="copy fonds intermediate lowest nested">
         <extref>
             <xsl:if test="@href">
-                <xsl:attribute name="xlink:href" select="@href"/>
+                <xsl:attribute name="xlink:href" select="ape:checkLink(@href)"/>
             </xsl:if>
             <xsl:if test="@*:href">
-                <xsl:attribute name="xlink:href" select="@*:href"/>
+                <xsl:attribute name="xlink:href" select="ape:checkLink(@*:href)"/>
             </xsl:if>
             <xsl:apply-templates select="node()" mode="#current"/>
         </extref>
@@ -2115,10 +2115,10 @@
         <p>
             <extref>
                 <xsl:if test="@href">
-                    <xsl:attribute name="xlink:href" select="@href"/>
+                    <xsl:attribute name="xlink:href" select="ape:checkLink(@href)"/>
                 </xsl:if>
                 <xsl:if test="@*:href">
-                    <xsl:attribute name="xlink:href" select="@*:href"/>
+                    <xsl:attribute name="xlink:href" select="ape:checkLink(@*:href)"/>
                 </xsl:if>
                 <xsl:apply-templates select="node()" mode="#current"/>
             </extref>
@@ -2426,10 +2426,10 @@
     <xsl:template match="unitid/extptr" mode="fonds intermediate lowest">
         <extptr>
             <xsl:if test="@href!=''">
-                <xsl:attribute name="xlink:href" select="@href"/>
+                <xsl:attribute name="xlink:href" select="ape:checkLink(@href)"/>
             </xsl:if>
             <xsl:if test="@*:href!=''">
-                <xsl:attribute name="xlink:href" select="@*:href"/>
+                <xsl:attribute name="xlink:href" select="ape:checkLink(@*:href)"/>
             </xsl:if>
             <xsl:if test="@title!=''">
                 <xsl:attribute name="xlink:title" select="@title"/>
@@ -2444,10 +2444,10 @@
     <xsl:template match="unitid/extref" mode="copy fonds intermediate lowest">
         <extptr>
             <xsl:if test="@href!=''">
-                <xsl:attribute name="xlink:href" select="@href"/>
+                <xsl:attribute name="xlink:href" select="ape:checkLink(@href)"/>
             </xsl:if>
             <xsl:if test="@*:href!=''">
-                <xsl:attribute name="xlink:href" select="@*:href"/>
+                <xsl:attribute name="xlink:href" select="ape:checkLink(@*:href)"/>
             </xsl:if>
             <xsl:if test="@title!=''">
                 <xsl:attribute name="xlink:title" select="@title"/>
@@ -2542,10 +2542,10 @@
             <xsl:for-each select="../daogrp/daoloc | ../odd/daogrp/daoloc | ../daogrp/dao">
                 <dao>
                     <xsl:if test="@href!=''">
-                        <xsl:attribute name="xlink:href" select="@href"/>
+                        <xsl:attribute name="xlink:href" select="ape:checkLink(@href)"/>
                     </xsl:if>
                     <xsl:if test="@*:href!=''">
-                        <xsl:attribute name="xlink:href" select="@*:href"/>
+                        <xsl:attribute name="xlink:href" select="ape:checkLink(@*:href)"/>
                     </xsl:if>
                     <xsl:if test="@title!=''">
                         <xsl:attribute name="xlink:title" select="@title"/>
@@ -2617,9 +2617,9 @@
     <xsl:template match="did/dao" name="dao" mode="fonds intermediate lowest">
         <dao>
             <xsl:choose>
-                <xsl:when test="(@xlink:href != '') and (@href != '')"><xsl:attribute name="xlink:href" select="@xlink:href"/></xsl:when>
-                <xsl:when test="@*:href != ''"><xsl:attribute name="xlink:href" select="@*:href"/></xsl:when>
-                <xsl:otherwise><xsl:if test="@href != ''"><xsl:attribute name="xlink:href" select="@href"/></xsl:if></xsl:otherwise>
+                <xsl:when test="(@xlink:href != '') and (@href != '')"><xsl:attribute name="xlink:href" select="ape:checkLink(@xlink:href)"/></xsl:when>
+                <xsl:when test="@*:href != ''"><xsl:attribute name="xlink:href" select="ape:checkLink(@*:href)"/></xsl:when>
+                <xsl:otherwise><xsl:if test="@href != ''"><xsl:attribute name="xlink:href" select="ape:checkLink(@href)"/></xsl:if></xsl:otherwise>
             </xsl:choose>
             <xsl:if test="@title!=''">
                 <xsl:attribute name="xlink:title" select="@title"/>
@@ -2668,17 +2668,17 @@
             <xsl:when test="@label='reference' or @label='thumb' or @linktype='locator'">
                 <dao>
                     <xsl:if test="@href!=''">
-                        <xsl:attribute name="xlink:href" select="@href"/>
+                        <xsl:attribute name="xlink:href" select="ape:checkLink(@href)"/>
                     </xsl:if>
                     <xsl:if test="@*:href!=''">
-                        <xsl:attribute name="xlink:href" select="@*:href"/>
+                        <xsl:attribute name="xlink:href" select="ape:checkLink(@*:href)"/>
                     </xsl:if>
                     <xsl:call-template name="daoRoleType" />
                 </dao>
             </xsl:when>
             <xsl:when test="@xlink:href">
                 <dao>
-                    <xsl:attribute name="xlink:href" select="@xlink:href"/>
+                    <xsl:attribute name="xlink:href" select="ape:checkLink(@xlink:href)"/>
                     <xsl:if test="@xlink:title">
                         <xsl:attribute name="xlink:title" select="@xlink:title"/>
                     </xsl:if>
@@ -2687,7 +2687,7 @@
             </xsl:when>
             <xsl:when test="@href">
             <dao>
-                <xsl:attribute name="xlink:href" select="@href"/>
+                <xsl:attribute name="xlink:href" select="ape:checkLink(@href)"/>
                 <xsl:if test="@title">
                     <xsl:attribute name="xlink:title" select="@title"/>
                 </xsl:if>
