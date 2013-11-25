@@ -44,6 +44,7 @@ import eu.apenet.dpt.utils.util.extendxsl.CounterCLevel;
 import eu.apenet.dpt.utils.util.extendxsl.CounterCLevelCall;
 import eu.apenet.dpt.utils.util.extendxsl.DateNormalization;
 import eu.apenet.dpt.utils.util.extendxsl.FlagSet;
+import eu.apenet.dpt.utils.util.extendxsl.LinkFormatChecker;
 import eu.apenet.dpt.utils.util.extendxsl.Oai2EadNormalization;
 import eu.apenet.dpt.utils.util.extendxsl.XmlQualityChecker;
 import eu.apenet.dpt.utils.util.extendxsl.XmlQualityCheckerCall;
@@ -56,7 +57,7 @@ public class TransformationTool {
     private static final String CONVERTED_APE_EAD_VERSION = "Converted_apeEAD_version_";
 	private static final Logger LOG = Logger.getLogger(TransformationTool.class);
     private static final String CHARACTER_SET = "UTF-8";
-    
+
     public static StringWriter createTransformation(InputStream inputStream, Writer writer, Source xsltSource, Map<String, String> parameters) throws SAXException {
         try {
             XMLReader saxParser =  XMLReaderFactory.createXMLReader();
@@ -65,6 +66,7 @@ public class TransformationTool {
             DateNormalization dateNormalization = new DateNormalization();
             Oai2EadNormalization oai2EadNormalization = new Oai2EadNormalization();
             FlagSet flagSet = new FlagSet();
+            LinkFormatChecker linkFormatChecker = new LinkFormatChecker();
 
             InputSource is = new InputSource(inputStream);
             SAXSource xmlSource = new SAXSource(saxParser, is);
@@ -73,6 +75,7 @@ public class TransformationTool {
             processor.registerExtensionFunction(dateNormalization);
             processor.registerExtensionFunction(oai2EadNormalization);
             processor.registerExtensionFunction(flagSet);
+            processor.registerExtensionFunction(linkFormatChecker);
 
             XsltCompiler compiler = processor.newXsltCompiler();
 
@@ -138,6 +141,7 @@ public class TransformationTool {
             DateNormalization dateNormalization = new DateNormalization(baseURI);
             Oai2EadNormalization oai2EadNormalization = new Oai2EadNormalization();
             FlagSet flagSet = new FlagSet();
+            LinkFormatChecker linkFormatChecker = new LinkFormatChecker();
 
             InputSource is = new InputSource(inputFileStream);
             SAXSource xmlSource = new SAXSource(saxParser, is);
@@ -146,6 +150,7 @@ public class TransformationTool {
             processor.registerExtensionFunction(dateNormalization);
             processor.registerExtensionFunction(oai2EadNormalization);
             processor.registerExtensionFunction(flagSet);
+            processor.registerExtensionFunction(linkFormatChecker);
 
             if(extensionFunctionCall == null || extensionFunctionCall instanceof CounterCLevelCall) {
                 if(extensionFunctionCall == null)
@@ -245,7 +250,7 @@ public class TransformationTool {
     	String version =  TransformationTool.class.getPackage().getImplementationVersion();
         if (StringUtils.isEmpty(version)) {
         	version= "DEV-VERSION";
-        } 
+        }
         return version;
     }
     public static String getFullVersion(){
