@@ -727,7 +727,7 @@ public class EseOptionsPanel extends JPanel {
         		}
         	} else if (this.inheritLanguageGroup.getSelection().getActionCommand().equalsIgnoreCase(EseOptionsPanel.YES)) {
         		if (!this.ead2EseInformation.isLanguagesOnParent()) {
-        			throw new Exception("The higher levels have not an associated language");
+        			throw new Exception("The higher levels do not have an associated language");
         		}
         	}
 
@@ -868,7 +868,11 @@ public class EseOptionsPanel extends JPanel {
                             progressFrame.stop();
                         }
                     } catch (Exception ex1) {
-                        DataPreparationToolGUI.createErrorOrWarningPanel(ex1, false, labels.getString("ese.formNotFilledError"), parent);
+                        if(ex1.getMessage().equals("At least one DAO does not have an associated language. Please inherit the language or provide it manually")){
+                            JOptionPane.showMessageDialog(parent, "At least one DAO does not have an associated language. Please inherit the language or provide it manually.", "Error", JOptionPane.WARNING_MESSAGE);
+                        } else {
+                            DataPreparationToolGUI.createErrorOrWarningPanel(ex1, false, labels.getString("ese.formNotFilledError"), parent);
+                        }
                     }
                     dataPreparationToolGUI.getFinalAct().run();
                     dataPreparationToolGUI.getXmlEadList().clearSelection();
