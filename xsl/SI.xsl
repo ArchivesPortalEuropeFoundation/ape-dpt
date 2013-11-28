@@ -95,82 +95,41 @@
 
     <!-- ead -->
     <xsl:template match="*:ExportRoot" name="ead" mode="top">
-        <xsl:choose>
-            <xsl:when test="$useXSD10 = 'true'">
-                <ead xmlns="urn:isbn:1-931666-22-9" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:isbn:1-931666-22-9 http://www.archivesportaleurope.net/Portal/profiles/apeEAD_XSD1.0.xsd http://www.w3.org/1999/xlink http://www.loc.gov/standards/xlink/xlink.xsd" audience="external">
-                    <eadheader countryencoding="iso3166-1" dateencoding="iso8601" langencoding="iso639-2b" repositoryencoding="iso15511" scriptencoding="iso15924" relatedencoding="MARC21">
-                        <eadid>
-                            <xsl:if test="normalize-space($mainagencycode)">
-                                <xsl:attribute name="mainagencycode" select="$mainagencycode"/>
-                            </xsl:if>
-                            <xsl:if test="normalize-space($countrycode)">
-                                <xsl:attribute name="countrycode" select="$countrycode"/>
-                            </xsl:if>
-                            <xsl:attribute name="identifier">
-                                <xsl:value-of select="$countrycode"/>_<xsl:value-of select="$mainagencycode"/>
-                            </xsl:attribute>
-                            <xsl:value-of select="$eadidmissing"/>
-                        </eadid>
-                        <filedesc>
-                            <titlestmt>
-                                <titleproper>SOME TITLE</titleproper>
-                            </titlestmt>
-                        </filedesc>
-                        <revisiondesc>
-                            <change>
-                                <date />
-                                <item>Converted_apeEAD_version_<xsl:value-of select="$versionnb"/></item>
-                            </change>
-                        </revisiondesc>
-	  	            </eadheader>
-                    <archdesc level="fonds">
-                        <did>
-                            <unitid/>
-                        </did>
-                        <dsc type="othertype">
-                            <xsl:apply-templates select="node()" mode="copy"/>
-                        </dsc>
-                    </archdesc>
-                </ead>
-            </xsl:when>
-            <xsl:otherwise>
-                <ead xmlns="urn:isbn:1-931666-22-9" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:isbn:1-931666-22-9 http://www.archivesportaleurope.net/Portal/profiles/apeEAD.xsd http://www.w3.org/1999/xlink http://www.loc.gov/standards/xlink/xlink.xsd" audience="external">
-                    <eadheader countryencoding="iso3166-1" dateencoding="iso8601" langencoding="iso639-2b" repositoryencoding="iso15511" scriptencoding="iso15924" relatedencoding="MARC21">
-                        <eadid>
-                            <xsl:if test="normalize-space($mainagencycode)">
-                                <xsl:attribute name="mainagencycode" select="$mainagencycode"/>
-                            </xsl:if>
-                            <xsl:if test="normalize-space($countrycode)">
-                                <xsl:attribute name="countrycode" select="$countrycode"/>
-                            </xsl:if>
-                            <xsl:attribute name="identifier">
-                                <xsl:value-of select="$countrycode"/>_<xsl:value-of select="$mainagencycode"/>
-                            </xsl:attribute>
-                            <xsl:value-of select="$eadidmissing"/>
-                        </eadid>
-                        <filedesc>
-                            <titlestmt>
-                                <titleproper>SOME TITLE</titleproper>
-                            </titlestmt>
-                        </filedesc>
-                        <revisiondesc>
-                            <change>
-                                <date />
-                                <item>Converted_apeEAD_version_<xsl:value-of select="$versionnb"/></item>
-                            </change>
-                        </revisiondesc>
-	  	            </eadheader>
-                    <archdesc level="fonds">
-                        <did>
-                            <unitid/>
-                        </did>
-                        <dsc type="othertype">
-                            <xsl:apply-templates select="node()" mode="copy"/>
-                        </dsc>
-                    </archdesc>
-                </ead>
-            </xsl:otherwise>
-        </xsl:choose>
+        <ead xmlns="urn:isbn:1-931666-22-9" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:isbn:1-931666-22-9 http://www.archivesportaleurope.net/Portal/profiles/apeEAD_XSD1.0.xsd http://www.w3.org/1999/xlink http://www.loc.gov/standards/xlink/xlink.xsd" audience="external">
+            <eadheader countryencoding="iso3166-1" dateencoding="iso8601" langencoding="iso639-2b" repositoryencoding="iso15511" scriptencoding="iso15924" relatedencoding="MARC21">
+                <eadid>
+                    <xsl:if test="normalize-space($mainagencycode)">
+                        <xsl:attribute name="mainagencycode" select="$mainagencycode"/>
+                    </xsl:if>
+                    <xsl:if test="normalize-space($countrycode)">
+                        <xsl:attribute name="countrycode" select="$countrycode"/>
+                    </xsl:if>
+                    <xsl:attribute name="identifier">
+                        <xsl:value-of select="$countrycode"/>_<xsl:value-of select="$mainagencycode"/>
+                    </xsl:attribute>
+                    <xsl:value-of select="$eadidmissing"/>
+                </eadid>
+                <filedesc>
+                    <titlestmt>
+                        <titleproper>SOME TITLE</titleproper>
+                    </titlestmt>
+                </filedesc>
+                <revisiondesc>
+                    <change>
+                        <date />
+                        <item>Converted_apeEAD_version_<xsl:value-of select="$versionnb"/></item>
+                    </change>
+                </revisiondesc>
+            </eadheader>
+            <archdesc level="fonds">
+                <did>
+                    <unitid/>
+                </did>
+                <dsc type="othertype">
+                    <xsl:apply-templates select="node()" mode="copy"/>
+                </dsc>
+            </archdesc>
+        </ead>
     </xsl:template>
 
     <!-- c -->

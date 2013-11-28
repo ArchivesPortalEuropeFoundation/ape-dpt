@@ -179,24 +179,12 @@
 
     <!-- ead -->
     <xsl:template match="ead" name="ead" mode="top">
-        <xsl:choose>
-            <xsl:when test="$useXSD10 = 'true'">
-                <ead xmlns="urn:isbn:1-931666-22-9"
-                     xmlns:xlink="http://www.w3.org/1999/xlink"
-                     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-                     xsi:schemaLocation="urn:isbn:1-931666-22-9 http://www.archivesportaleurope.net/Portal/profiles/apeEAD_XSD1.0.xsd http://www.w3.org/1999/xlink http://www.loc.gov/standards/xlink/xlink.xsd" audience="external">
-                    <xsl:apply-templates select="node()" mode="copy"/>
-                </ead>
-            </xsl:when>
-            <xsl:otherwise>
-                <ead xmlns="urn:isbn:1-931666-22-9"
-                     xmlns:xlink="http://www.w3.org/1999/xlink"
-                     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-                     xsi:schemaLocation="urn:isbn:1-931666-22-9 http://www.archivesportaleurope.net/Portal/profiles/apeEAD.xsd http://www.w3.org/1999/xlink http://www.loc.gov/standards/xlink/xlink.xsd" audience="external">
-                    <xsl:apply-templates select="node()" mode="copy"/>
-                </ead>
-            </xsl:otherwise>
-        </xsl:choose>
+        <ead xmlns="urn:isbn:1-931666-22-9"
+             xmlns:xlink="http://www.w3.org/1999/xlink"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xsi:schemaLocation="urn:isbn:1-931666-22-9 http://www.archivesportaleurope.net/Portal/profiles/apeEAD_XSD1.0.xsd http://www.w3.org/1999/xlink http://www.loc.gov/standards/xlink/xlink.xsd" audience="external">
+            <xsl:apply-templates select="node()" mode="copy"/>
+        </ead>
     </xsl:template>
 
     <!-- eadheader -->

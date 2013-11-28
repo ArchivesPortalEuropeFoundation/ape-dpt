@@ -6,7 +6,7 @@
                 xmlns:ape="http://www.archivesportaleurope.net/functions"
                 xmlns:saxon="http://saxon.sf.net/"
                 xmlns:xlink="http://www.w3.org/1999/xlink"
-                xsi:schemaLocation="urn:isbn:1-931666-22-9 http://www.archivesportaleurope.net/Portal/profiles/apeEAD.xsd"
+                xsi:schemaLocation="urn:isbn:1-931666-22-9 http://www.archivesportaleurope.net/Portal/profiles/apeEAD_XSD1.0.xsd"
                 xpath-default-namespace="urn:isbn:1-931666-22-9"
                 exclude-result-prefixes="xsl xs ape saxon">
 
