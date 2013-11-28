@@ -2568,21 +2568,21 @@
             <xsl:for-each select="following-sibling::descgrp/p">
                 <xsl:call-template name="note"/>
             </xsl:for-each>
-            <xsl:variable name="parentNode" select="current()/parent::node()"/>
-            <xsl:if test="$parentNode/bioghist/p/persname | $parentNode/bioghist/p/list/item/persname | current()/unittitle/persname[text()!=''] | current()/parent::node()/originalsloc/p/persname">
-                <origination label="pre">
-                    <xsl:for-each select="$parentNode/bioghist/p/persname | $parentNode/bioghist/p/list/item/persname | current()/unittitle/persname | $parentNode/originalsloc/p/persname">
-                        <persname><xsl:value-of select="text()"/></persname>
-                    </xsl:for-each>
-                </origination>
-            </xsl:if>
-            <xsl:if test="$parentNode/bibliography/p/bibref/persname | $parentNode/relatedmaterial/p/persname | $parentNode/scopecontent/p/list/item/persname | $parentNode/scopecontent/p/persname">
-                <origination label="final">
-                    <xsl:for-each select="$parentNode/bibliography/p/bibref/persname | $parentNode/relatedmaterial/p/persname | $parentNode/scopecontent/p/list/item/persname | $parentNode/scopecontent/p/persname">
-                        <persname><xsl:value-of select="text()"/></persname>
-                    </xsl:for-each>
-                </origination>
-            </xsl:if>
+            <!--<xsl:variable name="parentNode" select="current()/parent::node()"/>-->
+            <!--<xsl:if test="$parentNode/bioghist/p/persname | $parentNode/bioghist/p/list/item/persname | current()/unittitle/persname[text()!=''] | current()/parent::node()/originalsloc/p/persname">-->
+                <!--<origination label="pre">-->
+                    <!--<xsl:for-each select="$parentNode/bioghist/p/persname | $parentNode/bioghist/p/list/item/persname | current()/unittitle/persname | $parentNode/originalsloc/p/persname">-->
+                        <!--<persname><xsl:value-of select="text()"/></persname>-->
+                    <!--</xsl:for-each>-->
+                <!--</origination>-->
+            <!--</xsl:if>-->
+            <!--<xsl:if test="$parentNode/bibliography/p/bibref/persname | $parentNode/relatedmaterial/p/persname | $parentNode/scopecontent/p/list/item/persname | $parentNode/scopecontent/p/persname">-->
+                <!--<origination label="final">-->
+                    <!--<xsl:for-each select="$parentNode/bibliography/p/bibref/persname | $parentNode/relatedmaterial/p/persname | $parentNode/scopecontent/p/list/item/persname | $parentNode/scopecontent/p/persname">-->
+                        <!--<persname><xsl:value-of select="text()"/></persname>-->
+                    <!--</xsl:for-each>-->
+                <!--</origination>-->
+            <!--</xsl:if>-->
         </did>
         <xsl:apply-templates select="abstract" mode="#current" />
     </xsl:template>
