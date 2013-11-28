@@ -26,7 +26,7 @@ import java.util.*;
  */
 public class CreateHGListener implements ActionListener {
     private static final Logger LOG = Logger.getLogger(CreateHGListener.class);
-    
+
     private RetrieveFromDb retrieveFromDb;
     private ResourceBundle labels;
     private Component parent;
@@ -83,8 +83,8 @@ public class CreateHGListener implements ActionListener {
         paneListFilesHG.setPreferredSize(new Dimension(parent.getWidth()/4, parent.getHeight())); //getContentPane
 
         for(Object selectedValue : list.getSelectedValues()){
-            FileInstance currentFileInstance =  originalFileInstances.get(((File)selectedValue).getName());
-            ((ProfileListModel)listFilesForHG.getModel()).addFileInstance(currentFileInstance, (File)selectedValue);
+            FileInstance currentFileInstance = originalFileInstances.get(((File)selectedValue).getName());
+            ((ProfileListModel)listFilesForHG.getModel()).addFileInstance(currentFileInstance, new File(currentFileInstance.getCurrentLocation()));
         }
 
         listFilesForHG.setCellRenderer(new IconListCellRenderer(fileInstances));
@@ -232,7 +232,7 @@ public class CreateHGListener implements ActionListener {
         HoldingsGuideTreeMouseListener holdingsGuideTreeMouseListener = new HoldingsGuideTreeMouseListener();
         holdingsGuideTree.addMouseListener(holdingsGuideTreeMouseListener);
         holdingsGuideTreeMouseListener.doActionEditLevel(rootNode);
-        
+
         createHGDialog.pack();
         createHGDialog.setVisible(true);
     }
@@ -433,7 +433,7 @@ public class CreateHGListener implements ActionListener {
                 LOG.trace("child removed");
             }
         }
-        
+
         private TreeNode findTreeNode(TreeNode checkInside, CLevelTreeObject parent) {
             TreeNode correctParentTreeNode = null;
             if(checkInside == null)
@@ -448,7 +448,7 @@ public class CreateHGListener implements ActionListener {
             }
             return correctParentTreeNode;
         }
-        
+
         private void deleteChildrenRecursively(TreeNode parent) {
             for(int i = 0; i < parent.getChildCount(); i++) {
                 TreeNode child = parent.getChildAt(i);
