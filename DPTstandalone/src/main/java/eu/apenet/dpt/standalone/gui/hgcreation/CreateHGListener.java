@@ -87,7 +87,7 @@ public class CreateHGListener implements ActionListener {
             ((ProfileListModel)listFilesForHG.getModel()).addFileInstance(currentFileInstance, new File(currentFileInstance.getCurrentLocation()));
         }
 
-        listFilesForHG.setCellRenderer(new IconListCellRenderer(fileInstances));
+        listFilesForHG.setCellRenderer(new ChangeNameListCellRenderer(fileInstances));
 
         createHGDialog.add(paneListFilesHG, BorderLayout.EAST);
         JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, buttonsPanel, hgScrollPane);
