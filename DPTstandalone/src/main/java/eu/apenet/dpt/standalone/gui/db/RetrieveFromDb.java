@@ -4,6 +4,7 @@ import eu.apenet.dpt.standalone.gui.BareBonesBrowserLaunch;
 import eu.apenet.dpt.standalone.gui.FileInstance;
 import eu.apenet.dpt.standalone.gui.Utilities;
 import eu.apenet.dpt.standalone.gui.xsdaddition.XsdObject;
+import org.apache.commons.io.IOUtils;
 import org.apache.log4j.Logger;
 
 import javax.swing.*;
@@ -181,11 +182,13 @@ public class RetrieveFromDb {
         if(doCheckUpdate){
             try {
                 URL url = new URL("http://www.archivesportaleurope.net/Portal/dptupdate/version?versionNb=" + versionNb);
+//                URL url = new URL("http://localhost:8080/Portal/dptupdate/version?versionNb=" + versionNb);
                 HttpURLConnection connection = (HttpURLConnection) url.openConnection();
                 if(connection.getResponseCode() == 200){
-                    LOG.info("New version available...");
+                    String newVersionNb = IOUtils.toString(connection.getInputStream());
+                    LOG.info("New version available: " + newVersionNb);
                     if(JOptionPane.showConfirmDialog(contentPane, textNewAvailableVersion) == 0) {
-                        BareBonesBrowserLaunch.openURL("http://www.apex-project.eu/index.php/outcomes/52-public/about-the-project/outcomes/36-tools-and-manuals");
+                        BareBonesBrowserLaunch.openURL("http://dpt.archivesportaleurope.net/APE_data_preparation_tool_" + newVersionNb + ".zip");
                         System.exit(0);
                     }
                 }

@@ -1,5 +1,7 @@
 package eu.apenet.dpt.utils.service;
 
+import eu.apenet.dpt.utils.util.APEUTF8Control;
+
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Locale;
@@ -43,7 +45,7 @@ public class ResourceBundlesWrapper extends ResourceBundle {
 	        	basename = this.basenames[i];
 	        	if(!this.resourcesBundles.containsKey(basename)){ 
 	        		mapBundle = new HashMap<Locale,ResourceBundle>();
-	        		this.resourceBundle = ResourceBundle.getBundle(basename,locale);
+	        		this.resourceBundle = ResourceBundle.getBundle(basename,locale, new APEUTF8Control());
 	        		mapBundle.put(locale,this.resourceBundle);
 	        		this.resourcesBundles.put(basename,mapBundle);
 	        	}else{
@@ -51,7 +53,7 @@ public class ResourceBundlesWrapper extends ResourceBundle {
 	        		if(mapBundle.containsKey(locale)){
 	        			this.resourceBundle = mapBundle.get(locale);
 	        		}else{
-	        			this.resourceBundle = ResourceBundle.getBundle(basename,locale);
+	        			this.resourceBundle = ResourceBundle.getBundle(basename,locale, new APEUTF8Control());
 	        		}
 	        		mapBundle.put(locale,this.resourceBundle);
 	        		this.resourcesBundles.put(basename,mapBundle);
@@ -65,7 +67,7 @@ public class ResourceBundlesWrapper extends ResourceBundle {
 		        		if(mapBundle.containsKey(defaultLocale)){
 		        			tempResourceBundle = mapBundle.get(defaultLocale);
 		        		}else{
-		        			tempResourceBundle = ResourceBundle.getBundle(basename,defaultLocale);
+		        			tempResourceBundle = ResourceBundle.getBundle(basename,defaultLocale, new APEUTF8Control());
 		        			if(tempResourceBundle!=null){
 		        				mapBundle.put(defaultLocale,this.resourceBundle);
 		        				this.resourcesBundles.put(basename,mapBundle);

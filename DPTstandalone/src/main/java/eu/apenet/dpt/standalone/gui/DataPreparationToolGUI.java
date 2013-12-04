@@ -1105,7 +1105,9 @@ public class DataPreparationToolGUI extends JFrame {
                 explanation += "\n" + labels.getString("options.pleaseFollowRules");
             }
             result = (String) JOptionPane.showInputDialog(getContentPane(), explanation, labels.getString("chooseCountryCode"), JOptionPane.QUESTION_MESSAGE, Utilities.icon, null, null);
-            if (result == null && currentResult != null) {
+            if (result == null) {
+                if(currentResult == null)
+                    System.exit(0);
                 break;
             }
             i++;
@@ -1125,7 +1127,9 @@ public class DataPreparationToolGUI extends JFrame {
                 explanation += "\n" + labels.getString("options.pleaseFollowRules");
             }
             result = (String) JOptionPane.showInputDialog(getContentPane(), explanation, labels.getString("chooseRepositoryCode"), JOptionPane.QUESTION_MESSAGE, Utilities.icon, null, null);
-            if (result == null && currentResult != null) {
+            if (result == null) {
+                if(currentResult == null)
+                    System.exit(0);
                 break;
             }
             i++;
