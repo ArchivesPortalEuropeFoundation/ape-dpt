@@ -3,6 +3,9 @@ package eu.apenet.dpt.standalone.gui.edition;
 import java.util.List;
 import java.util.ResourceBundle;
 
+import eu.apenet.dpt.standalone.gui.DataPreparationToolGUI;
+import eu.apenet.dpt.standalone.gui.FileInstance;
+import eu.apenet.dpt.standalone.gui.ProfileListModel;
 import org.jdesktop.swingx.tree.TreeModelSupport;
 import org.jdesktop.swingx.treetable.AbstractTreeTableModel;
 import org.w3c.dom.Document;
@@ -11,6 +14,8 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import eu.apenet.dpt.utils.util.extendxsl.DateNormalization;
+
+import javax.swing.*;
 
 /**
  * User: Yoann Moranville
@@ -24,6 +29,8 @@ public class XMLTreeTableModel extends AbstractTreeTableModel {
     private List<String> levelList;
     private String name;
     private ResourceBundle labels;
+    private FileInstance fileInstance;
+    private DataPreparationToolGUI dataPreparationToolGUI;
 
     public XMLTreeTableModel(Document doc) {
         super(doc);
@@ -33,7 +40,7 @@ public class XMLTreeTableModel extends AbstractTreeTableModel {
         name = "";
     }
 
-    public XMLTreeTableModel(Document doc, DateNormalization dateNormalization, List<String> levelList, ResourceBundle labels) {
+    public XMLTreeTableModel(Document doc, DateNormalization dateNormalization, List<String> levelList, ResourceBundle labels, FileInstance fileInstance, DataPreparationToolGUI dataPreparationToolGUI) {
         super(doc);
         root = doc;
         modelSupport = new TreeModelSupport(this);
@@ -42,6 +49,8 @@ public class XMLTreeTableModel extends AbstractTreeTableModel {
         this.dateNormalization = dateNormalization;
         this.levelList = levelList;
         this.labels = labels;
+        this.fileInstance = fileInstance;
+        this.dataPreparationToolGUI = dataPreparationToolGUI;
     }
 
     public void setDateNormalization(DateNormalization dateNormalization){
@@ -159,8 +168,11 @@ public class XMLTreeTableModel extends AbstractTreeTableModel {
             throw new IllegalArgumentException();
         }
 
-        if(check((String)value, (Node)node))
+        if(check((String)value, (Node)node)) {
             ((Node) node).setNodeValue((String)value);
+            fileInstance.setLastOperation(FileInstance.Operation.EDIT_TREE);
+            ((ProfileListModel)dataPreparationToolGUI.getXmlEadList().getModel()).fireContentsChanged((ProfileListModel)dataPreparationToolGUI.getXmlEadList().getModel(), 0, 1);
+        }
     }
 
     private boolean check(String value, Node node){

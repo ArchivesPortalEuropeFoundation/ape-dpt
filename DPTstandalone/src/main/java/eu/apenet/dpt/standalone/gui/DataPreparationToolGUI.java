@@ -748,7 +748,8 @@ public class DataPreparationToolGUI extends JFrame {
                             if (apePanel.getApeTabbedPane().getSelectedIndex() == APETabbedPane.TAB_EDITION) {
                                 apePanel.getApeTabbedPane().createEditionTree(((File) xmlEadList.getSelectedValue()));
                                 if (tree != null) {
-                                    tree.addMouseListener(new PopupMouseListener(tree, getDataPreparationToolGUI(), getContentPane()));
+                                    FileInstance fileInstance = fileInstances.get(((File) getXmlEadList().getSelectedValue()).getName());
+                                    tree.addMouseListener(new PopupMouseListener(tree, getDataPreparationToolGUI(), getContentPane(), fileInstance));
                                 }
                             }
                             disableTabFlashing();

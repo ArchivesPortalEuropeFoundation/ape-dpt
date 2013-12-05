@@ -244,7 +244,7 @@ public class FileInstance {
         NONE,
         CONVERT,
         VALIDATE,
-        CREATE_TREE,
+        EDIT_TREE,
         SAVE,
         CONVERT_ESE,
         CONVERT_EDM

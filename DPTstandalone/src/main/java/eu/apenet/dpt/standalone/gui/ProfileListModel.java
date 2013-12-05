@@ -104,4 +104,8 @@ public class ProfileListModel extends AbstractListModel {
         listFiles.add(index, element);
         fireIntervalAdded(this, index, index);
     }
+
+    public void fireContentsChanged(Object o, int i, int j) {
+        super.fireContentsChanged(o, i, j);
+    }
 }

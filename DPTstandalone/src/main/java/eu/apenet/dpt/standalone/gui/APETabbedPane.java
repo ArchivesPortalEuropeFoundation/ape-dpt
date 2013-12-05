@@ -374,10 +374,10 @@ public class APETabbedPane extends JTabbedPane {
             return null;
         }
         FileInstance fileInstance = dataPreparationToolGUI.getFileInstances().get(file.getName());
-        if(tree != null && ((XMLTreeTableModel)tree.getTreeTableModel()).getName().equals(file.getName()) && fileInstance.getLastOperation().equals(FileInstance.Operation.CREATE_TREE))
+        if(tree != null && ((XMLTreeTableModel)tree.getTreeTableModel()).getName().equals(file.getName()) && fileInstance.getLastOperation().equals(FileInstance.Operation.EDIT_TREE))
             return null;
 
-        fileInstance.setLastOperation(FileInstance.Operation.CREATE_TREE);
+//        fileInstance.setLastOperation(FileInstance.Operation.CREATE_TREE);
         try {
             InputSource is;
             if(fileInstance.getCurrentLocation() == null || fileInstance.getCurrentLocation().equals("")){
@@ -387,7 +387,7 @@ public class APETabbedPane extends JTabbedPane {
             }
             Document doc = DOMUtil.createDocument(is);
             tree = new JXTreeTable();
-            tree.setTreeTableModel(new XMLTreeTableModel(doc, dataPreparationToolGUI.getDateNormalization(), dataPreparationToolGUI.getLevelList(), labels));
+            tree.setTreeTableModel(new XMLTreeTableModel(doc, dataPreparationToolGUI.getDateNormalization(), dataPreparationToolGUI.getLevelList(), labels, fileInstance, dataPreparationToolGUI));
             tree.setTreeCellRenderer(new XMLTreeTableRenderer());
 
             tree.addTreeExpansionListener(new TreeExpansionListener() {
@@ -448,8 +448,10 @@ public class APETabbedPane extends JTabbedPane {
             else if(apeTabbedPane.getSelectedIndex() == TAB_EDITION){
                 if(dataPreparationToolGUI.getXmlEadList().getSelectedValue() != null){
                     createEditionTree((File)dataPreparationToolGUI.getXmlEadList().getSelectedValue());
-                    if(tree != null)
-                        tree.addMouseListener(new PopupMouseListener(tree, dataPreparationToolGUI, parent));
+                    if(tree != null) {
+                        FileInstance fileInstance = dataPreparationToolGUI.getFileInstances().get(((File) dataPreparationToolGUI.getXmlEadList().getSelectedValue()).getName());
+                        tree.addMouseListener(new PopupMouseListener(tree, dataPreparationToolGUI, parent, fileInstance));
+                    }
                 }
             }
         }
