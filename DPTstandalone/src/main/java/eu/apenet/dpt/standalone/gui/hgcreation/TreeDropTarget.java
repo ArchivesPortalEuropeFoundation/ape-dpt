@@ -11,6 +11,7 @@ import java.awt.datatransfer.Transferable;
 import java.awt.dnd.*;
 import java.io.File;
 import java.util.Arrays;
+import java.util.Enumeration;
 
 /**
  * User: Yoann Moranville
@@ -141,16 +142,19 @@ public class TreeDropTarget implements DropTargetListener {
                     for (DataFlavor flavor : flavors) {
                         if (tr.isDataFlavorSupported(flavor)) {
                             LOG.trace("Checking if ok");
-                            dtde.acceptDrop(dtde.getDropAction());
                             TreePath p = (TreePath) tr.getTransferData(flavor);
                             DefaultMutableTreeNode node = (DefaultMutableTreeNode) p.getLastPathComponent();
-                            LOG.trace("Node: " + node.getUserObject().toString());
-                            LOG.trace("Parent: " + parent.getUserObject().toString());
-                            if(node == parent){
+                            if(node.getUserObject().toString().equals(parent.getUserObject().toString())) { //bad hack for fix #706
                                 LOG.info("Reject drop");
                                 dtde.rejectDrop();
                                 return;
                             }
+                            if(isParentOf(node, parent)) { //bad hack for fix #706
+                                LOG.info("Reject drop");
+                                dtde.rejectDrop();
+                                return;
+                            }
+                            dtde.acceptDrop(dtde.getDropAction());
                             DefaultTreeModel model = (DefaultTreeModel) tree.getModel();
                             model.insertNodeInto(node, parent, parent.getChildCount());
                             dtde.dropComplete(true);
@@ -164,5 +168,18 @@ public class TreeDropTarget implements DropTargetListener {
                 }
             }
         }
+    }
+
+    public boolean isParentOf(DefaultMutableTreeNode supposedParent, DefaultMutableTreeNode supposedChild) {
+        for(int i = 0; i < supposedParent.getChildCount(); i++) {
+            TreeNode child = supposedParent.getChildAt(i);
+            DefaultMutableTreeNode childNode = (DefaultMutableTreeNode)child;
+            if(childNode.toString().equals(supposedChild.toString())) {
+                return true;
+            } else {
+                isParentOf(childNode, supposedChild);
+            }
+        }
+        return false;
     }
 }
