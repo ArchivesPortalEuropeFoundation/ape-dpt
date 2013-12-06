@@ -843,7 +843,7 @@ public class DataPreparationToolGUI extends JFrame {
                 break;
             }
         }
-        if (xmlEadList.getSelectedValues().length > 1 && isOnlyValidFiles) {
+        if (xmlEadList.getSelectedValues().length > 0 && isOnlyValidFiles) {
             createHGBtn.setEnabled(true);
         } else {
             createHGBtn.setEnabled(false);
