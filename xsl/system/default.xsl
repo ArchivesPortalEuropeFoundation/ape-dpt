@@ -336,10 +336,10 @@
                 </xsl:choose>
             </xsl:if>
             <xsl:if test="not(@url) and normalize-space($url)">
-                <xsl:attribute name="url" select="$url"/>
+                <xsl:attribute name="url" select="ape:checkLink($url)"/>
             </xsl:if>
             <xsl:if test="@url">
-                <xsl:attribute name="url" select="@url"/>
+                <xsl:attribute name="url" select="ape:checkLink(@url)"/>
             </xsl:if>
             <xsl:choose>
                 <xsl:when test="not(text())">
