@@ -199,6 +199,10 @@ public class EagInstitutionPanel extends EagPanels {
             LocationType locationType = new LocationType(location);
             if(StringUtils.isEmpty(location.getLocalType()) || location.getLocalType().equals("visitors address")) {
                 locationType.setLocalType("visitors address");
+                if(hasMinimumOneVisitorAddress){
+                    locationType.getLatitudeTf().setEnabled(false);
+                    locationType.getLongitudeTf().setEnabled(false);
+                }
                 builder.addSeparator(labels.getString("eag2012.commons.visitorsAddress"), cc.xyw(1, rowNb, 7));
                 isPostal = false;
                 hasMinimumOneVisitorAddress = true;
@@ -327,7 +331,7 @@ public class EagInstitutionPanel extends EagPanels {
             builder.add(createErrorLabel(labels.getString("eag2012.errors.webpageProtocol")),          cc.xy(1, rowNb));
             setNextRow();
         }
-        
+
         if(repository.getTimetable().getOpening().size() == 0) {
             repository.getTimetable().getOpening().add(new Opening());
         }
@@ -558,7 +562,20 @@ public class EagInstitutionPanel extends EagPanels {
                 location.setCountry(new Country());
                 location.setStreet(new Street());
                 location.setMunicipalityPostalcode(new MunicipalityPostalcode());
-                
+                if(!isPostal){
+                    LocationType lastVisitorAddr = null;
+                    int index = counter - 1;
+                    while(lastVisitorAddr == null && index >= 0){
+                        if(locationFields.get(index).getLocalType().equals("visitors address"))
+                            lastVisitorAddr = locationFields.get(index);
+                        index--;
+                    }
+                    if(lastVisitorAddr != null){
+                        location.setLatitude(lastVisitorAddr.getLatitudeTfValue());
+                        location.setLongitude(lastVisitorAddr.getLongitudeTfValue());
+                    }
+                }
+
                 eag.getArchguide().getDesc().getRepositories().getRepository().get(repositoryNb).getLocation().add(location);
             }
             if(locationFields.get(counter - 1).getErrors().isEmpty() ){
