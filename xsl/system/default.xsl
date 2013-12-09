@@ -2037,7 +2037,7 @@
         </p>
     </xsl:template>
 
-    <xsl:template match="separatedmaterial/bibref" mode="copy fonds nested">
+    <xsl:template match="separatedmaterial/bibref | separatedmaterial/archref" mode="copy fonds nested">
         <p>
             <xsl:if test="@href or @*:href">
                 <extref>
@@ -2065,6 +2065,23 @@
         <title>
             <xsl:apply-templates select="node()" mode="#current"/>
         </title>
+    </xsl:template>
+    <xsl:template match="separatedmaterial/archref/unittitle" mode="copy fonds nested">
+        <xsl:if test="preceding-sibling::*"> - </xsl:if><xsl:apply-templates select="node()" mode="#current"/>
+    </xsl:template>
+    <xsl:template match="separatedmaterial/archref/unittitle/emph" mode="copy fonds nested">
+        <emph>
+            <xsl:if test="@render">
+                <xsl:attribute name="render" select="@render"/>
+            </xsl:if>
+            <xsl:if test="preceding-sibling::*"> - </xsl:if><xsl:apply-templates select="node()" mode="#current"/>
+        </emph>
+    </xsl:template>
+    <xsl:template match="separatedmaterial/archref/unitid" mode="copy fonds nested">
+        <xsl:if test="preceding-sibling::*"> - </xsl:if><xsl:apply-templates select="node()" mode="#current"/>
+    </xsl:template>
+    <xsl:template match="separatedmaterial/archref/repository" mode="copy fonds nested">
+        <xsl:if test="preceding-sibling::*"> - </xsl:if><xsl:apply-templates select="node()" mode="#current"/>
     </xsl:template>
 
     <xsl:template name="deflist_table">
@@ -2287,6 +2304,7 @@
             </xsl:when>
             <xsl:when test="(@type='call number' or @type='ABS' or @type='bestellnummer' or @type='Bestellnummer' or @type='series_code' or @type='reference' or @type='Sygnatura' or @type='REFERENCE_CODE' or @type='cote-de-consultation' or @type='cote-groupee' or @type='identifiant' or @type='cote' or @type='persistent' or (not(@type))) and (text()[string-length(normalize-space(.)) ge 1] or exists(extptr))"><!-- and not(preceding-sibling::unitid) and not(following-sibling::unitid)-->
                 <xsl:choose>
+                    <xsl:when test="@type = 'cote-groupee' and (following-sibling::unitid or preceding-sibling::unitid)"/> <!-- todo: test with french data, ticket #935 -->
                     <xsl:when test="@countrycode and @repositorycode">
                         <xsl:choose>
                             <xsl:when test="//eadid/@countrycode = 'SE'">
