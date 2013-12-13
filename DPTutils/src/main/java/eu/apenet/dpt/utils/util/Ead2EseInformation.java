@@ -1,19 +1,19 @@
 package eu.apenet.dpt.utils.util;
 
-import org.xml.sax.SAXException;
-
-import javax.xml.parsers.ParserConfigurationException;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.TreeSet;
+
+import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
+
 import org.apache.log4j.Logger;
-import org.apache.maven.internal.commons.io.input.BOMInputStream;
 import org.xml.sax.Attributes;
 import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.DefaultHandler;
 
@@ -97,7 +97,7 @@ public class Ead2EseInformation {
         XMLReader xr = sp.getXMLReader();
         EadContentHandler myContentHandler = new EadContentHandler();
         xr.setContentHandler(myContentHandler);
-        xr.parse(new InputSource(new InputStreamReader(new BOMInputStream(new FileInputStream(fileToRead)))));
+        xr.parse(new InputSource(new InputStreamReader(new FileInputStream(fileToRead))));
 
         if (this.roleType == null) {
             this.roleType = "UNSPECIFIED";
