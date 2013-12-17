@@ -10,6 +10,7 @@ import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 
+import org.apache.commons.io.input.BOMInputStream;
 import org.apache.log4j.Logger;
 import org.xml.sax.Attributes;
 import org.xml.sax.InputSource;
@@ -97,7 +98,7 @@ public class Ead2EseInformation {
         XMLReader xr = sp.getXMLReader();
         EadContentHandler myContentHandler = new EadContentHandler();
         xr.setContentHandler(myContentHandler);
-        xr.parse(new InputSource(new InputStreamReader(new FileInputStream(fileToRead))));
+        xr.parse(new InputSource(new InputStreamReader(new BOMInputStream(new FileInputStream(fileToRead)))));
 
         if (this.roleType == null) {
             this.roleType = "UNSPECIFIED";
