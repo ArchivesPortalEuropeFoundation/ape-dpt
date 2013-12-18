@@ -100,6 +100,9 @@ public class EagControlPanel extends EagPanels {
             builder.add(languageWithScript.getScriptBox(), cc.xy(7, rowNb));
             setNextRow();
         }
+        if(errors.contains("languageWithScriptTfs")) {
+            builder.add(createErrorLabel(labels.getString("eag2012.errors.noscript")),          cc.xy(3, rowNb));
+        }
         
         JButton addLanguagesBtn = new ButtonEag(labels.getString("eag2012.control.addFurtherLangsAnsScripts"));
         builder.add(addLanguagesBtn, cc.xy(5, rowNb));
@@ -292,7 +295,7 @@ public class EagControlPanel extends EagPanels {
             } else {
                 eag.getControl().getLanguageDeclarations().getLanguageDeclaration().clear();
                 for(LanguageWithScript languageWithScript : languageWithScriptTfs) {
-                    if(StringUtils.isNotEmpty(languageWithScript.getLanguage())) {
+                    if(StringUtils.isNotEmpty(languageWithScript.getLanguage()) && StringUtils.isNotEmpty(languageWithScript.getScript())) {
                         LanguageDeclaration languageDeclaration = new LanguageDeclaration();
                         Language language = new Language();
                         language.setLanguageCode(languageWithScript.getLanguage());
@@ -303,6 +306,8 @@ public class EagControlPanel extends EagPanels {
                         languageDeclaration.setLanguage(language);
                         languageDeclaration.setScript(script);
                         eag.getControl().getLanguageDeclarations().getLanguageDeclaration().add(languageDeclaration);
+                    } else if (StringUtils.isNotEmpty(languageWithScript.getLanguage())) {
+                        errors.add("languageWithScriptTfs");
                     }
                 }
             }
