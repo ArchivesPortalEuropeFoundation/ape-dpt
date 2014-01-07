@@ -833,18 +833,27 @@
 
     <!-- archdesc/did -->
     <xsl:template match="archdesc/did" mode="copy">
-        <did>
-            <xsl:apply-templates select="node() except abstract" mode="copy"/>
-            <xsl:if test="not(repository) and normalize-space($repository)">
-                <xsl:call-template name="repository"/>
-            </xsl:if>
-            <xsl:if test="not(langmaterial) and $langmaterial">
-                <xsl:call-template name="langmaterial"/>
-            </xsl:if>
-            <xsl:for-each select="following-sibling::note">
-                <xsl:call-template name="note"/>
-            </xsl:for-each>
-        </did>
+        <xsl:choose>
+            <xsl:when test="count(child::*) = 1 and child::*[local-name()='abstract']">
+                <did>
+                    <unitid/>
+                </did>
+            </xsl:when>
+            <xsl:otherwise>
+                <did>
+                    <xsl:apply-templates select="node() except abstract" mode="copy"/>
+                    <xsl:if test="not(repository) and normalize-space($repository)">
+                        <xsl:call-template name="repository"/>
+                    </xsl:if>
+                    <xsl:if test="not(langmaterial) and $langmaterial">
+                        <xsl:call-template name="langmaterial"/>
+                    </xsl:if>
+                    <xsl:for-each select="following-sibling::note">
+                        <xsl:call-template name="note"/>
+                    </xsl:for-each>
+                </did>
+            </xsl:otherwise>
+        </xsl:choose>
         <xsl:if test="//eadid/@countrycode='fr' and /ead/frontmatter">
             <xsl:call-template name="frontmatter2scopecontent" />
         </xsl:if>
@@ -2540,7 +2549,7 @@
             <xsl:if test="not(unittitle)">
                 <unittitle/>
             </xsl:if>
-            <xsl:apply-templates select="node() except abstract" mode="#current"/>
+            <xsl:apply-templates select="node()[not(local-name() = 'abstract') and not(local-name() = 'scopecontent') and not(local-name() = 'bioghist')]" mode="#current"/>
             <xsl:for-each select="following-sibling::dao">
                 <!--<dao xlink:href="{@href}"/>-->
                 <xsl:call-template name="dao"/>
@@ -2590,7 +2599,7 @@
                 <!--</origination>-->
             <!--</xsl:if>-->
         </did>
-        <xsl:apply-templates select="abstract" mode="#current" />
+        <xsl:apply-templates select="abstract | scopecontent | bioghist" mode="#current" />
     </xsl:template>
 
     <xsl:template match="c/descgrp | c01/descgrp | c02/descgrp | c03/descgrp | c04/descgrp | c05/descgrp | c06/descgrp | c07/descgrp | c08/descgrp | c09/descgrp | c10/descgrp | c11/descgrp | c12/descgrp" mode="fonds intermediate lowest">
