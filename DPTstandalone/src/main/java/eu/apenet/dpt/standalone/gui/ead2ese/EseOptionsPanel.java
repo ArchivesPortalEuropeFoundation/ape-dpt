@@ -659,13 +659,13 @@ public class EseOptionsPanel extends JPanel {
         } else if (type.equals(EUROPEANA_RIGHTS_STATEMENTS)) {
             String europeanaRights = europeanaRightsComboBox.getSelectedItem().toString();
             if (europeanaRights.equals(EUROPEANA_RIGHTS_FREE)) {
-                return "http://www.europeana.eu/portal/rights/rr-f/";
+                return "http://www.europeana.eu/rights/rr-f/";
             } else if (europeanaRights.equals(EUROPEANA_RIGHTS_PAID)) {
-                return "http://www.europeana.eu/portal/rights/rr-p/";
+                return "http://www.europeana.eu/rights/rr-p/";
             } else if (europeanaRights.equals(EUROPEANA_RIGHTS_RESTRICTED)) {
-                return "http://www.europeana.eu/portal/rights/rr-r/";
+                return "http://www.europeana.eu/rights/rr-r/";
             } else {
-                return "http://www.europeana.eu/portal/rights/unknown/";
+                return "http://www.europeana.eu/rights/unknown/";
             }
         } else if (type.equals(CREATIVE_COMMONS_CC0)) {
             return "http://creativecommons.org/publicdomain/zero/1.0/";
