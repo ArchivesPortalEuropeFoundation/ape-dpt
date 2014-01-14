@@ -76,6 +76,10 @@ public class DataPreparationToolGUI extends JFrame {
     private JButton convertEseSelectionBtn = new JButton();
     private JButton createHGBtn = new JButton();
 
+    private Cursor WAIT_CURSOR = Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR);
+    private Cursor DEFAULT_CURSOR = Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR);
+
+
     /**
      * Tabs to be visible in the GUI
      */
@@ -489,6 +493,10 @@ public class DataPreparationToolGUI extends JFrame {
                         currentLocation = fileChooser.getCurrentDirectory();
                         retrieveFromDb.saveOpenLocation(currentLocation.getAbsolutePath());
 
+                        RootPaneContainer root = (RootPaneContainer)getRootPane().getTopLevelAncestor();
+                        root.getGlassPane().setCursor(WAIT_CURSOR);
+                        root.getGlassPane().setVisible(true);
+
                         File[] files = fileChooser.getSelectedFiles();
                         for (File file : files) {
                             if (file.isDirectory()) {
@@ -505,6 +513,9 @@ public class DataPreparationToolGUI extends JFrame {
                                 }
                             }
                         }
+
+                        root.getGlassPane().setCursor(DEFAULT_CURSOR);
+                        root.getGlassPane().setVisible(false);
                     }
                 }
             }
@@ -652,6 +663,11 @@ public class DataPreparationToolGUI extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 String defaultOutputDirectory = retrieveFromDb.retrieveDefaultSaveFolder();
                 boolean isMultipleFiles = xmlEadList.getSelectedIndices().length > 1;
+
+                RootPaneContainer root = (RootPaneContainer)getRootPane().getTopLevelAncestor();
+                root.getGlassPane().setCursor(WAIT_CURSOR);
+                root.getGlassPane().setVisible(true);
+
                 for (Object selectedValue : xmlEadList.getSelectedValues()) {
                     File selectedFile = (File) selectedValue;
                     String filename = selectedFile.getName();
@@ -705,6 +721,10 @@ public class DataPreparationToolGUI extends JFrame {
                         }
                     }
                 }
+
+                root.getGlassPane().setCursor(DEFAULT_CURSOR);
+                root.getGlassPane().setVisible(false);
+
                 if (isMultipleFiles) {
                     JOptionPane.showMessageDialog(getContentPane(), MessageFormat.format(labels.getString("filesInOutput"), defaultOutputDirectory) + ".", labels.getString("fileSaved"), JOptionPane.INFORMATION_MESSAGE, Utilities.icon);
                 } else {
