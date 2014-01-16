@@ -1139,6 +1139,10 @@
         </address>
     </xsl:template>
 
+    <xsl:template match="repository/corpname" mode="copy fonds intermediate lowest">
+        <xsl:apply-templates select="node()" mode="#current" />
+    </xsl:template>
+
     <!-- fonds intermediate lowest: repository/address/addressline -->
     <xsl:template match="repository/address/addressline" mode="copy fonds intermediate lowest">
         <addressline>
