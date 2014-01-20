@@ -17,7 +17,7 @@ public class EdmConfig implements Serializable {
     private static final long serialVersionUID = -3232731426711003838L;
     private XMLTransformer transformerXML2XML;
     private XMLTransformer transformerXML2HTML;
-    
+
     private String edmIdentifier;
     private String prefixUrl;
     private String repositoryCode;
@@ -26,14 +26,14 @@ public class EdmConfig implements Serializable {
     private Properties properties;
 
     private boolean transferToFileOutput;
-    
+
     public EdmConfig(boolean transferToFileOutput) {
         this.transferToFileOutput = transferToFileOutput;
     }
 
     public XMLTransformer getTransformerXML2XML() {
         if (transformerXML2XML == null) {
-            transformerXML2XML = new XMLTransformer("/ese2edm/ese2edm_1.xslt", getProperties());
+            transformerXML2XML = new XMLTransformer("/ese2edm/ese2edm.xslt", getProperties());
         }
         return transformerXML2XML;
     }
@@ -76,7 +76,7 @@ public class EdmConfig implements Serializable {
 
     public void setTransferToFileOutput(boolean transferToFileOutput) {
         this.transferToFileOutput = transferToFileOutput;
-            transformerXML2XML = new XMLTransformer("/ese2edm/ese2edm_1.xslt", getProperties());
+            transformerXML2XML = new XMLTransformer("/ese2edm/ese2edm.xslt", getProperties());
     }
 
     /**
@@ -105,7 +105,7 @@ public class EdmConfig implements Serializable {
         }
         return properties;
     }
-    
+
     private static String getString(String string) {
         if (string == null) {
             return "";
@@ -113,7 +113,7 @@ public class EdmConfig implements Serializable {
             return string;
         }
     }
-    
+
     public XMLTransformer getTransformerXML2HTML() {
         if (transformerXML2HTML == null) {
             transformerXML2HTML = new XMLTransformer("/ese2edm/edm2html.xslt", getProperties());
