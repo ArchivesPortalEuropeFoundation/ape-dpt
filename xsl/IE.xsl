@@ -192,8 +192,11 @@
                         <xsl:if test="$level='SUB-FONDS' or $level='FONDS' or $level='SUB-SUB-FONDS'">
                             <xsl:value-of select="'fonds'"/>
                         </xsl:if>
-                        <xsl:if test="$level='SERIES' or $level='SUB-SERIES'">
+                        <xsl:if test="$level='SERIES'">
                             <xsl:value-of select="'series'"/>
+                        </xsl:if>
+                        <xsl:if test="$level='SUB-SERIES' or $level='SUB-SUB-SERIES'">
+                            <xsl:value-of select="'subseries'"/>
                         </xsl:if>
                         <xsl:if test="$level='FILE'">
                             <xsl:value-of select="'file'"/>
