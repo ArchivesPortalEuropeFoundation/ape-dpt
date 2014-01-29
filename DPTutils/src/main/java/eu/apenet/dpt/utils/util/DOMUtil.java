@@ -32,7 +32,8 @@ public class DOMUtil {
         transformer.setOutputProperty(OutputKeys.INDENT, "no");
 
         DOMResult result = new DOMResult();
-        transformer.transform(new SAXSource(reader, is), result);
+        SAXSource saxSource = new SAXSource(reader, is);
+        transformer.transform(saxSource, result);
         return (Document)result.getNode();
     }
 }
