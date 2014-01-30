@@ -91,7 +91,7 @@ public class ValidateActionListener implements ActionListener {
                 XsdObject xsdObject = fileInstance.getValidationSchema();
                 URL schemaPath = Utilities.getUrlPathXsd(xsdObject);
                 InputStream is2;
-                if(dataPreparationToolGUI.getTree() != null && dataPreparationToolGUI.getTree().getTreeTableModel() != null && fileInstance.getLastOperation().equals(FileInstance.Operation.CREATE_TREE)){
+                if(fileInstance.getLastOperation().equals(FileInstance.Operation.EDIT_TREE)){
                     TreeTableModel treeTableModel = dataPreparationToolGUI.getTree().getTreeTableModel();
                     Document document = (Document)treeTableModel.getRoot();
                     try {

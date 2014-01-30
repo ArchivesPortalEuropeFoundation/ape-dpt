@@ -1,6 +1,8 @@
 package eu.apenet.dpt.standalone.gui.edition;
 
 import eu.apenet.dpt.standalone.gui.DataPreparationToolGUI;
+import eu.apenet.dpt.standalone.gui.FileInstance;
+import eu.apenet.dpt.standalone.gui.ProfileListModel;
 import eu.apenet.dpt.standalone.gui.Utilities;
 import org.apache.log4j.Logger;
 import org.jdesktop.swingx.JXTreeTable;
@@ -32,12 +34,14 @@ public class PopupMouseListener implements MouseListener {
     private DataPreparationToolGUI dataPreparationToolGUI;
     private ResourceBundle labels;
     private Component parent;
+    private FileInstance fileInstance;
 
-    public PopupMouseListener(JXTreeTable tree, DataPreparationToolGUI dataPreparationToolGUI, Component parent) {
+    public PopupMouseListener(JXTreeTable tree, DataPreparationToolGUI dataPreparationToolGUI, Component parent, FileInstance fileInstance) {
         this.tree = tree;
         this.dataPreparationToolGUI = dataPreparationToolGUI;
         this.labels = dataPreparationToolGUI.getLabels();
         this.parent = parent;
+        this.fileInstance = fileInstance;
     }
 
     public void mouseReleased(MouseEvent e){
@@ -113,15 +117,18 @@ public class PopupMouseListener implements MouseListener {
             attr.setValue(dataPreparationToolGUI.getCountryCode());
             ((Element)node).setAttributeNode(attr);
             modelSupport.fireChildAdded(path, node.getAttributes().getLength()-1, attr);
+            fileInstance.setLastOperation(FileInstance.Operation.EDIT_TREE);
         } else if(actionCommand.equals(labels.getString(ActionNamesEnum.INSERT_MAINAGENCYCODE.getBundleCode()))){
             Attr attr = node.getOwnerDocument().createAttributeNS(NodeAppendable.XMLNS_EAD, "mainagencycode");
             attr.setValue(dataPreparationToolGUI.getRepositoryCodeIdentifier());
             ((Element)node).setAttributeNode(attr);
             modelSupport.fireChildAdded(path, node.getAttributes().getLength()-1, attr);
+            fileInstance.setLastOperation(FileInstance.Operation.EDIT_TREE);
         } else if(actionCommand.equals(labels.getString(ActionNamesEnum.INSERT_TEXT.getBundleCode()))){
             Text textNode = node.getOwnerDocument().createTextNode(dataPreparationToolGUI.getCountryCode() + "_" + dataPreparationToolGUI.getRepositoryCodeIdentifier());
             node.appendChild(textNode);
             modelSupport.fireTreeStructureChanged(path);
+            fileInstance.setLastOperation(FileInstance.Operation.EDIT_TREE);
         } else if(actionCommand.equals(labels.getString(ActionNamesEnum.INSERT_LANGUAGETAG.getBundleCode()))){
             String result = createPopupQuestion(0, labels.getString("chooseLanguage"), labels.getString("enterLanguageCode") + ":");
             if(result != null) {
@@ -139,6 +146,7 @@ public class PopupMouseListener implements MouseListener {
                 languageTag.appendChild(textNode);
                 node.appendChild(languageTag);
                 modelSupport.fireTreeStructureChanged(path);
+                fileInstance.setLastOperation(FileInstance.Operation.EDIT_TREE);
             }
         } else if(actionCommand.equals(labels.getString(ActionNamesEnum.INSERT_NORMALATTR.getBundleCode()))){
             String result = createPopupQuestion(1, labels.getString("provideNormalAttr"), labels.getString("enterNormalAttr") + ":");
@@ -147,6 +155,7 @@ public class PopupMouseListener implements MouseListener {
                 attr.setValue(result);
                 ((Element)node).setAttributeNode(attr);
                 modelSupport.fireChildAdded(path, node.getAttributes().getLength()-1, attr);
+                fileInstance.setLastOperation(FileInstance.Operation.EDIT_TREE);
             }
         } else if(actionCommand.equals(labels.getString(ActionNamesEnum.INSERT_EADID.getBundleCode()))) {
             String result = createPopupQuestion(2, labels.getString("eadidQuery"), labels.getString("eadidQuery") + ":");
@@ -156,8 +165,10 @@ public class PopupMouseListener implements MouseListener {
                 eadidTag.appendChild(textNode);
                 node.appendChild(eadidTag);
                 modelSupport.fireTreeStructureChanged(path);
+                fileInstance.setLastOperation(FileInstance.Operation.EDIT_TREE);
             }
         }
+        ((ProfileListModel)dataPreparationToolGUI.getXmlEadList().getModel()).fireContentsChanged((ProfileListModel)dataPreparationToolGUI.getXmlEadList().getModel(), 0, 1);
 
         if(!tree.isExpanded(path))
             tree.expandPath(path);

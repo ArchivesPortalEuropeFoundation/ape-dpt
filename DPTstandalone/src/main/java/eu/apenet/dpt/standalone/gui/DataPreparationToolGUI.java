@@ -65,7 +65,9 @@ public class DataPreparationToolGUI extends JFrame {
         }
     }
     private static final String[] LANGUAGES_OF_TOOL = {"en", "fr", "de", "el", "nl", "hu", "xx"};
+    private static final String[] I18N_BASENAMES = {"i18n/apeBundle","i18n/eag2012"};
     private ResourceBundle labels;
+
     /**
      * Button and titles to be used in the GUI
      */
@@ -73,6 +75,7 @@ public class DataPreparationToolGUI extends JFrame {
     private JButton validateSelectionBtn = new JButton();
     private JButton convertEseSelectionBtn = new JButton();
     private JButton createHGBtn = new JButton();
+
     /**
      * Tabs to be visible in the GUI
      */
@@ -113,6 +116,7 @@ public class DataPreparationToolGUI extends JFrame {
     private JMenuItem internetApexItem = new JMenuItem();
     private JFileChooser fileChooser = new JFileChooser();
     private File currentLocation = null;
+
     /**
      * List of files (model)
      */
@@ -124,37 +128,35 @@ public class DataPreparationToolGUI extends JFrame {
     private JLabel eseListLabel;
     private JLabel progressLabel = new JLabel("", JLabel.CENTER);
     private JLabel resultArea = new JLabel();
-    private JTable eagFormTable;
     private ButtonGroup groupXslt = new ButtonGroup();
     private ButtonGroup groupXsd = new ButtonGroup();
+
     /**
      * Utilities
      */
     private DateNormalization dateNormalization;
     private JMenuItem deleteFileItem = new JMenuItem();
-    private JFrame eagCreationFrame;
-//    private JFrame roleTypeFrame;
+
     /**
      * Locations
      */
     private RetrieveFromDb retrieveFromDb;
     public boolean useExistingRoleType;
     public String defaultRoleType;
-    private boolean continueLoop = true;
     private Map<String, FileInstance> fileInstances = new HashMap<String, FileInstance>();
     private Map<String, FileInstance> eseFileInstances = new HashMap<String, FileInstance>();
     private List<String> langList;
     private List<String> levelList;
     private Point from;
+
     /**
      * ActionListeners
      */
     private CreateHGListener createHgListener;
+
     /**
      * For edition
      */
-//    private JTree tree;
-//    private JTreeTable treeTable;
     private JXTreeTable tree;
 
     private DataPreparationToolGUI() {
@@ -163,11 +165,8 @@ public class DataPreparationToolGUI extends JFrame {
 
     private void setupTool() {
         Locale currentLocale = Locale.getDefault();
-//        labels = ResourceBundlesWrapper.getBundle("i18n/apeBundle", currentLocale);
-//        ResourceBundle.getBudle("i18n/eag2012", currentLocale);
-//        labels = new MultiResourceBundle("i18n/apeBundle","i18n/eag2012",currentLocale);
-        String[] basenames = {"i18n/apeBundle","i18n/eag2012"};
-        labels = new ResourceBundlesWrapper(basenames,currentLocale);
+
+        labels = new ResourceBundlesWrapper(I18N_BASENAMES, currentLocale);
         
         retrieveFromDb = new RetrieveFromDb();
         apePanel = new APEPanel(labels, getContentPane(), this, retrieveFromDb);
@@ -749,7 +748,8 @@ public class DataPreparationToolGUI extends JFrame {
                             if (apePanel.getApeTabbedPane().getSelectedIndex() == APETabbedPane.TAB_EDITION) {
                                 apePanel.getApeTabbedPane().createEditionTree(((File) xmlEadList.getSelectedValue()));
                                 if (tree != null) {
-                                    tree.addMouseListener(new PopupMouseListener(tree, getDataPreparationToolGUI(), getContentPane()));
+                                    FileInstance fileInstance = fileInstances.get(((File) getXmlEadList().getSelectedValue()).getName());
+                                    tree.addMouseListener(new PopupMouseListener(tree, getDataPreparationToolGUI(), getContentPane(), fileInstance));
                                 }
                             }
                             disableTabFlashing();
@@ -843,7 +843,7 @@ public class DataPreparationToolGUI extends JFrame {
                 break;
             }
         }
-        if (xmlEadList.getSelectedValues().length > 1 && isOnlyValidFiles) {
+        if (xmlEadList.getSelectedValues().length > 0 && isOnlyValidFiles) {
             createHGBtn.setEnabled(true);
         } else {
             createHGBtn.setEnabled(false);
@@ -1470,9 +1470,7 @@ public class DataPreparationToolGUI extends JFrame {
 
         public void actionPerformed(ActionEvent e) {
             if (Arrays.asList(LANGUAGES_OF_TOOL).contains(e.getActionCommand())) {
-//                labels = ResourceBundlesWrapper.getBundle("i18n/apeBundle", new Locale(e.getActionCommand()));
-                String[] basenames = {"i18n/apeBundle","i18n/eag2012"};
-                labels = new ResourceBundlesWrapper(basenames,new Locale(e.getActionCommand()));
+                labels = new ResourceBundlesWrapper(I18N_BASENAMES, new Locale(e.getActionCommand()));
             }
             changeAllTextLg();
         }

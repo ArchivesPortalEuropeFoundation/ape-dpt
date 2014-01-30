@@ -333,6 +333,8 @@ public class CreateHGListener implements ActionListener {
                     menuItem = new JMenuItem(labels.getString("removeFile"));
                 else
                     menuItem = new JMenuItem(labels.getString("removeLevel"));
+                if(defaultMutableTreeNode.getParent() == null)
+                    menuItem.setVisible(false);
                 menuItem.addActionListener(new ActionListener(){
                     public void actionPerformed(ActionEvent e) {
                         doActionRemoveLevel(defaultMutableTreeNode);

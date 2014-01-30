@@ -11,6 +11,7 @@ import java.util.TreeSet;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 import org.apache.log4j.Logger;
+import org.apache.maven.internal.commons.io.input.BOMInputStream;
 import org.xml.sax.Attributes;
 import org.xml.sax.InputSource;
 import org.xml.sax.XMLReader;
@@ -27,7 +28,7 @@ public class Ead2EseInformation {
     private String languageCode;
     private String repository;
     private String roleType;
-    private StringBuilder archdescValue = new StringBuilder();        
+    private StringBuilder archdescValue = new StringBuilder();
     private String archdescRepository;
     private TreeSet<String> languagesCodes;	// List of languages exist inside "<langusage>" element.
     private TreeSet<String> alternativeLanguages;	// List of languages exist inside "<archdesc><langmaterial>" element.
@@ -96,7 +97,7 @@ public class Ead2EseInformation {
         XMLReader xr = sp.getXMLReader();
         EadContentHandler myContentHandler = new EadContentHandler();
         xr.setContentHandler(myContentHandler);
-        xr.parse(new InputSource(new InputStreamReader(new FileInputStream(fileToRead), "UTF-8")));
+        xr.parse(new InputSource(new InputStreamReader(new BOMInputStream(new FileInputStream(fileToRead)))));
 
         if (this.roleType == null) {
             this.roleType = "UNSPECIFIED";
@@ -113,7 +114,7 @@ public class Ead2EseInformation {
         //flags for first occuring type and DAO in XML
         private boolean typeRetrieved = false;
         private boolean daoRetrieved = false;
-        private boolean languageOnCLevel; 
+        private boolean languageOnCLevel;
 
         @Override
         public void startElement(String namespaceURI, String localName,
