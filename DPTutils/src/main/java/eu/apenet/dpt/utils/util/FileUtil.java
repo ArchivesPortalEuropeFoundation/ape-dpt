@@ -1,8 +1,5 @@
 package eu.apenet.dpt.utils.util;
 
-import org.mozilla.intl.chardet.nsDetector;
-import org.mozilla.intl.chardet.nsPSMDetector;
-
 import java.io.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -208,40 +205,6 @@ public class FileUtil {
             out.append(new String(b, 0, n));
         }
         return out.toString();
-    }
-
-
-    public String detectCharset(InputStream is) throws Exception {
-        ChardetSniffer chardetSniffer = new ChardetSniffer();
-
-        // Initalize the nsDetector() ;
-        nsDetector det = new nsDetector(nsPSMDetector.ALL);
-        
-        // Set an observer...
-        // The Notify() will be called when a matching charset is found.
-
-        det.Init(chardetSniffer);
-
-        BufferedInputStream imp = new BufferedInputStream(is);
-
-        byte[] buf = new byte[1024] ;
-        int len;
-        boolean done = false ;
-        boolean isAscii = true ;
-
-        while( (len=imp.read(buf,0,buf.length)) != -1) {
-
-            // Check if the stream is only ascii.
-            if (isAscii)
-                isAscii = det.isAscii(buf,len);
-
-            // DoIt if non-ascii and not done yet.
-            if (!isAscii && !done)
-                done = det.DoIt(buf,len, false);
-        }
-        det.DataEnd();
-
-        return chardetSniffer.getCharsetName();
     }
 
     private final String XSD_APE_SCHEMA = "apeEAD.xsd";
