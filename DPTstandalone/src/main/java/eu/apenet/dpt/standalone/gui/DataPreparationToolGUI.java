@@ -665,7 +665,7 @@ public class DataPreparationToolGUI extends JFrame {
                         filePrefix = "NOT_" + filePrefix;
                     }
 
-                    if (tree != null && tree.getTreeTableModel() != null && !fileInstance.getLastOperation().equals(FileInstance.Operation.CONVERT)) {
+                    if (fileInstance.getLastOperation().equals(FileInstance.Operation.EDIT_TREE)) {
                         TreeTableModel treeTableModel = tree.getTreeTableModel();
                         Document document = (Document) treeTableModel.getRoot();
                         try {

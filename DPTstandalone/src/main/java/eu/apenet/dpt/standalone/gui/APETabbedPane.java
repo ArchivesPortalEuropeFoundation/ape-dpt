@@ -412,6 +412,7 @@ public class APETabbedPane extends JTabbedPane {
             dataPreparationToolGUI.setTree(tree);
             ((XMLTreeTableModel)tree.getTreeTableModel()).setName(file.getName());
         } catch (Exception e){
+            LOG.info("Error creating tree", e);
             tree = null;
             editionPane.setViewportView(createMsgEditionTree(labels.getString("edition.error.fileNoXmlOrCorrupted")));
         }

@@ -12,10 +12,7 @@ import eu.apenet.dpt.utils.util.LanguageIsoList;
 import org.apache.commons.lang.StringUtils;
 
 import javax.swing.*;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -99,6 +96,9 @@ public class EagControlPanel extends EagPanels {
             builder.addLabel(labels.getString("eag2012.control.descriptionScript"),    cc.xy (5, rowNb));
             builder.add(languageWithScript.getScriptBox(), cc.xy(7, rowNb));
             setNextRow();
+        }
+        if(errors.contains("languageWithScriptTfs")) {
+            builder.add(createErrorLabel(labels.getString("eag2012.errors.noscript")),          cc.xy(3, rowNb));
         }
         
         JButton addLanguagesBtn = new ButtonEag(labels.getString("eag2012.control.addFurtherLangsAnsScripts"));
@@ -292,7 +292,7 @@ public class EagControlPanel extends EagPanels {
             } else {
                 eag.getControl().getLanguageDeclarations().getLanguageDeclaration().clear();
                 for(LanguageWithScript languageWithScript : languageWithScriptTfs) {
-                    if(StringUtils.isNotEmpty(languageWithScript.getLanguage())) {
+                    if(StringUtils.isNotEmpty(languageWithScript.getLanguage()) && StringUtils.isNotEmpty(languageWithScript.getScript())) {
                         LanguageDeclaration languageDeclaration = new LanguageDeclaration();
                         Language language = new Language();
                         language.setLanguageCode(languageWithScript.getLanguage());
@@ -303,6 +303,8 @@ public class EagControlPanel extends EagPanels {
                         languageDeclaration.setLanguage(language);
                         languageDeclaration.setScript(script);
                         eag.getControl().getLanguageDeclarations().getLanguageDeclaration().add(languageDeclaration);
+                    } else if (StringUtils.isNotEmpty(languageWithScript.getLanguage())) {
+                        errors.add("languageWithScriptTfs");
                     }
                 }
             }

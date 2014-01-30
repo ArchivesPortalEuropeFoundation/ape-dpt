@@ -51,22 +51,10 @@ public class LinkFormatChecker extends ExtensionFunctionDefinition {
     }
 
     public class LinkFormatCheckerCall extends ExtensionFunctionCall {
-
-        private String url;
-
-        public LinkFormatCheckerCall() {
-
-        }
-
         @Override
         public SequenceIterator call(SequenceIterator[] arguments, XPathContext context) throws XPathException {
-            String out = checkLinkFormatTest(arguments[0].next().getStringValue());
+            String out = normalizeLink(arguments[0].next().getStringValue());
             return SingletonIterator.makeIterator(new StringValue(out));
-        }
-
-        public String checkLinkFormatTest(String link) {
-            link = normalizeLink(link);
-            return link;
         }
     }
 

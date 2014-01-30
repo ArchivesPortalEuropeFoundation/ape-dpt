@@ -13,10 +13,7 @@ import eu.apenet.dpt.utils.eag2012.*;
 import org.apache.commons.lang.StringUtils;
 
 import javax.swing.*;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
