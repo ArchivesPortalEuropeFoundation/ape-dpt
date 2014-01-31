@@ -965,6 +965,7 @@ public class EseOptionsPanel extends JPanel {
             } else {
                 XMLUtil.validateESE(outputFile);
             }
+            xmlReader.close();
             return numberOfRecords;
         }
     }
