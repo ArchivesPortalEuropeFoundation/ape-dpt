@@ -63,7 +63,6 @@ public class LinkFormatChecker extends ExtensionFunctionDefinition {
             URL currentUrl = new URL(link);
             link = currentUrl.toString();
         } catch (MalformedURLException ex) {
-            System.out.println(ex.getMessage());
             if (ex.getMessage().startsWith("no protocol") || ex.getMessage().startsWith("unknown protocol")) {
                 link = "http://" + link;
             }
