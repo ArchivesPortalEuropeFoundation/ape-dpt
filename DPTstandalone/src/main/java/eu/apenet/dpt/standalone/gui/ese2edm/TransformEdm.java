@@ -32,12 +32,12 @@ public class TransformEdm implements Runnable {
         try {
             RetrieveFromDb retrieveFromDb = new RetrieveFromDb();
             int lastIndex = selectedIndex.getName().lastIndexOf('.');
-            String xmlOutputFilename = retrieveFromDb.retrieveDefaultSaveFolder() + selectedIndex.getName() + "-edm";
+            String xmlOutputFilename = retrieveFromDb.retrieveDefaultSaveFolder() + selectedIndex.getName().substring(0, lastIndex) + "-edm" + selectedIndex.getName().substring(lastIndex);
             FileInstance fileInstance = fileInstances.get(selectedIndex.getName());
             File outputFile = new File(xmlOutputFilename);
             edmConfig.getTransformerXML2XML().transform(new File(fileInstance.getEseLocation()), outputFile);
             fileInstance.setEdm(true);
-            File eseFile = new File(retrieveFromDb.retrieveDefaultSaveFolder() + selectedIndex.getName() + "-ese");
+            File eseFile = new File(retrieveFromDb.retrieveDefaultSaveFolder() + selectedIndex.getName().substring(0, lastIndex) + "-ese" + selectedIndex.getName().substring(lastIndex));
             eseFile.delete();
         } catch (Exception e) {
             LOG.error("Error when converting file " + selectedIndex.getName() + " into EDM", e);
