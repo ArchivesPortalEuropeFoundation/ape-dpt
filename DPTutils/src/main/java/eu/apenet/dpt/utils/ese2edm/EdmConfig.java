@@ -33,7 +33,7 @@ public class EdmConfig implements Serializable {
 
     public XMLTransformer getTransformerXML2XML() {
         if (transformerXML2XML == null) {
-            transformerXML2XML = new XMLTransformer("/ese2edm/ese2edm.xslt", getProperties());
+            transformerXML2XML = new XMLTransformer("/ese2edm/ese2edm-min.xslt", getProperties());
         }
         return transformerXML2XML;
     }
