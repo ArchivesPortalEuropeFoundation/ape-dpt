@@ -49,9 +49,9 @@ public class ConvertEseActionListener extends ApexActionListener {
         dataPreparationToolGUI.disableRadioButtons();
         dataPreparationToolGUI.disableAllBatchBtns();
         dataPreparationToolGUI.getAPEPanel().setFilename("");
-        if (!dataPreparationToolGUI.getXmlEadList().isSelectionEmpty() && !dataPreparationToolGUI.getEseList().isSelectionEmpty()) {
-            JOptionPane.showMessageDialog(dataPreparationToolGUI, "You have selected several files in different processing status. Please make sure that you have selected either all apeEAD files only or all ESE files only.");
-        } else {
+//        if (!dataPreparationToolGUI.getXmlEadList().isSelectionEmpty() && !dataPreparationToolGUI.getEseList().isSelectionEmpty()) {
+//            JOptionPane.showMessageDialog(dataPreparationToolGUI, "You have selected several files in different processing status. Please make sure that you have selected either all apeEAD files only or all ESE files only.");
+//        } else {
             // Conversion from EAD to ESE in the if-statement, conversion from ESE to EDM in the else-statement
             if (!dataPreparationToolGUI.getXmlEadList().isSelectionEmpty()) {
                 JFrame eseOptionFrame = new JFrame(labels.getString("ese.eseOptionFrame"));
@@ -62,80 +62,80 @@ public class ConvertEseActionListener extends ApexActionListener {
                 eseOptionFrame.setPreferredSize(new Dimension(dataPreparationToolGUI.getContentPane().getWidth() * 3 / 4, dataPreparationToolGUI.getContentPane().getHeight() * 3 / 4));
                 eseOptionFrame.pack();
                 eseOptionFrame.setVisible(true);
-            } else if (!dataPreparationToolGUI.getEseList().isSelectionEmpty()) {
-                final Object[] objects = dataPreparationToolGUI.getEseList().getSelectedValues();
-                final ApexActionListener apexActionListener = this;
-                new Thread(new Runnable() {
-                    public void run() {
-                        int numberOfFiles = objects.length;
-                        int currentFileNumberBatch = 0;
-                        ProgressFrame progressFrame = new ProgressFrame(labels, apePanel, true, true, apexActionListener);
-                        ProgressFrame.ApeProgressBar progressBar = progressFrame.getProgressBarBatch();
-
-                        for (Object oneFile : objects) {
-                            if (!continueLoop) {
-                                break;
-                            }
-
-                            File file = (File) oneFile;
-                            dataPreparationToolGUI.setResultAreaText(labels.getString("converting") + " " + file.getName() + " (" + (++currentFileNumberBatch) + "/" + numberOfFiles + ")");
-                            SummaryWorking summaryWorking = new SummaryWorking(dataPreparationToolGUI.getResultArea(), progressBar);
-                            summaryWorking.setTotalNumberFiles(numberOfFiles);
-                            summaryWorking.setCurrentFileNumberBatch(currentFileNumberBatch);
-                            Thread threadRunner = new Thread(summaryWorking);
-                            threadRunner.setName(SummaryWorking.class.toString());
-                            threadRunner.start();
-                            dataPreparationToolGUI.getEseList().setEnabled(false);
-
-                            FileInstance fileInstance = dataPreparationToolGUI.getEseFileInstances().get(file.getName());
-
-                            if (!fileInstance.isXml()) {
-                                fileInstance.setXml(XmlChecker.isXmlParseable(file) == null);
-                                if (!fileInstance.isXml()) {
-                                    fileInstance.setConversionErrors(labels.getString("conversion.error.fileNotXml"));
-                                    dataPreparationToolGUI.enableSaveBtn();
-                                    dataPreparationToolGUI.enableRadioButtons();
-                                }
-                            }
-
-                            if (fileInstance.isXml()) {
-                                ConvertEdmActionListener edmListener = new ConvertEdmActionListener(apePanel, dataPreparationToolGUI, apePanel);
-                                EdmConfig edmConfig = edmListener.fillConfig();
-                                edmConfig.setMinimalConversion(fileInstance.isMinimalConverted());
-                                try {
-                                    SwingUtilities.invokeLater(new TransformEdm(edmConfig, file, dataPreparationToolGUI));
-                                    apePanel.getApeTabbedPane().appendEseConversionErrorText(MessageFormat.format(labels.getString("edm.convertedAndSaved"), file.getAbsolutePath(), retrieveFromDb.retrieveDefaultSaveFolder()) + "\r\n");
-                                    apePanel.getApeTabbedPane().checkFlashingTab(APETabbedPane.TAB_ESE, Utilities.FLASHING_GREEN_COLOR);
-                                } catch (Exception ex) {
-                                    LOG.error(ex);
-                                    apePanel.getApeTabbedPane().checkFlashingTab(APETabbedPane.TAB_ESE, Utilities.FLASHING_RED_COLOR);
-                                    dataPreparationToolGUI.enableEdmConversionBtn();
-                                    dataPreparationToolGUI.enableRadioButtons();
-                                } finally {
-                                    summaryWorking.stop();
-                                    threadRunner.interrupt();
-                                    dataPreparationToolGUI.getEseList().repaint();
-                                }
-                            }
-                        }
-                        if (progressFrame != null) {
-                            progressFrame.stop();
-                        }
-                        dataPreparationToolGUI.getFinalAct().run();
-                        JOptionPane.showMessageDialog(dataPreparationToolGUI.getContentPane(), MessageFormat.format(labels.getString("filesInOutput"), retrieveFromDb.retrieveDefaultSaveFolder()) + ".", labels.getString("fileSaved"), JOptionPane.INFORMATION_MESSAGE, Utilities.icon);
-                        dataPreparationToolGUI.getEseList().clearSelection();
-                        if (continueLoop) {
-                            dataPreparationToolGUI.setResultAreaText(labels.getString("finished"));
-                        } else {
-                            dataPreparationToolGUI.setResultAreaText(labels.getString("aborted"));
-                        }
-                        dataPreparationToolGUI.enableSaveBtn();
-                        dataPreparationToolGUI.enableRadioButtons();
-                        dataPreparationToolGUI.getEseList().setEnabled(true);
-                    }
-                }).start();
-            }
-        }
+            }// else if (!dataPreparationToolGUI.getEseList().isSelectionEmpty()) {
+//                final Object[] objects = dataPreparationToolGUI.getEseList().getSelectedValues();
+//                final ApexActionListener apexActionListener = this;
+//                new Thread(new Runnable() {
+//                    public void run() {
+//                        int numberOfFiles = objects.length;
+//                        int currentFileNumberBatch = 0;
+//                        ProgressFrame progressFrame = new ProgressFrame(labels, apePanel, true, true, apexActionListener);
+//                        ProgressFrame.ApeProgressBar progressBar = progressFrame.getProgressBarBatch();
+//
+//                        for (Object oneFile : objects) {
+//                            if (!continueLoop) {
+//                                break;
+//                            }
+//
+//                            File file = (File) oneFile;
+//                            dataPreparationToolGUI.setResultAreaText(labels.getString("converting") + " " + file.getName() + " (" + (++currentFileNumberBatch) + "/" + numberOfFiles + ")");
+//                            SummaryWorking summaryWorking = new SummaryWorking(dataPreparationToolGUI.getResultArea(), progressBar);
+//                            summaryWorking.setTotalNumberFiles(numberOfFiles);
+//                            summaryWorking.setCurrentFileNumberBatch(currentFileNumberBatch);
+//                            Thread threadRunner = new Thread(summaryWorking);
+//                            threadRunner.setName(SummaryWorking.class.toString());
+//                            threadRunner.start();
+//                            dataPreparationToolGUI.getEseList().setEnabled(false);
+//
+//                            FileInstance fileInstance = dataPreparationToolGUI.getEseFileInstances().get(file.getName());
+//
+//                            if (!fileInstance.isXml()) {
+//                                fileInstance.setXml(XmlChecker.isXmlParseable(file) == null);
+//                                if (!fileInstance.isXml()) {
+//                                    fileInstance.setConversionErrors(labels.getString("conversion.error.fileNotXml"));
+//                                    dataPreparationToolGUI.enableSaveBtn();
+//                                    dataPreparationToolGUI.enableRadioButtons();
+//                                }
+//                            }
+//
+//                            if (fileInstance.isXml()) {
+//                                ConvertEdmActionListener edmListener = new ConvertEdmActionListener(apePanel, dataPreparationToolGUI, apePanel);
+//                                EdmConfig edmConfig = edmListener.fillConfig();
+//                                edmConfig.setMinimalConversion(fileInstance.isMinimalConverted());
+//                                try {
+//                                    SwingUtilities.invokeLater(new TransformEdm(edmConfig, file, dataPreparationToolGUI));
+//                                    apePanel.getApeTabbedPane().appendEseConversionErrorText(MessageFormat.format(labels.getString("edm.convertedAndSaved"), file.getAbsolutePath(), retrieveFromDb.retrieveDefaultSaveFolder()) + "\r\n");
+//                                    apePanel.getApeTabbedPane().checkFlashingTab(APETabbedPane.TAB_ESE, Utilities.FLASHING_GREEN_COLOR);
+//                                } catch (Exception ex) {
+//                                    LOG.error(ex);
+//                                    apePanel.getApeTabbedPane().checkFlashingTab(APETabbedPane.TAB_ESE, Utilities.FLASHING_RED_COLOR);
+//                                    dataPreparationToolGUI.enableEdmConversionBtn();
+//                                    dataPreparationToolGUI.enableRadioButtons();
+//                                } finally {
+//                                    summaryWorking.stop();
+//                                    threadRunner.interrupt();
+//                                    dataPreparationToolGUI.getEseList().repaint();
+//                                }
+//                            }
+//                        }
+//                        if (progressFrame != null) {
+//                            progressFrame.stop();
+//                        }
+//                        dataPreparationToolGUI.getFinalAct().run();
+//                        JOptionPane.showMessageDialog(dataPreparationToolGUI.getContentPane(), MessageFormat.format(labels.getString("filesInOutput"), retrieveFromDb.retrieveDefaultSaveFolder()) + ".", labels.getString("fileSaved"), JOptionPane.INFORMATION_MESSAGE, Utilities.icon);
+//                        dataPreparationToolGUI.getEseList().clearSelection();
+//                        if (continueLoop) {
+//                            dataPreparationToolGUI.setResultAreaText(labels.getString("finished"));
+//                        } else {
+//                            dataPreparationToolGUI.setResultAreaText(labels.getString("aborted"));
+//                        }
+//                        dataPreparationToolGUI.enableSaveBtn();
+//                        dataPreparationToolGUI.enableRadioButtons();
+//                        dataPreparationToolGUI.getEseList().setEnabled(true);
+//                    }
+//                }).start();
+//            }
+//        }
     }
 
     public void stopLoop() {

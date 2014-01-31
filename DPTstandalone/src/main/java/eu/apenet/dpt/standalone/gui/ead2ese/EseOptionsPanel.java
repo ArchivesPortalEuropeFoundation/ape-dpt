@@ -2,12 +2,14 @@ package eu.apenet.dpt.standalone.gui.ead2ese;
 
 import eu.apenet.dpt.standalone.gui.*;
 import eu.apenet.dpt.standalone.gui.db.RetrieveFromDb;
+import eu.apenet.dpt.standalone.gui.ese2edm.TransformEdm;
 import eu.apenet.dpt.standalone.gui.progress.ApexActionListener;
 import eu.apenet.dpt.standalone.gui.progress.ProgressFrame;
 import eu.apenet.dpt.utils.ead2ese.EseConfig;
 import eu.apenet.dpt.utils.ead2ese.XMLUtil;
 import eu.apenet.dpt.utils.ead2ese.stax.ESEParser;
 import eu.apenet.dpt.utils.ead2ese.stax.RecordParser;
+import eu.apenet.dpt.utils.ese2edm.EdmConfig;
 import eu.apenet.dpt.utils.util.Ead2EseInformation;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -483,7 +485,7 @@ public class EseOptionsPanel extends JPanel {
                 if(batch){
                     dataPreparationToolGUI.enableAllBatchBtns();
                 } else {
-                    dataPreparationToolGUI.enableEseConversionBtn();
+                    dataPreparationToolGUI.enableEdmConversionBtn();
                 }
                 dataPreparationToolGUI.enableRadioButtons();
                 close();
@@ -535,7 +537,7 @@ public class EseOptionsPanel extends JPanel {
         return languages.keySet().toArray(new String[]{});
     }
 
-    private EseConfig fillConfig() {
+    private EseConfig fillEseConfig() {
         EseConfig config = new EseConfig();
 
         config.setUseExistingRepository(false);
@@ -638,6 +640,22 @@ public class EseOptionsPanel extends JPanel {
         } else {
         	config.setMinimalConversion(false);
         }
+
+        return config;
+    }
+
+    private EdmConfig fillEdmConfig(){
+        EdmConfig config = new EdmConfig(true);
+
+        //EDM identifier used for OAI-PMH; not needed for DPT purposes, so set to empty string
+        config.setEdmIdentifier("");
+
+        //prefixUrl, repositoryCode and xmlTypeName used for EDM element id generation;
+        //repositoryCode is taken from the tool while the other two have fixed values.
+
+        config.setPrefixUrl("http://www.archivesportaleurope.net/web/guest/ead-display/-/ead/fp");
+        config.setRepositoryCode(dataPreparationToolGUI.getRepositoryCodeIdentifier());
+        config.setXmlTypeName("fa");
 
         return config;
     }
@@ -828,8 +846,8 @@ public class EseOptionsPanel extends JPanel {
                         ProgressFrame.ApeProgressBar progressBar = progressFrame.getProgressBarBatch();
 
                         try {
-                            apeTabbedPane.setEseConversionErrorText(labels.getString("ese.conversionEseStarted") + "\n");
-                            writer.append(labels.getString("ese.conversionEseStarted") + "\n");
+                            apeTabbedPane.setEseConversionErrorText(labels.getString("edm.conversionEseStarted") + "\n");
+                            writer.append(labels.getString("edm.conversionEseStarted") + "\n");
                             SummaryWorking summaryWorking = new SummaryWorking(dataPreparationToolGUI.getResultArea(), progressBar);
                             summaryWorking.setTotalNumberFiles(numberOfFiles);
                             summaryWorking.setCurrentFileNumberBatch(currentFileNumberBatch);
@@ -838,15 +856,21 @@ public class EseOptionsPanel extends JPanel {
                             threadRunner.start();
 
                             try {
-                                EseConfig config = fillConfig();
+                                EseConfig eseConfig = fillEseConfig();
+                                EdmConfig edmConfig = fillEdmConfig();
+                                edmConfig.setMinimalConversion(eseConfig.isMinimalConversion());
                                 for (File selectedIndexFile : selectedIndices) {
                                     if (!continueLoop) {
                                         break;
                                     }
 
-                                    SwingUtilities.invokeLater(new TransformEse(config, selectedIndexFile));
+                                    SwingUtilities.invokeLater(new TransformEse(eseConfig, selectedIndexFile));
                                     apeTabbedPane.appendEseConversionErrorText(MessageFormat.format(labels.getString("ese.convertedAndSaved"), selectedIndexFile.getAbsolutePath(), retrieveFromDb.retrieveDefaultSaveFolder()) + "\n");
                                     writer.append(MessageFormat.format(labels.getString("ese.convertedAndSaved"), selectedIndexFile.getAbsolutePath(), retrieveFromDb.retrieveDefaultSaveFolder()) + "\n");
+                                    //EDM conversion starts here
+                                    SwingUtilities.invokeLater(new TransformEdm(edmConfig, selectedIndexFile, dataPreparationToolGUI));
+                                    apeTabbedPane.appendEseConversionErrorText(MessageFormat.format(labels.getString("edm.convertedAndSaved"), selectedIndexFile.getAbsolutePath(), retrieveFromDb.retrieveDefaultSaveFolder()) + "\n");
+                                    writer.append(MessageFormat.format(labels.getString("edm.convertedAndSaved"), selectedIndexFile.getAbsolutePath(), retrieveFromDb.retrieveDefaultSaveFolder()) + "\n");
                                 }
                                 apeTabbedPane.checkFlashingTab(APETabbedPane.TAB_ESE, Utilities.FLASHING_GREEN_COLOR);
                                 close();
@@ -874,6 +898,7 @@ public class EseOptionsPanel extends JPanel {
                             DataPreparationToolGUI.createErrorOrWarningPanel(ex1, false, labels.getString("ese.formNotFilledError"), parent);
                         }
                     }
+
                     dataPreparationToolGUI.getFinalAct().run();
                     dataPreparationToolGUI.getXmlEadList().clearSelection();
                     if (continueLoop) {
@@ -919,7 +944,7 @@ public class EseOptionsPanel extends JPanel {
                     fileInstance.setEseLocation(outputFile.getAbsolutePath());
                     if (StringUtils.isNotEmpty(fileInstance.getEseLocation())) {
                         fileInstance.setMinimalConverted(config.isMinimalConversion());
-                        apeTabbedPane.getDataPreparationToolGUI().addEseFileToList(new File(fileInstance.getEseLocation()), fileInstance);
+                        //apeTabbedPane.getDataPreparationToolGUI().addEseFileToList(new File(fileInstance.getEseLocation()), fileInstance);
                     }
                 }
             } catch (Exception e) {

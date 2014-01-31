@@ -25,18 +25,20 @@ public class TransformEdm implements Runnable {
     public TransformEdm(EdmConfig edmConfig, File file, DataPreparationToolGUI dataPreparationToolGUI) {
         this.edmConfig = edmConfig;
         this.selectedIndex = file;
-        this.fileInstances = dataPreparationToolGUI.getEseFileInstances();
+        this.fileInstances = dataPreparationToolGUI.getFileInstances();
     }
 
     public void run() {
         try {
             RetrieveFromDb retrieveFromDb = new RetrieveFromDb();
             int lastIndex = selectedIndex.getName().lastIndexOf('.');
-            String xmlOutputFilename = retrieveFromDb.retrieveDefaultSaveFolder() + selectedIndex.getName().substring(0, lastIndex - 4) + "-edm" + selectedIndex.getName().substring(lastIndex);
+            String xmlOutputFilename = retrieveFromDb.retrieveDefaultSaveFolder() + selectedIndex.getName() + "-edm";
             FileInstance fileInstance = fileInstances.get(selectedIndex.getName());
             File outputFile = new File(xmlOutputFilename);
             edmConfig.getTransformerXML2XML().transform(new File(fileInstance.getEseLocation()), outputFile);
             fileInstance.setEdm(true);
+            File eseFile = new File(retrieveFromDb.retrieveDefaultSaveFolder() + selectedIndex.getName() + "-ese");
+            eseFile.delete();
         } catch (Exception e) {
             LOG.error("Error when converting file " + selectedIndex.getName() + " into EDM", e);
         }
