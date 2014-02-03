@@ -1,36 +1,63 @@
 package eu.apenet.dpt.standalone.gui.ead2ese;
 
-import eu.apenet.dpt.standalone.gui.*;
+import java.awt.BorderLayout;
+import java.awt.CardLayout;
+import java.awt.Color;
+import java.awt.FlowLayout;
+import java.awt.GridLayout;
+import java.awt.Label;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
+import java.io.File;
+import java.io.StringWriter;
+import java.text.MessageFormat;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Enumeration;
+import java.util.LinkedHashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.ResourceBundle;
+import java.util.logging.Level;
+
+import javax.swing.AbstractButton;
+import javax.swing.BorderFactory;
+import javax.swing.ButtonGroup;
+import javax.swing.JButton;
+import javax.swing.JCheckBox;
+import javax.swing.JComboBox;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JList;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JRadioButton;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
+import javax.swing.ListSelectionModel;
+import javax.swing.SwingUtilities;
+import javax.swing.border.Border;
+
+import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
+
+import eu.apenet.dpt.standalone.gui.APETabbedPane;
+import eu.apenet.dpt.standalone.gui.DataPreparationToolGUI;
+import eu.apenet.dpt.standalone.gui.FileInstance;
+import eu.apenet.dpt.standalone.gui.SummaryWorking;
+import eu.apenet.dpt.standalone.gui.Utilities;
 import eu.apenet.dpt.standalone.gui.db.RetrieveFromDb;
 import eu.apenet.dpt.standalone.gui.ese2edm.TransformEdm;
 import eu.apenet.dpt.standalone.gui.progress.ApexActionListener;
 import eu.apenet.dpt.standalone.gui.progress.ProgressFrame;
 import eu.apenet.dpt.utils.ead2ese.EseConfig;
 import eu.apenet.dpt.utils.ead2ese.XMLUtil;
-import eu.apenet.dpt.utils.ead2ese.stax.ESEParser;
-import eu.apenet.dpt.utils.ead2ese.stax.RecordParser;
 import eu.apenet.dpt.utils.ese2edm.EdmConfig;
 import eu.apenet.dpt.utils.util.Ead2EseInformation;
-import org.apache.commons.lang.StringUtils;
-import org.apache.log4j.Logger;
-import org.xml.sax.SAXException;
-
-import javax.swing.*;
-import javax.swing.border.Border;
-import javax.xml.stream.XMLStreamException;
-import javax.xml.stream.XMLStreamReader;
-import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
-import java.io.File;
-import java.io.IOException;
-import java.io.StringWriter;
-import java.text.MessageFormat;
-import java.util.*;
-import java.util.List;
-import java.util.logging.Level;
 
 /**
  * User: Yoann Moranville Date: 17/11/2011
@@ -938,7 +965,7 @@ public class EseOptionsPanel extends JPanel {
                 }
                 File outputFile = new File(xmlOutputFilename);
                 config.getTransformerXML2XML().transform(new File(loc), outputFile);
-                if (analyzeESEXML(outputFile) <= 1) {
+                if (XMLUtil.analyzeESEXML(outputFile) <= 1) {
                     apeTabbedPane.appendEseConversionErrorText(labels.getString("ese.fileEmpty"));
                 } else {
                     fileInstance.setEseLocation(outputFile.getAbsolutePath());
@@ -952,22 +979,7 @@ public class EseOptionsPanel extends JPanel {
             }
         }
 
-        private int analyzeESEXML(File outputFile) throws XMLStreamException, SAXException, IOException {
-            XMLStreamReader xmlReader = XMLUtil.getXMLStreamReader(outputFile);
-            ESEParser parser = new ESEParser();
-            RecordParser recordParser = new RecordParser();
-            parser.registerParser(recordParser);
-            // count number of records
-            parser.parse(xmlReader, null);
-            int numberOfRecords = recordParser.getNumberOfRecords();
-            if (numberOfRecords <= 1) {
-                outputFile.delete();
-            } else {
-                XMLUtil.validateESE(outputFile);
-            }
-            xmlReader.close();
-            return numberOfRecords;
-        }
+
     }
 
     private class CreativeCommonsPanel extends JPanel {
