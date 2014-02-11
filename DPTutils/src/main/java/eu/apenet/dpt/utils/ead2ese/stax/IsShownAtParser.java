@@ -1,22 +1,17 @@
 package eu.apenet.dpt.utils.ead2ese.stax;
-import java.util.ArrayList;
-import java.util.List;
-
 import javax.xml.namespace.QName;
 import javax.xml.stream.XMLStreamConstants;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 import javax.xml.stream.XMLStreamWriter;
 
-public class RecordParser extends AbstractParser {
-	private static final String EUROPEANA = "http://www.europeana.eu/schemas/ese/";
-	private static final QName RECORD = new QName(EUROPEANA, "record");
-	private static final QName IDENTIFIER = new QName(DC, "identifier");
-	private int numberOfRecords = 0; 
-	private List<String> identifiers = new ArrayList<String>();
+public class IsShownAtParser extends AbstractParser {
+
+	private static final QName IS_SHOWN_AT = new QName(EUROPEANA, "isShownAt");
+	private int numberOfIsShownAt = 0; 
 	
-	public RecordParser() {
-		super(RECORD);
+	public IsShownAtParser() {
+		super(IS_SHOWN_AT);
 		registerParser(new DefaultTextParser());
 	}
 
@@ -27,7 +22,7 @@ public class RecordParser extends AbstractParser {
 	public String parse(XMLStreamReader xmlReader, XMLStreamWriter xmlWriter) throws XMLStreamException {
 		QName elementName = xmlReader.getName();
 		writeStartElement(xmlWriter);
-		numberOfRecords++;
+		numberOfIsShownAt++;
 		boolean foundEndElement = false;
 		String identifier = null;
 		for (int event = xmlReader.next(); !foundEndElement && event != XMLStreamConstants.END_DOCUMENT; event = xmlReader.next()) {
@@ -37,11 +32,6 @@ public class RecordParser extends AbstractParser {
 					getDelegates().get(elementName).parse(identifier, xmlReader, xmlWriter);
 					
 				}else if (getDefaultParser() != null) {
-					String content = getDefaultParser().parse(identifier, xmlReader, xmlWriter);
-					if (IDENTIFIER.equals(elementName)){
-						identifier = content;
-						identifiers.add(identifier);
-					}
 				}
 			} else if (event == XMLStreamConstants.END_ELEMENT) {
 				elementName = xmlReader.getName();
@@ -56,11 +46,8 @@ public class RecordParser extends AbstractParser {
 
 	}
 
-	public int getNumberOfRecords() {
-		return numberOfRecords;
+	public int getNumberOfIsShownAt() {
+		return numberOfIsShownAt;
 	}
-	public List<String> getIdentifiers() {
-		return identifiers;
-	}
-	
+
 }

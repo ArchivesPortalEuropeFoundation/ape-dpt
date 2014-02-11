@@ -14,6 +14,8 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
+import eu.apenet.dpt.utils.ead2ese.stax.ESEParser;
+import eu.apenet.dpt.utils.ead2ese.stax.IsShownAtParser;
 import eu.apenet.dpt.utils.util.APEXmlCatalogResolver;
 import javanet.staxutils.IndentingXMLStreamWriter;
 
@@ -45,40 +47,40 @@ public class XMLUtil {
 
 	public static final String UTF_8 = "UTF-8";
 
-
-
 	public static Document convertXMLToDocument(InputStream inputStream) throws SAXException, IOException,
 			ParserConfigurationException {
 
 		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 		factory.setNamespaceAware(true);
 		DocumentBuilder builder = factory.newDocumentBuilder();
-		//XMLErrorHandler errorHandler = new XMLErrorHandler();
-//		builder.setErrorHandler(errorHandler);
+		// XMLErrorHandler errorHandler = new XMLErrorHandler();
+		// builder.setErrorHandler(errorHandler);
 		InputSource inputSource = new InputSource(inputStream);
 		Document document = builder.parse(inputSource);
-//		if (errorHandler.hasError()) {
-//			throw errorHandler.getException();
-//
-//		}
+		// if (errorHandler.hasError()) {
+		// throw errorHandler.getException();
+		//
+		// }
 		return document;
 
 	}
-	public static XMLStreamReader getXMLStreamReader(File inputFile) throws FileNotFoundException, XMLStreamException{
-	    XMLInputFactory inputFactory = (XMLInputFactory) XMLInputFactory.newInstance();
-	    FileInputStream fileInputStream = new FileInputStream(inputFile);
-	    return inputFactory.createXMLStreamReader(fileInputStream, UTF_8);
-	}
-	public static XMLStreamWriter getXMLStreamWriter(File outputFile, boolean indent) throws FileNotFoundException, XMLStreamException{
-		XMLOutputFactory outputFactory = XMLOutputFactory.newInstance();
-	    FileOutputStream out = new FileOutputStream(outputFile);
-	    XMLStreamWriter writer = outputFactory.createXMLStreamWriter(out, UTF_8);
-	    if (indent){
-	    	writer = new IndentingXMLStreamWriter(writer);
-	    }
-	    return writer;
+
+	public static XMLStreamReader getXMLStreamReader(File inputFile) throws FileNotFoundException, XMLStreamException {
+		XMLInputFactory inputFactory = (XMLInputFactory) XMLInputFactory.newInstance();
+		FileInputStream fileInputStream = new FileInputStream(inputFile);
+		return inputFactory.createXMLStreamReader(fileInputStream, UTF_8);
 	}
 
+	public static XMLStreamWriter getXMLStreamWriter(File outputFile, boolean indent) throws FileNotFoundException,
+			XMLStreamException {
+		XMLOutputFactory outputFactory = XMLOutputFactory.newInstance();
+		FileOutputStream out = new FileOutputStream(outputFile);
+		XMLStreamWriter writer = outputFactory.createXMLStreamWriter(out, UTF_8);
+		if (indent) {
+			writer = new IndentingXMLStreamWriter(writer);
+		}
+		return writer;
+	}
 
 	public static void write(Document document, OutputStream outputStream) throws TransformerException,
 			UnsupportedEncodingException {
@@ -91,7 +93,26 @@ public class XMLUtil {
 		transformer.transform(source, result);
 	}
 
-	public static void validateESE(File file) throws SAXException, IOException, XMLStreamException{
+	public static int analyzeESEXML(File outputFile) throws XMLStreamException, SAXException,
+			IOException {
+
+		XMLStreamReader xmlReader = XMLUtil.getXMLStreamReader(outputFile);
+		ESEParser parser = new ESEParser();
+		IsShownAtParser recordParser = new IsShownAtParser();
+		parser.registerParser(recordParser);
+		// count number of records
+		parser.parse(xmlReader, null);
+		int numberOfIsShownAt = recordParser.getNumberOfIsShownAt();
+		if (numberOfIsShownAt == 0) {
+			outputFile.delete();
+		} else {
+			XMLUtil.validateESE(outputFile);
+		}
+		xmlReader.close();
+		return numberOfIsShownAt;
+	}
+
+	private static void validateESE(File file) throws SAXException, IOException, XMLStreamException {
 		List<URL> schemaURLs = new ArrayList<URL>();
 		schemaURLs.add(XMLUtil.class.getResource("/ead2ese/ese/dcmitype.xsd"));
 		schemaURLs.add(XMLUtil.class.getResource("/ead2ese/ese/dcterms.xsd"));
@@ -105,16 +126,15 @@ public class XMLUtil {
 		validator.validate(source);
 		reader.close();
 	}
-	
+
 	private static Schema getSchema(List<URL> schemaURLs) throws SAXException {
 		SchemaFactory schemaFactory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
-        schemaFactory.setResourceResolver(new APEXmlCatalogResolver());
+		schemaFactory.setResourceResolver(new APEXmlCatalogResolver());
 		List<StreamSource> schemaSources = new ArrayList<StreamSource>();
 		for (URL schemaURL : schemaURLs) {
 			schemaSources.add(new StreamSource(schemaURL.toExternalForm()));
 		}
 		return schemaFactory.newSchema(schemaSources.toArray(new StreamSource[] {}));
 	}
-
 
 }
