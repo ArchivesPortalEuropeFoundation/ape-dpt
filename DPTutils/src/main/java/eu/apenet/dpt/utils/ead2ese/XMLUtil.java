@@ -96,13 +96,14 @@ public class XMLUtil {
 		schemaURLs.add(XMLUtil.class.getResource("/ead2ese/ese/dcmitype.xsd"));
 		schemaURLs.add(XMLUtil.class.getResource("/ead2ese/ese/dcterms.xsd"));
 		schemaURLs.add(XMLUtil.class.getResource("/ead2ese/ese/dc.xsd"));
-		schemaURLs.add(XMLUtil.class.getResource("/ead2ese/ese/ESE-V3.4.xsd"));
+		schemaURLs.add(XMLUtil.class.getResource("/ead2ese/ese/ESE-V3.4-extended.xsd"));
 		InputStreamReader reader = new InputStreamReader(new FileInputStream(file), UTF_8);
 		StreamSource source = new StreamSource(reader);
 
 		Schema schema = getSchema(schemaURLs);
 		Validator validator = schema.newValidator();
 		validator.validate(source);
+		reader.close();
 	}
 	
 	private static Schema getSchema(List<URL> schemaURLs) throws SAXException {

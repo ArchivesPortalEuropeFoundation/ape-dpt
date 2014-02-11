@@ -220,7 +220,7 @@ public class EseConfig implements Serializable {
 
     public XMLTransformer getTransformerXML2XML() {
         if (transformerXML2XML == null) {
-            transformerXML2XML = new XMLTransformer("/ead2ese/ead2ese.xslt", getProperties());
+            transformerXML2XML = new XMLTransformer("/ead2ese/ead2ese-min.xslt", getProperties());
         }
         return transformerXML2XML;
     }
