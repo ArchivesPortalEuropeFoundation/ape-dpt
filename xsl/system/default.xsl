@@ -124,7 +124,7 @@
     <xsl:template match="emph" mode="#all">
         <xsl:choose>
             <xsl:when test="parent::bibref or parent::extref" />
-            <xsl:when test="parent::corpname or parent::origination or parent::physfacet or parent::persname or parent::head or parent::titleproper or parent::unitdate or parent::archref or parent::emph or parent::unittitle"> <!--unittitle here is a hack - better fix it in the display xsl of portal/dashboard-->
+            <xsl:when test="parent::corpname or parent::origination or parent::physfacet or parent::persname or parent::head or parent::titleproper or parent::unitdate or parent::archref or parent::emph or parent::unittitle or parent::physdesc"> <!--unittitle here is a hack - better fix it in the display xsl of portal/dashboard-->
                 <xsl:value-of select="normalize-space(.)"/><xsl:text> </xsl:text>
             </xsl:when>
             <xsl:when test="@render='bold' or @render='italic'">
