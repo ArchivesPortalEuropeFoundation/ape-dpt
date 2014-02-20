@@ -8,18 +8,34 @@
 	</parent>
 	<modelVersion>4.0.0</modelVersion>
 	<artifactId>DPTstandalone</artifactId>
-	<name>DPT Standalone mapping tool</name>
+	<name>Data Preparation Tool Standalone mapping tool</name>
 	<packaging>jar</packaging>
 	<organization>
-		<name>APEnet project</name>
-		<url>http://www.apenet.eu/</url>
+		<name>Archives Portal Europe</name>
+		<url>http://www.archivesportaleurope.net</url>
 	</organization>
-	<url>http://www.apenet.eu/</url>
+    <inceptionYear>2009</inceptionYear>
+    <properties>
+        <license.licenseName>eupl_apex</license.licenseName>
+        <license.licenseResolver>${project.baseUri}/src/license</license.licenseResolver>
+    </properties>
 	<build>
-		<!--release of current TOOL version: mvn clean release:prepare release:perform 
-			release:clean clean -->
-        <!-- native2ascii to convert i18n files-->
+		<!--release of current TOOL version: mvn clean release:prepare release:perform release:clean clean -->
 		<plugins>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>license-maven-plugin</artifactId>
+                <version>1.6</version>
+                <executions>
+                    <execution>
+                        <id>first</id>
+                        <goals>
+                            <goal>update-file-header</goal>
+                        </goals>
+                        <phase>process-sources</phase>
+                    </execution>
+                </executions>
+            </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
