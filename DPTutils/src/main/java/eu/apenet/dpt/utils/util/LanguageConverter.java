@@ -11,7 +11,7 @@ import java.util.Map;
 /**
  *
  * @author Stefan Papp
- * @date 2013/04/18
+ * Date: 2013/04/18
  */
 public class LanguageConverter {
 

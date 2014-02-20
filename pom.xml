@@ -78,6 +78,7 @@
     <modules>
         <module>DPTutils</module>
 		 <module>DPTstandalone</module>
+        <module>eagCreation</module>
     </modules>
     <dependencyManagement>
         <dependencies>
