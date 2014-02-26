@@ -75,6 +75,6 @@ public class LinkFormatChecker extends ExtensionFunctionDefinition {
         } catch (Exception ex) {
             throw new RuntimeException(ex);
         }
-        return null;
+        return link;
     }
 }
