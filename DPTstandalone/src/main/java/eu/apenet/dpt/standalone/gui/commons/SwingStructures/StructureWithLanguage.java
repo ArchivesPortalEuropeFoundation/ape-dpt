@@ -1,6 +1,5 @@
-package eu.apenet.dpt.standalone.gui.eag2012.SwingStructures;
+package eu.apenet.dpt.standalone.gui.commons.SwingStructures;
 
-import eu.apenet.dpt.standalone.gui.eag2012.EagPanels;
 import eu.apenet.dpt.utils.util.LanguageIsoList;
 
 import javax.swing.*;
@@ -14,8 +13,8 @@ import java.util.Arrays;
  */
 public class StructureWithLanguage {
     private JComboBox languageBox;
-    private static final String[] languages = EagPanels.languages;
-    private static final String[] languagesDisplay = EagPanels.languagesDisplay;
+    private static final String[] languages = CommonsPropertiesPanels.languages;
+    private static final String[] languagesDisplay = CommonsPropertiesPanels.languagesDisplay;
 
     public StructureWithLanguage(String language) {
         languageBox = new JComboBox(languagesDisplay);

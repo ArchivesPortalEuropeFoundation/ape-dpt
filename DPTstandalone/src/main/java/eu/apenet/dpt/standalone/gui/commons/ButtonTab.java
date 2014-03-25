@@ -1,4 +1,4 @@
-package eu.apenet.dpt.standalone.gui.eag2012;
+package eu.apenet.dpt.standalone.gui.commons;
 
 import javax.swing.*;
 import java.awt.*;
@@ -9,8 +9,8 @@ import java.awt.*;
  *
  * @author Yoann Moranville
  */
-public class ButtonEag extends JButton {
-    public ButtonEag(String title, boolean translationBtn) {
+public class ButtonTab extends JButton {
+    public ButtonTab(String title, boolean translationBtn) {
         super(title);
         if(!translationBtn) {
             setBackground(new Color(97, 201, 237));
@@ -24,7 +24,7 @@ public class ButtonEag extends JButton {
         setToolTipText(title);
     }
 
-    public ButtonEag(String title) {
+    public ButtonTab(String title) {
         this(title, false);
     }
 }

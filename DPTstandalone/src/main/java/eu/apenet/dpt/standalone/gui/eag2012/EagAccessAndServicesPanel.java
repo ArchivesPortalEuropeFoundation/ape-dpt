@@ -1,26 +1,71 @@
 package eu.apenet.dpt.standalone.gui.eag2012;
 
-import com.jgoodies.forms.builder.PanelBuilder;
-import com.jgoodies.forms.layout.CellConstraints;
-import com.jgoodies.forms.layout.FormLayout;
-import eu.apenet.dpt.standalone.gui.ProfileListModel;
-import eu.apenet.dpt.standalone.gui.Utilities;
-import static eu.apenet.dpt.standalone.gui.eag2012.EagPanels.createErrorLabel;
-
-import eu.apenet.dpt.standalone.gui.eag2012.SwingStructures.TextAreaWithLanguage;
-import eu.apenet.dpt.standalone.gui.eag2012.SwingStructures.TextFieldWithLanguage;
-import eu.apenet.dpt.utils.eag2012.*;
-import org.apache.commons.lang.StringUtils;
-
-import javax.swing.*;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.ResourceBundle;
+
+import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JComponent;
+import javax.swing.JFrame;
+import javax.swing.JOptionPane;
+import javax.swing.JTabbedPane;
+import javax.swing.JTextField;
+
+import org.apache.commons.lang.StringUtils;
+
+import com.jgoodies.forms.builder.PanelBuilder;
+import com.jgoodies.forms.layout.CellConstraints;
+import com.jgoodies.forms.layout.FormLayout;
+
+import eu.apenet.dpt.standalone.gui.ProfileListModel;
+import eu.apenet.dpt.standalone.gui.Utilities;
+import eu.apenet.dpt.standalone.gui.commons.ButtonTab;
+import eu.apenet.dpt.standalone.gui.eag2012.SwingStructures.TextAreaWithLanguage;
+import eu.apenet.dpt.standalone.gui.eag2012.SwingStructures.TextFieldWithLanguage;
+import eu.apenet.dpt.utils.eag2012.Accessibility;
+import eu.apenet.dpt.utils.eag2012.AdvancedOrders;
+import eu.apenet.dpt.utils.eag2012.Citation;
+import eu.apenet.dpt.utils.eag2012.Closing;
+import eu.apenet.dpt.utils.eag2012.ComputerPlaces;
+import eu.apenet.dpt.utils.eag2012.Contact;
+import eu.apenet.dpt.utils.eag2012.DescriptiveNote;
+import eu.apenet.dpt.utils.eag2012.Digitalser;
+import eu.apenet.dpt.utils.eag2012.Directions;
+import eu.apenet.dpt.utils.eag2012.Eag;
+import eu.apenet.dpt.utils.eag2012.Email;
+import eu.apenet.dpt.utils.eag2012.Exhibition;
+import eu.apenet.dpt.utils.eag2012.InternetAccess;
+import eu.apenet.dpt.utils.eag2012.Library;
+import eu.apenet.dpt.utils.eag2012.MicrofilmPlaces;
+import eu.apenet.dpt.utils.eag2012.Microformser;
+import eu.apenet.dpt.utils.eag2012.Monographicpub;
+import eu.apenet.dpt.utils.eag2012.Num;
+import eu.apenet.dpt.utils.eag2012.Opening;
+import eu.apenet.dpt.utils.eag2012.OtherServices;
+import eu.apenet.dpt.utils.eag2012.P;
+import eu.apenet.dpt.utils.eag2012.Photocopyser;
+import eu.apenet.dpt.utils.eag2012.PhotographAllowance;
+import eu.apenet.dpt.utils.eag2012.Photographser;
+import eu.apenet.dpt.utils.eag2012.ReadersTicket;
+import eu.apenet.dpt.utils.eag2012.RecreationalServices;
+import eu.apenet.dpt.utils.eag2012.Refreshment;
+import eu.apenet.dpt.utils.eag2012.Repository;
+import eu.apenet.dpt.utils.eag2012.Reproductionser;
+import eu.apenet.dpt.utils.eag2012.ResearchServices;
+import eu.apenet.dpt.utils.eag2012.Restaccess;
+import eu.apenet.dpt.utils.eag2012.Restorationlab;
+import eu.apenet.dpt.utils.eag2012.Searchroom;
+import eu.apenet.dpt.utils.eag2012.Serialpub;
+import eu.apenet.dpt.utils.eag2012.Services;
+import eu.apenet.dpt.utils.eag2012.Techservices;
+import eu.apenet.dpt.utils.eag2012.Telephone;
+import eu.apenet.dpt.utils.eag2012.TermsOfUse;
+import eu.apenet.dpt.utils.eag2012.ToursSessions;
+import eu.apenet.dpt.utils.eag2012.Webpage;
+import eu.apenet.dpt.utils.eag2012.WorkPlaces;
 
 /**
  * User: Yoann Moranville
@@ -123,7 +168,7 @@ public class EagAccessAndServicesPanel extends EagPanels {
             builder.add(createErrorLabel(labels.getString("eag2012.errors.openingHours")),          cc.xy (1, rowNb));
             setNextRow();
         }
-        JButton addOpeningHoursBtn = new ButtonEag(labels.getString("eag2012.commons.addOpeningHours"));
+        JButton addOpeningHoursBtn = new ButtonTab(labels.getString("eag2012.commons.addOpeningHours"));
         builder.add(addOpeningHoursBtn, cc.xy (1, rowNb));
         addOpeningHoursBtn.addActionListener(new AddOpeningHoursBtnAction(eag, tabbedPane, model));
         setNextRow();
@@ -141,7 +186,7 @@ public class EagAccessAndServicesPanel extends EagPanels {
             builder.add(textAreaWithLanguage.getLanguageBox(), cc.xy(7, rowNb));
             setNextRow();
         }
-        JButton addClosingDatesBtn = new ButtonEag(labels.getString("eag2012.commons.addClosingDates"));
+        JButton addClosingDatesBtn = new ButtonTab(labels.getString("eag2012.commons.addClosingDates"));
         builder.add(addClosingDatesBtn, cc.xy (1, rowNb));
         addClosingDatesBtn.addActionListener(new AddClosingDatesBtnAction(eag, tabbedPane, model));
         setNextRow();
@@ -181,7 +226,7 @@ public class EagAccessAndServicesPanel extends EagPanels {
             }
         }
 
-        JButton addTravellingDirectionsBtn = new ButtonEag(labels.getString("eag2012.accessAndServices.addTravellingDirections"));
+        JButton addTravellingDirectionsBtn = new ButtonTab(labels.getString("eag2012.accessAndServices.addTravellingDirections"));
         builder.add(addTravellingDirectionsBtn, cc.xy (1, rowNb));
         addTravellingDirectionsBtn.addActionListener(new AddTravellingDirectionsBtnAction(eag, tabbedPane, model));
         setNextRow();
@@ -206,7 +251,7 @@ public class EagAccessAndServicesPanel extends EagPanels {
             builder.add(textAreaWithLanguage.getLanguageBox(), cc.xy(7, rowNb));
             setNextRow();
             if(last-- == 0) {
-                JButton addRestaccessBtn = new ButtonEag(labels.getString("eag2012.commons.addFutherAccessInformation"));
+                JButton addRestaccessBtn = new ButtonTab(labels.getString("eag2012.commons.addFutherAccessInformation"));
                 builder.add(addRestaccessBtn, cc.xy (1, rowNb));
                 addRestaccessBtn.addActionListener(new AddRestaccessBtnAction(eag, tabbedPane, model));
                 setNextRow();
@@ -260,7 +305,7 @@ public class EagAccessAndServicesPanel extends EagPanels {
             builder.addLabel(labels.getString("eag2012.commons.language"), cc.xy(5, rowNb));
             builder.add(textAreaWithLanguage.getLanguageBox(), cc.xy(7, rowNb));
             if(last-- == 0) {
-                JButton addAccessibilityBtn = new ButtonEag(labels.getString("eag2012.yourinstitution.addInfoOnExistingFacilities"));
+                JButton addAccessibilityBtn = new ButtonTab(labels.getString("eag2012.yourinstitution.addInfoOnExistingFacilities"));
                 builder.add(addAccessibilityBtn, cc.xy (7, rowNb));
                 addAccessibilityBtn.addActionListener(new AddAccessibilityBtnAction(eag, tabbedPane, model));
             }
@@ -333,7 +378,7 @@ public class EagAccessAndServicesPanel extends EagPanels {
         computerplacesSearchroomTf = new JTextField(searchroom.getComputerPlaces().getNum().getContent());
         builder.add(computerplacesSearchroomTf,    cc.xy (3, rowNb));
         if(searchroom.getComputerPlaces().getDescriptiveNote() == null){
-            JButton addDescriptionBtn = new ButtonEag(labels.getString("eag2012.accessAndServices.addDescription"));
+            JButton addDescriptionBtn = new ButtonTab(labels.getString("eag2012.accessAndServices.addDescription"));
             builder.add(addDescriptionBtn, cc.xy (5, rowNb));
             addDescriptionBtn.addActionListener(new AddComputerplacesDescriptionBtnAction(eag, tabbedPane, model));
         }
@@ -349,7 +394,7 @@ public class EagAccessAndServicesPanel extends EagPanels {
                 builder.add(textFieldWithLanguage.getLanguageBox(), cc.xy(7, rowNb));
                 setNextRow();
             }
-            JButton addDescriptionBtn = new ButtonEag(labels.getString("eag2012.accessAndServices.addDescription"));
+            JButton addDescriptionBtn = new ButtonTab(labels.getString("eag2012.accessAndServices.addDescription"));
             builder.add(addDescriptionBtn, cc.xy (5, rowNb));
             addDescriptionBtn.addActionListener(new AddComputerplacesDescriptionBtnAction(eag, tabbedPane, model));
             setNextRow();
@@ -402,7 +447,7 @@ public class EagAccessAndServicesPanel extends EagPanels {
                 setNextRow();
             }
         }
-        JButton addReadersticketBtn = new ButtonEag(labels.getString("eag2012.accessAndServices.addReadersTicket"));
+        JButton addReadersticketBtn = new ButtonTab(labels.getString("eag2012.accessAndServices.addReadersTicket"));
         builder.add(addReadersticketBtn, cc.xy (1, rowNb));
         addReadersticketBtn.addActionListener(new AddReadersticketBtnAction(eag, tabbedPane, model));
         setNextRow();
@@ -432,7 +477,7 @@ public class EagAccessAndServicesPanel extends EagPanels {
                 setNextRow();
             }
         }
-        JButton addAdvancedordersBtn = new ButtonEag(labels.getString("eag2012.control.advancedOrders"));
+        JButton addAdvancedordersBtn = new ButtonTab(labels.getString("eag2012.control.advancedOrders"));
         builder.add(addAdvancedordersBtn, cc.xy (1, rowNb));
         addAdvancedordersBtn.addActionListener(new AddAdvancedordersBtnAction(eag, tabbedPane, model));
         setNextRow();
@@ -459,7 +504,7 @@ public class EagAccessAndServicesPanel extends EagPanels {
             builder.add(textFieldWithLanguage.getLanguageBox(),                     cc.xy (7, rowNb));
             setNextRow();
         }
-        JButton addResearchservicesBtn = new ButtonEag(labels.getString("eag2012.accessAndServices.addResearchservices"));
+        JButton addResearchservicesBtn = new ButtonTab(labels.getString("eag2012.accessAndServices.addResearchservices"));
         builder.add(addResearchservicesBtn, cc.xy (1, rowNb));
         addResearchservicesBtn.addActionListener(new AddResearchservicesBtnAction(eag, tabbedPane, model));
         setNextRow();
@@ -553,7 +598,7 @@ public class EagAccessAndServicesPanel extends EagPanels {
             builder.add(textFieldWithLanguage.getLanguageBox(), cc.xy(7, rowNb));
             setNextRow();
         }
-        JButton addInternetAccessBtn = new ButtonEag(labels.getString("eag2012.isil.addInternetAccess"));
+        JButton addInternetAccessBtn = new ButtonTab(labels.getString("eag2012.isil.addInternetAccess"));
         builder.add(addInternetAccessBtn, cc.xy (1, rowNb));
         addInternetAccessBtn.addActionListener(new AddInternetAccessBtnAction(eag, tabbedPane, model));
         setNextRow();
@@ -585,7 +630,7 @@ public class EagAccessAndServicesPanel extends EagPanels {
             builder.add(textFieldWithLanguage.getLanguageBox(), cc.xy(7, rowNb));
             setNextRow();
         }
-        JButton addDescriptionRestorationBtn = new ButtonEag(labels.getString("eag2012.accessAndServices.addDescriptionTranslation"), true);
+        JButton addDescriptionRestorationBtn = new ButtonTab(labels.getString("eag2012.accessAndServices.addDescriptionTranslation"), true);
         builder.add(addDescriptionRestorationBtn, cc.xy (1, rowNb));
         addDescriptionRestorationBtn.addActionListener(new AddDescriptionRestorationBtnAction(eag, tabbedPane, model));
         setNextRow();
@@ -651,7 +696,7 @@ public class EagAccessAndServicesPanel extends EagPanels {
             builder.add(textFieldWithLanguage.getLanguageBox(), cc.xy(7, rowNb));
             setNextRow();
         }
-        JButton addDescriptionReproductionBtn = new ButtonEag(labels.getString("eag2012.accessAndServices.addDescriptionTranslation"), true);
+        JButton addDescriptionReproductionBtn = new ButtonTab(labels.getString("eag2012.accessAndServices.addDescriptionTranslation"), true);
         builder.add(addDescriptionReproductionBtn, cc.xy (1, rowNb));
         addDescriptionReproductionBtn.addActionListener(new AddDescriptionReproductionBtnAction(eag, tabbedPane, model));
         setNextRow();
@@ -797,7 +842,7 @@ public class EagAccessAndServicesPanel extends EagPanels {
                 setNextRow();
             }
         }
-        JButton addExhibitionsBtn = new ButtonEag(labels.getString("eag2012.accessAndServices.addExhibitions"));
+        JButton addExhibitionsBtn = new ButtonTab(labels.getString("eag2012.accessAndServices.addExhibitions"));
         builder.add(addExhibitionsBtn, cc.xy (1, rowNb));
         addExhibitionsBtn.addActionListener(new AddExhibitionsBtnAction(eag, tabbedPane, model));
         setNextRow();
@@ -838,7 +883,7 @@ public class EagAccessAndServicesPanel extends EagPanels {
                 setNextRow();
             }
         }
-        JButton addToursSessionsBtn = new ButtonEag(labels.getString("eag2012.accessAndServices.addToursSessions"));
+        JButton addToursSessionsBtn = new ButtonTab(labels.getString("eag2012.accessAndServices.addToursSessions"));
         builder.add(addToursSessionsBtn, cc.xy (1, rowNb));
         addToursSessionsBtn.addActionListener(new AddToursSessionsBtnAction(eag, tabbedPane, model));
         setNextRow();
@@ -880,7 +925,7 @@ public class EagAccessAndServicesPanel extends EagPanels {
                 setNextRow();
             }
         }
-        JButton addOtherServicesBtn = new ButtonEag(labels.getString("eag2012.accessAndServices.addOtherServices"));
+        JButton addOtherServicesBtn = new ButtonTab(labels.getString("eag2012.accessAndServices.addOtherServices"));
         builder.add(addOtherServicesBtn, cc.xy (1, rowNb));
         addOtherServicesBtn.addActionListener(new AddOtherServicesBtnAction(eag, tabbedPane, model));
         setNextRow();
@@ -888,30 +933,30 @@ public class EagAccessAndServicesPanel extends EagPanels {
         builder.addSeparator("", cc.xyw(1, rowNb, 7));
         setNextRow();
 
-        JButton exitBtn = new ButtonEag(labels.getString("eag2012.commons.exit"));
+        JButton exitBtn = new ButtonTab(labels.getString("eag2012.commons.exit"));
         builder.add(exitBtn, cc.xy (1, rowNb));
         exitBtn.addActionListener(new ExitBtnAction());
 
-        JButton previousTabBtn = new ButtonEag(labels.getString("eag2012.commons.previousTab"));
+        JButton previousTabBtn = new ButtonTab(labels.getString("eag2012.commons.previousTab"));
         builder.add(previousTabBtn, cc.xy (3, rowNb));
         previousTabBtn.addActionListener(new ChangeTabBtnAction(eag, tabbedPane, model, false));
 
-        JButton nextTabBtn = new ButtonEag(labels.getString("eag2012.commons.nextTab"));
+        JButton nextTabBtn = new ButtonTab(labels.getString("eag2012.commons.nextTab"));
         builder.add(nextTabBtn, cc.xy (5, rowNb));
         nextTabBtn.addActionListener(new ChangeTabBtnAction(eag, tabbedPane, model, true));
 
         setNextRow();
-        JButton saveBtn = new ButtonEag(labels.getString("eag2012.commons.save"));
+        JButton saveBtn = new ButtonTab(labels.getString("eag2012.commons.save"));
         builder.add(saveBtn, cc.xy (5, rowNb));
         saveBtn.addActionListener(new SaveBtnAction(eag, tabbedPane, model));
 
         setNextRow();
         builder.addSeparator("", cc.xyw(1, rowNb, 7));
         setNextRow();
-        JButton previousInstitutionTabBtn = new ButtonEag(labels.getString("eag2012.controls.previousInstitution"));
+        JButton previousInstitutionTabBtn = new ButtonTab(labels.getString("eag2012.controls.previousInstitution"));
         previousInstitutionTabBtn.addActionListener(new PreviousInstitutionTabBtnAction(eag, tabbedPane, model));
         builder.add(previousInstitutionTabBtn, cc.xy(1, rowNb));
-        JButton nextInstitutionTabBtn = new ButtonEag(labels.getString("eag2012.controls.nextInstitution"));
+        JButton nextInstitutionTabBtn = new ButtonTab(labels.getString("eag2012.controls.nextInstitution"));
         nextInstitutionTabBtn.addActionListener(new NextInstitutionTabBtnAction(eag, tabbedPane, model));
         builder.add(nextInstitutionTabBtn, cc.xy(5, rowNb));
 

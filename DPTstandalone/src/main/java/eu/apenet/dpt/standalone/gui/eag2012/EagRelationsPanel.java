@@ -5,7 +5,7 @@ import com.jgoodies.forms.layout.CellConstraints;
 import com.jgoodies.forms.layout.FormLayout;
 import eu.apenet.dpt.standalone.gui.ProfileListModel;
 import eu.apenet.dpt.standalone.gui.Utilities;
-import static eu.apenet.dpt.standalone.gui.eag2012.EagPanels.createErrorLabel;
+import eu.apenet.dpt.standalone.gui.commons.ButtonTab;
 import eu.apenet.dpt.standalone.gui.eag2012.SwingStructures.ResourceRelationType;
 import eu.apenet.dpt.utils.eag2012.*;
 import org.apache.commons.lang.StringUtils;
@@ -100,7 +100,7 @@ public class EagRelationsPanel extends EagPanels {
             builder.add(resourceRelationType.getDescription().getLanguageBox(), cc.xy(7, rowNb));
             setNextRow();
         }
-        JButton addResourceRelation = new ButtonEag(labels.getString("eag2012.relations.addNewResourceRelation"));
+        JButton addResourceRelation = new ButtonTab(labels.getString("eag2012.relations.addNewResourceRelation"));
         builder.add(addResourceRelation, cc.xy (1, rowNb));
         addResourceRelation.addActionListener(new AddResourceRelationAction(eag, tabbedPane, model));
         setNextRow();
@@ -145,7 +145,7 @@ public class EagRelationsPanel extends EagPanels {
             builder.add(resourceRelationType.getDescription().getLanguageBox(), cc.xy(7, rowNb));
             setNextRow();
         }
-        JButton addInstitutionRelation = new ButtonEag(labels.getString("eag2012.relations.addNewInstitutionRelation"));
+        JButton addInstitutionRelation = new ButtonTab(labels.getString("eag2012.relations.addNewInstitutionRelation"));
         builder.add(addInstitutionRelation, cc.xy (1, rowNb));
         addInstitutionRelation.addActionListener(new AddInstitutionRelationAction(eag, tabbedPane, model));
         setNextRow();
@@ -153,22 +153,22 @@ public class EagRelationsPanel extends EagPanels {
         builder.addSeparator("", cc.xyw(1, rowNb, 7));
         setNextRow();
 
-        JButton exitBtn = new ButtonEag(labels.getString("eag2012.commons.exit"));
+        JButton exitBtn = new ButtonTab(labels.getString("eag2012.commons.exit"));
         builder.add(exitBtn, cc.xy (1, rowNb));
         exitBtn.addActionListener(new ExitBtnAction());
 
-        JButton previousTabBtn = new ButtonEag(labels.getString("eag2012.commons.previousTab"));
+        JButton previousTabBtn = new ButtonTab(labels.getString("eag2012.commons.previousTab"));
         builder.add(previousTabBtn, cc.xy (3, rowNb));
         previousTabBtn.addActionListener(new PreviousTabBtnAction(eag, tabbedPane, model));
 
-        JButton saveBtn = new ButtonEag(labels.getString("eag2012.commons.save"));
+        JButton saveBtn = new ButtonTab(labels.getString("eag2012.commons.save"));
         builder.add(saveBtn, cc.xy (5, rowNb));
         saveBtn.addActionListener(new SaveBtnAction(eag, tabbedPane, model));
 
         setNextRow();
         builder.addSeparator("", cc.xyw(1, rowNb, 7));
         setNextRow();
-        JButton nextInstitutionTabBtn = new ButtonEag(labels.getString("eag2012.controls.nextInstitution"));
+        JButton nextInstitutionTabBtn = new ButtonTab(labels.getString("eag2012.controls.nextInstitution"));
         nextInstitutionTabBtn.addActionListener(new NextInstitutionTabBtnAction(eag, tabbedPane, model));
         builder.add(nextInstitutionTabBtn, cc.xy(5, rowNb));
 

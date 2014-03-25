@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<eac-cpf 
+	xmlns:ns2="http://www.w3.org/1999/xlink"
+	xmlns="urn:isbn:1-931666-33-4"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.archivesportaleurope.net/Portal/profiles/eac-cpf/ http://www.archivesportaleurope.net/Portal/profiles/apeEAC-CPF.xsd"
+	xmlns:xlink="http://www.w3.org/1999/xlink"
+	xmlns:xs="http://www.w3.org/2001/XMLSchema">
+   <control>
+       <recordId></recordId>
+       <maintenanceStatus>new</maintenanceStatus>
+       <maintenanceAgency>
+           <agencyCode></agencyCode>
+           <agencyName></agencyName>
+       </maintenanceAgency>
+       <conventionDeclaration>
+           <abbreviation>ISO 639-2b</abbreviation>
+           <citation/>
+       </conventionDeclaration>
+       <conventionDeclaration>
+           <abbreviation>ISO 3166-1</abbreviation>
+           <citation/>
+       </conventionDeclaration>
+       <conventionDeclaration>
+           <abbreviation>ISO 8601</abbreviation>
+           <citation/>
+       </conventionDeclaration>
+       <conventionDeclaration>
+           <abbreviation>ISO 15511</abbreviation>
+           <citation/>
+       </conventionDeclaration>
+       <conventionDeclaration>
+           <abbreviation>ISO 15924</abbreviation>
+           <citation/>
+       </conventionDeclaration>
+       <maintenanceHistory>
+       </maintenanceHistory>
+   </control>
+   <cpfDescription>
+       <identity>
+           <entityType></entityType>
+           <nameEntry>
+                <part></part>
+           </nameEntry>
+       </identity>
+       <description>
+           <existDates>
+           </existDates>
+       </description>
+   </cpfDescription>
+</eac-cpf>

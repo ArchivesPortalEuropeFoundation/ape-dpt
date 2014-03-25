@@ -1,7 +1,4 @@
-package eu.apenet.dpt.standalone.gui.eag2012.SwingStructures;
-
-import eu.apenet.dpt.standalone.gui.eag2012.EagPanels;
-import eu.apenet.dpt.utils.util.LanguageIsoList;
+package eu.apenet.dpt.standalone.gui.commons.SwingStructures;
 
 import javax.swing.*;
 import java.util.ArrayList;

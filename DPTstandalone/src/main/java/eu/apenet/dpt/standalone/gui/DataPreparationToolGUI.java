@@ -1,5 +1,23 @@
 package eu.apenet.dpt.standalone.gui;
 
+/*
+ * #%L
+ * Data Preparation Tool Standalone mapping tool
+ * %%
+ * Copyright (C) 2009 - 2014 Archives Portal Europe
+ * %%
+ * Licensed under the EUPL, Version 1.1 or – as soon they will be approved by the European Commission - subsequent versions of the EUPL (the "Licence");
+ * You may not use this work except in compliance with the Licence.
+ * You may obtain a copy of the Licence at:
+ * 
+ * http://ec.europa.eu/idabc/eupl5
+ * 
+ * Unless required by applicable law or agreed to in writing, software distributed under the Licence is distributed on an "AS IS" basis,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the Licence for the specific language governing permissions and limitations under the Licence.
+ * #L%
+ */
+
 import eu.apenet.dpt.standalone.gui.adhoc.DirectoryPermission;
 import eu.apenet.dpt.standalone.gui.adhoc.FileNameComparator;
 import eu.apenet.dpt.standalone.gui.batch.ConvertAndValidateActionListener;
@@ -7,6 +25,7 @@ import eu.apenet.dpt.standalone.gui.conversion.ConvertActionListener;
 import eu.apenet.dpt.standalone.gui.databasechecker.DatabaseCheckerActionListener;
 import eu.apenet.dpt.standalone.gui.dateconversion.DateConversionRulesDialog;
 import eu.apenet.dpt.standalone.gui.db.RetrieveFromDb;
+import eu.apenet.dpt.standalone.gui.eacCpf.EacCpfFrame;
 import eu.apenet.dpt.standalone.gui.ead2ese.ConvertEseActionListener;
 import eu.apenet.dpt.standalone.gui.eag2012.Eag2012Frame;
 import eu.apenet.dpt.standalone.gui.edition.CheckList;
@@ -65,7 +84,7 @@ public class DataPreparationToolGUI extends JFrame {
         }
     }
     private static final String[] LANGUAGES_OF_TOOL = {"en", "fr", "de", "el", "nl", "hu", "xx"};
-    private static final String[] I18N_BASENAMES = {"i18n/apeBundle","i18n/eag2012"};
+    private static final String[] I18N_BASENAMES = {"i18n/apeBundle","i18n/eag2012","i18n/eac-cpf/eac-cpf"};
     private ResourceBundle labels;
 
     /**
@@ -120,7 +139,14 @@ public class DataPreparationToolGUI extends JFrame {
     private JMenuItem internetApexItem = new JMenuItem();
     private JFileChooser fileChooser = new JFileChooser();
     private File currentLocation = null;
-
+   
+    /**
+     * EAC-CPF
+     */
+    private JMenu EacCpfItem = new JMenu(); 
+    private JMenuItem editEacCpfFile = new JMenuItem();
+    private JMenuItem createEacCpf = new JMenuItem();
+    
     /**
      * List of files (model)
      */
@@ -253,11 +279,15 @@ public class DataPreparationToolGUI extends JFrame {
         menuBar.add(helpMenu);
         fileItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_O, Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()));
         fileMenu.add(fileItem);
-
+        
+        this.EacCpfItem.add(this.editEacCpfFile);     //add the different EAC-CPF options menu
+        this.EacCpfItem.add(this.createEacCpf);
+        this.fileMenu.add(this.EacCpfItem);
+        
         createEag2012Item.add(createEag2012FromExistingEag02);
         createEag2012Item.add(createEag2012FromExistingEag2012);
         createEag2012Item.add(createEag2012FromScratch);
-
+        
         fileMenu.add(createEag2012Item);
         saveSelectedItem.setEnabled(false);
         saveSelectedItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S, Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()));
@@ -391,6 +421,10 @@ public class DataPreparationToolGUI extends JFrame {
 
         xmlEadListLabel.setText(labels.getString("xmlEadFiles"));
 //        eseListLabel.setText(labels.getString("eseFiles"));
+        
+        this.EacCpfItem.setText(labels.getString("eaccpf.eacCpfItem"));      //labels related to EAC-CPF in the menu
+        this.editEacCpfFile.setText(labels.getString("eaccpf.menu.editEacCpfFile"));
+        this.createEacCpf.setText(labels.getString("eaccpf.menu.createEacCpf"));
     }
 
     private void changeAllTextLg() {
@@ -548,7 +582,7 @@ public class DataPreparationToolGUI extends JFrame {
                     File eagFile = eagFileChooser.getSelectedFile();
                     if (!Eag2012Frame.isUsed()) {
                         try {
-                            if (ReadXml.isEagFile(eagFile)) {
+                            if (ReadXml.isXmlFile(eagFile, "eag")) {
                                 new Eag2012Frame(eagFile, false, getContentPane().getSize(), (ProfileListModel) getXmlEadList().getModel(), labels);
                             } else {
                                 JOptionPane.showMessageDialog(rootPane, labels.getString("eag2012.errors.notAnEagFile"));
@@ -586,7 +620,7 @@ public class DataPreparationToolGUI extends JFrame {
                     File eagFile = eagFileChooser.getSelectedFile();
                     if (!Eag2012Frame.isUsed()) {
                         try {
-                            if (ReadXml.isEagFile(eagFile)) {
+                            if (ReadXml.isXmlFile(eagFile, "eag")) {
                                 new Eag2012Frame(eagFile, true, getContentPane().getSize(), (ProfileListModel) getXmlEadList().getModel(), labels);
                             } else {
                                 JOptionPane.showMessageDialog(rootPane, labels.getString("eag2012.errors.notAnEagFile"));
@@ -858,6 +892,61 @@ public class DataPreparationToolGUI extends JFrame {
                 BareBonesBrowserLaunch.openURL("http://www.apex-project.eu/");
             }
         });
+        
+        /**
+         * Option Edit apeEAC-CPF file in the menu 
+         */
+        
+        this.editEacCpfFile.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                JFileChooser eacFileChooser = new JFileChooser();
+                eacFileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+                eacFileChooser.setMultiSelectionEnabled(false);
+                eacFileChooser.setCurrentDirectory(new File(retrieveFromDb.retrieveOpenLocation()));
+                if (eacFileChooser.showOpenDialog(getParent()) == JFileChooser.APPROVE_OPTION) {
+                    currentLocation = eacFileChooser.getCurrentDirectory();
+                    retrieveFromDb.saveOpenLocation(currentLocation.getAbsolutePath());
+
+                    File eacFile = eacFileChooser.getSelectedFile();
+                    if (!EacCpfFrame.isUsed()) {
+                        try {
+                            if (ReadXml.isXmlFile(eacFile, "eac-cpf")) {
+                                new EacCpfFrame(eacFile, true, getContentPane().getSize(), (ProfileListModel) getXmlEadList().getModel(), labels);
+                            } else {
+                                JOptionPane.showMessageDialog(rootPane, labels.getString("eaccpf.error.notAnEacCpfFile"));
+                            }
+                        } catch (SAXException ex) {
+                            if (ex instanceof SAXParseException) {
+                                JOptionPane.showMessageDialog(rootPane, labels.getString("eaccpf.error.notAnEacCpfFile"));
+                            }
+                            java.util.logging.Logger.getLogger(DataPreparationToolGUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+                        } catch (IOException ex) {
+                            java.util.logging.Logger.getLogger(DataPreparationToolGUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+                        } catch (ParserConfigurationException ex) {
+                            java.util.logging.Logger.getLogger(DataPreparationToolGUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+                        } catch (Exception ex) {
+                            try {
+                                JOptionPane.showMessageDialog(rootPane, labels.getString(ex.getMessage()));
+                            } catch (Exception ex1) {
+                                JOptionPane.showMessageDialog(rootPane, "Error...");
+                            }
+                        }
+                    }
+                }
+            }
+        });
+        
+        /**
+         * Option Create apeEAC-CPF in the menu
+         */
+        this.createEacCpf.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                if (!EacCpfFrame.isUsed()) {
+                    EacCpfFrame eacCpfFrame = new EacCpfFrame(getContentPane().getSize(), (ProfileListModel) getXmlEadList().getModel(), labels, retrieveFromDb.retrieveCountryCode(), retrieveFromDb.retrieveRepositoryCode(), null, null, null);
+                }
+            }
+        });
+    
     }
 
     protected void checkHoldingsGuideButton() {

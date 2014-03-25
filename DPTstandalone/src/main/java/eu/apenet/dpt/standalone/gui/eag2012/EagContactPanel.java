@@ -5,8 +5,8 @@ import com.jgoodies.forms.layout.CellConstraints;
 import com.jgoodies.forms.layout.FormLayout;
 import eu.apenet.dpt.standalone.gui.ProfileListModel;
 import eu.apenet.dpt.standalone.gui.Utilities;
-import static eu.apenet.dpt.standalone.gui.eag2012.EagPanels.createErrorLabel;
 
+import eu.apenet.dpt.standalone.gui.commons.ButtonTab;
 import eu.apenet.dpt.standalone.gui.eag2012.SwingStructures.LocationType;
 import eu.apenet.dpt.standalone.gui.eag2012.SwingStructures.TextFieldWithLanguage;
 import eu.apenet.dpt.utils.eag2012.*;
@@ -96,7 +96,7 @@ public class EagContactPanel extends EagPanels {
                 builder.add(textFieldWithLanguage.getLanguageBox(), cc.xy(7, rowNb));
                 setNextRow();
             }
-            JButton addNewRepositoryNameBtn = new ButtonEag(labels.getString("eag2012.contact.addNameOfRepository"));
+            JButton addNewRepositoryNameBtn = new ButtonTab(labels.getString("eag2012.contact.addNameOfRepository"));
             addNewRepositoryNameBtn.addActionListener(new AddRepositoryNameAction(eag, tabbedPane, model));
             builder.add(addNewRepositoryNameBtn, cc.xy(3, rowNb));
             setNextRow();
@@ -184,24 +184,24 @@ public class EagContactPanel extends EagPanels {
         }
 
         if(hasMinimumOneVisitorAddress) {
-            JButton addNewVisitorTranslationAddressBtn = new ButtonEag(labels.getString("eag2012.commons.addVisitorTranslationAddress"), true);
+            JButton addNewVisitorTranslationAddressBtn = new ButtonTab(labels.getString("eag2012.commons.addVisitorTranslationAddress"), true);
             addNewVisitorTranslationAddressBtn.addActionListener(new AddAddressAction(eag, tabbedPane, model, false));
             builder.add(addNewVisitorTranslationAddressBtn, cc.xy(3, rowNb));
             setNextRow();
         } else {
-            JButton addNewVisitorAddressBtn = new ButtonEag(labels.getString("eag2012.commons.addVisitorAddress"));
+            JButton addNewVisitorAddressBtn = new ButtonTab(labels.getString("eag2012.commons.addVisitorAddress"));
             addNewVisitorAddressBtn.addActionListener(new AddAddressAction(eag, tabbedPane, model, false));
             builder.add(addNewVisitorAddressBtn, cc.xy(3, rowNb));
             setNextRow();
         }
 
         if(hasMinimumOnePostalAddress) {
-            JButton addNewPostalTranslationAddressBtn = new ButtonEag(labels.getString("eag2012.commons.addPostalTranslationAddress"), true);
+            JButton addNewPostalTranslationAddressBtn = new ButtonTab(labels.getString("eag2012.commons.addPostalTranslationAddress"), true);
             addNewPostalTranslationAddressBtn.addActionListener(new AddAddressAction(eag, tabbedPane, model, true));
             builder.add(addNewPostalTranslationAddressBtn, cc.xy(3, rowNb));
             setNextRow();
         } else {
-            JButton addNewPostalAddressBtn = new ButtonEag(labels.getString("eag2012.commons.addPostalAddress"));
+            JButton addNewPostalAddressBtn = new ButtonTab(labels.getString("eag2012.commons.addPostalAddress"));
             addNewPostalAddressBtn.addActionListener(new AddAddressAction(eag, tabbedPane, model, true));
             builder.add(addNewPostalAddressBtn, cc.xy(3, rowNb));
             setNextRow();
@@ -224,7 +224,7 @@ public class EagContactPanel extends EagPanels {
             telephoneTfs.add(telephoneTf);
             builder.add(telephoneTf, cc.xy (3, rowNb));
             if(i++ == 0) {
-                JButton addTelephoneBtn = new ButtonEag(labels.getString("eag2012.contact.addFurtherTelephoneNumbers"));
+                JButton addTelephoneBtn = new ButtonTab(labels.getString("eag2012.contact.addFurtherTelephoneNumbers"));
                 addTelephoneBtn.addActionListener(new AddTelephoneAction(eag, tabbedPane, model));
                 builder.add(addTelephoneBtn, cc.xy(5, rowNb));
             }
@@ -234,7 +234,7 @@ public class EagContactPanel extends EagPanels {
             JTextField telephoneTf = new JTextField();
             telephoneTfs.add(telephoneTf);
             builder.add(telephoneTf, cc.xy (3, rowNb));
-            JButton addTelephoneBtn = new ButtonEag(labels.getString("eag2012.contact.addFurtherTelephoneNumbers"));
+            JButton addTelephoneBtn = new ButtonTab(labels.getString("eag2012.contact.addFurtherTelephoneNumbers"));
             addTelephoneBtn.addActionListener(new AddTelephoneAction(eag, tabbedPane, model));
             builder.add(addTelephoneBtn, cc.xy(5, rowNb));
             setNextRow();
@@ -248,7 +248,7 @@ public class EagContactPanel extends EagPanels {
             faxTfs.add(faxTf);
             builder.add(faxTf, cc.xy (3, rowNb));
             if(i++ == 0) {
-                JButton addFaxBtn = new ButtonEag(labels.getString("eag2012.contact.addFaxNumbers"));
+                JButton addFaxBtn = new ButtonTab(labels.getString("eag2012.contact.addFaxNumbers"));
                 addFaxBtn.addActionListener(new AddFaxAction(eag, tabbedPane, model));
                 builder.add(addFaxBtn, cc.xy(5, rowNb));
             }
@@ -258,7 +258,7 @@ public class EagContactPanel extends EagPanels {
             JTextField faxTf = new JTextField();
             faxTfs.add(faxTf);
             builder.add(faxTf, cc.xy (3, rowNb));
-            JButton addFaxBtn = new ButtonEag(labels.getString("eag2012.contact.addFaxNumbers"));
+            JButton addFaxBtn = new ButtonTab(labels.getString("eag2012.contact.addFaxNumbers"));
             addFaxBtn.addActionListener(new AddFaxAction(eag, tabbedPane, model));
             builder.add(addFaxBtn, cc.xy(5, rowNb));
             setNextRow();
@@ -279,7 +279,7 @@ public class EagContactPanel extends EagPanels {
             builder.add(emailTitleTf,                                            cc.xy (7, rowNb));
             setNextRow();
         }
-        JButton addEmailBtn = new ButtonEag(labels.getString("eag2012.commons.addEmail"));
+        JButton addEmailBtn = new ButtonTab(labels.getString("eag2012.commons.addEmail"));
         addEmailBtn.addActionListener(new AddEmailAction(eag, tabbedPane, model));
         builder.add(addEmailBtn, cc.xy(1, rowNb));
         setNextRow();
@@ -312,7 +312,7 @@ public class EagContactPanel extends EagPanels {
                 setNextRow();
             }
         }
-        JButton addWebpageBtn = new ButtonEag(labels.getString("eag2012.commons.addWebpage"));
+        JButton addWebpageBtn = new ButtonTab(labels.getString("eag2012.commons.addWebpage"));
         addWebpageBtn.addActionListener(new AddWebpageAction(eag, tabbedPane, model));
         builder.add(addWebpageBtn, cc.xy(1, rowNb));
         setNextRow();
@@ -320,32 +320,32 @@ public class EagContactPanel extends EagPanels {
         builder.addSeparator("", cc.xyw(1, rowNb, 7));
         setNextRow();
 
-        JButton exitBtn = new ButtonEag(labels.getString("eag2012.commons.exit"));
+        JButton exitBtn = new ButtonTab(labels.getString("eag2012.commons.exit"));
         builder.add(exitBtn, cc.xy (1, rowNb));
         exitBtn.addActionListener(new ExitBtnAction());
 
         if(repositoryNb == 0) {
-            JButton previousTabBtn = new ButtonEag(labels.getString("eag2012.commons.previousTab"));
+            JButton previousTabBtn = new ButtonTab(labels.getString("eag2012.commons.previousTab"));
             builder.add(previousTabBtn, cc.xy (3, rowNb));
             previousTabBtn.addActionListener(new ChangeTabBtnAction(eag, tabbedPane, model, false));
         }
 
-        JButton nextTabBtn = new ButtonEag(labels.getString("eag2012.commons.nextTab"));
+        JButton nextTabBtn = new ButtonTab(labels.getString("eag2012.commons.nextTab"));
         builder.add(nextTabBtn, cc.xy (5, rowNb));
         nextTabBtn.addActionListener(new ChangeTabBtnAction(eag, tabbedPane, model, true));
 
         setNextRow();
-        JButton saveBtn = new ButtonEag(labels.getString("eag2012.commons.save"));
+        JButton saveBtn = new ButtonTab(labels.getString("eag2012.commons.save"));
         builder.add(saveBtn, cc.xy (5, rowNb));
         saveBtn.addActionListener(new SaveBtnAction(eag, tabbedPane, model));
 
         setNextRow();
         builder.addSeparator("", cc.xyw(1, rowNb, 7));
         setNextRow();
-        JButton previousInstitutionTabBtn = new ButtonEag(labels.getString("eag2012.controls.previousInstitution"));
+        JButton previousInstitutionTabBtn = new ButtonTab(labels.getString("eag2012.controls.previousInstitution"));
         previousInstitutionTabBtn.addActionListener(new PreviousInstitutionTabBtnAction(eag, tabbedPane, model));
         builder.add(previousInstitutionTabBtn, cc.xy(1, rowNb));
-        JButton nextInstitutionTabBtn = new ButtonEag(labels.getString("eag2012.controls.nextInstitution"));
+        JButton nextInstitutionTabBtn = new ButtonTab(labels.getString("eag2012.controls.nextInstitution"));
         nextInstitutionTabBtn.addActionListener(new NextInstitutionTabBtnAction(eag, tabbedPane, model));
         builder.add(nextInstitutionTabBtn, cc.xy(5, rowNb));
 

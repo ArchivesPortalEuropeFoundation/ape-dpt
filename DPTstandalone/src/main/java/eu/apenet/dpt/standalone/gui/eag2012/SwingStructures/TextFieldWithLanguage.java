@@ -1,5 +1,6 @@
 package eu.apenet.dpt.standalone.gui.eag2012.SwingStructures;
 
+import eu.apenet.dpt.standalone.gui.commons.SwingStructures.StructureWithLanguage;
 import eu.apenet.dpt.standalone.gui.eag2012.EagPanels;
 import eu.apenet.dpt.standalone.gui.eag2012.SwingStructures.EagScrollPane;
 import eu.apenet.dpt.standalone.gui.eag2012.SwingStructures.EagScrollPaneHolder;

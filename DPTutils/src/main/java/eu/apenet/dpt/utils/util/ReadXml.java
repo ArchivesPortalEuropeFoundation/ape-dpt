@@ -34,7 +34,7 @@ public class ReadXml {
         return "";
     }
 
-    public static boolean isEagFile(File file) throws XMLStreamException, FileNotFoundException {
+    public static boolean isXmlFile(File file, String target) throws XMLStreamException, FileNotFoundException {
         XMLInputFactory inputFactory = XMLInputFactory.newInstance();
         XMLStreamReader reader = inputFactory.createXMLStreamReader(new FileInputStream(file));
         while (reader.hasNext()) {
@@ -43,11 +43,14 @@ public class ReadXml {
                 QName qName = reader.getName();
                 if(qName != null){
                     if(qName.getLocalPart() != null && qName.getLocalPart().compareTo("") != 0)
-                        if(qName.getLocalPart().equals("eag"))
+                        if(qName.getLocalPart().equals(target))
                             return true;
                 }
             }
         }
         return false;
     }
+    
+    
+    
 }
