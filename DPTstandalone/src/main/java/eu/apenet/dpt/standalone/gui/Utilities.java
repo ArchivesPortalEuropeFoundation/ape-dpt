@@ -51,14 +51,14 @@ public final class Utilities {
     private final static String LOG_DIR_SIMPLE = "output";
     private final static String TEMP_DIR_SIMPLE = "temp";
 
-    public final static String XSL_DEFAULT_NAME = "default.xsl";
+    public final static String XSL_DEFAULT_NAME = "default-apeEAD.xsl";
     public final static String XSL_BEFORE_NAME = "before.xsl";
 
     public final static int XSLT_GROUP = 0;
     public final static int XSD_GROUP = 1;
 
     public final static ImageIcon icon = new ImageIcon(Utilities.class.getResource("/ape_logo.png"), "APE Logo");
-    
+
     public final static String[] SYSTEM_FILES = {XSL_BEFORE_NAME, XSL_DEFAULT_NAME, XML_LANGUAGES_NAME, "changeNS.xsl", "frontmatter.xsl", "import.xsl", "levels.xsl", "eag2eag2012.xsl"};
     public final static String[] FILES_NOT_SHOWN = {XSL_BEFORE_NAME, "frontmatter.xsl", "import.xsl", "levels.xsl"};
 
@@ -84,7 +84,7 @@ public final class Utilities {
     public static boolean isSystemFile(String filename) {
         return Arrays.asList(SYSTEM_FILES).contains(filename);
     }
-    
+
     public static String stringFromList(List<SAXParseException> exceptions) {
         StringBuilder result = new StringBuilder();
         for(SAXParseException exception : exceptions)

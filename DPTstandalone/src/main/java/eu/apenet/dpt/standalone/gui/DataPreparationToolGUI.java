@@ -139,14 +139,14 @@ public class DataPreparationToolGUI extends JFrame {
     private JMenuItem internetApexItem = new JMenuItem();
     private JFileChooser fileChooser = new JFileChooser();
     private File currentLocation = null;
-   
+
     /**
      * EAC-CPF
      */
-    private JMenu EacCpfItem = new JMenu(); 
+    private JMenu EacCpfItem = new JMenu();
     private JMenuItem editEacCpfFile = new JMenuItem();
     private JMenuItem createEacCpf = new JMenuItem();
-    
+
     /**
      * List of files (model)
      */
@@ -279,15 +279,15 @@ public class DataPreparationToolGUI extends JFrame {
         menuBar.add(helpMenu);
         fileItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_O, Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()));
         fileMenu.add(fileItem);
-        
+
         this.EacCpfItem.add(this.editEacCpfFile);     //add the different EAC-CPF options menu
         this.EacCpfItem.add(this.createEacCpf);
         this.fileMenu.add(this.EacCpfItem);
-        
+
         createEag2012Item.add(createEag2012FromExistingEag02);
         createEag2012Item.add(createEag2012FromExistingEag2012);
         createEag2012Item.add(createEag2012FromScratch);
-        
+
         fileMenu.add(createEag2012Item);
         saveSelectedItem.setEnabled(false);
         saveSelectedItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S, Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()));
@@ -421,7 +421,7 @@ public class DataPreparationToolGUI extends JFrame {
 
         xmlEadListLabel.setText(labels.getString("xmlEadFiles"));
 //        eseListLabel.setText(labels.getString("eseFiles"));
-        
+
         this.EacCpfItem.setText(labels.getString("eaccpf.eacCpfItem"));      //labels related to EAC-CPF in the menu
         this.editEacCpfFile.setText(labels.getString("eaccpf.menu.editEacCpfFile"));
         this.createEacCpf.setText(labels.getString("eaccpf.menu.createEacCpf"));
@@ -892,11 +892,11 @@ public class DataPreparationToolGUI extends JFrame {
                 BareBonesBrowserLaunch.openURL("http://www.apex-project.eu/");
             }
         });
-        
+
         /**
-         * Option Edit apeEAC-CPF file in the menu 
+         * Option Edit apeEAC-CPF file in the menu
          */
-        
+
         this.editEacCpfFile.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 JFileChooser eacFileChooser = new JFileChooser();
@@ -935,7 +935,7 @@ public class DataPreparationToolGUI extends JFrame {
                 }
             }
         });
-        
+
         /**
          * Option Create apeEAC-CPF in the menu
          */
@@ -946,7 +946,7 @@ public class DataPreparationToolGUI extends JFrame {
                 }
             }
         });
-    
+
     }
 
     protected void checkHoldingsGuideButton() {
@@ -1398,7 +1398,7 @@ public class DataPreparationToolGUI extends JFrame {
     }
 
     private void doChecks() {
-        //2 Files MUST exist - xsl/default.xsl and xsl/languages.xml
+        //2 Files MUST exist - xsl/default-apeEAD.xsl and xsl/languages.xml
         String errorMsg = "";
         if (isFileMissing(Utilities.DEFAULT_XSL_FILE_PATH)) {
             errorMsg = MessageFormat.format(labels.getString("fileNotFound"), Utilities.DEFAULT_XSL_FILE_PATH) + "\n";

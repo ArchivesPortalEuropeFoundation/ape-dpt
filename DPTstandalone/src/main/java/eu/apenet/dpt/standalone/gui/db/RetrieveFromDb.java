@@ -97,7 +97,7 @@ public class RetrieveFromDb {
     }
 
     public String retrieveDefaultXsl() {
-        return retrieve(DBUtil.OptionKeys.OPTION_DEFAULT_XSL.getName(), "default.xsl");
+        return retrieve(DBUtil.OptionKeys.OPTION_DEFAULT_XSL.getName(), "default-apeEAD.xsl");
     }
 
     public void saveDefaultXsl(String nameXsl) {
