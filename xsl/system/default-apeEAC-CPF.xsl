@@ -321,7 +321,7 @@
                         test="text()[string-length(normalize-space(.)) > 0] and text() != $mainagencycode">
                         <otherAgencyCode>
                                 <xsl:attribute name="localType">
-                                        <xsl:value-of select="'“localIDconverted'"/>
+                                        <xsl:value-of select="'localIDconverted'"/>
                                 </xsl:attribute>
                                 <xsl:value-of select="text()"/>
                         </otherAgencyCode>
@@ -1204,7 +1204,7 @@
                         <xsl:value-of select="."/>
                 </componentEntry>
         </xsl:template>
-        
+
         <!-- Ignore structureOrGenealogy/citation, objectXMLWrap, objectBinWrap - they are not used -->
         <xsl:template match="citation[parent::structureOrGenealogy] | objectXMLWrap | objectBinWrap" mode="#all"/>
         <!-- Ignore any relation elements with a object___Wrap element as only child -->
