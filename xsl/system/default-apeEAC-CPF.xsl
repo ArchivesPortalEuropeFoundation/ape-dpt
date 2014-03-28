@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-        EAC-CPF default convertion into APE-EAC-CPF
+        EAC-CPF default conversion into APE-EAC-CPF
 -->
 <xsl:stylesheet version="2.0" xmlns="urn:isbn:1-931666-33-4"
         xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
@@ -45,8 +45,7 @@
         <xsl:template match="eac-cpf" name="eac-cpf" mode="top">
                 <eac-cpf xmlns="urn:isbn:1-931666-33-4" xmlns:xlink="http://www.w3.org/1999/xlink"
                         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-                        xsi:schemaLocation="urn:isbn:1-931666-33-4 http://www.archivesportaleurope.net/Portal/profiles/apeEAC-CPF.xsd http://www.w3.org/1999/xlink http://www.loc.gov/standards/xlink/xlink.xsd"
-                        audience="external">
+                        xsi:schemaLocation="urn:isbn:1-931666-33-4 http://www.archivesportaleurope.net/Portal/profiles/apeEAC-CPF.xsd http://www.w3.org/1999/xlink http://www.loc.gov/standards/xlink/xlink.xsd">
                         <xsl:if test="@xml:base">
                                 <xsl:attribute name="xml:base" select="@xml:base"/>
                         </xsl:if>
@@ -66,7 +65,21 @@
         <!-- useDates -->
         <xsl:template match="useDates" mode="copy">
                 <useDates>
-                        <xsl:apply-templates select="node()" mode="copy"/>
+                        <xsl:choose>
+                                <xsl:when test="count(date) = 1 and count(dateRange) = 0">
+                                        <xsl:apply-templates select="date" mode="copy"/>
+                                </xsl:when>
+                                <xsl:when test="count(dateRange) = 1 and count(date) = 0">
+                                        <xsl:apply-templates select="dateRange" mode="copy"/>
+                                </xsl:when>
+                                <xsl:otherwise>
+                                        <dateSet>
+                                                <xsl:for-each select="date | dateRange | dateSet/date | dateSet/dateRange">
+                                                        <xsl:apply-templates select="." mode="copy"/>
+                                                </xsl:for-each>
+                                        </dateSet>
+                                </xsl:otherwise>
+                        </xsl:choose>
                 </useDates>
         </xsl:template>
 
@@ -85,13 +98,14 @@
                         <xsl:choose>
                                 <xsl:when test="string-length(.)!=0">
                                         <xsl:if test="@standardDate">
-                                                <xsl:attribute name="standardDate" select="@standardDate"/>
+                                                <xsl:attribute name="standardDate"
+                                                  select="@standardDate"/>
                                         </xsl:if>
-                                        <xsl:value-of select="."/>                                        
+                                        <xsl:value-of select="."/>
                                 </xsl:when>
                                 <xsl:otherwise>
                                         <xsl:attribute name="standardDate" select="'2099'"/>
-                                        <xsl:value-of select="'unknown'"></xsl:value-of>
+                                        <xsl:value-of select="'unknown'"/>
                                 </xsl:otherwise>
                         </xsl:choose>
                 </date>
@@ -105,7 +119,8 @@
                                         <xsl:attribute name="notAfter" select="fromDate/@notAfter"/>
                                 </xsl:if>
                                 <xsl:if test="fromDate/@notBefore">
-                                        <xsl:attribute name="notBefore" select="fromDate/@notBefore"/>
+                                        <xsl:attribute name="notBefore" select="fromDate/@notBefore"
+                                        />
                                 </xsl:if>
                                 <xsl:if test="fromDate/@xml:lang">
                                         <xsl:attribute name="xml:lang" select="fromDate/@xml:lang"/>
@@ -113,13 +128,14 @@
                                 <xsl:choose>
                                         <xsl:when test="string-length(fromDate)!=0">
                                                 <xsl:if test="fromDate/@standardDate">
-                                                        <xsl:attribute name="standardDate" select="fromDate/@standardDate"/>
+                                                  <xsl:attribute name="standardDate"
+                                                  select="fromDate/@standardDate"/>
                                                 </xsl:if>
-                                                <xsl:value-of select="fromDate"/>                                        
+                                                <xsl:value-of select="fromDate"/>
                                         </xsl:when>
                                         <xsl:otherwise>
                                                 <xsl:attribute name="standardDate" select="'0001'"/>
-                                                <xsl:value-of select="'unknown'"></xsl:value-of>
+                                                <xsl:value-of select="'unknown'"/>
                                         </xsl:otherwise>
                                 </xsl:choose>
                         </fromDate>
@@ -136,24 +152,18 @@
                                 <xsl:choose>
                                         <xsl:when test="string-length(toDate)!=0">
                                                 <xsl:if test="toDate/@standardDate">
-                                                        <xsl:attribute name="standardDate" select="toDate/@standardDate"/>
+                                                  <xsl:attribute name="standardDate"
+                                                  select="toDate/@standardDate"/>
                                                 </xsl:if>
-                                                <xsl:value-of select="toDate"/>                                        
+                                                <xsl:value-of select="toDate"/>
                                         </xsl:when>
                                         <xsl:otherwise>
                                                 <xsl:attribute name="standardDate" select="'2099'"/>
-                                                <xsl:value-of select="'unknown'"></xsl:value-of>
+                                                <xsl:value-of select="'unknown'"/>
                                         </xsl:otherwise>
                                 </xsl:choose>
                         </toDate>
                 </dateRange>
-        </xsl:template>
-
-        <!-- dateSet -->
-        <xsl:template match="dateSet" name="multipleDates" mode="#all">
-                <dateSet>
-                        <xsl:apply-templates select="node()" mode="copy"/>
-                </dateSet>
         </xsl:template>
 
         <!-- placeEntry -->
@@ -210,8 +220,8 @@
                 </term>
         </xsl:template>
 
-        <!-- citation -->
-        <xsl:template match="citation" mode="#all">
+        <!-- citation (everywhere except structureOrGenealogy -->
+        <xsl:template match="citation[not(parent::structureOrGenealogy)]" mode="#all">
                 <citation>
                         <xsl:if test="@lastDateTimeVerified">
                                 <xsl:attribute name="lastDateTimeVerified"
@@ -283,11 +293,13 @@
         </xsl:template>
 
         <!-- maintenanceAgency -->
-        <xsl:template match="maintenanceAgency">
-                <xsl:if test="not(agencyCode)">
-                        <xsl:call-template name="addApeAgencyCode"/>
-                </xsl:if>
-                <xsl:apply-templates select="node()" mode="copy"/>
+        <xsl:template match="maintenanceAgency" mode="copy">
+                <maintenanceAgency>
+                        <xsl:if test="not(agencyCode)">
+                                <xsl:call-template name="addApeAgencyCode"/>
+                        </xsl:if>
+                        <xsl:apply-templates select="node()" mode="copy"/>
+                </maintenanceAgency>
         </xsl:template>
 
         <!-- agencyCode (should be ISIL code of institution) -->
@@ -584,17 +596,17 @@
         <!-- nameEntry -->
         <xsl:template match="nameEntry" mode="copy">
                 <nameEntry>
-                        <xsl:if test="@localType">
-                                <xsl:attribute name="localType" select="@localType"/>
-                        </xsl:if>
-                        <xsl:if test="@scriptCode">
-                                <xsl:attribute name="scriptCode" select="@scriptCode"/>
-                        </xsl:if>
-                        <xsl:if test="@transliteration">
-                                <xsl:attribute name="transliteration" select="@transliteration"/>
-                        </xsl:if>
-                        <xsl:if test="@xml:lang">
-                                <xsl:attribute name="xml:lang" select="@xml:lang"/>
+                        <xsl:if test="parent::identity">
+                                <xsl:if test="@localType">
+                                        <xsl:attribute name="localType" select="@localType"/>
+                                </xsl:if>
+                                <xsl:if test="@scriptCode">
+                                        <xsl:attribute name="scriptCode" select="@scriptCode"/>
+                                </xsl:if>
+                                <xsl:if test="@transliteration">
+                                        <xsl:attribute name="transliteration"
+                                                select="@transliteration"/>
+                                </xsl:if>
                         </xsl:if>
                         <xsl:apply-templates select="node()" mode="copy"/>
                 </nameEntry>
@@ -603,9 +615,18 @@
         <!-- part -->
         <xsl:template match="part" mode="copy">
                 <part>
-                        <xsl:attribute name="xml:lang">
-                                <xsl:value-of select="@xml:lang"/>
-                        </xsl:attribute>
+                        <xsl:choose>
+                                <xsl:when test="@xml:lang">
+                                        <xsl:attribute name="xml:lang" select="@xml:lang"/>
+                                </xsl:when>
+                                <xsl:when test="../@xml:lang">
+                                        <xsl:attribute name="xml:lang" select="../@xml:lang"/>
+                                </xsl:when>
+                                <xsl:when test="../../@xml:lang">
+                                        <xsl:attribute name="xml:lang" select="../../@xml:lang"/>
+                                </xsl:when>
+                                <xsl:otherwise/>
+                        </xsl:choose>
                         <xsl:value-of select="."/>
                 </part>
         </xsl:template>
@@ -637,14 +658,117 @@
         <!-- description -->
         <xsl:template match="description" mode="copy">
                 <description>
-                        <xsl:apply-templates select="node()" mode="copy"/>
+                        <xsl:apply-templates select="existDates" mode="copy"/>
+                        <xsl:choose>
+                                <xsl:when test="count(place) &gt; 0">
+                                        <places>
+                                                <xsl:for-each select="place">
+                                                  <xsl:apply-templates select="." mode="copy"/>
+                                                </xsl:for-each>
+                                        </places>
+                                </xsl:when>
+                                <xsl:otherwise>
+                                        <xsl:apply-templates select="places" mode="copy"/>
+                                </xsl:otherwise>
+                        </xsl:choose>
+                        <xsl:choose>
+                                <xsl:when test="count(localDescription) &gt; 0">
+                                        <localDescriptions>
+                                                <xsl:for-each select="localDescription">
+                                                  <xsl:apply-templates select="." mode="copy"/>
+                                                </xsl:for-each>
+                                        </localDescriptions>
+                                </xsl:when>
+                                <xsl:otherwise>
+                                        <xsl:apply-templates select="localDescriptions" mode="copy"
+                                        />
+                                </xsl:otherwise>
+                        </xsl:choose>
+                        <xsl:choose>
+                                <xsl:when test="count(legalStatus) &gt; 0">
+                                        <legalStatuses>
+                                                <xsl:for-each select="legalStatus">
+                                                  <xsl:apply-templates select="." mode="copy"/>
+                                                </xsl:for-each>
+                                        </legalStatuses>
+                                </xsl:when>
+                                <xsl:otherwise>
+                                        <xsl:apply-templates select="legalStatuses" mode="copy"/>
+                                </xsl:otherwise>
+                        </xsl:choose>
+                        <xsl:choose>
+                                <xsl:when test="count(function) &gt; 0">
+                                        <functions>
+                                                <xsl:for-each select="function">
+                                                  <xsl:apply-templates select="." mode="copy"/>
+                                                </xsl:for-each>
+                                        </functions>
+                                </xsl:when>
+                                <xsl:otherwise>
+                                        <xsl:apply-templates select="functions" mode="copy"/>
+                                </xsl:otherwise>
+                        </xsl:choose>
+                        <xsl:choose>
+                                <xsl:when test="count(occupation) &gt; 0">
+                                        <occupations>
+                                                <xsl:for-each select="occupation">
+                                                  <xsl:apply-templates select="." mode="copy"/>
+                                                </xsl:for-each>
+                                        </occupations>
+                                </xsl:when>
+                                <xsl:otherwise>
+                                        <xsl:apply-templates select="occupations" mode="copy"/>
+                                </xsl:otherwise>
+                        </xsl:choose>
+                        <xsl:choose>
+                                <xsl:when test="count(mandate) &gt; 0">
+                                        <mandates>
+                                                <xsl:for-each select="mandate">
+                                                        <xsl:apply-templates select="." mode="copy"/>
+                                                </xsl:for-each>
+                                        </mandates>
+                                </xsl:when>
+                                <xsl:otherwise>
+                                        <xsl:apply-templates select="mandates" mode="copy"/>
+                                </xsl:otherwise>
+                        </xsl:choose>
+                        <xsl:choose>
+                                <xsl:when test="count(languageUsed) &gt; 0">
+                                        <languagesUsed>
+                                                <xsl:for-each select="languageUsed">
+                                                        <xsl:apply-templates select="." mode="copy"/>
+                                                </xsl:for-each>
+                                        </languagesUsed>
+                                </xsl:when>
+                                <xsl:otherwise>
+                                        <xsl:apply-templates select="languagesUsed" mode="copy"/>
+                                </xsl:otherwise>
+                        </xsl:choose>
+                        <xsl:apply-templates select="structureOrGenealogy" mode="copy"/>
+                        <xsl:apply-templates select="generalContext" mode="copy"/>
+                        <xsl:apply-templates select="biogHist" mode="copy"/>
                 </description>
         </xsl:template>
 
         <!-- existDates -->
         <xsl:template match="existDates" mode="copy">
                 <existDates>
-                        <xsl:apply-templates select="node()" mode="copy"/>
+                        <xsl:choose>
+                                <xsl:when test="count(date) = 1 and count(dateRange) = 0">
+                                        <xsl:apply-templates select="date" mode="copy"/>
+                                </xsl:when>
+                                <xsl:when test="count(dateRange) = 1 and count(date) = 0">
+                                        <xsl:apply-templates select="dateRange" mode="copy"/>
+                                </xsl:when>
+                                <xsl:otherwise>
+                                        <dateSet>
+                                                <xsl:for-each select="date | dateRange | dateSet/date | dateSet/dateRange">
+                                                        <xsl:apply-templates select="." mode="copy"/>
+                                                </xsl:for-each>
+                                        </dateSet>
+                                </xsl:otherwise>
+                        </xsl:choose>
+                        <xsl:apply-templates select="descriptiveNote" mode="copy"/>
                 </existDates>
         </xsl:template>
 
@@ -699,7 +823,7 @@
                                         <xsl:if test="@localType">
                                                 <xsl:attribute name="localType" select="@localType"/>
                                         </xsl:if>
-                                        <xsl:value-of select="."></xsl:value-of>
+                                        <xsl:value-of select="."/>
                                 </addressLine>
                         </xsl:for-each>
                 </address>
@@ -881,7 +1005,6 @@
                         </xsl:if>
                         <xsl:apply-templates select="node()" mode="copy"/>
                 </abstract>
-                <xsl:value-of select="."/>
         </xsl:template>
 
         <!-- chronList -->
@@ -1081,5 +1204,12 @@
                         <xsl:value-of select="."/>
                 </componentEntry>
         </xsl:template>
+        
+        <!-- Ignore structureOrGenealogy/citation, objectXMLWrap, objectBinWrap - they are not used -->
+        <xsl:template match="citation[parent::structureOrGenealogy] | objectXMLWrap | objectBinWrap" mode="#all"/>
+        <!-- Ignore any relation elements with a object___Wrap element as only child -->
+        <xsl:template match="cpfRelation[count(child::*) = 1 and (child::objectXMLWrap or child::objectBinWrap)]" mode="copy"/>
+        <xsl:template match="resourceRelation[count(child::*) = 1 and (child::objectXMLWrap or child::objectBinWrap)]" mode="copy"/>
+        <xsl:template match="functionRelation[count(child::*) = 1 and (child::objectXMLWrap or child::objectBinWrap)]" mode="copy"/>
 
 </xsl:stylesheet>
