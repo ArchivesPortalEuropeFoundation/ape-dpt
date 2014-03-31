@@ -600,9 +600,6 @@
                                 <xsl:if test="@localType">
                                         <xsl:attribute name="localType" select="@localType"/>
                                 </xsl:if>
-                                <xsl:if test="@scriptCode">
-                                        <xsl:attribute name="scriptCode" select="@scriptCode"/>
-                                </xsl:if>
                                 <xsl:if test="@transliteration">
                                         <xsl:attribute name="transliteration"
                                                 select="@transliteration"/>
