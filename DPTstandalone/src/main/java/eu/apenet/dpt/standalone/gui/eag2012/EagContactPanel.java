@@ -485,11 +485,11 @@ public class EagContactPanel extends EagPanels {
             int counter = locationFields.size();
             if (counter > 1){
                 if (isPostal && locationFields.get(counter - 1).getLocalType().equals("postal address")) {
-                    reloadTabbedPanel(new EagInstitutionPanel(eag, tabbedPane, mainTabbedPane, eag2012Frame, model, isNew, labels, repositoryNb).buildEditorPanel(errors), 0);
+                    reloadTabbedPanel(new EagContactPanel(eag, tabbedPane, mainTabbedPane, eag2012Frame, model, isNew, labels, repositoryNb).buildEditorPanel(errors),2);
                 }
                 if (!isPostal && locationFields.get(counter - 1).getLocalType().equals("visitors address")) {
                     if(StringUtils.isBlank(locationFields.get(counter - 1).getCountryTfValue())){
-                        reloadTabbedPanel(new EagInstitutionPanel(eag, tabbedPane, mainTabbedPane, eag2012Frame, model, isNew, labels, repositoryNb).buildEditorPanel(errors), 0);
+                        reloadTabbedPanel(new EagContactPanel(eag, tabbedPane, mainTabbedPane, eag2012Frame, model, isNew, labels, repositoryNb).buildEditorPanel(errors),2);
                     }
                 }
             }
@@ -507,7 +507,7 @@ public class EagContactPanel extends EagPanels {
                 eag.getArchguide().getDesc().getRepositories().getRepository().get(repositoryNb).getLocation().add(location);
             }
             if(locationFields.get(counter - 1).getErrors().isEmpty() ){
-                reloadTabbedPanel(new EagInstitutionPanel(eag, tabbedPane, mainTabbedPane, eag2012Frame, model, isNew, labels, repositoryNb).buildEditorPanel(errors), 0);
+                reloadTabbedPanel(new EagContactPanel(eag, tabbedPane, mainTabbedPane, eag2012Frame, model, isNew, labels, repositoryNb).buildEditorPanel(errors),2);
             }
 //            Location location = new Location();
 //            if(isPostal) {
