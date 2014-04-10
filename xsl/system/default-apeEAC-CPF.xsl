@@ -44,8 +44,8 @@
     <!-- eac-cpf -->
     <xsl:template match="eac-cpf" name="eac-cpf" mode="top">
         <eac-cpf xmlns="urn:isbn:1-931666-33-4" xmlns:xlink="http://www.w3.org/1999/xlink"
-                         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-                         xsi:schemaLocation="urn:isbn:1-931666-33-4 http://www.archivesportaleurope.net/Portal/profiles/apeEAC-CPF.xsd http://www.w3.org/1999/xlink http://www.loc.gov/standards/xlink/xlink.xsd">
+                 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                 xsi:schemaLocation="urn:isbn:1-931666-33-4 http://www.archivesportaleurope.net/Portal/profiles/apeEAC-CPF.xsd http://www.w3.org/1999/xlink http://www.loc.gov/standards/xlink/xlink.xsd">
             <xsl:if test="@xml:base">
                 <xsl:attribute name="xml:base" select="@xml:base"/>
             </xsl:if>
@@ -99,7 +99,7 @@
                 <xsl:when test="string-length(.)!=0">
                     <xsl:if test="@standardDate">
                         <xsl:attribute name="standardDate"
-                                                               select="@standardDate"/>
+                                       select="@standardDate"/>
                     </xsl:if>
                     <xsl:value-of select="."/>
                 </xsl:when>
@@ -129,7 +129,7 @@
                     <xsl:when test="string-length(fromDate)!=0">
                         <xsl:if test="fromDate/@standardDate">
                             <xsl:attribute name="standardDate"
-                                                                 select="fromDate/@standardDate"/>
+                                           select="fromDate/@standardDate"/>
                         </xsl:if>
                         <xsl:value-of select="fromDate"/>
                     </xsl:when>
@@ -153,7 +153,7 @@
                     <xsl:when test="string-length(toDate)!=0">
                         <xsl:if test="toDate/@standardDate">
                             <xsl:attribute name="standardDate"
-                                                                 select="toDate/@standardDate"/>
+                                           select="toDate/@standardDate"/>
                         </xsl:if>
                         <xsl:value-of select="toDate"/>
                     </xsl:when>
@@ -202,7 +202,7 @@
         <term>
             <xsl:if test="@lastDateTimeVerified">
                 <xsl:attribute name="lastDateTimeVerified"
-                                               select="@lastDateTimeVerified"/>
+                               select="@lastDateTimeVerified"/>
             </xsl:if>
             <xsl:if test="@xml:scriptCode">
                 <xsl:attribute name="scriptCode" select="@scriptCode"/>
@@ -225,7 +225,7 @@
         <citation>
             <xsl:if test="@lastDateTimeVerified">
                 <xsl:attribute name="lastDateTimeVerified"
-                                               select="@lastDateTimeVerified"/>
+                               select="@lastDateTimeVerified"/>
             </xsl:if>
             <xsl:attribute name="xlink:type" select="'simple'"/>
             <xsl:if test="@xlink:href">
@@ -368,7 +368,7 @@
                 </eventType>
                 <eventDateTime>
                     <xsl:attribute name="standardDateTime"
-                                                       select="format-date(current-date(), '[Y0001]-[M01]-[D01]')"/>
+                                   select="format-date(current-date(), '[Y0001]-[M01]-[D01]')"/>
                     <xsl:value-of
                         select="format-date(current-date(), '[Y0001]-[M01]-[D01]')"
                     />
@@ -482,7 +482,7 @@
         <source>
             <xsl:if test="@lastDateTimeVerified">
                 <xsl:attribute name="lastDateTimeVerified"
-                                               select="@lastDateTimeVerified"/>
+                               select="@lastDateTimeVerified"/>
             </xsl:if>
             <xsl:attribute name="xlink:type" select="'simple'"/>
             <xsl:if test="@xlink:href">
@@ -602,7 +602,7 @@
                 </xsl:if>
                 <xsl:if test="@transliteration">
                     <xsl:attribute name="transliteration"
-                                                       select="@transliteration"/>
+                                   select="@transliteration"/>
                 </xsl:if>
             </xsl:if>
             <xsl:apply-templates select="node()" mode="copy"/>
@@ -788,7 +788,7 @@
         <placeRole>
             <xsl:if test="@lastDateTimeVerified">
                 <xsl:attribute name="lastDateTimeVerified"
-                                               select="@lastDateTimeVerified"/>
+                               select="@lastDateTimeVerified"/>
             </xsl:if>
             <xsl:if test="@scriptCode">
                 <xsl:attribute name="scriptCode" select="@scriptCode"/>
@@ -1043,7 +1043,7 @@
             </xsl:if>
             <xsl:if test="@lastDateTimeVerified">
                 <xsl:attribute name="lastDateTimeVerified"
-                                               select="@lastDateTimeVerified"/>
+                               select="@lastDateTimeVerified"/>
             </xsl:if>
             <xsl:if test="@xml:lang">
                 <xsl:attribute name="xml:lang" select="@xml:lang"/>
@@ -1061,7 +1061,26 @@
             <xsl:if test="@xlink:title">
                 <xsl:attribute name="xlink:title" select="@xlink:title"/>
             </xsl:if>
-            <xsl:apply-templates select="node()" mode="copy"/>
+            <xsl:apply-templates select="relationEntry" mode="copy"/>
+            <xsl:if test="count(date) > 0 or count(dateRange) > 0 or count(dateSet) > 0">
+                <xsl:choose>
+                    <xsl:when test="count(date) = 1 and count(dateRange) = 0">
+                        <xsl:apply-templates select="date" mode="copy"/>
+                    </xsl:when>
+                    <xsl:when test="count(dateRange) = 1 and count(date) = 0">
+                        <xsl:apply-templates select="dateRange" mode="copy"/>
+                    </xsl:when>
+                    <xsl:otherwise>
+                        <dateSet>
+                            <xsl:for-each select="date | dateRange | dateSet/date | dateSet/dateRange">
+                                <xsl:apply-templates select="." mode="copy"/>
+                            </xsl:for-each>
+                        </dateSet>
+                    </xsl:otherwise>
+                </xsl:choose>
+            </xsl:if>
+            <xsl:apply-templates select="placeEntry" mode="copy" />
+            <xsl:apply-templates select="descriptiveNote" mode="copy" />
         </cpfRelation>
     </xsl:template>
 
@@ -1070,11 +1089,11 @@
         <functionRelation>
             <xsl:if test="@functionRelationType">
                 <xsl:attribute name="functionRelationType"
-                                               select="@functionRelationType"/>
+                               select="@functionRelationType"/>
             </xsl:if>
             <xsl:if test="@lastDateTimeVerified">
                 <xsl:attribute name="lastDateTimeVerified"
-                                               select="@lastDateTimeVerified"/>
+                               select="@lastDateTimeVerified"/>
             </xsl:if>
             <xsl:if test="@xml:lang">
                 <xsl:attribute name="xml:lang" select="@xml:lang"/>
@@ -1092,7 +1111,26 @@
             <xsl:if test="@xlink:title">
                 <xsl:attribute name="xlink:title" select="@xlink:title"/>
             </xsl:if>
-            <xsl:apply-templates select="node()" mode="copy"/>
+            <xsl:apply-templates select="relationEntry" mode="copy"/>
+            <xsl:if test="count(date) > 0 or count(dateRange) > 0 or count(dateSet) > 0">
+                <xsl:choose>
+                    <xsl:when test="count(date) = 1 and count(dateRange) = 0">
+                        <xsl:apply-templates select="date" mode="copy"/>
+                    </xsl:when>
+                    <xsl:when test="count(dateRange) = 1 and count(date) = 0">
+                        <xsl:apply-templates select="dateRange" mode="copy"/>
+                    </xsl:when>
+                    <xsl:otherwise>
+                        <dateSet>
+                            <xsl:for-each select="date | dateRange | dateSet/date | dateSet/dateRange">
+                                <xsl:apply-templates select="." mode="copy"/>
+                            </xsl:for-each>
+                        </dateSet>
+                    </xsl:otherwise>
+                </xsl:choose>
+            </xsl:if>
+            <xsl:apply-templates select="placeEntry" mode="copy" />
+            <xsl:apply-templates select="descriptiveNote" mode="copy" />
         </functionRelation>
     </xsl:template>
 
@@ -1101,11 +1139,11 @@
         <resourceRelation>
             <xsl:if test="@resourceRelationType">
                 <xsl:attribute name="resourceRelationType"
-                                               select="@resourceRelationType"/>
+                               select="@resourceRelationType"/>
             </xsl:if>
             <xsl:if test="@lastDateTimeVerified">
                 <xsl:attribute name="lastDateTimeVerified"
-                                               select="@lastDateTimeVerified"/>
+                               select="@lastDateTimeVerified"/>
             </xsl:if>
             <xsl:if test="@xml:lang">
                 <xsl:attribute name="xml:lang" select="@xml:lang"/>
@@ -1123,7 +1161,26 @@
             <xsl:if test="@xlink:title">
                 <xsl:attribute name="xlink:title" select="@xlink:title"/>
             </xsl:if>
-            <xsl:apply-templates select="node()" mode="copy"/>
+            <xsl:apply-templates select="relationEntry" mode="copy"/>
+            <xsl:if test="count(date) > 0 or count(dateRange) > 0 or count(dateSet) > 0">
+                <xsl:choose>
+                    <xsl:when test="count(date) = 1 and count(dateRange) = 0">
+                        <xsl:apply-templates select="date" mode="copy"/>
+                    </xsl:when>
+                    <xsl:when test="count(dateRange) = 1 and count(date) = 0">
+                        <xsl:apply-templates select="dateRange" mode="copy"/>
+                    </xsl:when>
+                    <xsl:otherwise>
+                        <dateSet>
+                            <xsl:for-each select="date | dateRange | dateSet/date | dateSet/dateRange">
+                                <xsl:apply-templates select="." mode="copy"/>
+                            </xsl:for-each>
+                        </dateSet>
+                    </xsl:otherwise>
+                </xsl:choose>
+            </xsl:if>
+            <xsl:apply-templates select="placeEntry" mode="copy" />
+            <xsl:apply-templates select="descriptiveNote" mode="copy" />
         </resourceRelation>
     </xsl:template>
 
@@ -1164,7 +1221,7 @@
         <setComponent>
             <xsl:if test="@lastDateTimeVerified">
                 <xsl:attribute name="lastDateTimeVerified"
-                                               select="@lastDateTimeVerified"/>
+                               select="@lastDateTimeVerified"/>
             </xsl:if>
             <xsl:if test="@xml:lang">
                 <xsl:attribute name="xml:lang" select="@xml:lang"/>
