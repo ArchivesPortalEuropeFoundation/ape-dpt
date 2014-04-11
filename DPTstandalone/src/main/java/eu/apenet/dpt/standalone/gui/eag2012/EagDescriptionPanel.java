@@ -25,6 +25,7 @@ import eu.apenet.dpt.standalone.gui.ProfileListModel;
 import eu.apenet.dpt.standalone.gui.Utilities;
 
 import eu.apenet.dpt.standalone.gui.commons.ButtonTab;
+import eu.apenet.dpt.standalone.gui.commons.DefaultBtnAction;
 import eu.apenet.dpt.standalone.gui.eag2012.SwingStructures.TextAreaWithLanguage;
 import eu.apenet.dpt.standalone.gui.eag2012.SwingStructures.TextFieldWithDate;
 import eu.apenet.dpt.standalone.gui.eag2012.SwingStructures.TextFieldWithLanguage;
@@ -395,7 +396,7 @@ public class EagDescriptionPanel extends EagPanels {
         @Override
         public void actionPerformed(ActionEvent actionEvent) {
             try {
-                super.updateEagObject(true);
+                super.updateJAXBObject(true);
 
                 int currentTabIndex = mainTabbedPane.getSelectedIndex();
                 if(currentTabIndex+1 < mainTabbedPane.getTabCount()) {
@@ -418,7 +419,7 @@ public class EagDescriptionPanel extends EagPanels {
         @Override
         public void actionPerformed(ActionEvent actionEvent) {
             try {
-                super.updateEagObject(true);
+                super.updateJAXBObject(true);
 
                 int currentTabIndex = mainTabbedPane.getSelectedIndex();
                 if(currentTabIndex > 0) {
@@ -442,7 +443,7 @@ public class EagDescriptionPanel extends EagPanels {
         @Override
         public void actionPerformed(ActionEvent actionEvent) {
             try {
-                super.updateEagObject(false);
+                super.updateJAXBObject(false);
             } catch (Eag2012FormException e) {
             }
             if(eag.getArchguide().getDesc().getRepositories().getRepository().get(repositoryNb).getRepositorhist() == null) {
@@ -461,7 +462,7 @@ public class EagDescriptionPanel extends EagPanels {
         @Override
         public void actionPerformed(ActionEvent actionEvent) {
             try {
-                super.updateEagObject(false);
+                super.updateJAXBObject(false);
             } catch (Eag2012FormException e) {
             }
             if(eag.getArchguide().getDesc().getRepositories().getRepository().get(repositoryNb).getRepositorfound() == null) {
@@ -479,7 +480,7 @@ public class EagDescriptionPanel extends EagPanels {
         @Override
         public void actionPerformed(ActionEvent actionEvent) {
             try {
-                super.updateEagObject(false);
+                super.updateJAXBObject(false);
             } catch (Eag2012FormException e) {
             }
             if(eag.getArchguide().getDesc().getRepositories().getRepository().get(repositoryNb).getRepositorsup() == null) {
@@ -499,7 +500,7 @@ public class EagDescriptionPanel extends EagPanels {
         @Override
         public void actionPerformed(ActionEvent actionEvent) {
             try {
-                super.updateEagObject(false);
+                super.updateJAXBObject(false);
             } catch (Eag2012FormException e) {
             }
             if(eag.getArchguide().getDesc().getRepositories().getRepository().get(repositoryNb).getAdminhierarchy() == null) {
@@ -519,7 +520,7 @@ public class EagDescriptionPanel extends EagPanels {
         @Override
         public void actionPerformed(ActionEvent actionEvent) {
             try {
-                super.updateEagObject(false);
+                super.updateJAXBObject(false);
             } catch (Eag2012FormException e) {
             }
             if(eag.getArchguide().getDesc().getRepositories().getRepository().get(repositoryNb).getBuildinginfo() == null) {
@@ -541,7 +542,7 @@ public class EagDescriptionPanel extends EagPanels {
         @Override
         public void actionPerformed(ActionEvent actionEvent) {
             try {
-                super.updateEagObject(false);
+                super.updateJAXBObject(false);
             } catch (Eag2012FormException e) {
             }
             if(eag.getArchguide().getDesc().getRepositories().getRepository().get(repositoryNb).getHoldings() == null) {
@@ -562,7 +563,7 @@ public class EagDescriptionPanel extends EagPanels {
         @Override
         public void actionPerformed(ActionEvent actionEvent) {
             try {
-                super.updateEagObject(false);
+                super.updateJAXBObject(false);
             } catch (Eag2012FormException e) {
             }
             if(eag.getArchguide().getDesc().getRepositories().getRepository().get(repositoryNb).getHoldings() == null) {
@@ -596,7 +597,7 @@ public class EagDescriptionPanel extends EagPanels {
         @Override
         public void actionPerformed(ActionEvent actionEvent) {
             try {
-                super.updateEagObject(true);
+                super.updateJAXBObject(true);
             } catch (Eag2012FormException e) {
             }
             if(eag.getArchguide().getDesc().getRepositories().getRepository().get(repositoryNb).getHoldings() == null) {
@@ -633,7 +634,7 @@ public class EagDescriptionPanel extends EagPanels {
         @Override
         public void actionPerformed(ActionEvent actionEvent) {
             try {
-                super.updateEagObject(true);
+                super.updateJAXBObject(true);
                 super.saveFile(eag.getControl().getRecordId().getValue());
                 closeFrame();
             } catch (Eag2012FormException e) {
@@ -653,7 +654,7 @@ public class EagDescriptionPanel extends EagPanels {
         @Override
         public void actionPerformed(ActionEvent actionEvent) {
             try {
-                super.updateEagObject(false);
+                super.updateJAXBObject(false);
 
                 if (isNextTab) {
                     reloadTabbedPanel(new EagControlPanel(eag, tabbedPane, mainTabbedPane, eag2012Frame, model, labels, repositoryNb).buildEditorPanel(errors), 5);
@@ -677,7 +678,7 @@ public class EagDescriptionPanel extends EagPanels {
         }
 
         @Override
-        protected void updateEagObject(boolean save) throws Eag2012FormException {
+        protected void updateJAXBObject(boolean save) throws Eag2012FormException {
             errors = new ArrayList<String>();
 
             boolean hasChanged = false;

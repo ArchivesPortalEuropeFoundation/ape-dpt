@@ -18,25 +18,7 @@ package eu.apenet.dpt.standalone.gui.eacCpf;
  * #L%
  */
 
-import eu.apenet.dpt.standalone.gui.ProfileListModel;
-import eu.apenet.dpt.standalone.gui.Utilities;
-import eu.apenet.dpt.utils.eaccpf.EacCpf;
-import eu.apenet.dpt.utils.eaccpf.namespace.EacCpfNamespaceMapper;
-import eu.apenet.dpt.utils.eag2012.Eag;
-
-import eu.apenet.dpt.utils.service.DocumentValidation;
-import eu.apenet.dpt.utils.service.TransformationTool;
-import eu.apenet.dpt.utils.util.ReadXml;
-import eu.apenet.dpt.utils.util.XmlTypeEacCpf;
-
-import org.apache.commons.io.FileUtils;
-import org.apache.commons.lang.StringUtils;
-import org.apache.log4j.Logger;
-
-import javax.swing.*;
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.Unmarshaller;
-import java.awt.*;
+import java.awt.Dimension;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
@@ -44,11 +26,32 @@ import java.io.InputStream;
 import java.util.Date;
 import java.util.ResourceBundle;
 
+import javax.swing.JFrame;
+import javax.swing.JTabbedPane;
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.Unmarshaller;
+
+import org.apache.commons.io.FileUtils;
+import org.apache.log4j.Logger;
+
+import eu.apenet.dpt.standalone.gui.ProfileListModel;
+import eu.apenet.dpt.standalone.gui.Utilities;
+import eu.apenet.dpt.utils.eaccpf.EacCpf;
+import eu.apenet.dpt.utils.eaccpf.namespace.EacCpfNamespaceMapper;
+import eu.apenet.dpt.utils.service.DocumentValidation;
+import eu.apenet.dpt.utils.service.TransformationTool;
+import eu.apenet.dpt.utils.util.ReadXml;
+import eu.apenet.dpt.utils.util.XmlTypeEacCpf;
+
 /**
  * Frame related to EAC-CPF
  */
 public class EacCpfFrame extends JFrame {
-    private static final Logger LOG = Logger.getLogger(EacCpfFrame.class);
+    /**
+	 * Serializable.
+	 */
+	private static final long serialVersionUID = -2843869434005672945L;
+	private static final Logger LOG = Logger.getLogger(EacCpfFrame.class);
     private JTabbedPane mainTabbedPane;
     private Dimension dimension;
     private ProfileListModel model;
@@ -73,10 +76,10 @@ public class EacCpfFrame extends JFrame {
         if(!isEac) {
             try {
                 InputStream is = FileUtils.openInputStream(eacFile);
-                File tempEagFile = new File(Utilities.TEMP_DIR + "tmp_" + eacFile.getName());
+                File tempEacCpfFile = new File(Utilities.TEMP_DIR + "tmp_" + eacFile.getName());
                 File xslFile = new File(Utilities.SYSTEM_DIR + "default-apeEAC-CPF.xsl");
-                TransformationTool.createTransformation(is, tempEagFile, xslFile, null, true, true, "", true, null);
-                eacFile = tempEagFile;
+                TransformationTool.createTransformation(is, tempEacCpfFile, xslFile, null, true, true, "", true, null);
+                eacFile = tempEacCpfFile;
             } catch (Exception e) {
                 LOG.error("Something went wrong...", e);
             }
@@ -146,11 +149,20 @@ public class EacCpfFrame extends JFrame {
     }
 
     public void buildPanel(EacCpf eacCpf, boolean isNew) {    
-    	mainTabbedPane = new JTabbedPane();
-        mainTabbedPane.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
-        mainTabbedPane.putClientProperty("jgoodies.noContentBorder", Boolean.TRUE);
+    	this.mainTabbedPane = new JTabbedPane();
+    	this.mainTabbedPane.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
+    	this.mainTabbedPane.putClientProperty("jgoodies.noContentBorder", Boolean.TRUE);
     	if (isNew){
-    		mainTabbedPane.add(labels.getString("eaccpf.tab.start"), new EacCpfStartPanel(eacCpf, null, mainTabbedPane, this, model, labels).buildEditorPanel(null));
+			this.mainTabbedPane.add(this.labels.getString("eaccpf.tab.start"), new EacCpfStartPanel(eacCpf, null, this.mainTabbedPane, this, this.model, this.labels).buildEditorPanel(null));
+    	} else if (this.firstLanguage != null && !this.firstLanguage.isEmpty()
+				&& this.firstScript != null && !this.firstScript.isEmpty()) {
+    		// TODO: recover name.
+    		String name = "";
+    		if (name != null && !name.isEmpty()) {
+    			this.mainTabbedPane.add(name, new EacCpfNewPanel(eacCpf, null, this.mainTabbedPane, this, this.model, this.labels).buildInstitutionTabbedPane(isNew, this.eacType.getName(), this.firstLanguage, this.firstScript));
+    		} else {
+    			this.mainTabbedPane.add(this.labels.getString("eaccpf.eacCpfItem"), new EacCpfNewPanel(eacCpf, null, this.mainTabbedPane, this, this.model, this.labels).buildInstitutionTabbedPane(isNew, this.eacType.getName(), this.firstLanguage, this.firstScript));
+    		}
     	}
     }
 

@@ -1,4 +1,4 @@
-package eu.apenet.dpt.standalone.gui.eag2012;
+package eu.apenet.dpt.standalone.gui.commons;
 
 /*
  * #%L
@@ -21,6 +21,16 @@ package eu.apenet.dpt.standalone.gui.eag2012;
 import eu.apenet.dpt.standalone.gui.FileInstance;
 import eu.apenet.dpt.standalone.gui.ProfileListModel;
 import eu.apenet.dpt.standalone.gui.Utilities;
+import eu.apenet.dpt.standalone.gui.eacCpf.EacCpfControlPanel;
+import eu.apenet.dpt.standalone.gui.eacCpf.EacCpfDescriptionPanel;
+import eu.apenet.dpt.standalone.gui.eacCpf.EacCpfFormException;
+import eu.apenet.dpt.standalone.gui.eacCpf.EacCpfFrame;
+import eu.apenet.dpt.standalone.gui.eacCpf.EacCpfIdentityPanel;
+import eu.apenet.dpt.standalone.gui.eacCpf.EacCpfPanel;
+import eu.apenet.dpt.standalone.gui.eacCpf.EacCpfRelationsPanel;
+import eu.apenet.dpt.standalone.gui.eag2012.*;
+import eu.apenet.dpt.utils.eaccpf.EacCpf;
+import eu.apenet.dpt.utils.eaccpf.namespace.EacCpfNamespaceMapper;
 import eu.apenet.dpt.utils.eag2012.Eag;
 import eu.apenet.dpt.utils.eag2012.namespace.EagNamespaceMapper;
 import eu.apenet.dpt.utils.util.Xsd_enum;
@@ -42,18 +52,28 @@ import java.util.ResourceBundle;
  */
 public abstract class DefaultBtnAction implements ActionListener {
     protected Eag eag;
+    protected EacCpf eaccpf;
     protected JTabbedPane tabbedPane;
     protected List<String> errors;
     protected ProfileListModel model;
+    private boolean isEag;
 
-    DefaultBtnAction(Eag eag, JTabbedPane tabbedPane, ProfileListModel model) {
+    public DefaultBtnAction(Eag eag, JTabbedPane tabbedPane, ProfileListModel model) {
         this.eag = eag;
         this.tabbedPane = tabbedPane;
         this.model = model;
+        this.isEag = true;
+    }
+
+    public DefaultBtnAction(EacCpf eaccpf, JTabbedPane tabbedPane, ProfileListModel model) {
+        this.eaccpf = eaccpf;
+        this.tabbedPane = tabbedPane;
+        this.model = model;
+        this.isEag = false;
     }
 
     public abstract void actionPerformed(ActionEvent actionEvent);
-    protected abstract void updateEagObject(boolean save) throws Eag2012FormException;
+    protected abstract void updateJAXBObject(boolean save) throws Eag2012FormException, EacCpfFormException;
 
     protected boolean notEqual(String newValue, String originalValue) {
         return !newValue.equals(originalValue);
@@ -64,22 +84,42 @@ public abstract class DefaultBtnAction implements ActionListener {
     }
 
     protected void saveFile(String id) {
-        Eag2012Frame.inUse(false);
+    	if (this.isEag) {
+            Eag2012Frame.inUse(false);
+    	} else {
+    		EacCpfFrame.inUse(false);
+    	}
         try {
-            if(model == null)
-                throw new Eag2012FormException("The model is null, we can not add the EAG to the list...");
+            if(model == null) {
+            	if (this.isEag) {
+            		throw new Eag2012FormException("The model is null, we can not add the EAG to the list...");
+            	} else {
+            		throw new EacCpfFormException("The model is null, we can not add the EAC-CPF to the list...");
+            	}
+            }
             JAXBContext jaxbContext = JAXBContext.newInstance(Eag.class);
             Marshaller jaxbMarshaller = jaxbContext.createMarshaller();
             jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
-            jaxbMarshaller.setProperty("com.sun.xml.bind.namespacePrefixMapper", new EagNamespaceMapper());
-            File eagFile = new File(Utilities.TEMP_DIR + "EAG2012_" + id + ".xml");
-            if(model.existsFile(eagFile)) {
-                model.removeFile(eagFile);
-                eagFile.delete();
+            File file;
+            if (this.isEag) {
+                jaxbMarshaller.setProperty("com.sun.xml.bind.namespacePrefixMapper", new EagNamespaceMapper());
+            	file = new File(Utilities.TEMP_DIR + "EAG2012_" + id + ".xml");
+            } else {
+                jaxbMarshaller.setProperty("com.sun.xml.bind.namespacePrefixMapper", new EacCpfNamespaceMapper());
+            	file = new File(Utilities.TEMP_DIR + "EAC-CPF_" + id + ".xml");
             }
-            jaxbMarshaller.marshal(eag, eagFile);
+            if(model.existsFile(file)) {
+                model.removeFile(file);
+                file.delete();
+            }
 
-            model.addFile(eagFile, Utilities.getXsdObjectFromPath(Xsd_enum.XSD_EAG_2012_SCHEMA.getPath()), FileInstance.FileType.EAG);
+            if (this.isEag) {
+            	jaxbMarshaller.marshal(eag, file);
+            	model.addFile(file, Utilities.getXsdObjectFromPath(Xsd_enum.XSD_EAG_2012_SCHEMA.getPath()), FileInstance.FileType.EAG);
+            } else {
+            	jaxbMarshaller.marshal(this.eaccpf, file);
+            	model.addFile(file, Utilities.getXsdObjectFromPath(Xsd_enum.XSD_EAC_SCHEMA.getPath()), FileInstance.FileType.EAC_CPF);
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -94,6 +134,16 @@ public abstract class DefaultBtnAction implements ActionListener {
             case 4: return new EagDescriptionPanel(eag, tabbedPane, mainTabbedPane, eag2012Frame, model, labels, repositoryNb);
             case 5: return new EagControlPanel(eag, tabbedPane, mainTabbedPane, eag2012Frame, model, labels, repositoryNb);
             case 6: return new EagRelationsPanel(eag, tabbedPane, mainTabbedPane, eag2012Frame, model, labels, repositoryNb);
+        }
+        return null;
+    }
+
+    protected EacCpfPanel getCorrectEacCpfPanels(int tabSelectedIndex, JTabbedPane mainTabbedPane, JFrame eacCpfFrame, ResourceBundle labels) {
+        switch (tabSelectedIndex) {
+            case 0: return new EacCpfIdentityPanel(this.eaccpf, this.tabbedPane, mainTabbedPane, eacCpfFrame, this.model, false, labels);
+            case 1: return new EacCpfDescriptionPanel(this.eaccpf, this.tabbedPane, mainTabbedPane, eacCpfFrame, this.model, labels);
+            case 2: return new EacCpfRelationsPanel(this.eaccpf, this.tabbedPane, mainTabbedPane, eacCpfFrame, this.model, labels);
+            case 3: return new EacCpfControlPanel(this.eaccpf, this.tabbedPane, mainTabbedPane, eacCpfFrame, this.model, labels);
         }
         return null;
     }

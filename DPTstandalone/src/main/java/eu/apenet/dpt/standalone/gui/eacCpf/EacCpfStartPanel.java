@@ -213,6 +213,7 @@ public class EacCpfStartPanel extends EacCpfPanel{
 				String firstScript = (String) languageWithScriptFirst.getScriptBox().getSelectedItem();
 				RetrieveFromDb retrieveFromDb = new RetrieveFromDb();
 				new EacCpfFrame(tabbedPane.getSize(), model, labels, retrieveFromDb.retrieveCountryCode(), retrieveFromDb.retrieveRepositoryCode(), eacType, firstLanguage, firstScript);
+				closeFrame();
 			} catch (Exception e1) {
 				 JOptionPane.showMessageDialog(tabbedPane, "Error...");
 			}

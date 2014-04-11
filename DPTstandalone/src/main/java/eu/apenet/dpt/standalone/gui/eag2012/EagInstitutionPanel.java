@@ -46,6 +46,7 @@ import com.jgoodies.forms.layout.FormLayout;
 import eu.apenet.dpt.standalone.gui.ProfileListModel;
 import eu.apenet.dpt.standalone.gui.Utilities;
 import eu.apenet.dpt.standalone.gui.commons.ButtonTab;
+import eu.apenet.dpt.standalone.gui.commons.DefaultBtnAction;
 import eu.apenet.dpt.standalone.gui.eag2012.SwingStructures.LocationType;
 import eu.apenet.dpt.standalone.gui.eag2012.SwingStructures.TextFieldWithCheckbox;
 import eu.apenet.dpt.standalone.gui.eag2012.SwingStructures.TextFieldWithLanguage;
@@ -512,7 +513,7 @@ public class EagInstitutionPanel extends EagPanels {
     	@Override
         public void actionPerformed(ActionEvent actionEvent) {
             try {
-                super.updateEagObject(true);
+                super.updateJAXBObject(true);
             } catch (Eag2012FormException e) { //copied from other catch Eag2012FormException
 //                reloadTabbedPanel(new EagInstitutionPanel(eag, tabbedPane, mainTabbedPane, eag2012Frame, model, isNew, labels, repositoryNb).buildEditorPanel(errors), 0);
             }
@@ -535,7 +536,7 @@ public class EagInstitutionPanel extends EagPanels {
         @Override
         public void actionPerformed(ActionEvent actionEvent) {
             try {
-                super.updateEagObject(true);
+                super.updateJAXBObject(true);
                 super.saveFile(eag.getControl().getRecordId().getValue());
                 closeFrame();
             } catch (Eag2012FormException e) {
@@ -560,7 +561,7 @@ public class EagInstitutionPanel extends EagPanels {
         @Override
         public void actionPerformed(ActionEvent actionEvent) {
             try {
-                super.updateEagObject(true);
+                super.updateJAXBObject(true);
                 reloadTabbedPanel(new EagIdentityPanel(eag, tabbedPane, mainTabbedPane, eag2012Frame, model, labels, repositoryNb).buildEditorPanel(errors), 1);
                 tabbedPane.setEnabledAt(1, true);
                 tabbedPane.setEnabledAt(0, false);
@@ -582,7 +583,7 @@ public class EagInstitutionPanel extends EagPanels {
 
         public void actionPerformed(ActionEvent actionEvent) {
             try {
-                super.updateEagObject(true);
+                super.updateJAXBObject(true);
 
                 int currentTabIndex = mainTabbedPane.getSelectedIndex();
                 if(currentTabIndex+1 < mainTabbedPane.getTabCount()) {
@@ -605,7 +606,7 @@ public class EagInstitutionPanel extends EagPanels {
         @Override
         public void actionPerformed(ActionEvent actionEvent) {
             try {
-                super.updateEagObject(false);
+                super.updateJAXBObject(false);
             } catch (Eag2012FormException e) {
 //                for(String error : getErrors().keySet()) {
 //                    System.out.println(error);
@@ -627,7 +628,7 @@ public class EagInstitutionPanel extends EagPanels {
         @Override
         public void actionPerformed(ActionEvent actionEvent) {
             try {
-                super.updateEagObject(false);
+                super.updateJAXBObject(false);
             } catch (Eag2012FormException e) {
 //                for(String error : getErrors().keySet()) {
 //                    System.out.println(error);
@@ -679,7 +680,7 @@ public class EagInstitutionPanel extends EagPanels {
             super(eag, tabbedPane, model);
         }
 
-        protected void updateEagObject(boolean save) throws Eag2012FormException {
+        protected void updateJAXBObject(boolean save) throws Eag2012FormException {
             errors = new ArrayList<String>();
 
             boolean hasChanged = false;
