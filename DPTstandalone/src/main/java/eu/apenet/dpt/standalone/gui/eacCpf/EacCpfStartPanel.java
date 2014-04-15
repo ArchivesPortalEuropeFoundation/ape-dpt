@@ -25,6 +25,7 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
+
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
@@ -36,35 +37,32 @@ import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
+
 import org.apache.log4j.Logger;
+
 import com.jgoodies.forms.builder.PanelBuilder;
 import com.jgoodies.forms.layout.CellConstraints;
 import com.jgoodies.forms.layout.FormLayout;
+
 import eu.apenet.dpt.standalone.gui.ProfileListModel;
 import eu.apenet.dpt.standalone.gui.Utilities;
 import eu.apenet.dpt.standalone.gui.commons.ButtonTab;
 import eu.apenet.dpt.standalone.gui.commons.SwingStructures.LanguageWithScript;
 import eu.apenet.dpt.standalone.gui.db.RetrieveFromDb;
-
 import eu.apenet.dpt.utils.eaccpf.EacCpf;
 import eu.apenet.dpt.utils.eaccpf.Language;
 import eu.apenet.dpt.utils.eaccpf.LanguageDeclaration;
 import eu.apenet.dpt.utils.eaccpf.Script;
-
 import eu.apenet.dpt.utils.util.XmlTypeEacCpf;
-
-
 
 /**
  * Start tab Panel
  */
-
 public class EacCpfStartPanel extends EacCpfPanel{
     protected static final Logger LOG = Logger.getLogger(EacCpfStartPanel.class);
     private LanguageWithScript languageWithScriptFirst;
     private JPanel radioBtnPanel;
 
-  
     public EacCpfStartPanel(EacCpf eacCpf, JTabbedPane tabbedPane1, JTabbedPane mainTabbedPane, JFrame eacCpfFrame, ProfileListModel model, ResourceBundle labels) {
     	 super(eacCpf, tabbedPane1, mainTabbedPane, eacCpfFrame, model, labels);
     	 tabbedPane = new JTabbedPane();
@@ -116,7 +114,7 @@ public class EacCpfStartPanel extends EacCpfPanel{
         builder.add(makeCheckboxesType(), cc.xyw(3, rowNb, 5));
         //language
         this.setNextRow();
-        builder.addLabel(labels.getString("eaccpf.start.language"), cc.xy(1, rowNb));
+        builder.addLabel(labels.getString("eaccpf.start.language" + ":"), cc.xy(1, rowNb));
         LanguageWithScript languageWithScript = new LanguageWithScript(languageDeclaration.getLanguage().getLanguageCode(), languageDeclaration.getScript().getScriptCode());
         this.languageWithScriptFirst = languageWithScript;
         builder.add(languageWithScript.getLanguageBox(), cc.xy (3, rowNb));
@@ -124,7 +122,7 @@ public class EacCpfStartPanel extends EacCpfPanel{
         builder.addLabel(labels.getString("eaccpf.start.text"), cc.xy(1, rowNb));
         //script
         this.setNextRow();
-        builder.addLabel(labels.getString("eaccpf.start.script"), cc.xy(1, rowNb));
+        builder.addLabel(labels.getString("eaccpf.start.script" + ":"), cc.xy(1, rowNb));
         builder.add(languageWithScript.getScriptBox(), cc.xy(3, rowNb));
         this.setNextRow();
         builder.addLabel(labels.getString("eaccpf.start.text"), cc.xy(1, rowNb));
@@ -132,7 +130,7 @@ public class EacCpfStartPanel extends EacCpfPanel{
         builder.addSeparator("", cc.xyw(1, rowNb, 7));
         this.setNextRow();
         //exit button
-        JButton exitBtn = new ButtonTab(labels.getString("eag2012.commons.exit"));
+        JButton exitBtn = new ButtonTab(labels.getString("eaccpf.commons.exit"));
         builder.add(exitBtn, cc.xy(5, rowNb));
         exitBtn.addActionListener(new ExitBtnAction());
         //Go button
@@ -156,11 +154,11 @@ public class EacCpfStartPanel extends EacCpfPanel{
         ButtonGroup groupRadio = new ButtonGroup();
         for(XmlTypeEacCpf xEnum : XmlTypeEacCpf.values()){
         	if (xEnum.getName().equals("person")){
-        		radioButton = new JRadioButton(labels.getString("eaccpf.start.person"));
+        		radioButton = new JRadioButton(labels.getString("eaccpf.commons.person"));
         	}else if (xEnum.getName().equals("family")){
-        		radioButton = new JRadioButton(labels.getString("eaccpf.start.family"));
+        		radioButton = new JRadioButton(labels.getString("eaccpf.commons.family"));
         	}else{
-        		radioButton = new JRadioButton(labels.getString("eaccpf.start.corporateBody"));
+        		radioButton = new JRadioButton(labels.getString("eaccpf.commons.corporateBody"));
         	}
             if(XmlTypeEacCpf.EAC_CPF_PERSON != null){
                 radioButton.setSelected(true);

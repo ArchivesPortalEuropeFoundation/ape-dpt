@@ -29,6 +29,7 @@ import javax.swing.JTabbedPane;
 
 import eu.apenet.dpt.standalone.gui.ProfileListModel;
 import eu.apenet.dpt.utils.eaccpf.EacCpf;
+import eu.apenet.dpt.utils.util.XmlTypeEacCpf;
 
 /**
  * Class for construct all the panels of the apeEAC-CPF creation form.
@@ -47,9 +48,9 @@ public class EacCpfNewPanel extends EacCpfPanel {
 	 */
 	public EacCpfNewPanel(EacCpf eaccpf, JTabbedPane tabbedPanel, JTabbedPane mainTabbedPane, JFrame eacCpfFrame, ProfileListModel model, ResourceBundle labels) {
 		super(eaccpf, tabbedPanel, mainTabbedPane, eacCpfFrame, model, labels);
-		tabbedPane = new JTabbedPane();
-		tabbedPane.putClientProperty("jgoodies.noContentBorder", Boolean.TRUE);
-		super.setTabbedPane(tabbedPane);
+		this.tabbedPane = new JTabbedPane();
+		this.tabbedPane.putClientProperty("jgoodies.noContentBorder", Boolean.TRUE);
+		super.setTabbedPane(this.tabbedPane);
 	}
 
 	@Override
@@ -66,22 +67,17 @@ public class EacCpfNewPanel extends EacCpfPanel {
 	 * @param firstScript
 	 * @return JConmponent with the form.
 	 */
-	protected JComponent buildInstitutionTabbedPane(boolean isNew, String eacType, String firstLanguage, String firstScript) {
+	protected JComponent buildInstitutionTabbedPane(boolean isNew, XmlTypeEacCpf eacType, String firstLanguage, String firstScript) {
 		EacCpfFrame.firstTimeInTab = true;
 
-		JScrollPane scrollPane = new JScrollPane(new EacCpfIdentityPanel(eaccpf, tabbedPane, mainTabbedPane, eacCpfFrame, model, isNew, labels, eacType).buildEditorPanel(null));
+		JScrollPane scrollPane = new JScrollPane(new EacCpfIdentityPanel(this.eaccpf, this.tabbedPane, this.mainTabbedPane, this.eacCpfFrame, this.model, isNew, this.labels, eacType).buildEditorPanel(null));
 		scrollPane.getVerticalScrollBar().setUnitIncrement(20);
-		tabbedPane.add(labels.getString("eaccpf.tab.identity"), scrollPane);
-		tabbedPane.add(labels.getString("eaccpf.tab.description"), null);
-		tabbedPane.add(labels.getString("eaccpf.tab.relations"), null);
-		tabbedPane.add(labels.getString("eaccpf.tab.control"), null);
-		// TODO: Delete?
-		tabbedPane.setEnabledAt(0, true);
-		tabbedPane.setEnabledAt(1, false);
-		tabbedPane.setEnabledAt(2, false);
-		tabbedPane.setEnabledAt(3, false);
+		this.tabbedPane.add(this.labels.getString("eaccpf.tab.identity"), scrollPane);
+		this.tabbedPane.add(this.labels.getString("eaccpf.tab.description"), null);
+		this.tabbedPane.add(this.labels.getString("eaccpf.tab.relations"), null);
+		this.tabbedPane.add(this.labels.getString("eaccpf.tab.control"), null);
 
-		return tabbedPane;
+		return this.tabbedPane;
 	}
 
 }

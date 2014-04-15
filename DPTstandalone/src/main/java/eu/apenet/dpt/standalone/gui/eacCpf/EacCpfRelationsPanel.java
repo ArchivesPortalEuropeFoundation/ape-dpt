@@ -21,6 +21,7 @@ package eu.apenet.dpt.standalone.gui.eacCpf;
 
 import java.awt.event.ActionEvent;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.ResourceBundle;
 
@@ -28,6 +29,8 @@ import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JTabbedPane;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 
 import com.jgoodies.forms.builder.PanelBuilder;
 import com.jgoodies.forms.layout.CellConstraints;
@@ -119,7 +122,33 @@ public class EacCpfRelationsPanel extends EacCpfPanel {
 		builder.add(saveBtn, cc.xy (5, this.rowNb));
 		saveBtn.addActionListener(new SaveBtnAction(this.eaccpf, this.tabbedPane, this.model));
 
+		// Define the change tab listener.
+		this.removeChangeListener();
+		this.tabbedPane.addChangeListener(new ChangeTabListener (this.eaccpf, this.tabbedPane, this.model, 2));
+
 		return builder.getPanel();
+	}
+
+	/**
+	 * Method that removes the existing "ChangeTabListener".
+	 */
+	private void removeChangeListener() {
+		// Check the current "ChangeListeners" and remove the non desired ones.
+		ChangeListener[] changeListeners = this.tabbedPane.getChangeListeners();
+		List<ChangeListener> changeListenerList = new LinkedList<ChangeListener>();
+		for (int i = 0; i < changeListeners.length; i++) {
+			ChangeListener changeListener = changeListeners[i];
+
+			if (changeListener instanceof ChangeTabListener) {
+				changeListenerList.add(changeListener);
+			}
+		}
+
+		if (changeListenerList != null) {
+			for (int i = 0; i < changeListenerList.size(); i++) {
+				this.tabbedPane.removeChangeListener(changeListenerList.get(i));
+			}
+		}
 	}
 
 	/**
@@ -155,17 +184,12 @@ public class EacCpfRelationsPanel extends EacCpfPanel {
 		public void actionPerformed(ActionEvent actionEvent) {
 			try {
 				super.updateJAXBObject(false);
+				removeChangeListener();
 
 				if (this.isNextTab) {
 					reloadTabbedPanel(new EacCpfControlPanel(eaccpf, tabbedPane, mainTabbedPane, eacCpfFrame, model, labels).buildEditorPanel(errors), 3);
-					// TODO: Delete?
-					tabbedPane.setEnabledAt(3, true);
-					tabbedPane.setEnabledAt(2, false);
 				} else {
 					reloadTabbedPanel(new EacCpfDescriptionPanel(eaccpf, tabbedPane, mainTabbedPane, eacCpfFrame, model, labels).buildEditorPanel(errors), 1);
-					// TODO: Delete?
-					tabbedPane.setEnabledAt(1, true);
-					tabbedPane.setEnabledAt(2, false);
 				}
 			} catch (EacCpfFormException e) {
 				reloadTabbedPanel(new EacCpfRelationsPanel(eaccpf, tabbedPane, mainTabbedPane, eacCpfFrame, model, labels).buildEditorPanel(errors), 2);
@@ -190,6 +214,48 @@ public class EacCpfRelationsPanel extends EacCpfPanel {
 			if(!errors.isEmpty()) {
 				throw new EacCpfFormException("Errors in validation of EAC-CPF");
 			}
+		}
+	}
+
+	/**
+	 * Class to performs the actions when the user clicks in other tab.
+	 */
+	public class ChangeTabListener extends UpdateEacCpfObject implements ChangeListener {
+		private int currentTab;
+		ChangeTabListener(EacCpf eaccpf, JTabbedPane tabbedPane, ProfileListModel model, int indexTab) {
+			super (eaccpf, tabbedPane, model);
+			this.currentTab = indexTab;
+		}
+
+		@Override
+		public void stateChanged(ChangeEvent e) {
+			int selectedIndex = this.tabbedPane.getSelectedIndex();
+			// Checks if clicks in different tab.
+			if (this.currentTab != selectedIndex) {
+				try {
+					super.updateJAXBObject(true);
+					removeChangeListener();
+					switch (selectedIndex) {
+						case 0:
+							reloadTabbedPanel(new EacCpfIdentityPanel(eaccpf, tabbedPane, mainTabbedPane, eacCpfFrame, model, false, labels).buildEditorPanel(errors), 0);
+							break;
+						case 1:
+							reloadTabbedPanel(new EacCpfDescriptionPanel(eaccpf, tabbedPane, mainTabbedPane, eacCpfFrame, model, labels).buildEditorPanel(errors), 1);
+							break;
+						case 3:
+							reloadTabbedPanel(new EacCpfControlPanel(eaccpf, tabbedPane, mainTabbedPane, eacCpfFrame, model, labels).buildEditorPanel(errors), 3);
+							break;
+						default:
+							reloadTabbedPanel(new EacCpfRelationsPanel(eaccpf, tabbedPane, mainTabbedPane, eacCpfFrame, model, labels).buildEditorPanel(errors), 2);
+					}
+				} catch (EacCpfFormException ex) {
+					reloadTabbedPanel(new EacCpfRelationsPanel(eaccpf, tabbedPane, mainTabbedPane, eacCpfFrame, model, labels).buildEditorPanel(errors), 2);
+				}
+			}
+		}
+		@Override
+		public void actionPerformed(ActionEvent actionEvent) {
+			// Empty.
 		}
 	}
 
