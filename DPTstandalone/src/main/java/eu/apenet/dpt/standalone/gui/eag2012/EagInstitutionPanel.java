@@ -27,6 +27,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.ResourceBundle;
 
@@ -34,6 +35,7 @@ import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextField;
 
@@ -47,6 +49,7 @@ import eu.apenet.dpt.standalone.gui.ProfileListModel;
 import eu.apenet.dpt.standalone.gui.Utilities;
 import eu.apenet.dpt.standalone.gui.commons.ButtonTab;
 import eu.apenet.dpt.standalone.gui.commons.DefaultBtnAction;
+import eu.apenet.dpt.standalone.gui.eag2012.EagIdentityPanel.UpdateEagObject;
 import eu.apenet.dpt.standalone.gui.eag2012.SwingStructures.LocationType;
 import eu.apenet.dpt.standalone.gui.eag2012.SwingStructures.TextFieldWithCheckbox;
 import eu.apenet.dpt.standalone.gui.eag2012.SwingStructures.TextFieldWithLanguage;
@@ -102,7 +105,12 @@ public class EagInstitutionPanel extends EagPanels {
     private String countrycode;
     private String mainagencycode;
     
-    private JComboBox typeInstitutionCombo = new JComboBox(EagIdentityPanel.typeInstitution);
+    protected static String[] typeInstitution = {"---", "National archives", "Regional archives", "County/local authority archives",
+        "Municipal archives", "Specialised governmental archives", "Private persons and family archives", "Church and religious archives",
+        "Business archives", "University and research archives", "Media archives", "Archives of political parties, of popular/labour movement and other non-governmental organisations, associations, agencies and foundations",
+        "Specialised non-governmental archives and archives of other cultural (heritage) institutions"};
+
+    private List<JComboBox> typeInstitutionComboList = new LinkedList<JComboBox>();
 
     public EagInstitutionPanel(Eag eag, JTabbedPane tabbedPane, JTabbedPane mainTabbedPane, JFrame eag2012Frame, ProfileListModel model, boolean isNew, ResourceBundle labels, int repositoryNb) {
         this(eag, tabbedPane, mainTabbedPane, eag2012Frame, model, isNew, labels, "", "", repositoryNb);
@@ -238,17 +246,33 @@ public class EagInstitutionPanel extends EagPanels {
             setNextRow();
         }
         
-        builder.addLabel(this.labels.getString("eag2012.identity.selectType"),    cc.xy (1, this.rowNb));
-        if(this.eag.getArchguide().getIdentity().getRepositoryType() != null && this.eag.getArchguide().getIdentity().getRepositoryType().size() > 0) {
-        	this.typeInstitutionCombo.setEnabled(true);
-            if(Arrays.asList(EagIdentityPanel.typeInstitution).contains(this.eag.getArchguide().getIdentity().getRepositoryType().get(0).getValue())){
-                this.typeInstitutionCombo.setSelectedItem(this.eag.getArchguide().getIdentity().getRepositoryType().get(0).getValue());
-            } else {
-            	this.typeInstitutionCombo.setSelectedItem("---");
+      //print repositoryType combo
+        if (eag.getArchguide().getIdentity().getRepositoryType()!=null && !eag.getArchguide().getIdentity().getRepositoryType().isEmpty()){
+            for(RepositoryType repoType : eag.getArchguide().getIdentity().getRepositoryType()) {
+                builder.addLabel(labels.getString("eag2012.identity.selectType"),    cc.xy (1, rowNb));
+            	JComboBox comboBox = new JComboBox(typeInstitution);
+                if (repoType.getValue() != null && !repoType.getValue().isEmpty()) {
+                	comboBox.setSelectedItem(repoType.getValue());
+                } else {
+                	comboBox.setSelectedItem("---");
+                }
+            	typeInstitutionComboList.add(comboBox);
+                builder.add(comboBox, cc.xy (3, rowNb));
+                setNextRow();
             }
+        }else{
+            builder.addLabel(labels.getString("eag2012.identity.selectType"),    cc.xy (1, rowNb));
+            JComboBox comboBox = new JComboBox(typeInstitution);
+        	comboBox.setSelectedItem("---");
+        	typeInstitutionComboList.add(comboBox);
+            builder.add(comboBox, cc.xy (3, rowNb));
+            setNextRow();
         }
-        this.typeInstitutionCombo.addActionListener(new ChangeComboActioin(this.eag, this.mainTabbedPane, this.model));
-        builder.add(this.typeInstitutionCombo, cc.xy (3, this.rowNb));
+
+        //add another repositoryType button
+        JButton addNewTypeOfTheInstitution = new ButtonTab(labels.getString("eag2012.yourinstitution.addAnotherRepositoryType"));
+        addNewTypeOfTheInstitution.addActionListener(new AddRepositoryTypeAction(eag, tabbedPane, model));
+        builder.add(addNewTypeOfTheInstitution,cc.xy(1, rowNb));
         setNextRow();
 
         builder.addSeparator("", cc.xyw(1, this.rowNb, 7));
@@ -951,6 +975,16 @@ public class EagInstitutionPanel extends EagPanels {
                     }
                 }
             }
+            
+            eag.getArchguide().getIdentity().getRepositoryType().clear();
+            for (int i = 0; i < typeInstitutionComboList.size(); i++) {
+            	String value = typeInstitutionComboList.get(i).getSelectedItem().toString();
+            	if (!value.equals("---")) {
+            		RepositoryType repositoryType = new RepositoryType();
+            		repositoryType.setValue(value);
+            		eag.getArchguide().getIdentity().getRepositoryType().add(repositoryType);
+            	}
+            }
 
             if(!errors.isEmpty()) {
                 throw new Eag2012FormException("Errors in validation of EAG 2012");
@@ -993,13 +1027,42 @@ public class EagInstitutionPanel extends EagPanels {
         }
     }
 
-	public JComboBox getTypeInstitutionCombo() {
-		return typeInstitutionCombo;
-	}
-	public void setTypeInstitutionCombo(JComboBox typeInstitutionCombo) {
-		this.typeInstitutionCombo = typeInstitutionCombo;
-	}
+    /***
+     * This class adds another repositoryType only if there is a selected type, if no, it shows an error message
+     * @author fernando
+     *
+     */
+    public class AddRepositoryTypeAction extends UpdateEagObject {
+        public AddRepositoryTypeAction(Eag eag, JTabbedPane tabbedPane, ProfileListModel model) {
+            super(eag, tabbedPane, model);
+        }
+        @Override
+        public void actionPerformed(ActionEvent actionEvent) {
+            try {
+                super.updateJAXBObject(false);
+            } catch (Eag2012FormException e) {
 
+            }
+
+            boolean empty = false;
+            for (int i = 0; !empty  && i < typeInstitutionComboList.size(); i++) {
+            	if (typeInstitutionComboList.get(i).getSelectedItem().toString().equals("---")) {
+            		empty = true;
+            	}
+            }
+
+            if (!empty) {
+            	eag.getArchguide().getIdentity().getRepositoryType().add(new RepositoryType());
+            } else {
+            	JOptionPane.showMessageDialog(eag2012Frame, labels.getString("eag2012.errors.typeOfInstitution"));
+            }
+
+            //reloadTabbedPanel(new EagIdentityPanel(eag, tabbedPane, mainTabbedPane, eag2012Frame, model, labels, repositoryNb).buildEditorPanel(errors), 1);           
+            reloadTabbedPanel(new EagInstitutionPanel(eag, tabbedPane, mainTabbedPane, eag2012Frame, model, isNew, labels, repositoryNb).buildEditorPanel(errors), 0);
+
+        }
+    }
+    
 //    public class TabChangeListener extends UpdateEagObject implements ChangeListener {
 //        private boolean click;
 //        public TabChangeListener(Eag eag, JTabbedPane tabbedPane, ProfileListModel model) {

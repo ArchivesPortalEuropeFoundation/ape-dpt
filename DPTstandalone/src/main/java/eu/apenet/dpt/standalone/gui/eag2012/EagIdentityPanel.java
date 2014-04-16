@@ -55,7 +55,8 @@ public class EagIdentityPanel extends EagPanels {
             "Municipal archives", "Specialised governmental archives", "Private persons and family archives", "Church and religious archives",
             "Business archives", "University and research archives", "Media archives", "Archives of political parties, of popular/labour movement and other non-governmental organisations, associations, agencies and foundations",
             "Specialised non-governmental archives and archives of other cultural (heritage) institutions"};
-    private JComboBox typeInstitutionCombo = new JComboBox(typeInstitution);
+    
+    private List<JComboBox> typeInstitutionComboList = new LinkedList<JComboBox>();
 
     public EagIdentityPanel(Eag eag, JTabbedPane tabbedPane, JTabbedPane mainTabbedPane, JFrame eag2012Frame, ProfileListModel model, ResourceBundle labels, int repositoryNb) {
         super(eag, tabbedPane, mainTabbedPane, eag2012Frame, model, labels, repositoryNb);
@@ -221,16 +222,34 @@ public class EagIdentityPanel extends EagPanels {
         addNewNonpreNameInstitutionBtn.addActionListener(new AddNonpreNameInstitutionAction(eag, tabbedPane, model));
         builder.add(addNewNonpreNameInstitutionBtn, cc.xy(1, rowNb));
         setNextRow();
-
-        builder.addLabel(labels.getString("eag2012.identity.selectType"),    cc.xy (1, rowNb));
-        if(eag.getArchguide().getIdentity().getRepositoryType() != null && eag.getArchguide().getIdentity().getRepositoryType().size() > 0) {
-            if(Arrays.asList(typeInstitution).contains(eag.getArchguide().getIdentity().getRepositoryType().get(0).getValue())){
-                typeInstitutionCombo.setSelectedItem(eag.getArchguide().getIdentity().getRepositoryType().get(0).getValue());
-            } else {
-                typeInstitutionCombo.setSelectedItem("---");
+      
+        //print repositoryType combo
+        if (eag.getArchguide().getIdentity().getRepositoryType()!=null && !eag.getArchguide().getIdentity().getRepositoryType().isEmpty()){
+            for(RepositoryType repoType : eag.getArchguide().getIdentity().getRepositoryType()) {
+                builder.addLabel(labels.getString("eag2012.identity.selectType"),    cc.xy (1, rowNb));
+            	JComboBox comboBox = new JComboBox(typeInstitution);
+                if (repoType.getValue() != null && !repoType.getValue().isEmpty()) {
+                	comboBox.setSelectedItem(repoType.getValue());
+                } else {
+                	comboBox.setSelectedItem("---");
+                }
+            	typeInstitutionComboList.add(comboBox);
+                builder.add(comboBox, cc.xy (3, rowNb));
+                setNextRow();
             }
+        }else{
+            builder.addLabel(labels.getString("eag2012.identity.selectType"),    cc.xy (1, rowNb));
+            JComboBox comboBox = new JComboBox(typeInstitution);
+        	comboBox.setSelectedItem("---");
+        	typeInstitutionComboList.add(comboBox);
+            builder.add(comboBox, cc.xy (3, rowNb));
+            setNextRow();
         }
-        builder.add(typeInstitutionCombo, cc.xy (3, rowNb));
+
+        //add another repositoryType button
+        JButton addNewTypeOfTheInstitution = new ButtonTab(labels.getString("eag2012.identity.addAnotherRepositoryType"));
+        addNewTypeOfTheInstitution.addActionListener(new AddRepositoryTypeAction(eag, tabbedPane, model));
+        builder.add(addNewTypeOfTheInstitution,cc.xy(1, rowNb));
         setNextRow();
 
         builder.addSeparator("", cc.xyw(1, rowNb, 7));
@@ -407,6 +426,7 @@ public class EagIdentityPanel extends EagPanels {
             reloadTabbedPanel(new EagIdentityPanel(eag, tabbedPane, mainTabbedPane, eag2012Frame, model, labels, repositoryNb).buildEditorPanel(errors), 1);
         }
     }
+
     public class AddParallelNameInstitutionAction extends UpdateEagObject {
         public AddParallelNameInstitutionAction(Eag eag, JTabbedPane tabbedPane, ProfileListModel model) {
             super(eag, tabbedPane, model);
@@ -422,6 +442,41 @@ public class EagIdentityPanel extends EagPanels {
             reloadTabbedPanel(new EagIdentityPanel(eag, tabbedPane, mainTabbedPane, eag2012Frame, model, labels, repositoryNb).buildEditorPanel(errors), 1);
         }
     }
+    
+    /***
+     * This class adds another repositoryType only if there is a selected type, if no, it shows an error message
+     * @author fernando
+     *
+     */
+    public class AddRepositoryTypeAction extends UpdateEagObject {
+        public AddRepositoryTypeAction(Eag eag, JTabbedPane tabbedPane, ProfileListModel model) {
+            super(eag, tabbedPane, model);
+        }
+        @Override
+        public void actionPerformed(ActionEvent actionEvent) {
+            try {
+                super.updateJAXBObject(false);
+            } catch (Eag2012FormException e) {
+
+            }
+
+            boolean empty = false;
+            for (int i = 0; !empty  && i < typeInstitutionComboList.size(); i++) {
+            	if (typeInstitutionComboList.get(i).getSelectedItem().toString().equals("---")) {
+            		empty = true;
+            	}
+            }
+
+            if (!empty) {
+            	eag.getArchguide().getIdentity().getRepositoryType().add(new RepositoryType());
+            } else {
+            	JOptionPane.showMessageDialog(eag2012Frame, labels.getString("eag2012.errors.typeOfInstitution"));
+            }
+
+            reloadTabbedPanel(new EagIdentityPanel(eag, tabbedPane, mainTabbedPane, eag2012Frame, model, labels, repositoryNb).buildEditorPanel(errors), 1);
+        }
+    }
+    
     public class AddNonpreNameInstitutionAction extends UpdateEagObject {
         public AddNonpreNameInstitutionAction(Eag eag, JTabbedPane tabbedPane, ProfileListModel model) {
             super(eag, tabbedPane, model);
@@ -589,12 +644,14 @@ public class EagIdentityPanel extends EagPanels {
                 }
             }
 
-            if(!(typeInstitutionCombo.getSelectedItem()).equals("---")) {
-                if(eag.getArchguide().getIdentity().getRepositoryType().size() == 0)
-                    eag.getArchguide().getIdentity().getRepositoryType().add(new RepositoryType());
-                eag.getArchguide().getIdentity().getRepositoryType().get(0).setValue(typeInstitutionCombo.getSelectedItem().toString());
-            } else if(eag.getArchguide().getIdentity().getRepositoryType().size() != 0) {
-                eag.getArchguide().getIdentity().getRepositoryType().remove(0);
+        	eag.getArchguide().getIdentity().getRepositoryType().clear();
+            for (int i = 0; i < typeInstitutionComboList.size(); i++) {
+            	String value = typeInstitutionComboList.get(i).getSelectedItem().toString();
+            	if (!value.equals("---")) {
+            		RepositoryType repositoryType = new RepositoryType();
+            		repositoryType.setValue(value);
+            		eag.getArchguide().getIdentity().getRepositoryType().add(repositoryType);
+            	}
             }
 
             if(!errors.isEmpty()) {
