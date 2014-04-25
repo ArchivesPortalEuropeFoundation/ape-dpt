@@ -85,6 +85,10 @@ import eu.apenet.dpt.utils.util.Ead2EseInformation;
  */
 public class EseOptionsPanel extends JPanel {
 
+    /**
+	 * Serializable.
+	 */
+	private static final long serialVersionUID = -832102808180688015L;
     private static final Logger LOG = Logger.getLogger(EseOptionsPanel.class);
     private static final String MINIMAL = "minimal";
     private static final String FULL = "full";
@@ -100,14 +104,8 @@ public class EseOptionsPanel extends JPanel {
     private static final String CREATIVE_COMMONS_CC0 = "creative_commons_cc0";
     private static final String CREATIVE_COMMONS_PUBLIC_DOMAIN_MARK = "creative_commons_public_domain_mark";
     private static final String EUROPEANA_RIGHTS_STATEMENTS = "europeana_rights_statements";
+    private static final String OUT_OF_COPYRIGHT = "Out_of_copyright";
     private static final String EMPTY_PANEL = "empty_panel";
-    private static final String CREATIVE_COMMONS_ALLOW_REMIXING = "Allow remixing";
-    private static final String CREATIVE_COMMONS_REQUIRE_SHARE_ALIKE = "Require share-alike";
-    private static final String CREATIVE_COMMONS_PROHIBIT_COMMERCIAL_USE = "Prohibit commercial use";
-    private static final String EUROPEANA_RIGHTS_FREE = "Free access";
-    private static final String EUROPEANA_RIGHTS_PAID = "Paid access";
-    private static final String EUROPEANA_RIGHTS_RESTRICTED = "Restricted access";
-    private static final String EUROPEANA_RIGHTS_UNKNOWN = "Unknown";
     private String archdescRepository = null;
     private ResourceBundle labels;
     private RetrieveFromDb retrieveFromDb;
@@ -187,14 +185,14 @@ public class EseOptionsPanel extends JPanel {
         conversionModeGroup = new ButtonGroup();
         JRadioButton radioButton;
 
-        panel.add(new Label("Please choose a conversion mode"));
-        radioButton = new JRadioButton("minimal");
+        panel.add(new Label(this.labels.getString("edm.panel.label.choose.mode")));
+        radioButton = new JRadioButton(this.labels.getString("edm.panel.label.mode.minimal"));
         radioButton.setActionCommand(MINIMAL);
         radioButton.setSelected(true);
         radioButton.addActionListener(new ConversionModeListener());
         conversionModeGroup.add(radioButton);
         panel.add(radioButton);
-        radioButton = new JRadioButton("full");
+        radioButton = new JRadioButton(this.labels.getString("edm.panel.label.mode.full"));
         radioButton.setActionCommand(FULL);
         radioButton.addActionListener(new ConversionModeListener());
         conversionModeGroup.add(radioButton);
@@ -269,8 +267,8 @@ public class EseOptionsPanel extends JPanel {
         } else {
             currentRoleType = ead2EseInformation.getRoleType();
         }
-        radioButton = new JRadioButton("TEXT");
-        if (currentRoleType.equals("TEXT")) {
+        radioButton = new JRadioButton(this.labels.getString("edm.panel.dao.role.text"));
+        if (currentRoleType.equals(EseOptionsPanel.TEXT)) {
             radioButton.setSelected(true);
         }
         radioButton.setActionCommand(TEXT);
@@ -280,8 +278,8 @@ public class EseOptionsPanel extends JPanel {
         panel.add(new JLabel(""));
 
         panel.add(new JLabel(""));
-        radioButton = new JRadioButton("IMAGE");
-        if (currentRoleType.equals("IMAGE")) {
+        radioButton = new JRadioButton(this.labels.getString("edm.panel.dao.role.image"));
+        if (currentRoleType.equals(EseOptionsPanel.IMAGE)) {
             radioButton.setSelected(true);
         }
         radioButton.setActionCommand(IMAGE);
@@ -291,8 +289,8 @@ public class EseOptionsPanel extends JPanel {
         panel.add(new JLabel(""));
 
         panel.add(new JLabel(""));
-        radioButton = new JRadioButton("VIDEO");
-        if (currentRoleType.equals("VIDEO")) {
+        radioButton = new JRadioButton(this.labels.getString("edm.panel.dao.role.video"));
+        if (currentRoleType.equals(EseOptionsPanel.VIDEO)) {
             radioButton.setSelected(true);
         }
         radioButton.setActionCommand(VIDEO);
@@ -309,8 +307,8 @@ public class EseOptionsPanel extends JPanel {
         panel.add(useExistingDaoRoleCheckbox);
 
         panel.add(new JLabel(""));
-        radioButton = new JRadioButton("SOUND");
-        if (currentRoleType.equals("SOUND")) {
+        radioButton = new JRadioButton(this.labels.getString("edm.panel.dao.role.sound"));
+        if (currentRoleType.equals(EseOptionsPanel.SOUND)) {
             radioButton.setSelected(true);
         }
         radioButton.setActionCommand(SOUND);
@@ -320,8 +318,8 @@ public class EseOptionsPanel extends JPanel {
         panel.add(new JLabel(""));
 
         panel.add(new JLabel(""));
-        radioButton = new JRadioButton("3D");
-        if (currentRoleType.equals("3D")) {
+        radioButton = new JRadioButton(this.labels.getString("edm.panel.dao.role.threed"));
+        if (currentRoleType.equals(EseOptionsPanel.THREE_D)) {
             radioButton.setSelected(true);
         }
         radioButton.setActionCommand(THREE_D);
@@ -386,29 +384,35 @@ public class EseOptionsPanel extends JPanel {
         }
 
         JPanel mainLicensePanel = new JPanel(new BorderLayout());
-        panel = new JPanel(new GridLayout(4, 2));
+        panel = new JPanel(new GridLayout(5, 2));
         panel.add(new Label(labels.getString("ese.specifyLicense") + ":" + "*"));
         licenseGroup = new ButtonGroup();
-        radioButton = new JRadioButton("Creative Commons");
+        radioButton = new JRadioButton(this.labels.getString("edm.panel.label.cc"));
         radioButton.setActionCommand(CREATIVE_COMMONS);
         radioButton.addActionListener(new ChangePanelActionListener(extraLicenseCardLayoutPanel));
         licenseGroup.add(radioButton);
         panel.add(radioButton);
         panel.add(new JLabel(""));
-        radioButton = new JRadioButton("Creative Commons CC0");
+        radioButton = new JRadioButton(this.labels.getString("edm.panel.label.cc.zero"));
         radioButton.setActionCommand(CREATIVE_COMMONS_CC0);
         radioButton.addActionListener(new ChangePanelActionListener(extraLicenseCardLayoutPanel));
         licenseGroup.add(radioButton);
         panel.add(radioButton);
         panel.add(new JLabel(""));
-        radioButton = new JRadioButton("Creative Commons Public Domain Mark");
+        radioButton = new JRadioButton(this.labels.getString("edm.panel.label.cc.public"));
         radioButton.setActionCommand(CREATIVE_COMMONS_PUBLIC_DOMAIN_MARK);
         radioButton.addActionListener(new ChangePanelActionListener(extraLicenseCardLayoutPanel));
         licenseGroup.add(radioButton);
         panel.add(radioButton);
         panel.add(new JLabel(""));
-        radioButton = new JRadioButton("Europeana rights statements");
+        radioButton = new JRadioButton(this.labels.getString("edm.panel.label.europeana.rights"));
         radioButton.setActionCommand(EUROPEANA_RIGHTS_STATEMENTS);
+        radioButton.addActionListener(new ChangePanelActionListener(extraLicenseCardLayoutPanel));
+        licenseGroup.add(radioButton);
+        panel.add(radioButton);
+        panel.add(new JLabel(""));
+        radioButton = new JRadioButton(this.labels.getString("edm.panel.label.out.copyright"));
+        radioButton.setActionCommand(EseOptionsPanel.OUT_OF_COPYRIGHT);
         radioButton.addActionListener(new ChangePanelActionListener(extraLicenseCardLayoutPanel));
         licenseGroup.add(radioButton);
         panel.add(radioButton);
@@ -594,10 +598,22 @@ public class EseOptionsPanel extends JPanel {
         config.setProvider("Archives Portal Europe");
 
         Enumeration<AbstractButton> enumeration = typeGroup.getElements();
-        while (enumeration.hasMoreElements()) {
+        boolean found = false;
+        while (!found && enumeration.hasMoreElements()) {
             AbstractButton btn = enumeration.nextElement();
             if (btn.isSelected()) {
-                config.setType(btn.getText());
+            	if (EseOptionsPanel.TEXT.equals(btn.getActionCommand())) {
+                    config.setType(EseOptionsPanel.TEXT);
+            	} else if (EseOptionsPanel.IMAGE.equals(btn.getActionCommand())) {
+            		config.setType(EseOptionsPanel.IMAGE);
+            	} else if (EseOptionsPanel.VIDEO.equals(btn.getActionCommand())) {
+            		config.setType(EseOptionsPanel.VIDEO);
+            	} else if (EseOptionsPanel.SOUND.equals(btn.getActionCommand())) {
+            		config.setType(EseOptionsPanel.SOUND);
+            	} else {
+            		config.setType(EseOptionsPanel.THREE_D);
+            	}
+            	found = true;
             }
         }
 
@@ -721,15 +737,15 @@ public class EseOptionsPanel extends JPanel {
             return MessageFormat.format(url, urlType);
         } else if (type.equals(EUROPEANA_RIGHTS_STATEMENTS)) {
             String europeanaRights = europeanaRightsComboBox.getSelectedItem().toString();
-            if (europeanaRights.equals(EUROPEANA_RIGHTS_FREE)) {
+            if (europeanaRights.equals(this.labels.getString("edm.panel.license.europeana.free"))) {
                 return "http://www.europeana.eu/rights/rr-f/";
-            } else if (europeanaRights.equals(EUROPEANA_RIGHTS_PAID)) {
+            } else if (europeanaRights.equals(this.labels.getString("edm.panel.license.europeana.paid"))) {
                 return "http://www.europeana.eu/rights/rr-p/";
-            } else if (europeanaRights.equals(EUROPEANA_RIGHTS_RESTRICTED)) {
-                return "http://www.europeana.eu/rights/rr-r/";
             } else {
-                return "http://www.europeana.eu/rights/unknown/";
+            	return "http://www.europeana.eu/rights/orphan-work-eu/";
             }
+        } else if (type.equalsIgnoreCase(EseOptionsPanel.OUT_OF_COPYRIGHT)) {
+        	return "http://www.europeana.eu/rights/out-of-copyright-non-commercial/";
         } else if (type.equals(CREATIVE_COMMONS_CC0)) {
             return "http://creativecommons.org/publicdomain/zero/1.0/";
         } else {
@@ -863,7 +879,9 @@ public class EseOptionsPanel extends JPanel {
         public void actionPerformed(ActionEvent actionEvent) {
             if (extraCardLayoutPanel.getLayout() instanceof CardLayout) {
                 CardLayout cardLayout = (CardLayout) extraCardLayoutPanel.getLayout();
-                if (actionEvent.getActionCommand().equals(CREATIVE_COMMONS_CC0) || actionEvent.getActionCommand().equals(CREATIVE_COMMONS_PUBLIC_DOMAIN_MARK)) {
+                if (actionEvent.getActionCommand().equals(CREATIVE_COMMONS_CC0)
+                		|| actionEvent.getActionCommand().equals(CREATIVE_COMMONS_PUBLIC_DOMAIN_MARK)
+                		|| actionEvent.getActionCommand().equals(EseOptionsPanel.OUT_OF_COPYRIGHT)) {
                     cardLayout.show(extraCardLayoutPanel, EMPTY_PANEL);
                 } else if (actionEvent.getActionCommand().equals(CREATIVE_COMMONS) || actionEvent.getActionCommand().equals(EUROPEANA_RIGHTS_STATEMENTS)) {
                     cardLayout.show(extraCardLayoutPanel, actionEvent.getActionCommand());
@@ -1005,13 +1023,13 @@ public class EseOptionsPanel extends JPanel {
         CreativeCommonsPanel() {
             super(new GridLayout(4, 1));
             creativeCommonsBtnGrp = new ButtonGroup();
-            JCheckBox checkBox = new JCheckBox(CREATIVE_COMMONS_ALLOW_REMIXING);
+            JCheckBox checkBox = new JCheckBox(labels.getString("edm.panel.license.cc.remixing"));
             add(checkBox);
             creativeCommonsBtnGrp.add(checkBox);
-            checkBox = new JCheckBox(CREATIVE_COMMONS_PROHIBIT_COMMERCIAL_USE);
+            checkBox = new JCheckBox(labels.getString("edm.panel.license.cc.prohibit"));
             add(checkBox);
             creativeCommonsBtnGrp.add(checkBox);
-            checkBox = new JCheckBox(CREATIVE_COMMONS_REQUIRE_SHARE_ALIKE);
+            checkBox = new JCheckBox(labels.getString("edm.panel.license.cc.share"));
             add(checkBox);
             creativeCommonsBtnGrp.add(checkBox);
             creativeCommonsComboBox = new JComboBox(CreativeCommons.getCountryNames().toArray());
@@ -1023,7 +1041,7 @@ public class EseOptionsPanel extends JPanel {
 
         EuropeanaRightsPanel() {
             super(new GridLayout(1, 1));
-            String[] rights = {EUROPEANA_RIGHTS_FREE, EUROPEANA_RIGHTS_PAID, EUROPEANA_RIGHTS_RESTRICTED, EUROPEANA_RIGHTS_UNKNOWN};
+            String[] rights = {labels.getString("edm.panel.license.europeana.free"), labels.getString("edm.panel.license.europeana.orphan"), labels.getString("edm.panel.license.europeana.paid")};
             europeanaRightsComboBox = new JComboBox(rights);
             add(europeanaRightsComboBox);
         }
@@ -1165,11 +1183,11 @@ public class EseOptionsPanel extends JPanel {
         }
 
         public void setBtnChecked(String btnName) {
-            if (btnName.equals(CREATIVE_COMMONS_ALLOW_REMIXING)) {
+            if (btnName.equals(labels.getString("edm.panel.license.cc.remixing"))) {
                 setAllowsRemixing(true);
-            } else if (btnName.equals(CREATIVE_COMMONS_PROHIBIT_COMMERCIAL_USE)) {
+            } else if (btnName.equals(labels.getString("edm.panel.license.cc.prohibit"))) {
                 setProhibitCommercialUse(true);
-            } else if (btnName.equals(CREATIVE_COMMONS_REQUIRE_SHARE_ALIKE)) {
+            } else if (btnName.equals(labels.getString("edm.panel.license.cc.share"))) {
                 setRequireShareAlike(true);
             }
         }
