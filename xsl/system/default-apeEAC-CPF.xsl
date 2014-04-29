@@ -1041,7 +1041,7 @@
 
     <!-- p -->
     <xsl:template match="p" mode="copy">
-        <xsl:choose>
+        <!--<xsl:choose>
             <xsl:when
                 test="parent::functions|languagesUsed|legalStatuses|localDescriptions|mandates|occupations|places">
                 <xsl:variable name="thisElement" select="."/>
@@ -1077,15 +1077,15 @@
                     </xsl:choose>
                 </xsl:for-each>
             </xsl:when>
-            <xsl:otherwise>
+            <xsl:otherwise>-->
                 <p>
                     <xsl:if test="@xml:lang">
                         <xsl:attribute name="xml:lang" select="@xml:lang"/>
                     </xsl:if>
                     <xsl:value-of select="."/>
-                </p>
+                </p><!--
             </xsl:otherwise>
-        </xsl:choose>
+        </xsl:choose>-->
     </xsl:template>
 
     <!-- generalContext -->
