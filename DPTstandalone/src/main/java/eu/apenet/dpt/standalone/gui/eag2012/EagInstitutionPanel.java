@@ -20,6 +20,8 @@ package eu.apenet.dpt.standalone.gui.eag2012;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.text.SimpleDateFormat;
@@ -168,7 +170,7 @@ public class EagInstitutionPanel extends EagPanels {
 
         builder.add(personTf, cc.xy(3, rowNb));
         setNextRow();
-        builder.addLabel(labels.getString("eag2012.commons.countryCode") + "*",          cc.xy (1, rowNb));
+        builder.addLabel(labels.getString("eag2012.commons.countryCode") + "*",cc.xy (1, rowNb));
         if(isNew && StringUtils.isEmpty(eag.getArchguide().getIdentity().getRepositorid().getCountrycode()))
             countryCodeTf = new JTextField(countrycode);
         else
@@ -194,10 +196,10 @@ public class EagInstitutionPanel extends EagPanels {
             TextFieldWithCheckbox textFieldWithCheckbox = new TextFieldWithCheckbox(otherRecordId.getValue(), otherRecordId.getLocalType());
             otherRecordIdTfs.add(textFieldWithCheckbox);
             builder.addLabel(labels.getString("eag2012.control.identifierInstitution"), cc.xy(1, rowNb));
-            builder.add(textFieldWithCheckbox.getTextField(),               cc.xy (3, rowNb));
+            builder.add(textFieldWithCheckbox.getTextField(), cc.xy (3, rowNb));
             builder.addLabel(labels.getString("eag2012.isil.isThisISIL"), cc.xy(5, rowNb));
             textFieldWithCheckbox.getTextField().addKeyListener(new CheckKeyListener());
-            builder.add(textFieldWithCheckbox.getIsilOrNotCombo(),               cc.xy (7, rowNb));
+            builder.add(textFieldWithCheckbox.getIsilOrNotCombo(), cc.xy (7, rowNb));
             textFieldWithCheckbox.getIsilOrNotCombo().addActionListener(new ComboboxActionListener(textFieldWithCheckbox));
             setNextRow();
         }
@@ -263,6 +265,7 @@ public class EagInstitutionPanel extends EagPanels {
         }else{
             builder.addLabel(labels.getString("eag2012.identity.selectType"),    cc.xy (1, rowNb));
             JComboBox comboBox = new JComboBox(typeInstitution);
+            comboBox.addActionListener(new ComboboxActionListener(comboBox));
         	comboBox.setSelectedItem("---");
         	typeInstitutionComboList.add(comboBox);
             builder.add(comboBox, cc.xy (3, rowNb));
@@ -272,6 +275,22 @@ public class EagInstitutionPanel extends EagPanels {
         //add another repositoryType button
         JButton addNewTypeOfTheInstitution = new ButtonTab(labels.getString("eag2012.yourinstitution.addAnotherRepositoryType"));
         addNewTypeOfTheInstitution.addActionListener(new AddRepositoryTypeAction(eag, tabbedPane, model));
+        addNewTypeOfTheInstitution.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+		    public void actionPerformed(ItemEvent event) {
+		       if (event.getStateChange() == ItemEvent.SELECTED) {
+		          Object item = event.getItem();
+		          JOptionPane.showMessageDialog(eag2012Frame, item);
+		          // do something with object
+		       }
+		    }  
+		});
         builder.add(addNewTypeOfTheInstitution,cc.xy(1, rowNb));
         setNextRow();
 
@@ -979,7 +998,7 @@ public class EagInstitutionPanel extends EagPanels {
             eag.getArchguide().getIdentity().getRepositoryType().clear();
             for (int i = 0; i < typeInstitutionComboList.size(); i++) {
             	String value = typeInstitutionComboList.get(i).getSelectedItem().toString();
-            	if (!value.equals("---")) {
+            	if (!value.equals("---") ) {
             		RepositoryType repositoryType = new RepositoryType();
             		repositoryType.setValue(value);
             		eag.getArchguide().getIdentity().getRepositoryType().add(repositoryType);
@@ -998,6 +1017,20 @@ public class EagInstitutionPanel extends EagPanels {
         public ComboboxActionListener(TextFieldWithCheckbox textFieldWithCheckbox) {
             this.textFieldWithCheckbox = textFieldWithCheckbox;
         }
+        
+        public ComboboxActionListener(JComboBox comboBox) {
+        	        	
+        	 boolean empty = false;
+             boolean found = false;
+ 	          for (int i = 0; !empty  && i < typeInstitutionComboList.size(); i++) {
+ 	          	if (typeInstitutionComboList.get(i).getSelectedItem().toString().equals(typeInstitutionComboList.get(i).toString())) {
+ 	          		found = true;
+ 	          	}
+ 	  		}
+ 	          if (!found)
+ 	        	  JOptionPane.showMessageDialog(eag2012Frame, labels.getString("eag2012.errors.typeOfInstitutionRepeated"));
+
+        }
 
         public void actionPerformed(ActionEvent actionEvent) {
             if(textFieldWithCheckbox.getisilOrNotComboValue().equals("yes")) {
@@ -1011,7 +1044,10 @@ public class EagInstitutionPanel extends EagPanels {
                     textFieldWithCheckbox.getIsilOrNotCombo().setSelectedItem("no");
             }
             idUsedInApeTf.setText(TextChanger.getNewText(otherRecordIdTfs, countryCodeTf.getText()));
-        }
+            
+            
+       }
+        
     }
 
     public class CheckKeyListener implements KeyListener {
@@ -1027,6 +1063,8 @@ public class EagInstitutionPanel extends EagPanels {
         }
     }
 
+
+    
     /***
      * This class adds another repositoryType only if there is a selected type, if no, it shows an error message
      * @author fernando
@@ -1045,55 +1083,37 @@ public class EagInstitutionPanel extends EagPanels {
             }
 
             boolean empty = false;
+            boolean exists = false;
+
+            List<String> churro = new LinkedList<String>();
+            for (int i=0; i<typeInstitutionComboList.size(); i++){
+            	churro.add(typeInstitutionComboList.get(i).getSelectedItem().toString());
+            }
+ 
+            //empty values
             for (int i = 0; !empty  && i < typeInstitutionComboList.size(); i++) {
             	if (typeInstitutionComboList.get(i).getSelectedItem().toString().equals("---")) {
             		empty = true;
+                    //Duplicated values		
+        			for(int j=0; j<churro.size();j++){
+    	            	if (typeInstitutionComboList.get(i).getSelectedItem().toString().equals(churro.get(j))) {
+    	            		exists = true;
+    	            	}
+            		}
             	}
             }
-
+            
             if (!empty) {
-            	eag.getArchguide().getIdentity().getRepositoryType().add(new RepositoryType());
+        		eag.getArchguide().getIdentity().getRepositoryType().add(new RepositoryType());
+        		
             } else {
             	JOptionPane.showMessageDialog(eag2012Frame, labels.getString("eag2012.errors.typeOfInstitution"));
+            	eag.getArchguide().getIdentity().getRepositoryType().add(new RepositoryType());
             }
-
-            //reloadTabbedPanel(new EagIdentityPanel(eag, tabbedPane, mainTabbedPane, eag2012Frame, model, labels, repositoryNb).buildEditorPanel(errors), 1);           
+          
             reloadTabbedPanel(new EagInstitutionPanel(eag, tabbedPane, mainTabbedPane, eag2012Frame, model, isNew, labels, repositoryNb).buildEditorPanel(errors), 0);
 
         }
     }
     
-//    public class TabChangeListener extends UpdateEagObject implements ChangeListener {
-//        private boolean click;
-//        public TabChangeListener(Eag eag, JTabbedPane tabbedPane, ProfileListModel model) {
-//            super(eag, tabbedPane, model);
-//            click = true;
-//        }
-//
-//        @Override
-//        public void actionPerformed(ActionEvent actionEvent) {}
-//
-//        public void stateChanged(ChangeEvent changeEvent) {
-//            LOG.info("Tab listener: " + locationFields.size());
-//            LOG.debug("stateChanged (mainTabbed index: " + mainTabbedPane.getSelectedIndex() + ") + (changeListener NB: " + tabbedPane.getChangeListeners().length + ")");
-//            LOG.debug(click + " - " + Eag2012Frame.firstTimeInTab);
-//            if(click && !Eag2012Frame.firstTimeInTab) {
-//                LOG.debug("Remove listener");
-//                tabbedPane.removeChangeListener(this);
-//                try {
-//                    super.updateEagObject(true);
-//                    LOG.debug("Ok");
-//                    Eag2012Frame.firstTimeInTab = true;
-//                    EagPanels eagPanels = getCorrectEagPanels(tabbedPane.getSelectedIndex(), mainTabbedPane, eag2012Frame, labels, repositoryNb);
-//                    reloadTabbedPanel(eagPanels.buildEditorPanel(errors), tabbedPane.getSelectedIndex());
-//                } catch (Eag2012FormException e) {
-//                    LOG.debug("NOT Ok");
-//                    EagPanels eagPanels = getCorrectEagPanels(0, mainTabbedPane, eag2012Frame, labels, repositoryNb);
-//                    reloadTabbedPanel(eagPanels.buildEditorPanel(errors), 0);
-//                }
-//                click = false;
-//            }
-//            Eag2012Frame.firstTimeInTab = false;
-//        }
-//    }
 }

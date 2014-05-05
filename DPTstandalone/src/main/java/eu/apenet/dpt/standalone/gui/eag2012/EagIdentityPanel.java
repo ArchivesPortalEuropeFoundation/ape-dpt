@@ -471,6 +471,7 @@ public class EagIdentityPanel extends EagPanels {
             	eag.getArchguide().getIdentity().getRepositoryType().add(new RepositoryType());
             } else {
             	JOptionPane.showMessageDialog(eag2012Frame, labels.getString("eag2012.errors.typeOfInstitution"));
+            	eag.getArchguide().getIdentity().getRepositoryType().add(new RepositoryType());
             }
 
             reloadTabbedPanel(new EagIdentityPanel(eag, tabbedPane, mainTabbedPane, eag2012Frame, model, labels, repositoryNb).buildEditorPanel(errors), 1);
