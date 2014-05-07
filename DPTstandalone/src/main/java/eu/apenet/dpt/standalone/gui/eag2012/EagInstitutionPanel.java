@@ -51,6 +51,7 @@ import eu.apenet.dpt.standalone.gui.ProfileListModel;
 import eu.apenet.dpt.standalone.gui.Utilities;
 import eu.apenet.dpt.standalone.gui.commons.ButtonTab;
 import eu.apenet.dpt.standalone.gui.commons.DefaultBtnAction;
+import eu.apenet.dpt.standalone.gui.commons.TextChanger;
 import eu.apenet.dpt.standalone.gui.eag2012.EagIdentityPanel.UpdateEagObject;
 import eu.apenet.dpt.standalone.gui.eag2012.SwingStructures.LocationType;
 import eu.apenet.dpt.standalone.gui.eag2012.SwingStructures.TextFieldWithCheckbox;

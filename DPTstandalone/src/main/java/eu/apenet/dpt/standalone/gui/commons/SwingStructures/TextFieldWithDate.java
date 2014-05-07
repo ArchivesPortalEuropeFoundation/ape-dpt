@@ -1,4 +1,4 @@
-package eu.apenet.dpt.standalone.gui.eag2012.SwingStructures;
+package eu.apenet.dpt.standalone.gui.commons.SwingStructures;
 
 /*
  * #%L
@@ -19,6 +19,8 @@ package eu.apenet.dpt.standalone.gui.eag2012.SwingStructures;
  */
 
 import javax.swing.*;
+
+import eu.apenet.dpt.standalone.gui.eag2012.SwingStructures.TextFieldWithLanguage;
 
 /**
  * User: Yoann Moranville

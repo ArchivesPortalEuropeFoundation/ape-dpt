@@ -1,4 +1,4 @@
-package eu.apenet.dpt.standalone.gui.eag2012;
+package eu.apenet.dpt.standalone.gui.commons;
 
 /*
  * #%L
@@ -18,8 +18,9 @@ package eu.apenet.dpt.standalone.gui.eag2012;
  * #L%
  */
 
+import eu.apenet.dpt.standalone.gui.commons.SwingStructures.TextFieldWithDate;
+import eu.apenet.dpt.standalone.gui.eag2012.Eag2012ValidFields;
 import eu.apenet.dpt.standalone.gui.eag2012.SwingStructures.TextFieldWithCheckbox;
-import eu.apenet.dpt.standalone.gui.eag2012.SwingStructures.TextFieldWithDate;
 import eu.apenet.dpt.utils.eag2012.MaintenanceEvent;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -75,6 +76,17 @@ public abstract class TextChanger {
 
     public static MaintenanceEvent getMaintenanceEventSaved(Date timeMaintenance, List<MaintenanceEvent> maintenanceEvents) {
         for(MaintenanceEvent maintenanceEvent : maintenanceEvents) {
+            SimpleDateFormat formatStandard = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+            String maintenanceTimeStandardForm = formatStandard.format(timeMaintenance);
+            if(maintenanceEvent.getEventDateTime().getStandardDateTime().equals(maintenanceTimeStandardForm)) {
+                return maintenanceEvent;
+            }
+        }
+        return null;
+    }
+
+    public static eu.apenet.dpt.utils.eaccpf.MaintenanceEvent getEacCpfMaintenanceEventSaved(Date timeMaintenance, List<eu.apenet.dpt.utils.eaccpf.MaintenanceEvent> maintenanceEvents) {
+        for(eu.apenet.dpt.utils.eaccpf.MaintenanceEvent maintenanceEvent : maintenanceEvents) {
             SimpleDateFormat formatStandard = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
             String maintenanceTimeStandardForm = formatStandard.format(timeMaintenance);
             if(maintenanceEvent.getEventDateTime().getStandardDateTime().equals(maintenanceTimeStandardForm)) {

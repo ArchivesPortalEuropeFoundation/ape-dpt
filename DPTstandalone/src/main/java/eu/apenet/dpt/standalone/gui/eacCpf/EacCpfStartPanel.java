@@ -114,7 +114,7 @@ public class EacCpfStartPanel extends EacCpfPanel{
         builder.add(makeCheckboxesType(), cc.xyw(3, rowNb, 5));
         //language
         this.setNextRow();
-        builder.addLabel(labels.getString("eaccpf.start.language" + ":"), cc.xy(1, rowNb));
+        builder.addLabel(labels.getString("eaccpf.start.language") + ":", cc.xy(1, rowNb));
         LanguageWithScript languageWithScript = new LanguageWithScript(languageDeclaration.getLanguage().getLanguageCode(), languageDeclaration.getScript().getScriptCode());
         this.languageWithScriptFirst = languageWithScript;
         builder.add(languageWithScript.getLanguageBox(), cc.xy (3, rowNb));
@@ -122,7 +122,7 @@ public class EacCpfStartPanel extends EacCpfPanel{
         builder.addLabel(labels.getString("eaccpf.start.text"), cc.xy(1, rowNb));
         //script
         this.setNextRow();
-        builder.addLabel(labels.getString("eaccpf.start.script" + ":"), cc.xy(1, rowNb));
+        builder.addLabel(labels.getString("eaccpf.start.script") + ":", cc.xy(1, rowNb));
         builder.add(languageWithScript.getScriptBox(), cc.xy(3, rowNb));
         this.setNextRow();
         builder.addLabel(labels.getString("eaccpf.start.text"), cc.xy(1, rowNb));

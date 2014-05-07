@@ -65,12 +65,18 @@ public class EacCpfNewPanel extends EacCpfPanel {
 	 * @param eacType
 	 * @param firstLanguage
 	 * @param firstScript
+	 * @param mainagencycode
 	 * @return JConmponent with the form.
 	 */
-	protected JComponent buildInstitutionTabbedPane(boolean isNew, XmlTypeEacCpf eacType, String firstLanguage, String firstScript) {
+	protected JComponent buildInstitutionTabbedPane(boolean isNew, XmlTypeEacCpf eacType, String firstLanguage, String firstScript, String mainagencycode) {
 		EacCpfFrame.firstTimeInTab = true;
 
-		JScrollPane scrollPane = new JScrollPane(new EacCpfIdentityPanel(this.eaccpf, this.tabbedPane, this.mainTabbedPane, this.eacCpfFrame, this.model, isNew, this.labels, eacType).buildEditorPanel(null));
+		JScrollPane scrollPane = null;
+		if (firstLanguage != null || firstScript != null) {
+			scrollPane = new JScrollPane(new EacCpfIdentityPanel(this.eaccpf, this.tabbedPane, this.mainTabbedPane, this.eacCpfFrame, this.model, isNew, this.labels, eacType, firstLanguage, firstScript, mainagencycode).buildEditorPanel(null));
+		} else {
+			scrollPane = new JScrollPane(new EacCpfIdentityPanel(this.eaccpf, this.tabbedPane, this.mainTabbedPane, this.eacCpfFrame, this.model, isNew, this.labels, eacType).buildEditorPanel(null));
+		}
 		scrollPane.getVerticalScrollBar().setUnitIncrement(20);
 		this.tabbedPane.add(this.labels.getString("eaccpf.tab.identity"), scrollPane);
 		this.tabbedPane.add(this.labels.getString("eaccpf.tab.description"), null);

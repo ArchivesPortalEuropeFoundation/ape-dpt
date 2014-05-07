@@ -97,7 +97,12 @@ public abstract class DefaultBtnAction implements ActionListener {
             		throw new EacCpfFormException("The model is null, we can not add the EAC-CPF to the list...");
             	}
             }
-            JAXBContext jaxbContext = JAXBContext.newInstance(Eag.class);
+            JAXBContext jaxbContext;
+            if (this.isEag) {
+            	jaxbContext = JAXBContext.newInstance(Eag.class);
+            } else {
+            	jaxbContext = JAXBContext.newInstance(EacCpf.class);
+            }
             Marshaller jaxbMarshaller = jaxbContext.createMarshaller();
             jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
             File file;

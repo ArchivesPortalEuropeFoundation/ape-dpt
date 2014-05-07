@@ -24,7 +24,6 @@ import java.awt.event.WindowEvent;
 import java.io.File;
 import java.io.InputStream;
 import java.util.Date;
-import java.util.List;
 import java.util.ResourceBundle;
 
 import javax.swing.JFrame;
@@ -38,9 +37,6 @@ import org.apache.log4j.Logger;
 import eu.apenet.dpt.standalone.gui.ProfileListModel;
 import eu.apenet.dpt.standalone.gui.Utilities;
 import eu.apenet.dpt.utils.eaccpf.EacCpf;
-import eu.apenet.dpt.utils.eaccpf.NameEntry;
-import eu.apenet.dpt.utils.eaccpf.NameEntryParallel;
-import eu.apenet.dpt.utils.eaccpf.Part;
 import eu.apenet.dpt.utils.eaccpf.namespace.EacCpfNamespaceMapper;
 import eu.apenet.dpt.utils.service.DocumentValidation;
 import eu.apenet.dpt.utils.service.TransformationTool;
@@ -160,58 +156,23 @@ public class EacCpfFrame extends JFrame {
 			this.mainTabbedPane.add(this.labels.getString("eaccpf.tab.start"), new EacCpfStartPanel(eacCpf, null, this.mainTabbedPane, this, this.model, this.labels).buildEditorPanel(null));
     	} else if (this.firstLanguage != null && !this.firstLanguage.isEmpty()
 				&& this.firstScript != null && !this.firstScript.isEmpty()) {
-			this.mainTabbedPane.add(this.labels.getString("eaccpf.eacCpfItem"), new EacCpfNewPanel(eacCpf, null, this.mainTabbedPane, this, this.model, this.labels).buildInstitutionTabbedPane(isNew, this.eacType, this.firstLanguage, this.firstScript));
+			this.mainTabbedPane.add(this.labels.getString("eaccpf.eacCpfItem"), new EacCpfNewPanel(eacCpf, null, this.mainTabbedPane, this, this.model, this.labels).buildInstitutionTabbedPane(isNew, this.eacType, this.firstLanguage, this.firstScript, this.mainagencycode));
     	} else {
-    		String name = getEntityNameAndType(eacCpf);
-    		if (name != null && !name.isEmpty()) {
-    			this.mainTabbedPane.add(name, new EacCpfNewPanel(eacCpf, null, this.mainTabbedPane, this, this.model, this.labels).buildInstitutionTabbedPane(isNew, this.eacType, null, null));
-    		} else {
-    			this.mainTabbedPane.add(this.labels.getString("eaccpf.eacCpfItem"), new EacCpfNewPanel(eacCpf, null, this.mainTabbedPane, this, this.model, this.labels).buildInstitutionTabbedPane(isNew, this.eacType, null, null));
-    		}
+    		this.getEntityType(eacCpf);
+			this.mainTabbedPane.add(this.labels.getString("eaccpf.eacCpfItem"), new EacCpfNewPanel(eacCpf, null, this.mainTabbedPane, this, this.model, this.labels).buildInstitutionTabbedPane(isNew, this.eacType, null, null, this.mainagencycode));
     	}
     }
 
     /**
-     * Method to recover the entity name and type when apeEAC-CPF file is loaded.
+     * Method to recover the entity type when apeEAC-CPF file is loaded.
      *
      * @param eacCpf
-     * @return
      */
-    private String getEntityNameAndType(EacCpf eacCpf) {
-    	String name = "";
-
+    private void getEntityType(EacCpf eacCpf) {
 		// Checks if element identity exits.
 		if (eacCpf != null
 				&& eacCpf.getCpfDescription() != null
 				&& eacCpf.getCpfDescription().getIdentity() != null) {
-			// Try to recover the entity name.
-			if (eacCpf.getCpfDescription().getIdentity().getNameEntryParallelOrNameEntry() != null
-					&& !eacCpf.getCpfDescription().getIdentity().getNameEntryParallelOrNameEntry().isEmpty()) {
-				Object nameEntryObject = eacCpf.getCpfDescription().getIdentity().getNameEntryParallelOrNameEntry().get(0);
-				NameEntry nameEntry = null;
-				if (nameEntryObject instanceof NameEntryParallel) {
-					NameEntryParallel nameEntryParallel = (NameEntryParallel) nameEntryObject;
-					List<Object> nameEntryParallelContentList = nameEntryParallel.getContent();
-					boolean found = false;
-					for (int i = 0; !found || i < nameEntryParallelContentList.size(); i++) {
-						Object nameEntryParallelContentObject = nameEntryParallelContentList.get(i);
-						if (nameEntryParallelContentObject instanceof NameEntry) {
-							nameEntry = (NameEntry) nameEntryObject;
-							found = true;
-						}
-					}
-				} else {
-					nameEntry = (NameEntry) nameEntryObject;
-				}
-				// TODO: complete this part.
-				if (nameEntry != null) {
-					List<Part> partList = nameEntry.getPart();
-					if (partList != null && !partList.isEmpty()) {
-						name = partList.get(0).getContent().trim().replaceAll("\\s+", " ");
-					}
-				}
-			}
-
 			// Try to recover the type.
 			if (eacCpf.getCpfDescription().getIdentity().getEntityType() != null
 					&& eacCpf.getCpfDescription().getIdentity().getEntityType().getValue() != null
@@ -228,8 +189,6 @@ public class EacCpfFrame extends JFrame {
 				}
 			}
 		}
-
-		return name;
     }
 
     public static void inUse(boolean used) {
