@@ -268,7 +268,6 @@ public class EagInstitutionPanel extends EagPanels {
         }else{
             builder.addLabel(labels.getString("eag2012.identity.selectType"),    cc.xy (1, rowNb));
             JComboBox comboBox = new JComboBox(typeInstitution);
-            comboBox.addActionListener(new ComboboxActionListener(comboBox));
         	comboBox.setSelectedItem("---");
         	typeInstitutionComboList.add(comboBox);
             builder.add(comboBox, cc.xy (3, rowNb));
@@ -278,22 +277,6 @@ public class EagInstitutionPanel extends EagPanels {
         //add another repositoryType button
         JButton addNewTypeOfTheInstitution = new ButtonTab(labels.getString("eag2012.yourinstitution.addAnotherRepositoryType"));
         addNewTypeOfTheInstitution.addActionListener(new AddRepositoryTypeAction(eag, tabbedPane, model));
-        addNewTypeOfTheInstitution.addActionListener(new ActionListener() {
-			
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				// TODO Auto-generated method stub
-				
-			}
-			
-		    public void actionPerformed(ItemEvent event) {
-		       if (event.getStateChange() == ItemEvent.SELECTED) {
-		          Object item = event.getItem();
-		          JOptionPane.showMessageDialog(eag2012Frame, item);
-		          // do something with object
-		       }
-		    }  
-		});
         builder.add(addNewTypeOfTheInstitution,cc.xy(1, rowNb));
         setNextRow();
 
@@ -1037,16 +1020,16 @@ public class EagInstitutionPanel extends EagPanels {
             this.textFieldWithCheckbox = textFieldWithCheckbox;
         }
         
-        public ComboboxActionListener(JComboBox comboBox) {
-		boolean empty = false;
-		boolean found = false;
-			for (int i = 0; !empty  && i < typeInstitutionComboList.size(); i++) {
-				if (typeInstitutionComboList.get(i).getSelectedItem().toString().equals(typeInstitutionComboList.get(i).toString()))
-					found = true;
-			}
-			if (!found)
-				JOptionPane.showMessageDialog(eag2012Frame, labels.getString("eag2012.errors.typeOfInstitutionRepeated"));
-        }
+//        public ComboboxActionListener(JComboBox comboBox) {
+//		boolean empty = false;
+//		boolean found = false;
+//			for (int i = 0; !empty  && i < typeInstitutionComboList.size(); i++) {
+//				if (typeInstitutionComboList.get(i).getSelectedItem().toString().equals(typeInstitutionComboList.get(i).toString()))
+//					found = true;
+//			}
+//			if (!found)
+//				JOptionPane.showMessageDialog(eag2012Frame, labels.getString("eag2012.errors.typeOfInstitutionRepeated"));
+//        }
 
         public void actionPerformed(ActionEvent actionEvent) {
             if(textFieldWithCheckbox.getisilOrNotComboValue().equals("yes")) {
