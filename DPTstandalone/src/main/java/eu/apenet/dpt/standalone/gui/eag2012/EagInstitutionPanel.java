@@ -28,10 +28,12 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.ResourceBundle;
+import java.util.Set;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -996,6 +998,7 @@ public class EagInstitutionPanel extends EagPanels {
                 }
             }
             
+            //type of institution
             eag.getArchguide().getIdentity().getRepositoryType().clear();
             for (int i = 0; i < typeInstitutionComboList.size(); i++) {
             	String value = typeInstitutionComboList.get(i).getSelectedItem().toString();
@@ -1005,8 +1008,23 @@ public class EagInstitutionPanel extends EagPanels {
             		eag.getArchguide().getIdentity().getRepositoryType().add(repositoryType);
             	}
             }
-
+  
+            //Check for duplicated values	
+            List<String> duplicated = new LinkedList<String>();
+            Set<String> concurrences = new HashSet<String>();
+            for (int i=0; i<typeInstitutionComboList.size(); i++){
+            	if(duplicated.contains(typeInstitutionComboList.get(i).getSelectedItem().toString())){
+            		errors.add("typeInstitutionComboList");
+            		concurrences.add(typeInstitutionComboList.get(i).getSelectedItem().toString());
+            	}
+            	else
+            		duplicated.add(typeInstitutionComboList.get(i).getSelectedItem().toString());
+            }
+         	
             if(!errors.isEmpty()) {
+            	if(errors.contains("typeInstitutionComboList"))
+            		JOptionPane.showMessageDialog(eag2012Frame, labels.getString("eag2012.errors.typeOfInstitutionRepeated") + ": " + concurrences);
+            		
                 throw new Eag2012FormException("Errors in validation of EAG 2012");
             }
         }
@@ -1020,17 +1038,14 @@ public class EagInstitutionPanel extends EagPanels {
         }
         
         public ComboboxActionListener(JComboBox comboBox) {
-        	        	
-        	 boolean empty = false;
-             boolean found = false;
- 	          for (int i = 0; !empty  && i < typeInstitutionComboList.size(); i++) {
- 	          	if (typeInstitutionComboList.get(i).getSelectedItem().toString().equals(typeInstitutionComboList.get(i).toString())) {
- 	          		found = true;
- 	          	}
- 	  		}
- 	          if (!found)
- 	        	  JOptionPane.showMessageDialog(eag2012Frame, labels.getString("eag2012.errors.typeOfInstitutionRepeated"));
-
+		boolean empty = false;
+		boolean found = false;
+			for (int i = 0; !empty  && i < typeInstitutionComboList.size(); i++) {
+				if (typeInstitutionComboList.get(i).getSelectedItem().toString().equals(typeInstitutionComboList.get(i).toString()))
+					found = true;
+			}
+			if (!found)
+				JOptionPane.showMessageDialog(eag2012Frame, labels.getString("eag2012.errors.typeOfInstitutionRepeated"));
         }
 
         public void actionPerformed(ActionEvent actionEvent) {
@@ -1045,10 +1060,7 @@ public class EagInstitutionPanel extends EagPanels {
                     textFieldWithCheckbox.getIsilOrNotCombo().setSelectedItem("no");
             }
             idUsedInApeTf.setText(TextChanger.getNewText(otherRecordIdTfs, countryCodeTf.getText()));
-            
-            
-       }
-        
+       }   
     }
 
     public class CheckKeyListener implements KeyListener {
@@ -1063,9 +1075,7 @@ public class EagInstitutionPanel extends EagPanels {
             idUsedInApeTf.setText(TextChanger.getNewText(otherRecordIdTfs, countryCodeTf.getText()));
         }
     }
-
-
-    
+ 
     /***
      * This class adds another repositoryType only if there is a selected type, if no, it shows an error message
      * @author fernando
@@ -1083,37 +1093,24 @@ public class EagInstitutionPanel extends EagPanels {
 
             }
 
-            boolean empty = false;
-            boolean exists = false;
-
-            List<String> churro = new LinkedList<String>();
-            for (int i=0; i<typeInstitutionComboList.size(); i++){
-            	churro.add(typeInstitutionComboList.get(i).getSelectedItem().toString());
-            }
- 
             //empty values
+            boolean empty = false;
             for (int i = 0; !empty  && i < typeInstitutionComboList.size(); i++) {
             	if (typeInstitutionComboList.get(i).getSelectedItem().toString().equals("---")) {
             		empty = true;
-                    //Duplicated values		
-        			for(int j=0; j<churro.size();j++){
-    	            	if (typeInstitutionComboList.get(i).getSelectedItem().toString().equals(churro.get(j))) {
-    	            		exists = true;
-    	            	}
-            		}
             	}
             }
             
-            if (!empty) {
-        		eag.getArchguide().getIdentity().getRepositoryType().add(new RepositoryType());
-        		
-            } else {
-            	JOptionPane.showMessageDialog(eag2012Frame, labels.getString("eag2012.errors.typeOfInstitution"));
-            	eag.getArchguide().getIdentity().getRepositoryType().add(new RepositoryType());
+            if(!errors.contains("typeInstitutionComboList")){
+	            if (!empty) {
+	        		eag.getArchguide().getIdentity().getRepositoryType().add(new RepositoryType());
+	            } else {
+	            	JOptionPane.showMessageDialog(eag2012Frame, labels.getString("eag2012.errors.typeOfInstitution"));
+	            	eag.getArchguide().getIdentity().getRepositoryType().add(new RepositoryType());
+	            }
             }
-          
-            reloadTabbedPanel(new EagInstitutionPanel(eag, tabbedPane, mainTabbedPane, eag2012Frame, model, isNew, labels, repositoryNb).buildEditorPanel(errors), 0);
 
+            reloadTabbedPanel(new EagInstitutionPanel(eag, tabbedPane, mainTabbedPane, eag2012Frame, model, isNew, labels, repositoryNb).buildEditorPanel(errors), 0);
         }
     }
     

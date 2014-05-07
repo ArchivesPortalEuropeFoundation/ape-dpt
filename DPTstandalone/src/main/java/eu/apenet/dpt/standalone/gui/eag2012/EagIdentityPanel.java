@@ -468,11 +468,13 @@ public class EagIdentityPanel extends EagPanels {
             	}
             }
 
-            if (!empty) {
-            	eag.getArchguide().getIdentity().getRepositoryType().add(new RepositoryType());
-            } else {
-            	JOptionPane.showMessageDialog(eag2012Frame, labels.getString("eag2012.errors.typeOfInstitution"));
-            	eag.getArchguide().getIdentity().getRepositoryType().add(new RepositoryType());
+            if(!errors.contains("typeInstitutionComboList")){
+	            if (!empty) {
+	            	eag.getArchguide().getIdentity().getRepositoryType().add(new RepositoryType());
+	            } else {
+	            	JOptionPane.showMessageDialog(eag2012Frame, labels.getString("eag2012.errors.typeOfInstitution"));
+	            	eag.getArchguide().getIdentity().getRepositoryType().add(new RepositoryType());
+	            }
             }
 
             reloadTabbedPanel(new EagIdentityPanel(eag, tabbedPane, mainTabbedPane, eag2012Frame, model, labels, repositoryNb).buildEditorPanel(errors), 1);
@@ -646,6 +648,8 @@ public class EagIdentityPanel extends EagPanels {
                 }
             }
 
+            
+            // type of the institution
         	eag.getArchguide().getIdentity().getRepositoryType().clear();
             for (int i = 0; i < typeInstitutionComboList.size(); i++) {
             	String value = typeInstitutionComboList.get(i).getSelectedItem().toString();
@@ -655,41 +659,24 @@ public class EagIdentityPanel extends EagPanels {
             		eag.getArchguide().getIdentity().getRepositoryType().add(repositoryType);
             	}
             }
+            //Duplicated values	
+            List<String> duplicated = new LinkedList<String>();
+            Set<String> concurrences = new HashSet<String>();
+            for (int i=0; i<typeInstitutionComboList.size(); i++){
+            	if(duplicated.contains(typeInstitutionComboList.get(i).getSelectedItem().toString())){
+            		errors.add("typeInstitutionComboList");
+            		concurrences.add(typeInstitutionComboList.get(i).getSelectedItem().toString());
+            	}
+            	else
+            		duplicated.add(typeInstitutionComboList.get(i).getSelectedItem().toString());
+            }
 
             if(!errors.isEmpty()) {
+            	if(errors.contains("typeInstitutionComboList"))
+            		JOptionPane.showMessageDialog(eag2012Frame, labels.getString("eag2012.errors.typeOfInstitutionRepeated") + ": " + concurrences);
+
                 throw new Eag2012FormException("Errors in validation of EAG 2012");
             }
         }
     }
-
-//    public class TabChangeListener extends UpdateEagObject implements ChangeListener {
-//        private boolean click;
-//        public TabChangeListener(Eag eag, JTabbedPane tabbedPane, ProfileListModel model) {
-//            super(eag, tabbedPane, model);
-//            click = true;
-//        }
-//
-//        @Override
-//        public void actionPerformed(ActionEvent actionEvent) {}
-//
-//        public void stateChanged(ChangeEvent changeEvent) {
-//            LOG.info("stateChanged");
-//            if(click && !Eag2012Frame.firstTimeInTab) {
-//                tabbedPane.removeChangeListener(this);
-//                try {
-//                    super.updateEagObject(false);
-//                    LOG.info("Ok");
-//                    Eag2012Frame.firstTimeInTab = true;
-//                    EagPanels eagPanels = getCorrectEagPanels(tabbedPane.getSelectedIndex(), mainTabbedPane, eag2012Frame, labels, repositoryNb);
-//                    reloadTabbedPanel(eagPanels.buildEditorPanel(errors), tabbedPane.getSelectedIndex());
-//                } catch (Eag2012FormException e) {
-//                    LOG.info("NOT Ok");
-//                    EagPanels eagPanels = getCorrectEagPanels(1, mainTabbedPane, eag2012Frame, labels, repositoryNb);
-//                    reloadTabbedPanel(eagPanels.buildEditorPanel(errors), 1);
-//                }
-//                click = false;
-//            }
-//            Eag2012Frame.firstTimeInTab = false;
-//        }
-//    }
 }
