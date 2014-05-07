@@ -117,7 +117,7 @@ public class EacCpfIdentityPanel extends EacCpfPanel {
 	private XmlTypeEacCpf entityType; // The type of the entity described.
 	private String firstLanguage; // The current first language selected.
 	private String firstScript; // The current first script selected.
-    private String mainagencycode;
+    private String mainagencycode; // The code of the current agency.
 
 	// Elements in the panel.
 	// Name section.
@@ -1689,14 +1689,10 @@ public class EacCpfIdentityPanel extends EacCpfPanel {
 //			boolean hasChanged = false;
 
 			// Call method to save the maintenance information.
-			if (save) {
-				if (this.eaccpf.getControl() == null) {
-					this.eaccpf.setControl(new Control());
-				}
-				Control control = this.eaccpf.getControl();
-
-				this.updateMaintenanceInformation(control);
+			if (this.eaccpf.getControl() == null) {
+				this.eaccpf.setControl(new Control());
 			}
+			this.updateMaintenanceInformation(this.eaccpf.getControl(), save);
 
 			// TODO: Temporary identifier.
 			//eaccpf.getControl().getRecordId().getValue()
@@ -1755,30 +1751,28 @@ public class EacCpfIdentityPanel extends EacCpfPanel {
 		 * Method to update the maintenance information of the apeEAC-CPF file.
 		 *
 		 * @param control
+		 * @param save
 		 * @return boolean value.
 		 */
-		private boolean updateMaintenanceInformation(Control control) {
+		private boolean updateMaintenanceInformation(Control control, boolean save) {
 			boolean hasChanged = false;
-
-			// Maintenance time.
-			if (EacCpfFrame.getTimeMaintenance() == null) {
-				EacCpfFrame.setTimeMaintenance(new java.util.Date());
-			}
-
-			// Update maintenance status.
-			hasChanged = this.updateMaintenanceStatus(control);
 
 			// Update maintenance agency.
 			hasChanged = this.updateMaintenanceAgency(control);
 
-			// Update language declaration.
-			hasChanged = this.updateLanguageDeclaration(control);
+			if (save) {
+				// Update maintenance status.
+				hasChanged = this.updateMaintenanceStatus(control);
 
-			// Update convention declaration.
-			hasChanged = this.updateConventionDeclaration(control);
+				// Update language declaration.
+				hasChanged = this.updateLanguageDeclaration(control);
 
-			// Update maintenance history.
-			hasChanged = this.updateMaintenanceHistory(control);
+				// Update convention declaration.
+				hasChanged = this.updateConventionDeclaration(control);
+
+				// Update maintenance history.
+				hasChanged = this.updateMaintenanceHistory(control);
+			}
 
 			return hasChanged;
 		}
@@ -1821,7 +1815,7 @@ public class EacCpfIdentityPanel extends EacCpfPanel {
 	        }
 
 	        // Maintenance agency code.
-	        if (!mainagencycode.isEmpty()) {
+	        if (StringUtils.isNotEmpty(mainagencycode)) {
 		        if (control.getMaintenanceAgency().getAgencyCode() == null) {
 		            control.getMaintenanceAgency().setAgencyCode(new AgencyCode());
 		        }
@@ -1848,8 +1842,10 @@ public class EacCpfIdentityPanel extends EacCpfPanel {
 			boolean hasChanged = false;
 
 	        // Language declaration.
-	        if (!firstLanguage.equals(TextFieldWithComboBoxEacCpf.DEFAULT_VALUE)
-	        		|| !firstScript.equals(TextFieldWithComboBoxEacCpf.DEFAULT_VALUE)) {
+	        if ((StringUtils.isNotEmpty(firstLanguage)
+	        		&& !firstLanguage.equals(TextFieldWithComboBoxEacCpf.DEFAULT_VALUE))
+	        		|| (StringUtils.isNotEmpty(firstScript)
+        				&& !firstScript.equals(TextFieldWithComboBoxEacCpf.DEFAULT_VALUE))) {
 	        	LanguageDeclaration languageDeclaration = new LanguageDeclaration();
 
 	        	if (!firstLanguage.equals(TextFieldWithComboBoxEacCpf.DEFAULT_VALUE)) {
@@ -1903,6 +1899,11 @@ public class EacCpfIdentityPanel extends EacCpfPanel {
 		 */
 		private boolean updateMaintenanceHistory(Control control) {
 			boolean hasChanged = false;
+
+			// Maintenance time.
+			if (EacCpfFrame.getTimeMaintenance() == null) {
+				EacCpfFrame.setTimeMaintenance(new java.util.Date());
+			}
 
 			// Maintenance event size.
 			int sizeMaintenanceEvents = control.getMaintenanceHistory().getMaintenanceEvent().size();
