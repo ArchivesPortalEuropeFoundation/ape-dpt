@@ -18,7 +18,6 @@ package eu.apenet.dpt.standalone.gui.eag2012;
  * #L%
  */
 
-import java.awt.HeadlessException;
 import java.awt.event.ActionEvent;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -43,8 +42,6 @@ import eu.apenet.dpt.standalone.gui.ProfileListModel;
 import eu.apenet.dpt.standalone.gui.Utilities;
 import eu.apenet.dpt.standalone.gui.commons.ButtonTab;
 import eu.apenet.dpt.standalone.gui.commons.DefaultBtnAction;
-import eu.apenet.dpt.standalone.gui.eag2012.EagContactPanel.AddTelephoneAction;
-import eu.apenet.dpt.standalone.gui.eag2012.EagContactPanel.UpdateEagObject;
 import eu.apenet.dpt.standalone.gui.eag2012.SwingStructures.TextAreaWithLanguage;
 import eu.apenet.dpt.standalone.gui.eag2012.SwingStructures.TextFieldWithLanguage;
 import eu.apenet.dpt.utils.eag2012.Accessibility;
@@ -75,7 +72,6 @@ import eu.apenet.dpt.utils.eag2012.ReadersTicket;
 import eu.apenet.dpt.utils.eag2012.RecreationalServices;
 import eu.apenet.dpt.utils.eag2012.Refreshment;
 import eu.apenet.dpt.utils.eag2012.Repository;
-import eu.apenet.dpt.utils.eag2012.RepositoryType;
 import eu.apenet.dpt.utils.eag2012.Reproductionser;
 import eu.apenet.dpt.utils.eag2012.ResearchServices;
 import eu.apenet.dpt.utils.eag2012.Restaccess;
@@ -438,9 +434,7 @@ public class EagAccessAndServicesPanel extends EagPanels {
         builder.add(addWebpageSearchroomBtn, cc.xy(1, rowNb));
         setNextRow();
 
-        
-       
-        
+
         if(searchroom.getWorkPlaces() == null)
             searchroom.setWorkPlaces(new WorkPlaces());
         builder.addLabel(labels.getString("eag2012.commons.workPlaces"),    cc.xy (1, rowNb));
@@ -1272,16 +1266,13 @@ public class EagAccessAndServicesPanel extends EagPanels {
                 	empty = true;
             }
 
-            if (!empty && !errors.contains("termsOfUseTfs")){
-            	repository.getAccess().getTermsOfUse().add(new TermsOfUse());
-            }
-             else{
-            	JOptionPane.showMessageDialog(eag2012Frame, labels.getString("eag2012.errors.errorTermsOfUse"));
-            	if (!errors.contains("termsOfUseTfs")){
-            		repository.getAccess().getTermsOfUse().add(new TermsOfUse());
-            	}
-             }
-
+        	if (!errors.contains("termsOfUseTfs")){
+        		if (empty)
+                	JOptionPane.showMessageDialog(eag2012Frame, labels.getString("eag2012.errors.errorTermsOfUse"));
+        		
+        		repository.getAccess().getTermsOfUse().add(new TermsOfUse());
+        	}
+             
             reloadTabbedPanel(new EagAccessAndServicesPanel(eag, tabbedPane, mainTabbedPane, eag2012Frame, model, labels, repositoryNb).buildEditorPanel(errors), 3);
         }
     }
@@ -1312,14 +1303,10 @@ public class EagAccessAndServicesPanel extends EagPanels {
                 	empty = true;
             }
 
-            if (!empty){
-            	repository.getAccessibility().add(new Accessibility());
-            }
-             else{ 
+            if (empty)
             	JOptionPane.showMessageDialog(eag2012Frame, labels.getString("eag2012.errors.errorFacilitiesForDisabled"));
-            	repository.getAccessibility().add(new Accessibility());
-             }
-         
+
+        	repository.getAccessibility().add(new Accessibility());
             reloadTabbedPanel(new EagAccessAndServicesPanel(eag, tabbedPane, mainTabbedPane, eag2012Frame, model, labels, repositoryNb).buildEditorPanel(errors), 3);
         }
     }
@@ -1591,7 +1578,7 @@ public class EagAccessAndServicesPanel extends EagPanels {
             try {
                 super.updateJAXBObject(false);
             } catch (Exception e) {
-            	JOptionPane.showMessageDialog(eag2012Frame, e.getCause() + "\n" + e.toString());
+//            	JOptionPane.showMessageDialog(eag2012Frame, e.toString());
             }
                         
 			if(eag.getArchguide().getDesc().getRepositories().getRepository().get(repositoryNb).getServices() != null){
@@ -1602,9 +1589,8 @@ public class EagAccessAndServicesPanel extends EagPanels {
 					searchroom = eag.getArchguide().getDesc().getRepositories().getRepository().get(repositoryNb).getServices().getSearchroom();
 				}
     			
-    			if(searchroom.getContact()==null){
+    			if(searchroom.getContact()==null)
     				searchroom.setContact(new Contact());	
-    			}
     			
 				boolean empty = false;         
 			    int pos = telephoneSearchroomTf.size(); 
@@ -1612,12 +1598,10 @@ public class EagAccessAndServicesPanel extends EagPanels {
 			        if( telephoneSearchroomTf.get(i).getText()==null || telephoneSearchroomTf.get(i).getText().trim().compareTo("") == 0)
 			        	empty = true;
 			    }
-				if (!empty){
-					searchroom.getContact().getTelephone().add(new Telephone());
-				}else{
+				if (empty)
 					JOptionPane.showMessageDialog(eag2012Frame, labels.getString("eag2012.errors.errorTelephone"));
-					searchroom.getContact().getTelephone().add(new Telephone());
-				}
+				
+				searchroom.getContact().getTelephone().add(new Telephone());
 			} else {
 			    JOptionPane.showMessageDialog(eag2012Frame, labels.getString("eag2012.errors.errorTelephone"));
 			}
@@ -1641,7 +1625,7 @@ public class EagAccessAndServicesPanel extends EagPanels {
             try {
                 super.updateJAXBObject(false);
             } catch (Eag2012FormException e) {
-            	JOptionPane.showMessageDialog(eag2012Frame, e.getCause() + "\n" + e.toString());
+//            	JOptionPane.showMessageDialog(eag2012Frame, e.getCause() + "\n" + e.toString());
             }
 		            
 			if(eag.getArchguide().getDesc().getRepositories().getRepository().get(repositoryNb).getServices() != null){
@@ -1652,9 +1636,8 @@ public class EagAccessAndServicesPanel extends EagPanels {
 					library = eag.getArchguide().getDesc().getRepositories().getRepository().get(repositoryNb).getServices().getLibrary();
 				}
     			
-    			if(library.getContact()==null){
+    			if(library.getContact()==null)
     				library.setContact(new Contact());	
-    			}
     			
     			boolean empty = false;         
 	            int pos = telephoneLibraryTf.size(); 
@@ -1662,12 +1645,10 @@ public class EagAccessAndServicesPanel extends EagPanels {
 	                if( telephoneLibraryTf.get(i).getText()==null || telephoneLibraryTf.get(i).getText().trim().compareTo("") == 0)
 	                	empty = true;
 	            }
-				if (!empty){
-					library.getContact().getTelephone().add(new Telephone());
-				}else{
+				if (empty)
 					JOptionPane.showMessageDialog(eag2012Frame, labels.getString("eag2012.errors.errorTelephone"));
-					library.getContact().getTelephone().add(new Telephone());
-				}
+					
+				library.getContact().getTelephone().add(new Telephone());
             } else {
                 JOptionPane.showMessageDialog(eag2012Frame, labels.getString("eag2012.errors.errorTelephone"));
             }
@@ -1691,16 +1672,15 @@ public class EagAccessAndServicesPanel extends EagPanels {
             try {
                 super.updateJAXBObject(false);
             } catch (Eag2012FormException e) {
-            	JOptionPane.showMessageDialog(eag2012Frame, e.getCause() + "\n" + e.toString());
+//            	JOptionPane.showMessageDialog(eag2012Frame, e.getCause() + "\n" + e.toString());
             }
 
             if(eag.getArchguide().getDesc().getRepositories().getRepository().get(repositoryNb).getServices() != null){
             	
 				Services services = eag.getArchguide().getDesc().getRepositories().getRepository().get(repositoryNb).getServices();
 				
-				if(services.getTechservices() == null) {
+				if(services.getTechservices() == null) 
 					services.setTechservices(new Techservices());
-				}
 				
 				Restorationlab restorationlab = eag.getArchguide().getDesc().getRepositories().getRepository().get(repositoryNb).getServices().getTechservices().getRestorationlab();
 				
@@ -1709,9 +1689,8 @@ public class EagAccessAndServicesPanel extends EagPanels {
 					restorationlab = eag.getArchguide().getDesc().getRepositories().getRepository().get(repositoryNb).getServices().getTechservices().getRestorationlab();
 				}
 
-    			if(restorationlab.getContact()==null){
+    			if(restorationlab.getContact()==null)
     				restorationlab.setContact(new Contact());	
-    			}
 				
     			boolean empty = false;         
 	            int pos = telephoneRestorationlabTf.size(); 
@@ -1719,12 +1698,10 @@ public class EagAccessAndServicesPanel extends EagPanels {
 	                if( telephoneRestorationlabTf.get(i).getText()==null || telephoneRestorationlabTf.get(i).getText().trim().compareTo("") == 0)
 	                	empty = true;
 	            }
-				if (!empty){
-					restorationlab.getContact().getTelephone().add(new Telephone());
-				}else{
+				if (empty)
 					JOptionPane.showMessageDialog(eag2012Frame, labels.getString("eag2012.errors.errorTelephone"));
-					restorationlab.getContact().getTelephone().add(new Telephone());
-				}
+					
+				restorationlab.getContact().getTelephone().add(new Telephone());
             } else {
                 JOptionPane.showMessageDialog(eag2012Frame, labels.getString("eag2012.errors.errorTelephone"));
             }
@@ -1748,16 +1725,15 @@ public class EagAccessAndServicesPanel extends EagPanels {
             try {
                 super.updateJAXBObject(false);
             } catch (Eag2012FormException e) {
-            	JOptionPane.showMessageDialog(eag2012Frame, e.getCause() + "\n" + e.toString());
+//            	JOptionPane.showMessageDialog(eag2012Frame, e.getCause() + "\n" + e.toString());
             }
 			
 			if(eag.getArchguide().getDesc().getRepositories().getRepository().get(repositoryNb).getServices() != null){
 				
 				Services services = eag.getArchguide().getDesc().getRepositories().getRepository().get(repositoryNb).getServices();
 				
-				if(services.getTechservices() == null) {
+				if(services.getTechservices() == null) 
 					services.setTechservices(new Techservices());
-				}
 				
 				Reproductionser reproductionser = eag.getArchguide().getDesc().getRepositories().getRepository().get(repositoryNb).getServices().getTechservices().getReproductionser();
 
@@ -1776,12 +1752,10 @@ public class EagAccessAndServicesPanel extends EagPanels {
 	                if( telephoneReproductionServiceTf.get(i).getText()==null || telephoneReproductionServiceTf.get(i).getText().trim().compareTo("") == 0)
 	                	empty = true;
 	            }
-				if (!empty){
-					reproductionser.getContact().getTelephone().add(new Telephone());
-				}else{
+				if (empty)
 					JOptionPane.showMessageDialog(eag2012Frame, labels.getString("eag2012.errors.errorTelephone"));
-					reproductionser.getContact().getTelephone().add(new Telephone());
-				}
+				
+				reproductionser.getContact().getTelephone().add(new Telephone());
             } else {
                 JOptionPane.showMessageDialog(eag2012Frame, labels.getString("eag2012.errors.errorTelephone"));
             }
@@ -1806,7 +1780,7 @@ public class EagAccessAndServicesPanel extends EagPanels {
             try {
                 super.updateJAXBObject(false);
             } catch (Eag2012FormException e) {
-
+//            	JOptionPane.showMessageDialog(eag2012Frame, e.getCause() + "\n" + e.toString());
             }
 
             if(eag.getArchguide().getDesc().getRepositories().getRepository().get(repositoryNb).getServices() != null){
@@ -1817,9 +1791,8 @@ public class EagAccessAndServicesPanel extends EagPanels {
 					searchroom = eag.getArchguide().getDesc().getRepositories().getRepository().get(repositoryNb).getServices().getSearchroom();
 				}
                 
-    			if(searchroom.getContact()==null){
+    			if(searchroom.getContact()==null)
     				searchroom.setContact(new Contact());	
-    			}
     			
     			boolean empty = false;         
 	            int pos = emailSearchroomTf.size(); 
@@ -1828,12 +1801,10 @@ public class EagAccessAndServicesPanel extends EagPanels {
 	                		&& (emailTitleSearchroomTf.get(i).getText().trim().compareTo("") == 0))
 	                	empty = true;
 	            }
-				if (!empty){
-					searchroom.getContact().getEmail().add(new Email());
-				}else{
+				if (empty)
 					JOptionPane.showMessageDialog(eag2012Frame, labels.getString("eag2012.errors.errorEmail"));
-					searchroom.getContact().getEmail().add(new Email());
-				}
+					
+				searchroom.getContact().getEmail().add(new Email());
             } else {
                 JOptionPane.showMessageDialog(eag2012Frame, labels.getString("eag2012.errors.errorEmail"));
             }
@@ -1857,7 +1828,7 @@ public class EagAccessAndServicesPanel extends EagPanels {
             try {
                 super.updateJAXBObject(false);
             } catch (Eag2012FormException e) {
-
+//            	JOptionPane.showMessageDialog(eag2012Frame, e.getCause() + "\n" + e.toString());
             }
 
             if(eag.getArchguide().getDesc().getRepositories().getRepository().get(repositoryNb).getServices() != null){
@@ -1868,9 +1839,8 @@ public class EagAccessAndServicesPanel extends EagPanels {
 					library = eag.getArchguide().getDesc().getRepositories().getRepository().get(repositoryNb).getServices().getLibrary();
 				}
     			
-    			if(library.getContact()==null){
+    			if(library.getContact()==null)
     				library.setContact(new Contact());	
-    			}
     			
     			boolean empty = false;         
 	            int pos = emailLibraryTf.size(); 
@@ -1879,12 +1849,10 @@ public class EagAccessAndServicesPanel extends EagPanels {
 	                	&& (emailTitleLibraryTf.get(i).getText().trim().compareTo("") == 0))
 	                	empty = true;
 	            }
-				if (!empty){
-					library.getContact().getEmail().add(new Email());
-				}else{
+				if (empty)
 					JOptionPane.showMessageDialog(eag2012Frame, labels.getString("eag2012.errors.errorEmail"));
-					library.getContact().getEmail().add(new Email());
-				}
+					
+				library.getContact().getEmail().add(new Email());
             } else {
                 JOptionPane.showMessageDialog(eag2012Frame, labels.getString("eag2012.errors.errorEmail"));
             }
@@ -1908,16 +1876,15 @@ public class EagAccessAndServicesPanel extends EagPanels {
             try {
                 super.updateJAXBObject(false);
             } catch (Eag2012FormException e) {
-
+//            	JOptionPane.showMessageDialog(eag2012Frame, e.getCause() + "\n" + e.toString());
             }
 
             if(eag.getArchguide().getDesc().getRepositories().getRepository().get(repositoryNb).getServices() != null){
     			
 				Services services = eag.getArchguide().getDesc().getRepositories().getRepository().get(repositoryNb).getServices();
 				
-				if(services.getTechservices() == null) {
+				if(services.getTechservices() == null) 
 					services.setTechservices(new Techservices());
-				}
 				
             	Restorationlab restorationlab = eag.getArchguide().getDesc().getRepositories().getRepository().get(repositoryNb).getServices().getTechservices().getRestorationlab();
 
@@ -1926,10 +1893,9 @@ public class EagAccessAndServicesPanel extends EagPanels {
 					restorationlab = eag.getArchguide().getDesc().getRepositories().getRepository().get(repositoryNb).getServices().getTechservices().getRestorationlab();
 				}
 				
-    			if(restorationlab.getContact()==null){
+    			if(restorationlab.getContact()==null)
     				restorationlab.setContact(new Contact());	
-    			}
-
+    			
     			boolean empty = false;         
 	            int pos = emailRestorationlabTf.size(); 
 	            for(int i=0; i<pos;i++){
@@ -1937,12 +1903,10 @@ public class EagAccessAndServicesPanel extends EagPanels {
 	                		&& (emailTitleRestorationlabTf.get(i).getText().trim().compareTo("") == 0))
 	                	empty = true;
 	            }
-				if (!empty){
-					restorationlab.getContact().getEmail().add(new Email());
-				}else{
+				if (empty)
 					JOptionPane.showMessageDialog(eag2012Frame, labels.getString("eag2012.errors.errorEmail"));
-					restorationlab.getContact().getEmail().add(new Email());
-				}
+				
+				restorationlab.getContact().getEmail().add(new Email());
             } else {
                 JOptionPane.showMessageDialog(eag2012Frame, labels.getString("eag2012.errors.errorEmail"));
             }
@@ -1966,15 +1930,15 @@ public class EagAccessAndServicesPanel extends EagPanels {
             try {
                 super.updateJAXBObject(false);
             } catch (Eag2012FormException e) {
+//            	JOptionPane.showMessageDialog(eag2012Frame, e.getCause() + "\n" + e.toString());
             }
     
             if(eag.getArchguide().getDesc().getRepositories().getRepository().get(repositoryNb).getServices() != null){
     			
 				Services services = eag.getArchguide().getDesc().getRepositories().getRepository().get(repositoryNb).getServices();
 				
-				if(services.getTechservices() == null) {
+				if(services.getTechservices() == null) 
 					services.setTechservices(new Techservices());
-				}
 				
             	Reproductionser reproductionser = eag.getArchguide().getDesc().getRepositories().getRepository().get(repositoryNb).getServices().getTechservices().getReproductionser();
 
@@ -1983,9 +1947,8 @@ public class EagAccessAndServicesPanel extends EagPanels {
 					reproductionser = eag.getArchguide().getDesc().getRepositories().getRepository().get(repositoryNb).getServices().getTechservices().getReproductionser();
 				}
 				
-    			if(reproductionser.getContact()==null){
+    			if(reproductionser.getContact()==null)
     				reproductionser.setContact(new Contact());	
-    			}
 				
     			boolean empty = false;         
 	            int pos = emailReproductionServiceTf.size(); 
@@ -1994,12 +1957,10 @@ public class EagAccessAndServicesPanel extends EagPanels {
 	                		&& (emailTitleReproductionServiceTf.get(i).getText().trim().compareTo("") == 0))
 	                	empty = true;
 	            }
-				if (!empty){
-					reproductionser.getContact().getEmail().add(new Email());
-				}else{
+				if (empty)
 					JOptionPane.showMessageDialog(eag2012Frame, labels.getString("eag2012.errors.errorEmail"));
-					reproductionser.getContact().getEmail().add(new Email());
-				}
+				
+				reproductionser.getContact().getEmail().add(new Email());
             } else {
                 JOptionPane.showMessageDialog(eag2012Frame, labels.getString("eag2012.errors.errorEmail"));
             }
@@ -2023,7 +1984,7 @@ public class EagAccessAndServicesPanel extends EagPanels {
             try {
                 super.updateJAXBObject(false);
             } catch (Eag2012FormException e) {
-
+//            	JOptionPane.showMessageDialog(eag2012Frame, e.getCause() + "\n" + e.toString());
             }
 
             if(eag.getArchguide().getDesc().getRepositories().getRepository().get(repositoryNb).getServices() != null){
@@ -2042,12 +2003,10 @@ public class EagAccessAndServicesPanel extends EagPanels {
 	                	empty = true;
 	            }
 	            if(!errors.contains("webpageSearchroomTf")){
-					if (!empty){
-						searchroom.getWebpage().add(new Webpage());
-					}else{
-						JOptionPane.showMessageDialog(eag2012Frame, labels.getString("eag2012.errors.webpage"));
-						searchroom.getWebpage().add(new Webpage());
-					}
+	            	if (empty)
+	            		JOptionPane.showMessageDialog(eag2012Frame, labels.getString("eag2012.errors.webpage"));
+	            	
+					searchroom.getWebpage().add(new Webpage());
 	            }
             } 
 
@@ -2070,7 +2029,7 @@ public class EagAccessAndServicesPanel extends EagPanels {
             try {
                 super.updateJAXBObject(false);
             } catch (Eag2012FormException e) {
-
+//            	JOptionPane.showMessageDialog(eag2012Frame, e.getCause() + "\n" + e.toString());
             }
 
             if(eag.getArchguide().getDesc().getRepositories().getRepository().get(repositoryNb).getServices() != null){
@@ -2089,12 +2048,10 @@ public class EagAccessAndServicesPanel extends EagPanels {
 	                	empty = true;
 	            }
 	            if (!errors.contains("webpageLibraryTf")){
-		            if (!empty){
-						library.getWebpage().add(new Webpage());
-					}else{
-						JOptionPane.showMessageDialog(eag2012Frame, labels.getString("eag2012.errors.webpage"));
-						library.getWebpage().add(new Webpage());
-					}
+		            if (empty)
+		            	JOptionPane.showMessageDialog(eag2012Frame, labels.getString("eag2012.errors.webpage"));
+		            
+					library.getWebpage().add(new Webpage());
 	            }
             } 
 
@@ -2117,7 +2074,7 @@ public class EagAccessAndServicesPanel extends EagPanels {
             try {
                 super.updateJAXBObject(false);
             } catch (Eag2012FormException e) {
-
+//            	JOptionPane.showMessageDialog(eag2012Frame, e.getCause() + "\n" + e.toString());
             }
 
             if(eag.getArchguide().getDesc().getRepositories().getRepository().get(repositoryNb).getServices() != null
@@ -2137,12 +2094,10 @@ public class EagAccessAndServicesPanel extends EagPanels {
 	                	empty = true;
 	            }
 	            if(!errors.contains("webpageRestorationlabTf")){
-		            if (!empty){
-						restorationlab.getWebpage().add(new Webpage());
-					}else{
-						JOptionPane.showMessageDialog(eag2012Frame, labels.getString("eag2012.errors.webpage"));
-						restorationlab.getWebpage().add(new Webpage());
-					}
+		            if (empty)
+		            	JOptionPane.showMessageDialog(eag2012Frame, labels.getString("eag2012.errors.webpage"));
+						
+					restorationlab.getWebpage().add(new Webpage());
 	            }
             } 
 
@@ -2165,6 +2120,7 @@ public class EagAccessAndServicesPanel extends EagPanels {
             try {
                 super.updateJAXBObject(false);
             } catch (Eag2012FormException e) {
+//            	JOptionPane.showMessageDialog(eag2012Frame, e.getCause() + "\n" + e.toString());
             }
 
             if(eag.getArchguide().getDesc().getRepositories().getRepository().get(repositoryNb).getServices() != null
@@ -2184,12 +2140,10 @@ public class EagAccessAndServicesPanel extends EagPanels {
 	                	empty = true;
 	            }
 	            if(!errors.contains("webpageReproductionServiceTf")){
-		            if (!empty ){
-						reproductionser.getWebpage().add(new Webpage());
-					}else{
-						JOptionPane.showMessageDialog(eag2012Frame, labels.getString("eag2012.errors.webpage"));
-						reproductionser.getWebpage().add(new Webpage());
-					}
+		            if (empty )
+		            	JOptionPane.showMessageDialog(eag2012Frame, labels.getString("eag2012.errors.webpage"));
+						
+					reproductionser.getWebpage().add(new Webpage());
 	            }
             } 
 
@@ -2265,7 +2219,7 @@ public class EagAccessAndServicesPanel extends EagPanels {
             }
         }
     }
-
+    
     public abstract class UpdateEagObject extends DefaultBtnAction {
 
         public UpdateEagObject(Eag eag, JTabbedPane tabbedPane, ProfileListModel model) {
@@ -2276,9 +2230,6 @@ public class EagAccessAndServicesPanel extends EagPanels {
         protected void updateJAXBObject(boolean save) throws Eag2012FormException {
             errors = new ArrayList<String>();
 
-            boolean hasChanged = false;
-
-//            if(eag.getArchguide().getDesc().getRepositories().getRepository().size() == 1) { //todo: BECAUSE FOR NOW ONLY ONE REPOSITORY!!!!
             Repository repository = eag.getArchguide().getDesc().getRepositories().getRepository().get(repositoryNb);
 
             //updating opening hours
@@ -2326,7 +2277,6 @@ public class EagAccessAndServicesPanel extends EagPanels {
                             directions.getContent().add(citation);
                         }
                         repository.getDirections().add(directions);
-                        hasChanged = true;
                     }
                 }
             }
@@ -2358,7 +2308,6 @@ public class EagAccessAndServicesPanel extends EagPanels {
                                 errors.add("termsOfUseTfs");
                         }
                         repository.getAccess().getTermsOfUse().add(termsOfUse);
-                        hasChanged = true;
                     }
                 }
             }
@@ -2371,8 +2320,8 @@ public class EagAccessAndServicesPanel extends EagPanels {
                         Accessibility accessibility = new Accessibility();
                         accessibility.setLang(textAreaWithLanguage.getLanguage());
                         accessibility.setContent(textAreaWithLanguage.getTextValue());
+                        accessibility.setQuestion((String) facilitiesForDisabledCombo.getSelectedItem());
                         repository.getAccessibility().add(accessibility);
-                        hasChanged = true;
                     }
                 }
             }
@@ -2403,7 +2352,6 @@ public class EagAccessAndServicesPanel extends EagPanels {
                     Telephone telephone = new Telephone();
                     telephone.setContent(field.getText());
                     searchroom.getContact().getTelephone().add(telephone);
-                    hasChanged = true;
                     hasContactInfo = true;
                 }
             }
@@ -2421,7 +2369,6 @@ public class EagAccessAndServicesPanel extends EagPanels {
                     else
                         email.setContent(field.getText());
                     searchroom.getContact().getEmail().add(email);
-                    hasChanged = true;
                     hasContactInfo = true;
                 }
             }
@@ -2448,7 +2395,6 @@ public class EagAccessAndServicesPanel extends EagPanels {
                     else
                     	webpage.setContent(field.getText());
                     searchroom.getWebpage().add(webpage);
-                    hasChanged = true;
                     hasSearchroomWebpage = true;
                 }
             }
@@ -2474,7 +2420,6 @@ public class EagAccessAndServicesPanel extends EagPanels {
                         p.setContent(textFieldWithLanguage.getTextValue());
                         p.setLang(textFieldWithLanguage.getLanguage());
                         searchroom.getComputerPlaces().getDescriptiveNote().getP().add(p);
-                        hasChanged = true;
                         hasSearchRoomInfo = true;
                     }
                 }
@@ -2508,7 +2453,6 @@ public class EagAccessAndServicesPanel extends EagPanels {
                         if(!StringUtils.startsWithAny(textFieldWithLanguage.getExtraValue(), webPrefixes))
                                 errors.add("readersticketSearchroomTfs");
                         searchroom.getReadersTicket().add(readersTicket);
-                        hasChanged = true;
                         hasSearchRoomInfo = true;
                     }
                 }
@@ -2525,7 +2469,6 @@ public class EagAccessAndServicesPanel extends EagPanels {
                         if(!StringUtils.startsWithAny(textFieldWithLanguage.getExtraValue(), webPrefixes))
                                 errors.add("advancedordersSearchroomTfs");
                         searchroom.getAdvancedOrders().add(advancedOrders);
-                        hasChanged = true;
                         hasSearchRoomInfo = true;
                     }
                 }
@@ -2544,7 +2487,6 @@ public class EagAccessAndServicesPanel extends EagPanels {
                         descriptiveNote.getP().get(0).setLang(textFieldWithLanguage.getLanguage());
                         researchServices.setDescriptiveNote(descriptiveNote);
                         searchroom.getResearchServices().add(researchServices);
-                        hasChanged = true;
                         hasSearchRoomInfo = true;
                     }
                 }
@@ -2587,7 +2529,6 @@ public class EagAccessAndServicesPanel extends EagPanels {
                     Telephone telephone = new Telephone();
                     telephone.setContent(field.getText());
                     library.getContact().getTelephone().add(telephone);
-                    hasChanged = true;
                     hasLibraryContactInfo = true;
                 }
             }
@@ -2605,7 +2546,6 @@ public class EagAccessAndServicesPanel extends EagPanels {
                     else
                         email.setContent(field.getText());
                     library.getContact().getEmail().add(email);
-                    hasChanged = true;
                     hasLibraryContactInfo = true;
                 }
             }
@@ -2632,7 +2572,6 @@ public class EagAccessAndServicesPanel extends EagPanels {
                     else
                     	webpage.setContent(field.getText());
                     library.getWebpage().add(webpage);
-                    hasChanged = true;
                     hasLibraryWebPage = true;
                     libraryExists=true;
                 }
@@ -2737,7 +2676,6 @@ public class EagAccessAndServicesPanel extends EagPanels {
                     Telephone telephone = new Telephone();
                     telephone.setContent(field.getText());
                     restorationlab.getContact().getTelephone().add(telephone);
-                    hasChanged = true;
                     hasRestorationlabContactInfo = true;
                 }
             }
@@ -2755,7 +2693,6 @@ public class EagAccessAndServicesPanel extends EagPanels {
                     else
                         email.setContent(field.getText());
                     restorationlab.getContact().getEmail().add(email);
-                    hasChanged = true;
                     hasRestorationlabContactInfo = true;
                 }
             }
@@ -2782,7 +2719,6 @@ public class EagAccessAndServicesPanel extends EagPanels {
                     else
                     	webpage.setContent(field.getText());
                     restorationlab.getWebpage().add(webpage);
-                    hasChanged = true;
                     hasRestorationLabWebPage = true;
                     restorationLabExists=true;
                 }
@@ -2835,7 +2771,6 @@ public class EagAccessAndServicesPanel extends EagPanels {
                     Telephone telephone = new Telephone();
                     telephone.setContent(field.getText());
                     reproductionser.getContact().getTelephone().add(telephone);
-                    hasChanged = true;
                     hasReproductionserContactInfo = true;
                 }
             }
@@ -2853,7 +2788,6 @@ public class EagAccessAndServicesPanel extends EagPanels {
                     else
                         email.setContent(field.getText());
                     reproductionser.getContact().getEmail().add(email);
-                    hasChanged = true;
                     hasReproductionserContactInfo = true;
                 }
             }
@@ -2882,7 +2816,6 @@ public class EagAccessAndServicesPanel extends EagPanels {
                     else
                     	webpage.setContent(field.getText());
                     reproductionser.getWebpage().add(webpage);
-                    hasChanged = true;
                     hasReproductionWebPage = true;
                 }
             }
@@ -2960,7 +2893,6 @@ public class EagAccessAndServicesPanel extends EagPanels {
                             exhibition.getWebpage().setContent(textAreaWithLanguage.getSecondExtraValue());
                         }
                         recreationalServices.getExhibition().add(exhibition);
-                        hasChanged = true;
                         hasRecreationalServices = true;
                     }
                 }
@@ -2984,7 +2916,6 @@ public class EagAccessAndServicesPanel extends EagPanels {
                             toursSessions.getWebpage().setContent(textAreaWithLanguage.getSecondExtraValue());
                         }
                         recreationalServices.getToursSessions().add(toursSessions);
-                        hasChanged = true;
                         hasRecreationalServices = true;
                     }
                 }
@@ -3008,7 +2939,6 @@ public class EagAccessAndServicesPanel extends EagPanels {
                             otherServices.getWebpage().setContent(textAreaWithLanguage.getSecondExtraValue());
                         }
                         recreationalServices.getOtherServices().add(otherServices);
-                        hasChanged = true;
                         hasRecreationalServices = true;
                     }
                 }
@@ -3027,6 +2957,9 @@ public class EagAccessAndServicesPanel extends EagPanels {
 
             if(!errors.isEmpty()) {
             	String strOut ="";
+            	
+            	if (errors.contains("termsOfUseTfs"))
+            		strOut+= labels.getString("eag2012.errors.errorTermsOfUse")+"\n";
             	
              	if (errors.contains("webpageSearchroomTf"))
             		strOut+= labels.getString("eag2012.portal.searchroom") +":\n" + labels.getString("eag2012.errors.webpageProtocol")+ "\n";

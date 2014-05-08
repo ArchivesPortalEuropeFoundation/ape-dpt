@@ -53,7 +53,7 @@ public class EagIdentityPanel extends EagPanels {
     private List<TextFieldWithDate> datesForFormerlyUsedName;
 
     protected static String[] typeInstitution = {"---", "National archives", "Regional archives", "County/local authority archives",
-            "Municipal archives", "Specialised governmental archives", "Private persons and family archives", "Church and religious archives",
+            "Municipal archives", "Specialised government archives", "Private persons and family archives", "Church and religious archives",
             "Business archives", "University and research archives", "Media archives", "Archives of political parties, of popular/labour movement and other non-governmental organisations, associations, agencies and foundations",
             "Specialised non-governmental archives and archives of other cultural (heritage) institutions"};
     
