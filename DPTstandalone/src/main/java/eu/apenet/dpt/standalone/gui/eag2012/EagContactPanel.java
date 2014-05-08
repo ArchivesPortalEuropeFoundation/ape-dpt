@@ -18,28 +18,45 @@ package eu.apenet.dpt.standalone.gui.eag2012;
  * #L%
  */
 
-import com.jgoodies.forms.builder.PanelBuilder;
-import com.jgoodies.forms.layout.CellConstraints;
-import com.jgoodies.forms.layout.FormLayout;
-import eu.apenet.dpt.standalone.gui.ProfileListModel;
-import eu.apenet.dpt.standalone.gui.Utilities;
-
-import eu.apenet.dpt.standalone.gui.commons.ButtonTab;
-import eu.apenet.dpt.standalone.gui.commons.DefaultBtnAction;
-import eu.apenet.dpt.standalone.gui.eag2012.SwingStructures.LocationType;
-import eu.apenet.dpt.standalone.gui.eag2012.SwingStructures.TextFieldWithLanguage;
-import eu.apenet.dpt.utils.eag2012.*;
-import org.apache.commons.lang.StringUtils;
-
-import javax.swing.*;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.ResourceBundle;
+
+import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JComponent;
+import javax.swing.JFrame;
+import javax.swing.JOptionPane;
+import javax.swing.JTabbedPane;
+import javax.swing.JTextField;
+
+import org.apache.commons.lang.StringUtils;
+
+import com.jgoodies.forms.builder.PanelBuilder;
+import com.jgoodies.forms.layout.CellConstraints;
+import com.jgoodies.forms.layout.FormLayout;
+
+import eu.apenet.dpt.standalone.gui.ProfileListModel;
+import eu.apenet.dpt.standalone.gui.Utilities;
+import eu.apenet.dpt.standalone.gui.commons.ButtonTab;
+import eu.apenet.dpt.standalone.gui.commons.DefaultBtnAction;
+import eu.apenet.dpt.standalone.gui.eag2012.SwingStructures.LocationType;
+import eu.apenet.dpt.standalone.gui.eag2012.SwingStructures.TextFieldWithLanguage;
+import eu.apenet.dpt.utils.eag2012.Country;
+import eu.apenet.dpt.utils.eag2012.Eag;
+import eu.apenet.dpt.utils.eag2012.Email;
+import eu.apenet.dpt.utils.eag2012.Fax;
+import eu.apenet.dpt.utils.eag2012.Location;
+import eu.apenet.dpt.utils.eag2012.MunicipalityPostalcode;
+import eu.apenet.dpt.utils.eag2012.Repository;
+import eu.apenet.dpt.utils.eag2012.RepositoryName;
+import eu.apenet.dpt.utils.eag2012.RepositoryRole;
+import eu.apenet.dpt.utils.eag2012.Services;
+import eu.apenet.dpt.utils.eag2012.Street;
+import eu.apenet.dpt.utils.eag2012.Telephone;
+import eu.apenet.dpt.utils.eag2012.Webpage;
 
 /**
  * User: Yoann Moranville
@@ -52,8 +69,8 @@ public class EagContactPanel extends EagPanels {
     private JComboBox repositoryRoleTypeCombo = new JComboBox(repositoryRoles);
 
     private List<LocationType> locationFields;
+    private List<JTextField> faxTfs; 
     private List<JTextField> telephoneTfs;
-    private List<JTextField> faxTfs;
     private List<JTextField> emailTfs;
     private List<JTextField> emailTitleTfs;
     private List<JTextField> webpageTfs;
@@ -234,7 +251,8 @@ public class EagContactPanel extends EagPanels {
         }
         builder.add(continentCombo, cc.xy (3, rowNb));
         setNextRow();
-
+        
+        //getTelephone()
         builder.addLabel(labels.getString("eag2012.commons.telephone"), cc.xy(1, rowNb));
         int i = 0;
         telephoneTfs = new ArrayList<JTextField>(repository.getTelephone().size());
@@ -243,9 +261,9 @@ public class EagContactPanel extends EagPanels {
             telephoneTfs.add(telephoneTf);
             builder.add(telephoneTf, cc.xy (3, rowNb));
             if(i++ == 0) {
-                JButton addTelephoneBtn = new ButtonTab(labels.getString("eag2012.contact.addFurtherTelephoneNumbers"));
+            	JButton addTelephoneBtn = new ButtonTab(labels.getString("eag2012.contact.addFurtherTelephoneNumbers"));
                 addTelephoneBtn.addActionListener(new AddTelephoneAction(eag, tabbedPane, model));
-                builder.add(addTelephoneBtn, cc.xy(5, rowNb));
+                builder.add(addTelephoneBtn, cc.xy(5, rowNb));            
             }
             setNextRow();
         }
@@ -258,7 +276,7 @@ public class EagContactPanel extends EagPanels {
             builder.add(addTelephoneBtn, cc.xy(5, rowNb));
             setNextRow();
         }
-
+     
         builder.addLabel(labels.getString("eag2012.contact.fax"), cc.xy(1, rowNb));
         i = 0;
         faxTfs = new ArrayList<JTextField>(repository.getFax().size());
@@ -282,52 +300,50 @@ public class EagContactPanel extends EagPanels {
             builder.add(addFaxBtn, cc.xy(5, rowNb));
             setNextRow();
         }
-
+       
+        //getEmail()
         emailTfs = new ArrayList<JTextField>(repository.getEmail().size());
         emailTitleTfs = new ArrayList<JTextField>(repository.getEmail().size());
         if(repository.getEmail().size() == 0)
-            repository.getEmail().add(new Email());
+        	repository.getEmail().add(new Email());
         for(Email email : repository.getEmail()) {
             JTextField emailTf = new JTextField(email.getHref());
             JTextField emailTitleTf = new JTextField(email.getContent());
             emailTfs.add(emailTf);
             emailTitleTfs.add(emailTitleTf);
-            builder.addLabel(labels.getString("eag2012.commons.email"),    cc.xy (1, rowNb));
+            builder.addLabel(labels.getString("eag2012.commons.email"),cc.xy (1, rowNb));
             builder.add(emailTf, cc.xy (3, rowNb));
-            builder.addLabel(labels.getString("eag2012.commons.linkTitle"),             cc.xy (5, rowNb));
-            builder.add(emailTitleTf,                                            cc.xy (7, rowNb));
+            builder.addLabel(labels.getString("eag2012.commons.linkTitle"),cc.xy (5, rowNb));
+            builder.add(emailTitleTf,cc.xy (7, rowNb));
             setNextRow();
         }
         JButton addEmailBtn = new ButtonTab(labels.getString("eag2012.commons.addEmail"));
         addEmailBtn.addActionListener(new AddEmailAction(eag, tabbedPane, model));
         builder.add(addEmailBtn, cc.xy(1, rowNb));
         setNextRow();
-
+     
+        //getWebpage()
         webpageTfs = new ArrayList<JTextField>(repository.getWebpage().size());
         webpageTitleTfs = new ArrayList<JTextField>(repository.getWebpage().size());
         if(repository.getWebpage().size() == 0)
-            repository.getWebpage().add(new Webpage());
+        	repository.getWebpage().add(new Webpage());
         for(Webpage webpage : repository.getWebpage()) {
             JTextField webpageTf = new JTextField(webpage.getHref());
-            JTextField webpageTitleTf;
-            if(!StringUtils.isBlank(repository.getWebpage().get(0).getContent()))
-                webpageTitleTf = new JTextField(webpage.getContent());
-            else
-                webpageTitleTf = new JTextField();
-            webpageTfs.add(webpageTf);
+            JTextField webpageTitleTf = new JTextField(webpage.getContent());
             webpageTitleTfs.add(webpageTitleTf);
-            builder.addLabel(labels.getString("eag2012.commons.webpage"),    cc.xy (1, rowNb));
-            builder.add(webpageTf, cc.xy (3, rowNb));
-            builder.addLabel(labels.getString("eag2012.commons.linkTitle"),             cc.xy (5, rowNb));
-            builder.add(webpageTitleTf,                                            cc.xy (7, rowNb));
+        	webpageTfs.add(webpageTf);
+    		builder.addLabel(labels.getString("eag2012.commons.webpage"),    cc.xy (1, rowNb));
+            builder.add(webpageTf,    cc.xy (3, rowNb));
+            builder.addLabel(labels.getString("eag2012.commons.linkTitle"),    cc.xy (5, rowNb));
+            builder.add(webpageTitleTf,    cc.xy (7, rowNb));
             setNextRow();
             if(errors.contains("webpageTfs")) {
                 if(StringUtils.isNotBlank(webpageTf.getText()) && !StringUtils.startsWithAny(webpageTf.getText(), webPrefixes)){
-                    builder.add(createErrorLabel(labels.getString("eag2012.errors.webpageProtocol")),          cc.xy(1, rowNb));
+                    builder.add(createErrorLabel(labels.getString("eag2012.errors.webpageProtocol")), cc.xyw(1, rowNb, 3));
                     setNextRow();
                 }
             } else if(StringUtils.isNotBlank(webpageTf.getText()) && !StringUtils.startsWithAny(webpageTf.getText(), webPrefixes)){
-                builder.add(createErrorLabel(labels.getString("eag2012.errors.webpageProtocol")),          cc.xy(1, rowNb));
+                builder.add(createErrorLabel(labels.getString("eag2012.errors.webpageProtocol")),cc.xyw(1, rowNb, 3));
                 setNextRow();
             }
         }
@@ -335,6 +351,9 @@ public class EagContactPanel extends EagPanels {
         addWebpageBtn.addActionListener(new AddWebpageAction(eag, tabbedPane, model));
         builder.add(addWebpageBtn, cc.xy(1, rowNb));
         setNextRow();
+
+        
+        
 
         builder.addSeparator("", cc.xyw(1, rowNb, 7));
         setNextRow();
@@ -478,9 +497,6 @@ public class EagContactPanel extends EagPanels {
             try {
                 super.updateJAXBObject(false);
             } catch (Eag2012FormException e) {
-//                for(String error : getErrors().keySet()) {
-//                    System.out.println(error);
-//                }
             }
 
             int counter = locationFields.size();
@@ -510,20 +526,14 @@ public class EagContactPanel extends EagPanels {
             if(locationFields.get(counter - 1).getErrors().isEmpty() ){
                 reloadTabbedPanel(new EagContactPanel(eag, tabbedPane, mainTabbedPane, eag2012Frame, model, isNew, labels, repositoryNb).buildEditorPanel(errors),2);
             }
-//            Location location = new Location();
-//            if(isPostal) {
-//                location.setLocalType("postal address");
-//            } else {
-//                location.setLocalType("visitors address");
-//            }
-//            location.setCountry(new Country());
-//            location.setStreet(new Street());
-//            location.setMunicipalityPostalcode(new MunicipalityPostalcode());
-//
-//            eag.getArchguide().getDesc().getRepositories().getRepository().get(repositoryNb).getLocation().add(location);
-//            reloadTabbedPanel(new EagContactPanel(eag, tabbedPane, mainTabbedPane, eag2012Frame, model, labels, repositoryNb).buildEditorPanel(errors), 2);
         }
     }
+    
+    /***
+     * Adds a new telephone in Contact tab
+     * @author fernando
+     *
+     */
     public class AddTelephoneAction extends UpdateEagObject {
         AddTelephoneAction(Eag eag, JTabbedPane tabbedPane, ProfileListModel model) {
             super(eag, tabbedPane, model);
@@ -534,14 +544,24 @@ public class EagContactPanel extends EagPanels {
             try {
                 super.updateJAXBObject(false);
             } catch (Eag2012FormException e) {
-
+//            	JOptionPane.showMessageDialog(eag2012Frame, e.getCause() + "\n" + e.toString());
             }
-            Repository repository = eag.getArchguide().getDesc().getRepositories().getRepository().get(repositoryNb);
-            repository.getTelephone().add(new Telephone());
-
+                			
+            List<Telephone> telephone= eag.getArchguide().getDesc().getRepositories().getRepository().get(repositoryNb).getTelephone();
+			boolean empty = false;         
+		    int pos = telephoneTfs.size(); 
+		    for(int i=0; i<pos;i++){
+		        if( telephoneTfs.get(i).getText()==null || telephoneTfs.get(i).getText().trim().compareTo("") == 0)
+		        	empty = true;
+		    }
+			if (empty)
+				JOptionPane.showMessageDialog(eag2012Frame, labels.getString("eag2012.errors.errorTelephone"));
+			
+			telephone.add(new Telephone());
             reloadTabbedPanel(new EagContactPanel(eag, tabbedPane, mainTabbedPane, eag2012Frame, model, isNew, labels, repositoryNb).buildEditorPanel(errors), 2);
         }
     }
+    
     public class AddFaxAction extends UpdateEagObject {
         AddFaxAction(Eag eag, JTabbedPane tabbedPane, ProfileListModel model) {
             super(eag, tabbedPane, model);
@@ -560,6 +580,12 @@ public class EagContactPanel extends EagPanels {
             reloadTabbedPanel(new EagContactPanel(eag, tabbedPane, mainTabbedPane, eag2012Frame, model, isNew, labels, repositoryNb).buildEditorPanel(errors), 2);
         }
     }
+    
+    /***
+     * Adds a new email in Contact tab
+     * @author fernando
+     *
+     */
     public class AddEmailAction extends UpdateEagObject {
         AddEmailAction(Eag eag, JTabbedPane tabbedPane, ProfileListModel model) {
             super(eag, tabbedPane, model);
@@ -570,14 +596,30 @@ public class EagContactPanel extends EagPanels {
             try {
                 super.updateJAXBObject(false);
             } catch (Eag2012FormException e) {
-
+//            	JOptionPane.showMessageDialog(eag2012Frame, e.getCause() + "\n" + e.toString());
             }
-            Repository repository = eag.getArchguide().getDesc().getRepositories().getRepository().get(repositoryNb);
-            repository.getEmail().add(new Email());
-
+   			
+            List<Email> email= eag.getArchguide().getDesc().getRepositories().getRepository().get(repositoryNb).getEmail();
+			boolean empty = false;         
+            int pos = emailTfs.size(); 
+            for(int i=0; i<pos;i++){
+                if( (emailTfs.get(i).getText()==null || emailTfs.get(i).getText().trim().compareTo("") == 0)
+                		&& (emailTitleTfs.get(i).getText().trim().compareTo("") == 0))
+                	empty = true;
+            }
+			if (empty)
+				JOptionPane.showMessageDialog(eag2012Frame, labels.getString("eag2012.errors.errorEmail"));
+			
+			email.add(new Email());
             reloadTabbedPanel(new EagContactPanel(eag, tabbedPane, mainTabbedPane, eag2012Frame, model, isNew, labels, repositoryNb).buildEditorPanel(errors), 2);
         }
     }
+    
+    /***
+     * Adds a new Web page in Contact tab
+     * @author fernando
+     *
+     */
     public class AddWebpageAction extends UpdateEagObject {
         AddWebpageAction(Eag eag, JTabbedPane tabbedPane, ProfileListModel model) {
             super(eag, tabbedPane, model);
@@ -588,15 +630,31 @@ public class EagContactPanel extends EagPanels {
             try {
                 super.updateJAXBObject(false);
             } catch (Eag2012FormException e) {
-
+//            	JOptionPane.showMessageDialog(eag2012Frame, e.getCause() + "\n" + e.toString());
             }
-            Repository repository = eag.getArchguide().getDesc().getRepositories().getRepository().get(repositoryNb);
-            Webpage webpage = new Webpage();
-            repository.getWebpage().add(webpage);
-
+            
+            List<Webpage> webpage= eag.getArchguide().getDesc().getRepositories().getRepository().get(repositoryNb).getWebpage();
+			boolean empty = false;         
+            int pos = webpageTfs.size(); 
+            for(int i=0; i<pos;i++){
+                if( (webpageTfs.get(i).getText()==null || webpageTfs.get(i).getText().trim().compareTo("") == 0)
+                		&& (webpageTitleTfs.get(i).getText()==null || webpageTitleTfs.get(i).getText().trim().compareTo("") == 0))
+                	empty = true;
+            }
+            if(!errors.contains("webpageTfs")){
+            	if (empty)
+            		JOptionPane.showMessageDialog(eag2012Frame, labels.getString("eag2012.errors.webpage"));
+            	
+            }
+            else{
+            	if (empty)
+            		JOptionPane.showMessageDialog(eag2012Frame, labels.getString("eag2012.errors.webpage"));
+            }
+            webpage.add(new Webpage());
             reloadTabbedPanel(new EagContactPanel(eag, tabbedPane, mainTabbedPane, eag2012Frame, model, isNew, labels, repositoryNb).buildEditorPanel(errors), 2);
         }
     }
+    
     public class AddRepositoryNameAction extends UpdateEagObject {
         AddRepositoryNameAction(Eag eag, JTabbedPane tabbedPane, ProfileListModel model) {
             super(eag, tabbedPane, model);
@@ -627,9 +685,6 @@ public class EagContactPanel extends EagPanels {
         protected void updateJAXBObject(boolean save) throws Eag2012FormException {
             errors = new ArrayList<String>();
 
-            boolean hasChanged = false;
-
-//            if(eag.getArchguide().getDesc().getRepositories().getRepository().size() == 1) {
             Repository repository = eag.getArchguide().getDesc().getRepositories().getRepository().get(repositoryNb);
 
             if(repositoryNb > 0) {
@@ -657,112 +712,93 @@ public class EagContactPanel extends EagPanels {
                 }
             }
 
-                repository.getLocation().clear();
+            repository.getLocation().clear();
 
-                String defaultCountry = "";
-                boolean isFirst = true;
-                for(LocationType locationType : locationFields) {
-                    if(StringUtils.isNotEmpty(locationType.getCountryTfValue())) {
-                        defaultCountry = locationType.getCountryTfValue();
-                    }
-                    Location location = locationType.getLocation(defaultCountry, isFirst);
-                    isFirst = false;
-                    errors.addAll(locationType.getErrors());
-                    if(location != null)
-                        repository.getLocation().add(location);
+            String defaultCountry = "";
+            boolean isFirst = true;
+            for(LocationType locationType : locationFields) {
+                if(StringUtils.isNotEmpty(locationType.getCountryTfValue())) {
+                    defaultCountry = locationType.getCountryTfValue();
                 }
+                Location location = locationType.getLocation(defaultCountry, isFirst);
+                isFirst = false;
+                errors.addAll(locationType.getErrors());
+                if(location != null)
+                    repository.getLocation().add(location);
+            }
 
-                if(!continentCombo.getSelectedItem().equals(repository.getGeogarea().getValue())) {
-                    repository.getGeogarea().setValue(continentCombo.getSelectedItem().toString());
-                    hasChanged = true;
-                }
+            if(!continentCombo.getSelectedItem().equals(repository.getGeogarea().getValue())) {
+                repository.getGeogarea().setValue(continentCombo.getSelectedItem().toString());
+            }
+           
+            if(repository.getServices() == null)
+                repository.setServices(new Services());
 
+            //Telephone 
+            repository.getTelephone().clear();
+            for(JTextField field : telephoneTfs) {
+                if(StringUtils.isNotEmpty(field.getText().trim())) {
+                    Telephone telephone = new Telephone();
+                    telephone.setContent(field.getText());
+                    repository.getTelephone().add(telephone);
+                }
+            }
 
-
-                repository.getTelephone().clear();
-                for(JTextField field : telephoneTfs) {
-                    if(StringUtils.isNotEmpty(field.getText())) {
-                        Telephone telephone = new Telephone();
-                        telephone.setContent(field.getText());
-                        repository.getTelephone().add(telephone);
-                        hasChanged = true;
-                    }
+            //email
+            repository.getEmail().clear();
+            for(int i = 0; i < emailTfs.size(); i++) {
+                JTextField field = emailTfs.get(i);
+                JTextField fieldTitle = emailTitleTfs.get(i);
+                if(StringUtils.isNotEmpty(field.getText().trim())) {
+                    Email email = new Email();
+                    email.setHref(field.getText());
+                    if(StringUtils.isNotEmpty(fieldTitle.getText()))
+                        email.setContent(fieldTitle.getText());
+                    else
+                        email.setContent(field.getText());
+                    repository.getEmail().add(email);
                 }
-                repository.getFax().clear();
-                for(JTextField field : faxTfs) {
-                    if(StringUtils.isNotEmpty(field.getText())) {
-                        Fax fax = new Fax();
-                        fax.setContent(field.getText());
-                        repository.getFax().add(fax);
-                        hasChanged = true;
+            }
+            
+            //web page
+            repository.getWebpage().clear();
+            for(int i = 0; i < webpageTfs.size(); i++) {
+                JTextField field = webpageTfs.get(i);
+                JTextField fieldTitle = webpageTitleTfs.get(i);
+                if(StringUtils.isNotEmpty(field.getText().trim()) || StringUtils.isNotEmpty(fieldTitle.getText().trim())) {
+                    Webpage webpage = new Webpage();
+                    webpage.setHref(field.getText());
+                    if(StringUtils.isNotEmpty(field.getText().trim())){
+	                    if(!StringUtils.startsWithAny(field.getText(), webPrefixes))
+	                        errors.add("webpageTfs");
                     }
+                    if(StringUtils.isNotEmpty(fieldTitle.getText()))
+                    	webpage.setContent(fieldTitle.getText());
+//                    else
+//                    	webpage.setContent(field.getText());
+                    repository.getWebpage().add(webpage);
                 }
-                repository.getEmail().clear();
-                for(int i = 0; i < emailTfs.size(); i++) {
-                    JTextField field = emailTfs.get(i);
-                    JTextField fieldTitle = emailTitleTfs.get(i);
-                    if(StringUtils.isNotEmpty(field.getText())) {
-                        Email email = new Email();
-                        email.setHref(field.getText());
-                        if(StringUtils.isNotEmpty(fieldTitle.getText()))
-                            email.setContent(fieldTitle.getText());
-                        else
-                            email.setContent(field.getText());
-                        repository.getEmail().add(email);
-                        hasChanged = true;
-                    }
+            }
+           
+            repository.getFax().clear();
+            for(JTextField field : faxTfs) {
+                if(StringUtils.isNotEmpty(field.getText())) {
+                    Fax fax = new Fax();
+                    fax.setContent(field.getText());
+                    repository.getFax().add(fax);
                 }
-                repository.getWebpage().clear();
-                for(int i = 0; i < webpageTfs.size(); i++) {
-                    JTextField field = webpageTfs.get(i);
-                    JTextField fieldTitle = webpageTitleTfs.get(i);
-                    if(StringUtils.isNotEmpty(field.getText())) {
-                        Webpage webpage = new Webpage();
-                        webpage.setHref(field.getText());
-                        if(!StringUtils.startsWithAny(field.getText(), webPrefixes))
-                            errors.add("webpageTfs");
-                        if(StringUtils.isNotEmpty(fieldTitle.getText()))
-                            webpage.setContent(fieldTitle.getText());
-                        repository.getWebpage().add(webpage);
-                        hasChanged = true;
-                    }
-                }
-//            }
+            }
+                
 
             if(!errors.isEmpty()) {
+//            	String strOut ="";
+//            	
+//             	if (errors.contains("webpageTfs"))
+//            		strOut+= labels.getString("eag2012.errors.webpageProtocol")+ "\n";
+//
+//        		JOptionPane.showMessageDialog(eag2012Frame, strOut);
                 throw new Eag2012FormException("Errors in validation of EAG 2012");
             }
         }
     }
-
-//    public class TabChangeListener extends UpdateEagObject implements ChangeListener {
-//        private boolean click;
-//        public TabChangeListener(Eag eag, JTabbedPane tabbedPane, ProfileListModel model) {
-//            super(eag, tabbedPane, model);
-//            click = true;
-//        }
-//
-//        @Override
-//        public void actionPerformed(ActionEvent actionEvent) {}
-//
-//        public void stateChanged(ChangeEvent changeEvent) {
-//            LOG.info("stateChanged (mainTabbed index: " + mainTabbedPane.getSelectedIndex() + ")");
-//            if(click && !Eag2012Frame.firstTimeInTab) {
-//                tabbedPane.removeChangeListener(this);
-//                try {
-//                    super.updateEagObject(false);
-//                    LOG.info("Ok");
-//                    Eag2012Frame.firstTimeInTab = true;
-//                    EagPanels eagPanels = getCorrectEagPanels(tabbedPane.getSelectedIndex(), mainTabbedPane, eag2012Frame, labels, repositoryNb);
-//                    reloadTabbedPanel(eagPanels.buildEditorPanel(errors), tabbedPane.getSelectedIndex());
-//                } catch (Eag2012FormException e) {
-//                    LOG.info("NOT Ok");
-//                    EagPanels eagPanels = getCorrectEagPanels(2, mainTabbedPane, eag2012Frame, labels, repositoryNb);
-//                    reloadTabbedPanel(eagPanels.buildEditorPanel(errors), 2);
-//                }
-//                click = false;
-//            }
-//            Eag2012Frame.firstTimeInTab = false;
-//        }
-//    }
 }
