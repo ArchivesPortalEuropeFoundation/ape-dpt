@@ -2391,13 +2391,13 @@ public class EagAccessAndServicesPanel extends EagPanels {
             for(int i = 0; i < emailSearchroomTf.size(); i++) {
                 JTextField field = emailSearchroomTf.get(i);
                 JTextField fieldTitle = emailTitleSearchroomTf.get(i);
-                if(StringUtils.isNotEmpty(field.getText().trim())) {
+                if(StringUtils.isNotEmpty(field.getText().trim())|| StringUtils.isNotEmpty(fieldTitle.getText().trim())) {
                     Email email = new Email();
                     email.setHref(field.getText());
                     if(StringUtils.isNotEmpty(fieldTitle.getText()))
                         email.setContent(fieldTitle.getText());
-                    else
-                        email.setContent(field.getText());
+//                    else
+//                        email.setContent(field.getText());
                     searchroom.getContact().getEmail().add(email);
                     hasContactInfo = true;
                 }
@@ -2568,13 +2568,13 @@ public class EagAccessAndServicesPanel extends EagPanels {
             for(int i = 0; i < emailLibraryTf.size(); i++) {
                 JTextField field = emailLibraryTf.get(i);
                 JTextField fieldTitle = emailTitleLibraryTf.get(i);
-                if(StringUtils.isNotEmpty(field.getText().trim())) {
+                if(StringUtils.isNotEmpty(field.getText().trim())|| StringUtils.isNotEmpty(fieldTitle.getText().trim())) {
                     Email email = new Email();
                     email.setHref(field.getText());
                     if(StringUtils.isNotEmpty(fieldTitle.getText()))
                         email.setContent(fieldTitle.getText());
-                    else
-                        email.setContent(field.getText());
+//                    else
+//                        email.setContent(field.getText());
                     library.getContact().getEmail().add(email);
                     hasLibraryContactInfo = true;
                 }
@@ -2715,13 +2715,13 @@ public class EagAccessAndServicesPanel extends EagPanels {
             for(int i = 0; i < emailRestorationlabTf.size(); i++) {
                 JTextField field = emailRestorationlabTf.get(i);
                 JTextField fieldTitle = emailTitleRestorationlabTf.get(i);
-                if(StringUtils.isNotEmpty(field.getText().trim())) {
+                if(StringUtils.isNotEmpty(field.getText().trim())|| StringUtils.isNotEmpty(fieldTitle.getText().trim())) {
                     Email email = new Email();
                     email.setHref(field.getText());
                     if(StringUtils.isNotEmpty(fieldTitle.getText()))
                         email.setContent(fieldTitle.getText());
-                    else
-                        email.setContent(field.getText());
+//                    else
+//                        email.setContent(field.getText());
                     restorationlab.getContact().getEmail().add(email);
                     hasRestorationlabContactInfo = true;
                 }
@@ -2810,13 +2810,13 @@ public class EagAccessAndServicesPanel extends EagPanels {
             for(int i = 0; i < emailReproductionServiceTf.size(); i++) {
                 JTextField field = emailReproductionServiceTf.get(i);
                 JTextField fieldTitle = emailTitleReproductionServiceTf.get(i);
-                if(StringUtils.isNotEmpty(field.getText().trim())) {
+                if(StringUtils.isNotEmpty(field.getText().trim())|| StringUtils.isNotEmpty(fieldTitle.getText().trim())) {
                     Email email = new Email();
                     email.setHref(field.getText());
                     if(StringUtils.isNotEmpty(fieldTitle.getText()))
                         email.setContent(fieldTitle.getText());
-                    else
-                        email.setContent(field.getText());
+//                    else
+//                        email.setContent(field.getText());
                     reproductionser.getContact().getEmail().add(email);
                     hasReproductionserContactInfo = true;
                 }

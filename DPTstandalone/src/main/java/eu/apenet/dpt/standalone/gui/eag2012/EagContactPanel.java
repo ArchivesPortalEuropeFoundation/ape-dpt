@@ -749,13 +749,13 @@ public class EagContactPanel extends EagPanels {
             for(int i = 0; i < emailTfs.size(); i++) {
                 JTextField field = emailTfs.get(i);
                 JTextField fieldTitle = emailTitleTfs.get(i);
-                if(StringUtils.isNotEmpty(field.getText().trim())) {
+                if(StringUtils.isNotEmpty(field.getText().trim())|| StringUtils.isNotEmpty(fieldTitle.getText().trim())) {
                     Email email = new Email();
                     email.setHref(field.getText());
                     if(StringUtils.isNotEmpty(fieldTitle.getText()))
                         email.setContent(fieldTitle.getText());
-                    else
-                        email.setContent(field.getText());
+//                    else
+//                        email.setContent(field.getText());
                     repository.getEmail().add(email);
                 }
             }
