@@ -1268,11 +1268,14 @@ public class EagAccessAndServicesPanel extends EagPanels {
 
         	if (!errors.contains("termsOfUseTfs")){
         		if (empty)
-                	JOptionPane.showMessageDialog(eag2012Frame, labels.getString("eag2012.errors.errorTermsOfUse"));
-        		
-        		repository.getAccess().getTermsOfUse().add(new TermsOfUse());
-        	}
-             
+            		JOptionPane.showMessageDialog(eag2012Frame, labels.getString("eag2012.errors.webpage"));
+            	
+            }
+            else{
+            	if (empty)
+            		JOptionPane.showMessageDialog(eag2012Frame, labels.getString("eag2012.errors.webpage"));
+            }
+             repository.getAccess().getTermsOfUse().add(new TermsOfUse());
             reloadTabbedPanel(new EagAccessAndServicesPanel(eag, tabbedPane, mainTabbedPane, eag2012Frame, model, labels, repositoryNb).buildEditorPanel(errors), 3);
         }
     }
@@ -1763,8 +1766,7 @@ public class EagAccessAndServicesPanel extends EagPanels {
             reloadTabbedPanel(new EagAccessAndServicesPanel(eag, tabbedPane, mainTabbedPane, eag2012Frame, model, labels, repositoryNb).buildEditorPanel(errors), 3);
         }
     }
-    
-    
+       
     /***
      * Adds a new email in SearchRoom
      * @author fernando
@@ -1968,7 +1970,6 @@ public class EagAccessAndServicesPanel extends EagPanels {
        }
     }
     
-   
     /***
      * Adds a new web page in Search room
      * @author fernando
@@ -2006,9 +2007,15 @@ public class EagAccessAndServicesPanel extends EagPanels {
 	            	if (empty)
 	            		JOptionPane.showMessageDialog(eag2012Frame, labels.getString("eag2012.errors.webpage"));
 	            	
-					searchroom.getWebpage().add(new Webpage());
 	            }
-            } 
+	            else{
+	            	if (empty)
+	            		JOptionPane.showMessageDialog(eag2012Frame, labels.getString("eag2012.errors.webpage"));
+	            }
+	            searchroom.getWebpage().add(new Webpage());
+            } else {
+                JOptionPane.showMessageDialog(eag2012Frame, labels.getString("eag2012.errors.webpage"));
+            }
 
             reloadTabbedPanel(new EagAccessAndServicesPanel(eag, tabbedPane, mainTabbedPane, eag2012Frame, model, labels, repositoryNb).buildEditorPanel(errors), 3);
         }
@@ -2048,12 +2055,18 @@ public class EagAccessAndServicesPanel extends EagPanels {
 	                	empty = true;
 	            }
 	            if (!errors.contains("webpageLibraryTf")){
-		            if (empty)
-		            	JOptionPane.showMessageDialog(eag2012Frame, labels.getString("eag2012.errors.webpage"));
-		            
-					library.getWebpage().add(new Webpage());
+	            	if (empty)
+	            		JOptionPane.showMessageDialog(eag2012Frame, labels.getString("eag2012.errors.webpage"));
+	            	
 	            }
-            } 
+	            else{
+	            	if (empty)
+	            		JOptionPane.showMessageDialog(eag2012Frame, labels.getString("eag2012.errors.webpage"));
+	            }
+	            library.getWebpage().add(new Webpage());
+            } else {
+                JOptionPane.showMessageDialog(eag2012Frame, labels.getString("eag2012.errors.webpage"));
+            }
 
             reloadTabbedPanel(new EagAccessAndServicesPanel(eag, tabbedPane, mainTabbedPane, eag2012Frame, model, labels, repositoryNb).buildEditorPanel(errors), 3);
         }
@@ -2094,12 +2107,18 @@ public class EagAccessAndServicesPanel extends EagPanels {
 	                	empty = true;
 	            }
 	            if(!errors.contains("webpageRestorationlabTf")){
-		            if (empty)
-		            	JOptionPane.showMessageDialog(eag2012Frame, labels.getString("eag2012.errors.webpage"));
-						
-					restorationlab.getWebpage().add(new Webpage());
+	            	if (empty)
+	            		JOptionPane.showMessageDialog(eag2012Frame, labels.getString("eag2012.errors.webpage"));
+	            	
 	            }
-            } 
+	            else{
+	            	if (empty)
+	            		JOptionPane.showMessageDialog(eag2012Frame, labels.getString("eag2012.errors.webpage"));
+	            }
+	            restorationlab.getWebpage().add(new Webpage());
+            } else {
+                JOptionPane.showMessageDialog(eag2012Frame, labels.getString("eag2012.errors.webpage"));
+            }
 
             reloadTabbedPanel(new EagAccessAndServicesPanel(eag, tabbedPane, mainTabbedPane, eag2012Frame, model, labels, repositoryNb).buildEditorPanel(errors), 3);
         }
@@ -2140,12 +2159,18 @@ public class EagAccessAndServicesPanel extends EagPanels {
 	                	empty = true;
 	            }
 	            if(!errors.contains("webpageReproductionServiceTf")){
-		            if (empty )
-		            	JOptionPane.showMessageDialog(eag2012Frame, labels.getString("eag2012.errors.webpage"));
-						
-					reproductionser.getWebpage().add(new Webpage());
+	            	if (empty)
+	            		JOptionPane.showMessageDialog(eag2012Frame, labels.getString("eag2012.errors.webpage"));
+	            	
 	            }
-            } 
+	            else{
+	            	if (empty)
+	            		JOptionPane.showMessageDialog(eag2012Frame, labels.getString("eag2012.errors.webpage"));
+	            }
+	            reproductionser.getWebpage().add(new Webpage());
+            } else {
+                JOptionPane.showMessageDialog(eag2012Frame, labels.getString("eag2012.errors.webpage"));
+            }
 
             reloadTabbedPanel(new EagAccessAndServicesPanel(eag, tabbedPane, mainTabbedPane, eag2012Frame, model, labels, repositoryNb).buildEditorPanel(errors), 3);
         }
@@ -2325,7 +2350,11 @@ public class EagAccessAndServicesPanel extends EagPanels {
                     }
                 }
             }
-
+            if (repository.getAccessibility().isEmpty()){
+            	Accessibility accessibility = new Accessibility();
+            	accessibility.setQuestion((String) facilitiesForDisabledCombo.getSelectedItem());
+            }
+            
             if(repository.getServices() == null)
                 repository.setServices(new Services());
      
@@ -2392,8 +2421,8 @@ public class EagAccessAndServicesPanel extends EagPanels {
                     }
                     if(StringUtils.isNotEmpty(fieldTitle.getText()))
                     	webpage.setContent(fieldTitle.getText());
-                    else
-                    	webpage.setContent(field.getText());
+//                    else
+//                    	webpage.setContent(field.getText());
                     searchroom.getWebpage().add(webpage);
                     hasSearchroomWebpage = true;
                 }
@@ -2569,8 +2598,8 @@ public class EagAccessAndServicesPanel extends EagPanels {
                     }
                     if(StringUtils.isNotEmpty(fieldTitle.getText()))
                     	webpage.setContent(fieldTitle.getText());
-                    else
-                    	webpage.setContent(field.getText());
+//                    else
+//                    	webpage.setContent(field.getText());
                     library.getWebpage().add(webpage);
                     hasLibraryWebPage = true;
                     libraryExists=true;
@@ -2716,8 +2745,8 @@ public class EagAccessAndServicesPanel extends EagPanels {
                     }
                     if(StringUtils.isNotEmpty(fieldTitle.getText()))
                     	webpage.setContent(fieldTitle.getText());
-                    else
-                    	webpage.setContent(field.getText());
+//                    else
+//                    	webpage.setContent(field.getText());
                     restorationlab.getWebpage().add(webpage);
                     hasRestorationLabWebPage = true;
                     restorationLabExists=true;
@@ -2813,8 +2842,8 @@ public class EagAccessAndServicesPanel extends EagPanels {
                     }
                     if(StringUtils.isNotEmpty(fieldTitle.getText()))
                     	webpage.setContent(fieldTitle.getText());
-                    else
-                    	webpage.setContent(field.getText());
+//                    else
+//                    	webpage.setContent(field.getText());
                     reproductionser.getWebpage().add(webpage);
                     hasReproductionWebPage = true;
                 }
@@ -2956,24 +2985,24 @@ public class EagAccessAndServicesPanel extends EagPanels {
             }
 
             if(!errors.isEmpty()) {
-            	String strOut ="";
-            	
-            	if (errors.contains("termsOfUseTfs"))
-            		strOut+= labels.getString("eag2012.errors.errorTermsOfUse")+"\n";
-            	
-             	if (errors.contains("webpageSearchroomTf"))
-            		strOut+= labels.getString("eag2012.portal.searchroom") +":\n" + labels.getString("eag2012.errors.webpageProtocol")+ "\n";
-
-             	if (errors.contains("webpageLibraryTf"))
-            		strOut+= labels.getString("eag2012.portal.library") +":\n" + labels.getString("eag2012.errors.webpageProtocol") + "\n";
-
-            	if (errors.contains("webpageRestorationlabTf"))
-            		strOut+= labels.getString("eag2012.portal.restorationlabcontact") +":\n" + labels.getString("eag2012.errors.webpageProtocol")+ "\n";
-
-            	if (errors.contains("webpageReproductionServiceTf"))
-            		strOut+= labels.getString("eag2012.accessAndServices.reproductionService") +":\n" + labels.getString("eag2012.errors.webpageProtocol")+ "\n";
-
-        		JOptionPane.showMessageDialog(eag2012Frame, strOut);
+//            	String strOut ="";
+//            	
+//            	if (errors.contains("termsOfUseTfs"))
+//            		strOut+= labels.getString("eag2012.errors.errorTermsOfUse")+"\n";
+//            	
+//             	if (errors.contains("webpageSearchroomTf"))
+//            		strOut+= labels.getString("eag2012.portal.searchroom") +":\n" + labels.getString("eag2012.errors.webpageProtocol")+ "\n";
+//
+//             	if (errors.contains("webpageLibraryTf"))
+//            		strOut+= labels.getString("eag2012.portal.library") +":\n" + labels.getString("eag2012.errors.webpageProtocol") + "\n";
+//
+//            	if (errors.contains("webpageRestorationlabTf"))
+//            		strOut+= labels.getString("eag2012.portal.restorationlabcontact") +":\n" + labels.getString("eag2012.errors.webpageProtocol")+ "\n";
+//
+//            	if (errors.contains("webpageReproductionServiceTf"))
+//            		strOut+= labels.getString("eag2012.accessAndServices.reproductionService") +":\n" + labels.getString("eag2012.errors.webpageProtocol")+ "\n";
+//
+//        		JOptionPane.showMessageDialog(eag2012Frame, strOut);
                 throw new Eag2012FormException("Errors in validation of EAG 2012");
             }
         }
