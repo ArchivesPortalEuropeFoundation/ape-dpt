@@ -1268,12 +1268,12 @@ public class EagAccessAndServicesPanel extends EagPanels {
 
         	if (!errors.contains("termsOfUseTfs")){
         		if (empty)
-            		JOptionPane.showMessageDialog(eag2012Frame, labels.getString("eag2012.errors.webpage"));
+            		JOptionPane.showMessageDialog(eag2012Frame, labels.getString("eag2012.errors.errorTermsOfUse"));
             	
             }
             else{
             	if (empty)
-            		JOptionPane.showMessageDialog(eag2012Frame, labels.getString("eag2012.errors.webpage"));
+            		JOptionPane.showMessageDialog(eag2012Frame, labels.getString("eag2012.errors.errorTermsOfUse"));
             }
              repository.getAccess().getTermsOfUse().add(new TermsOfUse());
             reloadTabbedPanel(new EagAccessAndServicesPanel(eag, tabbedPane, mainTabbedPane, eag2012Frame, model, labels, repositoryNb).buildEditorPanel(errors), 3);
@@ -2353,6 +2353,7 @@ public class EagAccessAndServicesPanel extends EagPanels {
             if (repository.getAccessibility().isEmpty()){
             	Accessibility accessibility = new Accessibility();
             	accessibility.setQuestion((String) facilitiesForDisabledCombo.getSelectedItem());
+            	repository.getAccessibility().add(accessibility);
             }
             
             if(repository.getServices() == null)
