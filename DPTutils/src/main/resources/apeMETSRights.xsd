@@ -1,61 +1,42 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- edited with Oxygen 15.0, build 2013071613, www.oxygenxml.com by Kerstin Arnold
-     (Federal Archives of Germany / APEx project) in November and December 2013; based on the 
-     RightsDeclarationMD Extension Schema by Nancy J. Hoebelheinrich (Stanford University Libraries).
-     
-     Changes and additions included (also indicated below):
-     - the @targetNamespace and @xmlns attributes point to the according locations for the Archives
-       Portal Europe
-     - adaptation of the existing <xs:documentation> on the <RightsDeclarationMD> element with regard to the 
-       use of apeMETSRights; first sentence added, second sentence with alternative beginning, last sentence
-       added for attributes on namespaces and schema location
-     - <RightsHolder> has been made mandatory in apeMETSRights
-     - <Context> has been made mandatory in apeMETSRights
-     - <xs:documentation> has been added for @RIGHTSCATEGORY
-     - @RIGHTSCATEGORY has been made required in apeMETSRights
-     - for @RIGHTSCATEGORY the value of <xs:restriction@base> has been changed from xs:string to xs:token
-       in order to restrict the set of possible values
-     - @OTHERCATEGORYTYPE has been changed to include a list of default values
-     - <xs:documentation> has been added for @OTHERCATEGORYTYPE
-     - <RightsHolderName> has been made mandatory in apeMETSRights
-     - the encoding for subelements of <RightsHolderContact> has been changed from pre-defining a sequence
-       to allowing a choice for using one or several of the four subelements with an option for repeated use
-     - the detailed definition of @PHONETYPE has been separated from the <xs:element name="RightsHolderContactPhone"
-       to fit with the encoding of the other elements and attributes in the schema
-     - <xs:documentation> has been added for @PHONETYPE
-     - for @PHONETYPE the value of <xs:restriction@base> has been changed from xs:string to xs:token
-       in order to restrict the set of possible values
-     - the <xs:documentation> for <Context> has been adapted with notes on values for <ConstraintDescription> 
-       and @OTHERCONSTRAINTTYPE, which are used specifically in apeMETSRights 
-     - <Permissions> has been made mandatory in apeMETSRights
-     - for @CONTEXTCLASS the value of <xs:restriction@base> has been changed from xs:string to xs:token
-       in order to restrict the set of possible values  
-     - for @USERTYPE the value of <xs:restriction@base> has been changed from xs:string to xs:token
-       in order to restrict the set of possible values
-     - the commented lines on the meaning of each of the attributes for <Permissions> have been combined in a 
-       new <xs:documentation>
-     - all attributes for <Permissions> (except @OTHER and @OTHERPERMITTYPE) have been made required for apeMETSRights
-     - <xs:documentation> has been added for <ConstraintDescription>
-     - @CONSTRAINTTYPE has been made required for apeMETSRights
-     - <xs:documentation> has been added for @CONSTRAINTTYPE
-     - the @type="xs:string" has been deleted from @OTHERCONSTRAINTTYPE and a default value has been added 
-       instead with <xs:simpleType>
-     - <xs:documentation> has been added for @OTHERCONSTRAINTTYPE  
-     
+     (Federal Archives of Germany / APEx project) in November 2013; based on the 
+     RightsDeclarationMD Extension Schema by Nancy J. Hoebelheinrich (Stanford University Libraries) -->
+<!-- Changes made in comparison to the original schema:
+    01. XMLSchema namespace added
+    02. RightsDeclarationMD - @type="RightsDeclareMDTYPE" deleted; <xs:element> added
+    03. RightsDeclarationMD/Rightsholder - @minOccurs change to ="1", @type="RightsHolderTYPE" deleted, name="" changed to ref=""
+    04. RightsDeclarationMD/Context - @minOccurs change to ="1", @type="ContextTYPE" deleted, name="" changed to ref=""
+    05. RightsDeclarationMD/@OTHERCATEGORYTYPE - @type="xs:string" deleted and default values added
+    06. RightsHolder - name="RightsHolderTYPE" changed to name="RightsHolder"; xs:element added
+    07. RightsHolder/RightsHolderName - minOccurs changed to ="1"
+    08. RightsHolder/RightsHolderContact - @type="RightsHolderContactTYPE" deleted, name="" changed to ref=""
+    09. RightsHolderContact - name="RightsHolderContactTYPE" changed to name="RightsHolderContact"; xs:element added
+    10. RightsHolderContact - xs:sequence for subelements changed to xs:choice
+    11. RightsHolderContact/RightsHolderContactPhone - name="" changed to ref=""
+    12. RightsHolderContact/RightsHolderContactEmail - definition and accompanying annotation moved (from where to where?)
+    13. Context - name="ContextTYPE" changed to name="Context"
+    14. Context - notes added on values for ConstraintDescription and @otherconstrainttype
+    15. Context/UserName - @type="UserNameTYPE" deleted, name="" changed to ref=""
+    16. Context/Permissions - @type="PermissionTYPE" and @minOccurs changed to ="1" deleted, name="" changed to ref=""
+    17. Context/Constraints - @type="ConstraintsTYPE" deleted, name="" changed to ref=""
+    18. UserName - name="UserNameTYPE" changed to name="UserName"
+    19. Permissions - name="PermissionsTYPE" changed to name="Permissions"; moved comments with attribute descriptions to proper annotation elements
+    20. Constraints - name="ConstraintsTYPE" changed to name="Constraints"
+    21. Constraints/ConstraintDeception - xs:complexType with default values added
+    22. Constraints/@OTHERCONSTRAINTTYPE - attribute with default value "RESTRICTED ACCESS" has been added specifically for apeMETS
 -->
 <xs:schema targetNamespace="http://www.archivesportaleurope.net/Portal/profiles/rights/"
     xmlns="http://www.archivesportaleurope.net/Portal/profiles/rights/"
     xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified"
     attributeFormDefault="unqualified">
-    <!-- 04 November 2013, Kerstin Arnold: targetNamespace and xmlns adapted -->
-    <xs:element name="RightsDeclarationMD" type="RightsDeclareMDTYPE">
+    <!-- November 2013: XMLSchema namespace added -->
+    <xs:element name="RightsDeclarationMD">
+        <!-- 04 November 2013: @type="RightsDeclareMDTYPE" deleted; <xs:element> added -->
         <xs:annotation>
-            <xs:documentation>The apeMETSRights schema is meant to be used in conjunction with the
-                apeMETS schema as defined in the context of the Archives Portal Europe
-                (http://www.archivesportaleurope.net/Portal/profiles/apeMETS.xsd). Based on the
-                RightsDeclarationMD Extension Schema it allows the documentation of minimal
-                administrative metadata about the intellectual rights associated with a digital
-                object or its parts. RightsDeclarationMD contains the following top level elements:
+            <xs:documentation xml:lang="en">The apeMETSRights schema is meant to be used in conjunction with the apeMETS schema as defined in the context of the Archives Portal Europe (http://www.archivesportaleurope.net/Portal/profiles/apeMETS.xsd). Based on the RightsDeclarationMD Extension Schema it allows the documentation of minimal administrative metadata about the intellectual rights associated with a digital object or its parts.
+                
+                RightsDeclarationMD contains the following top level elements:
                 1. RightsDeclaration: intellectual property rights associated with digital asset or
                 part of a digital asset; 2. the mandatory RightsHolder: person or organisation
                 holding some intellectual property rights to a given digital asset or part of a
@@ -65,370 +46,413 @@
                 "RIGHTSDECID provides a unique identifier for the rights declaration described.
                 "RIGHTSCATEGORY" specifies whether the resource is COPYRIGHTED, LICENSED, in the
                 PUBLIC DOMAIN, CONTRACTUAL, or OTHER which can be more fully described in the
-                "OTHERCATEGORYTYPE" attribute. RightsDeclarationMD also contains mandatory
-                attributes pointing to the apeMETSRights namespace and schema location as well as
-                the namespace for the XML Schema instance:
+                "OTHERCATEGORYTYPE" attribute.
+                
+                RightsDeclarationMD also contains mandatory attributes pointing to the apeMETSRights namespace and schema location as well as the namespace for the XML Schema instance:
                 xmlns="http://www.archivesportaleurope.net/Portal/profiles/rights/"
                 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-                xsi:schemaLocation="http://www.archivesportaleurope.net/Portal/profiles/rights/apeMETSRights.xsd".</xs:documentation>
-            <!-- 04 November 2013, Kerstin Arnold: details for apeMETSRights added; first two sentences and last sentence on 
-                 attributes for namespaces and schema location -->
+                xsi:schemaLocation="http://www.archivesportaleurope.net/Portal/profiles/rights/apeMETSRights.xsd".
+                
+                Changes for the apeMETSRights schema were made on 04 November 2013. 
+            </xs:documentation>
         </xs:annotation>
-    </xs:element>
-    <xs:complexType name="RightsDeclareMDTYPE">
-        <xs:sequence>
-            <xs:element name="RightsDeclaration" minOccurs="0" maxOccurs="unbounded">
-                <xs:annotation>
-                    <xs:documentation>Broad declaration of rights associated with digital asset
-                        which would provide the public notice to user community of the intellectual
-                        property rights associated with a given asset or part thereof. Further
-                        explanation of specific circumstances can be described within the Context
-                        element. RightsDeclaration has no attribute. </xs:documentation>
-                </xs:annotation>
-            </xs:element>
-            <xs:element name="RightsHolder" type="RightsHolderTYPE" minOccurs="1"
-                maxOccurs="unbounded"/>
-            <!-- 04 November 2013, Kerstin Arnold: @minOccurs changed to ="1" -->
-            <xs:element name="Context" type="ContextTYPE" minOccurs="1" maxOccurs="unbounded"/>
-            <!-- 04 November 2013, Kerstin Arnold: @minOccurs change to ="1" -->
-        </xs:sequence>
-        <xs:attribute name="RIGHTSDECID" type="xs:string" use="optional"/>
-        <xs:attribute name="RIGHTSCATEGORY" use="required">
-            <xs:simpleType>
-                <xs:annotation>
-                    <xs:documentation>The @RIGHTSCATEGORY attribute provides specification on the
-                        kind of rights applied to a digital object. It allows to state whether an
-                        object is copyrighted (e.g. when a photographer holds the copyright for a
-                        digital or digitised photograph and not the institution providing access to
-                        the object), if a special licence is applicable (e.g. one of the six
-                        Creative Commons licences, see http://creativecommons.org/licenses/), if an
-                        object is in the public domain, that is there is no known copyright (see
-                        http://creativecommons.org/about/pdm), or if there are any other contractual
-                        restrictions and/or conditions in the access and use as well as re-use of
-                        the object. The value "other" allows further options to be specified in the
-                        attribute @OTHERCATEGORYTYPE. </xs:documentation>
-                </xs:annotation>
-                <!-- 06 December 2013, Kerstin Arnold: <xs:documentation> has been added -->
-                <xs:restriction base="xs:token">
-                    <!-- 06 December 2013, Kerstin Arnold: @base="xs:string" has been changed to @base="xs:token" -->
-                    <xs:enumeration value="COPYRIGHTED"/>
-                    <xs:enumeration value="LICENSED"/>
-                    <xs:enumeration value="PUBLIC DOMAIN"/>
-                    <xs:enumeration value="CONTRACTUAL"/>
-                    <xs:enumeration value="OTHER"/>
-                </xs:restriction>
-            </xs:simpleType>
-        </xs:attribute>
-        <xs:attribute name="OTHERCATEGORYTYPE" use="optional">
-            <!-- 04 November 2013, Kerstin Arnold: @type="xs:string" deleted -->
-            <xs:simpleType>
-                <xs:annotation>
-                    <xs:documentation>The @OTHERCATEGORYTYPE is used in conjunction with the
-                        @RIGHTSCATEGORY attribute having the value "other". It can be used to
-                        provide further information on the rights applied to a digital object such
-                        as a note that users have free (as in gratis), direct and full access to the
-                        digital or digitised object on the data provider's website or a note on the
-                        object being licensed as CC0, i.e. no rights reserved (see
-                        http://creativecommons.org/about/cc0). There also would be the option to
-                        state that the rights situation is "unknown", which would e.g. be applicable
-                        for orphan works.</xs:documentation>
-                </xs:annotation>
-                <!-- 06 December 2013, Kerstin Arnold: <xs:documentation> has been added -->
-                <xs:restriction base="xs:token">
-                    <xs:enumeration value="CC0"/>
-                    <xs:enumeration value="FREE ACCESS"/>
-                    <xs:enumeration value="UNKNOWN"/>
-                </xs:restriction>
-                <!-- 04 November 2013, Kerstin Arnold: <xs:restriction> with default values added -->
-            </xs:simpleType>
-        </xs:attribute>
-    </xs:complexType>
-    <xs:complexType name="RightsHolderTYPE">
-        <xs:annotation>
-            <xs:documentation> Characteristics of person or institution holding some rights to a
-                given digital asset or part thereof. Has two attributes "RIGHTSHOLDERID" used to
-                uniquely identify the rights holder, and CONTEXTIDS which provides a way to
-                specifically link one or more context situations as described within the CONTEXT
-                element. In apeMETSRights this element is mandatory and
-                repeatable.</xs:documentation>
-        </xs:annotation>
-        <xs:sequence>
-            <xs:element minOccurs="1" maxOccurs="unbounded" name="RightsHolderName">
-                <!-- 04 November 2013, Kerstin Arnold: minOccurs changed to ="1" -->
-                <xs:annotation>
-                    <xs:documentation>Name of rights holder organization, as identified by the
-                        RIGHTSHOLDERID</xs:documentation>
-                </xs:annotation>
-            </xs:element>
-            <xs:element name="RightsHolderComments" minOccurs="0" maxOccurs="unbounded">
-                <xs:annotation>
-                    <xs:documentation>Any comments necessary to explain, not covered elsewhere
-                    </xs:documentation>
-                </xs:annotation>
-            </xs:element>
-            <xs:element name="RightsHolderContact" type="RightsHolderContactTYPE" minOccurs="0"
-                maxOccurs="unbounded"/>
-        </xs:sequence>
-        <xs:attribute name="RIGHTSHOLDERID" type="xs:ID" use="optional"/>
-        <xs:attribute name="CONTEXTIDS" type="xs:IDREFS" use="optional"/>
-    </xs:complexType>
-    <xs:complexType name="RightsHolderContactTYPE">
-        <xs:annotation>
-            <xs:documentation>Information about the contact point for rights holder organisation, as
-                identified by the RIGHTSHOLDERID. The contact point for a resource may be an agency
-                or organisation representing the rights holder rather than the rights holder per se.
-                Each RightsHolderContact may contain a RightsHolderContactDesignation element,
-                RightsHolderContactAddress element, a RightsHolderContactPhone element, and a
-                RightsHolderContactEmail element. </xs:documentation>
-        </xs:annotation>
-        <xs:choice minOccurs="0" maxOccurs="unbounded">
-            <!-- 04 November 2013, Kerstin Arnold: <xs:sequence> changed to <xs:choice> -->
-            <xs:element name="RightsHolderContactDesignation">
-                <xs:annotation>
-                    <xs:documentation>Name or title of a contact person or institution holding
-                        rights to a given digital asset, as identified by the
-                        RIGHTSHOLDERID.</xs:documentation>
-                </xs:annotation>
-            </xs:element>
-            <xs:element name="RightsHolderContactAddress">
-                <xs:annotation>
-                    <xs:documentation>Mailing address of contact person or institution holding
-                        rights to a given digital asset, as identified by the
-                        RIGHTSHOLDERID.</xs:documentation>
-                </xs:annotation>
-            </xs:element>
-            <xs:element name="RightsHolderContactPhone" type="RightsHolderPhoneTYPE">
-                <!-- 06 December 2013, Kerstin Arnold: @type="RightsHolderPhoneTYPE" added -->
-                <xs:annotation>
-                    <xs:documentation>Telephone number of contact person or institution holding
-                        rights to a given digital asset or part thereof, as identified by the
-                        RIGHTSHOLDERID. The PHONETYPE attribute has enumerated values of "FAX",
-                        "BUSINESS", and "MOBILE".</xs:documentation>
-                </xs:annotation>
-            </xs:element>
-            <!-- 04 November 2013, Kerstin Arnold: definition of attribute moved to <xs:complexType name="RightsHolderPhoneTYPE"
-                 in order to fit building of the other elements -->
-            <xs:element name="RightsHolderContactEmail">
-                <xs:annotation>
-                    <xs:documentation>Email address of contact person or institution holding rights
-                        to a digital asset or part thereof, as identified by the RIGHTSHOLDERID.
-                    </xs:documentation>
-                </xs:annotation>
-            </xs:element>
-        </xs:choice>
-    </xs:complexType>
-    <xs:complexType name="RightsHolderPhoneTYPE">
-        <!-- 04 November 2013, Kerstin Arnold: definition of attribute move from <xs:element name="RightsHolderContactPhone" -->
-        <xs:simpleContent>
-            <xs:extension base="xs:string">
-                <xs:attribute name="PHONETYPE">
-                    <xs:simpleType>
-                        <xs:annotation>
-                            <xs:documentation>The @PHONETYPE attribute provides specification on the
-                                type of phone number that is given in the element
-                                RightsHolderContactPhone. It can be distinguised between a business
-                                phone number, a mobile number or a fax number. </xs:documentation>
-                        </xs:annotation>
-                        <!-- 06 December 2013, Kerstin Arnold: <xs:documentation> has been added -->
-                        <xs:restriction base="xs:token">
-                            <!-- 06 December 2013, Kerstin Arnold: @base="xs:string" has been changed to @base="xs:token" -->
-                            <xs:enumeration value="BUSINESS"/>
-                            <xs:enumeration value="FAX"/>
-                            <xs:enumeration value="MOBILE"/>
-                        </xs:restriction>
-                    </xs:simpleType>
-                </xs:attribute>
-            </xs:extension>
-        </xs:simpleContent>
-    </xs:complexType>
-    <xs:complexType name="ContextTYPE">
-        <xs:annotation>
-            <xs:documentation>The "Context" element describes who has what permissions and
-                contraints within a specific set of circumstances. "Context" includes four
-                attributes, " CONTEXTID", an optional attribute which can be used to assign a unique
-                identifier for the circumstance described, "RIGHTSHOLDERIDS", an optional attribute
-                which provides a means to specifically list the unique identifiers of one or more
-                RightsHolders who are involved in the Context scenario to be described,
-                "CONTEXTCLASS", and "OTHERCONTEXTTYPE". By means of the required "CONTEXTCLASS"
-                attribute, the group is defined to which a given context relates. Enumerated values
-                for this attribute include "ACADEMIC USER", "GENERAL PUBLIC","REPOSITORY MGR",
-                "MANAGED GRP", "INSTITUTIONAL AFFILIATE", "OTHER". Local extensions to "OTHER"
-                context classes can be described in the "OTHERCONTEXTTYPE" attribute, as desired.
-                "Context" also contains three elements which further describe a specified context.
-                The element "UserName" allows the naming of the typical user or group who would use
-                the digital object within the described context. The kind of user being named can be
-                described by means of the attribute "USERTYPE" which has values "INDIVIDUAL",
-                "GROUP", "BOTH", or "UNDEFINED". The element "Permissions" describes a set of uses
-                to which a digital object or part thereof can be put as defined by the rights holder
-                in a given context. "Permissions" has nine attributes which describe the type of
-                permissions including "DISCOVER", "DISPLAY", "COPY", "DUPLICATE", "MODIFY",
-                "DELETE", "PRINT", "OTHER", and "OTHERPERMITTYPE" which allows the addition of local
-                types of permissions not included in the general list. Any restrictions that need to
-                be placed upon a set of permissions are described by the use of the "Constraints"
-                element. The "Constraints" element contains a "ConstraintDescription" sub-element
-                that is used with a set of fixed values corresponding to the Creative Commons
-                licences ("SA", "NC", "ND" and "NC-SA" and "NC-ND"). The "Constraints" element has
-                an attribute "CONSTRAINTTYPE" which characterises the type of restrictions imposed
-                upon the users within a given context. Enumerated values for the CONSTRAINTTYPE
-                attributes include "QUALITY", "FORMAT", "UNIT", "WATERMARK", "PAYMENT", "COUNT",
-                "ATTRIBUTION", "RE-USE", "TIME", "TRANSFERPERMISSIONS", "OTHER". As value for the
-                "OTHERCONSTRAINTTYPE" attribute "RESTRICTED ACCESS" has been defined for apeMETSRights. </xs:documentation>
-            <!-- 04 November 2013, Kerstin Arnold: notes added on values for <ConstraintDescription> and @otherconstrainttype. -->
-        </xs:annotation>
-        <xs:sequence>
-            <xs:element name="UserName" type="UserNameTYPE" minOccurs="0" maxOccurs="unbounded"/>
-            <xs:element name="Permissions" type="PermissionsTYPE" minOccurs="1"
-                maxOccurs="unbounded"/>
-            <!-- 04 November 2013, Kerstin Arnold: @minOccurs changed to ="1" -->
-            <xs:element name="Constraints" type="ConstraintsTYPE" minOccurs="0"
-                maxOccurs="unbounded"/>
-        </xs:sequence>
-        <xs:attribute name="CONTEXTID" type="xs:ID" use="optional"/>
-        <xs:attribute name="RIGHTSHOLDERIDS" type="xs:IDREFS" use="optional"/>
-        <xs:attribute name="CONTEXTCLASS" use="required">
-            <xs:simpleType>
-                <xs:restriction base="xs:token">
-                    <!-- 06 December 2013, Kerstin Arnold: @base="xs:string" has been changed to @base="xs:token" -->
-                    <xs:enumeration value="ACADEMIC USER"/>
-                    <xs:enumeration value="GENERAL PUBLIC"/>
-                    <xs:enumeration value="REPOSITORY MGR"/>
-                    <xs:enumeration value="MANAGED GRP"/>
-                    <xs:enumeration value="INSTITUTIONAL AFFILIATE"/>
-                    <xs:enumeration value="OTHER"/>
-                </xs:restriction>
-            </xs:simpleType>
-        </xs:attribute>
-        <xs:attribute name="OTHERCONTEXTTYPE" type="xs:string" use="optional"/>
-    </xs:complexType>
-    <xs:complexType name="UserNameTYPE">
-        <xs:simpleContent>
-            <xs:extension base="xs:string">
-                <xs:attribute name="USERTYPE">
-                    <xs:simpleType>
-                        <xs:restriction base="xs:token">
-                            <!-- 06 December 2013, Kerstin Arnold: @base="xs:string" has been changed to @base="xs:token" -->
-                            <xs:enumeration value="INDIVIDUAL"/>
-                            <xs:enumeration value="GROUP"/>
-                            <xs:enumeration value="BOTH"/>
-                            <xs:enumeration value="UNDEFINED"/>
-                        </xs:restriction>
-                    </xs:simpleType>
-                </xs:attribute>
-            </xs:extension>
-        </xs:simpleContent>
-    </xs:complexType>
-    <xs:complexType name="PermissionsTYPE">
-        <xs:annotation>
-            <xs:documentation>Via its attributes the element Permissions can be used to declare what
-                a user is allowed to do (or not to do) with a digital or digitised object. All
-                attributes can be used with the values "true" and "false" to indicate if a certain
-                action is possible and allowed. A "true" for @DISCOVER states that the resource is
-                available for searching or other discovery activities. A "true" for @DISPLAY states
-                that the resource can be rendered, played and executed. A "true" for @COPY states
-                that it is allowed to make a verbatim copy for purposes of re-use of the whole or a
-                part of the resource and to create of new resource with this copy. A "true" for
-                @DUPLICATE states that it is allowed to make exact copy of resource for file or
-                repository management purposes. A "true" for @MODIFY states that it is allowed to
-                annotate, edit, excerpt, embed, extract resource for purposes of re-use or
-                preservation. A "true" for @DELETE states that it is allowed to remove the resource
-                from the repository for purposes of resource or repository management. A "true" for
-                @PRINT states that it is allowed to render the resource onto paper or hard copy. A
-                "true" for @OTHER indicates that there is further information on permissions, which
-                are specified with the @OTHERPERMITTYPE attribute allowing for naming localised
-                permission types. </xs:documentation>
-        </xs:annotation>
-        <!-- 06 December 2013, Kerstin Arnold: commented lines on the meaning of the attributes for <Permissions>
-             have been moved to the above <xs:documentation> -->
-        <xs:attribute name="DISCOVER" type="xs:boolean" use="required"/>
-        <xs:attribute name="DISPLAY" type="xs:boolean" use="required"/>
-        <xs:attribute name="COPY" type="xs:boolean" use="required"/>
-        <xs:attribute name="DUPLICATE" type="xs:boolean" use="required"/>
-        <xs:attribute name="MODIFY" type="xs:boolean" use="required"/>
-        <xs:attribute name="DELETE" type="xs:boolean" use="required"/>
-        <xs:attribute name="PRINT" type="xs:boolean" use="required"/>
-        <xs:attribute name="OTHER" type="xs:boolean" use="optional"/>
-        <xs:attribute name="OTHERPERMITTYPE" type="xs:string" use="optional"/>
-        <!-- 06 December 2013, Kerstin Arnold: all attributes for <Permissions> (except @OTHER and @OTHERPERMITTYPE) 
-             have been made required for apeMETSRights -->
-    </xs:complexType>
-    <xs:complexType name="ConstraintsTYPE">
-        <xs:sequence>
-            <xs:element name="ConstraintDescription" minOccurs="0" maxOccurs="unbounded">
-                <xs:annotation>
-                    <xs:documentation>In apeMETSRights the element ConstraintDescription has been
-                        defined for use with five possible values ("SA" (share-alike), "NC" (non
-                        commercial), "ND" (no derivates), "NC-SA" (non commercial, share-alike) and
-                        "NC-ND" (non commercial, no derivatives)) and is specifically recommended
-                        for use in combination with the @CONSTRAINTTYPE="ATTRIBUTION" and "RE-USE".
-                        Seen together the element and the attribute will form an indication for
-                        objects licensed under one of the six Creative Commons licenses (see more at
-                        http://creativecommons.org/licenses/).</xs:documentation>
-                </xs:annotation>
-                <!-- 06 December 2013, Kerstin Arnold: <xs:documentation> added -->
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element minOccurs="0" maxOccurs="unbounded" name="RightsDeclaration">
+                    <xs:annotation>
+                        <xs:documentation xml:lang="en">Broad declaration of rights associated with digital asset
+                            which would provide the public notice to user community of the
+                            intellectual property rights associated with a given asset or part
+                            thereof. Further explanation of specific circumstances can be described
+                            within the Context element. RightsDeclarationTYPE has no attribute.
+                        </xs:documentation>
+                    </xs:annotation>
+                </xs:element>
+                <xs:element minOccurs="1" maxOccurs="unbounded" ref="RightsHolder">
+                    <xs:annotation>
+                        <xs:documentation xml:lang="en">
+                            apeMETSRights, 04 November 2013: @minOccurs change to ="1", @type="RightsHolderTYPE" deleted, name="" changed to ref="" 
+                        </xs:documentation>
+                    </xs:annotation>
+                </xs:element>
+                <xs:element minOccurs="1" maxOccurs="unbounded" ref="Context">
+                    <xs:annotation>
+                        <xs:documentation xml:lang="en">
+                            apeMETSRights, 04 November 2013: @minOccurs change to ="1", @type="ContextTYPE" deleted, name="" changed to ref=""
+                        </xs:documentation>
+                    </xs:annotation>
+                </xs:element>
+            </xs:sequence>
+            <xs:attribute name="RIGHTSDECID" type="xs:string" use="optional"/>
+            <xs:attribute name="RIGHTSCATEGORY">
                 <xs:simpleType>
-                    <xs:restriction base="xs:token">
-                        <xs:enumeration value="SA"/>
-                        <xs:enumeration value="NC"/>
-                        <xs:enumeration value="ND"/>
-                        <xs:enumeration value="NC-SA"/>
-                        <xs:enumeration value="NC-ND"/>
+                    <xs:restriction base="xs:string">
+                        <xs:enumeration value="COPYRIGHTED"/>
+                        <xs:enumeration value="LICENSED"/>
+                        <xs:enumeration value="PUBLIC DOMAIN"/>
+                        <xs:enumeration value="CONTRACTUAL"/>
+                        <xs:enumeration value="OTHER"/>
                     </xs:restriction>
                 </xs:simpleType>
-                <!-- 04 November 2013, Kerstin Arnold: <xs:simpleType> with default values added -->
-            </xs:element>
-        </xs:sequence>
-        <xs:attribute name="CONSTRAINTTYPE" use="required">
-            <!-- 06 December 2013, Kerstin Arnold: @CONSTRAINTTYPE has been made required for apeMETSRights -->
+            </xs:attribute>
+            <xs:attribute name="OTHERCATEGORYTYPE" use="optional">
+                <xs:annotation>
+                    <xs:documentation xml:lang="en">
+                        apeMETSRights, 04 November 2013: @type="xs:string" deleted and default values added -->
+                    </xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:enumeration value="CC0"/>
+                        <xs:enumeration value="FREE ACCESS"/>
+                        <xs:enumeration value="UNKNOWN"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:attribute>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="RightsHolder">
+        <xs:complexType>
             <xs:annotation>
-                <xs:documentation>The attribute @CONSTRAINTTYPE is used to characterise the type
-                    of constraints imposed on a digital object. Depending on the value used, it can
-                    be specified, that the digital object has been provided in lower "QUALITY", that
-                    it is only available in a certain "FORMAT", that it is only used in context of a
-                    certain "UNIT", that there is a "WATERMARK" on the object, that the use of the
-                    object is related to a certain "PAYMENT", that there is a "COUNT" connected to
-                    how often the same user uses the object for the same purpose, that "RE-USE"
-                    might be constraint with certain conditions, that "ATTRIBUTION" is required,
-                    that there is a limit in "TIME" for the use of an object, that there are certain
-                    "TRANSFERPERMISSIONS" to comply to or that there are "OTHER" constraints. When apeMETSRights
-                    is used in the context of the Archives Portal Europe, it is recommended to especially
-                    use the values "PAYMENT", "RE-USE" and "ATTRIBUTION" as well as "OTHER" to complement
-                    the different rights statements that have been defined for this central infrastructure
-                    and an exchange with Europeana.
+                <xs:documentation xml:lang="en"> Characteristics of person or institution holding some rights to a
+                    given digital asset or part thereof. Has two attributes "RIGHTSHOLDERID" used to
+                    uniquely identify the rights holder, and CONTEXTIDS which provides a way to
+                    specifically link one or more context situations as described within the CONTEXT
+                    element.
+                    
+                    apeMETSRights, 04 November 2013: name="RightsHolderTYPE" changed to name="RightsHolder"; xs:element added
                 </xs:documentation>
             </xs:annotation>
-            <!-- 06 December 2013, Kerstin Arnold: <xs:documentation> added -->
-            <xs:simpleType>
-                <xs:restriction base="xs:string">
-                    <xs:enumeration value="QUALITY"/>
-                    <xs:enumeration value="FORMAT"/>
-                    <xs:enumeration value="UNIT"/>
-                    <xs:enumeration value="WATERMARK"/>
-                    <xs:enumeration value="PAYMENT"/>
-                    <xs:enumeration value="COUNT"/>
-                    <xs:enumeration value="RE-USE"/>
-                    <xs:enumeration value="ATTRIBUTION"/>
-                    <xs:enumeration value="TIME"/>
-                    <xs:enumeration value="TRANSFERPERMISSIONS"/>
-                    <xs:enumeration value="OTHER"/>
-                </xs:restriction>
-            </xs:simpleType>
-        </xs:attribute>
-        <xs:attribute name="OTHERCONSTRAINTTYPE" use="optional">
-            <!-- 04 November 2013, Kerstin Arnold: @type="xs:string" deleted -->
+            <xs:sequence>
+                <xs:element minOccurs="1" maxOccurs="unbounded" name="RightsHolderName">
+                    <xs:annotation>
+                        <xs:documentation xml:lang="en">Name of rights holder organization, as identified by the RIGHTSHOLDERID
+                            
+                            apeMETSRights, 04 November 2013: minOccurs changed to ="1"
+                        </xs:documentation>
+                    </xs:annotation>
+                </xs:element>
+                <xs:element name="RightsHolderComments" minOccurs="0" maxOccurs="unbounded">
+                    <xs:annotation>
+                        <xs:documentation>Any comments necessary to explain, not covered elsewhere
+                        </xs:documentation>
+                    </xs:annotation>
+                </xs:element>
+                <xs:element ref="RightsHolderContact" minOccurs="0" maxOccurs="unbounded">
+                    <xs:annotation>
+                        <xs:documentation xml:lang="en">
+                            apeMETSRights, 04 November 2013: @type="RightsHolderContactTYPE" deleted, name="" changed to ref=""
+                        </xs:documentation>
+                    </xs:annotation>
+                </xs:element>
+            </xs:sequence>
+            <xs:attribute name="RIGHTSHOLDERID" type="xs:ID" use="optional"/>
+            <xs:attribute name="CONTEXTIDS" type="xs:IDREFS" use="optional"/>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="RightsHolderContact">
+        <xs:complexType>
             <xs:annotation>
-                <xs:documentation>The attribute @OTHERCONSTRAINTTYPE is to be used, when the value for 
-                @CONSTRAINTTYPE is "other". In apeMETSRights it has been defined with the default value
-                "RESTRICTED ACCESS" to indicate limitations other than the requirement to pay a fee for 
-                accessing a digitised object on the data provider's website. For example, when a registration 
-                is required or only snippets or previews are available to users.</xs:documentation>
+                <xs:documentation>Information about the contact point for rights holder
+                    organisation, as identified by the RIGHTSHOLDERID. The contact point for a
+                    resource may be an agency or organisation representing the rights holder rather
+                    than the rights holder per se. Each RightsHolderContact may contain a
+                    RightsHolderContactDesignation element, RightsHolderContactAddress element, a
+                    RightsHolderContactPhone element, and a RightsHolderContactEmail element.
+                    
+                    apeMETSRights, 04 November 2013: name="RightsHolderContactTYPE" changed to name="RightsHolderContact"; xs:element added
+                </xs:documentation>
             </xs:annotation>
-            <!-- 06 December 2013, Kerstin Arnold: <xs:documentation> added -->
-            <xs:simpleType>
-                <xs:restriction base="xs:token">
-                    <xs:enumeration value="RESTRICTED ACCESS"/>
-                </xs:restriction>
-            </xs:simpleType>
-            <!-- 04 November 2013, Kerstin Arnold: <xs:simpleType> with default value added -->
-        </xs:attribute>
-    </xs:complexType>
+            <xs:choice minOccurs="0" maxOccurs="unbounded">
+                <xs:annotation>
+                    <xs:documentation xml:lang="en">
+                        apeMETSRights, 04 November 2013: xs:sequence for subelements changed to xs:choice
+                    </xs:documentation>
+                </xs:annotation>
+                <xs:element name="RightsHolderContactDesignation">
+                    <xs:annotation>
+                        <xs:documentation>Name or title of a contact person or institution holding
+                            rights to a given digital asset, as identified by the
+                            RIGHTSHOLDERID.</xs:documentation>
+                    </xs:annotation>
+                </xs:element>
+                <xs:element name="RightsHolderContactAddress">
+                    <xs:annotation>
+                        <xs:documentation>Mailing address of contact person or institution holding
+                            rights to a given digital asset, as identified by the
+                            RIGHTSHOLDERID.</xs:documentation>
+                    </xs:annotation>
+                </xs:element>
+                <xs:element ref="RightsHolderContactPhone">
+                    <xs:annotation>
+                        <xs:documentation>Telephone number of contact person or institution holding
+                            rights to a given digital asset or part thereof, as identified by the
+                            RIGHTSHOLDERID. The PHONETYPE attribute has enumerated values of "FAX",
+                            "BUSINESS", and "MOBILE".
+                            
+                            apeMETSRights, 04 November 2013: name="" changed to ref=""
+                        </xs:documentation>
+                    </xs:annotation>
+                </xs:element>
+                <xs:element name="RightsHolderContactEmail">
+                    <xs:annotation>
+                        <xs:documentation>Email address of contact person or institution holding
+                            rights to a digital asset or part thereof, as identified by the
+                            RIGHTSHOLDERID.
+                            
+                            apeMETSRights, 04 November 2013: Definition and annotation moved (from where?)
+                        </xs:documentation>
+                    </xs:annotation>
+                </xs:element>
+            </xs:choice>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="RightsHolderContactPhone">
+        <xs:complexType>
+            <xs:simpleContent>
+                <xs:extension base="xs:string">
+                    <xs:attribute name="PHONETYPE">
+                        <xs:simpleType>
+                            <xs:restriction base="xs:string">
+                                <xs:enumeration value="BUSINESS"/>
+                                <xs:enumeration value="FAX"/>
+                                <xs:enumeration value="MOBILE"/>
+                            </xs:restriction>
+                        </xs:simpleType>
+                    </xs:attribute>
+                </xs:extension>
+            </xs:simpleContent>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="Context">
+        <xs:complexType>
+            <xs:annotation>
+                <xs:documentation>The "Context" element describes who has what permissions and
+                    contraints within a specific set of circumstances. "Context" includes four
+                    attributes, " CONTEXTID", an optional attribute which can be used to assign a
+                    unique identifier for the circumstance described, "RIGHTSHOLDERIDS", an optional
+                    attribute which provides a means to specifically list the unique identifiers of
+                    one or more RightsHolders who are involved in the Context scenario to be
+                    described, "CONTEXTCLASS", and "OTHERCONTEXTTYPE". By means of the required
+                    "CONTEXTCLASS" attribute, the group is defined to which a given context relates.
+                    Enumerated values for this attribute include "ACADEMIC USER", "GENERAL
+                    PUBLIC","REPOSITORY MGR", "MANAGED GRP", "INSTITUTIONAL AFFILIATE", "OTHER".
+                    Local extensions to "OTHER" context classes can be described in the
+                    "OTHERCONTEXTTYPE" attribute, as desired. "Context" also contains three elements
+                    which further describe a specified context. The element "UserName" allows the
+                    naming of the typical user or group who would use the digital object within the
+                    described context. The kind of user being named can be described by means of the
+                    attribute "USERTYPE" which has values "INDIVIDUAL", "GROUP", "BOTH", or
+                    "UNDEFINED". The element "Permissions" describes a set of uses to which a
+                    digital object or part thereof can be put as defined by the rights holder in a
+                    given context. "Permissions" has nine attributes which describe the type of
+                    permissions including "DISCOVER", "DISPLAY", "COPY", "DUPLICATE", "MODIFY",
+                    "DELETE", "PRINT", "OTHER", and "OTHERPERMITTYPE" which allows the addition of
+                    local types of permissions not included in the general list. Any restrictions
+                    that need to be placed upon a set of permissions are described by the use of the
+                    "Constraints" element. The "Constraints" element contains a
+                    "ConstraintDescription" sub-element that is used with a set of fixed values
+                    corresponding to the Creative Commons licences ("SA", "NC", "ND" and "NC-SA" and
+                    "NC-ND"). The "Constraints" element has an attribute "CONSTRAINTTYPE" which
+                    characterises the type of restrictions imposed upon the users within a given
+                    context. Enumerated values for the CONSTRAINTTYPE attributes include "QUALITY",
+                    "FORMAT", "UNIT", "WATERMARK", "PAYMENT", "COUNT", "ATTRIBUTION", "RE-USE",
+                    "TIME", "TRANSFERPERMISSIONS", "OTHER".
+                    
+                    apeMETSRights, 04 November 2013: name="ContextTYPE" changed to name="Context"; @OTHERCONSTRAINTTYPE
+                    with value "RESTRICTED ACCESS" has been defined for apeMETS; notes added on values for ConstraintDescription and @otherconstrainttype.
+                </xs:documentation>
+            </xs:annotation>
+            <xs:sequence>
+                <xs:element ref="UserName" minOccurs="0" maxOccurs="unbounded">
+                    <xs:annotation>
+                        <xs:documentation xml:lang="en">
+                            apeMETSRights, 04 November 2013: @type="UserNameTYPE" deleted, name="" changed to ref=""
+                        </xs:documentation>
+                    </xs:annotation>
+                </xs:element>
+                <xs:element minOccurs="1" maxOccurs="unbounded" ref="Permissions">
+                    <xs:annotation>
+                        <xs:documentation xml:lang="en">
+                            apeMETSRights, 04 November 2013: @type="PermissionTYPE" and @minOccurs changed to ="1" deleted, name="" changed to ref=""
+                        </xs:documentation>
+                    </xs:annotation>
+                </xs:element>
+                <xs:element ref="Constraints" minOccurs="0" maxOccurs="unbounded">
+                    <xs:annotation>
+                        <xs:documentation xml:lang="en">
+                            apeMETSRights, 04 November 2013: @type="ConstraintsTYPE" deleted, name="" changed to ref=""
+                        </xs:documentation>
+                    </xs:annotation>
+                </xs:element>
+            </xs:sequence>
+            <xs:attribute name="CONTEXTID" type="xs:ID" use="optional"/>
+            <xs:attribute name="RIGHTSHOLDERIDS" type="xs:IDREFS" use="optional"/>
+            <xs:attribute name="CONTEXTCLASS" use="required">
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:enumeration value="ACADEMIC USER"/>
+                        <xs:enumeration value="GENERAL PUBLIC"/>
+                        <xs:enumeration value="REPOSITORY MGR"/>
+                        <xs:enumeration value="MANAGED GRP"/>
+                        <xs:enumeration value="INSTITUTIONAL AFFILIATE"/>
+                        <xs:enumeration value="OTHER"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:attribute>
+            <xs:attribute name="OTHERCONTEXTTYPE" type="xs:string" use="optional"/>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="UserName">
+        <xs:annotation>
+            <xs:documentation xml:lang="en">
+                apeMETSRights, 04 November 2013: name="UserNameTYPE" changed to name="UserName"
+            </xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:simpleContent>
+                <xs:extension base="xs:string">
+                    <xs:attribute name="USERTYPE">
+                        <xs:simpleType>
+                            <xs:restriction base="xs:string">
+                                <xs:enumeration value="INDIVIDUAL"/>
+                                <xs:enumeration value="GROUP"/>
+                                <xs:enumeration value="BOTH"/>
+                                <xs:enumeration value="UNDEFINED"/>
+                            </xs:restriction>
+                        </xs:simpleType>
+                    </xs:attribute>
+                </xs:extension>
+            </xs:simpleContent>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="Permissions">
+        <xs:annotation>
+            <xs:documentation xml:lang="en">
+                apeMETSRights, 04 November 2013: name="PermissionsTYPE" changed to name="Permissions"
+                apeMETSRights, 06 December 2013: moved comments with attribute descriptions to proper annotation elements 
+            </xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:attribute name="DISCOVER" type="xs:boolean">
+                <xs:annotation>
+                    <xs:documentation xml:lang="en">
+                        Resource is available for searching or other discovery activities.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
+            <xs:attribute name="DISPLAY" type="xs:boolean">
+                <xs:annotation>
+                    <xs:documentation xml:lang="en">
+                        Rendering, playing, executing the resource.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
+            <xs:attribute name="COPY" type="xs:boolean">
+                <xs:annotation>
+                    <xs:documentation xml:lang="en">
+                        Making verbatim copy for purposes of re-use of whole or part of the resource and creation of new resource.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
+            <xs:attribute name="DUPLICATE" type="xs:boolean">
+                <xs:annotation>
+                    <xs:documentation xml:lang="en">
+                        Make exact copy of resource for file or repository management purposes.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
+            <xs:attribute name="MODIFY" type="xs:boolean">
+                <xs:annotation>
+                    <xs:documentation xml:lang="en">
+                        Annotate, edit, excerpt, embed, extract resource for purposes of re-use or preservation.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
+            <xs:attribute name="DELETE" type="xs:boolean">
+                <xs:annotation>
+                    <xs:documentation xml:lang="en">
+                        Remove resource from repository for purposes of resource or repository management.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
+            <xs:attribute name="PRINT" type="xs:boolean">
+                <xs:annotation>
+                    <xs:documentation xml:lang="en">
+                        Rendering the resource onto paper or hard copy.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
+            <xs:attribute name="OTHER" type="xs:boolean"/>
+            <xs:attribute name="OTHERPERMITTYPE" type="xs:string" use="optional">
+                <xs:annotation>
+                    <xs:documentation xml:lang="en">
+                        Allows for naming localised permission types.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="Constraints">
+        <xs:annotation>
+            <xs:documentation xml:lang="en">
+                04 November 2013: name="ConstraintsTYPE" changed to name="Constraints"
+            </xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="ConstraintDescription" minOccurs="0" maxOccurs="unbounded">
+                    <xs:annotation>
+                        <xs:documentation xml:lang="en">
+                            apeMETSRights, 04 November 2013: xs:complexType with default values added
+                        </xs:documentation>
+                    </xs:annotation>
+                    <xs:complexType>
+                        <xs:simpleContent>
+                            <xs:restriction base="xs:anyType">
+                                <xs:simpleType>
+                                    <xs:restriction base="xs:token">
+                                        <xs:enumeration value="SA"/>
+                                        <xs:enumeration value="NC"/>
+                                        <xs:enumeration value="ND"/>
+                                        <xs:enumeration value="NC-SA"/>
+                                        <xs:enumeration value="NC-ND"/>
+                                    </xs:restriction>
+                                </xs:simpleType>
+                            </xs:restriction>
+                        </xs:simpleContent>
+                    </xs:complexType>
+                </xs:element>
+            </xs:sequence>
+            <xs:attribute name="CONSTRAINTTYPE">
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:enumeration value="QUALITY"/>
+                        <xs:enumeration value="FORMAT"/>
+                        <xs:enumeration value="UNIT"/>
+                        <xs:enumeration value="WATERMARK"/>
+                        <xs:enumeration value="PAYMENT"/>
+                        <xs:enumeration value="COUNT"/>
+                        <xs:enumeration value="RE-USE"/>
+                        <xs:enumeration value="ATTRIBUTION"/>
+                        <xs:enumeration value="TIME"/>
+                        <xs:enumeration value="TRANSFERPERMISSIONS"/>
+                        <xs:enumeration value="OTHER"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:attribute>
+            <xs:attribute name="OTHERCONSTRAINTTYPE" use="optional">
+                <xs:annotation>
+                    <xs:documentation xml:lang="en">
+                        apeMETSRights, 04 November 2013: attribute with default value "RESTRICTED ACCESS" has been added specifically for apeMETS
+                    </xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:enumeration value="RESTRICTED ACCESS"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:attribute>
+        </xs:complexType>
+    </xs:element>
 </xs:schema>
