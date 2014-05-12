@@ -1252,7 +1252,7 @@
     <!--Beginning of big chunk-->
     <!--Elements in archdesc and c@fonds-->
     <!-- acqinfo -->
-    <xsl:template match="acqinfo" mode="copy fonds">
+    <xsl:template match="acqinfo" mode="copy fonds intermediate lowest">
         <acqinfo encodinganalog="3.2.4">
             <xsl:apply-templates select="node() except acqinfo" mode="#current"/>
             <xsl:apply-templates select="acqinfo" mode="nested"/>
@@ -1331,7 +1331,7 @@
     </xsl:template>
 
     <!-- archdesc/separatedmaterial -->
-    <xsl:template match="separatedmaterial" mode="copy fonds">
+    <xsl:template match="separatedmaterial" mode="copy fonds intermediate lowest">
         <separatedmaterial encodinganalog="3.5.3">
             <xsl:apply-templates select="node() except separatedmaterial" mode="#current"/>
             <xsl:apply-templates select="separatedmaterial/*" mode="nested"/>
@@ -1363,7 +1363,7 @@
     </xsl:template>
 
     <!-- prefercite -->
-    <xsl:template match="prefercite" mode="copy fonds">
+    <xsl:template match="prefercite" mode="copy fonds intermediate lowest">
         <prefercite>
             <xsl:apply-templates select="node() except prefercite" mode="#current"/>
             <xsl:apply-templates select="prefercite/*" mode="nested"/>
@@ -1371,7 +1371,7 @@
     </xsl:template>
 
     <!-- archdesc/arrangement -->
-    <xsl:template match="arrangement" mode="copy fonds">
+    <xsl:template match="arrangement" mode="copy fonds intermediate lowest">
         <arrangement encodinganalog="3.3.4">
             <xsl:apply-templates select="node() except arrangement" mode="#current"/>
             <xsl:apply-templates select="arrangement" mode="nested"/>
@@ -1383,7 +1383,7 @@
     </xsl:template>
 
     <!-- archdesc/originalsloc (2x ?)-->
-    <xsl:template match="originalsloc" mode="copy fonds">
+    <xsl:template match="originalsloc" mode="copy fonds intermediate lowest">
         <originalsloc encodinganalog="3.5.1">
             <xsl:apply-templates select="node() except originalsloc" mode="#current"/>
             <xsl:apply-templates select="originalsloc/*" mode="nested"/>
@@ -1391,7 +1391,7 @@
     </xsl:template>
 
     <!-- fileplan -->
-    <xsl:template match="fileplan" mode="copy fonds">
+    <xsl:template match="fileplan" mode="copy fonds intermediate lowest">
         <fileplan>
             <xsl:apply-templates select="node() except fileplan" mode="#current"/>
             <xsl:apply-templates select="fileplan/*" mode="nested"/>
@@ -1399,7 +1399,7 @@
     </xsl:template>
 
     <!-- fileplan/p/archref -->
-    <xsl:template match="fileplan/p/archref" mode="copy fonds nested">
+    <xsl:template match="fileplan/p/archref" mode="copy fonds nested intermediate lowest">
         <archref>
             <xsl:if test="@*:href!=''">
                 <xsl:attribute name="xlink:href" select="ape:checkLink(@*:href)"/>
