@@ -1811,6 +1811,7 @@
 		<xs:choice>
             <xs:group maxOccurs="unbounded" minOccurs="0" ref="m.render"/>
             <xs:element minOccurs="0" maxOccurs="unbounded" name="list"/>
+			<xs:element minOccurs="0" maxOccurs="unbounded" name="extref" type="extref"/>
         </xs:choice>
 	</xs:complexType>
     <xs:complexType name="table">

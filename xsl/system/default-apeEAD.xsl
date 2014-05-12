@@ -1689,12 +1689,14 @@
     <xsl:template match="processinfo/list/item | relatedmaterial/list/item | relatedmaterial/p/list/item | bioghist/list/item | bioghist/p/list/item | odd/p/list/item | appraisal/list/item | accruals/list/item | odd/list/item | accessrestrict[not(ancestor::accessrestrict)]/list/item | userestrict/list/item | altformavail/list/item | otherfindaid/list/item | custodhist/list/item | bibliography/list/item" mode="copy fonds intermediate lowest nested">
         <item>
             <xsl:value-of select="node()" />
+            <xsl:apply-templates select="extref" mode="#current"/>
         </item>
     </xsl:template>
     <!-- archdesc and c@fonds -->
     <xsl:template match="acqinfo/list/item | acqinfo/p/list/item | separatedmaterial/list/item | prefercite/list/item | arrangement/list/item | arrangement/p/list/item | originalsloc/list/item | fileplan/list/item" mode="copy fonds nested">
         <item>
             <xsl:value-of select="node()" />
+            <xsl:apply-templates select="extref" mode="#current"/>
         </item>
     </xsl:template>
 
@@ -1703,12 +1705,28 @@
     <xsl:template match="processinfo/list/item//* | relatedmaterial/list/item//* | relatedmaterial/p/list/item//* | bioghist/list/item//* | appraisal/list/item//* | accruals/list/item//* | odd/list/item//* | odd/p/list/item//*[not(local-name='extref')] | accessrestrict[not(ancestor::accessrestrict)]/list/item//* | userestrict/list/item//* | altformavail/list/item//* | otherfindaid/list/item//* | custodhist/list/item//* | bibliography/list/item//*" mode="copy fonds intermediate lowest nested">
         <xsl:value-of select="text()" />
     </xsl:template>
-    <!--<xsl:template match="odd/p/list/item/extref">-->
-        <!--<xsl:value-of select="@href"/>-->
-    <!--</xsl:template>-->
+
     <!-- archdesc and c@fonds -->
     <xsl:template match="acqinfo/list/item//* | acqinfo/p/list/item//* | separatedmaterial/list/item//* | prefercite/list/item//* | arrangement/list/item//* | arrangement/p/list/item//* | originalsloc/list/item//* | fileplan/list/item//*" mode="copy fonds nested">
         <xsl:value-of select="text()" />
+    </xsl:template>
+
+    <!-- ITEM/extref (gets higher priority due to avoiding ambiguous matching) -->
+    <xsl:template match="extref[parent::item]" mode="copy fonds intermediate lowest nested" priority="5">
+        <extref>
+            <xsl:if test="@href">
+                <xsl:attribute name="xlink:href" select="ape:checkLink(@href)"/>
+            </xsl:if>
+            <xsl:if test="@*:href">
+                <xsl:attribute name="xlink:href" select="ape:checkLink(@*:href)"/>
+            </xsl:if>
+            <xsl:if test="@title">
+                <xsl:attribute name="xlink:title" select="@title"/>
+            </xsl:if>
+            <xsl:if test="@*:title">
+                <xsl:attribute name="xlink:title" select="@*:title"/>
+            </xsl:if>
+        </extref>
     </xsl:template>
 
     <xsl:template match="processinfo/p/note | separatedmaterial/p/note | bioghist/p/note | arrangement/p/note | acqinfo/p/note | accruals/p/note | custodhist/p/note" mode="copy fonds intermediate lowest nested">
