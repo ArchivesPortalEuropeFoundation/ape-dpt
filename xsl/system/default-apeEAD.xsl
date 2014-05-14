@@ -1265,6 +1265,20 @@
         </xsl:if>
     </xsl:template>
 
+    <!-- fonds intermediate lowest: repository/corpname -->
+    <xsl:template match="repository/corpname" mode="copy fonds intermediate lowest">
+        <corpname>
+            <xsl:apply-templates select="node()" mode="#current"/>
+        </corpname>
+    </xsl:template>
+    
+    <!-- fonds intermediate lowest: repository/name -->
+    <xsl:template match="repository/name" mode="copy fonds intermediate lowest">
+        <name>
+            <xsl:apply-templates select="node()" mode="#current"/>
+        </name>
+    </xsl:template>
+    
     <!-- copy fonds intermediate lowest: physloc -->
     <xsl:template match="physloc" mode="copy fonds intermediate lowest">
         <physloc>

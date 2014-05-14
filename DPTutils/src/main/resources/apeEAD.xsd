@@ -1158,6 +1158,8 @@
         <xs:choice maxOccurs="unbounded" minOccurs="0">
             <xs:element name="address" type="address"/>
             <xs:element name="extref" type="extref"/>
+            <xs:element name="name" type="name"/>
+            <xs:element name="corpname" type="corpname"/>
         </xs:choice>
     </xs:complexType>
     <xs:complexType mixed="true" name="unitdate">
