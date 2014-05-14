@@ -25,7 +25,9 @@ import net.sf.saxon.value.StringValue;
 public class LinkFormatChecker extends ExtensionFunctionDefinition {
 
     private static final StructuredQName FUNCTION_NAME = new StructuredQName("ape", "http://www.archivesportaleurope.net/functions", "checkLink");
-    private static final Pattern URL_PATTERN = Pattern.compile("^(http|https|ftp)\\://[a-zA-Z0-9\\-\\.]+\\.[a-zA-Z]{2,3}(:[a-zA-Z0-9]*)?/?([a-zA-Z0-9\\-\\._\\?\\,\\'/\\\\\\+&amp;%\\$\\:#\\=~\\[\\]\\(\\)@;!])*$");
+    private static final Pattern TEXT_URL_PATTERN = Pattern.compile("^(http|https|ftp)\\://[a-zA-Z0-9\\-\\.]+\\.[a-zA-Z]{2,3}(:[a-zA-Z0-9]*)?/?([a-zA-Z0-9\\-\\._\\?\\,\\'/\\\\\\+&amp;%\\$\\:#\\=~\\[\\]\\(\\)@;!])*$");
+    private static final Pattern IP4_URL_PATTERN = Pattern.compile("^(http|https|ftp)\\://(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)(?:\\:(?![7-9]\\d\\d\\d\\d)(?!6[6-9]\\d\\d\\d)(?!65[6-9]\\d\\d)(?!655[4-9]\\d)(?!6553[6-9])(?!0+))?/?([a-zA-Z0-9\\-\\._\\?\\,\\'/\\\\\\+&amp;%\\$\\:#\\=~\\[\\]\\(\\)@;!])*$");
+    private static final Pattern IP6_URL_PATTERN = Pattern.compile("^(http|https|ftp)\\://\\[([0-9a-fA-F]{4}|0)(\\:([0-9a-fA-F]{4}|0)){7}\\](?:\\:(?![7-9]\\d\\d\\d\\d)(?!6[6-9]\\d\\d\\d)(?!65[6-9]\\d\\d)(?!655[4-9]\\d)(?!6553[6-9])(?!0+))?/?([a-zA-Z0-9\\-\\._\\?\\,\\'/\\\\\\+&amp;%\\$\\:#\\=~\\[\\]\\(\\)@;!])*$");
 
     public LinkFormatChecker() {
     }
@@ -67,9 +69,15 @@ public class LinkFormatChecker extends ExtensionFunctionDefinition {
                 link = "http://" + link;
             }
         }
-        Matcher matcher = URL_PATTERN.matcher(link);
+        Matcher matcherText = TEXT_URL_PATTERN.matcher(link);
+        Matcher matcherIp4 = IP4_URL_PATTERN.matcher(link);
+        Matcher matcherIp6 = IP6_URL_PATTERN.matcher(link);
         try {
-            if (matcher.matches()) {
+            if (matcherText.matches()) {
+                return link;
+            } else if (matcherIp4.matches()) {
+                return link;
+            } else if (matcherIp6.matches()) {
                 return link;
             }
         } catch (Exception ex) {
