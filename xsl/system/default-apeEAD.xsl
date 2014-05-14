@@ -9,16 +9,13 @@
 	    - other modes: specific for special purposes
 -->
 <xsl:stylesheet version="2.0" xmlns="urn:isbn:1-931666-22-9"
-                xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-                xmlns:fo="http://www.w3.org/1999/XSL/Format"
-                xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-                xmlns:xs="http://www.w3.org/2001/XMLSchema"
-                xmlns:none="none"
-                xmlns:ape="http://www.archivesportaleurope.net/functions"
-                xmlns:xlink="http://www.w3.org/1999/xlink"
-                xsi:schemaLocation="urn:isbn:1-931666-22-9 http://www.loc.gov/ead/ead.xsd"
-                xpath-default-namespace="urn:isbn:1-931666-22-9"
-                exclude-result-prefixes="xsl fo xs none ape">
+    xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:fo="http://www.w3.org/1999/XSL/Format"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:none="none"
+    xmlns:ape="http://www.archivesportaleurope.net/functions"
+    xmlns:xlink="http://www.w3.org/1999/xlink"
+    xsi:schemaLocation="urn:isbn:1-931666-22-9 http://www.loc.gov/ead/ead.xsd"
+    xpath-default-namespace="urn:isbn:1-931666-22-9" exclude-result-prefixes="xsl fo xs none ape">
 
     <!--Will be used in the next version to use specialized xsl templates for partners-->
     <!--<xsl:include href="xsl/import.xsl"/>-->
@@ -44,7 +41,7 @@
     <xsl:param name="url" select="''"/>
     <xsl:param name="provider" select="''"/>
 
-    <xsl:output indent="yes" method="xml" />
+    <xsl:output indent="yes" method="xml"/>
     <xsl:strip-space elements="*"/>
     <!-- / -->
 
@@ -63,26 +60,50 @@
         </xsl:if>
         <xsl:variable name="excludedElement">
             <xsl:if test="name(../../../../../../../..) != ''">
-                <xsl:value-of select="name(../../../../../../../..)"/><xsl:if test="name(../../../../../../../..)='c'">@<xsl:value-of select="../../../../../../../../@level" /></xsl:if><xsl:text>/</xsl:text>
+                <xsl:value-of select="name(../../../../../../../..)"/>
+                <xsl:if test="name(../../../../../../../..)='c'">@<xsl:value-of
+                        select="../../../../../../../../@level"/></xsl:if>
+                <xsl:text>/</xsl:text>
             </xsl:if>
             <xsl:if test="name(../../../../../../..) != ''">
-                <xsl:value-of select="name(../../../../../../..)"/><xsl:if test="name(../../../../../../..)='c'">@<xsl:value-of select="../../../../../../../@level" /></xsl:if><xsl:text>/</xsl:text>
+                <xsl:value-of select="name(../../../../../../..)"/>
+                <xsl:if test="name(../../../../../../..)='c'">@<xsl:value-of
+                        select="../../../../../../../@level"/></xsl:if>
+                <xsl:text>/</xsl:text>
             </xsl:if>
             <xsl:if test="name(../../../../../..) != ''">
-                <xsl:value-of select="name(../../../../../..)"/><xsl:if test="name(../../../../../..)='c'">@<xsl:value-of select="../../../../../../@level" /></xsl:if><xsl:text>/</xsl:text>
+                <xsl:value-of select="name(../../../../../..)"/>
+                <xsl:if test="name(../../../../../..)='c'">@<xsl:value-of
+                        select="../../../../../../@level"/></xsl:if>
+                <xsl:text>/</xsl:text>
             </xsl:if>
             <xsl:if test="name(../../../../..) != ''">
-                <xsl:value-of select="name(../../../../..)"/><xsl:if test="name(../../../../..)='c'">@<xsl:value-of select="../../../../../@level" /></xsl:if><xsl:text>/</xsl:text>
+                <xsl:value-of select="name(../../../../..)"/>
+                <xsl:if test="name(../../../../..)='c'">@<xsl:value-of
+                        select="../../../../../@level"/></xsl:if>
+                <xsl:text>/</xsl:text>
             </xsl:if>
             <xsl:if test="name(../../../..) != ''">
-                <xsl:value-of select="name(../../../..)"/><xsl:if test="name(../../../..)='c'">@<xsl:value-of select="../../../../@level" /></xsl:if><xsl:text>/</xsl:text>
+                <xsl:value-of select="name(../../../..)"/>
+                <xsl:if test="name(../../../..)='c'">@<xsl:value-of select="../../../../@level"
+                    /></xsl:if>
+                <xsl:text>/</xsl:text>
             </xsl:if>
             <xsl:if test="name(../../..) != ''">
-                <xsl:value-of select="name(../../..)"/><xsl:if test="name(../../..)='c'">@<xsl:value-of select="../../../@level" /></xsl:if><xsl:text>/</xsl:text>
+                <xsl:value-of select="name(../../..)"/>
+                <xsl:if test="name(../../..)='c'">@<xsl:value-of select="../../../@level"/></xsl:if>
+                <xsl:text>/</xsl:text>
             </xsl:if>
-            <xsl:value-of select="name(../..)"/><xsl:if test="name(../..)='c'">@<xsl:value-of select="../../@level" /></xsl:if><xsl:text>/</xsl:text><xsl:value-of select="name(..)"/><xsl:if test="name(..)='c'">@<xsl:value-of select="../@level" /></xsl:if><xsl:text>/</xsl:text><xsl:value-of select="name(.)"/><xsl:if test="name(.)='c'">@<xsl:value-of select="@level" /></xsl:if>
+            <xsl:value-of select="name(../..)"/>
+            <xsl:if test="name(../..)='c'">@<xsl:value-of select="../../@level"/></xsl:if>
+            <xsl:text>/</xsl:text>
+            <xsl:value-of select="name(..)"/>
+            <xsl:if test="name(..)='c'">@<xsl:value-of select="../@level"/></xsl:if>
+            <xsl:text>/</xsl:text>
+            <xsl:value-of select="name(.)"/>
+            <xsl:if test="name(.)='c'">@<xsl:value-of select="@level"/></xsl:if>
         </xsl:variable>
-        <xsl:message select="normalize-space($excludedElement)" />
+        <xsl:message select="normalize-space($excludedElement)"/>
     </xsl:template>
 
     <!--
@@ -96,14 +117,20 @@
             <xsl:when test="parent::altformavail"/>
             <xsl:otherwise>
                 <xsl:choose>
-                    <xsl:when test="(parent::accessrestrict or parent::bioghist) and normalize-space(.)"> <!--If file contains elements without p but directly text in it-->
-                        <p><xsl:value-of select="."/></p>
+                    <xsl:when
+                        test="(parent::accessrestrict or parent::bioghist) and normalize-space(.)">
+                        <!--If file contains elements without p but directly text in it-->
+                        <p>
+                            <xsl:value-of select="."/>
+                        </p>
                     </xsl:when>
                     <xsl:when test="contains(., '&#xa;')">
                         <xsl:value-of select="translate(normalize-space(.), '&#xa;', ' ')"/>
                     </xsl:when>
                     <xsl:otherwise>
-                        <!--xsl:if test="preceding-sibling::node()[1][self::node()]"><xsl:text> </xsl:text></xsl:if--><xsl:value-of select="."/><!--xsl:if test="following-sibling::node()[1][self::node()]"><xsl:text> </xsl:text></xsl:if-->
+                        <!--xsl:if test="preceding-sibling::node()[1][self::node()]"><xsl:text> </xsl:text></xsl:if-->
+                        <xsl:value-of select="."/>
+                        <!--xsl:if test="following-sibling::node()[1][self::node()]"><xsl:text> </xsl:text></xsl:if-->
                     </xsl:otherwise>
                 </xsl:choose>
             </xsl:otherwise>
@@ -113,9 +140,12 @@
     <!-- lb is almost allowed everywhere -->
     <xsl:template match="lb" mode="#all">
         <xsl:choose>
-            <xsl:when test="parent::unitdate or parent::emph or parent::origination or parent::physdesc or parent::entry or parent::item or parent::head or parent::physfacet or parent::bibref or parent::langusage or parent::title or parent::dimensions"><xsl:text> - </xsl:text></xsl:when>
+            <xsl:when
+                test="parent::unitdate or parent::emph or parent::origination or parent::physdesc or parent::entry or parent::item or parent::head or parent::physfacet or parent::bibref or parent::langusage or parent::title or parent::dimensions">
+                <xsl:text> - </xsl:text>
+            </xsl:when>
             <xsl:otherwise>
-                <lb />
+                <lb/>
             </xsl:otherwise>
         </xsl:choose>
     </xsl:template>
@@ -123,9 +153,12 @@
     <!-- emph is only copied if it is of type render bold or italic - if not it just take the data inside the field and prints it -->
     <xsl:template match="emph" mode="#all">
         <xsl:choose>
-            <xsl:when test="parent::bibref or parent::extref" />
-            <xsl:when test="parent::corpname or parent::origination or parent::physfacet or parent::persname or parent::head or parent::titleproper or parent::unitdate or parent::archref or parent::emph or parent::unittitle"> <!--unittitle here is a hack - better fix it in the display xsl of portal/dashboard-->
-                <xsl:value-of select="normalize-space(.)"/><xsl:text> </xsl:text>
+            <xsl:when test="parent::bibref or parent::extref"/>
+            <xsl:when
+                test="parent::corpname or parent::origination or parent::physfacet or parent::persname or parent::head or parent::titleproper or parent::unitdate or parent::archref or parent::emph or parent::unittitle">
+                <!--unittitle here is a hack - better fix it in the display xsl of portal/dashboard-->
+                <xsl:value-of select="normalize-space(.)"/>
+                <xsl:text> </xsl:text>
             </xsl:when>
             <xsl:when test="@render='bold' or @render='italic'">
                 <emph>
@@ -136,7 +169,8 @@
                 </emph>
             </xsl:when>
             <xsl:otherwise>
-                <xsl:value-of select="normalize-space(.)"/><xsl:text> </xsl:text>
+                <xsl:value-of select="normalize-space(.)"/>
+                <xsl:text> </xsl:text>
             </xsl:otherwise>
         </xsl:choose>
     </xsl:template>
@@ -171,28 +205,29 @@
     </xsl:template>
 
     <xsl:template match="*[local-name() = 'eadgrp']" mode="top">
-        <xsl:apply-templates mode="top" />
+        <xsl:apply-templates mode="top"/>
     </xsl:template>
     <xsl:template match="*[local-name() = 'archdescgrp']" name="archdescgrp" mode="top">
-        <xsl:apply-templates mode="top" />
+        <xsl:apply-templates mode="top"/>
     </xsl:template>
 
     <!-- ead -->
     <xsl:template match="ead" name="ead" mode="top">
-        <ead xmlns="urn:isbn:1-931666-22-9"
-             xmlns:xlink="http://www.w3.org/1999/xlink"
-             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-             xsi:schemaLocation="urn:isbn:1-931666-22-9 http://www.archivesportaleurope.net/Portal/profiles/apeEAD_XSD1.0.xsd http://www.w3.org/1999/xlink http://www.loc.gov/standards/xlink/xlink.xsd" audience="external">
+        <ead xmlns="urn:isbn:1-931666-22-9" xmlns:xlink="http://www.w3.org/1999/xlink"
+            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+            xsi:schemaLocation="urn:isbn:1-931666-22-9 http://www.archivesportaleurope.net/Portal/profiles/apeEAD_XSD1.0.xsd http://www.w3.org/1999/xlink http://www.loc.gov/standards/xlink/xlink.xsd"
+            audience="external">
             <xsl:apply-templates select="node()" mode="copy"/>
         </ead>
     </xsl:template>
 
     <!-- eadheader -->
     <xsl:template match="eadheader" mode="copy">
-        <eadheader countryencoding="iso3166-1" dateencoding="iso8601" langencoding="iso639-2b" repositoryencoding="iso15511" scriptencoding="iso15924">
+        <eadheader countryencoding="iso3166-1" dateencoding="iso8601" langencoding="iso639-2b"
+            repositoryencoding="iso15511" scriptencoding="iso15924">
             <xsl:attribute name="relatedencoding" select="'MARC21'"/>
             <xsl:if test="not(eadid)">
-                <xsl:call-template name="addEadid" />
+                <xsl:call-template name="addEadid"/>
             </xsl:if>
             <xsl:apply-templates select="node()" mode="copy"/>
             <xsl:if test="not(revisiondesc) and normalize-space($versionnb)">
@@ -204,7 +239,7 @@
     <xsl:template name="revisiondesc_ape">
         <revisiondesc>
             <change>
-                <date />
+                <date/>
                 <item>Converted_apeEAD_version_<xsl:value-of select="$versionnb"/></item>
             </change>
         </revisiondesc>
@@ -229,7 +264,7 @@
                                     <xsl:attribute name="calendar" select="'gregorian'"/>
                                     <xsl:attribute name="era" select="'ce'"/>
                                     <xsl:for-each select="date">
-                                        <xsl:call-template name="normalizeDate" />
+                                        <xsl:call-template name="normalizeDate"/>
                                     </xsl:for-each>
                                     <xsl:value-of select="date/text()"/>
                                 </xsl:if>
@@ -267,7 +302,7 @@
         </item>
     </xsl:template>
     <xsl:template name="revisiondesc_item">
-        <date />
+        <date/>
         <item>Converted_apeEAD_version_<xsl:value-of select="$versionnb"/></item>
     </xsl:template>
     <xsl:template match="revisiondesc/list" mode="copy"/>
@@ -282,14 +317,19 @@
                 <xsl:when test="@IDENTIFIER">
                     <xsl:attribute name="identifier" select="@IDENTIFIER"/>
                 </xsl:when>
-                <xsl:when test="not(@identifier) and not(@IDENTIFIER) and text()[string-length(normalize-space(.)) ge 1] and normalize-space($mainagencycode)">
+                <xsl:when
+                    test="not(@identifier) and not(@IDENTIFIER) and text()[string-length(normalize-space(.)) ge 1] and normalize-space($mainagencycode)">
                     <xsl:attribute name="identifier">
-                        <xsl:value-of select="$mainagencycode"/><xsl:text>_</xsl:text><xsl:value-of select="text()"/>
+                        <xsl:value-of select="$mainagencycode"/>
+                        <xsl:text>_</xsl:text>
+                        <xsl:value-of select="text()"/>
                     </xsl:attribute>
                 </xsl:when>
                 <xsl:otherwise>
                     <xsl:attribute name="identifier">
-                        <xsl:value-of select="$mainagencycode"/><xsl:text>_</xsl:text><xsl:value-of select="$eadidmissing"/>
+                        <xsl:value-of select="$mainagencycode"/>
+                        <xsl:text>_</xsl:text>
+                        <xsl:value-of select="$eadidmissing"/>
                     </xsl:attribute>
                 </xsl:otherwise>
             </xsl:choose>
@@ -315,7 +355,9 @@
                     <xsl:otherwise>
                         <xsl:if test="@countrycode">
                             <xsl:variable name="myCode_2">
-                                <xsl:value-of select="ape:normalizeDate(concat(concat(@countrycode,'-'),@mainagencycode), 'mainagencycode')"/>
+                                <xsl:value-of
+                                    select="ape:normalizeDate(concat(concat(@countrycode,'-'),@mainagencycode), 'mainagencycode')"
+                                />
                             </xsl:variable>
                             <xsl:choose>
                                 <xsl:when test="normalize-space($myCode_2)">
@@ -357,10 +399,11 @@
         <filedesc>
             <xsl:apply-templates select="node()" mode="copy"/>
             <xsl:if test="not(titlestmt)">
-                <xsl:call-template name="titlestmt" />
+                <xsl:call-template name="titlestmt"/>
             </xsl:if>
-            <xsl:if test="not(publicationstmt) and (normalize-space($addressline) or normalize-space($publisher))">
-                <xsl:call-template name="publicationstmt" />
+            <xsl:if
+                test="not(publicationstmt) and (normalize-space($addressline) or normalize-space($publisher))">
+                <xsl:call-template name="publicationstmt"/>
             </xsl:if>
         </filedesc>
     </xsl:template>
@@ -383,7 +426,7 @@
         <xsl:choose>
             <xsl:when test="//eadid/@countrycode = 'PL' or //eadid/@countrycode = 'pl'">
                 <publisher encodinganalog="260$b">
-                    <xsl:apply-templates select="node()" mode="#current" />
+                    <xsl:apply-templates select="node()" mode="#current"/>
                 </publisher>
             </xsl:when>
             <xsl:otherwise>
@@ -414,7 +457,7 @@
         <seriesstmt>
             <xsl:apply-templates select="titleproper" mode="copy"/>
             <xsl:if test="not(titleproper)">
-                <titleproper />
+                <titleproper/>
             </xsl:if>
         </seriesstmt>
     </xsl:template>
@@ -507,7 +550,7 @@
             <xsl:if test="@encodinganalog !=''">
                 <xsl:attribute name="encodinganalog" select="@encodinganalog "/>
             </xsl:if>
-            <xsl:apply-templates select="node()" mode="copy" />
+            <xsl:apply-templates select="node()" mode="copy"/>
             <!-- For Portugal-->
             <xsl:if test="normalize-space(.) = ''">
                 <xsl:value-of select="//archdesc/did/unittitle/text()"/>
@@ -551,40 +594,53 @@
         </langusage>
     </xsl:template>
 
-    <!-- profiledesc/langusage/language --> <!-- todo: This will have to be modified into a nicer function -->
+    <!-- profiledesc/langusage/language -->
+    <!-- todo: This will have to be modified into a nicer function -->
     <xsl:template match="profiledesc/langusage/language" mode="copy">
         <xsl:variable name="langusagetemp">
             <xsl:choose>
                 <xsl:when test="normalize-space($langusage)">
                     <xsl:for-each select="tokenize(normalize-space($langusage), ';')">
-                        <xsl:if test="current()[normalize-space()] and exists($langfile//none:language[@code=normalize-space(current())])">
+                        <xsl:if
+                            test="current()[normalize-space()] and exists($langfile//none:language[@code=normalize-space(current())])">
                             <language encodinganalog="041">
                                 <xsl:attribute name="langcode">
-                                    <xsl:value-of select="$langfile//none:language[@code=normalize-space(current())]/none:langcode"/>
+                                    <xsl:value-of
+                                        select="$langfile//none:language[@code=normalize-space(current())]/none:langcode"
+                                    />
                                 </xsl:attribute>
                                 <xsl:attribute name="scriptcode">
-                                    <xsl:value-of select="$langfile//none:language[@code=normalize-space(current())]/none:scriptcode"/>
+                                    <xsl:value-of
+                                        select="$langfile//none:language[@code=normalize-space(current())]/none:scriptcode"
+                                    />
                                 </xsl:attribute>
-                                <xsl:value-of select="$langfile//none:language[@code=normalize-space(current())]/none:langname[@language='0x409']"/>
+                                <xsl:value-of
+                                    select="$langfile//none:language[@code=normalize-space(current())]/none:langname[@language='0x409']"
+                                />
                             </language>
                         </xsl:if>
                     </xsl:for-each>
                 </xsl:when>
                 <xsl:otherwise>
                     <xsl:choose>
-                        <xsl:when test="exists($langfile//none:language[@code=normalize-space(current()/@langcode)])">
+                        <xsl:when
+                            test="exists($langfile//none:language[@code=normalize-space(current()/@langcode)])">
                             <language encodinganalog="041">
                                 <xsl:attribute name="langcode">
-                                    <xsl:value-of select="$langfile//none:language[@code=normalize-space(current()/@langcode)]/none:langcode"/>
+                                    <xsl:value-of
+                                        select="$langfile//none:language[@code=normalize-space(current()/@langcode)]/none:langcode"
+                                    />
                                 </xsl:attribute>
                                 <xsl:attribute name="scriptcode">
-                                    <xsl:value-of select="$langfile//none:language[@code=normalize-space(current()/@langcode)]/none:scriptcode"/>
+                                    <xsl:value-of
+                                        select="$langfile//none:language[@code=normalize-space(current()/@langcode)]/none:scriptcode"
+                                    />
                                 </xsl:attribute>
-                                <xsl:apply-templates select="node()" mode="#current" />
+                                <xsl:apply-templates select="node()" mode="#current"/>
                             </language>
                         </xsl:when>
                         <xsl:otherwise>
-                            <xsl:apply-templates select="node()" mode="#current" />
+                            <xsl:apply-templates select="node()" mode="#current"/>
                         </xsl:otherwise>
                     </xsl:choose>
                 </xsl:otherwise>
@@ -595,7 +651,7 @@
                 <xsl:copy-of select="$langusagetemp"/>
             </xsl:when>
             <xsl:otherwise>
-                <xsl:apply-templates select="node()" mode="copy" />
+                <xsl:apply-templates select="node()" mode="copy"/>
             </xsl:otherwise>
         </xsl:choose>
     </xsl:template>
@@ -615,21 +671,29 @@
         <xsl:apply-templates select="node()" mode="#current"/>
     </xsl:template>
 
-    <!-- copy fonds intermediate lowest: langusage --> <!-- todo: This will be rewritten has well -->
+    <!-- copy fonds intermediate lowest: langusage -->
+    <!-- todo: This will be rewritten has well -->
     <xsl:template match="langusage" name="langusage" mode="copy fonds intermediate lowest">
         <xsl:variable name="langusagetemp">
             <xsl:if test="normalize-space($langusage)">
                 <langusage>
                     <xsl:for-each select="tokenize(normalize-space($langusage), ';')">
-                        <xsl:if test="current()[normalize-space()] and exists($langfile//none:language[@code=normalize-space(current())])">
+                        <xsl:if
+                            test="current()[normalize-space()] and exists($langfile//none:language[@code=normalize-space(current())])">
                             <language encodinganalog="041">
                                 <xsl:attribute name="langcode">
-                                    <xsl:value-of select="$langfile//none:language[@code=normalize-space(current())]/none:langcode"/>
+                                    <xsl:value-of
+                                        select="$langfile//none:language[@code=normalize-space(current())]/none:langcode"
+                                    />
                                 </xsl:attribute>
                                 <xsl:attribute name="scriptcode">
-                                    <xsl:value-of select="$langfile//none:language[@code=normalize-space(current())]/none:scriptcode"/>
+                                    <xsl:value-of
+                                        select="$langfile//none:language[@code=normalize-space(current())]/none:scriptcode"
+                                    />
                                 </xsl:attribute>
-                                <xsl:value-of select="$langfile//none:language[@code=normalize-space(current())]/none:langname[@language='0x409']"/>
+                                <xsl:value-of
+                                    select="$langfile//none:language[@code=normalize-space(current())]/none:langname[@language='0x409']"
+                                />
                             </language>
                         </xsl:if>
                     </xsl:for-each>
@@ -643,7 +707,7 @@
 
     <xsl:template match="frontmatter" mode="copy">
         <xsl:if test="not($countrycode='FR')">
-            <xsl:call-template name="excludeElement" />
+            <xsl:call-template name="excludeElement"/>
         </xsl:if>
     </xsl:template>
 
@@ -663,7 +727,9 @@
     </xsl:template>
 
     <!-- All p/persname, p/geogname and p/date are just discarded, we take the data but not the elements -->
-    <xsl:template match="p/persname | p/geogname | p/corpname | p/title | p/date | p/name | p/subject" mode="#all">
+    <xsl:template
+        match="p/persname | p/geogname | p/corpname | p/title | p/date | p/name | p/subject"
+        mode="#all">
         <xsl:value-of select="normalize-space(.)"/>
     </xsl:template>
 
@@ -697,11 +763,14 @@
     </xsl:template>
 
 
-    <!-- Here begin something for NL--> <!--todo: Ok, this WILL need to be changed, here we pass other info that are not sent to the user but instead are just discarded-->
+    <!-- Here begin something for NL-->
+    <!--todo: Ok, this WILL need to be changed, here we pass other info that are not sent to the user but instead are just discarded-->
     <!-- descgrp -->
 
     <xsl:template match="archdesc/descgrp[not(@type='appendices')]" mode="copy">
-        <xsl:apply-templates select="bibliography | bioghist | custodhist | custodhist/acqinfo | accruals | appraisal | arrangement | originalsloc | processinfo | scopecontent | accessrestrict | userestrict | otherfindaid | prefercite | separatedmaterial | odd | controlaccess | phystech | relatedmaterial | index" mode="copy"/>
+        <xsl:apply-templates
+            select="bibliography | bioghist | custodhist | custodhist/acqinfo | accruals | appraisal | arrangement | originalsloc | processinfo | scopecontent | accessrestrict | userestrict | otherfindaid | prefercite | separatedmaterial | odd | controlaccess | phystech | relatedmaterial | index"
+            mode="copy"/>
     </xsl:template>
 
     <!-- descgrp/bioghist -->
@@ -738,9 +807,12 @@
     <xsl:template match="archdesc/descgrp/custodhist" mode="copy">
         <custodhist encodinganalog="3.2.3">
             <!-- "acqinfo" goes one level uo to the same level as "custodhist" -->
-            <xsl:apply-templates select="node()[not(name()='acqinfo' or name()='custodhist')]" mode="copy"/>
+            <xsl:apply-templates select="node()[not(name()='acqinfo' or name()='custodhist')]"
+                mode="copy"/>
             <xsl:apply-templates select="custodhist" mode="nested"/>
-            <xsl:if test="not(p)"><p/></xsl:if>
+            <xsl:if test="not(p)">
+                <p/>
+            </xsl:if>
         </custodhist>
     </xsl:template>
 
@@ -778,23 +850,25 @@
     </xsl:template>
 
     <!-- descgrp[@type='allied_materials'][altformavail] -->
-    <xsl:template match="archdesc/descgrp[@type='allied_materials'][altformavail]" priority="10" mode="copy">
+    <xsl:template match="archdesc/descgrp[@type='allied_materials'][altformavail]" priority="10"
+        mode="copy">
         <altformavail encodinganalog="3.5.2">
-            <xsl:apply-templates select="altformavail/node() except altformavail/altformavail" mode="copy"/>
+            <xsl:apply-templates select="altformavail/node() except altformavail/altformavail"
+                mode="copy"/>
             <xsl:apply-templates select="altformavail/altformavail/*" mode="nested"/>
         </altformavail>
     </xsl:template>
     <!--<xsl:template match="archdesc/descgrp[@type='allied_materials'][originalsloc]" priority="10" mode="copy">-->
-        <!--<originalsloc encodinganalog="3.5.1">-->
-            <!--<xsl:apply-templates select="originalsloc/node() except originalsloc/originalsloc" mode="copy"/>-->
-            <!--<xsl:apply-templates select="originalsloc/originalsloc/*" mode="nested"/>-->
-        <!--</originalsloc>-->
+    <!--<originalsloc encodinganalog="3.5.1">-->
+    <!--<xsl:apply-templates select="originalsloc/node() except originalsloc/originalsloc" mode="copy"/>-->
+    <!--<xsl:apply-templates select="originalsloc/originalsloc/*" mode="nested"/>-->
+    <!--</originalsloc>-->
     <!--</xsl:template>-->
     <!--<xsl:template match="archdesc/descgrp[@type='allied_materials'][separatedmaterial]" priority="10" mode="copy">-->
-        <!--<originalsloc encodinganalog="3.5.1">-->
-            <!--<xsl:apply-templates select="originalsloc/node() except originalsloc/originalsloc" mode="copy"/>-->
-            <!--<xsl:apply-templates select="originalsloc/originalsloc/*" mode="nested"/>-->
-        <!--</originalsloc>-->
+    <!--<originalsloc encodinganalog="3.5.1">-->
+    <!--<xsl:apply-templates select="originalsloc/node() except originalsloc/originalsloc" mode="copy"/>-->
+    <!--<xsl:apply-templates select="originalsloc/originalsloc/*" mode="nested"/>-->
+    <!--</originalsloc>-->
     <!--</xsl:template>-->
 
     <!-- descgrp/relatedmaterial -->
@@ -823,7 +897,9 @@
         <xsl:apply-templates select="fileplan | index | odd" mode="copy"/>
     </xsl:template>
 
-    <xsl:template match="archdesc/descgrp[@type='content_and_structure']/controlaccess[@audience='internal']" mode="copy"/>
+    <xsl:template
+        match="archdesc/descgrp[@type='content_and_structure']/controlaccess[@audience='internal']"
+        mode="copy"/>
 
     <xsl:template match="archdesc/descgrp[@type='access_and_use']/phystech">
         <xsl:apply-templates select="phystech" mode="copy"/>
@@ -846,7 +922,7 @@
             </xsl:for-each>
         </did>
         <xsl:if test="//eadid/@countrycode='fr' and /ead/frontmatter">
-            <xsl:call-template name="frontmatter2scopecontent" />
+            <xsl:call-template name="frontmatter2scopecontent"/>
         </xsl:if>
         <xsl:apply-templates select="abstract" mode="#current"/>
     </xsl:template>
@@ -942,7 +1018,9 @@
             </xsl:when>
             <xsl:when test="@countrycode and @repositorycode">
                 <unitid encodinganalog="3.1.1" type="call number">
-                    <xsl:value-of select="concat(concat(concat(concat(@countrycode,'/'),@repositorycode), '/'), .)"/>
+                    <xsl:value-of
+                        select="concat(concat(concat(concat(@countrycode,'/'),@repositorycode), '/'), .)"
+                    />
                 </unitid>
             </xsl:when>
             <xsl:otherwise>
@@ -968,7 +1046,7 @@
         <unitdate>
             <xsl:attribute name="calendar" select="'gregorian'"/>
             <xsl:attribute name="era" select="'ce'"/>
-            <xsl:call-template name="normalizeDate" />
+            <xsl:call-template name="normalizeDate"/>
             <xsl:attribute name="encodinganalog" select="'3.1.3'"/>
             <xsl:apply-templates select="node()"/>
         </unitdate>
@@ -980,17 +1058,17 @@
         <scopecontent encodinganalog="summary">
             <xsl:if test="@type and not(@encodinganalog)">
                 <head>
-                    <xsl:value-of select="@type" />
+                    <xsl:value-of select="@type"/>
                 </head>
             </xsl:if>
             <xsl:if test="@encodinganalog and not(@type)">
                 <head>
-                    <xsl:value-of select="@encodinganalog" />
+                    <xsl:value-of select="@encodinganalog"/>
                 </head>
             </xsl:if>
             <xsl:if test="@type and @encodinganalog">
                 <head>
-                    <xsl:value-of select="@type" />, <xsl:value-of select="@encodinganalog" />
+                    <xsl:value-of select="@type"/>, <xsl:value-of select="@encodinganalog"/>
                 </head>
             </xsl:if>
             <p>
@@ -999,7 +1077,8 @@
         </scopecontent>
     </xsl:template>
 
-    <!-- copy fonds intermediate lowest: did/origination --> <!-- todo: We only accept @encoding=('pre'|'final'|'organisational unit') -->
+    <!-- copy fonds intermediate lowest: did/origination -->
+    <!-- todo: We only accept @encoding=('pre'|'final'|'organisational unit') -->
     <xsl:template match="did/origination" mode="copy fonds intermediate lowest">
         <origination>
             <xsl:attribute name="encodinganalog" select="'3.2.1'"/>
@@ -1018,7 +1097,9 @@
     </xsl:template>
 
     <!-- copy fonds intermediate lowest did/origination/name | did/origination/persname | did/origination/corpname | did/origination/famname -->
-    <xsl:template match="did/origination/name | did/origination/persname | did/origination/corpname | did/origination/famname" mode="copy fonds intermediate lowest">
+    <xsl:template
+        match="did/origination/name | did/origination/persname | did/origination/corpname | did/origination/famname"
+        mode="copy fonds intermediate lowest">
         <xsl:element name="{local-name()}" namespace="urn:isbn:1-931666-22-9">
             <xsl:if test="@authfilenumber">
                 <xsl:attribute name="authfilenumber" select="@authfilenumber"/>
@@ -1034,40 +1115,53 @@
         </langmaterial>
     </xsl:template>
 
-    <!-- copy fonds intermediate lowest: langmaterial --> <!--todo: This also will be modified to be nicer-->
+    <!-- copy fonds intermediate lowest: langmaterial -->
+    <!--todo: This also will be modified to be nicer-->
     <xsl:template match="langmaterial/language" mode="copy fonds intermediate lowest">
         <xsl:variable name="langmaterialtemp">
             <xsl:choose>
                 <xsl:when test="normalize-space($langmaterial)">
                     <xsl:for-each select="tokenize(normalize-space($langmaterial), ';')">
-                        <xsl:if test="current()[normalize-space()] and exists($langfile//none:language[@code=normalize-space(current())])">
+                        <xsl:if
+                            test="current()[normalize-space()] and exists($langfile//none:language[@code=normalize-space(current())])">
                             <language>
                                 <xsl:attribute name="langcode">
-                                    <xsl:value-of select="$langfile//none:language[@code=normalize-space(current())]/none:langcode"/>
+                                    <xsl:value-of
+                                        select="$langfile//none:language[@code=normalize-space(current())]/none:langcode"
+                                    />
                                 </xsl:attribute>
                                 <xsl:attribute name="scriptcode">
-                                    <xsl:value-of select="$langfile//none:language[@code=normalize-space(current())]/none:scriptcode"/>
+                                    <xsl:value-of
+                                        select="$langfile//none:language[@code=normalize-space(current())]/none:scriptcode"
+                                    />
                                 </xsl:attribute>
-                                <xsl:value-of select="$langfile//none:language[@code=normalize-space(current())]/none:langname[@language='0x409']"/>
+                                <xsl:value-of
+                                    select="$langfile//none:language[@code=normalize-space(current())]/none:langname[@language='0x409']"
+                                />
                             </language>
                         </xsl:if>
                     </xsl:for-each>
                 </xsl:when>
                 <xsl:otherwise>
                     <xsl:choose>
-                        <xsl:when test="exists($langfile//none:language[@code=normalize-space(current()/@langcode)])">
+                        <xsl:when
+                            test="exists($langfile//none:language[@code=normalize-space(current()/@langcode)])">
                             <language>
                                 <xsl:attribute name="langcode">
-                                    <xsl:value-of select="$langfile//none:language[@code=normalize-space(current()/@langcode)]/none:langcode"/>
+                                    <xsl:value-of
+                                        select="$langfile//none:language[@code=normalize-space(current()/@langcode)]/none:langcode"
+                                    />
                                 </xsl:attribute>
                                 <xsl:attribute name="scriptcode">
-                                    <xsl:value-of select="$langfile//none:language[@code=normalize-space(current()/@langcode)]/none:scriptcode"/>
+                                    <xsl:value-of
+                                        select="$langfile//none:language[@code=normalize-space(current()/@langcode)]/none:scriptcode"
+                                    />
                                 </xsl:attribute>
-                                <xsl:apply-templates select="node()" mode="#current" />
+                                <xsl:apply-templates select="node()" mode="#current"/>
                             </language>
                         </xsl:when>
                         <xsl:otherwise>
-                            <xsl:apply-templates select="node()" mode="#current" />
+                            <xsl:apply-templates select="node()" mode="#current"/>
                         </xsl:otherwise>
                     </xsl:choose>
                 </xsl:otherwise>
@@ -1078,7 +1172,7 @@
                 <xsl:copy-of select="$langmaterialtemp"/>
             </xsl:when>
             <xsl:otherwise>
-                <xsl:apply-templates select="node()" mode="#current" />
+                <xsl:apply-templates select="node()" mode="#current"/>
             </xsl:otherwise>
         </xsl:choose>
     </xsl:template>
@@ -1117,7 +1211,7 @@
         <!--</xsl:when>-->
         <!--<xsl:otherwise>-->
         <repository>
-            <xsl:apply-templates select="node()" mode="#current" />
+            <xsl:apply-templates select="node()" mode="#current"/>
         </repository>
         <!--</xsl:otherwise>-->
         <!--</xsl:choose>-->
@@ -1126,18 +1220,20 @@
     <!-- fonds intermediate lowest: repository/address -->
     <xsl:template match="repository/address" mode="copy fonds intermediate lowest">
         <address>
-            <xsl:apply-templates select="node()" mode="#current" />
+            <xsl:apply-templates select="node()" mode="#current"/>
         </address>
     </xsl:template>
 
     <!-- fonds intermediate lowest: repository/address/addressline -->
     <xsl:template match="repository/address/addressline" mode="copy fonds intermediate lowest">
         <addressline>
-            <xsl:apply-templates select="node()" mode="#current" />
+            <xsl:apply-templates select="node()" mode="#current"/>
             <xsl:if test="../../extref/corpname">
                 <xsl:value-of select="../../extref/corpname"/>
                 <xsl:if test="../../extref/@href">
-                    <xsl:text> (</xsl:text><xsl:value-of select="ape:checkLink(extref/@href)"/><xsl:text>)</xsl:text>
+                    <xsl:text> (</xsl:text>
+                    <xsl:value-of select="ape:checkLink(extref/@href)"/>
+                    <xsl:text>)</xsl:text>
                 </xsl:if>
             </xsl:if>
         </addressline>
@@ -1168,7 +1264,7 @@
     <xsl:template match="physloc" mode="copy fonds intermediate lowest">
         <physloc>
             <xsl:if test="@label!=''">
-                <xsl:attribute name="label" select="@label" />
+                <xsl:attribute name="label" select="@label"/>
             </xsl:if>
             <xsl:value-of select="normalize-space(.)"/>
         </physloc>
@@ -1204,7 +1300,7 @@
     <xsl:template match="physdesc/physfacet" mode="copy fonds intermediate lowest">
         <physfacet>
             <xsl:if test="@type='condition' or @type='damage'">
-                <xsl:attribute name="type" select="@type" />
+                <xsl:attribute name="type" select="@type"/>
             </xsl:if>
             <xsl:apply-templates select="node()" mode="#current"/>
         </physfacet>
@@ -1236,7 +1332,7 @@
             </xsl:if>
             <xsl:apply-templates select="node() except dimensions" mode="#current"/>
             <xsl:for-each select="dimensions">
-                <xsl:apply-templates select="node()" mode="#current" />
+                <xsl:apply-templates select="node()" mode="#current"/>
             </xsl:for-each>
         </dimensions>
     </xsl:template>
@@ -1277,7 +1373,8 @@
     </xsl:template>
 
     <!-- relatedmaterial/archref -->
-    <xsl:template match="relatedmaterial/archref | relatedmaterial/ref" mode="copy fonds intermediate lowest nested">
+    <xsl:template match="relatedmaterial/archref | relatedmaterial/ref"
+        mode="copy fonds intermediate lowest nested">
         <p>
             <xsl:for-each select="./title">
                 <xsl:apply-templates mode="#current"/>
@@ -1292,25 +1389,31 @@
                 <xsl:if test="@*:title!=''">
                     <xsl:attribute name="xlink:title" select="@*:title"/>
                 </xsl:if>
-                <xsl:apply-templates select="node()" mode="#current" />
+                <xsl:apply-templates select="node()" mode="#current"/>
             </extref>
         </p>
     </xsl:template>
 
     <xsl:template match="relatedmaterial/archref/title" mode="copy fonds intermediate lowest nested"/>
-    <xsl:template match="relatedmaterial/archref/unitid" mode="copy fonds intermediate lowest nested">
-        <xsl:text>, </xsl:text><xsl:apply-templates mode="#current"/>
-    </xsl:template>
-    <xsl:template match="relatedmaterial/archref/unittitle" mode="copy fonds intermediate lowest nested">
+    <xsl:template match="relatedmaterial/archref/unitid"
+        mode="copy fonds intermediate lowest nested">
+        <xsl:text>, </xsl:text>
         <xsl:apply-templates mode="#current"/>
     </xsl:template>
-    <xsl:template match="relatedmaterial/archref/unittitle/ref" mode="copy fonds intermediate lowest nested">
+    <xsl:template match="relatedmaterial/archref/unittitle"
+        mode="copy fonds intermediate lowest nested">
         <xsl:apply-templates mode="#current"/>
     </xsl:template>
-    <xsl:template match="relatedmaterial/archref/repository" mode="copy fonds intermediate lowest nested">
+    <xsl:template match="relatedmaterial/archref/unittitle/ref"
+        mode="copy fonds intermediate lowest nested">
         <xsl:apply-templates mode="#current"/>
     </xsl:template>
-    <xsl:template match="relatedmaterial/archref/repository/extref" mode="copy fonds intermediate lowest nested">
+    <xsl:template match="relatedmaterial/archref/repository"
+        mode="copy fonds intermediate lowest nested">
+        <xsl:apply-templates mode="#current"/>
+    </xsl:template>
+    <xsl:template match="relatedmaterial/archref/repository/extref"
+        mode="copy fonds intermediate lowest nested">
         <xsl:apply-templates mode="#current"/>
     </xsl:template>
     <xsl:template match="relatedmaterial/p/repository" mode="copy fonds intermediate lowest nested">
@@ -1322,7 +1425,7 @@
         <altformavail encodinganalog="3.5.2">
             <xsl:if test="text()">
                 <p>
-                    <xsl:value-of select="text()" />
+                    <xsl:value-of select="text()"/>
                 </p>
             </xsl:if>
             <xsl:apply-templates select="node() except altformavail, text()" mode="#current"/>
@@ -1338,7 +1441,8 @@
         </separatedmaterial>
     </xsl:template>
 
-    <!-- otherfindaid --> <!--otherfindaid/bibref is below with bibliography-->
+    <!-- otherfindaid -->
+    <!--otherfindaid/bibref is below with bibliography-->
     <xsl:template match="otherfindaid" mode="copy fonds intermediate lowest">
         <otherfindaid encodinganalog="3.4.5">
             <xsl:apply-templates select="node() except otherfindaid" mode="#current"/>
@@ -1349,7 +1453,9 @@
                         <xsl:attribute name="xlink:href">
                             <xsl:choose>
                                 <xsl:when test="contains(archref/@href, '.xml')">
-                                    <xsl:value-of select="substring-before(tokenize(archref/@href, '/')[last()], '.xml')"/>
+                                    <xsl:value-of
+                                        select="substring-before(tokenize(archref/@href, '/')[last()], '.xml')"
+                                    />
                                 </xsl:when>
                                 <xsl:otherwise>
                                     <xsl:value-of select="tokenize(archref/@href, '/')[last()]"/>
@@ -1425,7 +1531,8 @@
 
     <!--Elements in archdesc, c@fonds, c@intermediate and c@lowest-->
     <!-- processinfo -->
-    <xsl:template match="processinfo[not(ancestor::processinfo)]" mode="copy fonds intermediate lowest">
+    <xsl:template match="processinfo[not(ancestor::processinfo)]"
+        mode="copy fonds intermediate lowest">
         <xsl:if test="count(child::*) != 0 or normalize-space(text()) != ''">
             <processinfo encodinganalog="3.7.1">
                 <xsl:apply-templates select="node() except processinfo" mode="#current"/>
@@ -1434,7 +1541,7 @@
         </xsl:if>
     </xsl:template>
 
-    <xsl:template match="processinfo[ancestor::processinfo]" mode="copy fonds intermediate lowest" />
+    <xsl:template match="processinfo[ancestor::processinfo]" mode="copy fonds intermediate lowest"/>
 
     <xsl:template match="processinfo[ancestor::processinfo]" mode="nested">
         <xsl:apply-templates select="node()" mode="#current"/>
@@ -1504,7 +1611,8 @@
     </xsl:template>
 
     <!-- accessrestrict -->
-    <xsl:template match="accessrestrict[not(ancestor::accessrestrict)]" mode="copy fonds intermediate lowest">
+    <xsl:template match="accessrestrict[not(ancestor::accessrestrict)]"
+        mode="copy fonds intermediate lowest">
         <accessrestrict encodinganalog="3.4.1">
             <xsl:apply-templates select="node() except accessrestrict" mode="#current"/>
             <xsl:apply-templates select="accessrestrict/*" mode="nested"/>
@@ -1522,54 +1630,67 @@
 
     <!--HEAD-->
     <!-- #all -->
-    <xsl:template match="processinfo/head | relatedmaterial/head | bioghist/head | appraisal/head | accruals/head | odd/head | otherfindaid/head | accessrestrict[not(ancestor::accessrestrict)]/head | userestrict/head | altformavail/head | custodhist/head" mode="copy fonds intermediate lowest">
+    <xsl:template
+        match="processinfo/head | relatedmaterial/head | bioghist/head | appraisal/head | accruals/head | odd/head | otherfindaid/head | accessrestrict[not(ancestor::accessrestrict)]/head | userestrict/head | altformavail/head | custodhist/head"
+        mode="copy fonds intermediate lowest">
         <xsl:choose>
             <xsl:when test="not(preceding-sibling::*/head)">
                 <head>
-                    <xsl:value-of select="text()" />
+                    <xsl:value-of select="text()"/>
                 </head>
             </xsl:when>
             <xsl:otherwise>
                 <p>
                     <emph render="bold">
-                        <xsl:value-of select="text()" />
+                        <xsl:value-of select="text()"/>
                     </emph>
                 </p>
             </xsl:otherwise>
         </xsl:choose>
     </xsl:template>
     <!-- archdesc and c@fonds -->
-    <xsl:template match="acqinfo/head | separatedmaterial/head | prefercite/head | arrangement/head | originalsloc/head | fileplan/head" mode="copy fonds">
+    <xsl:template
+        match="acqinfo/head | separatedmaterial/head | prefercite/head | arrangement/head | originalsloc/head | fileplan/head"
+        mode="copy fonds">
         <head>
-            <xsl:value-of select="text()" />
+            <xsl:value-of select="text()"/>
         </head>
     </xsl:template>
     <!-- #all NESTED mode-->
-    <xsl:template match="processinfo/head | bioghist/head | appraisal/head | accruals/head | odd/head | accessrestrict/head | userestrict/head | custodhist/head" mode="nested">
+    <xsl:template
+        match="processinfo/head | bioghist/head | appraisal/head | accruals/head | odd/head | accessrestrict/head | userestrict/head | custodhist/head"
+        mode="nested">
         <p>
             <emph render="bold">
-                <xsl:value-of select="text()" />
+                <xsl:value-of select="text()"/>
             </emph>
         </p>
     </xsl:template>
     <!-- archdesc and c@fonds NESTED mode-->
-    <xsl:template match="acqinfo/head | relatedmaterial/head | altformavail/head | separatedmaterial/head | otherfindaid/head | prefercite/head | arrangement/head | originalsloc/head | fileplan/head" mode="nested">
+    <xsl:template
+        match="acqinfo/head | relatedmaterial/head | altformavail/head | separatedmaterial/head | otherfindaid/head | prefercite/head | arrangement/head | originalsloc/head | fileplan/head"
+        mode="nested">
         <p>
             <emph render="bold">
-                <xsl:value-of select="text()" />
+                <xsl:value-of select="text()"/>
             </emph>
         </p>
     </xsl:template>
 
     <!--P-->
     <!-- #all -->
-    <xsl:template match="processinfo/p | relatedmaterial/p | bioghist/p | appraisal/p | accruals/p | odd/p | accessrestrict/p | accessrestrict/legalstatus | userestrict/p | altformavail/p | otherfindaid/p | custodhist/p" mode="copy fonds intermediate lowest nested">
-        <xsl:if test="(count(child::node()[not(name()='list' or name()='chronlist' or name()='table')]) &gt; 0) or (not(following-sibling::p) and not(preceding-sibling::list) and not(following-sibling::list) and not(preceding-sibling::chronlist) and not(following-sibling::chronlist) and not(preceding-sibling::table) and not(following-sibling::table))">
+    <xsl:template
+        match="processinfo/p | relatedmaterial/p | bioghist/p | appraisal/p | accruals/p | odd/p | accessrestrict/p | accessrestrict/legalstatus | userestrict/p | altformavail/p | otherfindaid/p | custodhist/p"
+        mode="copy fonds intermediate lowest nested">
+        <xsl:if
+            test="(count(child::node()[not(name()='list' or name()='chronlist' or name()='table')]) &gt; 0) or (not(following-sibling::p) and not(preceding-sibling::list) and not(following-sibling::list) and not(preceding-sibling::chronlist) and not(following-sibling::chronlist) and not(preceding-sibling::table) and not(following-sibling::table))">
             <p>
-                <xsl:apply-templates select="node()[not(name()='list' or name()='chronlist' or name()='table')]" mode="#current"/>
+                <xsl:apply-templates
+                    select="node()[not(name()='list' or name()='chronlist' or name()='table')]"
+                    mode="#current"/>
             </p>
         </xsl:if>
-        <xsl:apply-templates select="list | chronlist | table" mode="#current" />
+        <xsl:apply-templates select="list | chronlist | table" mode="#current"/>
     </xsl:template>
 
     <!-- copy: legalstatus/date -->
@@ -1578,10 +1699,16 @@
     </xsl:template>
 
     <!--archdesc and c@fonds-->
-    <xsl:template match="acqinfo/p | separatedmaterial/p | prefercite/p | arrangement/p | originalsloc/p | fileplan/p" mode="copy fonds nested">
-        <xsl:if test="(count(child::node()[not(name()='list' or name()='chronlist' or name()='table')]) &gt; 0) or (not(following-sibling::p) and not(preceding-sibling::list) and not(following-sibling::list) and not(preceding-sibling::chronlist) and not(following-sibling::chronlist) and not(preceding-sibling::table) and not(following-sibling::table))">
-            <p>                                                                                                    <!--not(preceding-sibling::p) and -->
-                <xsl:apply-templates select="node()[not(name()='list' or name()='chronlist' or name()='table')]" mode="#current"/>
+    <xsl:template
+        match="acqinfo/p | separatedmaterial/p | prefercite/p | arrangement/p | originalsloc/p | fileplan/p"
+        mode="copy fonds nested">
+        <xsl:if
+            test="(count(child::node()[not(name()='list' or name()='chronlist' or name()='table')]) &gt; 0) or (not(following-sibling::p) and not(preceding-sibling::list) and not(following-sibling::list) and not(preceding-sibling::chronlist) and not(following-sibling::chronlist) and not(preceding-sibling::table) and not(following-sibling::table))">
+            <p>
+                <!--not(preceding-sibling::p) and -->
+                <xsl:apply-templates
+                    select="node()[not(name()='list' or name()='chronlist' or name()='table')]"
+                    mode="#current"/>
             </p>
         </xsl:if>
         <xsl:apply-templates select="list | chronlist | table" mode="#current"/>
@@ -1590,17 +1717,21 @@
     <xsl:template match="otherfindaid/p/ref" mode="fonds intermediate lowest">
         <xsl:apply-templates mode="#current"/>
     </xsl:template>
-    <xsl:template match="otherfindaid/p/ref/archref/note | otherfindaid/p/ref/note" mode="fonds intermediate lowest">
+    <xsl:template match="otherfindaid/p/ref/archref/note | otherfindaid/p/ref/note"
+        mode="fonds intermediate lowest">
         <xsl:apply-templates mode="#current"/>
     </xsl:template>
-    <xsl:template match="otherfindaid/p/ref/archref/note/p | otherfindaid/p/ref/note/p" mode="fonds intermediate lowest" priority="1">
+    <xsl:template match="otherfindaid/p/ref/archref/note/p | otherfindaid/p/ref/note/p"
+        mode="fonds intermediate lowest" priority="1">
         <xsl:apply-templates mode="#current"/>
     </xsl:template>
-    <xsl:template match="otherfindaid/p/ref/archref/note/p/emph | otherfindaid/p/ref/note/p/emph" mode="fonds intermediate lowest" priority="1">
+    <xsl:template match="otherfindaid/p/ref/archref/note/p/emph | otherfindaid/p/ref/note/p/emph"
+        mode="fonds intermediate lowest" priority="1">
         <xsl:apply-templates mode="#current"/>
     </xsl:template>
 
-    <xsl:template match="otherfindaid/p/archref | otherfindaid/p/ref/archref" mode="fonds intermediate lowest">
+    <xsl:template match="otherfindaid/p/archref | otherfindaid/p/ref/archref"
+        mode="fonds intermediate lowest">
         <extref>
             <xsl:if test="@*:href">
                 <xsl:attribute name="xlink:href" select="ape:checkLink(@*:href)"/>
@@ -1620,7 +1751,9 @@
 
     <!--LIST-->
     <!-- #all -->
-    <xsl:template match="processinfo/list | relatedmaterial/list | relatedmaterial/p/list | bioghist/list | bioghist/p/list | appraisal/list | accruals/list | odd/list | odd/p/list | accessrestrict[not(ancestor::accessrestrict)]/list | userestrict/list | altformavail/list | otherfindaid/list | custodhist/list | bibliography/list" mode="copy fonds intermediate lowest nested" name="p_list">
+    <xsl:template
+        match="processinfo/list | relatedmaterial/list | relatedmaterial/p/list | bioghist/list | bioghist/p/list | appraisal/list | accruals/list | odd/list | odd/p/list | accessrestrict[not(ancestor::accessrestrict)]/list | userestrict/list | altformavail/list | otherfindaid/list | custodhist/list | bibliography/list"
+        mode="copy fonds intermediate lowest nested" name="p_list">
         <xsl:choose>
             <xsl:when test="@type='deflist' or (not(@type) and ./child::*[name()='defitem'])">
                 <table>
@@ -1649,7 +1782,9 @@
         </xsl:choose>
     </xsl:template>
     <!-- archdesc and c@fonds -->
-    <xsl:template match="acqinfo/list | acqinfo/p/list | separatedmaterial/list | prefercite/list | arrangement/list | arrangement/p/list | originalsloc/list | fileplan/list" mode="copy fonds nested">
+    <xsl:template
+        match="acqinfo/list | acqinfo/p/list | separatedmaterial/list | prefercite/list | arrangement/list | arrangement/p/list | originalsloc/list | fileplan/list"
+        mode="copy fonds nested">
         <xsl:choose>
             <xsl:when test="@type='deflist' or (not(@type) and ./child::*[name()='defitem'])">
                 <table>
@@ -1672,13 +1807,17 @@
 
     <!--HEAD-->
     <!-- #all -->
-    <xsl:template match="processinfo/list/head | relatedmaterial/list/head | relatedmaterial/p/list/head | bioghist/list/head | bioghist/p/list/head | appraisal/list/head | accruals/list/head | odd/list/head | odd/p/list/head | accessrestrict[not(ancestor::accessrestrict)]/list/head | userestrict/list/head | altformavail/list/head | otherfindaid/list/head | custodhist/list/head | bibliography/list/head" mode="copy fonds intermediate lowest nested">
+    <xsl:template
+        match="processinfo/list/head | relatedmaterial/list/head | relatedmaterial/p/list/head | bioghist/list/head | bioghist/p/list/head | appraisal/list/head | accruals/list/head | odd/list/head | odd/p/list/head | accessrestrict[not(ancestor::accessrestrict)]/list/head | userestrict/list/head | altformavail/list/head | otherfindaid/list/head | custodhist/list/head | bibliography/list/head"
+        mode="copy fonds intermediate lowest nested">
         <head>
             <xsl:apply-templates select="node()" mode="#current"/>
         </head>
     </xsl:template>
     <!-- archdesc and c@fonds -->
-    <xsl:template match="acqinfo/list/head | acqinfo/p/list/head | separatedmaterial/list/head | prefercite/list/head | arrangement/list/head | arrangement/p/list/head | originalsloc/list/head | fileplan/list/head" mode="copy fonds nested">
+    <xsl:template
+        match="acqinfo/list/head | acqinfo/p/list/head | separatedmaterial/list/head | prefercite/list/head | arrangement/list/head | arrangement/p/list/head | originalsloc/list/head | fileplan/list/head"
+        mode="copy fonds nested">
         <head>
             <xsl:apply-templates select="node()" mode="#current"/>
         </head>
@@ -1686,33 +1825,42 @@
 
     <!--ITEM-->
     <!-- #all -->
-    <xsl:template match="processinfo/list/item | relatedmaterial/list/item | relatedmaterial/p/list/item | bioghist/list/item | bioghist/p/list/item | odd/p/list/item | appraisal/list/item | accruals/list/item | odd/list/item | accessrestrict[not(ancestor::accessrestrict)]/list/item | userestrict/list/item | altformavail/list/item | otherfindaid/list/item | custodhist/list/item | bibliography/list/item" mode="copy fonds intermediate lowest nested">
+    <xsl:template
+        match="processinfo/list/item | relatedmaterial/list/item | relatedmaterial/p/list/item | bioghist/list/item | bioghist/p/list/item | odd/p/list/item | appraisal/list/item | accruals/list/item | odd/list/item | accessrestrict[not(ancestor::accessrestrict)]/list/item | userestrict/list/item | altformavail/list/item | otherfindaid/list/item | custodhist/list/item | bibliography/list/item"
+        mode="copy fonds intermediate lowest nested">
         <item>
-            <xsl:value-of select="node()" />
+            <xsl:value-of select="node()"/>
             <xsl:apply-templates select="extref" mode="#current"/>
         </item>
     </xsl:template>
     <!-- archdesc and c@fonds -->
-    <xsl:template match="acqinfo/list/item | acqinfo/p/list/item | separatedmaterial/list/item | prefercite/list/item | arrangement/list/item | arrangement/p/list/item | originalsloc/list/item | fileplan/list/item" mode="copy fonds nested">
+    <xsl:template
+        match="acqinfo/list/item | acqinfo/p/list/item | separatedmaterial/list/item | prefercite/list/item | arrangement/list/item | arrangement/p/list/item | originalsloc/list/item | fileplan/list/item"
+        mode="copy fonds nested">
         <item>
-            <xsl:value-of select="node()" />
+            <xsl:value-of select="node()"/>
             <xsl:apply-templates select="extref" mode="#current"/>
         </item>
     </xsl:template>
 
     <!--ITEM//*-->
     <!-- #all -->
-    <xsl:template match="processinfo/list/item//* | relatedmaterial/list/item//* | relatedmaterial/p/list/item//* | bioghist/list/item//* | appraisal/list/item//* | accruals/list/item//* | odd/list/item//* | odd/p/list/item//*[not(local-name='extref')] | accessrestrict[not(ancestor::accessrestrict)]/list/item//* | userestrict/list/item//* | altformavail/list/item//* | otherfindaid/list/item//* | custodhist/list/item//* | bibliography/list/item//*" mode="copy fonds intermediate lowest nested">
-        <xsl:value-of select="text()" />
+    <xsl:template
+        match="processinfo/list/item//* | relatedmaterial/list/item//* | relatedmaterial/p/list/item//* | bioghist/list/item//* | appraisal/list/item//* | accruals/list/item//* | odd/list/item//* | odd/p/list/item//*[not(local-name='extref')] | accessrestrict[not(ancestor::accessrestrict)]/list/item//* | userestrict/list/item//* | altformavail/list/item//* | otherfindaid/list/item//* | custodhist/list/item//* | bibliography/list/item//*"
+        mode="copy fonds intermediate lowest nested">
+        <xsl:value-of select="text()"/>
     </xsl:template>
 
     <!-- archdesc and c@fonds -->
-    <xsl:template match="acqinfo/list/item//* | acqinfo/p/list/item//* | separatedmaterial/list/item//* | prefercite/list/item//* | arrangement/list/item//* | arrangement/p/list/item//* | originalsloc/list/item//* | fileplan/list/item//*" mode="copy fonds nested">
-        <xsl:value-of select="text()" />
+    <xsl:template
+        match="acqinfo/list/item//* | acqinfo/p/list/item//* | separatedmaterial/list/item//* | prefercite/list/item//* | arrangement/list/item//* | arrangement/p/list/item//* | originalsloc/list/item//* | fileplan/list/item//*"
+        mode="copy fonds nested">
+        <xsl:value-of select="text()"/>
     </xsl:template>
 
     <!-- ITEM/extref (gets higher priority due to avoiding ambiguous matching) -->
-    <xsl:template match="extref[parent::item]" mode="copy fonds intermediate lowest nested" priority="5">
+    <xsl:template match="extref[parent::item]" mode="copy fonds intermediate lowest nested"
+        priority="5">
         <extref>
             <xsl:if test="@href">
                 <xsl:attribute name="xlink:href" select="ape:checkLink(@href)"/>
@@ -1729,17 +1877,24 @@
         </extref>
     </xsl:template>
 
-    <xsl:template match="processinfo/p/note | separatedmaterial/p/note | bioghist/p/note | arrangement/p/note | acqinfo/p/note | accruals/p/note | custodhist/p/note" mode="copy fonds intermediate lowest nested">
-        <xsl:text> (</xsl:text><xsl:apply-templates select="p/text()" mode="#current"/><xsl:text>) </xsl:text>
+    <xsl:template
+        match="processinfo/p/note | separatedmaterial/p/note | bioghist/p/note | arrangement/p/note | acqinfo/p/note | accruals/p/note | custodhist/p/note"
+        mode="copy fonds intermediate lowest nested">
+        <xsl:text> (</xsl:text>
+        <xsl:apply-templates select="p/text()" mode="#current"/>
+        <xsl:text>) </xsl:text>
     </xsl:template>
 
     <xsl:template match="bioghist/note" mode="copy fonds intermediate lowest nested">
         <p>
-            <xsl:text> (</xsl:text><xsl:apply-templates select="p/text()" mode="#current"/><xsl:text>) </xsl:text>
+            <xsl:text> (</xsl:text>
+            <xsl:apply-templates select="p/text()" mode="#current"/>
+            <xsl:text>) </xsl:text>
         </p>
     </xsl:template>
 
-    <xsl:template match="userestrict/note | accessrestrict/note" mode="copy fonds intermediate lowest nested">
+    <xsl:template match="userestrict/note | accessrestrict/note"
+        mode="copy fonds intermediate lowest nested">
         <xsl:apply-templates mode="#current"/>
     </xsl:template>
 
@@ -1747,39 +1902,44 @@
         <xsl:apply-templates mode="#current"/>
     </xsl:template>
 
-    <xsl:template match="userestrict/address/addressline" mode="copy fonds intermediate lowest nested">
-        <p><xsl:apply-templates mode="#current"/></p>
+    <xsl:template match="userestrict/address/addressline"
+        mode="copy fonds intermediate lowest nested">
+        <p>
+            <xsl:apply-templates mode="#current"/>
+        </p>
     </xsl:template>
 
     <!--CHRONLIST-->
     <xsl:template match="chronlist" mode="copy fonds intermediate lowest nested">
         <list type="marked">
-            <xsl:apply-templates mode="#current" />
+            <xsl:apply-templates mode="#current"/>
         </list>
     </xsl:template>
     <!--CHRONLIST/HEAD-->
     <xsl:template match="chronlist/head" mode="copy fonds intermediate lowest nested">
         <head>
-            <xsl:apply-templates mode="#current" />
+            <xsl:apply-templates mode="#current"/>
         </head>
     </xsl:template>
     <!--CHRONLIST/CHRONITEM-->
     <xsl:template match="chronlist/chronitem" mode="copy fonds intermediate lowest nested">
         <item>
-            <xsl:value-of select="./event" /><xsl:text>, </xsl:text><xsl:value-of select="./date" />
+            <xsl:value-of select="./event"/>
+            <xsl:text>, </xsl:text>
+            <xsl:value-of select="./date"/>
         </item>
     </xsl:template>
 
     <!--table-->
     <xsl:template match="table" name="table_all" mode="copy fonds intermediate lowest nested">
         <table>
-            <xsl:apply-templates select="node()" mode="#current" />
+            <xsl:apply-templates select="node()" mode="#current"/>
         </table>
     </xsl:template>
     <!--table/head-->
     <xsl:template match="table/head" mode="copy fonds intermediate lowest nested">
         <head>
-            <xsl:apply-templates select="node()" mode="#current" />
+            <xsl:apply-templates select="node()" mode="#current"/>
         </head>
     </xsl:template>
     <!--table/tgroup-->
@@ -1790,59 +1950,64 @@
                     <xsl:attribute name="cols" select="@cols"/>
                 </xsl:when>
                 <xsl:otherwise>
-                    <xsl:attribute name="cols" select="count(./child::tbody[position()=1]/child::row[position()=1]/entry)"/>
+                    <xsl:attribute name="cols"
+                        select="count(./child::tbody[position()=1]/child::row[position()=1]/entry)"
+                    />
                 </xsl:otherwise>
             </xsl:choose>
-            <xsl:apply-templates select="node()" mode="#current" />
+            <xsl:apply-templates select="node()" mode="#current"/>
         </tgroup>
     </xsl:template>
     <!--table/tgroup/thead-->
     <xsl:template match="table/tgroup/thead" mode="copy fonds intermediate lowest nested">
         <thead>
-            <xsl:apply-templates select="node()" mode="#current" />
+            <xsl:apply-templates select="node()" mode="#current"/>
         </thead>
     </xsl:template>
     <!--table/tgroup/thead/row-->
     <xsl:template match="table/tgroup/thead/row" mode="copy fonds intermediate lowest nested">
         <row>
-            <xsl:apply-templates select="node()" mode="#current" />
+            <xsl:apply-templates select="node()" mode="#current"/>
         </row>
     </xsl:template>
     <!--table/tgroup/thead/row/entry-->
     <xsl:template match="table/tgroup/thead/row/entry" mode="copy fonds intermediate lowest nested">
         <entry>
-            <xsl:apply-templates select="node()" mode="#current" />
+            <xsl:apply-templates select="node()" mode="#current"/>
         </entry>
     </xsl:template>
     <!--table/tgroup/tbody-->
     <xsl:template match="table/tgroup/tbody" mode="copy fonds intermediate lowest nested">
         <tbody>
-            <xsl:apply-templates select="node()" mode="#current" />
+            <xsl:apply-templates select="node()" mode="#current"/>
         </tbody>
     </xsl:template>
     <!--table/tgroup/tbody/row-->
     <xsl:template match="table/tgroup/tbody/row" mode="copy fonds intermediate lowest nested">
         <row>
-            <xsl:apply-templates select="node()" mode="#current" />
+            <xsl:apply-templates select="node()" mode="#current"/>
         </row>
     </xsl:template>
     <!--table/tgroup/tbody/row/entry-->
     <xsl:template match="table/tgroup/tbody/row/entry" mode="copy fonds intermediate lowest nested">
         <entry>
-            <xsl:apply-templates select="node()" mode="#current" />
+            <xsl:apply-templates select="node()" mode="#current"/>
         </entry>
     </xsl:template>
     <!--table/tgroup/tbody/row/entry-->
-    <xsl:template match="table/tgroup/tbody/row/entry/geogname" mode="copy fonds intermediate lowest nested">
-        <xsl:apply-templates select="node()" mode="#current" />
+    <xsl:template match="table/tgroup/tbody/row/entry/geogname"
+        mode="copy fonds intermediate lowest nested">
+        <xsl:apply-templates select="node()" mode="#current"/>
     </xsl:template>
 
-    <xsl:template match="table/tgroup/tbody/row/entry/unittitle" mode="copy fonds intermediate lowest nested">
-        <xsl:apply-templates select="node()" mode="#current" />
+    <xsl:template match="table/tgroup/tbody/row/entry/unittitle"
+        mode="copy fonds intermediate lowest nested">
+        <xsl:apply-templates select="node()" mode="#current"/>
     </xsl:template>
 
-    <xsl:template match="table/tgroup/tbody/row/entry/emph" mode="copy fonds intermediate lowest nested">
-        <xsl:apply-templates select="node()" mode="#current" />
+    <xsl:template match="table/tgroup/tbody/row/entry/emph"
+        mode="copy fonds intermediate lowest nested">
+        <xsl:apply-templates select="node()" mode="#current"/>
     </xsl:template>
     <!--End of big chunk-->
 
@@ -1860,15 +2025,18 @@
     </xsl:template>
 
     <!-- copy fonds intermediate: scopecontent[not(@*)] -->
-    <xsl:template match="scopecontent[not(@encodinganalog='preface' or @encodinganalog='Vorwort')]" mode="copy fonds intermediate lowest">
+    <xsl:template match="scopecontent[not(@encodinganalog='preface' or @encodinganalog='Vorwort')]"
+        mode="copy fonds intermediate lowest">
         <xsl:if test="count(child::*) != 0 or normalize-space(text()) != ''">
             <xsl:if test="not(count(child::*) eq 1 and child::arrangement)">
                 <scopecontent encodinganalog="summary">
-                    <xsl:apply-templates select="node()[not(name()='arrangement' or name()='scopecontent')]" mode="#current"/>
+                    <xsl:apply-templates
+                        select="node()[not(name()='arrangement' or name()='scopecontent')]"
+                        mode="#current"/>
                     <xsl:apply-templates select="scopecontent" mode="nested"/>
                 </scopecontent>
             </xsl:if>
-            <xsl:apply-templates select="arrangement" mode="#current" />
+            <xsl:apply-templates select="arrangement" mode="#current"/>
         </xsl:if>
     </xsl:template>
 
@@ -1877,12 +2045,14 @@
     </xsl:template>
 
     <!-- copy fonds intermediate: scopecontent[@encodinganalog='preface'] -->
-    <xsl:template match="scopecontent[@encodinganalog='preface' or @encodinganalog='Vorwort']" mode="copy fonds intermediate lowest">
+    <xsl:template match="scopecontent[@encodinganalog='preface' or @encodinganalog='Vorwort']"
+        mode="copy fonds intermediate lowest">
         <scopecontent encodinganalog="preface">
-            <xsl:apply-templates select="node()[not(name()='arrangement' or name()='scopecontent')]" mode="#current"/>
+            <xsl:apply-templates select="node()[not(name()='arrangement' or name()='scopecontent')]"
+                mode="#current"/>
             <xsl:apply-templates select="scopecontent" mode="nested"/>
         </scopecontent>
-        <xsl:apply-templates select="arrangement" mode="#current" />
+        <xsl:apply-templates select="arrangement" mode="#current"/>
     </xsl:template>
 
     <!-- copy fonds intermediate: scopecontent/head -->
@@ -1896,7 +2066,7 @@
     <xsl:template match="scopecontent/head" mode="nested">
         <p>
             <emph render="bold">
-                <xsl:value-of select="normalize-space(.)" />
+                <xsl:value-of select="normalize-space(.)"/>
             </emph>
         </p>
     </xsl:template>
@@ -1904,35 +2074,44 @@
     <!-- copy fonds intermediate: scopecontent/p -->
     <xsl:template match="scopecontent/p" mode="copy fonds intermediate lowest nested">
         <p>
-            <xsl:apply-templates select="node()[not(name()='list' or name()='chronlist' or name()='table')]" mode="#current"/>
+            <xsl:apply-templates
+                select="node()[not(name()='list' or name()='chronlist' or name()='table')]"
+                mode="#current"/>
         </p>
         <xsl:for-each select="list">
-            <xsl:call-template name="p_list_scopecontent" />
+            <xsl:call-template name="p_list_scopecontent"/>
         </xsl:for-each>
         <xsl:for-each select="table">
-            <xsl:call-template name="table_all" />
+            <xsl:call-template name="table_all"/>
         </xsl:for-each>
         <xsl:apply-templates select="chronlist" mode="#current"/>
     </xsl:template>
 
     <!-- copy fonds intermediate: scopecontent/p/note -->
     <xsl:template match="scopecontent/p/note" mode="copy fonds intermediate lowest nested">
-        <xsl:text> (</xsl:text><xsl:apply-templates select="p/text()" mode="#current"/><xsl:text>) </xsl:text>
+        <xsl:text> (</xsl:text>
+        <xsl:apply-templates select="p/text()" mode="#current"/>
+        <xsl:text>) </xsl:text>
     </xsl:template>
 
     <xsl:template match="scopecontent/note | odd/note" mode="copy fonds intermediate lowest nested">
         <p>
-            <xsl:text> (</xsl:text><xsl:apply-templates select="p/text()" mode="#current"/><xsl:text>) </xsl:text>
+            <xsl:text> (</xsl:text>
+            <xsl:apply-templates select="p/text()" mode="#current"/>
+            <xsl:text>) </xsl:text>
         </p>
     </xsl:template>
 
     <!-- copy fonds intermediate: scopecontent/list/item/list scopecontent/p/list/item/list -->
-    <xsl:template match="scopecontent/list/item/list | scopecontent/p/list/item/list | scopecontent/list/item/list/item/list | scopecontent/p/list/item/list/item/list" mode="copy fonds intermediate lowest nested">
-        <xsl:call-template name="p_list_scopecontent" />
+    <xsl:template
+        match="scopecontent/list/item/list | scopecontent/p/list/item/list | scopecontent/list/item/list/item/list | scopecontent/p/list/item/list/item/list"
+        mode="copy fonds intermediate lowest nested">
+        <xsl:call-template name="p_list_scopecontent"/>
     </xsl:template>
 
     <!-- copy fonds intermediate: scopecontent/list | scopecontent/p/list -->
-    <xsl:template match="scopecontent/list" name="p_list_scopecontent" mode="copy fonds intermediate lowest nested">
+    <xsl:template match="scopecontent/list" name="p_list_scopecontent"
+        mode="copy fonds intermediate lowest nested">
         <xsl:choose>
             <xsl:when test="@type='deflist' or (not(@type) and ./child::*[name()='defitem'])">
                 <table>
@@ -1954,14 +2133,18 @@
     </xsl:template>
 
     <!-- copy fonds intermediate: scopecontent/list/item scopecontent/p/list/item | scopecontent/list/item/list/item | scopecontent/p/list/item/list/item -->
-    <xsl:template match="scopecontent/list/item | scopecontent/p/list/item | scopecontent/list/item/list/item | scopecontent/p/list/item/list/item | scopecontent/list/item/list/item/list/item | scopecontent/p/list/item/list/item/list/item" mode="copy fonds intermediate lowest nested">
+    <xsl:template
+        match="scopecontent/list/item | scopecontent/p/list/item | scopecontent/list/item/list/item | scopecontent/p/list/item/list/item | scopecontent/list/item/list/item/list/item | scopecontent/p/list/item/list/item/list/item"
+        mode="copy fonds intermediate lowest nested">
         <item>
             <xsl:apply-templates select="node()" mode="#current"/>
         </item>
     </xsl:template>
 
     <!-- copy fonds intermediate: scopecontent/list/item//* | scopecontent/p/list/item//* -->
-    <xsl:template match="scopecontent/list/item/*[not(name()='list')] | scopecontent/p/list/item/*[not(name()='list')]" mode="copy fonds intermediate lowest nested">
+    <xsl:template
+        match="scopecontent/list/item/*[not(name()='list')] | scopecontent/p/list/item/*[not(name()='list')]"
+        mode="copy fonds intermediate lowest nested">
         <xsl:apply-templates select="text()" mode="#current"/>
     </xsl:template>
 
@@ -1981,7 +2164,8 @@
         <xsl:apply-templates mode="#current"/>
     </xsl:template>
 
-    <xsl:template match="scopecontent/address/addressline" mode="copy fonds intermediate lowest nested">
+    <xsl:template match="scopecontent/address/addressline"
+        mode="copy fonds intermediate lowest nested">
         <p>
             <xsl:apply-templates mode="#current"/>
         </p>
@@ -2030,7 +2214,8 @@
         </bibref>
     </xsl:template>
 
-    <xsl:template match="otherfindaid/bibref | relatedmaterial/bibref" mode="copy fonds intermediate lowest nested">
+    <xsl:template match="otherfindaid/bibref | relatedmaterial/bibref"
+        mode="copy fonds intermediate lowest nested">
         <p>
             <xsl:if test="@href or @*:href">
                 <extref>
@@ -2105,7 +2290,8 @@
         </entry>
     </xsl:template>
 
-    <xsl:template match="otherfindaid/bibref/extref | relatedmaterial/bibref/extref" mode="copy fonds intermediate lowest nested">
+    <xsl:template match="otherfindaid/bibref/extref | relatedmaterial/bibref/extref"
+        mode="copy fonds intermediate lowest nested">
         <extref>
             <xsl:if test="@href">
                 <xsl:attribute name="xlink:href" select="ape:checkLink(@href)"/>
@@ -2157,7 +2343,9 @@
     </xsl:template>
 
     <!-- copy fonds intermediate lowest: bibliography/bibref/imprint/publisher | bibliography/bibref/imprint/geogname | bibliography/bibref/imprint/date -->
-    <xsl:template match="bibliography/bibref/imprint/publisher | bibliography/bibref/imprint/geogname | bibliography/bibref/imprint/date" mode="copy fonds intermediate lowest">
+    <xsl:template
+        match="bibliography/bibref/imprint/publisher | bibliography/bibref/imprint/geogname | bibliography/bibref/imprint/date"
+        mode="copy fonds intermediate lowest">
         <xsl:element name="{local-name()}" namespace="urn:isbn:1-931666-22-9">
             <xsl:apply-templates select="node()" mode="#current"/>
         </xsl:element>
@@ -2166,21 +2354,21 @@
     <!-- phystech -->
     <xsl:template match="phystech" mode="#all">
         <phystech encodinganalog="3.4.4">
-            <xsl:apply-templates mode="#current" />
+            <xsl:apply-templates mode="#current"/>
         </phystech>
     </xsl:template>
 
     <!-- phystech/head -->
     <xsl:template match="phystech/head" mode="#all">
         <head>
-            <xsl:apply-templates mode="#current" />
+            <xsl:apply-templates mode="#current"/>
         </head>
     </xsl:template>
 
     <!-- phystech/p -->
     <xsl:template match="phystech/p" mode="#all">
         <p>
-            <xsl:apply-templates mode="#current" />
+            <xsl:apply-templates mode="#current"/>
         </p>
     </xsl:template>
 
@@ -2190,10 +2378,13 @@
             <xsl:when test="not(child::*)"/>
             <xsl:when test="not(ancestor::controlaccess)">
                 <xsl:if test="child::genreform[@type='typir'] and count(child::*) &gt; 1">
-                    <controlaccess>                                                                                                                           <!--../index/indexentry//geogname | ../index/indexentry//subject | ../index/indexentry//famname | ../index/indexentry//persname | ../index/indexentry//corpname | ../index/indexentry//occupation | ../index/indexentry//genreform | ../index/indexentry//function | ../index/indexentry//title | ../index/indexentry//name-->
-                        <xsl:for-each select="geogname | subject | famname | persname | corpname | occupation | genreform | function | title | p | head | name | indexentry//geogname | indexentry//subject | indexentry//famname | indexentry//persname | indexentry//corpname | indexentry//occupation | indexentry//genreform | indexentry//function | indexentry//title | indexentry//name">
+                    <controlaccess>
+                        <!--../index/indexentry//geogname | ../index/indexentry//subject | ../index/indexentry//famname | ../index/indexentry//persname | ../index/indexentry//corpname | ../index/indexentry//occupation | ../index/indexentry//genreform | ../index/indexentry//function | ../index/indexentry//title | ../index/indexentry//name-->
+                        <xsl:for-each
+                            select="geogname | subject | famname | persname | corpname | occupation | genreform | function | title | p | head | name | indexentry//geogname | indexentry//subject | indexentry//famname | indexentry//persname | indexentry//corpname | indexentry//occupation | indexentry//genreform | indexentry//function | indexentry//title | indexentry//name">
                             <xsl:if test="not(local-name()='genreform' and @type='typir')">
-                                <xsl:element name="{local-name()}" namespace="urn:isbn:1-931666-22-9">
+                                <xsl:element name="{local-name()}"
+                                    namespace="urn:isbn:1-931666-22-9">
                                     <xsl:apply-templates select="node()" mode="#current"/>
                                 </xsl:element>
                             </xsl:if>
@@ -2205,7 +2396,8 @@
                 </xsl:if>
             </xsl:when>
             <xsl:otherwise>
-                <xsl:for-each select="geogname|subject|famname|persname|corpname|occupation|genreform|function|title|p|name">
+                <xsl:for-each
+                    select="geogname|subject|famname|persname|corpname|occupation|genreform|function|title|p|name">
                     <xsl:if test="not(local-name()='genreform' and @type='typir')">
                         <xsl:element name="{local-name()}" namespace="urn:isbn:1-931666-22-9">
                             <xsl:apply-templates select="node()" mode="#current"/>
@@ -2217,16 +2409,16 @@
     </xsl:template>
 
     <!--<xsl:template name="createControlaccess">-->
-        <!--<xsl:param name="context" />-->
-        <!--<controlaccess>-->
-            <!--<xsl:for-each select="$context/did/unittitle and $context/bibref">-->
-                <!--<xsl:for-each select="geogname | subject | famname | persname | corpname | occupation | genreform | function">-->
-                    <!--<xsl:element name="{local-name()}" namespace="urn:isbn:1-931666-22-9">-->
-                        <!--<xsl:apply-templates select="node()" mode="#current"/>-->
-                    <!--</xsl:element>-->
-                <!--</xsl:for-each>-->
-            <!--</xsl:for-each>-->
-        <!--</controlaccess>-->
+    <!--<xsl:param name="context" />-->
+    <!--<controlaccess>-->
+    <!--<xsl:for-each select="$context/did/unittitle and $context/bibref">-->
+    <!--<xsl:for-each select="geogname | subject | famname | persname | corpname | occupation | genreform | function">-->
+    <!--<xsl:element name="{local-name()}" namespace="urn:isbn:1-931666-22-9">-->
+    <!--<xsl:apply-templates select="node()" mode="#current"/>-->
+    <!--</xsl:element>-->
+    <!--</xsl:for-each>-->
+    <!--</xsl:for-each>-->
+    <!--</controlaccess>-->
     <!--</xsl:template>-->
 
 
@@ -2246,7 +2438,7 @@
     <xsl:template match="dsc/head" mode="copy">
         <xsl:if test="preceding-sibling::* or following-sibling::*">
             <head>
-                <xsl:value-of select="." />
+                <xsl:value-of select="."/>
             </head>
         </xsl:if>
     </xsl:template>
@@ -2254,13 +2446,13 @@
     <!-- copy: dsc/p -->
     <xsl:template match="dsc/p" mode="copy">
         <p>
-            <xsl:apply-templates select="node()" mode="copy" />
+            <xsl:apply-templates select="node()" mode="copy"/>
         </p>
     </xsl:template>
 
-    <xsl:template match="nothing" mode="lowest" />
-    <xsl:template match="nothing" mode="intermediate" />
-    <xsl:template match="nothing" mode="fonds" />
+    <xsl:template match="nothing" mode="lowest"/>
+    <xsl:template match="nothing" mode="intermediate"/>
+    <xsl:template match="nothing" mode="fonds"/>
 
     <!-- class: unittitle -->
     <xsl:template match="unittitle" mode="fonds intermediate lowest">
@@ -2287,13 +2479,14 @@
                     <xsl:attribute name="encodinganalog" select="'3.1.3'"/>
                     <xsl:attribute name="era" select="'ce'"/>
                     <xsl:attribute name="calendar" select="'gregorian'"/>
-                    <xsl:call-template name="normalizeDate" />
-                    <xsl:apply-templates select="node()" mode="#current" />
+                    <xsl:call-template name="normalizeDate"/>
+                    <xsl:apply-templates select="node()" mode="#current"/>
                 </unitdate>
             </xsl:for-each>
         </xsl:if>
     </xsl:template>
-    <xsl:template match="unittitle/geogname | unittitle/persname | unittitle/title" mode="fonds intermediate lowest">
+    <xsl:template match="unittitle/geogname | unittitle/persname | unittitle/title"
+        mode="fonds intermediate lowest">
         <xsl:apply-templates select="node()" mode="#current"/>
     </xsl:template>
 
@@ -2303,25 +2496,32 @@
             <xsl:when test="$countrycode='NL' and ../../@otherlevel='subfile'">
                 <xsl:apply-templates select="../../../did/unitid" mode="#current"/>
             </xsl:when>
-            <xsl:when test="(@type='call number' or @type='ABS' or @type='bestellnummer' or @type='Bestellnummer' or @type='series_code' or @type='reference' or @type='Sygnatura' or @type='REFERENCE_CODE' or @type='cote-de-consultation' or @type='cote-groupee' or @type='identifiant' or @type='cote' or @type='persistent' or (not(@type))) and (text()[string-length(normalize-space(.)) ge 1] or exists(extptr))"><!-- and not(preceding-sibling::unitid) and not(following-sibling::unitid)-->
+            <xsl:when
+                test="(@type='call number' or @type='ABS' or @type='bestellnummer' or @type='Bestellnummer' or @type='series_code' or @type='reference' or @type='Sygnatura' or @type='REFERENCE_CODE' or @type='cote-de-consultation' or @type='cote-groupee' or @type='identifiant' or @type='cote' or @type='persistent' or (not(@type))) and (text()[string-length(normalize-space(.)) ge 1] or exists(extptr))">
+                <!-- and not(preceding-sibling::unitid) and not(following-sibling::unitid)-->
                 <xsl:choose>
                     <xsl:when test="@countrycode and @repositorycode">
                         <xsl:choose>
                             <xsl:when test="//eadid/@countrycode = 'SE'">
-                                <xsl:variable name="eadid"><xsl:value-of select="//eadid/text()"/></xsl:variable>
-                                <xsl:variable name="actual"><xsl:value-of select="."/></xsl:variable>
+                                <xsl:variable name="eadid">
+                                    <xsl:value-of select="//eadid/text()"/>
+                                </xsl:variable>
+                                <xsl:variable name="actual">
+                                    <xsl:value-of select="."/>
+                                </xsl:variable>
                                 <xsl:variable name="above">
                                     <xsl:for-each select="ancestor::c/did/unitid">
                                         <xsl:if test="current() != $actual">
-                                            <xsl:value-of select="."/>/
-                                        </xsl:if>
+                                            <xsl:value-of select="."/>/ </xsl:if>
                                     </xsl:for-each>
                                 </xsl:variable>
                                 <unitid type="call number" encodinganalog="3.1.1">
                                     <xsl:if test="extptr">
                                         <xsl:apply-templates select="extptr" mode="#current"/>
                                     </xsl:if>
-                                    <xsl:value-of select="concat(concat(concat(normalize-space($eadid), '/'), normalize-space($above)),.)"/>
+                                    <xsl:value-of
+                                        select="concat(concat(concat(normalize-space($eadid), '/'), normalize-space($above)),.)"
+                                    />
                                 </unitid>
                             </xsl:when>
                             <xsl:otherwise>
@@ -2330,11 +2530,14 @@
                                         <xsl:apply-templates select="extptr" mode="#current"/>
                                     </xsl:if>
                                     <xsl:choose>
-                                        <xsl:when test="starts-with(., concat(concat(@countrycode,'/'),@repositorycode))">
+                                        <xsl:when
+                                            test="starts-with(., concat(concat(@countrycode,'/'),@repositorycode))">
                                             <xsl:value-of select="text()"/>
                                         </xsl:when>
                                         <xsl:otherwise>
-                                            <xsl:value-of select="concat(concat(concat(concat(@countrycode,'/'),@repositorycode), '/'), .)"/>
+                                            <xsl:value-of
+                                                select="concat(concat(concat(concat(@countrycode,'/'),@repositorycode), '/'), .)"
+                                            />
                                         </xsl:otherwise>
                                     </xsl:choose>
                                 </unitid>
@@ -2352,7 +2555,8 @@
                             <xsl:if test="following-sibling::*/@type='handle'">
                                 <extptr>
                                     <xsl:attribute name="xlink:href">
-                                        <xsl:value-of select="following-sibling::*[@type='handle']/text()"/>
+                                        <xsl:value-of
+                                            select="following-sibling::*[@type='handle']/text()"/>
                                     </xsl:attribute>
                                 </extptr>
                             </xsl:if>
@@ -2364,17 +2568,21 @@
                                             <xsl:value-of select="."/>
                                         </xsl:when>
                                         <xsl:otherwise>
-                                            <xsl:value-of select="concat(//eadid/text(), concat(' - ', .))"/>
+                                            <xsl:value-of
+                                                select="concat(//eadid/text(), concat(' - ', .))"/>
                                         </xsl:otherwise>
                                     </xsl:choose>
                                 </xsl:when>
                                 <xsl:otherwise>
                                     <xsl:choose>
-                                        <xsl:when test="starts-with(., //archdesc/did/unitid[1]/text()) or //archdesc/did/unitid[@label='Cotes extrêmes']">
+                                        <xsl:when
+                                            test="starts-with(., //archdesc/did/unitid[1]/text()) or //archdesc/did/unitid[@label='Cotes extrêmes']">
                                             <xsl:value-of select="text()"/>
                                         </xsl:when>
                                         <xsl:otherwise>
-                                            <xsl:value-of select="concat(//archdesc/did/unitid[1]/text(), concat(' - ', .))"/>
+                                            <xsl:value-of
+                                                select="concat(//archdesc/did/unitid[1]/text(), concat(' - ', .))"
+                                            />
                                         </xsl:otherwise>
                                     </xsl:choose>
                                 </xsl:otherwise>
@@ -2384,7 +2592,8 @@
                     </xsl:otherwise>
                 </xsl:choose>
             </xsl:when>
-            <xsl:when test="@type='former call number' or @type='obsolete' or @type='former' or @type='altsignatur' or @type='Altsignatur' or @type='Sygnatura dawna' or @type='ancienne_cote' or @type='OLD_REFERENCE_CODE' or @type='nouvelle-foliotation' or @type='cote-forgée'">
+            <xsl:when
+                test="@type='former call number' or @type='obsolete' or @type='former' or @type='altsignatur' or @type='Altsignatur' or @type='Sygnatura dawna' or @type='ancienne_cote' or @type='OLD_REFERENCE_CODE' or @type='nouvelle-foliotation' or @type='cote-forgée'">
                 <xsl:if test="text()[string-length(normalize-space(.)) ge 1]">
                     <unitid>
                         <xsl:attribute name="type" select="'former call number'"/>
@@ -2396,7 +2605,8 @@
                     </unitid>
                 </xsl:if>
             </xsl:when>
-            <xsl:when test="@type='file reference' or @type='code-de-communication' or @type='Aktenzeichen' or @type='aktenzeichen' or @type='Znak teczki'">
+            <xsl:when
+                test="@type='file reference' or @type='code-de-communication' or @type='Aktenzeichen' or @type='aktenzeichen' or @type='Znak teczki'">
                 <xsl:if test="text()[string-length(normalize-space(.)) ge 1]">
                     <unitid>
                         <xsl:attribute name="type" select="'file reference'"/>
@@ -2416,9 +2626,9 @@
             <!--<xsl:value-of select="concat(//eadid/text(), ' - empty')" />-->
             <!--</unitid>-->
             <!--</xsl:when>-->
-            <xsl:when test="@type='blank'" />
+            <xsl:when test="@type='blank'"/>
             <xsl:otherwise>
-                <xsl:call-template name="excludeElement" />
+                <xsl:call-template name="excludeElement"/>
             </xsl:otherwise>
         </xsl:choose>
     </xsl:template>
@@ -2473,8 +2683,8 @@
                 <xsl:attribute name="encodinganalog" select="'3.1.3'"/>
                 <xsl:attribute name="era" select="'ce'"/>
                 <xsl:attribute name="calendar" select="'gregorian'"/>
-                <xsl:call-template name="normalizeDate" />
-                <xsl:apply-templates select="node()" mode="#current" />
+                <xsl:call-template name="normalizeDate"/>
+                <xsl:apply-templates select="node()" mode="#current"/>
             </unitdate>
         </xsl:if>
     </xsl:template>
@@ -2499,7 +2709,8 @@
         <xsl:choose>
             <xsl:when test="@label or @role">
                 <xsl:choose>
-                    <xsl:when test="@label='thumb' or @role='thumb' or @role='image_thumb' or @*:role='image_thumb'">
+                    <xsl:when
+                        test="@label='thumb' or @role='thumb' or @role='image_thumb' or @*:role='image_thumb'">
                         <xsl:attribute name="xlink:title" select="'thumbnail'"/>
                     </xsl:when>
                     <xsl:when test="@label = 'Document'">
@@ -2570,11 +2781,15 @@
                     <xsl:if test="@*:title!=''">
                         <xsl:attribute name="xlink:title" select="@*:title"/>
                     </xsl:if>
-                    <xsl:if test="not(@title) and not(@*:title) and ../daodesc[@label='reference']/p/text()">
-                        <xsl:attribute name="xlink:title" select="../daodesc[@label='reference']/p/text()"/>
+                    <xsl:if
+                        test="not(@title) and not(@*:title) and ../daodesc[@label='reference']/p/text()">
+                        <xsl:attribute name="xlink:title"
+                            select="../daodesc[@label='reference']/p/text()"/>
                     </xsl:if>
-                    <xsl:if test="not(@title) and not(@*:title) and .[@label='reference']/daodesc/p/text()">
-                        <xsl:attribute name="xlink:title" select=".[@label='reference']/daodesc/p/text()"/>
+                    <xsl:if
+                        test="not(@title) and not(@*:title) and .[@label='reference']/daodesc/p/text()">
+                        <xsl:attribute name="xlink:title"
+                            select=".[@label='reference']/daodesc/p/text()"/>
                     </xsl:if>
                     <xsl:call-template name="daoRoleType"/>
                 </dao>
@@ -2587,56 +2802,88 @@
             </xsl:for-each>
             <!--<xsl:variable name="parentNode" select="current()/parent::node()"/>-->
             <!--<xsl:if test="$parentNode/bioghist/p/persname | $parentNode/bioghist/p/list/item/persname | current()/unittitle/persname[text()!=''] | current()/parent::node()/originalsloc/p/persname">-->
-                <!--<origination label="pre">-->
-                    <!--<xsl:for-each select="$parentNode/bioghist/p/persname | $parentNode/bioghist/p/list/item/persname | current()/unittitle/persname | $parentNode/originalsloc/p/persname">-->
-                        <!--<persname><xsl:value-of select="text()"/></persname>-->
-                    <!--</xsl:for-each>-->
-                <!--</origination>-->
+            <!--<origination label="pre">-->
+            <!--<xsl:for-each select="$parentNode/bioghist/p/persname | $parentNode/bioghist/p/list/item/persname | current()/unittitle/persname | $parentNode/originalsloc/p/persname">-->
+            <!--<persname><xsl:value-of select="text()"/></persname>-->
+            <!--</xsl:for-each>-->
+            <!--</origination>-->
             <!--</xsl:if>-->
             <!--<xsl:if test="$parentNode/bibliography/p/bibref/persname | $parentNode/relatedmaterial/p/persname | $parentNode/scopecontent/p/list/item/persname | $parentNode/scopecontent/p/persname">-->
-                <!--<origination label="final">-->
-                    <!--<xsl:for-each select="$parentNode/bibliography/p/bibref/persname | $parentNode/relatedmaterial/p/persname | $parentNode/scopecontent/p/list/item/persname | $parentNode/scopecontent/p/persname">-->
-                        <!--<persname><xsl:value-of select="text()"/></persname>-->
-                    <!--</xsl:for-each>-->
-                <!--</origination>-->
+            <!--<origination label="final">-->
+            <!--<xsl:for-each select="$parentNode/bibliography/p/bibref/persname | $parentNode/relatedmaterial/p/persname | $parentNode/scopecontent/p/list/item/persname | $parentNode/scopecontent/p/persname">-->
+            <!--<persname><xsl:value-of select="text()"/></persname>-->
+            <!--</xsl:for-each>-->
+            <!--</origination>-->
             <!--</xsl:if>-->
         </did>
-        <xsl:apply-templates select="abstract" mode="#current" />
+        <xsl:apply-templates select="abstract" mode="#current"/>
     </xsl:template>
 
-    <xsl:template match="c/descgrp | c01/descgrp | c02/descgrp | c03/descgrp | c04/descgrp | c05/descgrp | c06/descgrp | c07/descgrp | c08/descgrp | c09/descgrp | c10/descgrp | c11/descgrp | c12/descgrp" mode="fonds intermediate lowest">
+    <xsl:template
+        match="c/descgrp | c01/descgrp | c02/descgrp | c03/descgrp | c04/descgrp | c05/descgrp | c06/descgrp | c07/descgrp | c08/descgrp | c09/descgrp | c10/descgrp | c11/descgrp | c12/descgrp"
+        mode="fonds intermediate lowest">
         <xsl:apply-templates mode="#current"/>
     </xsl:template>
-    <xsl:template match="descgrp/p" mode="fonds intermediate lowest" />
+    <xsl:template match="descgrp/p" mode="fonds intermediate lowest"/>
     <!--<note encodinganalog="3.6.1">-->
     <!--<xsl:apply-templates mode="#current"/>-->
     <!--</note>-->
     <!--</xsl:template>-->
 
     <!--Nothing because already used earlier-->
-    <xsl:template match="c/dao | c01/dao | c02/dao | c03/dao | c04/dao | c05/dao | c06/dao | c07/dao | c08/dao | c09/dao | c10/dao | c11/dao | c12/dao" mode="fonds intermediate lowest" />
+    <xsl:template
+        match="c/dao | c01/dao | c02/dao | c03/dao | c04/dao | c05/dao | c06/dao | c07/dao | c08/dao | c09/dao | c10/dao | c11/dao | c12/dao"
+        mode="fonds intermediate lowest"/>
     <!--<xsl:template match="scopecontent[not(ancestor::did)]" mode="lowest" />-->
-    <xsl:template match="c/daogrp | c01/daogrp | c02/daogrp | c03/daogrp | c04/daogrp | c05/daogrp | c06/daogrp | c07/daogrp | c08/daogrp | c09/daogrp | c10/daogrp | c11/daogrp | c12/daogrp" mode="fonds intermediate lowest">
-        <xsl:apply-templates select="node()" mode="#current" />
+    <xsl:template
+        match="c/daogrp | c01/daogrp | c02/daogrp | c03/daogrp | c04/daogrp | c05/daogrp | c06/daogrp | c07/daogrp | c08/daogrp | c09/daogrp | c10/daogrp | c11/daogrp | c12/daogrp"
+        mode="fonds intermediate lowest">
+        <xsl:apply-templates select="node()" mode="#current"/>
     </xsl:template>
-    <xsl:template match="c/daogrp/resource | c01/daogrp/resource | c02/daogrp/resource | c03/daogrp/resource | c04/daogrp/resource | c05/daogrp/resource | c06/daogrp/resource | c07/daogrp/resource | c08/daogrp/resource | c09/daogrp/resource | c10/daogrp/resource | c11/daogrp/resource | c12/daogrp/resource" mode="fonds intermediate lowest" />
-    <xsl:template match="c/daogrp/arc | c01/daogrp/arc | c02/daogrp/arc | c03/daogrp/arc | c04/daogrp/arc | c05/daogrp/arc | c06/daogrp/arc | c07/daogrp/arc | c08/daogrp/arc | c09/daogrp/arc | c10/daogrp/arc | c11/daogrp/arc | c12/daogrp/arc" mode="fonds intermediate lowest" />
-    <xsl:template match="c/daogrp/daoloc | c01/daogrp/daoloc | c02/daogrp/daoloc | c03/daogrp/daoloc | c04/daogrp/daoloc | c05/daogrp/daoloc | c06/daogrp/daoloc | c07/daogrp/daoloc | c08/daogrp/daoloc | c09/daogrp/daoloc | c10/daogrp/daoloc | c11/daogrp/daoloc | c12/daogrp/daoloc" mode="fonds intermediate lowest" />
-    <xsl:template match="c/daogrp/dao | c01/daogrp/dao | c02/daogrp/dao | c03/daogrp/dao | c04/daogrp/dao | c05/daogrp/dao | c06/daogrp/dao | c07/daogrp/dao | c08/daogrp/dao | c09/daogrp/dao | c10/daogrp/dao | c11/daogrp/dao | c12/daogrp/dao" mode="fonds intermediate lowest" />
-    <xsl:template match="c/odd/daogrp | c01/odd/daogrp | c02/odd/daogrp | c03/odd/daogrp | c04/odd/daogrp | c05/odd/daogrp | c06/odd/daogrp | c07/odd/daogrp | c08/odd/daogrp | c09/odd/daogrp | c10/odd/daogrp | c11/odd/daogrp | c12/odd/daogrp" mode="fonds intermediate lowest">
-        <xsl:apply-templates select="node()" mode="#current" />
+    <xsl:template
+        match="c/daogrp/resource | c01/daogrp/resource | c02/daogrp/resource | c03/daogrp/resource | c04/daogrp/resource | c05/daogrp/resource | c06/daogrp/resource | c07/daogrp/resource | c08/daogrp/resource | c09/daogrp/resource | c10/daogrp/resource | c11/daogrp/resource | c12/daogrp/resource"
+        mode="fonds intermediate lowest"/>
+    <xsl:template
+        match="c/daogrp/arc | c01/daogrp/arc | c02/daogrp/arc | c03/daogrp/arc | c04/daogrp/arc | c05/daogrp/arc | c06/daogrp/arc | c07/daogrp/arc | c08/daogrp/arc | c09/daogrp/arc | c10/daogrp/arc | c11/daogrp/arc | c12/daogrp/arc"
+        mode="fonds intermediate lowest"/>
+    <xsl:template
+        match="c/daogrp/daoloc | c01/daogrp/daoloc | c02/daogrp/daoloc | c03/daogrp/daoloc | c04/daogrp/daoloc | c05/daogrp/daoloc | c06/daogrp/daoloc | c07/daogrp/daoloc | c08/daogrp/daoloc | c09/daogrp/daoloc | c10/daogrp/daoloc | c11/daogrp/daoloc | c12/daogrp/daoloc"
+        mode="fonds intermediate lowest"/>
+    <xsl:template
+        match="c/daogrp/dao | c01/daogrp/dao | c02/daogrp/dao | c03/daogrp/dao | c04/daogrp/dao | c05/daogrp/dao | c06/daogrp/dao | c07/daogrp/dao | c08/daogrp/dao | c09/daogrp/dao | c10/daogrp/dao | c11/daogrp/dao | c12/daogrp/dao"
+        mode="fonds intermediate lowest"/>
+    <xsl:template
+        match="c/odd/daogrp | c01/odd/daogrp | c02/odd/daogrp | c03/odd/daogrp | c04/odd/daogrp | c05/odd/daogrp | c06/odd/daogrp | c07/odd/daogrp | c08/odd/daogrp | c09/odd/daogrp | c10/odd/daogrp | c11/odd/daogrp | c12/odd/daogrp"
+        mode="fonds intermediate lowest">
+        <xsl:apply-templates select="node()" mode="#current"/>
     </xsl:template>
-    <xsl:template match="c/odd/daogrp/resource | c01/odd/daogrp/resource | c02/odd/daogrp/resource | c03/odd/daogrp/resource | c04/odd/daogrp/resource | c05/odd/daogrp/resource | c06/odd/daogrp/resource | c07/odd/daogrp/resource | c08/odd/daogrp/resource | c09/odd/daogrp/resource | c10/odd/daogrp/resource | c11/odd/daogrp/resource | c12/odd/daogrp/resource" mode="fonds intermediate lowest" />
-    <xsl:template match="c/odd/daogrp/arc | c01/odd/daogrp/arc | c02/odd/daogrp/arc | c03/odd/daogrp/arc | c04/odd/daogrp/arc | c05/odd/daogrp/arc | c06/odd/daogrp/arc | c07/odd/daogrp/arc | c08/odd/daogrp/arc | c09/odd/daogrp/arc | c10/odd/daogrp/arc | c11/odd/daogrp/arc | c12/odd/daogrp/arc" mode="fonds intermediate lowest" />
-    <xsl:template match="c/odd/daogrp/daoloc | c01/odd/daogrp/daoloc | c02/odd/daogrp/daoloc | c03/odd/daogrp/daoloc | c04/odd/daogrp/daoloc | c05/odd/daogrp/daoloc | c06/odd/daogrp/daoloc | c07/odd/daogrp/daoloc | c08/odd/daogrp/daoloc | c09/odd/daogrp/daoloc | c10/odd/daogrp/daoloc | c11/odd/daogrp/daoloc | c12/odd/daogrp/daoloc" mode="fonds intermediate lowest" />
-    <xsl:template match="c/note | c01/note | c02/note | c03/note | c04/note | c05/note | c06/note | c07/note | c08/note | c09/note | c10/note | c11/note | c12/note" mode="fonds intermediate lowest" />
+    <xsl:template
+        match="c/odd/daogrp/resource | c01/odd/daogrp/resource | c02/odd/daogrp/resource | c03/odd/daogrp/resource | c04/odd/daogrp/resource | c05/odd/daogrp/resource | c06/odd/daogrp/resource | c07/odd/daogrp/resource | c08/odd/daogrp/resource | c09/odd/daogrp/resource | c10/odd/daogrp/resource | c11/odd/daogrp/resource | c12/odd/daogrp/resource"
+        mode="fonds intermediate lowest"/>
+    <xsl:template
+        match="c/odd/daogrp/arc | c01/odd/daogrp/arc | c02/odd/daogrp/arc | c03/odd/daogrp/arc | c04/odd/daogrp/arc | c05/odd/daogrp/arc | c06/odd/daogrp/arc | c07/odd/daogrp/arc | c08/odd/daogrp/arc | c09/odd/daogrp/arc | c10/odd/daogrp/arc | c11/odd/daogrp/arc | c12/odd/daogrp/arc"
+        mode="fonds intermediate lowest"/>
+    <xsl:template
+        match="c/odd/daogrp/daoloc | c01/odd/daogrp/daoloc | c02/odd/daogrp/daoloc | c03/odd/daogrp/daoloc | c04/odd/daogrp/daoloc | c05/odd/daogrp/daoloc | c06/odd/daogrp/daoloc | c07/odd/daogrp/daoloc | c08/odd/daogrp/daoloc | c09/odd/daogrp/daoloc | c10/odd/daogrp/daoloc | c11/odd/daogrp/daoloc | c12/odd/daogrp/daoloc"
+        mode="fonds intermediate lowest"/>
+    <xsl:template
+        match="c/note | c01/note | c02/note | c03/note | c04/note | c05/note | c06/note | c07/note | c08/note | c09/note | c10/note | c11/note | c12/note"
+        mode="fonds intermediate lowest"/>
 
     <xsl:template match="did/dao" name="dao" mode="fonds intermediate lowest">
         <dao>
             <xsl:choose>
-                <xsl:when test="(@xlink:href != '') and (@href != '')"><xsl:attribute name="xlink:href" select="ape:checkLink(@xlink:href)"/></xsl:when>
-                <xsl:when test="@*:href != ''"><xsl:attribute name="xlink:href" select="ape:checkLink(@*:href)"/></xsl:when>
-                <xsl:otherwise><xsl:if test="@href != ''"><xsl:attribute name="xlink:href" select="ape:checkLink(@href)"/></xsl:if></xsl:otherwise>
+                <xsl:when test="(@xlink:href != '') and (@href != '')">
+                    <xsl:attribute name="xlink:href" select="ape:checkLink(@xlink:href)"/>
+                </xsl:when>
+                <xsl:when test="@*:href != ''">
+                    <xsl:attribute name="xlink:href" select="ape:checkLink(@*:href)"/>
+                </xsl:when>
+                <xsl:otherwise>
+                    <xsl:if test="@href != ''">
+                        <xsl:attribute name="xlink:href" select="ape:checkLink(@href)"/>
+                    </xsl:if>
+                </xsl:otherwise>
             </xsl:choose>
             <xsl:if test="@title!=''">
                 <xsl:attribute name="xlink:title" select="@title"/>
@@ -2647,7 +2894,7 @@
             <xsl:if test="not(@title) and not(@*:title) and daodesc/p/text()">
                 <xsl:attribute name="xlink:title" select="daodesc/p/text()"/>
             </xsl:if>
-            <xsl:call-template name="daoDigitalType" />
+            <xsl:call-template name="daoDigitalType"/>
         </dao>
     </xsl:template>
 
@@ -2683,21 +2930,21 @@
                 </dao>
             </xsl:when>
             <xsl:when test="@label='reference' or @label='thumb' or @linktype='locator'">
-                    <dao>
-                        <xsl:if test="@href!=''">
-                            <xsl:attribute name="xlink:href" select="ape:checkLink(@href)"/>
-                        </xsl:if>
-                        <xsl:if test="@*:href!=''">
-                            <xsl:attribute name="xlink:href" select="ape:checkLink(@*:href)"/>
-                        </xsl:if>
-                        <xsl:call-template name="daoRoleType" />
-                    </dao>
+                <dao>
+                    <xsl:if test="@href!=''">
+                        <xsl:attribute name="xlink:href" select="ape:checkLink(@href)"/>
+                    </xsl:if>
+                    <xsl:if test="@*:href!=''">
+                        <xsl:attribute name="xlink:href" select="ape:checkLink(@*:href)"/>
+                    </xsl:if>
+                    <xsl:call-template name="daoRoleType"/>
+                </dao>
             </xsl:when>
             <xsl:when test="@xlink:href">
                 <xsl:choose>
                     <!-- Special condition for IISG from NL -->
                     <xsl:when test="@xlink:label = 'pdf' or @xlink:label = 'mets'">
-                        <xsl:call-template name="excludeElement" />
+                        <xsl:call-template name="excludeElement"/>
                     </xsl:when>
                     <xsl:otherwise>
                         <dao>
@@ -2705,7 +2952,7 @@
                             <xsl:if test="@xlink:title">
                                 <xsl:attribute name="xlink:title" select="@xlink:title"/>
                             </xsl:if>
-                            <xsl:call-template name="daoRoleType" />
+                            <xsl:call-template name="daoRoleType"/>
                         </dao>
                     </xsl:otherwise>
                 </xsl:choose>
@@ -2716,24 +2963,24 @@
                     <xsl:if test="@title">
                         <xsl:attribute name="xlink:title" select="@title"/>
                     </xsl:if>
-                    <xsl:call-template name="daoRoleType" />
+                    <xsl:call-template name="daoRoleType"/>
                 </dao>
             </xsl:when>
             <xsl:otherwise>
-                <xsl:call-template name="excludeElement" />
+                <xsl:call-template name="excludeElement"/>
             </xsl:otherwise>
         </xsl:choose>
     </xsl:template>
 
-    <xsl:template match="did/daogrp/daodesc" mode="fonds intermediate lowest" />
-    <xsl:template match="did/daogrp/resource" mode="fonds intermediate lowest" />
-    <xsl:template match="did/daogrp/arc" mode="fonds intermediate lowest" />
+    <xsl:template match="did/daogrp/daodesc" mode="fonds intermediate lowest"/>
+    <xsl:template match="did/daogrp/resource" mode="fonds intermediate lowest"/>
+    <xsl:template match="did/daogrp/arc" mode="fonds intermediate lowest"/>
 
     <xsl:template match="did/abstract" mode="fonds">
         <scopecontent encodinganalog="summary">
             <xsl:if test="@type">
                 <head>
-                    <xsl:value-of select="@type" />
+                    <xsl:value-of select="@type"/>
                 </head>
             </xsl:if>
             <p>
@@ -2746,7 +2993,7 @@
         <scopecontent encodinganalog="summary">
             <xsl:if test="@type">
                 <head>
-                    <xsl:value-of select="@type" />
+                    <xsl:value-of select="@type"/>
                 </head>
             </xsl:if>
             <p>
@@ -2778,7 +3025,10 @@
                         </p>
                     </xsl:when>
                     <xsl:otherwise>
-                        <xsl:apply-templates select="node()[not(name()='acqinfo' or name()='custodhist')]" mode="#current"/> <!--except acqinfo?-->
+                        <xsl:apply-templates
+                            select="node()[not(name()='acqinfo' or name()='custodhist')]"
+                            mode="#current"/>
+                        <!--except acqinfo?-->
                         <xsl:apply-templates select="custodhist" mode="nested"/>
                     </xsl:otherwise>
                 </xsl:choose>
@@ -2789,15 +3039,19 @@
     <xsl:template match="custodhist/date" mode="copy fonds intermediate lowest">
         <xsl:choose>
             <xsl:when test="preceding-sibling::*[name()='p']">
-                <p><xsl:apply-templates mode="#current"/></p>
+                <p>
+                    <xsl:apply-templates mode="#current"/>
+                </p>
             </xsl:when>
             <xsl:otherwise>
-                <xsl:text> </xsl:text><xsl:apply-templates mode="#current"/><xsl:text> </xsl:text>
+                <xsl:text> </xsl:text>
+                <xsl:apply-templates mode="#current"/>
+                <xsl:text> </xsl:text>
             </xsl:otherwise>
         </xsl:choose>
     </xsl:template>
 
-    <xsl:template match="custodhist[ancestor::custodhist]" mode="copy fonds intermediate lowest" />
+    <xsl:template match="custodhist[ancestor::custodhist]" mode="copy fonds intermediate lowest"/>
 
     <xsl:template match="custodhist[ancestor::custodhist]" mode="nested">
         <xsl:apply-templates select="node()" mode="nested"/>
@@ -2805,7 +3059,7 @@
 
     <xsl:template match="index" mode="copy fonds intermediate lowest">
         <xsl:choose>
-            <xsl:when test="../controlaccess" />
+            <xsl:when test="../controlaccess"/>
             <xsl:otherwise>
                 <xsl:call-template name="controlaccess"/>
             </xsl:otherwise>
@@ -2814,7 +3068,9 @@
 
     <!-- all: unittitle/unitdate -->
     <xsl:template match="unittitle/unitdate" mode="#all">
-        <xsl:text> </xsl:text><xsl:apply-templates select="node()" mode="#current"/><xsl:text> </xsl:text>
+        <xsl:text> </xsl:text>
+        <xsl:apply-templates select="node()" mode="#current"/>
+        <xsl:text> </xsl:text>
     </xsl:template>
 
     <!-- all: unittitle/archref -->
@@ -2870,10 +3126,12 @@
     </xsl:template>
 
     <!--todo: WARNING!! Those are just taken away and are NOT provided to the user as missing elements-->
-    <xsl:template match="arrangement | originalsloc | separatedmaterial | acqinfo | prefercite" mode="intermediate lowest"/>
+    <xsl:template match="arrangement | originalsloc | separatedmaterial | acqinfo | prefercite"
+        mode="intermediate lowest"/>
 
     <!-- c-level -->
-    <xsl:template match="c | c01 | c02 | c03 | c04 | c05 | c06 | c07 | c08 | c09 | c10 | c11 | c12" mode="copy fonds intermediate lowest">
+    <xsl:template match="c | c01 | c02 | c03 | c04 | c05 | c06 | c07 | c08 | c09 | c10 | c11 | c12"
+        mode="copy fonds intermediate lowest">
         <!--Counter-->
         <xsl:value-of select="ape:counterclevel()"/>
         <!---->
@@ -2881,10 +3139,12 @@
             <xsl:choose>
                 <xsl:when test="@level='item'">
                     <xsl:choose>
-                        <xsl:when test="(child::c[@level='item'])"><!-- or (following-sibling::*/child::*/@level='item') or (preceding-sibling::*/child::*/@level='item')">-->
+                        <xsl:when test="(child::c[@level='item'])">
+                            <!-- or (following-sibling::*/child::*/@level='item') or (preceding-sibling::*/child::*/@level='item')">-->
                             <xsl:value-of select="'file'"/>
                         </xsl:when>
-                        <xsl:when test="child::c[not(@level)] or child::c[@otherlevel='partie-de-pièce']">
+                        <xsl:when
+                            test="child::c[not(@level)] or child::c[@otherlevel='partie-de-pièce']">
                             <xsl:value-of select="'file'"/>
                         </xsl:when>
                         <xsl:when test="child::c[@level='file']">
@@ -2897,10 +3157,13 @@
                 </xsl:when>
                 <xsl:when test="@level='file'">
                     <xsl:choose>
-                        <xsl:when test="child::c[@level='file'] or child::c[@otherlevel='sous-dossier'] or (child::c[@otherlevel='subfile' or @otherlevel='item'] and child::c/child::c[@level='item'])"><!-- or (following-sibling::c/child::c[@otherlevel='subfile' or @otherlevel='item'] and following-sibling::c/child::c/child::c[@level='item']) or (preceding-sibling::c/child::c[@otherlevel='subfile' or @otherlevel='item'] and preceding-sibling::c/child::c/child::c[@level='item'])">-->
+                        <xsl:when
+                            test="child::c[@level='file'] or child::c[@otherlevel='sous-dossier'] or (child::c[@otherlevel='subfile' or @otherlevel='item'] and child::c/child::c[@level='item'])">
+                            <!-- or (following-sibling::c/child::c[@otherlevel='subfile' or @otherlevel='item'] and following-sibling::c/child::c/child::c[@level='item']) or (preceding-sibling::c/child::c[@otherlevel='subfile' or @otherlevel='item'] and preceding-sibling::c/child::c/child::c[@level='item'])">-->
                             <xsl:value-of select="'subseries'"/>
                         </xsl:when>
-                        <xsl:when test="parent::c[@otherlevel='subfile'] and parent::c/parent::c[@otherlevel='filegrp']">
+                        <xsl:when
+                            test="parent::c[@otherlevel='subfile'] and parent::c/parent::c[@otherlevel='filegrp']">
                             <xsl:value-of select="'item'"/>
                         </xsl:when>
                         <xsl:when test="parent::c[not(@level)]">
@@ -2911,7 +3174,8 @@
                         </xsl:otherwise>
                     </xsl:choose>
                 </xsl:when>
-                <xsl:when test="@level='subseries' or @level='recordgrp' or @level='subgrp' or (@level='series' and //eadid/@countrycode = 'DE')">
+                <xsl:when
+                    test="@level='subseries' or @level='recordgrp' or @level='subgrp' or (@level='series' and //eadid/@countrycode = 'DE')">
                     <xsl:choose>
                         <xsl:when test="child::c[@level='series']">
                             <xsl:value-of select="'series'"/>
@@ -2921,16 +3185,19 @@
                         </xsl:otherwise>
                     </xsl:choose>
                 </xsl:when>
-                <xsl:when test="(@level='series' and (//eadid/@countrycode != 'DE' or not(//eadid/@countrycode))) or @level='subfonds' or @level='class' or not(@level)">
+                <xsl:when
+                    test="(@level='series' and (//eadid/@countrycode != 'DE' or not(//eadid/@countrycode))) or @level='subfonds' or @level='class' or not(@level)">
                     <xsl:choose>
-                        <xsl:when test="parent::c[@otherlevel='filegrp'] or (not(@level) and parent::c[@level='subseries'])">
+                        <xsl:when
+                            test="parent::c[@otherlevel='filegrp'] or (not(@level) and parent::c[@level='subseries'])">
                             <xsl:value-of select="'file'"/>
                         </xsl:when>
-                        <xsl:when test="child::c[@level='item']"><!-- or following-sibling::c/child::c[@level='item'] or preceding-sibling::c/child::c[@level='item']">-->
+                        <xsl:when test="child::c[@level='item']">
+                            <!-- or following-sibling::c/child::c[@level='item'] or preceding-sibling::c/child::c[@level='item']">-->
                             <xsl:value-of select="'file'"/>
                         </xsl:when>
                         <xsl:when test="@level='subfonds' and parent::c[@level='subseries']">
-                            <xsl:value-of select="'subseries'" />
+                            <xsl:value-of select="'subseries'"/>
                         </xsl:when>
                         <xsl:when test="not(@level) and parent::c[@level='file' or @level='item']">
                             <xsl:value-of select="'item'"/>
@@ -2941,10 +3208,12 @@
                         <xsl:when test="parent::c[@level='file'] and child::c">
                             <xsl:value-of select="'file'"/>
                         </xsl:when>
-                        <xsl:when test="parent::c[@otherlevel='groupe-de-fonds' or @otherlevel='groupe_de_fonds' or not(@level)]">
+                        <xsl:when
+                            test="parent::c[@otherlevel='groupe-de-fonds' or @otherlevel='groupe_de_fonds' or not(@level)]">
                             <xsl:value-of select="'subseries'"/>
                         </xsl:when>
-                        <xsl:when test="not(@level) and (parent::c[@otherlevel='sous-sous-serie-organique' or @otherlevel='recordgrp'] or child::c[@otherlevel='sous-sous-serie-organique'] or not(child::c))">
+                        <xsl:when
+                            test="not(@level) and (parent::c[@otherlevel='sous-sous-serie-organique' or @otherlevel='recordgrp'] or child::c[@otherlevel='sous-sous-serie-organique'] or not(child::c))">
                             <xsl:value-of select="'subseries'"/>
                         </xsl:when>
                         <xsl:otherwise>
@@ -2954,10 +3223,12 @@
                 </xsl:when>
                 <xsl:when test="@level='fonds' or @level='collection'">
                     <xsl:choose>
-                        <xsl:when test="parent::c[@otherlevel='groupe-de-fonds' or @otherlevel='groupe_de_fonds' or @otherlevel='groupe-de-fonds-et-de-collections' or not(@level)]">
+                        <xsl:when
+                            test="parent::c[@otherlevel='groupe-de-fonds' or @otherlevel='groupe_de_fonds' or @otherlevel='groupe-de-fonds-et-de-collections' or not(@level)]">
                             <xsl:value-of select="'series'"/>
                         </xsl:when>
-                        <xsl:when test="parent::c[@level='fonds']/parent::c[not(@level) or @otherlevel='groupe-de-fonds']">
+                        <xsl:when
+                            test="parent::c[@level='fonds']/parent::c[not(@level) or @otherlevel='groupe-de-fonds']">
                             <xsl:value-of select="'series'"/>
                         </xsl:when>
                         <xsl:when test="parent::c[@level='subseries']">
@@ -2970,27 +3241,35 @@
                 </xsl:when>
                 <xsl:when test="@level='otherlevel'">
                     <xsl:choose>
-                        <xsl:when test="@otherlevel='filegrp' or @otherlevel=' filegrp' or @otherlevel='filegroup' or @otherlevel='file' or @otherlevel='subseries' or @otherlevel='subsubseries' or @otherlevel='sous-serie' or @otherlevel='sous-sous-serie' or @otherlevel='sous-sous-sous-serie' or @otherlevel='sous-sous-sous-sous-série' or @otherlevel='subsubsubseries' or @otherlevel='subsubsusbseries' or @otherlevel='subsubsubsubseries' or @otherlevel='sous-sous-série' or @otherlevel='sous-sous-sous-série' or @otherlevel='partie-de-subgp' or @otherlevel='partie-de-subgrp' or @otherlevel='partie-de-sbgrp' or @otherlevel='subsubsubsubsubseries' or @otherlevel='sous-série' or @otherlevel='sous-dossiers' or @otherlevel='sous-sous-serie-organique' or @otherlevel='sous-sous-sous-serie-organique' or @otherlevel='sub-subseries' or @otherlevel='box'">
+                        <xsl:when
+                            test="@otherlevel='filegrp' or @otherlevel=' filegrp' or @otherlevel='filegroup' or @otherlevel='file' or @otherlevel='subseries' or @otherlevel='subsubseries' or @otherlevel='sous-serie' or @otherlevel='sous-sous-serie' or @otherlevel='sous-sous-sous-serie' or @otherlevel='sous-sous-sous-sous-série' or @otherlevel='subsubsubseries' or @otherlevel='subsubsusbseries' or @otherlevel='subsubsubsubseries' or @otherlevel='sous-sous-série' or @otherlevel='sous-sous-sous-série' or @otherlevel='partie-de-subgp' or @otherlevel='partie-de-subgrp' or @otherlevel='partie-de-sbgrp' or @otherlevel='subsubsubsubsubseries' or @otherlevel='sous-série' or @otherlevel='sous-dossiers' or @otherlevel='sous-sous-serie-organique' or @otherlevel='sous-sous-sous-serie-organique' or @otherlevel='sub-subseries' or @otherlevel='box'">
                             <xsl:value-of select="'subseries'"/>
                         </xsl:when>
-                        <xsl:when test="((@otherlevel='groupe-de-fonds' or @otherlevel='groupe_de_fonds') and not(parent::c[not(@level) or @level='file' or @otherlevel='groupe-de-fonds' or @otherlevel='groupe_de_fonds'])) or @otherlevel='SF' or @otherlevel='sous-fonds' or @otherlevel='sous-sous-fonds'">
+                        <xsl:when
+                            test="((@otherlevel='groupe-de-fonds' or @otherlevel='groupe_de_fonds') and not(parent::c[not(@level) or @level='file' or @otherlevel='groupe-de-fonds' or @otherlevel='groupe_de_fonds'])) or @otherlevel='SF' or @otherlevel='sous-fonds' or @otherlevel='sous-sous-fonds'">
                             <xsl:value-of select="'fonds'"/>
                         </xsl:when>
-                        <xsl:when test="@otherlevel='groupe-de-fonds-et-de-collections' or @otherlevel='groupe-de-series' or @otherlevel='groupe-de-fonds-et-de-sous-fonds' or @otherlevel='SC' or @otherlevel='SSC' or @otherlevel='SSSC' or @otherlevel='SR' or @otherlevel='SSR' or @otherlevel='SSSR' or @otherlevel='partie-de-fonds' or @otherlevel='partie-de-sous-fonds' or @otherlevel='sous-collection' or @otherlevel='article' or @otherlevel='SubCollection' or @otherlevel='sub-subfonds' or @otherlevel='sub sub fonds' or @otherlevel='sub-sub-subfonds' or @otherlevel='sub sub sub fonds' or @otherlevel='Section' or @otherlevel='SubSection'">
+                        <xsl:when
+                            test="@otherlevel='groupe-de-fonds-et-de-collections' or @otherlevel='groupe-de-series' or @otherlevel='groupe-de-fonds-et-de-sous-fonds' or @otherlevel='SC' or @otherlevel='SSC' or @otherlevel='SSSC' or @otherlevel='SR' or @otherlevel='SSR' or @otherlevel='SSSR' or @otherlevel='partie-de-fonds' or @otherlevel='partie-de-sous-fonds' or @otherlevel='sous-collection' or @otherlevel='article' or @otherlevel='SubCollection' or @otherlevel='sub-subfonds' or @otherlevel='sub sub fonds' or @otherlevel='sub-sub-subfonds' or @otherlevel='sub sub sub fonds' or @otherlevel='Section' or @otherlevel='SubSection'">
                             <xsl:value-of select="'series'"/>
                         </xsl:when>
-                        <xsl:when test="@otherlevel='sous-sous-serie-organique' or @otherlevel='DC' or ((@otherlevel='groupe-de-fonds' or @otherlevel='groupe_de_fonds') and parent::c[not(@level) or @otherlevel='groupe-de-fonds' or @otherlevel='groupe_de_fonds'])">
+                        <xsl:when
+                            test="@otherlevel='sous-sous-serie-organique' or @otherlevel='DC' or ((@otherlevel='groupe-de-fonds' or @otherlevel='groupe_de_fonds') and parent::c[not(@level) or @otherlevel='groupe-de-fonds' or @otherlevel='groupe_de_fonds'])">
                             <xsl:value-of select="'series'"/>
                         </xsl:when>
-                        <xsl:when test="@otherlevel='UI' or @otherlevel='volym' or @otherlevel='karta' or (@otherlevel='sous-dossier' and (child::c[@otherlevel='sous-sous-dossier'] or child::dsc/child::c[@level='item'])) or @otherlevel='sous-sous-dossier_factice' or @otherlevel='sous-sous-groupe' or @otherlevel='groupe-de-pièces' or @otherlevel='piece'">
+                        <xsl:when
+                            test="@otherlevel='UI' or @otherlevel='volym' or @otherlevel='karta' or (@otherlevel='sous-dossier' and (child::c[@otherlevel='sous-sous-dossier'] or child::dsc/child::c[@level='item'])) or @otherlevel='sous-sous-dossier_factice' or @otherlevel='sous-sous-groupe' or @otherlevel='groupe-de-pièces' or @otherlevel='piece'">
                             <xsl:value-of select="'file'"/>
                         </xsl:when>
-                        <xsl:when test="@otherlevel='D' or ((@otherlevel='groupe-de-fonds' or @otherlevel='groupe_de_fonds') and parent::c[@level='file']) or @otherlevel='partie-de-pièce' or @otherlevel='partie-de-dossier' or @otherlevel='sous-dossier' or @otherlevel='sous-sous-dossier' or @otherlevel='ss_ss_fonds' or @otherlevel='Piece'">
+                        <xsl:when
+                            test="@otherlevel='D' or ((@otherlevel='groupe-de-fonds' or @otherlevel='groupe_de_fonds') and parent::c[@level='file']) or @otherlevel='partie-de-pièce' or @otherlevel='partie-de-dossier' or @otherlevel='sous-dossier' or @otherlevel='sous-sous-dossier' or @otherlevel='ss_ss_fonds' or @otherlevel='Piece'">
                             <xsl:value-of select="'item'"/>
                         </xsl:when>
                         <xsl:when test="@otherlevel='subfile'">
                             <xsl:choose>
-                                <xsl:when test="child::c[@level='file' or @level='item' or @otherlevel='subfile']"><!-- or following-sibling::c/child::c[@level='file' or @level='item' or @otherlevel='subfile'] or preceding-sibling::c/child::c[@level='file' or @level='item' or @otherlevel='subfile']">-->
+                                <xsl:when
+                                    test="child::c[@level='file' or @level='item' or @otherlevel='subfile']">
+                                    <!-- or following-sibling::c/child::c[@level='file' or @level='item' or @otherlevel='subfile'] or preceding-sibling::c/child::c[@level='file' or @level='item' or @otherlevel='subfile']">-->
                                     <xsl:value-of select="'file'"/>
                                 </xsl:when>
                                 <xsl:otherwise>
@@ -3008,12 +3287,14 @@
                             <xsl:value-of select="'subseries'"/>
                         </xsl:when>
                         <xsl:otherwise>
-                            <xsl:message select="@otherlevel"> - WARNING! We don't know this c otherlevel attribute</xsl:message>
+                            <xsl:message select="@otherlevel"> - WARNING! We don't know this c
+                                otherlevel attribute</xsl:message>
                         </xsl:otherwise>
                     </xsl:choose>
                 </xsl:when>
                 <xsl:otherwise>
-                    <xsl:message select="@level"> - WARNING! We don't know this c level attribute</xsl:message>
+                    <xsl:message select="@level"> - WARNING! We don't know this c level
+                        attribute</xsl:message>
                 </xsl:otherwise>
             </xsl:choose>
         </xsl:variable>
@@ -3061,9 +3342,9 @@
                         <xsl:apply-templates mode="fonds"/>
                     </xsl:if>
                     <!--<xsl:if test="not(controlaccess) and not(did/controlaccess) and not(index) and not(did/index)">-->
-                        <!--<xsl:call-template name="createControlaccess">-->
-                            <!--<xsl:with-param name="context" select="."/>-->
-                        <!--</xsl:call-template>-->
+                    <!--<xsl:call-template name="createControlaccess">-->
+                    <!--<xsl:with-param name="context" select="."/>-->
+                    <!--</xsl:call-template>-->
                     <!--</xsl:if>-->
                 </c>
             </xsl:otherwise>
