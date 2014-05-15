@@ -829,9 +829,28 @@
 
     <!-- places -->
     <xsl:template match="places" mode="copy">
-        <xsl:if test="*[text()]">
+        <xsl:if test="descendant::*[text()]">
             <places>
-                <xsl:apply-templates select="node()" mode="copy"/>
+                <xsl:choose>
+                    <xsl:when test="p|list|citation">
+                        <place>
+                            <placeEntry/>
+                            <descriptiveNote>
+                                <xsl:for-each select="p|list/item|citation">
+                                    <p>
+                                        <xsl:if test="@xml:lang">
+                                            <xsl:attribute name="xml:lang" select="@xml:lang"/>
+                                        </xsl:if>
+                                        <xsl:value-of select="normalize-space(text())"/>
+                                    </p>
+                                </xsl:for-each>
+                            </descriptiveNote>
+                        </place>
+                    </xsl:when>
+                    <xsl:otherwise>
+                        <xsl:apply-templates select="node()" mode="copy"/>
+                    </xsl:otherwise>
+                </xsl:choose>
             </places>
         </xsl:if>
     </xsl:template>
@@ -890,10 +909,30 @@
 
     <!-- localDescriptions -->
     <xsl:template match="localDescriptions" mode="copy">
-        <localDescriptions>
+        <xsl:if test="descendant::*[text()]">
+            <localDescriptions>
             <xsl:attribute name="localType" select="@localType"/>
-            <xsl:apply-templates select="node()" mode="copy"/>
+            <xsl:choose>
+                <xsl:when test="p|list|citation">
+                    <localDescription>
+                        <descriptiveNote>
+                            <xsl:for-each select="p|list/item|citation">
+                                <p>
+                                    <xsl:if test="@xml:lang">
+                                        <xsl:attribute name="xml:lang" select="@xml:lang"/>
+                                    </xsl:if>
+                                    <xsl:value-of select="normalize-space(text())"/>
+                                </p>
+                            </xsl:for-each>
+                        </descriptiveNote>
+                    </localDescription>
+                </xsl:when>
+                <xsl:otherwise>
+                    <xsl:apply-templates select="node()" mode="copy"/>
+                </xsl:otherwise>
+            </xsl:choose>
         </localDescriptions>
+        </xsl:if>
     </xsl:template>
 
     <!-- localDescription -->
@@ -906,9 +945,29 @@
 
     <!-- legalStatuses -->
     <xsl:template match="legalStatuses" mode="copy">
-        <legalStatuses>
-            <xsl:apply-templates select="node()" mode="copy"/>
+        <xsl:if test="descendant::*[text()]">
+            <legalStatuses>
+            <xsl:choose>
+                <xsl:when test="p|list|citation">
+                    <legalStatus>
+                        <descriptiveNote>
+                            <xsl:for-each select="p|list/item|citation">
+                                <p>
+                                    <xsl:if test="@xml:lang">
+                                        <xsl:attribute name="xml:lang" select="@xml:lang"/>
+                                    </xsl:if>
+                                    <xsl:value-of select="normalize-space(text())"/>
+                                </p>
+                            </xsl:for-each>
+                        </descriptiveNote>
+                    </legalStatus>
+                </xsl:when>
+                <xsl:otherwise>
+                    <xsl:apply-templates select="node()" mode="copy"/>
+                </xsl:otherwise>
+            </xsl:choose>
         </legalStatuses>
+        </xsl:if>
     </xsl:template>
 
     <!-- legalStatus -->
@@ -923,9 +982,28 @@
 
     <!-- functions -->
     <xsl:template match="functions" mode="copy">
-        <xsl:if test="*[text()]">
+        <xsl:if test="descendant::*[text()]">
             <functions>
-                <xsl:apply-templates select="node()" mode="copy"/>
+                <xsl:choose>
+                    <xsl:when test="p|list|citation">
+                        <function>
+                            <descriptiveNote>
+                                <xsl:for-each select="p|list/item|citation">
+                                    <p>
+                                        <xsl:if test="@xml:lang">
+                                            <xsl:attribute name="xml:lang" select="@xml:lang"/>
+                                        </xsl:if>
+                                        <xsl:value-of select="normalize-space(text())"/>
+                                    </p>
+                                </xsl:for-each>
+                            </descriptiveNote>
+                        </function>
+                    </xsl:when>
+                    <xsl:otherwise>
+                        <xsl:apply-templates select="node()" mode="copy"/>
+                    </xsl:otherwise>
+                </xsl:choose>
+                
             </functions>
         </xsl:if>
     </xsl:template>
@@ -942,9 +1020,27 @@
 
     <!-- occupations -->
     <xsl:template match="occupations" mode="copy">
-        <xsl:if test="./*[text()]">
+        <xsl:if test="descendant::*[text()]">
             <occupations>
-                <xsl:apply-templates select="node()" mode="copy"/>
+                <xsl:choose>
+                    <xsl:when test="p|list|citation">
+                        <occupation>
+                            <descriptiveNote>
+                                <xsl:for-each select="p|list/item|citation">
+                                    <p>
+                                        <xsl:if test="@xml:lang">
+                                            <xsl:attribute name="xml:lang" select="@xml:lang"/>
+                                        </xsl:if>
+                                        <xsl:value-of select="normalize-space(text())"/>
+                                    </p>
+                                </xsl:for-each>
+                            </descriptiveNote>
+                        </occupation>
+                    </xsl:when>
+                    <xsl:otherwise>
+                        <xsl:apply-templates select="node()" mode="copy"/>
+                    </xsl:otherwise>
+                </xsl:choose>
             </occupations>
         </xsl:if>
     </xsl:template>
@@ -961,9 +1057,27 @@
 
     <!-- mandates -->
     <xsl:template match="mandates" mode="copy">
-        <xsl:if test="./*[text()]">
+        <xsl:if test="descendant::*[text()]">
             <mandates>
-                <xsl:apply-templates select="node()" mode="copy"/>
+                <xsl:choose>
+                    <xsl:when test="p|list|citation">
+                        <mandate>
+                            <descriptiveNote>
+                                <xsl:for-each select="p|list/item|citation">
+                                    <p>
+                                        <xsl:if test="@xml:lang">
+                                            <xsl:attribute name="xml:lang" select="@xml:lang"/>
+                                        </xsl:if>
+                                        <xsl:value-of select="normalize-space(text())"/>
+                                    </p>
+                                </xsl:for-each>
+                            </descriptiveNote>
+                        </mandate>
+                    </xsl:when>
+                    <xsl:otherwise>
+                        <xsl:apply-templates select="node()" mode="copy"/>
+                    </xsl:otherwise>
+                </xsl:choose>
             </mandates>
         </xsl:if>
     </xsl:template>
@@ -980,9 +1094,27 @@
 
     <!-- languagesUsed -->
     <xsl:template match="languagesUsed" mode="copy">
-        <xsl:if test="./*[text()]">
+        <xsl:if test="descendant::*[text()]">
             <languagesUsed>
-                <xsl:apply-templates select="node()" mode="copy"/>
+                <xsl:choose>
+                    <xsl:when test="p|list|citation">
+                        <languageUsed>
+                            <descriptiveNote>
+                                <xsl:for-each select="p|list/item|citation">
+                                    <p>
+                                        <xsl:if test="@xml:lang">
+                                            <xsl:attribute name="xml:lang" select="@xml:lang"/>
+                                        </xsl:if>
+                                        <xsl:value-of select="normalize-space(text())"/>
+                                    </p>
+                                </xsl:for-each>
+                            </descriptiveNote>
+                        </languageUsed>
+                    </xsl:when>
+                    <xsl:otherwise>
+                        <xsl:apply-templates select="node()" mode="copy"/>
+                    </xsl:otherwise>
+                </xsl:choose>
             </languagesUsed>
         </xsl:if>
     </xsl:template>
@@ -999,7 +1131,7 @@
 
     <!-- structureOrGenealogy -->
     <xsl:template match="structureOrGenealogy" mode="copy">
-        <xsl:if test="*[text()]">
+        <xsl:if test="descendant::*[text()]">
             <structureOrGenealogy>
                 <xsl:apply-templates select="node()" mode="copy"/>
             </structureOrGenealogy>
@@ -1041,51 +1173,12 @@
 
     <!-- p -->
     <xsl:template match="p" mode="copy">
-        <!--<xsl:choose>
-            <xsl:when
-                test="parent::functions|languagesUsed|legalStatuses|localDescriptions|mandates|occupations|places">
-                <xsl:variable name="thisElement" select="."/>
-                <xsl:variable name="singularName">
-                    <xsl:choose>
-                        <xsl:when test="parent::languagesUsed">
-                            <xsl:value-of>languageUsed</xsl:value-of>
-                        </xsl:when>
-                        <xsl:when test="parent::legalStatuses">
-                            <xsl:value-of>legalStatus</xsl:value-of>
-                        </xsl:when>
-                        <xsl:otherwise>
-                            <xsl:value-of
-                                select="substring(name(..), 0, string-length(name(..)) - 1)"/>
-                        </xsl:otherwise>
-                    </xsl:choose>
-                </xsl:variable>
-                <xsl:for-each select="../$singularName">
-                    <xsl:choose>
-                        <xsl:when test="descriptiveNote">
-                            
-                        </xsl:when>
-                        <xsl:otherwise>
-                            <descriptiveNote>
-                                <p>
-                                    <xsl:if test="@xml:lang">
-                                        <xsl:attribute name="xml:lang" select="$thisElement/@xml:lang"/>
-                                    </xsl:if>
-                                    <xsl:value-of select="$thisElement"/>
-                                </p>
-                            </descriptiveNote>
-                        </xsl:otherwise>
-                    </xsl:choose>
-                </xsl:for-each>
-            </xsl:when>
-            <xsl:otherwise>-->
-                <p>
-                    <xsl:if test="@xml:lang">
-                        <xsl:attribute name="xml:lang" select="@xml:lang"/>
-                    </xsl:if>
-                    <xsl:value-of select="."/>
-                </p><!--
-            </xsl:otherwise>
-        </xsl:choose>-->
+        <p>
+            <xsl:if test="@xml:lang">
+                <xsl:attribute name="xml:lang" select="@xml:lang"/>
+            </xsl:if>
+            <xsl:value-of select="."/>
+        </p>
     </xsl:template>
 
     <!-- generalContext -->
