@@ -153,13 +153,13 @@ public class EacCpfFrame extends JFrame {
     	this.mainTabbedPane.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
     	this.mainTabbedPane.putClientProperty("jgoodies.noContentBorder", Boolean.TRUE);
     	if (isNew){
-			this.mainTabbedPane.add(this.labels.getString("eaccpf.tab.start"), new EacCpfStartPanel(eacCpf, null, this.mainTabbedPane, this, this.model, this.labels).buildEditorPanel(null));
+			this.mainTabbedPane.add(this.labels.getString("eaccpf.tab.start"), new EacCpfStartPanel(eacCpf, null, this.mainTabbedPane, this, this.model, this.labels, this.eacType, this.firstLanguage, this.firstScript).buildEditorPanel(null));
     	} else if (this.firstLanguage != null && !this.firstLanguage.isEmpty()
 				&& this.firstScript != null && !this.firstScript.isEmpty()) {
-			this.mainTabbedPane.add(this.labels.getString("eaccpf.eacCpfItem"), new EacCpfNewPanel(eacCpf, null, this.mainTabbedPane, this, this.model, this.labels).buildInstitutionTabbedPane(isNew, this.eacType, this.firstLanguage, this.firstScript, this.mainagencycode));
+			this.mainTabbedPane.add(this.labels.getString("eaccpf.eacCpfItem"), new EacCpfNewPanel(eacCpf, null, this.mainTabbedPane, this, this.model, this.labels, this.eacType, this.firstLanguage, this.firstScript).buildInstitutionTabbedPane(isNew, this.eacType, this.firstLanguage, this.firstScript, this.mainagencycode));
     	} else {
     		this.getEntityType(eacCpf);
-			this.mainTabbedPane.add(this.labels.getString("eaccpf.eacCpfItem"), new EacCpfNewPanel(eacCpf, null, this.mainTabbedPane, this, this.model, this.labels).buildInstitutionTabbedPane(isNew, this.eacType, null, null, this.mainagencycode));
+			this.mainTabbedPane.add(this.labels.getString("eaccpf.eacCpfItem"), new EacCpfNewPanel(eacCpf, null, this.mainTabbedPane, this, this.model, this.labels, this.eacType, this.firstLanguage, this.firstScript).buildInstitutionTabbedPane(isNew, this.eacType, null, null, this.mainagencycode));
     	}
     }
 

@@ -1,4 +1,4 @@
-package eu.apenet.dpt.standalone.gui.eag2012.SwingStructures;
+package eu.apenet.dpt.standalone.gui.commons.SwingStructures;
 
 /*
  * #%L
@@ -18,14 +18,7 @@ package eu.apenet.dpt.standalone.gui.eag2012.SwingStructures;
  * #L%
  */
 
-import eu.apenet.dpt.standalone.gui.commons.SwingStructures.StructureWithLanguage;
-import eu.apenet.dpt.standalone.gui.eag2012.EagPanels;
-import eu.apenet.dpt.standalone.gui.eag2012.SwingStructures.EagScrollPane;
-import eu.apenet.dpt.standalone.gui.eag2012.SwingStructures.EagScrollPaneHolder;
-import eu.apenet.dpt.utils.util.LanguageIsoList;
-
-import javax.swing.*;
-import java.util.Arrays;
+import javax.swing.JTextField;
 
 /**
  * User: Yoann Moranville

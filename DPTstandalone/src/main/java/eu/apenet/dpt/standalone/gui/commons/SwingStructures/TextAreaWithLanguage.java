@@ -1,4 +1,4 @@
-package eu.apenet.dpt.standalone.gui.eag2012.SwingStructures;
+package eu.apenet.dpt.standalone.gui.commons.SwingStructures;
 
 /*
  * #%L
@@ -18,12 +18,8 @@ package eu.apenet.dpt.standalone.gui.eag2012.SwingStructures;
  * #L%
  */
 
-import eu.apenet.dpt.standalone.gui.commons.SwingStructures.StructureWithLanguage;
-import eu.apenet.dpt.standalone.gui.eag2012.EagPanels;
-import eu.apenet.dpt.utils.util.LanguageIsoList;
+import javax.swing.JTextField;
 
-import javax.swing.*;
-import java.util.Arrays;
 
 /**
  * User: Yoann Moranville
@@ -32,13 +28,13 @@ import java.util.Arrays;
  * @author Yoann Moranville
  */
 public class TextAreaWithLanguage extends StructureWithLanguage {
-    private EagScrollPaneHolder eagScrollPaneHolder;
+    private ScrollPaneHolder scrollPaneHolder;
     private JTextField extraField;
     private JTextField secondExtraField;
 
     public TextAreaWithLanguage(String text, String language, String extraText, String secondExtraText) {
         super(language);
-        eagScrollPaneHolder = new EagScrollPaneHolder(text);
+        scrollPaneHolder = new ScrollPaneHolder(text);
         extraField = new JTextField(extraText);
         secondExtraField = new JTextField(secondExtraText);
     }
@@ -51,8 +47,8 @@ public class TextAreaWithLanguage extends StructureWithLanguage {
         this(text, language, "");
     }
 
-    public EagScrollPane getTextField() {
-        return eagScrollPaneHolder.getScrollPane();
+    public ScrollPane getTextField() {
+        return scrollPaneHolder.getScrollPane();
     }
 
     public JTextField getExtraField() {
@@ -64,7 +60,7 @@ public class TextAreaWithLanguage extends StructureWithLanguage {
     }
 
     public String getTextValue() {
-        return eagScrollPaneHolder.getText();
+        return scrollPaneHolder.getText();
     }
 
     public String getExtraValue() {

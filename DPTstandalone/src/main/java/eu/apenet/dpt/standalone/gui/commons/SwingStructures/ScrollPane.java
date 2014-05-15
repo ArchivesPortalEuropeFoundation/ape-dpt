@@ -1,4 +1,4 @@
-package eu.apenet.dpt.standalone.gui.eag2012.SwingStructures;
+package eu.apenet.dpt.standalone.gui.commons.SwingStructures;
 
 /*
  * #%L
@@ -20,22 +20,23 @@ package eu.apenet.dpt.standalone.gui.eag2012.SwingStructures;
 
 import javax.swing.*;
 
+
 /**
  * User: Yoann Moranville
  * Date: 25/04/2013
  *
  * @author Yoann Moranville
  */
-public class EagScrollPane extends JScrollPane {
-    private EagTextAreaScrollable eagTextAreaScrollable;
+public class ScrollPane extends JScrollPane {
+    private TextAreaScrollable textAreaScrollable;
 
-    public EagScrollPane(EagTextAreaScrollable eagTextAreaScrollable) {
-        super(eagTextAreaScrollable);
-        this.eagTextAreaScrollable = eagTextAreaScrollable;
+    public ScrollPane(TextAreaScrollable textAreaScrollable) {
+        super(textAreaScrollable);
+        this.textAreaScrollable = textAreaScrollable;
         this.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
     }
 
     public String getText() {
-        return eagTextAreaScrollable.getText();
+        return textAreaScrollable.getText();
     }
 }

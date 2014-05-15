@@ -29,6 +29,7 @@ import javax.swing.JComboBox;
 import javax.swing.JTextField;
 
 import eu.apenet.dpt.standalone.gui.commons.SwingStructures.TextFieldWithDate;
+import eu.apenet.dpt.standalone.gui.commons.SwingStructures.TextFieldWithLanguage;
 
 /**
  *

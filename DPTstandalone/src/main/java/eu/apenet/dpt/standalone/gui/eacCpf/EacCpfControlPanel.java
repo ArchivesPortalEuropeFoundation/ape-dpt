@@ -41,6 +41,7 @@ import eu.apenet.dpt.standalone.gui.Utilities;
 import eu.apenet.dpt.standalone.gui.commons.ButtonTab;
 import eu.apenet.dpt.standalone.gui.commons.DefaultBtnAction;
 import eu.apenet.dpt.utils.eaccpf.EacCpf;
+import eu.apenet.dpt.utils.util.XmlTypeEacCpf;
 
 /**
  * Class for the panel "control" of the apeEAC-CPF creation form.
@@ -56,9 +57,12 @@ public class EacCpfControlPanel extends EacCpfPanel {
 	 * @param eacCpfFrame
 	 * @param model
 	 * @param labels
+	 * @param entityType
+	 * @param firstLanguage
+	 * @param firstScript
 	 */
-	public EacCpfControlPanel(EacCpf eaccpf, JTabbedPane tabbedPane, JTabbedPane mainTabbedPane, JFrame eacCpfFrame, ProfileListModel model, ResourceBundle labels) {
-		super(eaccpf, tabbedPane, mainTabbedPane, eacCpfFrame, model, labels);
+	public EacCpfControlPanel(EacCpf eaccpf, JTabbedPane tabbedPane, JTabbedPane mainTabbedPane, JFrame eacCpfFrame, ProfileListModel model, ResourceBundle labels, XmlTypeEacCpf entityType, String firstLanguage, String firstScript) {
+		super(eaccpf, tabbedPane, mainTabbedPane, eacCpfFrame, model, labels, entityType, firstLanguage, firstScript);
 	}
 
 	/**
@@ -161,7 +165,7 @@ public class EacCpfControlPanel extends EacCpfPanel {
 				super.updateJAXBObject(true);
 				super.saveFile(eaccpf.getControl().getRecordId().getValue());
 			} catch (EacCpfFormException e) {
-				reloadTabbedPanel(new EacCpfControlPanel(eaccpf, tabbedPane, mainTabbedPane, eacCpfFrame, model, labels).buildEditorPanel(errors), 3);
+				reloadTabbedPanel(new EacCpfControlPanel(eaccpf, tabbedPane, mainTabbedPane, eacCpfFrame, model, labels, entityType, firstLanguage, firstScript).buildEditorPanel(errors), 3);
 			}
 		}
 	}
@@ -180,9 +184,9 @@ public class EacCpfControlPanel extends EacCpfPanel {
 				super.updateJAXBObject(false);
 				removeChangeListener();
 
-				reloadTabbedPanel(new EacCpfRelationsPanel(eaccpf, tabbedPane, mainTabbedPane, eacCpfFrame, model, labels).buildEditorPanel(errors), 2);
+				reloadTabbedPanel(new EacCpfRelationsPanel(eaccpf, tabbedPane, mainTabbedPane, eacCpfFrame, model, labels, entityType, firstLanguage, firstScript).buildEditorPanel(errors), 2);
 			} catch (EacCpfFormException e) {
-				reloadTabbedPanel(new EacCpfControlPanel(eaccpf, tabbedPane, mainTabbedPane, eacCpfFrame, model, labels).buildEditorPanel(errors), 3);
+				reloadTabbedPanel(new EacCpfControlPanel(eaccpf, tabbedPane, mainTabbedPane, eacCpfFrame, model, labels, entityType, firstLanguage, firstScript).buildEditorPanel(errors), 3);
 			}
 		}
 	}
@@ -227,19 +231,20 @@ public class EacCpfControlPanel extends EacCpfPanel {
 					removeChangeListener();
 					switch (selectedIndex) {
 						case 0:
-							reloadTabbedPanel(new EacCpfIdentityPanel(eaccpf, tabbedPane, mainTabbedPane, eacCpfFrame, model, false, labels).buildEditorPanel(errors), 0);
+							String mainagencycode = eaccpf.getControl().getMaintenanceAgency().getAgencyCode().getValue();
+							reloadTabbedPanel(new EacCpfIdentityPanel(eaccpf, tabbedPane, mainTabbedPane, eacCpfFrame, model, false, labels, entityType, firstLanguage, firstScript, mainagencycode).buildEditorPanel(errors), 0);
 							break;
 						case 1:
-							reloadTabbedPanel(new EacCpfDescriptionPanel(eaccpf, tabbedPane, mainTabbedPane, eacCpfFrame, model, labels).buildEditorPanel(errors), 1);
+							reloadTabbedPanel(new EacCpfDescriptionPanel(eaccpf, tabbedPane, mainTabbedPane, eacCpfFrame, model, labels, entityType, firstLanguage, firstScript).buildEditorPanel(errors), 1);
 							break;
 						case 2:
-							reloadTabbedPanel(new EacCpfRelationsPanel(eaccpf, tabbedPane, mainTabbedPane, eacCpfFrame, model, labels).buildEditorPanel(errors), 2);
+							reloadTabbedPanel(new EacCpfRelationsPanel(eaccpf, tabbedPane, mainTabbedPane, eacCpfFrame, model, labels, entityType, firstLanguage, firstScript).buildEditorPanel(errors), 2);
 							break;
 						default:
-							reloadTabbedPanel(new EacCpfControlPanel(eaccpf, tabbedPane, mainTabbedPane, eacCpfFrame, model, labels).buildEditorPanel(errors), 3);
+							reloadTabbedPanel(new EacCpfControlPanel(eaccpf, tabbedPane, mainTabbedPane, eacCpfFrame, model, labels, entityType, firstLanguage, firstScript).buildEditorPanel(errors), 3);
 					}
 				} catch (EacCpfFormException ex) {
-					reloadTabbedPanel(new EacCpfControlPanel(eaccpf, tabbedPane, mainTabbedPane, eacCpfFrame, model, labels).buildEditorPanel(errors), 3);
+					reloadTabbedPanel(new EacCpfControlPanel(eaccpf, tabbedPane, mainTabbedPane, eacCpfFrame, model, labels, entityType, firstLanguage, firstScript).buildEditorPanel(errors), 3);
 				}
 			}
 		}

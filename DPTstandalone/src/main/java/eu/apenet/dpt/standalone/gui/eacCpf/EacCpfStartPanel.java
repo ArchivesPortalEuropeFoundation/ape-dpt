@@ -63,8 +63,8 @@ public class EacCpfStartPanel extends EacCpfPanel{
     private LanguageWithScript languageWithScriptFirst;
     private JPanel radioBtnPanel;
 
-    public EacCpfStartPanel(EacCpf eacCpf, JTabbedPane tabbedPane1, JTabbedPane mainTabbedPane, JFrame eacCpfFrame, ProfileListModel model, ResourceBundle labels) {
-    	 super(eacCpf, tabbedPane1, mainTabbedPane, eacCpfFrame, model, labels);
+    public EacCpfStartPanel(EacCpf eacCpf, JTabbedPane tabbedPane1, JTabbedPane mainTabbedPane, JFrame eacCpfFrame, ProfileListModel model, ResourceBundle labels, XmlTypeEacCpf entityType, String firstLanguage, String firstScript) {
+    	 super(eacCpf, tabbedPane1, mainTabbedPane, eacCpfFrame, model, labels, entityType, firstLanguage, firstScript);
     	 tabbedPane = new JTabbedPane();
          tabbedPane.putClientProperty("jgoodies.noContentBorder", Boolean.TRUE);
          super.setTabbedPane(tabbedPane);
@@ -206,7 +206,11 @@ public class EacCpfStartPanel extends EacCpfPanel{
 				}
 
 				// Recover the selected first language.
-				String firstLanguage = (String) languageWithScriptFirst.getLanguageBox().getSelectedItem();
+				String firstLanguage = (String) languageWithScriptFirst.getLanguage();
+				if (firstLanguage == null
+						|| firstLanguage.isEmpty()) {
+					firstLanguage = (String) languageWithScriptFirst.getLanguageBox().getSelectedItem();
+				}
 				// Recover the selected first script.
 				String firstScript = (String) languageWithScriptFirst.getScriptBox().getSelectedItem();
 				RetrieveFromDb retrieveFromDb = new RetrieveFromDb();

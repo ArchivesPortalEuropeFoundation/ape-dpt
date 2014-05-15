@@ -27,8 +27,8 @@ import eu.apenet.dpt.standalone.gui.commons.ButtonTab;
 import eu.apenet.dpt.standalone.gui.commons.DefaultBtnAction;
 import eu.apenet.dpt.standalone.gui.commons.TextChanger;
 import eu.apenet.dpt.standalone.gui.commons.SwingStructures.TextFieldWithDate;
+import eu.apenet.dpt.standalone.gui.commons.SwingStructures.TextFieldWithLanguage;
 import eu.apenet.dpt.standalone.gui.eag2012.SwingStructures.FormerlyUsedName;
-import eu.apenet.dpt.standalone.gui.eag2012.SwingStructures.TextFieldWithLanguage;
 import eu.apenet.dpt.utils.eag2012.*;
 import org.apache.commons.lang.StringUtils;
 

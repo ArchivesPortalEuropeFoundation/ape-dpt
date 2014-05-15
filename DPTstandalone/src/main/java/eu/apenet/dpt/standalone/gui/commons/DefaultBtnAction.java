@@ -33,6 +33,7 @@ import eu.apenet.dpt.utils.eaccpf.EacCpf;
 import eu.apenet.dpt.utils.eaccpf.namespace.EacCpfNamespaceMapper;
 import eu.apenet.dpt.utils.eag2012.Eag;
 import eu.apenet.dpt.utils.eag2012.namespace.EagNamespaceMapper;
+import eu.apenet.dpt.utils.util.XmlTypeEacCpf;
 import eu.apenet.dpt.utils.util.Xsd_enum;
 
 import javax.swing.*;
@@ -143,12 +144,14 @@ public abstract class DefaultBtnAction implements ActionListener {
         return null;
     }
 
-    protected EacCpfPanel getCorrectEacCpfPanels(int tabSelectedIndex, JTabbedPane mainTabbedPane, JFrame eacCpfFrame, ResourceBundle labels) {
+    protected EacCpfPanel getCorrectEacCpfPanels(int tabSelectedIndex, JTabbedPane mainTabbedPane, JFrame eacCpfFrame, ResourceBundle labels, XmlTypeEacCpf entityType, String firstLanguage, String firstScript) {
         switch (tabSelectedIndex) {
-            case 0: return new EacCpfIdentityPanel(this.eaccpf, this.tabbedPane, mainTabbedPane, eacCpfFrame, this.model, false, labels);
-            case 1: return new EacCpfDescriptionPanel(this.eaccpf, this.tabbedPane, mainTabbedPane, eacCpfFrame, this.model, labels);
-            case 2: return new EacCpfRelationsPanel(this.eaccpf, this.tabbedPane, mainTabbedPane, eacCpfFrame, this.model, labels);
-            case 3: return new EacCpfControlPanel(this.eaccpf, this.tabbedPane, mainTabbedPane, eacCpfFrame, this.model, labels);
+            case 0:
+				String mainagencycode = eaccpf.getControl().getMaintenanceAgency().getAgencyCode().getValue();
+            	return new EacCpfIdentityPanel(this.eaccpf, this.tabbedPane, mainTabbedPane, eacCpfFrame, this.model, false, labels, entityType, firstLanguage, firstScript, mainagencycode);
+            case 1: return new EacCpfDescriptionPanel(this.eaccpf, this.tabbedPane, mainTabbedPane, eacCpfFrame, this.model, labels, entityType, firstLanguage, firstScript);
+            case 2: return new EacCpfRelationsPanel(this.eaccpf, this.tabbedPane, mainTabbedPane, eacCpfFrame, this.model, labels, entityType, firstLanguage, firstScript);
+            case 3: return new EacCpfControlPanel(this.eaccpf, this.tabbedPane, mainTabbedPane, eacCpfFrame, this.model, labels, entityType, firstLanguage, firstScript);
         }
         return null;
     }

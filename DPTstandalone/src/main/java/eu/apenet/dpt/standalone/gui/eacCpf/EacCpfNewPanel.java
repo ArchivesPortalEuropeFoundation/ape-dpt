@@ -45,9 +45,12 @@ public class EacCpfNewPanel extends EacCpfPanel {
 	 * @param eacCpfFrame
 	 * @param model
 	 * @param labels
+	 * @param entityType
+	 * @param firstLanguage
+	 * @param firstScript
 	 */
-	public EacCpfNewPanel(EacCpf eaccpf, JTabbedPane tabbedPanel, JTabbedPane mainTabbedPane, JFrame eacCpfFrame, ProfileListModel model, ResourceBundle labels) {
-		super(eaccpf, tabbedPanel, mainTabbedPane, eacCpfFrame, model, labels);
+	public EacCpfNewPanel(EacCpf eaccpf, JTabbedPane tabbedPanel, JTabbedPane mainTabbedPane, JFrame eacCpfFrame, ProfileListModel model, ResourceBundle labels, XmlTypeEacCpf entityType, String firstLanguage, String firstScript) {
+		super(eaccpf, tabbedPanel, mainTabbedPane, eacCpfFrame, model, labels, entityType, firstLanguage, firstScript);
 		this.tabbedPane = new JTabbedPane();
 		this.tabbedPane.putClientProperty("jgoodies.noContentBorder", Boolean.TRUE);
 		super.setTabbedPane(this.tabbedPane);
@@ -72,11 +75,7 @@ public class EacCpfNewPanel extends EacCpfPanel {
 		EacCpfFrame.firstTimeInTab = true;
 
 		JScrollPane scrollPane = null;
-		if (firstLanguage != null || firstScript != null) {
-			scrollPane = new JScrollPane(new EacCpfIdentityPanel(this.eaccpf, this.tabbedPane, this.mainTabbedPane, this.eacCpfFrame, this.model, isNew, this.labels, eacType, firstLanguage, firstScript, mainagencycode).buildEditorPanel(null));
-		} else {
-			scrollPane = new JScrollPane(new EacCpfIdentityPanel(this.eaccpf, this.tabbedPane, this.mainTabbedPane, this.eacCpfFrame, this.model, isNew, this.labels, eacType).buildEditorPanel(null));
-		}
+		scrollPane = new JScrollPane(new EacCpfIdentityPanel(this.eaccpf, this.tabbedPane, this.mainTabbedPane, this.eacCpfFrame, this.model, isNew, this.labels, eacType, firstLanguage, firstScript, mainagencycode).buildEditorPanel(null));
 		scrollPane.getVerticalScrollBar().setUnitIncrement(20);
 		this.tabbedPane.add(this.labels.getString("eaccpf.tab.identity"), scrollPane);
 		this.tabbedPane.add(this.labels.getString("eaccpf.tab.description"), null);

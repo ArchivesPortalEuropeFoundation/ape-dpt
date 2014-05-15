@@ -1,4 +1,4 @@
-package eu.apenet.dpt.standalone.gui.eag2012.SwingStructures;
+package eu.apenet.dpt.standalone.gui.commons.SwingStructures;
 
 /*
  * #%L
@@ -18,10 +18,10 @@ package eu.apenet.dpt.standalone.gui.eag2012.SwingStructures;
  * #L%
  */
 
-import javax.swing.*;
-import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+
+import javax.swing.JTextArea;
 
 /**
  * User: Yoann Moranville
@@ -29,8 +29,8 @@ import java.awt.event.KeyListener;
  *
  * @author Yoann Moranville
  */
-public class EagTextAreaScrollable extends JTextArea implements KeyListener {
-    public EagTextAreaScrollable(String title) {
+public class TextAreaScrollable extends JTextArea implements KeyListener {
+    public TextAreaScrollable(String title) {
         super(title);
         this.setLineWrap(true);
         this.setAutoscrolls(true);

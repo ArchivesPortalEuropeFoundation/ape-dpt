@@ -21,6 +21,8 @@ package eu.apenet.dpt.standalone.gui.eacCpf;
 import eu.apenet.dpt.standalone.gui.ProfileListModel;
 import eu.apenet.dpt.standalone.gui.commons.SwingStructures.CommonsPropertiesPanels;
 import eu.apenet.dpt.utils.eaccpf.EacCpf;
+import eu.apenet.dpt.utils.util.XmlTypeEacCpf;
+
 import org.apache.log4j.Logger;
 
 import javax.swing.*;
@@ -41,15 +43,21 @@ public abstract class EacCpfPanel extends CommonsPropertiesPanels{
 	protected JFrame eacCpfFrame;
     protected ProfileListModel model;
     protected ResourceBundle labels;
+    protected XmlTypeEacCpf entityType;
+    protected String firstLanguage;
+    protected String firstScript;
 
   
-    public EacCpfPanel(EacCpf eaccpf, JTabbedPane tabbedPane, JTabbedPane mainTabbedPane, JFrame eacCpfFrame, ProfileListModel model, ResourceBundle labels) {
+    public EacCpfPanel(EacCpf eaccpf, JTabbedPane tabbedPane, JTabbedPane mainTabbedPane, JFrame eacCpfFrame, ProfileListModel model, ResourceBundle labels, XmlTypeEacCpf entityType, String firstLanguage, String firstScript) {
         this.eacCpfFrame = eacCpfFrame;
         this.eaccpf = eaccpf;
         this.tabbedPane = tabbedPane;
         this.mainTabbedPane = mainTabbedPane;
         this.model = model;
         this.labels = labels;
+        this.entityType = entityType;
+		this.firstLanguage = firstLanguage;
+		this.firstScript = firstScript;
     }
 
     protected void closeFrame() {

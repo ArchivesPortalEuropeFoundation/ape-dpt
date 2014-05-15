@@ -94,7 +94,7 @@ import eu.apenet.dpt.utils.util.XmlTypeEacCpf;
  * Class for the panel "identity" of the apeEAC-CPF creation form.
  */
 public class EacCpfIdentityPanel extends EacCpfPanel {
-	// Constansts for the errors.
+	// Constants for the errors.
 	private static final String ERROR_NAME_PART = "namePartComponentTfsWCbs_";
 	private static final String ERROR_EXISTENCE_DATES = "existenceDateTFs";
 
@@ -105,7 +105,7 @@ public class EacCpfIdentityPanel extends EacCpfPanel {
 	private static final String UNKNOWN_END_DATE = "2099";
 	private static final String UNKNOWN_INITIAL_DATE = "0001";
 
-	// Constanrs for maintenance.
+	// Constants for maintenance.
 	private static final String MAINTENANCE_AGENCY_NAME = "European test archives";
 	private static final String MAINTENANCE_AGENT_HUMAN = "human";
 	private static final String MAINTENANCE_EVENT_CREATED = "created";
@@ -114,9 +114,6 @@ public class EacCpfIdentityPanel extends EacCpfPanel {
 
 	// Initial values.
 	private boolean isNew; // Indicates if is new file.
-	private XmlTypeEacCpf entityType; // The type of the entity described.
-	private String firstLanguage; // The current first language selected.
-	private String firstScript; // The current first script selected.
     private String mainagencycode; // The code of the current agency.
 
 	// Elements in the panel.
@@ -141,50 +138,14 @@ public class EacCpfIdentityPanel extends EacCpfPanel {
 	 * @param model
 	 * @param isNew
 	 * @param labels
-	 */
-	public EacCpfIdentityPanel(EacCpf eaccpf, JTabbedPane tabbedPane, JTabbedPane mainTabbedPane, JFrame eacCpfFrame, ProfileListModel model, boolean isNew, ResourceBundle labels) {
-		this(eaccpf, tabbedPane, mainTabbedPane, eacCpfFrame, model, isNew, labels, null);
-	}
-
-	/**
-	 * Constructor.
-	 *
-	 * @param eaccpf
-	 * @param tabbedPane
-	 * @param mainTabbedPane
-	 * @param eacCpfFrame
-	 * @param model
-	 * @param isNew
-	 * @param labels
-	 * @param entityType
-	 */
-	public EacCpfIdentityPanel(EacCpf eaccpf, JTabbedPane tabbedPane, JTabbedPane mainTabbedPane, JFrame eacCpfFrame, ProfileListModel model, boolean isNew, ResourceBundle labels, XmlTypeEacCpf entityType) {
-		super(eaccpf, tabbedPane, mainTabbedPane, eacCpfFrame, model, labels);
-		this.isNew = isNew;
-		this.entityType = entityType;
-	}
-
-	/**
-	 * Constructor.
-	 *
-	 * @param eaccpf
-	 * @param tabbedPane
-	 * @param mainTabbedPane
-	 * @param eacCpfFrame
-	 * @param model
-	 * @param isNew
-	 * @param labels
 	 * @param entityType
 	 * @param firstLanguage
 	 * @param firstScript
 	 * @param mainagencycode
 	 */
 	public EacCpfIdentityPanel(EacCpf eaccpf, JTabbedPane tabbedPane, JTabbedPane mainTabbedPane, JFrame eacCpfFrame, ProfileListModel model, boolean isNew, ResourceBundle labels, XmlTypeEacCpf entityType, String firstLanguage, String firstScript, String mainagencycode) {
-		super(eaccpf, tabbedPane, mainTabbedPane, eacCpfFrame, model, labels);
+		super(eaccpf, tabbedPane, mainTabbedPane, eacCpfFrame, model, labels, entityType, firstLanguage, firstScript);
 		this.isNew = isNew;
-		this.entityType = entityType;
-		this.firstLanguage = firstLanguage;
-		this.firstScript = firstScript;
 		this.mainagencycode = mainagencycode;
 	}
 
@@ -276,16 +237,16 @@ public class EacCpfIdentityPanel extends EacCpfPanel {
 		}
 
 		if (XmlTypeEacCpf.EAC_CPF_CORPORATEBODY.getName().equalsIgnoreCase(type)) {
-			builder.addLabel(this.labels.getString("eaccpf.identity.type") + " " + this.labels.getString("eaccpf.commons.corporateBody"), cc.xyw(1, this.rowNb, 3));
+			builder.addLabel(this.labels.getString("eaccpf.commons.type") + " " + this.labels.getString("eaccpf.commons.corporateBody"), cc.xyw(1, this.rowNb, 3));
 			this.entityType = XmlTypeEacCpf.EAC_CPF_CORPORATEBODY;
 		} else if (XmlTypeEacCpf.EAC_CPF_FAMILY.getName().equalsIgnoreCase(type)) {
-			builder.addLabel(this.labels.getString("eaccpf.identity.type") + " " + this.labels.getString("eaccpf.commons.family"), cc.xyw(1, this.rowNb, 3));
+			builder.addLabel(this.labels.getString("eaccpf.commons.type") + " " + this.labels.getString("eaccpf.commons.family"), cc.xyw(1, this.rowNb, 3));
 			this.entityType = XmlTypeEacCpf.EAC_CPF_FAMILY;
 		} else if (XmlTypeEacCpf.EAC_CPF_PERSON.getName().equalsIgnoreCase(type)) {
-			builder.addLabel(this.labels.getString("eaccpf.identity.type") + " " + this.labels.getString("eaccpf.commons.person"), cc.xyw(1, this.rowNb, 3));
+			builder.addLabel(this.labels.getString("eaccpf.commons.type") + " " + this.labels.getString("eaccpf.commons.person"), cc.xyw(1, this.rowNb, 3));
 			this.entityType = XmlTypeEacCpf.EAC_CPF_PERSON;
 		} else {
-			builder.addLabel(this.labels.getString("eaccpf.identity.unrecognized.type"), cc.xyw (1, this.rowNb, 3));
+			builder.addLabel(this.labels.getString("eaccpf.commons.unrecognized.type"), cc.xyw (1, this.rowNb, 3));
 		}
 
 		return builder;
@@ -584,12 +545,13 @@ public class EacCpfIdentityPanel extends EacCpfPanel {
 
 		// Buttons to add new entries.
 		this.setNextRow();
+		builder.addLabel(this.labels.getString("eaccpf.identity.dates.use"), cc.xy(1, this.rowNb));
 		JButton addSingleDateBtn = new ButtonTab(this.labels.getString("eaccpf.commons.add.single.date"));
 		addSingleDateBtn.addActionListener(new AddSingleOrRangeDateAction(this.eaccpf, this.tabbedPane, this.model, true, false, index));
-		builder.add(addSingleDateBtn, cc.xy(1, this.rowNb));
+		builder.add(addSingleDateBtn, cc.xy(3, this.rowNb));
 		JButton addRangeDateBtn = new ButtonTab(this.labels.getString("eaccpf.commons.add.range.date"));
 		addRangeDateBtn.addActionListener(new AddSingleOrRangeDateAction(this.eaccpf, this.tabbedPane, this.model, true, true, index));
-		builder.add(addRangeDateBtn, cc.xy(3, this.rowNb));
+		builder.add(addRangeDateBtn, cc.xy(5, this.rowNb));
 
 		this.useDateTFs.put(Integer.valueOf(index), tfwcfdList);
 
@@ -1017,7 +979,7 @@ public class EacCpfIdentityPanel extends EacCpfPanel {
 		 * @param tabbedPane
 		 * @param model
 		 */
-		AddNamePartsAction(EacCpf eacCpf, JTabbedPane tabbedPane,
+		public AddNamePartsAction(EacCpf eacCpf, JTabbedPane tabbedPane,
 				ProfileListModel model, int counter) {
 			super(eacCpf, tabbedPane, model);
 			this.currentNameEntry = counter;
@@ -1028,7 +990,7 @@ public class EacCpfIdentityPanel extends EacCpfPanel {
 			try {
 				super.updateJAXBObject(false);
 			} catch (EacCpfFormException e) {
-//				reloadTabbedPanel(new EacCpfIdentityPanel(eaccpf, tabbedPane, mainTabbedPane, eacCpfFrame, model, isNew, labels).buildEditorPanel(errors), 0);
+//				reloadTabbedPanel(new EacCpfIdentityPanel(eaccpf, tabbedPane, mainTabbedPane, eacCpfFrame, model, isNew, labels, entityType, firstLanguage, firstScript, mainagencycode).buildEditorPanel(errors), 0);
 			}
 
 			boolean empty = false;
@@ -1048,7 +1010,7 @@ public class EacCpfIdentityPanel extends EacCpfPanel {
 				nameEntry.getPart().add(new Part());
 			}
 
-			reloadTabbedPanel(new EacCpfIdentityPanel(eaccpf, tabbedPane, mainTabbedPane, eacCpfFrame, model, isNew, labels).buildEditorPanel(errors), 0);
+			reloadTabbedPanel(new EacCpfIdentityPanel(eaccpf, tabbedPane, mainTabbedPane, eacCpfFrame, model, isNew, labels, entityType, firstLanguage, firstScript, mainagencycode).buildEditorPanel(errors), 0);
 		}
 	}
 
@@ -1064,7 +1026,7 @@ public class EacCpfIdentityPanel extends EacCpfPanel {
 		 * @param tabbedPane
 		 * @param model
 		 */
-		AddFormNameAction(EacCpf eacCpf, JTabbedPane tabbedPane,
+		public AddFormNameAction(EacCpf eacCpf, JTabbedPane tabbedPane,
 				ProfileListModel model) {
 			super(eacCpf, tabbedPane, model);
 		}
@@ -1074,7 +1036,7 @@ public class EacCpfIdentityPanel extends EacCpfPanel {
 			try {
 				super.updateJAXBObject(false);
 			} catch (EacCpfFormException e) {
-//				reloadTabbedPanel(new EacCpfIdentityPanel(eaccpf, tabbedPane, mainTabbedPane, eacCpfFrame, model, isNew, labels).buildEditorPanel(errors), 0);
+//				reloadTabbedPanel(new EacCpfIdentityPanel(eaccpf, tabbedPane, mainTabbedPane, eacCpfFrame, model, isNew, labels, entityType, firstLanguage, firstScript, mainagencycode).buildEditorPanel(errors), 0);
 			}
 
 			boolean empty = false;
@@ -1090,7 +1052,7 @@ public class EacCpfIdentityPanel extends EacCpfPanel {
 			// Add new NameEntry.
 			eaccpf.getCpfDescription().getIdentity().getNameEntryParallelOrNameEntry().add(new NameEntry());
 
-			reloadTabbedPanel(new EacCpfIdentityPanel(eaccpf, tabbedPane, mainTabbedPane, eacCpfFrame, model, isNew, labels).buildEditorPanel(errors), 0);
+			reloadTabbedPanel(new EacCpfIdentityPanel(eaccpf, tabbedPane, mainTabbedPane, eacCpfFrame, model, isNew, labels, entityType, firstLanguage, firstScript, mainagencycode).buildEditorPanel(errors), 0);
 		}
 	}
 
@@ -1108,7 +1070,7 @@ public class EacCpfIdentityPanel extends EacCpfPanel {
 		 * @param tfwcbfDates
 		 * @param dateType
 		 */
-		AddIsoText(TextFieldsWithCheckBoxForDates tfwcbfDates, String dateType) {
+		public AddIsoText(TextFieldsWithCheckBoxForDates tfwcbfDates, String dateType) {
 			this.tfwcbfDates = tfwcbfDates;
 			this.dateType = dateType;
 		}
@@ -1144,7 +1106,7 @@ public class EacCpfIdentityPanel extends EacCpfPanel {
 		 * @param tfwcbfDates
 		 * @param dateType
 		 */
-		CheckIsoText(TextFieldsWithCheckBoxForDates tfwcbfDates, String dateType) {
+		public CheckIsoText(TextFieldsWithCheckBoxForDates tfwcbfDates, String dateType) {
 			this.tfwcbfDates = tfwcbfDates;
 			this.dateType = dateType;
 		}
@@ -1195,7 +1157,7 @@ public class EacCpfIdentityPanel extends EacCpfPanel {
 		 * @param tfwcbfDates
 		 * @param dateType
 		 */
-		AddUndefinedTexts(TextFieldsWithCheckBoxForDates tfwcbfDates, String dateType) {
+		public AddUndefinedTexts(TextFieldsWithCheckBoxForDates tfwcbfDates, String dateType) {
 			this.tfwcbfDates = tfwcbfDates;
 			this.dateType = dateType;
 		}
@@ -1269,7 +1231,7 @@ public class EacCpfIdentityPanel extends EacCpfPanel {
 		 * @param isNameSection
 		 * @param isDateRange
 		 */
-		AddSingleOrRangeDateAction(EacCpf eacCpf, JTabbedPane tabbedPane,
+		public AddSingleOrRangeDateAction(EacCpf eacCpf, JTabbedPane tabbedPane,
 				ProfileListModel model, boolean isNameSection, boolean isDateRange, int index) {
 			super(eacCpf, tabbedPane, model);
 			this.isNameSection = isNameSection;
@@ -1277,17 +1239,15 @@ public class EacCpfIdentityPanel extends EacCpfPanel {
 			this.currentNameEntry = index;
 		}
 
-		// TODO: Simplify this class.
 		@Override
 		public void actionPerformed(ActionEvent actionEvent) {
 			try {
 				super.updateJAXBObject(false);
 			} catch (EacCpfFormException e) {
-//				reloadTabbedPanel(new EacCpfIdentityPanel(eaccpf, tabbedPane, mainTabbedPane, eacCpfFrame, model, isNew, labels).buildEditorPanel(errors), 0);
+//				reloadTabbedPanel(new EacCpfIdentityPanel(eaccpf, tabbedPane, mainTabbedPane, eacCpfFrame, model, isNew, labels, entityType, firstLanguage, firstScript, mainagencycode).buildEditorPanel(errors), 0);
 			}
 
-			boolean empty = false;
-			boolean partial = false;
+			// Recover the lists of elements for the current section.
 			List<TextFieldsWithCheckBoxForDates> textFieldsWithCheckBoxForDatesList = null;
 			if (this.isNameSection) {
 				textFieldsWithCheckBoxForDatesList = useDateTFs.get(this.currentNameEntry);
@@ -1295,282 +1255,111 @@ public class EacCpfIdentityPanel extends EacCpfPanel {
 				textFieldsWithCheckBoxForDatesList = existenceDateTFs;
 			}
 
-			for (int i = 0; !empty && i < textFieldsWithCheckBoxForDatesList.size(); i++) {
+			// Check if some element is empty
+			boolean emptyDate = false;
+			boolean emptyDateRange = false;
+			for (int i = 0; !emptyDate && !emptyDateRange && i < textFieldsWithCheckBoxForDatesList.size(); i++) {
 				TextFieldsWithCheckBoxForDates textFieldsWithCheckBoxForDates = textFieldsWithCheckBoxForDatesList.get(i);
 
-				// Check if is date or dateRange
+				// Check if is date or dateRange.
 				if (!this.isDateRange && !textFieldsWithCheckBoxForDates.isDateRange()) {
-					// Checks if some value is empty
-					if (StringUtils.isEmpty(trimStringValue(textFieldsWithCheckBoxForDates.getDateValue()))) {
+					// Check if some date value is empty.
+					if (StringUtils.isEmpty(textFieldsWithCheckBoxForDates.getDateValue())) {
 						JOptionPane.showMessageDialog(eacCpfFrame, labels.getString("eaccpf.commons.error.empty.single.date"));
-						empty = true;
+						emptyDate = true;
 					}
 				} else  if (this.isDateRange && textFieldsWithCheckBoxForDates.isDateRange()) {
-					// Checks if some value is empty
-					if (StringUtils.isEmpty(trimStringValue(textFieldsWithCheckBoxForDates.getDateFromValue()))
-							|| StringUtils.isEmpty(trimStringValue(textFieldsWithCheckBoxForDates.getDateToValue()))) {
+					// Check if some dateRage is empty (both dateFrom and dateTo).
+					if (StringUtils.isEmpty(textFieldsWithCheckBoxForDates.getDateFromValue())
+							&& StringUtils.isEmpty(textFieldsWithCheckBoxForDates.getDateToValue())) {
 						JOptionPane.showMessageDialog(eacCpfFrame, labels.getString("eaccpf.commons.error.empty.range.date"));
-						partial = !(StringUtils.isEmpty(trimStringValue(textFieldsWithCheckBoxForDates.getDateFromValue()))
-								&& StringUtils.isEmpty(trimStringValue(textFieldsWithCheckBoxForDates.getDateToValue())));
-						empty = true;
+						emptyDateRange = true;
 					}
-				} else if (textFieldsWithCheckBoxForDates.isDateRange() && !partial) {
-					partial = StringUtils.isEmpty(trimStringValue(textFieldsWithCheckBoxForDates.getDateFromValue()))
-							|| StringUtils.isEmpty(trimStringValue(textFieldsWithCheckBoxForDates.getDateToValue()));
 				}
 			}
 
-			// Add new Date.
+			// Checks if its needed to add new block, depending of the selected action.
+			Date date = null;
+			DateRange dateRange = null;
+			if (!this.isDateRange) {
+				// Checks to add date.
+					date = new Date();
+			} else {
+				// Checks to add dateRange.
+					dateRange = new DateRange();
+			}
+
+			// Recover elements of the desired section.
+			List<Object> datesList = null;
 			ExistDates existDates = null;
 			UseDates useDates = null;
-			List<NameEntry> nameEntryList = null;
 			if (this.isNameSection) {
-				nameEntryList = getAllNameEntries();
+				List<NameEntry> nameEntryList = getAllNameEntries();
 				if (nameEntryList.size() > this.currentNameEntry) {
+					if (nameEntryList.get(this.currentNameEntry).getUseDates() == null) {
+						nameEntryList.get(this.currentNameEntry).setUseDates(new UseDates());
+					}
 					useDates = nameEntryList.get(this.currentNameEntry).getUseDates();
 				}
+
+				if (useDates != null) {
+					datesList = getAllDates(useDates);
+				}
 			} else {
+				if (eaccpf.getCpfDescription().getDescription().getExistDates() == null) {
+					eaccpf.getCpfDescription().getDescription().setExistDates(new ExistDates());
+				}
 				existDates = eaccpf.getCpfDescription().getDescription().getExistDates();
+				datesList = getAllDates(existDates);
 			}
 
-			if (!empty) {
-				if (this.isNameSection) {
-					if (useDates != null) {
-						UseDates newUseDates = new UseDates();
-						if (useDates.getDate() != null) {
-							DateSet dateSet = new DateSet();
-							dateSet.getDateOrDateRange().add(useDates.getDate());
-							if (!this.isDateRange) {
-								dateSet.getDateOrDateRange().add(new Date());
-							} else if (!partial) {
-								dateSet.getDateOrDateRange().add(new DateRange());
-							}
-		
-							newUseDates.setDateSet(dateSet);
-						} else if (useDates.getDateRange() != null) {
-							DateSet dateSet = new DateSet();
-							dateSet.getDateOrDateRange().add(useDates.getDateRange());
-							if (!this.isDateRange) {
-								dateSet.getDateOrDateRange().add(new Date());
-							} else if (!partial) {
-								dateSet.getDateOrDateRange().add(new DateRange());
-							}
-		
-							newUseDates.setDateSet(dateSet);
-						} else if (useDates.getDateSet() != null) {
-							DateSet dateSet = useDates.getDateSet();
-							if (!this.isDateRange) {
-								dateSet.getDateOrDateRange().add(new Date());
-							} else if (!partial) {
-								dateSet.getDateOrDateRange().add(new DateRange());
-							}
-		
-							newUseDates.setDateSet(dateSet);
-						} else {
-							if (!this.isDateRange) {
-								newUseDates.setDate(new Date());
-							} else {
-								newUseDates.setDateRange(new DateRange());
-							}
-						}
-
-						int position = eaccpf.getCpfDescription().getIdentity().getNameEntryParallelOrNameEntry().indexOf(nameEntryList.get(this.currentNameEntry));
-						NameEntry nameEntry = (NameEntry) eaccpf.getCpfDescription().getIdentity().getNameEntryParallelOrNameEntry().get(position);
-						nameEntry.setUseDates(newUseDates);
-//						useDates = newUseDates;
+			// Checks elements in the dates list.
+			DateSet dateSet = null;
+			if (!datesList.isEmpty()) {
+				if (date != null || dateRange != null) {
+					dateSet = new DateSet();
+					dateSet.getDateOrDateRange().addAll(datesList);
+					if (date != null) {
+						dateSet.getDateOrDateRange().add(date);
 					} else {
-						useDates = new UseDates();
-						if (!this.isDateRange) {
-							useDates.setDate(new Date());
-						} else {
-							useDates.setDateRange(new DateRange());
-						}
-						if (eaccpf.getCpfDescription().getIdentity().getNameEntryParallelOrNameEntry().size() > this.currentNameEntry) {
-							int position = eaccpf.getCpfDescription().getIdentity().getNameEntryParallelOrNameEntry().indexOf(nameEntryList.get(this.currentNameEntry));
-							NameEntry nameEntry = (NameEntry) eaccpf.getCpfDescription().getIdentity().getNameEntryParallelOrNameEntry().get(position);
-							nameEntry.setUseDates(useDates);	
-						} else {
-							NameEntry nameEntry = new NameEntry();
-							nameEntry.setUseDates(useDates);
-							eaccpf.getCpfDescription().getIdentity().getNameEntryParallelOrNameEntry().add(nameEntry);
-						}
+						dateSet.getDateOrDateRange().add(dateRange);
 					}
-				} else  {
-					if (existDates != null) {
-						ExistDates newExistDates = new ExistDates();
-						if (existDates.getDate() != null && !partial) {
-							DateSet dateSet = new DateSet();
-							dateSet.getDateOrDateRange().add(existDates.getDate());
-							if (!this.isDateRange) {
-								dateSet.getDateOrDateRange().add(new Date());
-							} else /*if (!partial)*/ {
-								dateSet.getDateOrDateRange().add(new DateRange());
-							}
+				}
+			}
 
-							newExistDates.setDateSet(dateSet);
-						} else if (existDates.getDateRange() != null && !partial) {
-							if (existDates.getDateRange().getFromDate() != null
-									&& StringUtils.isNotEmpty(existDates.getDateRange().getFromDate().getContent())
-									&& existDates.getDateRange().getToDate() != null
-									&& StringUtils.isNotEmpty(existDates.getDateRange().getToDate().getContent())) {
-								DateSet dateSet = new DateSet();
-								dateSet.getDateOrDateRange().add(existDates.getDateRange());
-								if (!this.isDateRange) {
-									dateSet.getDateOrDateRange().add(new Date());
-								} else /*if (!partial)*/ {
-									dateSet.getDateOrDateRange().add(new DateRange());
-								}
-
-								newExistDates.setDateSet(dateSet);
-							} else {
-								newExistDates = existDates;
-							}
-						} else if (existDates.getDateSet() != null && !partial) {
-							DateSet dateSet = existDates.getDateSet();
-							if (!this.isDateRange) {
-								dateSet.getDateOrDateRange().add(new Date());
-							} else /*if (!partial)*/ {
-								dateSet.getDateOrDateRange().add(new DateRange());
-							}
-
-							newExistDates.setDateSet(dateSet);
-						} else if (!partial) {
-							if (!this.isDateRange) {
-								newExistDates.setDate(new Date());
-							} else {
-								newExistDates.setDateRange(new DateRange());
-							}
-						} else {
-							newExistDates = existDates;
-						}
-						eaccpf.getCpfDescription().getDescription().setExistDates(newExistDates);
-					} else {
-						existDates = new ExistDates();
-						if (!this.isDateRange) {
-							existDates.setDate(new Date());
-						} else {
-							existDates.setDateRange(new DateRange());
-						}
-
-						eaccpf.getCpfDescription().getDescription().setExistDates(existDates);
-						if (this.errors.contains(EacCpfIdentityPanel.ERROR_EXISTENCE_DATES)) {
-							this.errors.remove(EacCpfIdentityPanel.ERROR_EXISTENCE_DATES);
-						}
-					}
+			// Add dates to the desired section.
+			if (this.isNameSection) {
+				if (dateSet != null) {
+					useDates.setDate(null);
+					useDates.setDateRange(null);
+					useDates.setDateSet(dateSet);
+				} else if (date != null) {
+					useDates.setDate(date);
+					useDates.setDateRange(null);
+					useDates.setDateSet(null);
+				} else if (dateRange != null) {
+					useDates.setDate(null);
+					useDates.setDateRange(dateRange);
+					useDates.setDateSet(null);
 				}
 			} else {
-				if (this.isNameSection) {
-					if (useDates != null) {
-						if (useDates.getDateSet() != null && !partial) {
-							if (!this.isDateRange) {
-								useDates.getDateSet().getDateOrDateRange().add(new Date());
-							} else /*if (!partial)*/ {
-								useDates.getDateSet().getDateOrDateRange().add(new DateRange());
-							}
-						} else if (useDates.getDate() == null
-								&& useDates.getDateRange() == null
-								&& useDates.getDateSet() == null) {
-							if (!this.isDateRange) {
-								useDates.setDate(new Date());
-							} else {
-								useDates.setDateRange(new DateRange());
-							}
-						} else if (useDates.getDate() != null) {
-							DateSet dateSet = new DateSet();
-							dateSet.getDateOrDateRange().add(useDates.getDate());
-							if (!this.isDateRange) {
-								dateSet.getDateOrDateRange().add(new Date());
-							} else {
-								dateSet.getDateOrDateRange().add(new DateRange());
-							}
-
-							useDates.setDate(null);
-							useDates.setDateSet(dateSet);
-						} else if (useDates.getDateRange() != null && !partial) {
-							DateSet dateSet = new DateSet();
-							dateSet.getDateOrDateRange().add(useDates.getDateRange());
-							if (!this.isDateRange) {
-								dateSet.getDateOrDateRange().add(new Date());
-							} else {
-								dateSet.getDateOrDateRange().add(new DateRange());
-							}
-
-							useDates.setDateRange(null);
-							useDates.setDateSet(dateSet);
-						}
-					} else {
-						useDates = new UseDates();
-						if (!this.isDateRange) {
-							useDates.setDate(new Date());
-						} else {
-							useDates.setDateRange(new DateRange());
-						}
-						if (eaccpf.getCpfDescription().getIdentity().getNameEntryParallelOrNameEntry().size() > this.currentNameEntry) {
-							int position = eaccpf.getCpfDescription().getIdentity().getNameEntryParallelOrNameEntry().indexOf(nameEntryList.get(this.currentNameEntry));
-							NameEntry nameEntry = (NameEntry) eaccpf.getCpfDescription().getIdentity().getNameEntryParallelOrNameEntry().get(position);
-							nameEntry.setUseDates(useDates);	
-						} else {
-							NameEntry nameEntry = new NameEntry();
-							nameEntry.setUseDates(useDates);
-							eaccpf.getCpfDescription().getIdentity().getNameEntryParallelOrNameEntry().add(nameEntry);
-						}
-					}
-				} else {
-					if (existDates != null) {
-						if (existDates.getDateSet() != null && !partial) {
-							if (!this.isDateRange) {
-								existDates.getDateSet().getDateOrDateRange().add(new Date());
-							} else /*if (!partial)*/ {
-								existDates.getDateSet().getDateOrDateRange().add(new DateRange());
-							}
-						} else if (existDates.getDate() == null
-								&& existDates.getDateRange() == null
-								&& existDates.getDateSet() == null) {
-							if (!this.isDateRange) {
-								existDates.setDate(new Date());
-							} else {
-								existDates.setDateRange(new DateRange());
-							}
-						} else if (existDates.getDate() != null) {
-							DateSet dateSet = new DateSet();
-							dateSet.getDateOrDateRange().add(existDates.getDate());
-							if (!this.isDateRange) {
-								dateSet.getDateOrDateRange().add(new Date());
-							} else {
-								dateSet.getDateOrDateRange().add(new DateRange());
-							}
-
-							existDates.setDate(null);
-							existDates.setDateSet(dateSet);
-						} else if (existDates.getDateRange() != null && !partial) {
-							DateSet dateSet = new DateSet();
-							dateSet.getDateOrDateRange().add(existDates.getDateRange());
-							if (!this.isDateRange) {
-								dateSet.getDateOrDateRange().add(new Date());
-							} else {
-								dateSet.getDateOrDateRange().add(new DateRange());
-							}
-
-							existDates.setDateRange(null);
-							existDates.setDateSet(dateSet);
-						}
-					} else {
-						existDates = new ExistDates();
-						if (!this.isDateRange) {
-							existDates.setDate(new Date());
-						} else {
-							existDates.setDateRange(new DateRange());
-						}
-
-						eaccpf.getCpfDescription().getDescription().setExistDates(existDates);
-						if (this.errors.contains(EacCpfIdentityPanel.ERROR_EXISTENCE_DATES)) {
-							this.errors.remove(EacCpfIdentityPanel.ERROR_EXISTENCE_DATES);
-						}
-					}
+				if (dateSet != null) {
+					existDates.setDate(null);
+					existDates.setDateRange(null);
+					existDates.setDateSet(dateSet);
+				} else if (date != null) {
+					existDates.setDate(date);
+					existDates.setDateRange(null);
+					existDates.setDateSet(null);
+				} else if (dateRange != null) {
+					existDates.setDate(null);
+					existDates.setDateRange(dateRange);
+					existDates.setDateSet(null);
 				}
 			}
+			
 
-			reloadTabbedPanel(new EacCpfIdentityPanel(eaccpf, tabbedPane, mainTabbedPane, eacCpfFrame, model, isNew, labels).buildEditorPanel(errors), 0);
+			reloadTabbedPanel(new EacCpfIdentityPanel(eaccpf, tabbedPane, mainTabbedPane, eacCpfFrame, model, isNew, labels, entityType, firstLanguage, firstScript, mainagencycode).buildEditorPanel(errors), 0);
 		}
 	}
 
@@ -1586,7 +1375,7 @@ public class EacCpfIdentityPanel extends EacCpfPanel {
 		 * @param tabbedPane
 		 * @param model
 		 */
-		AddIdentifierAction(EacCpf eacCpf, JTabbedPane tabbedPane,
+		public AddIdentifierAction(EacCpf eacCpf, JTabbedPane tabbedPane,
 				ProfileListModel model) {
 			super(eacCpf, tabbedPane, model);
 		}
@@ -1596,21 +1385,29 @@ public class EacCpfIdentityPanel extends EacCpfPanel {
 			try {
 				super.updateJAXBObject(false);
 			} catch (EacCpfFormException e) {
-				reloadTabbedPanel(new EacCpfIdentityPanel(eaccpf, tabbedPane, mainTabbedPane, eacCpfFrame, model, isNew, labels).buildEditorPanel(errors), 0);
+				reloadTabbedPanel(new EacCpfIdentityPanel(eaccpf, tabbedPane, mainTabbedPane, eacCpfFrame, model, isNew, labels, entityType, firstLanguage, firstScript, mainagencycode).buildEditorPanel(errors), 0);
 			}
 
-			boolean empty = false;
-			for (int i = 0; !empty && i < identifierTfs.size(); i++) {
-				if (StringUtils.isEmpty(trimStringValue(identifierTfs.get(i).getText()))
-						/*|| StringUtils.isEmpty(trimStringValue(identifierTypeTfs.get(i).getText()))*/) {
+			boolean emptyId = false;
+			boolean emptytype = false;
+			for (int i = 0; !emptyId && !emptytype && i < identifierTfs.size(); i++) {
+				if (StringUtils.isEmpty(trimStringValue(identifierTfs.get(i).getText()))) {
 					JOptionPane.showMessageDialog(eacCpfFrame, labels.getString("eaccpf.identity.error.empty.identifier"));
-					empty = true;
+					emptyId = true;
+				}
+				if (StringUtils.isEmpty(trimStringValue(identifierTypeTfs.get(i).getText()))) {
+					if (!emptyId) {
+						JOptionPane.showMessageDialog(eacCpfFrame, labels.getString("eaccpf.identity.error.empty.identifier"));
+					}
+					emptytype = true;
 				}
 			}
 
-			eaccpf.getCpfDescription().getIdentity().getEntityId().add(new EntityId());
+			if ((!emptyId && !emptytype) || (emptyId && emptytype)) {
+				eaccpf.getCpfDescription().getIdentity().getEntityId().add(new EntityId());
+			}
 
-			reloadTabbedPanel(new EacCpfIdentityPanel(eaccpf, tabbedPane, mainTabbedPane, eacCpfFrame, model, isNew, labels).buildEditorPanel(errors), 0);
+			reloadTabbedPanel(new EacCpfIdentityPanel(eaccpf, tabbedPane, mainTabbedPane, eacCpfFrame, model, isNew, labels, entityType, firstLanguage, firstScript, mainagencycode).buildEditorPanel(errors), 0);
 		}
 	}
 
@@ -1625,7 +1422,7 @@ public class EacCpfIdentityPanel extends EacCpfPanel {
 		 * @param tabbedPane
 		 * @param model
 		 */
-		SaveBtnAction(EacCpf eaccpf, JTabbedPane tabbedPane, ProfileListModel model) {
+		public SaveBtnAction(EacCpf eaccpf, JTabbedPane tabbedPane, ProfileListModel model) {
 			super(eaccpf, tabbedPane, model);
 		}
 
@@ -1636,7 +1433,7 @@ public class EacCpfIdentityPanel extends EacCpfPanel {
 				super.saveFile(eaccpf.getControl().getRecordId().getValue());
                 closeFrame();
 			} catch (EacCpfFormException e) {
-				reloadTabbedPanel(new EacCpfIdentityPanel(eaccpf, tabbedPane, mainTabbedPane, eacCpfFrame, model, isNew, labels).buildEditorPanel(errors), 0);
+				reloadTabbedPanel(new EacCpfIdentityPanel(eaccpf, tabbedPane, mainTabbedPane, eacCpfFrame, model, isNew, labels, entityType, firstLanguage, firstScript, mainagencycode).buildEditorPanel(errors), 0);
 			}
 		}
 	}
@@ -1652,7 +1449,7 @@ public class EacCpfIdentityPanel extends EacCpfPanel {
 		 * @param tabbedPane
 		 * @param model
 		 */
-		NextTabBtnAction(EacCpf eaccpf, JTabbedPane tabbedPane, ProfileListModel model) {
+		public NextTabBtnAction(EacCpf eaccpf, JTabbedPane tabbedPane, ProfileListModel model) {
 			super(eaccpf, tabbedPane, model);
 		}
 
@@ -1662,9 +1459,9 @@ public class EacCpfIdentityPanel extends EacCpfPanel {
 				super.updateJAXBObject(true);
 				removeChangeListener();
 
-				reloadTabbedPanel(new EacCpfDescriptionPanel(eaccpf, tabbedPane, mainTabbedPane, eacCpfFrame, model, labels).buildEditorPanel(errors), 1);
+				reloadTabbedPanel(new EacCpfDescriptionPanel(eaccpf, tabbedPane, mainTabbedPane, eacCpfFrame, model, labels, entityType, firstLanguage, firstScript).buildEditorPanel(errors), 1);
 			} catch (EacCpfFormException e) {
-				reloadTabbedPanel(new EacCpfIdentityPanel(eaccpf, tabbedPane, mainTabbedPane, eacCpfFrame, model, isNew, labels).buildEditorPanel(errors), 0);
+				reloadTabbedPanel(new EacCpfIdentityPanel(eaccpf, tabbedPane, mainTabbedPane, eacCpfFrame, model, isNew, labels, entityType, firstLanguage, firstScript, mainagencycode).buildEditorPanel(errors), 0);
 			}
 		}
 	}
@@ -1680,7 +1477,7 @@ public class EacCpfIdentityPanel extends EacCpfPanel {
 		 * @param tabbedPane
 		 * @param model
 		 */
-		UpdateEacCpfObject(EacCpf eacCpf, JTabbedPane tabbedPane, ProfileListModel model) {
+		public UpdateEacCpfObject(EacCpf eacCpf, JTabbedPane tabbedPane, ProfileListModel model) {
 			super(eacCpf, tabbedPane, model);
 		}
 
@@ -2154,9 +1951,12 @@ public class EacCpfIdentityPanel extends EacCpfPanel {
 			for (int i = 0; i < identifierTfs.size(); i++) {
 				JTextField identifier = identifierTfs.get(i);
 				JTextField identifierType = identifierTypeTfs.get(i);
-				if (StringUtils.isNotEmpty(trimStringValue(identifier.getText()))) {
+				if (StringUtils.isNotEmpty(trimStringValue(identifier.getText()))
+						|| StringUtils.isNotEmpty(trimStringValue(identifierType.getText()))) {
 					EntityId entityId = new EntityId();
-					entityId.setContent(trimStringValue(identifier.getText()));
+					if (StringUtils.isNotEmpty(trimStringValue(identifier.getText()))) {
+						entityId.setContent(trimStringValue(identifier.getText()));
+					}
 					if (StringUtils.isNotEmpty(trimStringValue(identifierType.getText()))) {
 						entityId.setLocalType(trimStringValue(identifierType.getText()));
 					}
@@ -2356,7 +2156,7 @@ public class EacCpfIdentityPanel extends EacCpfPanel {
 		 * @param model
 		 * @param indexTab
 		 */
-		ChangeTabListener(EacCpf eaccpf, JTabbedPane tabbedPane, ProfileListModel model, int indexTab) {
+		public ChangeTabListener(EacCpf eaccpf, JTabbedPane tabbedPane, ProfileListModel model, int indexTab) {
 			super (eaccpf, tabbedPane, model);
 			this.currentTab = indexTab;
 		}
@@ -2371,19 +2171,19 @@ public class EacCpfIdentityPanel extends EacCpfPanel {
 					removeChangeListener();
 					switch (selectedIndex) {
 						case 1:
-							reloadTabbedPanel(new EacCpfDescriptionPanel(eaccpf, tabbedPane, mainTabbedPane, eacCpfFrame, model, labels).buildEditorPanel(errors), 1);
+							reloadTabbedPanel(new EacCpfDescriptionPanel(eaccpf, tabbedPane, mainTabbedPane, eacCpfFrame, model, labels, entityType, firstLanguage, firstScript).buildEditorPanel(errors), 1);
 							break;
 						case 2:
-							reloadTabbedPanel(new EacCpfRelationsPanel(eaccpf, tabbedPane, mainTabbedPane, eacCpfFrame, model, labels).buildEditorPanel(errors), 2);
+							reloadTabbedPanel(new EacCpfRelationsPanel(eaccpf, tabbedPane, mainTabbedPane, eacCpfFrame, model, labels, entityType, firstLanguage, firstScript).buildEditorPanel(errors), 2);
 							break;
 						case 3:
-							reloadTabbedPanel(new EacCpfControlPanel(eaccpf, tabbedPane, mainTabbedPane, eacCpfFrame, model, labels).buildEditorPanel(errors), 3);
+							reloadTabbedPanel(new EacCpfControlPanel(eaccpf, tabbedPane, mainTabbedPane, eacCpfFrame, model, labels, entityType, firstLanguage, firstScript).buildEditorPanel(errors), 3);
 							break;
 						default:
-							reloadTabbedPanel(new EacCpfIdentityPanel(eaccpf, tabbedPane, mainTabbedPane, eacCpfFrame, model, isNew, labels).buildEditorPanel(errors), 0);
+							reloadTabbedPanel(new EacCpfIdentityPanel(eaccpf, tabbedPane, mainTabbedPane, eacCpfFrame, model, isNew, labels, entityType, firstLanguage, firstScript, mainagencycode).buildEditorPanel(errors), 0);
 					}
 				} catch (EacCpfFormException ex) {
-					reloadTabbedPanel(new EacCpfIdentityPanel(eaccpf, tabbedPane, mainTabbedPane, eacCpfFrame, model, isNew, labels).buildEditorPanel(errors), 0);
+					reloadTabbedPanel(new EacCpfIdentityPanel(eaccpf, tabbedPane, mainTabbedPane, eacCpfFrame, model, isNew, labels, entityType, firstLanguage, firstScript, mainagencycode).buildEditorPanel(errors), 0);
 				}
 			}
 		}

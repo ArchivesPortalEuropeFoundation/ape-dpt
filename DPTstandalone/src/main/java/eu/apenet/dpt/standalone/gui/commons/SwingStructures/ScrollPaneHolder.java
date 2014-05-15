@@ -1,4 +1,5 @@
-package eu.apenet.dpt.standalone.gui.eag2012.SwingStructures;
+package eu.apenet.dpt.standalone.gui.commons.SwingStructures;
+
 
 /*
  * #%L
@@ -18,7 +19,6 @@ package eu.apenet.dpt.standalone.gui.eag2012.SwingStructures;
  * #L%
  */
 
-import javax.swing.*;
 
 /**
  * User: Yoann Moranville
@@ -26,23 +26,23 @@ import javax.swing.*;
  *
  * @author Yoann Moranville
  */
-public class EagScrollPaneHolder {
-    private EagTextAreaScrollable eagTextAreaScrollable;
-    private EagScrollPane eagScrollPane;
+public class ScrollPaneHolder {
+    private TextAreaScrollable textAreaScrollable;
+    private ScrollPane scrollPane;
 
-    public EagScrollPaneHolder(String title) {
-        eagTextAreaScrollable = new EagTextAreaScrollable(title);
-        eagScrollPane = new EagScrollPane(eagTextAreaScrollable);
+    public ScrollPaneHolder(String title) {
+        textAreaScrollable = new TextAreaScrollable(title);
+        scrollPane = new ScrollPane(textAreaScrollable);
     }
-    public EagScrollPaneHolder() {
-        new EagScrollPaneHolder("");
+    public ScrollPaneHolder() {
+        new ScrollPaneHolder("");
     }
 
-    public EagScrollPane getScrollPane() {
-        return eagScrollPane;
+    public ScrollPane getScrollPane() {
+        return scrollPane;
     }
 
     public String getText() {
-        return eagTextAreaScrollable.getText();
+        return textAreaScrollable.getText();
     }
 }

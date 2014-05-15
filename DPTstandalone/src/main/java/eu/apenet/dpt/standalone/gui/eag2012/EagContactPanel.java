@@ -42,8 +42,8 @@ import eu.apenet.dpt.standalone.gui.ProfileListModel;
 import eu.apenet.dpt.standalone.gui.Utilities;
 import eu.apenet.dpt.standalone.gui.commons.ButtonTab;
 import eu.apenet.dpt.standalone.gui.commons.DefaultBtnAction;
+import eu.apenet.dpt.standalone.gui.commons.SwingStructures.TextFieldWithLanguage;
 import eu.apenet.dpt.standalone.gui.eag2012.SwingStructures.LocationType;
-import eu.apenet.dpt.standalone.gui.eag2012.SwingStructures.TextFieldWithLanguage;
 import eu.apenet.dpt.utils.eag2012.Country;
 import eu.apenet.dpt.utils.eag2012.Eag;
 import eu.apenet.dpt.utils.eag2012.Email;
@@ -251,7 +251,7 @@ public class EagContactPanel extends EagPanels {
         }
         builder.add(continentCombo, cc.xy (3, rowNb));
         setNextRow();
-        
+
         //getTelephone()
         builder.addLabel(labels.getString("eag2012.commons.telephone"), cc.xy(1, rowNb));
         int i = 0;
@@ -276,7 +276,7 @@ public class EagContactPanel extends EagPanels {
             builder.add(addTelephoneBtn, cc.xy(5, rowNb));
             setNextRow();
         }
-     
+
         builder.addLabel(labels.getString("eag2012.contact.fax"), cc.xy(1, rowNb));
         i = 0;
         faxTfs = new ArrayList<JTextField>(repository.getFax().size());
@@ -300,7 +300,7 @@ public class EagContactPanel extends EagPanels {
             builder.add(addFaxBtn, cc.xy(5, rowNb));
             setNextRow();
         }
-       
+
         //getEmail()
         emailTfs = new ArrayList<JTextField>(repository.getEmail().size());
         emailTitleTfs = new ArrayList<JTextField>(repository.getEmail().size());
@@ -321,7 +321,7 @@ public class EagContactPanel extends EagPanels {
         addEmailBtn.addActionListener(new AddEmailAction(eag, tabbedPane, model));
         builder.add(addEmailBtn, cc.xy(1, rowNb));
         setNextRow();
-     
+
         //getWebpage()
         webpageTfs = new ArrayList<JTextField>(repository.getWebpage().size());
         webpageTitleTfs = new ArrayList<JTextField>(repository.getWebpage().size());
@@ -351,9 +351,6 @@ public class EagContactPanel extends EagPanels {
         addWebpageBtn.addActionListener(new AddWebpageAction(eag, tabbedPane, model));
         builder.add(addWebpageBtn, cc.xy(1, rowNb));
         setNextRow();
-
-        
-        
 
         builder.addSeparator("", cc.xyw(1, rowNb, 7));
         setNextRow();
@@ -546,7 +543,7 @@ public class EagContactPanel extends EagPanels {
             } catch (Eag2012FormException e) {
 //            	JOptionPane.showMessageDialog(eag2012Frame, e.getCause() + "\n" + e.toString());
             }
-                			
+
             List<Telephone> telephone= eag.getArchguide().getDesc().getRepositories().getRepository().get(repositoryNb).getTelephone();
 			boolean empty = false;         
 		    int pos = telephoneTfs.size(); 
@@ -556,12 +553,12 @@ public class EagContactPanel extends EagPanels {
 		    }
 			if (empty)
 				JOptionPane.showMessageDialog(eag2012Frame, labels.getString("eag2012.errors.errorTelephone"));
-			
+
 			telephone.add(new Telephone());
             reloadTabbedPanel(new EagContactPanel(eag, tabbedPane, mainTabbedPane, eag2012Frame, model, isNew, labels, repositoryNb).buildEditorPanel(errors), 2);
         }
     }
-    
+
     public class AddFaxAction extends UpdateEagObject {
         AddFaxAction(Eag eag, JTabbedPane tabbedPane, ProfileListModel model) {
             super(eag, tabbedPane, model);
@@ -580,7 +577,7 @@ public class EagContactPanel extends EagPanels {
             reloadTabbedPanel(new EagContactPanel(eag, tabbedPane, mainTabbedPane, eag2012Frame, model, isNew, labels, repositoryNb).buildEditorPanel(errors), 2);
         }
     }
-    
+
     /***
      * Adds a new email in Contact tab
      * @author fernando
@@ -654,7 +651,7 @@ public class EagContactPanel extends EagPanels {
             reloadTabbedPanel(new EagContactPanel(eag, tabbedPane, mainTabbedPane, eag2012Frame, model, isNew, labels, repositoryNb).buildEditorPanel(errors), 2);
         }
     }
-    
+
     public class AddRepositoryNameAction extends UpdateEagObject {
         AddRepositoryNameAction(Eag eag, JTabbedPane tabbedPane, ProfileListModel model) {
             super(eag, tabbedPane, model);
@@ -787,8 +784,7 @@ public class EagContactPanel extends EagPanels {
                     fax.setContent(field.getText());
                     repository.getFax().add(fax);
                 }
-            }
-                
+            }   
 
             if(!errors.isEmpty()) {
 //            	String strOut ="";
