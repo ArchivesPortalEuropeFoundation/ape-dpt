@@ -170,7 +170,31 @@
                 <xsl:attribute name="latitude" select="@latitude"/>
             </xsl:if>
             <xsl:if test="@localType">
-                <xsl:attribute name="localType" select="@localType"/>
+                <xsl:attribute name="localType">
+                    <xsl:choose>
+                        <xsl:when test="@localType='birth'">
+                            <xsl:value-of select="'birth'"/>
+                        </xsl:when>
+                        <xsl:when test="@localType='foundation'">
+                            <xsl:value-of select="'foundationm'"/>
+                        </xsl:when>
+                        <xsl:when test="@localType='private-residence'">
+                            <xsl:value-of select="'private-residence'"/>
+                        </xsl:when>
+                        <xsl:when test="@localType='business-residence'">
+                            <xsl:value-of select="'business-residence'"/>
+                        </xsl:when>
+                        <xsl:when test="@localType='death'">
+                            <xsl:value-of select="'death'"/>
+                        </xsl:when>
+                        <xsl:when test="@localType='suppression'">
+                            <xsl:value-of select="'suppression'"/>
+                        </xsl:when>
+                        <xsl:otherwise>
+                            <xsl:value-of select="'other'"/>
+                        </xsl:otherwise>
+                    </xsl:choose>
+                </xsl:attribute>
             </xsl:if>
             <xsl:if test="@longitude">
                 <xsl:attribute name="longitude" select="@longitude"/>
@@ -562,6 +586,7 @@
                                 </toDate>
                             </dateRange>
                         </existDates>
+                        <xsl:message>Mandatory element &lt;existDates&gt; has been added!</xsl:message>
                     </description>
                 </xsl:when>
                 <xsl:otherwise>
@@ -614,14 +639,20 @@
                 <xsl:if test="@localType">
                     <xsl:attribute name="localType">
                         <xsl:choose>
-                            <xsl:when test="@localType = 'autorisée'">
+                            <xsl:when test="@localType = ('authorized', 'autorisée')">
                                 <xsl:value-of>authorized</xsl:value-of>
                             </xsl:when>
-                            <xsl:when test="@localType = 'variante'">
+                            <xsl:when test="@localType = ('alternative', 'variante')">
+                                <xsl:value-of>alternative</xsl:value-of>
+                            </xsl:when>
+                            <xsl:when test="@localType = ('preferred')">
+                                <xsl:value-of>alternative</xsl:value-of>
+                            </xsl:when>
+                            <xsl:when test="@localType = ('abbreviation')">
                                 <xsl:value-of>alternative</xsl:value-of>
                             </xsl:when>
                             <xsl:otherwise>
-                                <xsl:value-of select="@localType"/>
+                                <xsl:value-of>other</xsl:value-of>
                             </xsl:otherwise>
                         </xsl:choose>
                     </xsl:attribute>
@@ -649,6 +680,9 @@
                 </xsl:when>
                 <xsl:otherwise/>
             </xsl:choose>
+            <xsl:if test="@localType = ('corpname', 'famname', 'persname', 'surname', 'firstname', 'birthname', 'title', 'prefix', 'suffix', 'alias', 'patronymic', 'legalform')">
+                <xsl:attribute name="localType" select="@localType"/>
+            </xsl:if>
             <xsl:value-of select="."/>
         </part>
     </xsl:template>
@@ -696,6 +730,7 @@
                             </toDate>
                         </dateRange>
                     </existDates>
+                    <xsl:message>Mandatory element &lt;existDates&gt; has been added!</xsl:message>
                 </xsl:when>
                 <xsl:otherwise>
                     <xsl:apply-templates select="existDates" mode="copy"/>
@@ -808,6 +843,7 @@
                             </xsl:attribute>
                         </toDate>
                     </dateRange>
+                    <xsl:message>Default values for unknown dates added to empty &lt;existDates&gt;</xsl:message>
                 </xsl:when>
                 <xsl:when test="count(date) = 1 and count(dateRange) = 0">
                     <xsl:apply-templates select="date" mode="copy"/>
@@ -860,6 +896,7 @@
         <place>
             <xsl:if test="not(placeEntry)">
                 <placeEntry/>
+                <xsl:message>Mandatory &lt;placeEntry&gt; in &lt;place&gt; added</xsl:message>
             </xsl:if>
             <xsl:apply-templates select="node()" mode="copy"/>
         </place>
@@ -891,7 +928,19 @@
     <xsl:template match="address" mode="copy">
         <address>
             <xsl:if test="@localType">
-                <xsl:attribute name="localType" select="@localType"/>
+                <xsl:attribute name="localType">
+                    <xsl:choose>
+                        <xsl:when test="@localType='visitors address'">
+                            <xsl:value-of select="'visitors address'"/>
+                        </xsl:when>
+                        <xsl:when test="@localType='postal address'">
+                            <xsl:value-of select="'postal address'"/>
+                        </xsl:when>
+                        <xsl:otherwise>
+                            <xsl:value-of select="'other'"/>
+                        </xsl:otherwise>
+                    </xsl:choose>
+                </xsl:attribute>
             </xsl:if>
             <xsl:for-each select="addressLine">
                 <addressLine>
@@ -899,7 +948,28 @@
                         <xsl:attribute name="xml:lang" select="@xml:lang"/>
                     </xsl:if>
                     <xsl:if test="@localType">
-                        <xsl:attribute name="localType" select="@localType"/>
+                        <xsl:attribute name="localType">
+                            <xsl:choose>
+                                <xsl:when test="@localType='firstdem'">
+                                    <xsl:value-of select="'firstdem'"/>
+                                </xsl:when>
+                                <xsl:when test="@localType='secondem'">
+                                    <xsl:value-of select="'secondem'"/>
+                                </xsl:when>
+                                <xsl:when test="@localType='postalcode'">
+                                    <xsl:value-of select="'postalcode'"/>
+                                </xsl:when>
+                                <xsl:when test="@localType='localentity'">
+                                    <xsl:value-of select="'localentity'"/>
+                                </xsl:when>
+                                <xsl:when test="@localType='street'">
+                                    <xsl:value-of select="'street'"/>
+                                </xsl:when>
+                                <xsl:otherwise>
+                                    <xsl:value-of select="'other'"/>
+                                </xsl:otherwise>
+                            </xsl:choose>
+                        </xsl:attribute>
                     </xsl:if>
                     <xsl:value-of select="."/>
                 </addressLine>
@@ -1393,7 +1463,7 @@
     <!-- relationEntry -->
     <xsl:template match="relationEntry" mode="copy">
         <relationEntry>
-            <xsl:if test="@localType">
+            <xsl:if test="@localType = ('title', 'id','agencyCode', 'agencyName')">
                 <xsl:attribute name="localType" select="@localType"/>
             </xsl:if>
             <xsl:if test="@scriptCode">
