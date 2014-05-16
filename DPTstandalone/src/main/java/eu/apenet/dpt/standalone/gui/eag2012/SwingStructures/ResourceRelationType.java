@@ -33,13 +33,15 @@ import java.util.*;
 public class ResourceRelationType {
     private static Map<String, String> resourceRelationMap;
     private static Map<String, String> institutionRelationMap;
+    private final static String DEFAULT_VALUE ="---";
     static {
-        resourceRelationMap = new HashMap<String, String>();
+        resourceRelationMap = new LinkedHashMap<String, String>();
         resourceRelationMap.put("creator of", "creatorOf");
         resourceRelationMap.put("subject of", "subjectOf");
         resourceRelationMap.put("other", "other");
 
-        institutionRelationMap = new HashMap<String, String>();
+        institutionRelationMap = new LinkedHashMap<String, String>();
+        institutionRelationMap.put(DEFAULT_VALUE, DEFAULT_VALUE);
         institutionRelationMap.put("hierarchical (child)", "hierarchical-child");
         institutionRelationMap.put("hierarchical (parent)", "hierarchical-parent");
         institutionRelationMap.put("temporal (earlier)", "temporal-earlier");
@@ -61,10 +63,14 @@ public class ResourceRelationType {
             typeRelations = new JComboBox(resourceRelationMap.keySet().toArray(new String[]{}));
             if((keySelected = getKeyOfSet(resourceRelationMap, typeRelationValue)) != null)
                 typeRelations.setSelectedItem(keySelected);
+            else 
+            	typeRelations.setSelectedIndex(0);
         } else {
             typeRelations = new JComboBox(institutionRelationMap.keySet().toArray(new String[]{}));
             if((keySelected = getKeyOfSet(institutionRelationMap, typeRelationValue)) != null)
                 typeRelations.setSelectedItem(keySelected);
+            else
+                typeRelations.setSelectedItem(DEFAULT_VALUE);            	
         }
     }
 
