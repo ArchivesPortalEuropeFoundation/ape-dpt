@@ -671,10 +671,10 @@
         <xsl:text> </xsl:text>
         <extref>
             <xsl:if test="@href">
-                <xsl:attribute name="xlink:href" select="ape:checkLink(@href)"/>
+                <xsl:attribute name="xlink:href" select="@href"/>
             </xsl:if>
             <xsl:if test="@*:href">
-                <xsl:attribute name="xlink:href" select="ape:checkLink(@*:href)"/>
+                <xsl:attribute name="xlink:href" select="@*:href"/>
             </xsl:if>
             <xsl:if test="@title">
                 <xsl:attribute name="xlink:title" select="@title"/>
