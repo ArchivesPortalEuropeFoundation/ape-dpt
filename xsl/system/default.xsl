@@ -671,10 +671,24 @@
         <xsl:text> </xsl:text>
         <extref>
             <xsl:if test="@href">
-                <xsl:attribute name="xlink:href" select="@href"/>
+                <xsl:choose>
+                    <xsl:when test="parent::otherfindingaid">
+                        <xsl:attribute name="xlink:href" select="@href"/>
+                    </xsl:when>
+                    <xsl:otherwise>
+                        <xsl:attribute name="xlink:href" select="ape:checkLink(@href)"/>
+                    </xsl:otherwise>
+                </xsl:choose>
             </xsl:if>
             <xsl:if test="@*:href">
-                <xsl:attribute name="xlink:href" select="@*:href"/>
+                <xsl:choose>
+                    <xsl:when test="parent::otherfindingaid">
+                        <xsl:attribute name="xlink:href" select="@*:href"/>
+                    </xsl:when>
+                    <xsl:otherwise>
+                        <xsl:attribute name="xlink:href" select="ape:checkLink(@*:href)"/>
+                    </xsl:otherwise>
+                </xsl:choose>
             </xsl:if>
             <xsl:if test="@title">
                 <xsl:attribute name="xlink:title" select="@title"/>
