@@ -1098,14 +1098,9 @@
     
     <xsl:template match="archdesc/did/abstract[@encodinganalog='Zusammenfassung']" mode="abstractGer">
         <scopecontent encodinganalog="summary">
-            <xsl:choose>
-                <xsl:when test="preceding-sibling::abstract[@encodinganalog='Kopfzeile']">
-                    <xsl:apply-templates select="preceding-sibling::abstract[@encodinganalog='Kopfzeile']" mode="abstractGer"/>
-                </xsl:when>
-                <xsl:when test="following-sibling::abstract[@encodinganalog='Kopfzeile']">
-                    <xsl:apply-templates select="following-sibling::abstract[@encodinganalog='Kopfzeile']" mode="abstractGer"/>
-                </xsl:when>
-            </xsl:choose>
+            <xsl:if test="following-sibling::abstract[@encodinganalog='Kopfzeile' and position()=1]">
+                <xsl:apply-templates select="following-sibling::abstract[@encodinganalog='Kopfzeile' and position()=1]" mode="abstractGer"/>
+            </xsl:if>
             <p>
                 <xsl:apply-templates select="node()" mode="copy"/>
             </p>
