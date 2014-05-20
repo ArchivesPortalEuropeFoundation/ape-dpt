@@ -96,14 +96,14 @@ import eu.apenet.dpt.utils.util.XmlTypeEacCpf;
 public class EacCpfIdentityPanel extends EacCpfPanel {
 	// Constants for the errors.
 	private static final String ERROR_NAME_PART = "namePartComponentTfsWCbs_";
-	private static final String ERROR_EXISTENCE_DATES = "existenceDateTFs";
+	protected static final String ERROR_EXISTENCE_DATES = "existenceDateTFs";
 
 	// Constants for the unknown dates.
-	private static final String UNKNOWN_DATE = "date";
-	private static final String UNKNOWN_DATE_FROM = "from";
-	private static final String UNKNOWN_DATE_TO = "to";
-	private static final String UNKNOWN_END_DATE = "2099";
-	private static final String UNKNOWN_INITIAL_DATE = "0001";
+	protected static final String UNKNOWN_DATE = "date";
+	protected static final String UNKNOWN_DATE_FROM = "from";
+	protected static final String UNKNOWN_DATE_TO = "to";
+	protected static final String UNKNOWN_END_DATE = "2099";
+	protected static final String UNKNOWN_INITIAL_DATE = "0001";
 
 	// Constants for maintenance.
 	private static final String MAINTENANCE_AGENCY_NAME = "European test archives";
@@ -186,10 +186,6 @@ public class EacCpfIdentityPanel extends EacCpfPanel {
 			this.eaccpf.getCpfDescription().setIdentity(new Identity());
 		}
 
-        this.setNextRow();
-		builder.addSeparator("", cc.xyw(1, this.rowNb, 7));
-        this.setNextRow();
-
 		// Call method to build the text of the entity type.
 		builder = this.buildEntityTypeText(builder, cc);
 
@@ -248,6 +244,10 @@ public class EacCpfIdentityPanel extends EacCpfPanel {
 		} else {
 			builder.addLabel(this.labels.getString("eaccpf.commons.unrecognized.type"), cc.xyw (1, this.rowNb, 3));
 		}
+
+        this.setNextRow();
+		builder.addSeparator("", cc.xyw(1, this.rowNb, 7));
+        this.setNextRow();
 
 		return builder;
 	}
@@ -1998,7 +1998,6 @@ public class EacCpfIdentityPanel extends EacCpfPanel {
 					&& existenceDateTFs.get(0).isDateRange()) {
 				// DateRange.
 				DateRange dateRange = this.fillDateRangeValues(existenceDateTFs.get(0));
-
 				if (dateRange != null) {
 					if (dateRange.getFromDate() == null
 							|| StringUtils.isEmpty(trimStringValue(dateRange.getFromDate().getContent()))
@@ -2006,7 +2005,6 @@ public class EacCpfIdentityPanel extends EacCpfPanel {
 							|| StringUtils.isEmpty(trimStringValue(dateRange.getToDate().getContent()))) {
 						this.errors.add(EacCpfIdentityPanel.ERROR_EXISTENCE_DATES);
 					}
-
 					existDates.setDateRange(dateRange);
 					hasChanged = true;
 				} else {

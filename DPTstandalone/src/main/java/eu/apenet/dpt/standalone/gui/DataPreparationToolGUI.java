@@ -280,7 +280,8 @@ public class DataPreparationToolGUI extends JFrame {
         fileItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_O, Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()));
         fileMenu.add(fileItem);
 
-        this.EacCpfItem.add(this.editEacCpfFile);     //add the different EAC-CPF options menu
+        // TODO: Uncomment when edit will be available.
+//        this.EacCpfItem.add(this.editEacCpfFile);     //add the different EAC-CPF options menu
         this.EacCpfItem.add(this.createEacCpf);
         this.fileMenu.add(this.EacCpfItem);
 

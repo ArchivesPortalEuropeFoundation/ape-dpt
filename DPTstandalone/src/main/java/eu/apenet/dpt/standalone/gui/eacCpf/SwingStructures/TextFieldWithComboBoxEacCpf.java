@@ -41,14 +41,20 @@ public class TextFieldWithComboBoxEacCpf {
 	private static final String[] NAME_COMPONENT_CORPORATE_BODY = { "corpname", "suffix", "alias", "legalform" };
 	private static final String[] NAME_COMPONENT_FAMILY = { "famname", "surname", "prefix", "suffix", "alias" };
 	private static final String[] NAME_COMPONENT_PERSON = { "persname", "surname", "firstname", "birthname", "title", "prefix", "suffix", "alias", "patronymic" };
-	private static final String[] NAME_FORM = { "authorized", "alternative", "preferred" , "abbreviation" , "other"  };
+	private static final String[] NAME_FORM = { "authorized", "alternative", "preferred" , "abbreviation" , "other" };
+	private static final String[] PLACE_ADDRESS = { "firstdem", "secondem", "postalcode", "localentity", "street", "other" };
+	private static final String[] PLACE_ROLE_CORPORATE_BODY = { "foundation", "business-residence", "suppression", "other" };
+	private static final String[] PLACE_ROLE_FAMILY = { "private-residence", "business-residence", "other" };
+	private static final String[] PLACE_ROLE_PERSON = { "birth", "private-residence", "business-residence", "death", "other" };
 
 	// Constants.
 	public static final String DEFAULT_VALUE = "---";
 	// Constants for types.
+	public static final String TYPE_ADDRESS_COMPONENT = "address";
 	public static final String TYPE_COMPONENT = "coponent";
 	public static final String TYPE_CPF_RELATION = "cpf";
 	public static final String TYPE_FORM = "form";
+	public static final String TYPE_PLACE_ROLE = "place";
 
 	/**
 	 * Constructor.
@@ -77,6 +83,24 @@ public class TextFieldWithComboBoxEacCpf {
 		} else if (TextFieldWithComboBoxEacCpf.TYPE_FORM.equalsIgnoreCase(type)) {
 			this.comboBox = new JComboBox<String>(fillTranslationComboBoxValues(type, TextFieldWithComboBoxEacCpf.NAME_FORM, labels));
 			this.comboBox.setSelectedIndex(this.getIndex(comboBoxValue, TextFieldWithComboBoxEacCpf.NAME_FORM));
+		} else if (TextFieldWithComboBoxEacCpf.TYPE_ADDRESS_COMPONENT.equalsIgnoreCase(type)) {
+			// Fill the value of JTextField.
+			this.textField = new JTextField(textFieldValue);
+			this.comboBox = new JComboBox<String>(fillTranslationComboBoxValues(type, TextFieldWithComboBoxEacCpf.PLACE_ADDRESS, labels));
+			this.comboBox.setSelectedIndex(this.getIndex(comboBoxValue, TextFieldWithComboBoxEacCpf.PLACE_ADDRESS));
+		} else if (TextFieldWithComboBoxEacCpf.TYPE_PLACE_ROLE.equalsIgnoreCase(type)) {
+			// Fill the value of JTextField.
+//			this.textField = new JTextField(textFieldValue);
+			if (XmlTypeEacCpf.EAC_CPF_CORPORATEBODY.getName().equalsIgnoreCase(entityType.getName())){
+				this.comboBox = new JComboBox<String>(fillTranslationComboBoxValues(type, TextFieldWithComboBoxEacCpf.PLACE_ROLE_CORPORATE_BODY, labels));
+				this.comboBox.setSelectedIndex(this.getIndex(comboBoxValue, TextFieldWithComboBoxEacCpf.PLACE_ROLE_CORPORATE_BODY));
+			} else if (XmlTypeEacCpf.EAC_CPF_FAMILY.getName().equalsIgnoreCase(entityType.getName())) {
+				this.comboBox = new JComboBox<String>(fillTranslationComboBoxValues(type, TextFieldWithComboBoxEacCpf.PLACE_ROLE_FAMILY, labels));
+				this.comboBox.setSelectedIndex(this.getIndex(comboBoxValue, TextFieldWithComboBoxEacCpf.PLACE_ROLE_FAMILY));
+			} else if (XmlTypeEacCpf.EAC_CPF_PERSON.getName().equalsIgnoreCase(entityType.getName())) {
+				this.comboBox = new JComboBox<String>(fillTranslationComboBoxValues(type, TextFieldWithComboBoxEacCpf.PLACE_ROLE_PERSON, labels));
+				this.comboBox.setSelectedIndex(this.getIndex(comboBoxValue, TextFieldWithComboBoxEacCpf.PLACE_ROLE_PERSON));
+			}
 		} else if (TextFieldWithComboBoxEacCpf.TYPE_CPF_RELATION.equalsIgnoreCase(type)) {
 			// Fill the value of JTextField.
 			this.textField = new JTextField(textFieldValue);
@@ -100,11 +124,19 @@ public class TextFieldWithComboBoxEacCpf {
 			for (int i =0; i < arrayValues.length; i++) {
 				partComponents.add(labels.getString("eaccpf.identity.name.component." + arrayValues[i]));
 			}
-		}  else if (TextFieldWithComboBoxEacCpf.TYPE_FORM.equalsIgnoreCase(type)) {
+		} else if (TextFieldWithComboBoxEacCpf.TYPE_FORM.equalsIgnoreCase(type)) {
 			for (int i =0; i < arrayValues.length; i++) {
 				partComponents.add(labels.getString("eaccpf.identity.name.form." + arrayValues[i]));
 			}
-		}  else if (TextFieldWithComboBoxEacCpf.TYPE_CPF_RELATION.equalsIgnoreCase(type)) {
+		} else if (TextFieldWithComboBoxEacCpf.TYPE_ADDRESS_COMPONENT.equalsIgnoreCase(type)) {
+			for (int i =0; i < arrayValues.length; i++) {
+				partComponents.add(labels.getString("eaccpf.description.combo.address.component." + arrayValues[i]));
+			}
+		} else if (TextFieldWithComboBoxEacCpf.TYPE_PLACE_ROLE.equalsIgnoreCase(type)) {
+			for (int i =0; i < arrayValues.length; i++) {
+				partComponents.add(labels.getString("eaccpf.description.combo.place.role." + arrayValues[i]));
+			}
+		} else if (TextFieldWithComboBoxEacCpf.TYPE_CPF_RELATION.equalsIgnoreCase(type)) {
 			for (int i =0; i < arrayValues.length; i++) {
 				partComponents.add(labels.getString("eaccpf.relations.cpf.relation.type." + arrayValues[i]));
 			}
@@ -178,6 +210,16 @@ public class TextFieldWithComboBoxEacCpf {
 				}
 			} else if (TextFieldWithComboBoxEacCpf.TYPE_FORM.equalsIgnoreCase(type)) {
 				value = TextFieldWithComboBoxEacCpf.NAME_FORM[index - 1];
+			} else if (TextFieldWithComboBoxEacCpf.TYPE_ADDRESS_COMPONENT.equalsIgnoreCase(type)) {
+				value = TextFieldWithComboBoxEacCpf.PLACE_ADDRESS[index - 1];
+			} else if (TextFieldWithComboBoxEacCpf.TYPE_PLACE_ROLE.equalsIgnoreCase(type)) {
+				if (XmlTypeEacCpf.EAC_CPF_CORPORATEBODY.getName().equalsIgnoreCase(entityType.getName())){
+					value = TextFieldWithComboBoxEacCpf.PLACE_ROLE_CORPORATE_BODY[index - 1];
+				} else if (XmlTypeEacCpf.EAC_CPF_FAMILY.getName().equalsIgnoreCase(entityType.getName())) {
+					value = TextFieldWithComboBoxEacCpf.PLACE_ROLE_FAMILY[index - 1];
+				} else if (XmlTypeEacCpf.EAC_CPF_PERSON.getName().equalsIgnoreCase(entityType.getName())) {
+					value = TextFieldWithComboBoxEacCpf.PLACE_ROLE_PERSON[index - 1];
+				}
 			} else if (TextFieldWithComboBoxEacCpf.TYPE_CPF_RELATION.equalsIgnoreCase(type)) {
 				value = TextFieldWithComboBoxEacCpf.CPF_RELATION[index - 1];
 			}
