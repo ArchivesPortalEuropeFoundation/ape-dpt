@@ -929,7 +929,14 @@
         <xsl:if test="//eadid/@countrycode='fr' and /ead/frontmatter">
             <xsl:call-template name="frontmatter2scopecontent"/>
         </xsl:if>
-        <xsl:apply-templates select="abstract" mode="#current"/>
+        <xsl:choose>
+            <xsl:when test="abstract/@encodinganalog='Zusammenfassung'">
+                <xsl:apply-templates select="abstract[@encodinganalog='Zusammenfassung']" mode="abstractGer"/>
+            </xsl:when>
+            <xsl:otherwise>
+                <xsl:apply-templates select="abstract" mode="#current"/>
+            </xsl:otherwise>
+        </xsl:choose>
     </xsl:template>
 
     <xsl:template name="frontmatter2scopecontent">
@@ -963,7 +970,7 @@
     <xsl:template match="div/p/list | div/p/list/item" mode="frontmatter">
         <xsl:apply-templates mode="frontmatter"/>
     </xsl:template>
-
+    
     <xsl:template match="archdesc/note" mode="copy"/>
 
     <!-- copy fonds intermediate lowest: did/note -->
@@ -1066,16 +1073,39 @@
                     <xsl:value-of select="@type"/>
                 </head>
             </xsl:if>
-            <xsl:if test="@encodinganalog and not(@type)">
+<!--            <xsl:if test="@encodinganalog and not(@type)">
                 <head>
                     <xsl:value-of select="@encodinganalog"/>
                 </head>
-            </xsl:if>
+            </xsl:if>-->
             <xsl:if test="@type and @encodinganalog">
                 <head>
                     <xsl:value-of select="@type"/>, <xsl:value-of select="@encodinganalog"/>
                 </head>
             </xsl:if>
+            <p>
+                <xsl:apply-templates select="node()" mode="copy"/>
+            </p>
+        </scopecontent>
+    </xsl:template>
+    
+    <!-- Special archdesc/did/abstract templates for German software -->
+    <xsl:template match="archdesc/did/abstract[@encodinganalog='Kopfzeile']" mode="abstractGer">
+        <head>
+            <xsl:apply-templates select="node()" mode="copy"/>
+        </head>
+    </xsl:template>
+    
+    <xsl:template match="archdesc/did/abstract[@encodinganalog='Zusammenfassung']" mode="abstractGer">
+        <scopecontent encodinganalog="summary">
+            <xsl:choose>
+                <xsl:when test="preceding-sibling::abstract[@encodinganalog='Kopfzeile']">
+                    <xsl:apply-templates select="preceding-sibling::abstract[@encodinganalog='Kopfzeile']" mode="abstractGer"/>
+                </xsl:when>
+                <xsl:when test="following-sibling::abstract[@encodinganalog='Kopfzeile']">
+                    <xsl:apply-templates select="following-sibling::abstract[@encodinganalog='Kopfzeile']" mode="abstractGer"/>
+                </xsl:when>
+            </xsl:choose>
             <p>
                 <xsl:apply-templates select="node()" mode="copy"/>
             </p>
