@@ -3128,12 +3128,12 @@
         </xsl:choose>
     </xsl:template>
 
-    <!-- all: unittitle/unitdate -->
+    <!-- all: unittitle/unitdate
     <xsl:template match="unittitle/unitdate" mode="#all">
         <xsl:text> </xsl:text>
         <xsl:apply-templates select="node()" mode="#current"/>
         <xsl:text> </xsl:text>
-    </xsl:template>
+    </xsl:template>-->
 
     <!-- all: unittitle/archref -->
     <xsl:template match="unittitle/archref" mode="#all">
