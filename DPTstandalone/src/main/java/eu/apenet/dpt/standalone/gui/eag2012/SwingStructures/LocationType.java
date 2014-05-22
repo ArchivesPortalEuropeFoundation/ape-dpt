@@ -173,7 +173,7 @@ public class LocationType {
         errors = new ArrayList<String>();
         Location location = new Location();
         location.setLocalType(localType);
-        if(StringUtils.isNotEmpty(getStreetTfValue())) {
+        if(StringUtils.isNotEmpty(getStreetTfValue()) && !getStreetTfValue().trim().isEmpty()) {
             location.setStreet(new Street());
             location.getStreet().setContent(getStreetTfValue());
             location.getStreet().setLang(getStreetTfLanguage());
@@ -183,7 +183,8 @@ public class LocationType {
             //else
             //    location.setStreet(null); //wrong
         }
-        if(StringUtils.isNotEmpty(getCityTfValue())) {
+        
+        if(StringUtils.isNotEmpty(getCityTfValue()) && !getCityTfValue().trim().isEmpty()) {
             location.setMunicipalityPostalcode(new MunicipalityPostalcode());
             location.getMunicipalityPostalcode().setContent(getCityTfValue());
             location.getMunicipalityPostalcode().setLang(getCityTfLanguage());
@@ -193,7 +194,8 @@ public class LocationType {
             //else
             //    location.setMunicipalityPostalcode(null); //wrong
         }
-        if(StringUtils.isNotEmpty(getCountryTfValue())) {
+        
+        if(StringUtils.isNotEmpty(getCountryTfValue()) && !getCountryTfValue().trim().isEmpty()) {
             location.setCountry(new Country());
             location.getCountry().setContent(getCountryTfValue());
             location.getCountry().setLang(getCountryTfLanguage());
@@ -207,29 +209,29 @@ public class LocationType {
             }
         }
 
-        if(StringUtils.isNotEmpty(getDistrictTfValue())) {
+        if(StringUtils.isNotEmpty(getDistrictTfValue()) && !getDistrictTfValue().trim().isEmpty()) {
             location.setLocalentity(new Localentity());
             location.getLocalentity().setContent(getDistrictTfValue());
             location.getLocalentity().setLang(getDistrictTfLanguage());
         }
 
-        if(StringUtils.isNotEmpty(getCountyTfValue())) {
+        if(StringUtils.isNotEmpty(getDistrictTfValue()) && !getDistrictTfValue().trim().isEmpty()) {
             location.setSecondem(new Secondem());
             location.getSecondem().setContent(getCountyTfValue());
             location.getSecondem().setLang(getCountyTfLanguage());
         }
 
-        if(StringUtils.isNotEmpty(getRegionTfValue())) {
+        if(StringUtils.isNotEmpty(getRegionTfValue()) && !getRegionTfValue().trim().isEmpty()) {
             location.setFirstdem(new Firstdem());
             location.getFirstdem().setContent(getRegionTfValue());
             location.getFirstdem().setLang(getRegionTfLanguage());
         }
 
-        if(StringUtils.isNotEmpty(getLatitudeTfValue())) {
+        if(StringUtils.isNotEmpty(getLatitudeTfValue()) && !getLatitudeTfValue().trim().isEmpty()) {
             location.setLatitude(getLatitudeTfValue());
         }
 
-        if(StringUtils.isNotEmpty(getLongitudeTfValue())) {
+        if(StringUtils.isNotEmpty(getLongitudeTfValue()) && !getLongitudeTfValue().trim().isEmpty()) {
             location.setLongitude(getLongitudeTfValue());
         }
 

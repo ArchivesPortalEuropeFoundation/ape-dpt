@@ -55,6 +55,7 @@ public class EagNewRepositoryPanel extends EagPanels {
             Repository repository = eag.getArchguide().getDesc().getRepositories().getRepository().get(repositoryNb);
             repository.setGeogarea(new Geogarea());
             repository.getLocation().add(new Location());
+            repository.getLocation().get(0).setLocalType("visitors address");
             repository.getLocation().get(0).setCountry(new Country());
             repository.getLocation().get(0).setMunicipalityPostalcode(new MunicipalityPostalcode());
             repository.getLocation().get(0).setStreet(new Street());
