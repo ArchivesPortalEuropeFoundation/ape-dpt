@@ -48,26 +48,74 @@ public class LocationType {
     private List<String> errors;
 
     public LocationType(Location location) {
-        if(location.getStreet() == null)
+        
+    	// street
+    	if(location.getStreet() == null)
             location.setStreet(new Street());
-        this.streetTf = new TextFieldWithLanguage(location.getStreet().getContent(), location.getStreet().getLang());
+
+    	if(StringUtils.isNotEmpty(location.getStreet().getContent()) && !location.getStreet().getContent().trim().isEmpty()) 
+    		this.streetTf = new TextFieldWithLanguage(location.getStreet().getContent().trim(), location.getStreet().getLang());
+    	 else 
+    		this.streetTf = new TextFieldWithLanguage("", location.getStreet().getLang());
+        
+    	// city/town with postal code
         if(location.getMunicipalityPostalcode() == null)
             location.setMunicipalityPostalcode(new MunicipalityPostalcode());
-        this.cityTf = new TextFieldWithLanguage(location.getMunicipalityPostalcode().getContent(), location.getMunicipalityPostalcode().getLang());
+        
+        if(StringUtils.isNotEmpty(location.getMunicipalityPostalcode().getContent()) && !location.getMunicipalityPostalcode().getContent().trim().isEmpty()) 
+        	this.cityTf = new TextFieldWithLanguage(location.getMunicipalityPostalcode().getContent().trim(), location.getMunicipalityPostalcode().getLang());
+        else
+        	this.cityTf = new TextFieldWithLanguage("", location.getMunicipalityPostalcode().getLang());
+
+        // local entity
         if(location.getLocalentity() == null)
             location.setLocalentity(new Localentity());
-        this.districtTf = new TextFieldWithLanguage(location.getLocalentity().getContent(), location.getLocalentity().getLang());
+        
+        if(StringUtils.isNotEmpty(location.getLocalentity().getContent()) && !location.getLocalentity().getContent().trim().isEmpty())
+        	this.districtTf = new TextFieldWithLanguage(location.getLocalentity().getContent().trim(), location.getLocalentity().getLang());
+        else
+        	this.districtTf = new TextFieldWithLanguage("", location.getLocalentity().getLang());
+        
+        // county
         if(location.getSecondem() == null)
             location.setSecondem(new Secondem());
-        this.countyTf = new TextFieldWithLanguage(location.getSecondem().getContent(), location.getSecondem().getLang());
+     
+        if(StringUtils.isNotEmpty(location.getSecondem().getContent()) && !location.getSecondem().getContent().trim().isEmpty())
+        	this.countyTf = new TextFieldWithLanguage(location.getSecondem().getContent().trim(), location.getSecondem().getLang());
+        else
+        	this.countyTf = new TextFieldWithLanguage("", location.getSecondem().getLang());
+       
+        // district
         if(location.getFirstdem() == null)
             location.setFirstdem(new Firstdem());
-        this.regionTf = new TextFieldWithLanguage(location.getFirstdem().getContent(), location.getFirstdem().getLang());
+        
+        if(StringUtils.isNotEmpty(location.getFirstdem().getContent()) && !location.getFirstdem().getContent().trim().isEmpty())
+        	this.regionTf = new TextFieldWithLanguage(location.getFirstdem().getContent().trim(), location.getFirstdem().getLang());
+        else
+        	this.regionTf = new TextFieldWithLanguage("", location.getFirstdem().getLang());
+        
+        // country
         if(location.getCountry() == null)
             location.setCountry(new Country());
-        this.countryTf = new TextFieldWithLanguage(location.getCountry().getContent(), location.getCountry().getLang());
-        this.latitudeTf = new JTextField(location.getLatitude());
-        this.longitudeTf = new JTextField(location.getLongitude());
+        
+        if(StringUtils.isNotEmpty(location.getCountry().getContent()) && !location.getCountry().getContent().trim().isEmpty())
+        	this.countryTf = new TextFieldWithLanguage(location.getCountry().getContent().trim(), location.getCountry().getLang());
+        else
+        	this.countryTf = new TextFieldWithLanguage("", location.getCountry().getLang());
+        
+        // latitude
+        if(StringUtils.isNotEmpty(location.getLatitude()) && !location.getLatitude().trim().isEmpty())
+        	this.latitudeTf = new JTextField(location.getLatitude().trim());
+        else
+        	this.latitudeTf = new JTextField("");
+
+        //longitude
+        if(StringUtils.isNotEmpty(location.getLongitude()) && !location.getLongitude().trim().isEmpty())
+        	this.longitudeTf = new JTextField(location.getLongitude().trim());
+        else
+        	this.longitudeTf = new JTextField("");
+        
+        //local type
         this.localType = location.getLocalType();
     }
 
@@ -175,7 +223,7 @@ public class LocationType {
         location.setLocalType(localType);
         if(StringUtils.isNotEmpty(getStreetTfValue()) && !getStreetTfValue().trim().isEmpty()) {
             location.setStreet(new Street());
-            location.getStreet().setContent(getStreetTfValue());
+            location.getStreet().setContent(getStreetTfValue().trim());
             location.getStreet().setLang(getStreetTfLanguage());
         } else {
             //if(!isPostal)
@@ -186,7 +234,7 @@ public class LocationType {
         
         if(StringUtils.isNotEmpty(getCityTfValue()) && !getCityTfValue().trim().isEmpty()) {
             location.setMunicipalityPostalcode(new MunicipalityPostalcode());
-            location.getMunicipalityPostalcode().setContent(getCityTfValue());
+            location.getMunicipalityPostalcode().setContent(getCityTfValue().trim());
             location.getMunicipalityPostalcode().setLang(getCityTfLanguage());
         } else {
             //if(!isPostal)
@@ -197,7 +245,7 @@ public class LocationType {
         
         if(StringUtils.isNotEmpty(getCountryTfValue()) && !getCountryTfValue().trim().isEmpty()) {
             location.setCountry(new Country());
-            location.getCountry().setContent(getCountryTfValue());
+            location.getCountry().setContent(getCountryTfValue().trim());
             location.getCountry().setLang(getCountryTfLanguage());
         } else {
             if(!isPostal)
@@ -211,28 +259,28 @@ public class LocationType {
 
         if(StringUtils.isNotEmpty(getDistrictTfValue()) && !getDistrictTfValue().trim().isEmpty()) {
             location.setLocalentity(new Localentity());
-            location.getLocalentity().setContent(getDistrictTfValue());
+            location.getLocalentity().setContent(getDistrictTfValue().trim());
             location.getLocalentity().setLang(getDistrictTfLanguage());
         }
 
         if(StringUtils.isNotEmpty(getDistrictTfValue()) && !getDistrictTfValue().trim().isEmpty()) {
             location.setSecondem(new Secondem());
-            location.getSecondem().setContent(getCountyTfValue());
+            location.getSecondem().setContent(getCountyTfValue().trim());
             location.getSecondem().setLang(getCountyTfLanguage());
         }
 
         if(StringUtils.isNotEmpty(getRegionTfValue()) && !getRegionTfValue().trim().isEmpty()) {
             location.setFirstdem(new Firstdem());
-            location.getFirstdem().setContent(getRegionTfValue());
+            location.getFirstdem().setContent(getRegionTfValue().trim());
             location.getFirstdem().setLang(getRegionTfLanguage());
         }
 
         if(StringUtils.isNotEmpty(getLatitudeTfValue()) && !getLatitudeTfValue().trim().isEmpty()) {
-            location.setLatitude(getLatitudeTfValue());
+            location.setLatitude(getLatitudeTfValue().trim());
         }
 
         if(StringUtils.isNotEmpty(getLongitudeTfValue()) && !getLongitudeTfValue().trim().isEmpty()) {
-            location.setLongitude(getLongitudeTfValue());
+            location.setLongitude(getLongitudeTfValue().trim());
         }
 
         if(!isFirst && getLocalType().equals("visitors address") && StringUtils.isEmpty(getCityTfValue()) && StringUtils.isEmpty(getStreetTfValue()) && StringUtils.isEmpty(getCountryTfValue())) {
