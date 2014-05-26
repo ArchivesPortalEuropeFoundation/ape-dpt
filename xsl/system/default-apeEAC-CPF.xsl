@@ -13,6 +13,7 @@
 
     <xsl:param name="recordId" select="''"/>
     <xsl:param name="mainagencycode" select="''"/>
+    <xsl:param name="currentLanguage" select="''"/>
 
     <xsl:output indent="yes" method="xml"/>
     <xsl:strip-space elements="*"/>
@@ -586,7 +587,7 @@
                                 </toDate>
                             </dateRange>
                         </existDates>
-                        <xsl:message>Mandatory element &lt;existDates&gt; has been added!</xsl:message>
+                        <xsl:message select="ape:resource('eaccpf.message.existDates', $currentLanguage)"/>
                     </description>
                 </xsl:when>
                 <xsl:otherwise>
@@ -640,19 +641,19 @@
                     <xsl:attribute name="localType">
                         <xsl:choose>
                             <xsl:when test="@localType = ('authorized', 'autorisée')">
-                                <xsl:value-of>authorized</xsl:value-of>
+                                <xsl:value-of select="'authorized'"/>
                             </xsl:when>
                             <xsl:when test="@localType = ('alternative', 'variante')">
-                                <xsl:value-of>alternative</xsl:value-of>
+                                <xsl:value-of select="'alternative'"/>
                             </xsl:when>
                             <xsl:when test="@localType = ('preferred')">
-                                <xsl:value-of>alternative</xsl:value-of>
+                                <xsl:value-of select="'preferred'"/>
                             </xsl:when>
                             <xsl:when test="@localType = ('abbreviation')">
-                                <xsl:value-of>alternative</xsl:value-of>
+                                <xsl:value-of select="'abbreviation'"/>
                             </xsl:when>
                             <xsl:otherwise>
-                                <xsl:value-of>other</xsl:value-of>
+                                <xsl:value-of select="'other'"/>
                             </xsl:otherwise>
                         </xsl:choose>
                     </xsl:attribute>
@@ -730,7 +731,7 @@
                             </toDate>
                         </dateRange>
                     </existDates>
-                    <xsl:message>Mandatory element &lt;existDates&gt; has been added!</xsl:message>
+                    <xsl:message select="ape:resource('eaccpf.message.existDates', $currentLanguage)"/>
                 </xsl:when>
                 <xsl:otherwise>
                     <xsl:apply-templates select="existDates" mode="copy"/>
@@ -843,7 +844,7 @@
                             </xsl:attribute>
                         </toDate>
                     </dateRange>
-                    <xsl:message>Default values for unknown dates added to empty &lt;existDates&gt;</xsl:message>
+                    <xsl:message select="ape:resource('eaccpf.message.existDates', $currentLanguage)"/>
                 </xsl:when>
                 <xsl:when test="count(date) = 1 and count(dateRange) = 0">
                     <xsl:apply-templates select="date" mode="copy"/>
@@ -896,7 +897,7 @@
         <place>
             <xsl:if test="not(placeEntry)">
                 <placeEntry/>
-                <xsl:message>Mandatory &lt;placeEntry&gt; in &lt;place&gt; added</xsl:message>
+                <xsl:message select="ape:resource('eaccpf.message.placeEntry', $currentLanguage)"/>
             </xsl:if>
             <xsl:apply-templates select="node()" mode="copy"/>
         </place>
@@ -1073,7 +1074,7 @@
                         <xsl:apply-templates select="node()" mode="copy"/>
                     </xsl:otherwise>
                 </xsl:choose>
-                
+
             </functions>
         </xsl:if>
     </xsl:template>
