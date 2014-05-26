@@ -46,6 +46,7 @@ import eu.apenet.dpt.utils.util.extendxsl.DateNormalization;
 import eu.apenet.dpt.utils.util.extendxsl.FlagSet;
 import eu.apenet.dpt.utils.util.extendxsl.LinkFormatChecker;
 import eu.apenet.dpt.utils.util.extendxsl.Oai2EadNormalization;
+import eu.apenet.dpt.utils.util.extendxsl.ResourcebundleExtension;
 import eu.apenet.dpt.utils.util.extendxsl.XmlQualityChecker;
 import eu.apenet.dpt.utils.util.extendxsl.XmlQualityCheckerCall;
 
@@ -67,6 +68,7 @@ public class TransformationTool {
             Oai2EadNormalization oai2EadNormalization = new Oai2EadNormalization();
             FlagSet flagSet = new FlagSet();
             LinkFormatChecker linkFormatChecker = new LinkFormatChecker();
+            ResourcebundleExtension resourcebundleExtension = new ResourcebundleExtension();
 
             InputSource is = new InputSource(inputStream);
             SAXSource xmlSource = new SAXSource(saxParser, is);
@@ -76,6 +78,7 @@ public class TransformationTool {
             processor.registerExtensionFunction(oai2EadNormalization);
             processor.registerExtensionFunction(flagSet);
             processor.registerExtensionFunction(linkFormatChecker);
+            processor.registerExtensionFunction(resourcebundleExtension);
 
             XsltCompiler compiler = processor.newXsltCompiler();
 
@@ -142,6 +145,7 @@ public class TransformationTool {
             Oai2EadNormalization oai2EadNormalization = new Oai2EadNormalization();
             FlagSet flagSet = new FlagSet();
             LinkFormatChecker linkFormatChecker = new LinkFormatChecker();
+            ResourcebundleExtension resourcebundleExtension = new ResourcebundleExtension();
 
             InputSource is = new InputSource(inputFileStream);
             SAXSource xmlSource = new SAXSource(saxParser, is);
@@ -151,6 +155,7 @@ public class TransformationTool {
             processor.registerExtensionFunction(oai2EadNormalization);
             processor.registerExtensionFunction(flagSet);
             processor.registerExtensionFunction(linkFormatChecker);
+            processor.registerExtensionFunction(resourcebundleExtension);
 
             if(extensionFunctionCall == null || extensionFunctionCall instanceof CounterCLevelCall) {
                 if(extensionFunctionCall == null)
