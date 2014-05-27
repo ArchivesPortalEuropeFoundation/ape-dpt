@@ -488,19 +488,24 @@ public class EacCpfDescriptionPanel extends EacCpfPanel {
 			boolean places = false;
 			boolean functions = false;
 			boolean ocupations = false;
+			boolean structureOrGenealogy = false;
 			boolean lastPlaces = false;
 			boolean lastFunctions = false;
 			boolean lastOccupations = false;
 			int counter = this.eaccpf.getCpfDescription().getDescription().getPlacesOrLocalDescriptionsOrLegalStatuses().size();
 			for(int i=0;i<counter;i++){
 				Object object = this.eaccpf.getCpfDescription().getDescription().getPlacesOrLocalDescriptionsOrLegalStatuses().get(i);
+				boolean flagIsFirst = false;
+				
 				//check if there is the neccesary instancesof, if not the form needs to show before section
 				if(object instanceof Places){
+					flagIsFirst = !places;
 					places = true;
 					if(i+1==counter){ 
 						lastPlaces = true;
 					}
 				}else if (object instanceof Functions) {
+					flagIsFirst = !functions;
 					functions = true;
 					if(!places){
 						builder = buildPlaces(builder,cc,null);
@@ -510,45 +515,49 @@ public class EacCpfDescriptionPanel extends EacCpfPanel {
 						lastFunctions = true;
 					}
 				}else if (object instanceof Occupations) {
+					flagIsFirst = !ocupations;
 					ocupations = true;
 					if(!places){
 						builder = buildPlaces(builder,cc,null);
 					}
 					if(!functions){
-						builder = buildFunctions(builder,cc,null);
+						builder = buildFunctions(builder,cc,null,true);
 						functions = true;
 					}
 					if(i+1==counter){ 
 						lastOccupations = true;
 					}
 				}else if (object instanceof StructureOrGenealogy) {
+					flagIsFirst = !structureOrGenealogy;
+					structureOrGenealogy = true;
 					if(!places){
 						builder = buildPlaces(builder,cc,null);
 					}
 					if(!functions){
-						builder = buildFunctions(builder,cc,null);
+						builder = buildFunctions(builder,cc,null,true);
 						functions = true;
 					}
 					if(!ocupations){
-						builder = buildOcupation(builder,cc,null);
+						builder = buildOcupation(builder,cc,null,true);
 						ocupations = true;
 					}
 				}
-				builder = buildPlaceByPlacesLocationDescription(object,builder,cc); //build current form
+				
+				builder = buildPlaceByPlacesLocationDescription(object,builder,cc,flagIsFirst); //build current form
 				//if it's the last element, call the next elements to be written at empty way
 				if(lastPlaces){
-					builder = buildFunctions(builder,cc,null);
-					builder = buildOcupation(builder,cc,null);
-					builder = buildGenealogy(builder,cc,null);
+					builder = buildFunctions(builder,cc,null,true);
+					builder = buildOcupation(builder,cc,null,true);
+					builder = buildGenealogy(builder,cc,null,true);
 				}else if(lastFunctions){
-					builder = buildOcupation(builder,cc,null);
-					builder = buildGenealogy(builder,cc,null);
+					builder = buildOcupation(builder,cc,null,true);
+					builder = buildGenealogy(builder,cc,null,true);
 				}else if(lastOccupations){
-					builder = buildGenealogy(builder,cc,null);
+					builder = buildGenealogy(builder,cc,null,true);
 				}
 			}
 		}else{ //put other one empty, it calls to else of next method
-			builder = buildPlaceByPlacesLocationDescription(null,builder,cc);
+			builder = buildPlaceByPlacesLocationDescription(null,builder,cc,true);
 		}
 		return builder;
 	}
@@ -562,7 +571,7 @@ public class EacCpfDescriptionPanel extends EacCpfPanel {
                 && this.eaccpf.getCpfDescription().getDescription().getBiogHist() != null) {
 			builder = buildBiographies(builder,cc,this.eaccpf.getCpfDescription().getDescription().getBiogHist());
 		}else{
-			builder = buildBiography(builder,cc,null,null);
+			builder = buildBiography(builder,cc,null,null,true);
 		}
 		setNextRow();
 		JButton jButtonAddFurtherBiographyDescription = new ButtonTab(this.labels.getString("eaccpf.description.button.addfurtherbiographydescription"));
@@ -586,13 +595,13 @@ public class EacCpfDescriptionPanel extends EacCpfPanel {
 	                    	P par = ((P) paragraph);
 	                    	content = par.getContent();
 	                    	lang = par.getLang();
-	                    	builder = buildBiography(builder,cc,content,lang);
+	                    	builder = buildBiography(builder,cc,content,lang,false);
 	                    }
 	                }
 //	            }
 			}
 		}else{
-			builder = buildBiography(builder,cc,null,null);
+			builder = buildBiography(builder,cc,null,null,true);
 		}
 		return builder;
 	}
@@ -601,27 +610,27 @@ public class EacCpfDescriptionPanel extends EacCpfPanel {
 	 * Builds for parts, places, functions ocupations and genealogy.
 	 * It returns the builder with this four elements.
 	 */
-	private PanelBuilder buildPlaceByPlacesLocationDescription(Object object,PanelBuilder builder, CellConstraints cc) {
+	private PanelBuilder buildPlaceByPlacesLocationDescription(Object object,PanelBuilder builder, CellConstraints cc,boolean isFirst) {
 		if(object!=null){
 			if(object instanceof Places){
 				builder = buildPlaces(builder,cc,(Places)object);
 			}
 			if(object instanceof Functions){
-				builder = buildFunctions(builder,cc,(Functions)object);
+				builder = buildFunctions(builder,cc,(Functions)object,isFirst);
 			}
 			if (object instanceof Occupations) {
-				builder = buildOcupation(builder,cc,(Occupations)object);
+				builder = buildOcupation(builder,cc,(Occupations)object,isFirst);
 			}
 			if (object instanceof StructureOrGenealogy) {
 				StructureOrGenealogy structureOrGeneaoly = (StructureOrGenealogy) object;
-				builder = buildGenealogy(builder,cc,structureOrGeneaoly);
+				builder = buildGenealogy(builder,cc,structureOrGeneaoly,isFirst);
 	    		setNextRow();
 			}
 		}else{
 			builder = buildPlaces(builder,cc,null);
-			builder = buildFunctions(builder,cc,null);
-			builder = buildOcupation(builder,cc,null);
-    		builder = buildGenealogy(builder,cc,null);
+			builder = buildFunctions(builder,cc,null,isFirst);
+			builder = buildOcupation(builder,cc,null,isFirst);
+    		builder = buildGenealogy(builder,cc,null,isFirst);
 		}
 		
 		return builder;
@@ -629,7 +638,7 @@ public class EacCpfDescriptionPanel extends EacCpfPanel {
 	/**
 	 * Build occupation parts (form)
 	 */
-	private PanelBuilder buildOcupation(PanelBuilder builder,CellConstraints cc, Occupations ocupations) {
+	private PanelBuilder buildOcupation(PanelBuilder builder,CellConstraints cc, Occupations ocupations, boolean isFirst) {
 		
 		builder.addSeparator(this.labels.getString("eaccpf.description.ocupation"), cc.xyw(1, this.rowNb, 7));
 		setNextRow();
@@ -637,7 +646,7 @@ public class EacCpfDescriptionPanel extends EacCpfPanel {
 		if(ocupations!=null && ocupations.getOccupation().size()>0){
 			for(int i=0;i<ocupations.getOccupation().size();i++){
 				Occupation ocupation = ocupations.getOccupation().get(i);
-				builder = buildOcupationPlace(builder,cc,ocupation,true);
+				builder = buildOcupationPlace(builder,cc,ocupation,i==0);
 				setNextRow();
 				
 				JButton jButtonAddFurtherPlaceOcupation = new ButtonTab(this.labels.getString("eaccpf.description.button.addFurtherPlaceOcupation"));
@@ -649,7 +658,7 @@ public class EacCpfDescriptionPanel extends EacCpfPanel {
 				setNextRow();
 			}
 		} else {
-			builder = buildOcupationPlace(builder,cc,null,false);
+			builder = buildOcupationPlace(builder,cc,null,isFirst);
 			setNextRow();
 			
 			JButton jButtonAddFurtherPlaceOcupation = new ButtonTab(this.labels.getString("eaccpf.description.button.addFurtherPlaceOcupation"));
@@ -672,13 +681,13 @@ public class EacCpfDescriptionPanel extends EacCpfPanel {
 	 * Builds functions part (if there are severals or if there is none.
 	 * Also appends Add Further Places button.
 	 */
-	private PanelBuilder buildFunctions(PanelBuilder builder,CellConstraints cc, Functions functionObjects) {
+	private PanelBuilder buildFunctions(PanelBuilder builder,CellConstraints cc, Functions functionObjects,boolean isFirst) {
 		builder.addSeparator(this.labels.getString("eaccpf.description.function"), cc.xyw(1, this.rowNb, 7));
 		setNextRow();
 		if(functionObjects!=null && functionObjects.getFunction() != null && !functionObjects.getFunction().isEmpty()) {
             for (int i=0;i<functionObjects.getFunction().size();i++) {
             	 Function function = functionObjects.getFunction().get(i);
-                 builder = buildPlaceFunction(builder,cc,function,true);
+                 builder = buildPlaceFunction(builder,cc,function,i==0);
                  setNextRow();
 
          		 JButton jButtonAddFurtherPlaceFunction = new ButtonTab(this.labels.getString("eaccpf.description.button.addFurtherPlaceFunction"));
@@ -693,7 +702,7 @@ public class EacCpfDescriptionPanel extends EacCpfPanel {
                  builder = buildAddDateDateRangeLabelAndJButtons(builder,cc,FUNCTIONS,i);
             }
 		}else{
-            builder = buildPlaceFunction(builder,cc,null,false);
+            builder = buildPlaceFunction(builder,cc,null,isFirst);
             setNextRow();
             
             JButton jButtonAddFurtherPlaceFunction = new ButtonTab(this.labels.getString("eaccpf.description.button.addFurtherPlaceFunction"));
@@ -729,7 +738,7 @@ public class EacCpfDescriptionPanel extends EacCpfPanel {
 			builder = buildPlace(builder,cc,null,null);
 		}
 		JButton jButtonAddFurtherPlace = new ButtonTab(this.labels.getString("eaccpf.description.button.addFurtherPlace"));
-		jButtonAddFurtherPlace.addActionListener(new AddFurtherAddressDetailsButton(this.eaccpf, this.tabbedPane, this.model));
+		jButtonAddFurtherPlace.addActionListener(new AddFurtherAddressButton(this.eaccpf, this.tabbedPane, this.model));
 		builder.add(jButtonAddFurtherPlace, cc.xy (1, rowNb));
 		setNextRow();
 		return builder;
@@ -737,7 +746,7 @@ public class EacCpfDescriptionPanel extends EacCpfPanel {
 	/**
 	 * Method which builds an individual biography form part
 	 */
-	private PanelBuilder buildBiography(PanelBuilder builder, CellConstraints cc, String content, String lang) {
+	private PanelBuilder buildBiography(PanelBuilder builder, CellConstraints cc, String content, String lang,boolean isFirst) {
 		JLabel jLabelLinkDescriptionGenealogy = new JLabel(this.labels.getString("eaccpf.description.description"));
 		builder.add(jLabelLinkDescriptionGenealogy, cc.xy (1, rowNb));
 		TextAreaWithLanguage textFieldWithLanguage = null;
@@ -757,7 +766,7 @@ public class EacCpfDescriptionPanel extends EacCpfPanel {
 			addBiographyHistoryJTextfield(textFieldWithLanguage);
 			JLabel jLabelLanguageBiography = new JLabel(this.labels.getString("eaccpf.description.selectlanguage"));
 			builder.add(jLabelLanguageBiography, cc.xy (5, rowNb));
-			JComboBox jComboboxLanguageBiography = buildLanguageJComboBox();
+			JComboBox jComboboxLanguageBiography = buildLanguageJComboBox(isFirst);
 			builder.add(jComboboxLanguageBiography, cc.xy (7, rowNb));
 			addBiographyHistoryJComboBoxes(jComboboxLanguageBiography);
 		}
@@ -769,7 +778,7 @@ public class EacCpfDescriptionPanel extends EacCpfPanel {
 	 * Method which builds genealogy part form.
 	 * It could load paragraph parts and language if object<StructureOrGenealogy> is used.
 	 */
-	private PanelBuilder buildGenealogy(PanelBuilder builder, CellConstraints cc,StructureOrGenealogy structureOrGenealogy) {
+	private PanelBuilder buildGenealogy(PanelBuilder builder, CellConstraints cc,StructureOrGenealogy structureOrGenealogy,boolean isFirst) {
 		builder.addSeparator(this.labels.getString("eaccpf.description.genealogy"), cc.xyw(1, this.rowNb, 7));
 		setNextRow();
 		
@@ -779,14 +788,17 @@ public class EacCpfDescriptionPanel extends EacCpfPanel {
 		if(structureOrGenealogy!=null && structureOrGenealogy.getMDiscursiveSet()!=null && !structureOrGenealogy.getMDiscursiveSet().isEmpty()){
 			List<Object> mDiscursiveSet = structureOrGenealogy.getMDiscursiveSet();
             for (int i=0;i<mDiscursiveSet.size();i++) {
-            	Object paragraph = mDiscursiveSet;
-                if (paragraph instanceof P) {
-                	content = ((P) paragraph).getContent();
-                	lang = ((P) paragraph).getLang();
-                	JLabel jLabelLinkDescriptionGenealogy = new JLabel(this.labels.getString("eaccpf.description.description"));
+            	content = "";
+            	lang = "";
+            	Object paragraph = mDiscursiveSet.get(i);
+            	if(paragraph!=null && paragraph instanceof P){
+            		P p = (P)paragraph;
+                	content = ((P) p).getContent();
+                	lang = ((P) p).getLang();
+        			JLabel jLabelLinkDescriptionGenealogy = new JLabel(this.labels.getString("eaccpf.description.description"));
             		builder.add(jLabelLinkDescriptionGenealogy, cc.xy (1, rowNb));
-//                	textFieldWithLanguage = new TextFieldWithLanguage(content,lang);
-					textFieldWithLanguage = new TextAreaWithLanguage(content, lang);
+//                  textFieldWithLanguage = new TextFieldWithLanguage(content,lang);
+        			textFieldWithLanguage = new TextAreaWithLanguage(content!=null?content:"", lang!=null?lang:"");
                     ScrollPane genealogyTextField = textFieldWithLanguage.getTextField();
                     builder.add(genealogyTextField, cc.xy (3, rowNb));
                     addGenealogyTextField(textFieldWithLanguage);
@@ -796,7 +808,7 @@ public class EacCpfDescriptionPanel extends EacCpfPanel {
         			builder.add(genealogyLanguageComboBox, cc.xy (7, rowNb));
         			addGenealogyLanguage(genealogyLanguageComboBox);
         			setNextRow();
-                }
+            	}
             }
 		}else{
 			JLabel jLabelLinkDescriptionGenealogy = new JLabel(this.labels.getString("eaccpf.description.description"));
@@ -808,7 +820,7 @@ public class EacCpfDescriptionPanel extends EacCpfPanel {
 			addGenealogyTextField(jTextFieldLinkDescriptionGenealogy);
 			JLabel jLabelLanguageGenealogy = new JLabel(this.labels.getString("eaccpf.description.selectlanguage"));
 			builder.add(jLabelLanguageGenealogy, cc.xy (5, rowNb));
-			JComboBox jComboboxLanguageGenealogy = buildLanguageJComboBox();
+			JComboBox jComboboxLanguageGenealogy = buildLanguageJComboBox(isFirst);
 			builder.add(jComboboxLanguageGenealogy, cc.xy (7, rowNb));
 			addGenealogyLanguage(jComboboxLanguageGenealogy);
 			setNextRow();
@@ -828,11 +840,11 @@ public class EacCpfDescriptionPanel extends EacCpfPanel {
 	 * Builds a JComboBox with all languages used in several parts of this form.
 	 * Languages are provided by CommonsPropertiesPanels class.
 	 */
-	private JComboBox buildLanguageJComboBox(){
+	private JComboBox buildLanguageJComboBox(boolean flag){
 		JComboBox jComboboxLanguageGenealogy = new JComboBox(CommonsPropertiesPanels.languagesDisplay);
-		if(StringUtils.isNotEmpty(this.firstLanguage)){
+		if(flag && StringUtils.isNotEmpty(this.firstLanguage)){
 //			Locale.ENGLISH.getISO3Language()
-			jComboboxLanguageGenealogy.setSelectedItem(this.firstLanguage);
+			jComboboxLanguageGenealogy.setSelectedItem(LanguageIsoList.getLanguageStr(this.firstLanguage));
 		}else{
 			jComboboxLanguageGenealogy.setSelectedItem("---");
 		}
@@ -885,8 +897,8 @@ public class EacCpfDescriptionPanel extends EacCpfPanel {
 			builder.add(jComboBoxLanguage, cc.xy (7, rowNb));
 			addOcupationPlaceOcupationLanguageJComboBox(jComboBoxLanguage);
 		}else{
-			JComboBox jComboboxLanguage = buildLanguageJComboBox();
-			if(flag){
+			JComboBox jComboboxLanguage = buildLanguageJComboBox(flag);
+			if(!flag){
 				jComboboxLanguage.setSelectedItem("---");
 			}
 			builder.add(jComboboxLanguage, cc.xy (7, rowNb));
@@ -1021,8 +1033,8 @@ public class EacCpfDescriptionPanel extends EacCpfPanel {
 			builder.add(languageBox, cc.xy (7, rowNb));
 			addPlaceFunctionLanguageJComboBox(languageBox);
 		}else{
-			JComboBox jComboboxLanguage = buildLanguageJComboBox();
-			if(flag){
+			JComboBox jComboboxLanguage = buildLanguageJComboBox(flag);
+			if(!flag){
 				jComboboxLanguage.setSelectedItem("---");
 			}
 			builder.add(jComboboxLanguage, cc.xy (7, rowNb));
@@ -1111,11 +1123,11 @@ public class EacCpfDescriptionPanel extends EacCpfPanel {
 			builder = buildPlaceDateRange(builder,cc,place,placeNumber);
 			builder = buildPlaceDateRangeButton(builder,cc,placeNumber);
 		}else{ //empty one
-			builder = buildPlaceEntry(builder,cc,null,false);
+			builder = buildPlaceEntry(builder,cc,null,true);
 			builder = buildAddressDetails(builder,cc,null);
 			builder = buildButtonAddFurtherAddressDetails(builder,cc,null);
 			builder = buildPlaceDateRange(builder,cc,null,placeNumber);
-			builder = buildPlaceDateRangeButton(builder,cc,null);
+			builder = buildPlaceDateRangeButton(builder,cc,placeNumber);
 		}
 		setNextRow();
 		return builder;
@@ -1311,8 +1323,8 @@ public class EacCpfDescriptionPanel extends EacCpfPanel {
 			builder.add(jTextfieldPlace, cc.xy (3, rowNb));
 			JLabel jLabelLanguage = new JLabel(this.labels.getString("eaccpf.description.selectlanguage"));
 			builder.add(jLabelLanguage, cc.xy (5, rowNb));
-			JComboBox jComboboxLanguage = buildLanguageJComboBox();
-			if(flag){
+			JComboBox jComboboxLanguage = buildLanguageJComboBox(flag);
+			if(!flag){
 				jComboboxLanguage.setSelectedItem("---");
 			}
 			builder.add(jComboboxLanguage, cc.xy (7, rowNb));
@@ -1563,11 +1575,13 @@ public class EacCpfDescriptionPanel extends EacCpfPanel {
 				
 				if((lastBiography.getChronListOrPOrCitation().get(lastIndex)!=null && lastBiography.getChronListOrPOrCitation().get(lastIndex) instanceof P)){
 					P p = (P)lastBiography.getChronListOrPOrCitation().get(lastIndex);
-					if((p.getContent()==null || p.getContent().isEmpty()) && (p.getLang()==null || p.getLang().isEmpty() || p.getLang().equals(TextFieldWithComboBoxEacCpf.DEFAULT_VALUE))){
+					if((p.getContent()==null || p.getContent().isEmpty())){
 						JOptionPane.showMessageDialog(eacCpfFrame, labels.getString("eaccpf.commons.error.empty.biohist"));
 					}else{
 						this.eaccpf.getCpfDescription().getDescription().getBiogHist().get(this.eaccpf.getCpfDescription().getDescription().getBiogHist().size()-1).getChronListOrPOrCitation().add(new P());
 					}
+				}else{
+					JOptionPane.showMessageDialog(eacCpfFrame, labels.getString("eaccpf.commons.error.empty.biohist"));
 				}
 			}else{
 				JOptionPane.showMessageDialog(eacCpfFrame, labels.getString("eaccpf.commons.error.empty.biohist"));
@@ -1616,11 +1630,13 @@ public class EacCpfDescriptionPanel extends EacCpfPanel {
 				
 				if((lastGenealogy.getMDiscursiveSet().get(lastIndex)!=null && lastGenealogy.getMDiscursiveSet().get(lastIndex) instanceof P)){
 					P p = (P)lastGenealogy.getMDiscursiveSet().get(lastIndex);
-					if((p.getContent()==null || p.getContent().isEmpty()) && (p.getLang()==null || p.getLang().isEmpty() || p.getLang().equals(TextFieldWithComboBoxEacCpf.DEFAULT_VALUE))){
+					if((p.getContent()==null || p.getContent().isEmpty())){
 						JOptionPane.showMessageDialog(eacCpfFrame, labels.getString("eaccpf.commons.error.empty.genealogy"));
 					}else{
 						lastGenealogy.getMDiscursiveSet().add(new P());
 					}
+				}else{
+					JOptionPane.showMessageDialog(eacCpfFrame, labels.getString("eaccpf.commons.error.empty.genealogy"));
 				}
 			}else{
 				JOptionPane.showMessageDialog(eacCpfFrame, labels.getString("eaccpf.commons.error.empty.genealogy"));
@@ -1654,21 +1670,7 @@ public class EacCpfDescriptionPanel extends EacCpfPanel {
 
 		private void putEmptyOcupation() {
 			int lastIndex = ocupationPlaceOcupationJTextfields.size()-1;
-			boolean isEmptyOccupation = (ocupationPlaceOcupationJTextfields.size()>lastIndex && 
-					ocupationPlaceOcupationLanguagesJComboboxes.size()>lastIndex &&
-					ocupationPlaceLinkToControlledVocabularyTextFields.size()>lastIndex &&
-					ocupationPlaceOcupationDescriptionTextFields.size()>lastIndex &&
-					ocupationPlacePlaceJTextFields.size()>lastIndex &&
-					ocupationPlaceCountryPlaceJComboBoxes.size()>lastIndex &&
-					(
-						ocupationPlaceOcupationJTextfields.get(lastIndex).getText().isEmpty() &&
-						(ocupationPlaceOcupationLanguagesJComboboxes.get(lastIndex).getSelectedItem().toString().isEmpty() || ocupationPlaceOcupationLanguagesJComboboxes.get(lastIndex).getSelectedItem().toString().equals(TextFieldWithComboBoxEacCpf.DEFAULT_VALUE) ) &&
-						ocupationPlaceLinkToControlledVocabularyTextFields.get(lastIndex).getText().isEmpty() &&
-						ocupationPlaceOcupationDescriptionTextFields.get(lastIndex).getTextValue().isEmpty() &&
-						ocupationPlacePlaceJTextFields.get(lastIndex).get(ocupationPlacePlaceJTextFields.get(lastIndex).size()-1).getText().isEmpty() &&
-						(ocupationPlaceOcupationLanguagesJComboboxes.get(lastIndex).getSelectedItem().toString().isEmpty() || ocupationPlaceOcupationLanguagesJComboboxes.get(lastIndex).getSelectedItem().toString().equals(TextFieldWithComboBoxEacCpf.DEFAULT_VALUE)) 
-					)
-					);
+			boolean isEmptyOccupation = (ocupationPlaceOcupationJTextfields.size()>lastIndex && (ocupationPlaceOcupationJTextfields.get(lastIndex).getText().isEmpty()));
 			if(isEmptyOccupation){
 				JOptionPane.showMessageDialog(eacCpfFrame, labels.getString("eaccpf.commons.error.empty.occupation"));
 			}else{
@@ -1767,20 +1769,7 @@ public class EacCpfDescriptionPanel extends EacCpfPanel {
 			if(placesFunctionJTextfield!=null){
 				boolean thereAreSomeFieldsFilled = false;
 				int lastIndex = placesFunctionJTextfield.size()-1;
-				if(placesFunctionJTextfield.size()>lastIndex && placesVocabularyJTextFields.size()>lastIndex && 
-						placesDescriptionTextfields.size()>lastIndex && placesFunctionJComboBoxes.size()>lastIndex && 
-						placeFunctionPlaceJtextfields.size()>lastIndex && placeFunctionPlaceJComboBoxes.size()>lastIndex && 
-						placesFunctionJComboBoxes.size()>lastIndex &&
-						!(
-							placesFunctionJTextfield.get(lastIndex).getText().isEmpty() &&
-							placesVocabularyJTextFields.get(lastIndex).getText().isEmpty() &&
-							placesDescriptionTextfields.get(lastIndex).getTextValue().isEmpty() &&
-							(placesFunctionJComboBoxes.get(lastIndex).getSelectedItem()!=null && (placesFunctionJComboBoxes.get(lastIndex).getSelectedItem().toString().isEmpty() || placesFunctionJComboBoxes.get(lastIndex).getSelectedItem().toString().equals(TextFieldWithComboBoxEacCpf.DEFAULT_VALUE) )) &&
-							placeFunctionPlaceJtextfields.get(lastIndex).get(placeFunctionPlaceJtextfields.get(lastIndex).size()-1).getText().isEmpty() &&
-							(placeFunctionPlaceJComboBoxes.get(lastIndex).get(placeFunctionPlaceJComboBoxes.get(lastIndex).size()-1).getSelectedItem().toString().isEmpty() || placeFunctionPlaceJComboBoxes.get(lastIndex).get(placeFunctionPlaceJComboBoxes.get(lastIndex).size()-1).getSelectedItem().toString().equals(TextFieldWithComboBoxEacCpf.DEFAULT_VALUE) ) &&
-							(placesFunctionJComboBoxes.get(lastIndex).getSelectedItem().toString().isEmpty() || placesFunctionJComboBoxes.get(lastIndex).getSelectedItem().toString().equals(TextFieldWithComboBoxEacCpf.DEFAULT_VALUE))
-						)
-					){
+				if(placesFunctionJTextfield.size()>lastIndex && placesVocabularyJTextFields.size()>lastIndex && !(placesFunctionJTextfield.get(lastIndex).getText().isEmpty()) ){
 					thereAreSomeFieldsFilled = true;
 				}
 				if(!thereAreSomeFieldsFilled){ 
@@ -1864,7 +1853,7 @@ public class EacCpfDescriptionPanel extends EacCpfPanel {
 
 		private int index;
 		
-		AddFurtherAddressAndComponentButton(EacCpf eacCpf,JTabbedPane tabbedPane, ProfileListModel model, Integer placeEntryNumber) {
+		public AddFurtherAddressAndComponentButton(EacCpf eacCpf,JTabbedPane tabbedPane, ProfileListModel model, Integer placeEntryNumber) {
 			super(eacCpf, tabbedPane, model);
 			this.index = placeEntryNumber!=null?placeEntryNumber:0;
 		}
@@ -1915,9 +1904,9 @@ public class EacCpfDescriptionPanel extends EacCpfPanel {
 	}
 
 	
-	public class AddFurtherAddressDetailsButton extends UpdateEacCpfObject{
+	public class AddFurtherAddressButton extends UpdateEacCpfObject{
 		
-		public AddFurtherAddressDetailsButton(EacCpf eacCpf, JTabbedPane tabbedPane, ProfileListModel model) {
+		public AddFurtherAddressButton(EacCpf eacCpf, JTabbedPane tabbedPane, ProfileListModel model) {
 			super(eacCpf, tabbedPane, model);
 		}
 		
@@ -1959,25 +1948,9 @@ public class EacCpfDescriptionPanel extends EacCpfPanel {
 					int j;
 					for(j=0;!lastNodeIsBlank && j<lastPlaces.getPlace().size();j++){
 						Place place = lastPlaces.getPlace().get(j);
-						if(place.getAddress()!=null && place.getAddress().getAddressLine()!=null){
-							if(place.getAddress().getAddressLine().size()==1){
-								AddressLine addressLine = place.getAddress().getAddressLine().get(0);
-								lastNodeIsBlank = (addressLine.getContent()==null || addressLine.getContent().isEmpty()) 
-									&& (addressLine.getLang()==null || addressLine.getLang().isEmpty());
-							}
-						}else{
-							lastNodeIsBlank = true;
-						}
-						if(lastNodeIsBlank && place.getPlaceEntry()!=null && !place.getPlaceEntry().isEmpty()){
-							lastNodeIsBlank = false; //check if also it's empty or not
-							for(int k=0;!lastNodeIsBlank && k<place.getPlaceEntry().size();k++){
-								PlaceEntry placeEntry = place.getPlaceEntry().get(k);
-								lastNodeIsBlank = (placeEntry.getContent()==null || placeEntry.getContent().isEmpty() )
-									&& (placeEntry.getLang()==null || placeEntry.getLang().isEmpty())
-									&& (placeEntry.getCountryCode()==null || placeEntry.getCountryCode().isEmpty() || placeEntry.getCountryCode().equals(TextFieldWithComboBoxEacCpf.DEFAULT_VALUE)) 
-									&& (placeEntry.getVocabularySource()==null || placeEntry.getVocabularySource().isEmpty());
-							}
-						}
+						lastNodeIsBlank = (place.getPlaceEntry()!=null && 
+							place.getPlaceEntry().get(place.getPlaceEntry().size()-1).getContent()!=null && 
+							place.getPlaceEntry().get(place.getPlaceEntry().size()-1).getContent().isEmpty());
 					}
 				}
 				if(!lastNodeIsBlank && lastPlaces!=null){ //put into target position
@@ -2431,14 +2404,9 @@ public class EacCpfDescriptionPanel extends EacCpfPanel {
 					if(biographyHistoryJTextfields!=null && biographyHistoryJTextfields.size()>i){
 						if(!biographyHistoryJTextfields.get(i).getTextValue().isEmpty() || !save){
 							P p = new P();
-							if(biographyHistoryJComboBoxes!=null && biographyHistoryJComboBoxes.size()>i){
-								p.setLang(LanguageIsoList.getIsoCode(biographyHistoryJComboBoxes.get(i).getSelectedItem().toString()));
-							}
-							String biographyHistoryContent = biographyHistoryJTextfields.get(i).getTextValue();
-							if(!save || biographyHistoryContent!=null && !biographyHistoryContent.isEmpty()){
-								p.setContent(biographyHistoryContent);
-								biogHist.getChronListOrPOrCitation().add(p);
-							}
+							p.setLang(LanguageIsoList.getIsoCode(biographyHistoryJComboBoxes.get(i).getSelectedItem().toString()));
+							p.setContent(biographyHistoryJTextfields.get(i).getTextValue());
+							biogHist.getChronListOrPOrCitation().add(p);
 						}
 					}
 				}
@@ -2452,7 +2420,7 @@ public class EacCpfDescriptionPanel extends EacCpfPanel {
 			StructureOrGenealogy genealogy = new StructureOrGenealogy();
 			if(genealogyTextFields!=null){
 				for(int i=0;i<genealogyTextFields.size();i++){
-					if(genealogyLanguagesJComboBoxes!=null && genealogyLanguagesJComboBoxes.size()>i){
+					if(genealogyTextFields!=null && genealogyTextFields.size()>i){
 						if(!genealogyTextFields.get(i).getTextValue().isEmpty() || !save){
 							P p = new P();
 							p.setLang(LanguageIsoList.getIsoCode(genealogyLanguagesJComboBoxes.get(i).getSelectedItem().toString()));

@@ -38,6 +38,8 @@ public class TextFieldWithComboBoxEacCpf {
 
 	// All possible lists of values.
 	private static final String[] CPF_RELATION = { "identity", "hierarchical", "hierarchical-parent", "hierarchical-child", "temporal", "temporal-earlier", "temporal-later", "family", "associative" };
+	private static final String[] RESOURCE_RELATION = {"creatorOf","subjectOf","other" };
+	private static final String[] FUNCTION_RELATION = {"controls","owns","performs" }; 
 	private static final String[] NAME_COMPONENT_CORPORATE_BODY = { "corpname", "suffix", "alias", "legalform" };
 	private static final String[] NAME_COMPONENT_FAMILY = { "famname", "surname", "prefix", "suffix", "alias" };
 	private static final String[] NAME_COMPONENT_PERSON = { "persname", "surname", "firstname", "birthname", "title", "prefix", "suffix", "alias", "patronymic" };
@@ -49,12 +51,15 @@ public class TextFieldWithComboBoxEacCpf {
 
 	// Constants.
 	public static final String DEFAULT_VALUE = "---";
+	public static final String SELECTED_ALTERNATIVE_SET_VALUE = "identity";
 	// Constants for types.
 	public static final String TYPE_ADDRESS_COMPONENT = "address";
 	public static final String TYPE_COMPONENT = "coponent";
 	public static final String TYPE_CPF_RELATION = "cpf";
 	public static final String TYPE_FORM = "form";
 	public static final String TYPE_PLACE_ROLE = "place";
+	public static final String TYPE_RESOURCE_RELATION = "resource_relation";
+	public static final String TYPE_FUNCTION_RELATION = "function_relation";
 
 	/**
 	 * Constructor.
@@ -106,6 +111,16 @@ public class TextFieldWithComboBoxEacCpf {
 			this.textField = new JTextField(textFieldValue);
 			this.comboBox = new JComboBox<String>(fillTranslationComboBoxValues(type, TextFieldWithComboBoxEacCpf.CPF_RELATION, labels));
 			this.comboBox.setSelectedIndex(this.getIndex(comboBoxValue, TextFieldWithComboBoxEacCpf.CPF_RELATION));
+		} else if (TextFieldWithComboBoxEacCpf.TYPE_RESOURCE_RELATION.equalsIgnoreCase(type)) {
+			// Fill the value of JTextField.
+			this.textField = new JTextField(textFieldValue);
+			this.comboBox = new JComboBox<String>(fillTranslationComboBoxValues(type, TextFieldWithComboBoxEacCpf.RESOURCE_RELATION, labels));
+			this.comboBox.setSelectedIndex(this.getIndex(comboBoxValue, TextFieldWithComboBoxEacCpf.RESOURCE_RELATION));
+		} else if (TextFieldWithComboBoxEacCpf.TYPE_FUNCTION_RELATION.equalsIgnoreCase(type)) {
+			// Fill the value of JTextField.
+			this.textField = new JTextField(textFieldValue);
+			this.comboBox = new JComboBox<String>(fillTranslationComboBoxValues(type, TextFieldWithComboBoxEacCpf.FUNCTION_RELATION, labels));
+			this.comboBox.setSelectedIndex(this.getIndex(comboBoxValue, TextFieldWithComboBoxEacCpf.FUNCTION_RELATION));
 		}
 	}
 
@@ -139,6 +154,14 @@ public class TextFieldWithComboBoxEacCpf {
 		} else if (TextFieldWithComboBoxEacCpf.TYPE_CPF_RELATION.equalsIgnoreCase(type)) {
 			for (int i =0; i < arrayValues.length; i++) {
 				partComponents.add(labels.getString("eaccpf.relations.cpf.relation.type." + arrayValues[i]));
+			}
+		} else if (TextFieldWithComboBoxEacCpf.TYPE_RESOURCE_RELATION.equalsIgnoreCase(type)) {
+			for (int i =0; i < arrayValues.length; i++) {
+				partComponents.add(labels.getString("eaccpf.relations.resource.relation.type." + arrayValues[i]));
+			}
+		} else if (TextFieldWithComboBoxEacCpf.TYPE_FUNCTION_RELATION.equalsIgnoreCase(type)) {
+			for (int i =0; i < arrayValues.length; i++) {
+				partComponents.add(labels.getString("eaccpf.relations.function.relation.type." + arrayValues[i]));
 			}
 		}
 
@@ -222,6 +245,10 @@ public class TextFieldWithComboBoxEacCpf {
 				}
 			} else if (TextFieldWithComboBoxEacCpf.TYPE_CPF_RELATION.equalsIgnoreCase(type)) {
 				value = TextFieldWithComboBoxEacCpf.CPF_RELATION[index - 1];
+			} else if (TextFieldWithComboBoxEacCpf.TYPE_RESOURCE_RELATION.equalsIgnoreCase(type)) {
+				value = TextFieldWithComboBoxEacCpf.RESOURCE_RELATION[index - 1];
+			} else if (TextFieldWithComboBoxEacCpf.TYPE_FUNCTION_RELATION.equalsIgnoreCase(type)) {
+				value = TextFieldWithComboBoxEacCpf.FUNCTION_RELATION[index - 1];
 			}
 		}
 
