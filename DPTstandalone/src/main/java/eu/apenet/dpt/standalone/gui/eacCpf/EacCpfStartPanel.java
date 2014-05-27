@@ -115,7 +115,7 @@ public class EacCpfStartPanel extends EacCpfPanel{
         //language
         this.setNextRow();
         builder.addLabel(labels.getString("eaccpf.start.language") + ":", cc.xy(1, rowNb));
-        LanguageWithScript languageWithScript = new LanguageWithScript(languageDeclaration.getLanguage().getLanguageCode(), languageDeclaration.getScript().getScriptCode());
+        LanguageWithScript languageWithScript = new LanguageWithScript(languageDeclaration.getLanguage().getLanguageCode(), languageDeclaration.getScript().getScriptCode(), labels);
         this.languageWithScriptFirst = languageWithScript;
         builder.add(languageWithScript.getLanguageBox(), cc.xy (3, rowNb));
         this.setNextRow();

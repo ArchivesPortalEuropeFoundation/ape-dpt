@@ -111,7 +111,7 @@ public class EagControlPanel extends EagPanels {
         languageWithScriptTfs = new ArrayList<LanguageWithScript>(eag.getControl().getLanguageDeclarations().getLanguageDeclaration().size());
         for(LanguageDeclaration languageDeclaration : eag.getControl().getLanguageDeclarations().getLanguageDeclaration()) {
             builder.addLabel(labels.getString("eag2012.commons.language"),    cc.xy (1, rowNb));
-            LanguageWithScript languageWithScript = new LanguageWithScript(languageDeclaration.getLanguage().getLanguageCode(), languageDeclaration.getScript().getScriptCode());
+            LanguageWithScript languageWithScript = new LanguageWithScript(languageDeclaration.getLanguage().getLanguageCode(), languageDeclaration.getScript().getScriptCode(), labels);
             languageWithScriptTfs.add(languageWithScript);
             builder.add(languageWithScript.getLanguageBox(),                     cc.xy (3, rowNb));
             builder.addLabel(labels.getString("eag2012.control.descriptionScript"),    cc.xy (5, rowNb));

@@ -42,9 +42,10 @@ public abstract class CommonsPropertiesPanels {
         temp += "p";
         EDITOR_ROW_SPEC = temp;
 
-        List<String> languagesList = LanguageIsoList.getLanguageIsoList();
-        languages = languagesList.toArray(new String[]{});
+        List<String> languagesList = new LinkedList<String>();
         languagesList.add("---");
+        languagesList.addAll(LanguageIsoList.getLanguageIsoList());
+        languages = languagesList.toArray(new String[]{});
         languagesDisplay = languagesList.toArray(new String[]{});
     }
 
@@ -57,7 +58,6 @@ public abstract class CommonsPropertiesPanels {
     
     protected ProfileListModel model;
     protected ResourceBundle labels;
-    
     protected void setNextRow() {
         rowNb += 2;
     }

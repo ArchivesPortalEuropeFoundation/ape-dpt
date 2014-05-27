@@ -19,9 +19,14 @@ package eu.apenet.dpt.standalone.gui.commons.SwingStructures;
  */
 
 import javax.swing.*;
+
+import eu.apenet.dpt.standalone.gui.eacCpf.SwingStructures.TextFieldWithComboBoxEacCpf;
+
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.ResourceBundle;
 
 /**
  * User: Yoann Moranville
@@ -30,32 +35,40 @@ import java.util.List;
  * @author Yoann Moranville
  */
 public class LanguageWithScript extends StructureWithLanguage {
-    private JComboBox scriptBox;
-
+    private JComboBox<String> scriptBox;
     private static final String[] scripts = {"Arab", "Armn", "Cprt", "Cyrl", "Geor", "Grek", "Hebr", "Latn"};
     private static String[] scriptsDisplay;
-
-    static {
-        List<String> scriptList = new ArrayList<String>();
-        scriptList.add("---");
-        scriptList.addAll(Arrays.asList(scripts));
-        scriptsDisplay = scriptList.toArray(new String[]{});
-    }
-
-    public LanguageWithScript(String language, String script) {
+    
+    public LanguageWithScript(String language, String script, ResourceBundle labels) {
         super(language);
-        scriptBox = new JComboBox(scriptsDisplay);
-        if(Arrays.asList(scripts).contains(script))
-            scriptBox.setSelectedItem(script);
+        scriptsDisplay = fillTranslationComboBoxValues(labels);
+        scriptBox = new JComboBox<String>(scriptsDisplay);
+        if(Arrays.asList(scripts).contains(script)){
+        	scriptBox.setSelectedIndex(Arrays.asList(scripts).indexOf(script) + 1);
+        }
+            
     }
 
-    public JComboBox getScriptBox() {
+    public JComboBox<String> getScriptBox() {
         return scriptBox;
     }
 
     public String getScript() {
-        if(Arrays.asList(scripts).contains((String) scriptBox.getSelectedItem()))
-            return (String)scriptBox.getSelectedItem();
-        return null;
+    	return (String) Arrays.asList(scripts).get(this.scriptBox.getSelectedIndex() - 1);
     }
+    
+    /**
+	 * Method to fill the combo box with translated labels.
+	 *
+	 * @param labels
+	 * @return the array of translated labels.
+	 */
+    private static String[] fillTranslationComboBoxValues(ResourceBundle labels) {
+    	List<String> scriptList = new  LinkedList<String>();
+    	scriptList.add("---");
+    	for(int i=0; i< scripts.length;i++){
+    		scriptList.add(labels.getString("eaccpf.commons.script." + scripts[i]));
+    	}
+		return scriptList.toArray(new String[scriptList.size()]);
+	}
 }
