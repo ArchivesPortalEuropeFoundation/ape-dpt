@@ -3,7 +3,7 @@
 	<parent>
 		<groupId>eu.archivesportaleurope.dpt</groupId>
 		<artifactId>DPT-project</artifactId>
-		<version>2014-05</version>
+		<version>2014-06-SNAPSHOT</version>
 		<relativePath>..</relativePath>
 	</parent>
 	<modelVersion>4.0.0</modelVersion>
