@@ -22,7 +22,7 @@ import eu.apenet.dpt.standalone.gui.conversion.ConvertActionListener;
 import eu.apenet.dpt.standalone.gui.db.RetrieveFromDb;
 import eu.apenet.dpt.standalone.gui.ead2ese.ConvertEseActionListener;
 import eu.apenet.dpt.standalone.gui.edition.*;
-import eu.apenet.dpt.standalone.gui.ese2edm.ConvertEdmActionListener;
+import eu.apenet.dpt.standalone.gui.ead2edm.ConvertEdmActionListener;
 import eu.apenet.dpt.standalone.gui.validation.DownloadReportActionListener;
 import eu.apenet.dpt.standalone.gui.validation.ValidateActionListener;
 import eu.apenet.dpt.standalone.gui.xsdaddition.XsdObject;
@@ -166,8 +166,8 @@ public class APETabbedPane extends JTabbedPane {
 //        convertEseBtn.setPreferredSize(DEFAULT_BTN_DIMENSION);
 //        convertEseBtn.setEnabled(false);
 
-        //convertEdmBtn.addActionListener(new ConvertEdmActionListener(parent, dataPreparationToolGUI, apePanel));
-        convertEdmBtn.addActionListener(new ConvertEseActionListener(labels, dataPreparationToolGUI, apePanel));
+        convertEdmBtn.addActionListener(new ConvertEdmActionListener(labels, dataPreparationToolGUI, apePanel));
+        //convertEdmBtn.addActionListener(new ConvertEseActionListener(labels, dataPreparationToolGUI, apePanel));
         convertEdmBtn.setPreferredSize(DEFAULT_BTN_DIMENSION);
         convertEdmBtn.setEnabled(false);
 

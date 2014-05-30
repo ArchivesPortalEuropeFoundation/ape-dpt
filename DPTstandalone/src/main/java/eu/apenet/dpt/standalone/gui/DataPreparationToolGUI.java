@@ -26,6 +26,7 @@ import eu.apenet.dpt.standalone.gui.databasechecker.DatabaseCheckerActionListene
 import eu.apenet.dpt.standalone.gui.dateconversion.DateConversionRulesDialog;
 import eu.apenet.dpt.standalone.gui.db.RetrieveFromDb;
 import eu.apenet.dpt.standalone.gui.eacCpf.EacCpfFrame;
+import eu.apenet.dpt.standalone.gui.ead2edm.ConvertEdmActionListener;
 import eu.apenet.dpt.standalone.gui.ead2ese.ConvertEseActionListener;
 import eu.apenet.dpt.standalone.gui.eag2012.Eag2012Frame;
 import eu.apenet.dpt.standalone.gui.edition.CheckList;
@@ -363,7 +364,8 @@ public class DataPreparationToolGUI extends JFrame {
 
         convertAndValidateBtn.addActionListener(new ConvertAndValidateActionListener(this, getContentPane()));
         validateSelectionBtn.addActionListener(new ValidateSelectionActionListener(this, getContentPane()));
-        convertEseSelectionBtn.addActionListener(new ConvertEseActionListener(labels, this, apePanel));
+        //convertEseSelectionBtn.addActionListener(new ConvertEseActionListener(labels, this, apePanel));
+        convertEseSelectionBtn.addActionListener(new ConvertEdmActionListener(labels, this, apePanel));
 
         nameComponents();
         wireUp();
