@@ -12,6 +12,7 @@
     xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
     xmlns:dcterms="http://purl.org/dc/terms/" xmlns:dc="http://purl.org/dc/elements/1.1/"
     xmlns:europeana="http://www.europeana.eu/schemas/ese/"
+    xmlns="http://www.europeana.eu/schemas/edm/"
     xpath-default-namespace="urn:isbn:1-931666-22-9"
     xmlns:fn="http://www.w3.org/2005/xpath-functions" xmlns:xlink="http://www.w3.org/1999/xlink"
     exclude-result-prefixes="xlink fo fn">
@@ -344,6 +345,9 @@
                 <dc:identifier>
                     <xsl:apply-templates select="$didnode/unitid"/>
                 </dc:identifier>
+                <dc:type>
+                    <xsl:value-of select="$cnode/@level"></xsl:value-of>
+                </dc:type>
                 <xsl:choose>
                     <xsl:when test="$cnode/controlaccess">
                         <xsl:call-template name="controlaccess">
