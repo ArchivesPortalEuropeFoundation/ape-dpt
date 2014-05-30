@@ -1468,26 +1468,38 @@ public class EacCpfDescriptionPanel extends EacCpfPanel {
 			if (EacCpfIdentityPanel.UNKNOWN_DATE.equalsIgnoreCase(this.dateType)) {
 				if (!this.tfwcbfDates.getStandardDateValue().isEmpty()) {
 					if (parseStandardDate(this.tfwcbfDates.getStandardDateValue()).isEmpty()) {
-						JOptionPane.showMessageDialog(eacCpfFrame, labels.getString("eaccpf.commons.error.no.standard.date"));
+						JOptionPane.showMessageDialog(tabbedPane, labels.getString("eaccpf.commons.error.no.standard.date"));
 						this.tfwcbfDates.getStandardDateTextField().setText("");
 					}
 				}
 			} else if (EacCpfIdentityPanel.UNKNOWN_DATE_FROM.equalsIgnoreCase(this.dateType)) {
 				if (!this.tfwcbfDates.getStandardDateFromValue().isEmpty()) {
 					if (parseStandardDate(this.tfwcbfDates.getStandardDateFromValue()).isEmpty()) {
-						JOptionPane.showMessageDialog(eacCpfFrame, labels.getString("eaccpf.commons.error.no.standard.date"));
+						JOptionPane.showMessageDialog(tabbedPane, labels.getString("eaccpf.commons.error.no.standard.date"));
 						this.tfwcbfDates.getStandardDateFromTextField().setText("");
 					}
 				}
 			} else if (EacCpfIdentityPanel.UNKNOWN_DATE_TO.equalsIgnoreCase(this.dateType)) {
 				if (!this.tfwcbfDates.getStandardDateToValue().isEmpty()) {
 					if (parseStandardDate(this.tfwcbfDates.getStandardDateToValue()).isEmpty()) {
-						JOptionPane.showMessageDialog(eacCpfFrame, labels.getString("eaccpf.commons.error.no.standard.date"));
+						JOptionPane.showMessageDialog(tabbedPane, labels.getString("eaccpf.commons.error.no.standard.date"));
 						this.tfwcbfDates.getStandardDateToTextField().setText("");
 					}
 				}
 			}
 		}
+	}
+	
+	protected boolean checkStartTabFields() {
+		boolean state = true;
+		if(firstLanguage==null || firstLanguage.isEmpty() || firstLanguage.equals("---")){
+			state = false;
+			JOptionPane.showMessageDialog(this.tabbedPane, labels.getString("eaccpf.commons.error.emptylanguage"));
+		}else if(firstScript==null || firstScript.isEmpty() || firstScript.equals("---")){
+			state = false;
+			JOptionPane.showMessageDialog(this.tabbedPane, labels.getString("eaccpf.control.error.emptyscript"));
+		}
+		return state;
 	}
 
 	/**
@@ -1504,8 +1516,10 @@ public class EacCpfDescriptionPanel extends EacCpfPanel {
 		public void actionPerformed(ActionEvent actionEvent) {
 			try {
 				super.updateJAXBObject(true);
-				super.saveFile(eaccpf.getControl().getRecordId().getValue());
-				closeFrame();
+				if(checkStartTabFields()){
+					super.saveFile(eaccpf.getControl().getRecordId().getValue());
+					closeFrame();
+				}
 			} catch (EacCpfFormException e) {
 				reloadTabbedPanel(new EacCpfDescriptionPanel(eaccpf, tabbedPane, mainTabbedPane, eacCpfFrame, model, labels,entityType,firstLanguage,firstScript).buildEditorPanel(errors), 1);
 			}
@@ -1529,7 +1543,7 @@ public class EacCpfDescriptionPanel extends EacCpfPanel {
 				removeChangeListener();
 				if (this.isNextTab) {
 					reloadTabbedPanel(new EacCpfRelationsPanel(eaccpf, tabbedPane, mainTabbedPane, eacCpfFrame, model, labels, entityType, firstLanguage, firstScript).buildEditorPanel(errors), 2);
-				} else {
+				} else if(checkStartTabFields()){
 					String mainagencycode = eaccpf.getControl().getMaintenanceAgency().getAgencyCode().getValue();
 					reloadTabbedPanel(new EacCpfIdentityPanel(eaccpf, tabbedPane, mainTabbedPane, eacCpfFrame, model, false, labels, entityType, firstLanguage, firstScript,mainagencycode).buildEditorPanel(errors), 0);
 				}
@@ -1576,15 +1590,15 @@ public class EacCpfDescriptionPanel extends EacCpfPanel {
 				if((lastBiography.getChronListOrPOrCitation().get(lastIndex)!=null && lastBiography.getChronListOrPOrCitation().get(lastIndex) instanceof P)){
 					P p = (P)lastBiography.getChronListOrPOrCitation().get(lastIndex);
 					if((p.getContent()==null || p.getContent().isEmpty())){
-						JOptionPane.showMessageDialog(eacCpfFrame, labels.getString("eaccpf.commons.error.empty.biohist"));
+						JOptionPane.showMessageDialog(this.tabbedPane, labels.getString("eaccpf.commons.error.empty.biohist"));
 					}else{
 						this.eaccpf.getCpfDescription().getDescription().getBiogHist().get(this.eaccpf.getCpfDescription().getDescription().getBiogHist().size()-1).getChronListOrPOrCitation().add(new P());
 					}
 				}else{
-					JOptionPane.showMessageDialog(eacCpfFrame, labels.getString("eaccpf.commons.error.empty.biohist"));
+					JOptionPane.showMessageDialog(this.tabbedPane, labels.getString("eaccpf.commons.error.empty.biohist"));
 				}
 			}else{
-				JOptionPane.showMessageDialog(eacCpfFrame, labels.getString("eaccpf.commons.error.empty.biohist"));
+				JOptionPane.showMessageDialog(this.tabbedPane, labels.getString("eaccpf.commons.error.empty.biohist"));
 			}
 		}
 		
@@ -1631,15 +1645,15 @@ public class EacCpfDescriptionPanel extends EacCpfPanel {
 				if((lastGenealogy.getMDiscursiveSet().get(lastIndex)!=null && lastGenealogy.getMDiscursiveSet().get(lastIndex) instanceof P)){
 					P p = (P)lastGenealogy.getMDiscursiveSet().get(lastIndex);
 					if((p.getContent()==null || p.getContent().isEmpty())){
-						JOptionPane.showMessageDialog(eacCpfFrame, labels.getString("eaccpf.commons.error.empty.genealogy"));
+						JOptionPane.showMessageDialog(this.tabbedPane, labels.getString("eaccpf.commons.error.empty.genealogy"));
 					}else{
 						lastGenealogy.getMDiscursiveSet().add(new P());
 					}
 				}else{
-					JOptionPane.showMessageDialog(eacCpfFrame, labels.getString("eaccpf.commons.error.empty.genealogy"));
+					JOptionPane.showMessageDialog(this.tabbedPane, labels.getString("eaccpf.commons.error.empty.genealogy"));
 				}
 			}else{
-				JOptionPane.showMessageDialog(eacCpfFrame, labels.getString("eaccpf.commons.error.empty.genealogy"));
+				JOptionPane.showMessageDialog(this.tabbedPane, labels.getString("eaccpf.commons.error.empty.genealogy"));
 			}
 		}
 		
@@ -1672,7 +1686,7 @@ public class EacCpfDescriptionPanel extends EacCpfPanel {
 			int lastIndex = ocupationPlaceOcupationJTextfields.size()-1;
 			boolean isEmptyOccupation = (ocupationPlaceOcupationJTextfields.size()>lastIndex && (ocupationPlaceOcupationJTextfields.get(lastIndex).getText().isEmpty()));
 			if(isEmptyOccupation){
-				JOptionPane.showMessageDialog(eacCpfFrame, labels.getString("eaccpf.commons.error.empty.occupation"));
+				JOptionPane.showMessageDialog(this.tabbedPane, labels.getString("eaccpf.commons.error.empty.occupation"));
 			}else{
 				boolean found = false;
 				Occupations lastOccupations = null;
@@ -1722,7 +1736,7 @@ public class EacCpfDescriptionPanel extends EacCpfPanel {
 			String lastPlaceTargetFunctionDetails = ocupationPlacePlaceJTextFields.get(this.index).get(ocupationPlacePlaceJTextFields.get(this.index).size()-1).getText(); //get previews ocupation if exists
 			
 			if(lastPlaceTargetFunctionDetails.isEmpty()){
-				JOptionPane.showMessageDialog(eacCpfFrame, labels.getString("eaccpf.commons.error.empty.place"));
+				JOptionPane.showMessageDialog(this.tabbedPane, labels.getString("eaccpf.commons.error.empty.place"));
 			}else{
 				boolean found = false;
 				Occupations lastOccupations = null;
@@ -1773,7 +1787,7 @@ public class EacCpfDescriptionPanel extends EacCpfPanel {
 					thereAreSomeFieldsFilled = true;
 				}
 				if(!thereAreSomeFieldsFilled){ 
-					JOptionPane.showMessageDialog(eacCpfFrame, labels.getString("eaccpf.commons.error.empty.function"));//alert
+					JOptionPane.showMessageDialog(this.tabbedPane, labels.getString("eaccpf.commons.error.empty.function"));//alert
 				}else{ //continue
 					int counter = eaccpf.getCpfDescription().getDescription().getPlacesOrLocalDescriptionsOrLegalStatuses().size();
 					int i = 0;
@@ -1827,7 +1841,7 @@ public class EacCpfDescriptionPanel extends EacCpfPanel {
 				String lastPlaceTargetFunctionDetails = placeFunctionPlaceJtextfields.get(this.index).get(placeFunctionPlaceJtextfields.get(this.index).size()-1).getText();
 				
 				if(lastPlaceTargetFunctionDetails.isEmpty()){
-					JOptionPane.showMessageDialog(eacCpfFrame, labels.getString("eaccpf.commons.error.empty.place"));
+					JOptionPane.showMessageDialog(this.tabbedPane, labels.getString("eaccpf.commons.error.empty.place"));
 				}else{
 					int counter = eaccpf.getCpfDescription().getDescription().getPlacesOrLocalDescriptionsOrLegalStatuses().size();
 					int i = 0;
@@ -1881,7 +1895,7 @@ public class EacCpfDescriptionPanel extends EacCpfPanel {
 				
 //				String lastPlaceEntryPlaceJComboBoxs = placeEntryPlaceJComboBoxs.get(placeEntryPlaceJComboBoxs.size()-1).getSelectedItem().toString();
 				if(lastAddressDetails.isEmpty()/* && (lastPlaceEntryPlaceJComboBoxs.isEmpty() || lastPlaceEntryPlaceJComboBoxs.equals(TextFieldWithComboBoxEacCpf.DEFAULT_VALUE) ) */){
-					JOptionPane.showMessageDialog(eacCpfFrame, labels.getString("eaccpf.commons.error.empty.place"));
+					JOptionPane.showMessageDialog(this.tabbedPane, labels.getString("eaccpf.commons.error.empty.place"));
 				}else{
 					int counter = eaccpf.getCpfDescription().getDescription().getPlacesOrLocalDescriptionsOrLegalStatuses().size();
 					int i = 0;
@@ -1956,7 +1970,7 @@ public class EacCpfDescriptionPanel extends EacCpfPanel {
 				if(!lastNodeIsBlank && lastPlaces!=null){ //put into target position
 					lastPlaces.getPlace().add(emptyPlace);
 				}else{
-					JOptionPane.showMessageDialog(eacCpfFrame, labels.getString("eaccpf.commons.error.empty.place"));
+					JOptionPane.showMessageDialog(this.tabbedPane, labels.getString("eaccpf.commons.error.empty.place"));
 				}
 			}else if(lastPlaces!=null){ //put at final of elements
 				lastPlaces.getPlace().add(emptyPlace);
@@ -2017,12 +2031,12 @@ public class EacCpfDescriptionPanel extends EacCpfPanel {
 					//Check if there are empty box, if there are one and is the previews selected report it
 					if (!this.isDateRange && !textFieldsWithCheckBoxForDates.isDateRange()) {
 						if (StringUtils.isEmpty(textFieldsWithCheckBoxForDates.getDateValue())) { //Check if some date value is empty.
-							JOptionPane.showMessageDialog(eacCpfFrame, labels.getString("eaccpf.commons.error.empty.single.date"));
+							JOptionPane.showMessageDialog(this.tabbedPane, labels.getString("eaccpf.commons.error.empty.single.date"));
 							emptyDate = true;
 						}
 					}else if (this.isDateRange && textFieldsWithCheckBoxForDates.isDateRange()) {
 						if (StringUtils.isEmpty(textFieldsWithCheckBoxForDates.getDateFromValue()) && StringUtils.isEmpty(textFieldsWithCheckBoxForDates.getDateToValue())) {
-							JOptionPane.showMessageDialog(eacCpfFrame, labels.getString("eaccpf.commons.error.empty.range.date"));
+							JOptionPane.showMessageDialog(this.tabbedPane, labels.getString("eaccpf.commons.error.empty.range.date"));
 							emptyDateRange = true;
 						}
 					}
@@ -2404,7 +2418,7 @@ public class EacCpfDescriptionPanel extends EacCpfPanel {
 					if(biographyHistoryJTextfields!=null && biographyHistoryJTextfields.size()>i){
 						if(!biographyHistoryJTextfields.get(i).getTextValue().isEmpty() || !save){
 							P p = new P();
-							p.setLang(LanguageIsoList.getIsoCode(biographyHistoryJComboBoxes.get(i).getSelectedItem().toString()));
+							p.setLang(biographyHistoryJComboBoxes.get(i).getSelectedItem()!=null?LanguageIsoList.getIsoCode(biographyHistoryJComboBoxes.get(i).getSelectedItem().toString()):"");
 							p.setContent(biographyHistoryJTextfields.get(i).getTextValue());
 							biogHist.getChronListOrPOrCitation().add(p);
 						}
@@ -2423,7 +2437,7 @@ public class EacCpfDescriptionPanel extends EacCpfPanel {
 					if(genealogyTextFields!=null && genealogyTextFields.size()>i){
 						if(!genealogyTextFields.get(i).getTextValue().isEmpty() || !save){
 							P p = new P();
-							p.setLang(LanguageIsoList.getIsoCode(genealogyLanguagesJComboBoxes.get(i).getSelectedItem().toString()));
+							p.setLang(LanguageIsoList.getIsoCode((genealogyLanguagesJComboBoxes.get(i).getSelectedItem()!=null)?genealogyLanguagesJComboBoxes.get(i).getSelectedItem().toString():""));
 							p.setContent(genealogyTextFields.get(i).getTextValue());
 							genealogy.getMDiscursiveSet().add(p);
 						}
@@ -2453,7 +2467,7 @@ public class EacCpfDescriptionPanel extends EacCpfPanel {
 						placeEntry.setContent(placeEntryPlaceText);
 					}
 					
-					if(placeEntryPlaceJComboBoxs!=null && placeEntryPlaceJComboBoxs.size()>i){
+					if(placeEntryPlaceJComboBoxs!=null && placeEntryPlaceJComboBoxs.size()>i && placeEntryPlaceJComboBoxs.get(i).getSelectedItem()!=null){
 						String item = placeEntryPlaceJComboBoxs.get(i).getSelectedItem().toString();
 						if(item!=null && !item.isEmpty() && !item.equals(TextFieldWithComboBoxEacCpf.DEFAULT_VALUE)){
 							write = true;
@@ -2500,7 +2514,7 @@ public class EacCpfDescriptionPanel extends EacCpfPanel {
 					for(TextFieldWithComboBoxEacCpf addressJTextField : addressDetailsTextFieldsWithComboBoxes.get(i)){
 						AddressLine addressLine = new AddressLine();
 						
-						if(placeEntryPlaceJComboBoxs!=null && placeEntryPlaceJComboBoxs.size()>i){
+						if(placeEntryPlaceJComboBoxs!=null && placeEntryPlaceJComboBoxs.size()>i && placeEntryPlaceJComboBoxs.get(i).getSelectedItem()!=null){
 							String item = placeEntryPlaceJComboBoxs.get(i).getSelectedItem().toString();
 							if(item!=null && !item.isEmpty() && !item.equals(TextFieldWithComboBoxEacCpf.DEFAULT_VALUE)){
 								write2 = true;
@@ -2558,7 +2572,7 @@ public class EacCpfDescriptionPanel extends EacCpfPanel {
 						write = true;
 					}
 					
-					if(placesFunctionJComboBoxes!=null && placesFunctionJComboBoxes.size()>i){
+					if(placesFunctionJComboBoxes!=null && placesFunctionJComboBoxes.size()>i && placesFunctionJComboBoxes.get(i).getSelectedItem()!=null){
 						term.setLang(LanguageIsoList.getIsoCode(placesFunctionJComboBoxes.get(i).getSelectedItem().toString()));
 						write = true;
 					}
@@ -2578,7 +2592,7 @@ public class EacCpfDescriptionPanel extends EacCpfPanel {
 						P p = new P();
 						p.setContent(placesDescriptionTextfields.get(i).getTextValue());
 						
-						if(placesFunctionJComboBoxes!=null && placesFunctionJComboBoxes.size()>i){
+						if(placesFunctionJComboBoxes!=null && placesFunctionJComboBoxes.size()>i && placesFunctionJComboBoxes.get(i).getSelectedItem()!=null){
 							p.setLang(LanguageIsoList.getIsoCode(placesFunctionJComboBoxes.get(i).getSelectedItem().toString())); //the only lang element available from this part of the form is the same that contains term
 						}
 						
@@ -2610,7 +2624,7 @@ public class EacCpfDescriptionPanel extends EacCpfPanel {
 								}
 							}
 							
-							if(placesFunctionJComboBoxes!=null && placesFunctionJComboBoxes.size()>i){
+							if(placesFunctionJComboBoxes!=null && placesFunctionJComboBoxes.size()>i && placesFunctionJComboBoxes.get(i).getSelectedItem()!=null){
 								placeEntry.setLang(LanguageIsoList.getIsoCode(placesFunctionJComboBoxes.get(i).getSelectedItem().toString())); //the only lang element available from this part of the form is the same that contains term
 								write3 = true;
 							}
@@ -2652,7 +2666,7 @@ public class EacCpfDescriptionPanel extends EacCpfPanel {
 						write = true;
 					}
 					
-					if(ocupationPlaceOcupationLanguagesJComboboxes!=null && ocupationPlaceOcupationLanguagesJComboboxes.size()>i){
+					if(ocupationPlaceOcupationLanguagesJComboboxes!=null && ocupationPlaceOcupationLanguagesJComboboxes.size()>i && ocupationPlaceOcupationLanguagesJComboboxes.get(i).getSelectedItem()!=null){
 						term.setLang(LanguageIsoList.getIsoCode(ocupationPlaceOcupationLanguagesJComboboxes.get(i).getSelectedItem().toString()));
 						write = true;
 					}
@@ -2669,7 +2683,7 @@ public class EacCpfDescriptionPanel extends EacCpfPanel {
 					if(ocupationPlaceOcupationDescriptionTextFields!=null && ocupationPlaceOcupationDescriptionTextFields.size()>i){
 						DescriptiveNote descriptiveNote = new DescriptiveNote();
 	                    P p = new P();
-	                    if(ocupationPlaceOcupationLanguagesJComboboxes!=null && ocupationPlaceOcupationLanguagesJComboboxes.size()>i){
+	                    if(ocupationPlaceOcupationLanguagesJComboboxes!=null && ocupationPlaceOcupationLanguagesJComboboxes.size()>i && ocupationPlaceOcupationLanguagesJComboboxes.get(i).getSelectedItem()!=null){
 							p.setLang(LanguageIsoList.getIsoCode(ocupationPlaceOcupationLanguagesJComboboxes.get(i).getSelectedItem().toString()));
 							write2 = true;
 						}
@@ -2696,7 +2710,7 @@ public class EacCpfDescriptionPanel extends EacCpfPanel {
 								write3 = true;
 							}
 							
-							if(ocupationPlaceOcupationLanguagesJComboboxes!=null && ocupationPlaceOcupationLanguagesJComboboxes.size()>i){
+							if(ocupationPlaceOcupationLanguagesJComboboxes!=null && ocupationPlaceOcupationLanguagesJComboboxes.size()>i && ocupationPlaceOcupationLanguagesJComboboxes.get(i).getSelectedItem()!=null){
 								placeEntry.setLang(LanguageIsoList.getIsoCode(ocupationPlaceOcupationLanguagesJComboboxes.get(i).getSelectedItem().toString()));
 								write3 = true;
 							}

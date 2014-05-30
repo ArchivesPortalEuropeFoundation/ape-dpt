@@ -1192,7 +1192,7 @@ public class EacCpfRelationsPanel extends EacCpfPanel {
 				for (int i = 0; !emptyName && !emptyCode && i < cpfRelationOrganisationNameAndIdTf.size(); i++) {
 					if (StringUtils.isEmpty(cpfRelationOrganisationNameAndIdTf.get(i).getTextValue())
 							|| StringUtils.isEmpty(cpfRelationOrganisationNameAndIdTf.get(i).getExtraValue())) {
-						JOptionPane.showMessageDialog(eacCpfFrame, labels.getString("eaccpf.relations.error.empty.agency"));
+						JOptionPane.showMessageDialog(this.tabbedPane, labels.getString("eaccpf.relations.error.empty.agency"));
 					}
 					if (StringUtils.isEmpty(cpfRelationOrganisationNameAndIdTf.get(i).getTextValue())) {
 						emptyName = true;
@@ -1234,7 +1234,7 @@ public class EacCpfRelationsPanel extends EacCpfPanel {
 				for (int i = 0; !emptyName && !emptyCode && i < resourceRelationOrganisationNameAndIdTf.size(); i++) {
 					if (StringUtils.isEmpty(resourceRelationOrganisationNameAndIdTf.get(i).getTextValue())
 							|| StringUtils.isEmpty(resourceRelationOrganisationNameAndIdTf.get(i).getExtraValue())) {
-						JOptionPane.showMessageDialog(eacCpfFrame, labels.getString("eaccpf.relations.error.empty.agency"));
+						JOptionPane.showMessageDialog(this.tabbedPane, labels.getString("eaccpf.relations.error.empty.agency"));
 					}
 					if (StringUtils.isEmpty(resourceRelationOrganisationNameAndIdTf.get(i).getTextValue())) {
 						emptyName = true;
@@ -1265,7 +1265,7 @@ public class EacCpfRelationsPanel extends EacCpfPanel {
 				for (int i = 0; !emptyName && !emptyCode && i < functionRelationOrganisationNameAndIdTf.size(); i++) {
 					if (StringUtils.isEmpty(functionRelationOrganisationNameAndIdTf.get(i).getTextValue())
 							|| StringUtils.isEmpty(functionRelationOrganisationNameAndIdTf.get(i).getExtraValue())) {
-						JOptionPane.showMessageDialog(eacCpfFrame, labels.getString("eaccpf.relations.error.empty.agency"));
+						JOptionPane.showMessageDialog(this.tabbedPane, labels.getString("eaccpf.relations.error.empty.agency"));
 					}
 					if (StringUtils.isEmpty(functionRelationOrganisationNameAndIdTf.get(i).getTextValue())) {
 						emptyName = true;
@@ -1319,7 +1319,7 @@ public class EacCpfRelationsPanel extends EacCpfPanel {
 			List<TextFieldWithLanguage> resourceRelationNameTfsList = resourceRelationNameTfs;
 			for (int i = 0; !empty && i < resourceRelationNameTfsList.size(); i++) {
 				if (StringUtils.isEmpty(resourceRelationNameTfsList.get(i).getTextValue())) {
-					JOptionPane.showMessageDialog(eacCpfFrame, labels.getString("eaccpf.relations.error.empty.name"));
+					JOptionPane.showMessageDialog(this.tabbedPane, labels.getString("eaccpf.relations.error.empty.name"));
 					empty = true;
 				}
 			}
@@ -1361,7 +1361,7 @@ public class EacCpfRelationsPanel extends EacCpfPanel {
 			List<TextFieldWithLanguage> functionRelationNameTfsList = functionRelationNameTfs;
 			for (int i = 0; !empty && i < functionRelationNameTfsList.size(); i++) {
 				if (StringUtils.isEmpty(functionRelationNameTfsList.get(i).getTextValue())) {
-					JOptionPane.showMessageDialog(eacCpfFrame, labels.getString("eaccpf.relations.error.empty.name"));
+					JOptionPane.showMessageDialog(this.tabbedPane, labels.getString("eaccpf.relations.error.empty.name"));
 					empty = true;
 				}
 			}
@@ -1403,7 +1403,7 @@ public class EacCpfRelationsPanel extends EacCpfPanel {
 			List<TextFieldWithLanguage> cpfRelationNameTfsList = cpfRelationNameTfs;
 			for (int i = 0; !empty && i < cpfRelationNameTfsList.size(); i++) {
 				if (StringUtils.isEmpty(cpfRelationNameTfsList.get(i).getTextValue())) {
-					JOptionPane.showMessageDialog(eacCpfFrame, labels.getString("eaccpf.relations.error.empty.name"));
+					JOptionPane.showMessageDialog(this.tabbedPane, labels.getString("eaccpf.relations.error.empty.name"));
 					empty = true;
 				}
 			}
@@ -1421,6 +1421,18 @@ public class EacCpfRelationsPanel extends EacCpfPanel {
 			reloadTabbedPanel(new EacCpfRelationsPanel(eaccpf, tabbedPane, mainTabbedPane, eacCpfFrame, model, labels, entityType, firstLanguage, firstScript).buildEditorPanel(errors), 2);
 		}
 	}
+	
+	protected boolean checkStartTabFields() {
+		boolean state = true;
+		if(firstLanguage==null || firstLanguage.isEmpty() || firstLanguage.equals("---")){
+			state = false;
+			JOptionPane.showMessageDialog(this.tabbedPane, labels.getString("eaccpf.commons.error.emptylanguage"));
+		}else if(firstScript==null || firstScript.isEmpty() || firstScript.equals("---")){
+			state = false;
+			JOptionPane.showMessageDialog(this.tabbedPane, labels.getString("eaccpf.control.error.emptyscript"));
+		}
+		return state;
+	}
 
 	/**
 	 * Class to performs the actions when the user clicks on button save.
@@ -1434,8 +1446,10 @@ public class EacCpfRelationsPanel extends EacCpfPanel {
 		public void actionPerformed(ActionEvent actionEvent) {
 			try {
 				super.updateJAXBObject(true);
-				super.saveFile(eaccpf.getControl().getRecordId().getValue());
-                closeFrame();
+				if(checkStartTabFields()){
+					super.saveFile(eaccpf.getControl().getRecordId().getValue());
+	                closeFrame();
+				}
 			} catch (EacCpfFormException e) {
 				reloadTabbedPanel(new EacCpfRelationsPanel(eaccpf, tabbedPane, mainTabbedPane, eacCpfFrame, model, labels, entityType, firstLanguage, firstScript).buildEditorPanel(errors), 2);
 			}

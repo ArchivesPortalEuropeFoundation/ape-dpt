@@ -29,6 +29,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 import java.util.ResourceBundle;
 import java.util.regex.Pattern;
 
@@ -47,6 +48,7 @@ import com.jgoodies.forms.builder.PanelBuilder;
 import com.jgoodies.forms.layout.CellConstraints;
 import com.jgoodies.forms.layout.FormLayout;
 
+import eu.apenet.dpt.standalone.gui.DataPreparationToolGUI;
 import eu.apenet.dpt.standalone.gui.ProfileListModel;
 import eu.apenet.dpt.standalone.gui.Utilities;
 import eu.apenet.dpt.standalone.gui.commons.ButtonTab;
@@ -72,6 +74,7 @@ import eu.apenet.dpt.utils.eaccpf.EacCpf;
 import eu.apenet.dpt.utils.eaccpf.EntityId;
 import eu.apenet.dpt.utils.eaccpf.EntityType;
 import eu.apenet.dpt.utils.eaccpf.EventDateTime;
+import eu.apenet.dpt.utils.eaccpf.EventDescription;
 import eu.apenet.dpt.utils.eaccpf.EventType;
 import eu.apenet.dpt.utils.eaccpf.ExistDates;
 import eu.apenet.dpt.utils.eaccpf.FromDate;
@@ -997,7 +1000,7 @@ public class EacCpfIdentityPanel extends EacCpfPanel {
 			List<TextFieldWithComboBoxEacCpf> namePartComponentList = namePartComponentTfsWCbs.get(this.currentNameEntry);
 			for (int i = 0; !empty && i < namePartComponentList.size(); i++) {
 				if (StringUtils.isEmpty(trimStringValue(namePartComponentList.get(i).getTextFieldValue()))) {
-					JOptionPane.showMessageDialog(eacCpfFrame, labels.getString("eaccpf.identity.error.empty.name"));
+					JOptionPane.showMessageDialog(this.tabbedPane, labels.getString("eaccpf.identity.error.empty.name"));
 					empty = true;
 				}
 			}
@@ -1044,7 +1047,7 @@ public class EacCpfIdentityPanel extends EacCpfPanel {
 				List<TextFieldWithComboBoxEacCpf> namePartComponentList = namePartComponentTfsWCbs.get(i);
 				// Always recover the first part.
 				if (StringUtils.isEmpty(trimStringValue(namePartComponentList.get(0).getTextFieldValue()))) {
-					JOptionPane.showMessageDialog(eacCpfFrame, labels.getString("eaccpf.identity.error.empty.name"));
+					JOptionPane.showMessageDialog(this.tabbedPane, labels.getString("eaccpf.identity.error.empty.name"));
 					empty = true;
 				}
 			}
@@ -1121,21 +1124,21 @@ public class EacCpfIdentityPanel extends EacCpfPanel {
 			if (EacCpfIdentityPanel.UNKNOWN_DATE.equalsIgnoreCase(this.dateType)) {
 				if (!this.tfwcbfDates.getStandardDateValue().isEmpty()) {
 					if (parseStandardDate(this.tfwcbfDates.getStandardDateValue()).isEmpty()) {
-						JOptionPane.showMessageDialog(eacCpfFrame, labels.getString("eaccpf.commons.error.no.standard.date"));
+						JOptionPane.showMessageDialog(tabbedPane, labels.getString("eaccpf.commons.error.no.standard.date"));
 						this.tfwcbfDates.getStandardDateTextField().setText("");
 					}
 				}
 			} else if (EacCpfIdentityPanel.UNKNOWN_DATE_FROM.equalsIgnoreCase(this.dateType)) {
 				if (!this.tfwcbfDates.getStandardDateFromValue().isEmpty()) {
 					if (parseStandardDate(this.tfwcbfDates.getStandardDateFromValue()).isEmpty()) {
-						JOptionPane.showMessageDialog(eacCpfFrame, labels.getString("eaccpf.commons.error.no.standard.date"));
+						JOptionPane.showMessageDialog(tabbedPane, labels.getString("eaccpf.commons.error.no.standard.date"));
 						this.tfwcbfDates.getStandardDateFromTextField().setText("");
 					}
 				}
 			} else if (EacCpfIdentityPanel.UNKNOWN_DATE_TO.equalsIgnoreCase(this.dateType)) {
 				if (!this.tfwcbfDates.getStandardDateToValue().isEmpty()) {
 					if (parseStandardDate(this.tfwcbfDates.getStandardDateToValue()).isEmpty()) {
-						JOptionPane.showMessageDialog(eacCpfFrame, labels.getString("eaccpf.commons.error.no.standard.date"));
+						JOptionPane.showMessageDialog(tabbedPane, labels.getString("eaccpf.commons.error.no.standard.date"));
 						this.tfwcbfDates.getStandardDateToTextField().setText("");
 					}
 				}
@@ -1265,14 +1268,14 @@ public class EacCpfIdentityPanel extends EacCpfPanel {
 				if (!this.isDateRange && !textFieldsWithCheckBoxForDates.isDateRange()) {
 					// Check if some date value is empty.
 					if (StringUtils.isEmpty(textFieldsWithCheckBoxForDates.getDateValue())) {
-						JOptionPane.showMessageDialog(eacCpfFrame, labels.getString("eaccpf.commons.error.empty.single.date"));
+						JOptionPane.showMessageDialog(this.tabbedPane, labels.getString("eaccpf.commons.error.empty.single.date"));
 						emptyDate = true;
 					}
 				} else  if (this.isDateRange && textFieldsWithCheckBoxForDates.isDateRange()) {
 					// Check if some dateRage is empty (both dateFrom and dateTo).
 					if (StringUtils.isEmpty(textFieldsWithCheckBoxForDates.getDateFromValue())
 							&& StringUtils.isEmpty(textFieldsWithCheckBoxForDates.getDateToValue())) {
-						JOptionPane.showMessageDialog(eacCpfFrame, labels.getString("eaccpf.commons.error.empty.range.date"));
+						JOptionPane.showMessageDialog(this.tabbedPane, labels.getString("eaccpf.commons.error.empty.range.date"));
 						emptyDateRange = true;
 					}
 				}
@@ -1392,12 +1395,12 @@ public class EacCpfIdentityPanel extends EacCpfPanel {
 			boolean emptytype = false;
 			for (int i = 0; !emptyId && !emptytype && i < identifierTfs.size(); i++) {
 				if (StringUtils.isEmpty(trimStringValue(identifierTfs.get(i).getText()))) {
-					JOptionPane.showMessageDialog(eacCpfFrame, labels.getString("eaccpf.identity.error.empty.identifier"));
+					JOptionPane.showMessageDialog(this.tabbedPane, labels.getString("eaccpf.identity.error.empty.identifier"));
 					emptyId = true;
 				}
 				if (StringUtils.isEmpty(trimStringValue(identifierTypeTfs.get(i).getText()))) {
 					if (!emptyId) {
-						JOptionPane.showMessageDialog(eacCpfFrame, labels.getString("eaccpf.identity.error.empty.identifier"));
+						JOptionPane.showMessageDialog(this.tabbedPane, labels.getString("eaccpf.identity.error.empty.identifier"));
 					}
 					emptytype = true;
 				}
@@ -1430,8 +1433,10 @@ public class EacCpfIdentityPanel extends EacCpfPanel {
 		public void actionPerformed(ActionEvent actionEvent) {
 			try {
 				super.updateJAXBObject(true);
-				super.saveFile(eaccpf.getControl().getRecordId().getValue());
-                closeFrame();
+				if(checkStartTabFields()){
+					super.saveFile(eaccpf.getControl().getRecordId().getValue());
+	                closeFrame();
+				}
 			} catch (EacCpfFormException e) {
 				reloadTabbedPanel(new EacCpfIdentityPanel(eaccpf, tabbedPane, mainTabbedPane, eacCpfFrame, model, isNew, labels, entityType, firstLanguage, firstScript, mainagencycode).buildEditorPanel(errors), 0);
 			}
@@ -1458,7 +1463,6 @@ public class EacCpfIdentityPanel extends EacCpfPanel {
 			try {
 				super.updateJAXBObject(true);
 				removeChangeListener();
-
 				reloadTabbedPanel(new EacCpfDescriptionPanel(eaccpf, tabbedPane, mainTabbedPane, eacCpfFrame, model, labels, entityType, firstLanguage, firstScript).buildEditorPanel(errors), 1);
 			} catch (EacCpfFormException e) {
 				reloadTabbedPanel(new EacCpfIdentityPanel(eaccpf, tabbedPane, mainTabbedPane, eacCpfFrame, model, isNew, labels, entityType, firstLanguage, firstScript, mainagencycode).buildEditorPanel(errors), 0);
@@ -1470,6 +1474,8 @@ public class EacCpfIdentityPanel extends EacCpfPanel {
 	 * Class for update the JABX EAC-CPF object.
 	 */
 	public abstract class UpdateEacCpfObject extends DefaultBtnAction {
+		private static final String CONVERTED_STRING = "Converted_apeEAC-CPF_version_";
+
 		/**
 		 * Constructor.
 		 *
@@ -1491,7 +1497,6 @@ public class EacCpfIdentityPanel extends EacCpfPanel {
 			}
 			this.updateMaintenanceInformation(this.eaccpf.getControl(), save);
 
-			// TODO: Temporary identifier.
 			//eaccpf.getControl().getRecordId().getValue()
 			if (this.eaccpf != null) {
 				if (this.eaccpf.getControl() == null) {
@@ -1501,13 +1506,16 @@ public class EacCpfIdentityPanel extends EacCpfPanel {
 				if (this.eaccpf.getControl().getRecordId() == null
 						|| this.eaccpf.getControl().getRecordId().getValue() == null
 						|| this.eaccpf.getControl().getRecordId().getValue().isEmpty()) {
+					//extracted from dashboard implementation
+					Random random = new Random(); 
+					int fakeId = random.nextInt(1000000000);
 					RecordId recordId = new RecordId();
-					recordId.setValue("Temporary_id");
+//					recordId.setValue(Integer.toString(fakeId));
+					recordId.setValue("eac_"+mainagencycode+"_"+Integer.toString(fakeId));
 	
 					this.eaccpf.getControl().setRecordId(recordId);
 				}
 			}
-			// End TODO: Temporary identifier.
 
 			// Define values of the section "Identity".
 			if (this.eaccpf.getCpfDescription() == null) {
@@ -1538,10 +1546,24 @@ public class EacCpfIdentityPanel extends EacCpfPanel {
 
 			// Save existence dates.
 			this.updateExistenceDates(description);
-
+			
+//			checkStartTabFields();
+			
 			if(!errors.isEmpty()) {
 				throw new EacCpfFormException("Errors in validation of EAC-CPF");
 			}
+		}
+
+		protected boolean checkStartTabFields() {
+			boolean state = true;
+			if(firstLanguage==null || firstLanguage.isEmpty() || firstLanguage.equals("---")){
+				state = false;
+				JOptionPane.showMessageDialog(this.tabbedPane, labels.getString("eaccpf.commons.error.emptylanguage"));
+			}else if(firstScript==null || firstScript.isEmpty() || firstScript.equals("---")){
+				state = false;
+				JOptionPane.showMessageDialog(this.tabbedPane, labels.getString("eaccpf.control.error.emptyscript"));
+			}
+			return state;
 		}
 
 		/**
@@ -1730,6 +1752,9 @@ public class EacCpfIdentityPanel extends EacCpfPanel {
                 SimpleDateFormat formatStandard = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
                 maintenanceEvent.getEventDateTime().setContent(format.format(EacCpfFrame.getTimeMaintenance()));
                 maintenanceEvent.getEventDateTime().setStandardDateTime(formatStandard.format(EacCpfFrame.getTimeMaintenance()));
+                EventDescription eventDescription = new EventDescription();
+                eventDescription.setContent(CONVERTED_STRING+DataPreparationToolGUI.VERSION_NB);
+                maintenanceEvent.setEventDescription(eventDescription);
 			} else {
 				control.getMaintenanceHistory().getMaintenanceEvent().remove(maintenanceEvent);
 			}
