@@ -83,6 +83,10 @@ public class EagRelationsPanel extends EagPanels {
         setNextRow();
 
         resourceRelationTypes = new ArrayList<ResourceRelationType>(relations.getResourceRelation().size());
+        
+        if(relations.getResourceRelation().isEmpty())
+        	relations.getResourceRelation().add(new ResourceRelation());
+      
         for(ResourceRelation resourceRelation : relations.getResourceRelation()) {
             if(resourceRelation.getRelationEntry() == null)
                 resourceRelation.setRelationEntry(new RelationEntry());
@@ -119,6 +123,7 @@ public class EagRelationsPanel extends EagPanels {
             builder.add(resourceRelationType.getDescription().getLanguageBox(), cc.xy(7, rowNb));
             setNextRow();
         }
+    
         JButton addResourceRelation = new ButtonTab(labels.getString("eag2012.relations.addNewResourceRelation"));
         builder.add(addResourceRelation, cc.xy (1, rowNb));
         addResourceRelation.addActionListener(new AddResourceRelationAction(eag, tabbedPane, model));
@@ -128,6 +133,10 @@ public class EagRelationsPanel extends EagPanels {
         setNextRow();
 
         institutionRelationTypes = new ArrayList<ResourceRelationType>(relations.getEagRelation().size());
+    
+        if(relations.getEagRelation().isEmpty())
+        	relations.getEagRelation().add(new EagRelation());
+  
         for(EagRelation eagRelation : relations.getEagRelation()) {
             if(eagRelation.getRelationEntry().size() == 0)
                 eagRelation.getRelationEntry().add(new RelationEntry());
@@ -164,6 +173,7 @@ public class EagRelationsPanel extends EagPanels {
             builder.add(resourceRelationType.getDescription().getLanguageBox(), cc.xy(7, rowNb));
             setNextRow();
         }
+        
         JButton addInstitutionRelation = new ButtonTab(labels.getString("eag2012.relations.addNewInstitutionRelation"));
         builder.add(addInstitutionRelation, cc.xy (1, rowNb));
         addInstitutionRelation.addActionListener(new AddInstitutionRelationAction(eag, tabbedPane, model));
@@ -190,11 +200,6 @@ public class EagRelationsPanel extends EagPanels {
         JButton nextInstitutionTabBtn = new ButtonTab(labels.getString("eag2012.controls.nextInstitution"));
         nextInstitutionTabBtn.addActionListener(new NextInstitutionTabBtnAction(eag, tabbedPane, model));
         builder.add(nextInstitutionTabBtn, cc.xy(5, rowNb));
-
-//        if(tabbedPane.getChangeListeners().length < 2) {
-//            LOG.info("Add listener");
-//            tabbedPane.addChangeListener(new TabChangeListener(eag, tabbedPane, model));
-//        }
 
         return builder.getPanel();
     }
@@ -233,12 +238,68 @@ public class EagRelationsPanel extends EagPanels {
                 super.updateJAXBObject(false);
             } catch (Eag2012FormException e) {
             }
-            if(eag.getRelations() == null)
-                eag.setRelations(new Relations());
-            eag.getRelations().getResourceRelation().add(new ResourceRelation());
+           
+           if(eag.getRelations() == null)
+               eag.setRelations(new Relations());
+           
+            boolean empty = false;
+            List <ResourceRelation> errResources = new ArrayList<ResourceRelation>();
+            
+            for (ResourceRelationType resourceRelationType: resourceRelationTypes){
+            	if(StringUtils.isEmpty(resourceRelationType.getTypeRelationsValue()) || StringUtils.isEmpty(resourceRelationType.getWebsiteValue())){ 
+            		empty = true;
+
+            		boolean hasChanged = false;
+            		ResourceRelation resourceRelation = new ResourceRelation();
+                    resourceRelation.setResourceRelationType(resourceRelationType.getTypeRelationsValue());
+                   
+                    if (StringUtils.isNotEmpty(resourceRelationType.getWebsiteValue())) {
+                    	resourceRelation.setHref(resourceRelationType.getWebsiteValue());
+                    	hasChanged = true;
+                    }
+                    
+                    if (StringUtils.isNotEmpty(resourceRelationType.getTitleAndIdValue()) || StringUtils.isNotEmpty(resourceRelationType.getDescriptionValue()) || StringUtils.isNotEmpty(resourceRelationType.getDescriptionLanguage())) {
+	                    
+                    	if(resourceRelation.getRelationEntry() == null)
+	                        resourceRelation.setRelationEntry(new RelationEntry());
+
+                    	if (StringUtils.isNotEmpty(resourceRelationType.getTitleAndIdValue())) {
+	                    	resourceRelation.getRelationEntry().setContent(resourceRelationType.getTitleAndIdValue());
+	                    	hasChanged = true;
+                    	}
+
+	                    if (StringUtils.isNotEmpty(resourceRelationType.getDescriptionValue()) || StringUtils.isNotEmpty(resourceRelationType.getDescriptionLanguage())){
+		                    if(resourceRelation.getDescriptiveNote() == null)
+		                        resourceRelation.setDescriptiveNote(new DescriptiveNote());
+		                    if(resourceRelation.getDescriptiveNote().getP().size() == 0)
+		                        resourceRelation.getDescriptiveNote().getP().add(new P());
+		                    
+		                    resourceRelation.getDescriptiveNote().getP().get(0).setContent(resourceRelationType.getDescriptionValue());
+		                    resourceRelation.getDescriptiveNote().getP().get(0).setLang(resourceRelationType.getDescriptionLanguage());
+	                    	hasChanged = true;
+	                    }
+                    }
+
+                    if (hasChanged) {
+                    	errResources.add(resourceRelation);
+                    }
+            	}
+            }
+
+			if (empty)
+                JOptionPane.showMessageDialog(eag2012Frame, labels.getString("eag2012.errors.linkToResourceRelation"));
+
+			if (!errResources.isEmpty()) {
+				for (ResourceRelation resourceRelation : errResources) {
+					eag.getRelations().getResourceRelation().add(resourceRelation);
+				}
+			} else {
+				eag.getRelations().getResourceRelation().add(new ResourceRelation());
+			}
             reloadTabbedPanel(new EagRelationsPanel(eag, tabbedPane, mainTabbedPane, eag2012Frame, model, labels, repositoryNb).buildEditorPanel(errors), 6);
         }
     }
+    
     public class AddInstitutionRelationAction extends UpdateEagObject {
         AddInstitutionRelationAction(Eag eag, JTabbedPane tabbedPane, ProfileListModel model) {
             super(eag, tabbedPane, model);
@@ -250,10 +311,69 @@ public class EagRelationsPanel extends EagPanels {
                 super.updateJAXBObject(false);
             } catch (Eag2012FormException e) {
             }
+            
+            
             if(eag.getRelations() == null)
-                eag.setRelations(new Relations());
-            eag.getRelations().getEagRelation().add(new EagRelation());
-            reloadTabbedPanel(new EagRelationsPanel(eag, tabbedPane, mainTabbedPane, eag2012Frame, model, labels, repositoryNb).buildEditorPanel(errors), 6);
+				eag.setRelations(new Relations());
+
+            boolean empty = false;
+            List <EagRelation> errResources = new ArrayList<EagRelation>();
+            
+            
+            for (ResourceRelationType eagRelationType: institutionRelationTypes){
+            	if(StringUtils.isEmpty(eagRelationType.getTypeRelationsValue()) || StringUtils.isEmpty(eagRelationType.getWebsiteValue())){ 
+            		empty = true;
+
+            		boolean hasChanged = false;
+            		EagRelation eagRelation = new EagRelation();
+            		eagRelation.setEagRelationType(eagRelationType.getTypeRelationsValue());
+                   
+                    if (StringUtils.isNotEmpty(eagRelationType.getWebsiteValue())) {
+                    	eagRelation.setHref(eagRelationType.getWebsiteValue());
+                    	hasChanged = true;
+                    }
+                    
+                    if (StringUtils.isNotEmpty(eagRelationType.getTitleAndIdValue()) || StringUtils.isNotEmpty(eagRelationType.getDescriptionValue()) || StringUtils.isNotEmpty(eagRelationType.getDescriptionLanguage())) {
+	                    
+                    	if(eagRelation.getRelationEntry() == null
+                    			|| eagRelation.getRelationEntry().isEmpty())
+                    		eagRelation.getRelationEntry().add(new RelationEntry());
+
+                    	if (StringUtils.isNotEmpty(eagRelationType.getTitleAndIdValue())) {
+                    		eagRelation.getRelationEntry().get(0).setContent(eagRelationType.getTitleAndIdValue());
+	                    	hasChanged = true;
+                    	}
+
+	                    if (StringUtils.isNotEmpty(eagRelationType.getDescriptionValue()) || StringUtils.isNotEmpty(eagRelationType.getDescriptionLanguage())){
+		                    if(eagRelation.getDescriptiveNote() == null)
+		                    	eagRelation.setDescriptiveNote(new DescriptiveNote());
+		                    if(eagRelation.getDescriptiveNote().getP().size() == 0)
+		                    	eagRelation.getDescriptiveNote().getP().add(new P());
+		                    
+		                    eagRelation.getDescriptiveNote().getP().get(0).setContent(eagRelationType.getDescriptionValue());
+		                    eagRelation.getDescriptiveNote().getP().get(0).setLang(eagRelationType.getDescriptionLanguage());
+	                    	hasChanged = true;
+	                    }
+                    }
+
+                    if (hasChanged) {
+                    	errResources.add(eagRelation);
+                    }
+            	}
+            }
+            
+            if (empty)
+                JOptionPane.showMessageDialog(eag2012Frame, labels.getString("eag2012.errors.institutionRelation"));
+
+			if (!errResources.isEmpty()) {
+				for (EagRelation resourceRelation : errResources) {
+					eag.getRelations().getEagRelation().add(resourceRelation);
+				}
+			} else {
+				eag.getRelations().getEagRelation().add(new EagRelation());
+			}
+            
+			reloadTabbedPanel(new EagRelationsPanel(eag, tabbedPane, mainTabbedPane, eag2012Frame, model, labels, repositoryNb).buildEditorPanel(errors), 6);
         }
     }
 
@@ -304,7 +424,7 @@ public class EagRelationsPanel extends EagPanels {
             errors = new ArrayList<String>();
 
             boolean hasChanged = false;
-
+            
             eag.getRelations().getResourceRelation().clear();
             for(ResourceRelationType resourceRelationType : resourceRelationTypes) {
                 if(StringUtils.isNotEmpty(resourceRelationType.getWebsiteValue())) {
@@ -359,34 +479,5 @@ public class EagRelationsPanel extends EagPanels {
             }
         }
     }
-//    public class TabChangeListener extends UpdateEagObject implements ChangeListener {
-//        private boolean click;
-//        public TabChangeListener(Eag eag, JTabbedPane tabbedPane, ProfileListModel model) {
-//            super(eag, tabbedPane, model);
-//            click = true;
-//        }
-//
-//        @Override
-//        public void actionPerformed(ActionEvent actionEvent) {}
-//
-//        public void stateChanged(ChangeEvent changeEvent) {
-//            LOG.info("stateChanged");
-//            if(click && !Eag2012Frame.firstTimeInTab) {
-//                tabbedPane.removeChangeListener(this);
-//                try {
-//                    super.updateEagObject(false);
-//                    LOG.info("Ok");
-//                    Eag2012Frame.firstTimeInTab = true;
-//                    EagPanels eagPanels = getCorrectEagPanels(tabbedPane.getSelectedIndex(), mainTabbedPane, eag2012Frame, labels, repositoryNb);
-//                    reloadTabbedPanel(eagPanels.buildEditorPanel(errors), tabbedPane.getSelectedIndex());
-//                } catch (Eag2012FormException e) {
-//                    LOG.info("NOT Ok");
-//                    EagPanels eagPanels = getCorrectEagPanels(6, mainTabbedPane, eag2012Frame, labels, repositoryNb);
-//                    reloadTabbedPanel(eagPanels.buildEditorPanel(errors), 6);
-//                }
-//                click = false;
-//            }
-//            Eag2012Frame.firstTimeInTab = false;
-//        }
-//    }
+
 }

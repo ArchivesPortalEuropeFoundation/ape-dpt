@@ -101,6 +101,7 @@ public class EagIdentityPanel extends EagPanels {
             setNextRow();
         }
 
+        // name of the institution
         nameInstitutionTfs = new ArrayList<TextFieldWithLanguage>(eag.getArchguide().getIdentity().getAutform().size());
         int loop = 0;
         for(Autform autform : eag.getArchguide().getIdentity().getAutform()) {
@@ -423,6 +424,28 @@ public class EagIdentityPanel extends EagPanels {
             } catch (Eag2012FormException e) {
 
             }
+
+            boolean empty=false;
+            
+            
+            if (eag.getArchguide().getIdentity().getAutform()==null)
+            	eag.getArchguide().getIdentity().getAutform().add(new Autform());
+            else
+            {
+	            if(nameInstitutionTfs.size() > 0) 
+	            {
+	                for(TextFieldWithLanguage textFieldWithLanguage : nameInstitutionTfs) 
+	                    if(textFieldWithLanguage.getTextValue()== null || StringUtils.isEmpty(textFieldWithLanguage.getTextValue().trim())) {
+	                    	empty=true;
+	                    
+	                }
+	            }
+	            
+	   			if (empty)
+    				JOptionPane.showMessageDialog(eag2012Frame, labels.getString("eag2012.errors.addAnotherForm"));
+ 
+            }
+
             eag.getArchguide().getIdentity().getAutform().add(new Autform());
             reloadTabbedPanel(new EagIdentityPanel(eag, tabbedPane, mainTabbedPane, eag2012Frame, model, labels, repositoryNb).buildEditorPanel(errors), 1);
         }
@@ -437,8 +460,27 @@ public class EagIdentityPanel extends EagPanels {
             try {
                 super.updateJAXBObject(false);
             } catch (Eag2012FormException e) {
-
             }
+            
+        	boolean empty=false;
+            
+            if (eag.getArchguide().getIdentity().getAutform()==null)
+            	eag.getArchguide().getIdentity().getAutform().add(new Autform());
+            else
+            {
+	            if(parallelNameTfs.size() > 0) {
+	                eag.getArchguide().getIdentity().getParform().clear();
+	                for(TextFieldWithLanguage textFieldWithLanguage : parallelNameTfs) {
+	                    if(textFieldWithLanguage.getTextValue()==null  || StringUtils.isEmpty(textFieldWithLanguage.getTextValue().trim())) {
+                    		empty=true;
+	                    }
+	                }
+	            }
+	            
+	            if (empty)
+    				JOptionPane.showMessageDialog(eag2012Frame, labels.getString("eag2012.errors.parallelNameOfInstitution"));
+            }
+    
             eag.getArchguide().getIdentity().getParform().add(new Parform());
             reloadTabbedPanel(new EagIdentityPanel(eag, tabbedPane, mainTabbedPane, eag2012Frame, model, labels, repositoryNb).buildEditorPanel(errors), 1);
         }
@@ -492,11 +534,30 @@ public class EagIdentityPanel extends EagPanels {
             } catch (Eag2012FormException e) {
 
             }
-            Nonpreform nonpreform = new Nonpreform();
-            nonpreform.getContent().add(new UseDates());
-            eag.getArchguide().getIdentity().getNonpreform().add(nonpreform);
-            reloadTabbedPanel(new EagIdentityPanel(eag, tabbedPane, mainTabbedPane, eag2012Frame, model, labels, repositoryNb).buildEditorPanel(errors), 1);
-        }
+            
+            boolean empty = false;
+           
+		   if (eag.getArchguide().getIdentity().getNonpreform()==null)
+		    	eag.getArchguide().getIdentity().getNonpreform().add(new Nonpreform());
+		    else
+		    {
+		    	if(formerlyUsedNameTfs.size() > 0) {
+		            for (FormerlyUsedName formerlyUsedName : formerlyUsedNameTfs) {
+		                if (formerlyUsedName.getName()==null || StringUtils.isEmpty(formerlyUsedName.getName().trim())) 
+		                	empty=true;
+		            }
+		        }
+		        
+		        if (empty)
+					JOptionPane.showMessageDialog(eag2012Frame, labels.getString("eag2012.errors.previousNameOfArchive"));
+		    }
+		   
+		    Nonpreform nonpreform = new Nonpreform();
+		    nonpreform.getContent().add(new UseDates());
+		    eag.getArchguide().getIdentity().getNonpreform().add(nonpreform);
+		    reloadTabbedPanel(new EagIdentityPanel(eag, tabbedPane, mainTabbedPane, eag2012Frame, model, labels, repositoryNb).buildEditorPanel(errors), 1);
+		    
+		}
     }
 
     public class ChangeTabBtnAction extends UpdateEagObject {

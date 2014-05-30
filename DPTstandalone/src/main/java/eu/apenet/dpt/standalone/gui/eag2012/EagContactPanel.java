@@ -621,11 +621,20 @@ public class EagContactPanel extends EagPanels {
             try {
                 super.updateJAXBObject(false);
             } catch (Eag2012FormException e) {
-
             }
-            Repository repository = eag.getArchguide().getDesc().getRepositories().getRepository().get(repositoryNb);
-            repository.getFax().add(new Fax());
-
+            
+            boolean empty = false;         
+		    int pos = faxTfs.size(); 
+            
+            List <Fax> fax = eag.getArchguide().getDesc().getRepositories().getRepository().get(repositoryNb).getFax();
+            for(int i=0; i<pos;i++){
+		        if( faxTfs.get(i).getText()==null || faxTfs.get(i).getText().trim().compareTo("") == 0)
+		        	empty = true;
+		    }
+			if (empty)
+				JOptionPane.showMessageDialog(eag2012Frame, labels.getString("eag2012.errors.errorFax"));
+            
+            fax.add(new Fax());
             reloadTabbedPanel(new EagContactPanel(eag, tabbedPane, mainTabbedPane, eag2012Frame, model, isNew, labels, repositoryNb).buildEditorPanel(errors), 2);
         }
     }
@@ -645,7 +654,6 @@ public class EagContactPanel extends EagPanels {
             try {
                 super.updateJAXBObject(false);
             } catch (Eag2012FormException e) {
-//            	JOptionPane.showMessageDialog(eag2012Frame, e.getCause() + "\n" + e.toString());
             }
    			
             List<Email> email= eag.getArchguide().getDesc().getRepositories().getRepository().get(repositoryNb).getEmail();

@@ -33,6 +33,7 @@ import eu.apenet.dpt.utils.util.LanguageIsoList;
 import org.apache.commons.lang.StringUtils;
 
 import javax.swing.*;
+
 import java.awt.event.ActionEvent;
 import java.util.ArrayList;
 import java.util.List;
@@ -113,7 +114,7 @@ public class EagControlPanel extends EagPanels {
             builder.addLabel(labels.getString("eag2012.commons.language"),    cc.xy (1, rowNb));
             LanguageWithScript languageWithScript = new LanguageWithScript(languageDeclaration.getLanguage().getLanguageCode(), languageDeclaration.getScript().getScriptCode(), labels);
             languageWithScriptTfs.add(languageWithScript);
-            builder.add(languageWithScript.getLanguageBox(),                     cc.xy (3, rowNb));
+            builder.add(languageWithScript.getLanguageBox(),cc.xy (3, rowNb));
             builder.addLabel(labels.getString("eag2012.control.descriptionScript"),    cc.xy (5, rowNb));
             builder.add(languageWithScript.getScriptBox(), cc.xy(7, rowNb));
             setNextRow();
@@ -217,7 +218,17 @@ public class EagControlPanel extends EagPanels {
                 super.updateJAXBObject(false);
             } catch (Eag2012FormException e) {
             }
-            LanguageDeclaration languageDeclaration = new LanguageDeclaration();
+            
+            boolean empty = false;      
+            for (int i = 0; !empty  && i < languageWithScriptTfs.size(); i++) {
+		        if( StringUtils.isEmpty(languageWithScriptTfs.get(i).getScript())
+		        		|| languageWithScriptTfs.get(i).getLanguage()==null)
+            		empty = true;
+            }
+			if (empty)
+                JOptionPane.showMessageDialog(eag2012Frame, labels.getString("eag2012.errors.addFurtherLangsAnsScripts"));
+
+             LanguageDeclaration languageDeclaration = new LanguageDeclaration();
             languageDeclaration.setLanguage(new Language());
             languageDeclaration.setScript(new Script());
             if(eag.getControl().getLanguageDeclarations() == null)
@@ -238,6 +249,16 @@ public class EagControlPanel extends EagPanels {
                 super.updateJAXBObject(false);
             } catch (Eag2012FormException e) {
             }
+
+            boolean empty = false;      
+            for (int i = 0; !empty  && i < rulesConventionTfs.size(); i++) {
+		        if( rulesConventionTfs.get(i).getTextValue()==null || rulesConventionTfs.get(i).getTextValue().trim().compareTo("")==0  || 
+		        		rulesConventionTfs.get(i).getExtraValue()==null || rulesConventionTfs.get(i).getExtraValue().trim().compareTo("")==0)
+            		empty = true;
+            }
+			if (empty)
+                JOptionPane.showMessageDialog(eag2012Frame, labels.getString("eag2012.errors.addCnventions"));
+
             ConventionDeclaration conventionDeclaration = new ConventionDeclaration();
             conventionDeclaration.setAbbreviation(new Abbreviation());
             conventionDeclaration.getCitation().add(new Citation());
@@ -300,15 +321,13 @@ public class EagControlPanel extends EagPanels {
         protected void updateJAXBObject(boolean save) throws Eag2012FormException {
             errors = new ArrayList<String>();
 
-            boolean hasChanged = false;
-
             int sizeEvents = eag.getControl().getMaintenanceHistory().getMaintenanceEvent().size();
             if(sizeEvents > 0) {
                 MaintenanceEvent event = eag.getControl().getMaintenanceHistory().getMaintenanceEvent().get(sizeEvents - 1);
                 event.getAgent().setLang(personInstitutionRespTf.getLanguage());
             }
 
-            if(languageWithScriptTfs.size() == 0 || (languageWithScriptTfs.size() == 1 && StringUtils.isEmpty(languageWithScriptTfs.get(0).getLanguage()))) {
+            if(languageWithScriptTfs.size() <2 && StringUtils.isEmpty(languageWithScriptTfs.get(0).getLanguage())) {
                 eag.getControl().setLanguageDeclarations(null);
             } else {
                 eag.getControl().getLanguageDeclarations().getLanguageDeclaration().clear();
@@ -344,43 +363,11 @@ public class EagControlPanel extends EagPanels {
                         eag.getControl().getConventionDeclaration().add(conventionDeclaration);
                     }
                 }
-
             }
-
+ 
             if(!errors.isEmpty()) {
                 throw new Eag2012FormException("Errors in validation of EAG 2012");
             }
         }
     }
-
-//    public class TabChangeListener extends UpdateEagObject implements ChangeListener {
-//        private boolean click;
-//        public TabChangeListener(Eag eag, JTabbedPane tabbedPane, ProfileListModel model) {
-//            super(eag, tabbedPane, model);
-//            click = true;
-//        }
-//
-//        @Override
-//        public void actionPerformed(ActionEvent actionEvent) {}
-//
-//        public void stateChanged(ChangeEvent changeEvent) {
-//            LOG.info("stateChanged");
-//            if(click && !Eag2012Frame.firstTimeInTab) {
-//                tabbedPane.removeChangeListener(this);
-//                try {
-//                    super.updateEagObject(false);
-//                    LOG.info("Ok");
-//                    Eag2012Frame.firstTimeInTab = true;
-//                    EagPanels eagPanels = getCorrectEagPanels(tabbedPane.getSelectedIndex(), mainTabbedPane, eag2012Frame, labels, repositoryNb);
-//                    reloadTabbedPanel(eagPanels.buildEditorPanel(errors), tabbedPane.getSelectedIndex());
-//                } catch (Eag2012FormException e) {
-//                    LOG.info("NOT Ok");
-//                    EagPanels eagPanels = getCorrectEagPanels(5, mainTabbedPane, eag2012Frame, labels, repositoryNb);
-//                    reloadTabbedPanel(eagPanels.buildEditorPanel(errors), 5);
-//                }
-//                click = false;
-//            }
-//            Eag2012Frame.firstTimeInTab = false;
-//        }
-//    }
 }

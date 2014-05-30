@@ -54,7 +54,11 @@ public class LanguageWithScript extends StructureWithLanguage {
     }
 
     public String getScript() {
-    	return (String) Arrays.asList(scripts).get(this.scriptBox.getSelectedIndex() - 1);
+    	if (this.scriptBox.getSelectedIndex() > 0) {
+    		return (String) Arrays.asList(scripts).get(this.scriptBox.getSelectedIndex() - 1);
+    	} else {
+    		return "";
+    	}
     }
     
     /**
