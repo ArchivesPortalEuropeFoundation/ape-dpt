@@ -1497,7 +1497,7 @@ public class EacCpfDescriptionPanel extends EacCpfPanel {
 			JOptionPane.showMessageDialog(this.tabbedPane, labels.getString("eaccpf.commons.error.emptylanguage"));
 		}else if(firstScript==null || firstScript.isEmpty() || firstScript.equals("---")){
 			state = false;
-			JOptionPane.showMessageDialog(this.tabbedPane, labels.getString("eaccpf.control.error.emptyscript"));
+			JOptionPane.showMessageDialog(this.tabbedPane, labels.getString("eaccpf.commons.error.emptyscript"));
 		}
 		return state;
 	}

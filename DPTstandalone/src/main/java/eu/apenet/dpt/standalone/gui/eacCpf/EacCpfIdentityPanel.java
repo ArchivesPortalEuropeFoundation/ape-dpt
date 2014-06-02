@@ -1561,7 +1561,7 @@ public class EacCpfIdentityPanel extends EacCpfPanel {
 				JOptionPane.showMessageDialog(this.tabbedPane, labels.getString("eaccpf.commons.error.emptylanguage"));
 			}else if(firstScript==null || firstScript.isEmpty() || firstScript.equals("---")){
 				state = false;
-				JOptionPane.showMessageDialog(this.tabbedPane, labels.getString("eaccpf.control.error.emptyscript"));
+				JOptionPane.showMessageDialog(this.tabbedPane, labels.getString("eaccpf.commons.error.emptyscript"));
 			}
 			return state;
 		}
@@ -1731,7 +1731,7 @@ public class EacCpfIdentityPanel extends EacCpfPanel {
 			if (sizeMaintenanceEvents > 0) {
 				MaintenanceEvent maintenanceEvent = control.getMaintenanceHistory().getMaintenanceEvent().get(sizeMaintenanceEvents - 1);
 				languagePerson = maintenanceEvent.getAgent().getLang();
-			} else if (!firstLanguage.equals(TextFieldWithComboBoxEacCpf.DEFAULT_VALUE)) {
+			} else if (firstLanguage!=null && !firstLanguage.equals(TextFieldWithComboBoxEacCpf.DEFAULT_VALUE)) {
 				languagePerson = firstLanguage;
 			}
 

@@ -1120,7 +1120,6 @@ public class EacCpfRelationsPanel extends EacCpfPanel {
 		JButton saveBtn = new ButtonTab(labels.getString("eaccpf.commons.save"));
 		builder.add(saveBtn, cc.xy (5, this.rowNb));
 		saveBtn.addActionListener(new SaveBtnAction(this.eaccpf, this.tabbedPane, this.model));
-		saveBtn.addActionListener(new SaveBtnAction(this.eaccpf, this.tabbedPane, this.model));
 
 		return builder;
 	}
@@ -1429,7 +1428,7 @@ public class EacCpfRelationsPanel extends EacCpfPanel {
 			JOptionPane.showMessageDialog(this.tabbedPane, labels.getString("eaccpf.commons.error.emptylanguage"));
 		}else if(firstScript==null || firstScript.isEmpty() || firstScript.equals("---")){
 			state = false;
-			JOptionPane.showMessageDialog(this.tabbedPane, labels.getString("eaccpf.control.error.emptyscript"));
+			JOptionPane.showMessageDialog(this.tabbedPane, labels.getString("eaccpf.commons.error.emptyscript"));
 		}
 		return state;
 	}
@@ -1539,7 +1538,7 @@ public class EacCpfRelationsPanel extends EacCpfPanel {
 				String type = functionRelationHrefAndTypeTf.getComboBoxValue(TextFieldWithComboBoxEacCpf.TYPE_FUNCTION_RELATION, entityType);
 				if (StringUtils.isNotEmpty(type) && !type.equalsIgnoreCase(TextFieldWithComboBoxEacCpf.DEFAULT_VALUE)) {
 					functionRelation.setFunctionRelationType(type);
-					functionRelation.setType(type);
+//					functionRelation.setType(type);
 					hasChanged = true;
 				}
 				// Try to recover the href of the relation.
@@ -1647,7 +1646,7 @@ public class EacCpfRelationsPanel extends EacCpfPanel {
 				String type = resourceRelationHrefAndTypeTf.getComboBoxValue(TextFieldWithComboBoxEacCpf.TYPE_RESOURCE_RELATION, entityType);
 				if (StringUtils.isNotEmpty(type) && !type.equalsIgnoreCase(TextFieldWithComboBoxEacCpf.DEFAULT_VALUE)) {
 					resourceRelation.setResourceRelationType(type);
-					resourceRelation.setType(type);
+//					resourceRelation.setType(type);
 					hasChanged = true;
 				}
 				// Try to recover the href of the relation.
@@ -1745,11 +1744,22 @@ public class EacCpfRelationsPanel extends EacCpfPanel {
 
 			// Clear the current CPF relations list.
 			relations.getCpfRelation().clear();
-			
-			if(this.eaccpf.getCpfDescription().getAlternativeSet()==null){
-				this.eaccpf.getCpfDescription().setAlternativeSet(new AlternativeSet());
+			boolean found = false;
+			for (int i = 0; !found && i < cpfRelationOrganisationNameAndIdTfs.size(); i++) {
+				TextFieldWithComboBoxEacCpf cpfRelationHrefAndTypeTf = cpfRelationHrefAndTypeTfs.get(i);
+				String type = cpfRelationHrefAndTypeTf.getComboBoxValue(TextFieldWithComboBoxEacCpf.TYPE_CPF_RELATION, entityType);
+				if(type.equalsIgnoreCase(TextFieldWithComboBoxEacCpf.SELECTED_ALTERNATIVE_SET_VALUE)){
+					found = true;
+				}
+			}
+			if(found){
+				if(this.eaccpf.getCpfDescription().getAlternativeSet()==null){
+					this.eaccpf.getCpfDescription().setAlternativeSet(new AlternativeSet());
+				}else{
+					this.eaccpf.getCpfDescription().getAlternativeSet().getSetComponent().clear();
+				}
 			}else{
-				this.eaccpf.getCpfDescription().getAlternativeSet().getSetComponent().clear();
+				this.eaccpf.getCpfDescription().setAlternativeSet(null);
 			}
 
 			for (int i = 0; i < cpfRelationOrganisationNameAndIdTfs.size(); i++) {
@@ -1764,6 +1774,7 @@ public class EacCpfRelationsPanel extends EacCpfPanel {
 				if(continueWithEacCpfPart || StringUtils.isEmpty(type)){
 					relations = buildCPFRelationPart(relations,i); //builds the old CpfRelation part
 				}else{
+					
 					hasChanged = buildAlternativeSet(i); //builds the new alternativeSet, it works with global 'eaccpf' -> this.eaccpf.getCpfDescription().getAlternativeSet().getSetComponent()
 				}
 			}
@@ -1913,7 +1924,7 @@ public class EacCpfRelationsPanel extends EacCpfPanel {
 			String type = cpfRelationHrefAndTypeTf.getComboBoxValue(TextFieldWithComboBoxEacCpf.TYPE_CPF_RELATION, entityType);
 			if (StringUtils.isNotEmpty(type) && !type.equalsIgnoreCase(TextFieldWithComboBoxEacCpf.DEFAULT_VALUE)) {
 				cpfRelation.setCpfRelationType(type);
-				cpfRelation.setType(type);
+//				cpfRelation.setType(type);
 				hasChanged = true;
 			}
 

@@ -49,6 +49,7 @@ import eu.apenet.dpt.standalone.gui.Utilities;
 import eu.apenet.dpt.standalone.gui.commons.ButtonTab;
 import eu.apenet.dpt.standalone.gui.commons.SwingStructures.LanguageWithScript;
 import eu.apenet.dpt.standalone.gui.db.RetrieveFromDb;
+import eu.apenet.dpt.standalone.gui.eacCpf.SwingStructures.TextFieldWithComboBoxEacCpf;
 import eu.apenet.dpt.utils.eaccpf.EacCpf;
 import eu.apenet.dpt.utils.eaccpf.Language;
 import eu.apenet.dpt.utils.eaccpf.LanguageDeclaration;
@@ -112,20 +113,17 @@ public class EacCpfStartPanel extends EacCpfPanel{
         builder.addLabel(labels.getString("eaccpf.start.createInstance") + "*" + ":", cc.xy (1, rowNb));
         this.radioBtnPanel= new JPanel();
         builder.add(makeCheckboxesType(), cc.xyw(3, rowNb, 5));
-        //language
         this.setNextRow();
+        builder.addLabel(labels.getString("eaccpf.start.text"), cc.xyw(1, rowNb, 5));
+        this.setNextRow();
+        //language
         builder.addLabel(labels.getString("eaccpf.start.language") + ":", cc.xy(1, rowNb));
         LanguageWithScript languageWithScript = new LanguageWithScript(languageDeclaration.getLanguage().getLanguageCode(), languageDeclaration.getScript().getScriptCode(), labels);
         this.languageWithScriptFirst = languageWithScript;
         builder.add(languageWithScript.getLanguageBox(), cc.xy (3, rowNb));
-        this.setNextRow();
-        builder.addLabel(labels.getString("eaccpf.start.text"), cc.xy(1, rowNb));
         //script
-        this.setNextRow();
-        builder.addLabel(labels.getString("eaccpf.start.script") + ":", cc.xy(1, rowNb));
-        builder.add(languageWithScript.getScriptBox(), cc.xy(3, rowNb));
-        this.setNextRow();
-        builder.addLabel(labels.getString("eaccpf.start.text"), cc.xy(1, rowNb));
+        builder.addLabel(labels.getString("eaccpf.start.script") + ":", cc.xy(5, rowNb));
+        builder.add(languageWithScript.getScriptBox(), cc.xy(7, rowNb));
         this.setNextRow();
         builder.addSeparator("", cc.xyw(1, rowNb, 7));
         this.setNextRow();
@@ -207,12 +205,14 @@ public class EacCpfStartPanel extends EacCpfPanel{
 
 				// Recover the selected first language.
 				String firstLanguage = (String) languageWithScriptFirst.getLanguage();
-				if (firstLanguage == null
-						|| firstLanguage.isEmpty()) {
+				if (firstLanguage == null || firstLanguage.isEmpty()) {
 					firstLanguage = (String) languageWithScriptFirst.getLanguageBox().getSelectedItem();
 				}
 				// Recover the selected first script.
 				String firstScript = (String) languageWithScriptFirst.getScriptBox().getSelectedItem();
+				if(firstScript!=null && !firstScript.isEmpty() && !firstScript.equalsIgnoreCase(TextFieldWithComboBoxEacCpf.DEFAULT_VALUE)){
+					firstScript = languageWithScriptFirst.getScript();
+				}
 				RetrieveFromDb retrieveFromDb = new RetrieveFromDb();
 				new EacCpfFrame(tabbedPane.getSize(), model, labels, retrieveFromDb.retrieveCountryCode(), retrieveFromDb.retrieveRepositoryCode(), eacType, firstLanguage, firstScript);
 				closeFrame();
