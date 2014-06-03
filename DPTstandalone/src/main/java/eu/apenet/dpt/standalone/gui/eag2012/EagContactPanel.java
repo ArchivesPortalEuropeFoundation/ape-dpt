@@ -19,6 +19,8 @@ package eu.apenet.dpt.standalone.gui.eag2012;
  */
 
 import java.awt.event.ActionEvent;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -43,6 +45,9 @@ import eu.apenet.dpt.standalone.gui.Utilities;
 import eu.apenet.dpt.standalone.gui.commons.ButtonTab;
 import eu.apenet.dpt.standalone.gui.commons.DefaultBtnAction;
 import eu.apenet.dpt.standalone.gui.commons.SwingStructures.TextFieldWithLanguage;
+import eu.apenet.dpt.standalone.gui.eacCpf.EacCpfIdentityPanel;
+import eu.apenet.dpt.standalone.gui.eacCpf.EacCpfIdentityPanel.AddIsoText;
+import eu.apenet.dpt.standalone.gui.eacCpf.SwingStructures.TextFieldsWithCheckBoxForDates;
 import eu.apenet.dpt.standalone.gui.eag2012.SwingStructures.LocationType;
 import eu.apenet.dpt.utils.eag2012.Country;
 import eu.apenet.dpt.utils.eag2012.Eag;
@@ -80,6 +85,10 @@ public class EagContactPanel extends EagPanels {
 
     private JComboBox continentCombo = new JComboBox(continents);
 
+    //constants for the coordinates
+	protected static final String LATITUDE = "latitude";
+	protected static final String LONGITUDE = "longitude";
+	
     public EagContactPanel(Eag eag, JTabbedPane tabbedPane, JTabbedPane mainTabbedPane, JFrame eag2012Frame, ProfileListModel model, boolean isNew, ResourceBundle labels, int repositoryNb) {
         super(eag, tabbedPane, mainTabbedPane, eag2012Frame, model, labels, repositoryNb);
         this.isNew = isNew;
@@ -150,20 +159,24 @@ public class EagContactPanel extends EagPanels {
             {
                 LocationType locationType = new LocationType(location);
                 locationFields.add(locationType);
+                if(hasMinimumOneVisitorAddress){
+                    locationType.getLatitudeTf().setEnabled(false);
+                    locationType.getLongitudeTf().setEnabled(false);
+                }
                 builder.addSeparator(labels.getString("eag2012.commons.visitorsAddress"), cc.xyw(1, rowNb, 7));
                 hasMinimumOneVisitorAddress = true;
 	            setNextRow();
 
 	            String mandatoryStar = "*";
 	
-	            builder.addLabel(labels.getString("eag2012.commons.street") + mandatoryStar,    cc.xy (1, rowNb));
-	            builder.add(locationType.getStreetTf().getTextField(),                               cc.xy (3, rowNb));
-	            builder.addLabel(labels.getString("eag2012.commons.language"),    cc.xy (5, rowNb));
-	            builder.add(locationType.getStreetTf().getLanguageBox(),                               cc.xy (7, rowNb));
+	            builder.addLabel(labels.getString("eag2012.commons.street") + mandatoryStar, cc.xy (1, rowNb));
+	            builder.add(locationType.getStreetTf().getTextField(), cc.xy (3, rowNb));
+	            builder.addLabel(labels.getString("eag2012.commons.language"), cc.xy (5, rowNb));
+	            builder.add(locationType.getStreetTf().getLanguageBox(), cc.xy (7, rowNb));
 	            if(errors.contains("streetTf") && StringUtils.isEmpty(locationType.getStreetTfValue())) 
 	            {
 	                setNextRow();
-	                builder.add(createErrorLabel(labels.getString("eag2012.errors.street")),          cc.xy (1, rowNb));
+	                builder.add(createErrorLabel(labels.getString("eag2012.errors.street")), cc.xy (1, rowNb));
 	            }
 	            setNextRow();
 	
@@ -184,34 +197,36 @@ public class EagContactPanel extends EagPanels {
 	            builder.add(locationType.getDistrictTf().getLanguageBox(), cc.xy (7, rowNb));
 	            setNextRow();
 	
-	            builder.addLabel(labels.getString("eag2012.contact.countyLocalAuthority"),    cc.xy (1, rowNb));
+	            builder.addLabel(labels.getString("eag2012.contact.countyLocalAuthority"), cc.xy (1, rowNb));
 	            builder.add(locationType.getCountyTf().getTextField(), cc.xy (3, rowNb));
 	            builder.addLabel(labels.getString("eag2012.commons.language"), cc.xy (5, rowNb));
-	            builder.add(locationType.getCountyTf().getLanguageBox(),                               cc.xy (7, rowNb));
+	            builder.add(locationType.getCountyTf().getLanguageBox(), cc.xy (7, rowNb));
 	            setNextRow();
 	
-	            builder.addLabel(labels.getString("eag2012.contact.region"),    cc.xy (1, rowNb));
+	            builder.addLabel(labels.getString("eag2012.contact.region"), cc.xy (1, rowNb));
 	            builder.add(locationType.getRegionTf().getTextField(), cc.xy (3, rowNb));
 	            builder.addLabel(labels.getString("eag2012.commons.language"), cc.xy (5, rowNb));
-	            builder.add(locationType.getRegionTf().getLanguageBox(),                               cc.xy (7, rowNb));
+	            builder.add(locationType.getRegionTf().getLanguageBox(), cc.xy (7, rowNb));
 	            setNextRow();
 	
-	            builder.addLabel(labels.getString("eag2012.commons.country") + "*",    cc.xy (1, rowNb));
+	            builder.addLabel(labels.getString("eag2012.commons.country") + "*", cc.xy (1, rowNb));
 	            builder.add(locationType.getCountryTf().getTextField(), cc.xy (3, rowNb));
-	            builder.addLabel(labels.getString("eag2012.commons.language"),    cc.xy (5, rowNb));
-	            builder.add(locationType.getCountryTf().getLanguageBox(),                               cc.xy (7, rowNb));
+	            builder.addLabel(labels.getString("eag2012.commons.language"), cc.xy (5, rowNb));
+	            builder.add(locationType.getCountryTf().getLanguageBox(), cc.xy (7, rowNb));
 	            if(errors.contains("countryTf") && StringUtils.isEmpty(locationType.getCountryTfValue())) 
 	            {
 	                setNextRow();
-	                builder.add(createErrorLabel(labels.getString("eag2012.errors.country")),          cc.xy (1, rowNb));
+	                builder.add(createErrorLabel(labels.getString("eag2012.errors.country")), cc.xy (1, rowNb));
 	            }
 	            setNextRow();
 	
-	            builder.addLabel(labels.getString("eag2012.commons.latitude"),    cc.xy (1, rowNb));
-	            builder.add(locationType.getLatitudeTf(), cc.xy (3, rowNb));
-	            builder.addLabel(labels.getString("eag2012.commons.longitude"), cc.xy(5, rowNb));
-	            builder.add(locationType.getLongitudeTf(), cc.xy (7, rowNb));
-	            setNextRow();
+	            builder.addLabel(labels.getString("eag2012.commons.latitude"), cc.xy (1, rowNb));
+	            locationType.getLatitudeTf().addFocusListener(new UpdateCoordsText(locationType, EagContactPanel.LATITUDE));
+                builder.add(locationType.getLatitudeTf(), cc.xy (3, rowNb));
+                builder.addLabel(labels.getString("eag2012.commons.longitude"), cc.xy(5, rowNb));
+	            locationType.getLongitudeTf().addFocusListener(new UpdateCoordsText(locationType, EagContactPanel.LONGITUDE));
+                builder.add(locationType.getLongitudeTf(), cc.xy (7, rowNb));
+                setNextRow();
             }// end if visitors address
         }//end loop to load Visitors address
 
@@ -245,14 +260,14 @@ public class EagContactPanel extends EagPanels {
 
 	            String mandatoryStar = "";
 	
-	            builder.addLabel(labels.getString("eag2012.commons.street") + mandatoryStar,    cc.xy (1, rowNb));
-	            builder.add(locationType.getStreetTf().getTextField(),                               cc.xy (3, rowNb));
-	            builder.addLabel(labels.getString("eag2012.commons.language"),    cc.xy (5, rowNb));
-	            builder.add(locationType.getStreetTf().getLanguageBox(),                               cc.xy (7, rowNb));
+	            builder.addLabel(labels.getString("eag2012.commons.street") + mandatoryStar, cc.xy (1, rowNb));
+	            builder.add(locationType.getStreetTf().getTextField(), cc.xy (3, rowNb));
+	            builder.addLabel(labels.getString("eag2012.commons.language"), cc.xy (5, rowNb));
+	            builder.add(locationType.getStreetTf().getLanguageBox(), cc.xy (7, rowNb));
 	            if(errors.contains("streetTf") && StringUtils.isEmpty(locationType.getStreetTfValue())) 
 	            {
 	                setNextRow();
-	                builder.add(createErrorLabel(labels.getString("eag2012.errors.street")),          cc.xy (1, rowNb));
+	                builder.add(createErrorLabel(labels.getString("eag2012.errors.street")), cc.xy (1, rowNb));
 	            }
 	            setNextRow();
 	
@@ -286,7 +301,7 @@ public class EagContactPanel extends EagPanels {
         }
         //end add postal address button
 
-        builder.addLabel(labels.getString("eag2012.commons.continent") + "*",    cc.xy (1, rowNb));
+        builder.addLabel(labels.getString("eag2012.commons.continent") + "*", cc.xy (1, rowNb));
         if(Arrays.asList(continents).contains(repository.getGeogarea().getValue())){
             continentCombo.setSelectedItem(repository.getGeogarea().getValue());
         } else {
@@ -375,10 +390,10 @@ public class EagContactPanel extends EagPanels {
             JTextField webpageTitleTf = new JTextField(webpage.getContent());
             webpageTitleTfs.add(webpageTitleTf);
         	webpageTfs.add(webpageTf);
-    		builder.addLabel(labels.getString("eag2012.commons.webpage"),    cc.xy (1, rowNb));
-            builder.add(webpageTf,    cc.xy (3, rowNb));
-            builder.addLabel(labels.getString("eag2012.commons.linkTitle"),    cc.xy (5, rowNb));
-            builder.add(webpageTitleTf,    cc.xy (7, rowNb));
+    		builder.addLabel(labels.getString("eag2012.commons.webpage"), cc.xy (1, rowNb));
+            builder.add(webpageTf, cc.xy (3, rowNb));
+            builder.addLabel(labels.getString("eag2012.commons.linkTitle"), cc.xy (5, rowNb));
+            builder.add(webpageTitleTf, cc.xy (7, rowNb));
             setNextRow();
             if(errors.contains("webpageTfs")) {
                 if(StringUtils.isNotBlank(webpageTf.getText()) && !StringUtils.startsWithAny(webpageTf.getText(), webPrefixes)){
@@ -571,12 +586,68 @@ public class EagContactPanel extends EagPanels {
                 location.setStreet(new Street());
                 location.setMunicipalityPostalcode(new MunicipalityPostalcode());
                 
+                LocationType lastVisitorAddr = null;
+                int index = counter - 1;
+                while(lastVisitorAddr == null && index >= 0){
+                    if(locationFields.get(index).getLocalType().equals("visitors address"))
+                        lastVisitorAddr = locationFields.get(index);
+                    index--;
+                }
+                if(lastVisitorAddr != null){
+                    location.setLatitude(lastVisitorAddr.getLatitudeTfValue());
+                    location.setLongitude(lastVisitorAddr.getLongitudeTfValue());
+                }
+                
                 eag.getArchguide().getDesc().getRepositories().getRepository().get(repositoryNb).getLocation().add(location);
                 reloadTabbedPanel(new EagContactPanel(eag, tabbedPane, mainTabbedPane, eag2012Frame, model, isNew, labels, repositoryNb).buildEditorPanel(errors),2);
 			}
             //reloadTabbedPanel(new EagContactPanel(eag, tabbedPane, mainTabbedPane, eag2012Frame, model, isNew, labels, repositoryNb).buildEditorPanel(errors),2);
         }
     }
+    
+    /***
+     * update coordinates in all fields
+     * @author fernando
+     *
+     */
+	public class UpdateCoordsText implements FocusListener {
+		private String coordsType;
+		private LocationType locationType;
+
+		/**
+		 * Constructor.
+		 *
+		 * @param locationType the fields that contains visitors address with
+		 * @param dateType to check if it is latitude or longitude
+		 */
+		public UpdateCoordsText(LocationType locationType, String dateType) {
+			this.locationType = locationType;
+			this.coordsType = dateType;
+		}
+
+		@Override
+		public void focusGained(FocusEvent e) {
+			// No action
+		}
+
+		@Override
+		public void focusLost(FocusEvent e) {
+			if (coordsType.equalsIgnoreCase(EagContactPanel.LATITUDE)) 
+			{
+				String value = this.locationType.getLatitudeTfValue();
+				for (LocationType locationField: locationFields) {
+					locationField.getLatitudeTf().setText(value);
+				}
+			} 
+			else if (coordsType.equalsIgnoreCase(EagContactPanel.LONGITUDE)) 
+			{
+				String value = this.locationType.getLongitudeTfValue();
+				for (LocationType locationField: locationFields) {
+					locationField.getLongitudeTf().setText(value);
+				}
+			}
+		}
+	}
     
     /***
      * Adds a new telephone in Contact tab

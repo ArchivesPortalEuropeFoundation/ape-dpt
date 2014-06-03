@@ -20,6 +20,8 @@ package eu.apenet.dpt.standalone.gui.eag2012;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.awt.event.KeyEvent;
@@ -55,6 +57,8 @@ import eu.apenet.dpt.standalone.gui.commons.ButtonTab;
 import eu.apenet.dpt.standalone.gui.commons.DefaultBtnAction;
 import eu.apenet.dpt.standalone.gui.commons.TextChanger;
 import eu.apenet.dpt.standalone.gui.commons.SwingStructures.TextFieldWithLanguage;
+import eu.apenet.dpt.standalone.gui.eag2012.EagContactPanel.AddAddressAction;
+import eu.apenet.dpt.standalone.gui.eag2012.EagContactPanel.UpdateCoordsText;
 import eu.apenet.dpt.standalone.gui.eag2012.EagIdentityPanel.UpdateEagObject;
 import eu.apenet.dpt.standalone.gui.eag2012.SwingStructures.LocationType;
 import eu.apenet.dpt.standalone.gui.eag2012.SwingStructures.TextFieldWithCheckbox;
@@ -337,9 +341,11 @@ public class EagInstitutionPanel extends EagPanels {
                 setNextRow();
 
                 builder.addLabel(labels.getString("eag2012.commons.latitude"), cc.xy (1, rowNb));
-                builder.add(locationType.getLatitudeTf(), cc.xy (3, rowNb));
+	            locationType.getLatitudeTf().addFocusListener(new UpdateCoordsText(locationType, EagContactPanel.LATITUDE));
+	            builder.add(locationType.getLatitudeTf(), cc.xy (3, rowNb));
                 builder.addLabel(labels.getString("eag2012.commons.longitude"), cc.xy(5, rowNb));
-                builder.add(locationType.getLongitudeTf(), cc.xy (7, rowNb));
+	            locationType.getLongitudeTf().addFocusListener(new UpdateCoordsText(locationType, EagContactPanel.LONGITUDE));
+	            builder.add(locationType.getLongitudeTf(), cc.xy (7, rowNb));
                 setNextRow();
 
             }
@@ -710,6 +716,51 @@ public class EagInstitutionPanel extends EagPanels {
 			}
         }
     }
+    
+    /***
+     * update coordinates in all fields
+     * @author fernando
+     *
+     */
+	public class UpdateCoordsText implements FocusListener {
+		private String coordsType;
+		private LocationType locationType;
+
+		/**
+		 * Constructor.
+		 *
+		 * @param locationType the fields that contains visitors address with
+		 * @param dateType to check if it is latitude or longitude
+		 */
+		public UpdateCoordsText(LocationType locationType, String dateType) {
+			this.locationType = locationType;
+			this.coordsType = dateType;
+		}
+
+		@Override
+		public void focusGained(FocusEvent e) {
+			// No action
+		}
+
+		@Override
+		public void focusLost(FocusEvent e) {
+			if (coordsType.equalsIgnoreCase(EagContactPanel.LATITUDE)) 
+			{
+				String value = this.locationType.getLatitudeTfValue();
+				for (LocationType locationField: locationFields) {
+					locationField.getLatitudeTf().setText(value);
+				}
+			} 
+			else if (coordsType.equalsIgnoreCase(EagContactPanel.LONGITUDE)) 
+			{
+				String value = this.locationType.getLongitudeTfValue();
+				for (LocationType locationField: locationFields) {
+					locationField.getLongitudeTf().setText(value);
+				}
+			}
+		}
+	}
+    
 
     public abstract class UpdateEagObject extends DefaultBtnAction {
 
