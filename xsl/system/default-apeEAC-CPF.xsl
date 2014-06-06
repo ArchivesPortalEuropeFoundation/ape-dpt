@@ -388,6 +388,9 @@
                         select="format-date(current-date(), '[Y0001]-[M01]-[D01]')"/>
                     <xsl:value-of select="format-date(current-date(), '[Y0001]-[M01]-[D01]')"/>
                 </eventDateTime>
+                <eventDescription>
+                    <xsl:text>Converted_apeEAC-CPF_version_unknown</xsl:text>
+                </eventDescription>
                 <agentType>
                     <xsl:text>machine</xsl:text>
                 </agentType>
