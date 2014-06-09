@@ -222,4 +222,16 @@ public class EacCpfStartPanel extends EacCpfPanel{
 		}
     	 
      }
+     
+     /**
+      * Class to implement the button Exit
+      */
+     protected class ExitBtnAction implements ActionListener {
+    	 
+    	 @Override
+    	 public void actionPerformed(ActionEvent actionEvent) {
+             EacCpfFrame.inUse(false);
+             closeFrame();
+         }
+     }
 }

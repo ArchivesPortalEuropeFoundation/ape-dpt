@@ -908,7 +908,7 @@ public class EacCpfIdentityPanel extends EacCpfPanel {
 		this.setNextRow();
 		JButton exitBtn = new ButtonTab(this.labels.getString("eaccpf.commons.exit"));
 		builder.add(exitBtn, cc.xy(1, this.rowNb));
-		exitBtn.addActionListener(new ExitBtnAction());
+		exitBtn.addActionListener(new ExitBtnAction(this.eaccpf, this.tabbedPane, this.model));
 
 		JButton saveBtn = new ButtonTab(labels.getString("eaccpf.commons.save"));
 		builder.add(saveBtn, cc.xy (5, this.rowNb));
@@ -1435,7 +1435,6 @@ public class EacCpfIdentityPanel extends EacCpfPanel {
 				super.updateJAXBObject(true);
 				if(checkStartTabFields()){
 					super.saveFile(eaccpf.getControl().getRecordId().getValue());
-	                closeFrame();
 				}
 			} catch (EacCpfFormException e) {
 				reloadTabbedPanel(new EacCpfIdentityPanel(eaccpf, tabbedPane, mainTabbedPane, eacCpfFrame, model, isNew, labels, entityType, firstLanguage, firstScript, mainagencycode).buildEditorPanel(errors), 0);
@@ -1659,29 +1658,31 @@ public class EacCpfIdentityPanel extends EacCpfPanel {
 		 */
 		private boolean updateLanguageDeclaration(Control control) {
 			boolean hasChanged = false;
-
-	        // Language declaration.
-	        if ((StringUtils.isNotEmpty(firstLanguage)
-	        		&& !firstLanguage.equals(TextFieldWithComboBoxEacCpf.DEFAULT_VALUE))
-	        		|| (StringUtils.isNotEmpty(firstScript)
-        				&& !firstScript.equals(TextFieldWithComboBoxEacCpf.DEFAULT_VALUE))) {
-	        	LanguageDeclaration languageDeclaration = new LanguageDeclaration();
-
-	        	if (!firstLanguage.equals(TextFieldWithComboBoxEacCpf.DEFAULT_VALUE)) {
-	        		Language language = new Language();
-	        		language.setLanguageCode(firstLanguage);
-	        		languageDeclaration.setLanguage(language);
-	        	}
-
-	        	if (!firstScript.equals(TextFieldWithComboBoxEacCpf.DEFAULT_VALUE)) {
-	        		Script script = new Script();
-	        		script.setScriptCode(firstScript);
-	        		languageDeclaration.setScript(script);
-	        	}
-	        	control.setLanguageDeclaration(languageDeclaration);
-	        	hasChanged = true;
-	        }
-
+			
+			if (control.getLanguageDeclaration()==null
+					|| (control.getLanguageDeclaration()!=null && control.getLanguageDeclaration().getLanguage()==null && control.getLanguageDeclaration().getScript()==null && control.getLanguageDeclaration().getDescriptiveNote()==null)){
+		        // Language declaration.
+		        if ((StringUtils.isNotEmpty(firstLanguage)
+		        		&& !firstLanguage.equals(TextFieldWithComboBoxEacCpf.DEFAULT_VALUE))
+		        		|| (StringUtils.isNotEmpty(firstScript)
+	        				&& !firstScript.equals(TextFieldWithComboBoxEacCpf.DEFAULT_VALUE))) {
+		        	LanguageDeclaration languageDeclaration = new LanguageDeclaration();
+	
+		        	if (!firstLanguage.equals(TextFieldWithComboBoxEacCpf.DEFAULT_VALUE)) {
+		        		Language language = new Language();
+		        		language.setLanguageCode(firstLanguage);
+		        		languageDeclaration.setLanguage(language);
+		        	}
+	
+		        	if (!firstScript.equals(TextFieldWithComboBoxEacCpf.DEFAULT_VALUE)) {
+		        		Script script = new Script();
+		        		script.setScriptCode(firstScript);
+		        		languageDeclaration.setScript(script);
+		        	}
+		        	control.setLanguageDeclaration(languageDeclaration);
+		        	hasChanged = true;
+		        }
+			}
 			return hasChanged;
 		}
 
@@ -1693,20 +1694,21 @@ public class EacCpfIdentityPanel extends EacCpfPanel {
 		 */
 		private boolean updateConventionDeclaration(Control control) {
 			boolean hasChanged = false;
-
-	        // Convention declaration items.
-	        String[] conventionValues = {"ISO 639-2b", "ISO 3166-1", "ISO 8601", "ISO 15511", "ISO 15924"};
-	        for (String conventionValue : conventionValues) {
-	            ConventionDeclaration conventionDeclaration = new ConventionDeclaration();
-	            Abbreviation abbreviation = new Abbreviation();
-
-	            abbreviation.setValue(conventionValue);
-	            conventionDeclaration.setAbbreviation(abbreviation);
-	            conventionDeclaration.setCitation(new Citation());
-	            control.getConventionDeclaration().add(conventionDeclaration);
-	            hasChanged = true;
-	        }
-
+			
+			if (control.getConventionDeclaration().isEmpty()){
+		        // Convention declaration items.
+		        String[] conventionValues = {"ISO 639-2b", "ISO 3166-1", "ISO 8601", "ISO 15511", "ISO 15924"};
+		        for (String conventionValue : conventionValues) {
+		            ConventionDeclaration conventionDeclaration = new ConventionDeclaration();
+		            Abbreviation abbreviation = new Abbreviation();
+	
+		            abbreviation.setValue(conventionValue);
+		            conventionDeclaration.setAbbreviation(abbreviation);
+		            conventionDeclaration.setCitation(new Citation());
+		            control.getConventionDeclaration().add(conventionDeclaration);
+		            hasChanged = true;
+		        }
+			}
 			return hasChanged;
 		}
 
@@ -2215,5 +2217,42 @@ public class EacCpfIdentityPanel extends EacCpfPanel {
 			// Empty.
 		}
 	}
+	
+	/**
+	 * Class to performs the action when the user clicks in the exit button
+	 */
+	protected class ExitBtnAction extends UpdateEacCpfObject {
+	    
+		/**
+		 * Constructor.
+		 *
+		 * @param eacCpf
+		 * @param tabbedPane
+		 * @param model
+		 */
+		public ExitBtnAction(EacCpf eaccpf, JTabbedPane tabbedPane, ProfileListModel model) {
+			super(eaccpf, tabbedPane, model);
+		}
+		
+		@Override
+		public void actionPerformed(ActionEvent actionEvent) {
+        	int event = JOptionPane.showConfirmDialog(tabbedPane,labels.getString("eaccpf.commons.exitConfirm"),labels.getString("eaccpf.eacCpfItem"),JOptionPane.YES_NO_OPTION);
+        	try{
+	        	if(event == JOptionPane.YES_OPTION){
+	        		super.updateJAXBObject(true);
+	        		if(checkStartTabFields()){
+	        			super.saveFile(eaccpf.getControl().getRecordId().getValue());
+	        			closeFrame();
+	        		}
+	        	}else if (event == JOptionPane.NO_OPTION){	
+	        		EacCpfFrame.inUse(false);
+	                closeFrame();
+	        	}
+	        	
+			} catch (EacCpfFormException e) {
+				reloadTabbedPanel(new EacCpfIdentityPanel(eaccpf, tabbedPane, mainTabbedPane, eacCpfFrame, model, isNew, labels, entityType, firstLanguage, firstScript, mainagencycode).buildEditorPanel(errors), 0);
+			}
+        }
+    }
 
 }

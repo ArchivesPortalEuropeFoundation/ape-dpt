@@ -27,8 +27,6 @@ import org.apache.log4j.Logger;
 
 import javax.swing.*;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.*;
 
 /**
@@ -59,7 +57,7 @@ public abstract class EacCpfPanel extends CommonsPropertiesPanels{
 		this.firstLanguage = firstLanguage;
 		this.firstScript = firstScript;
     }
-
+    
     protected void closeFrame() {
     	this.eacCpfFrame.dispose();
     	this.eacCpfFrame.setVisible(false);
@@ -67,12 +65,5 @@ public abstract class EacCpfPanel extends CommonsPropertiesPanels{
 
     protected void setTabbedPane(JTabbedPane tabbedPane) {
         this.tabbedPane = tabbedPane;
-    }
-  
-    protected class ExitBtnAction implements ActionListener {
-        public void actionPerformed(ActionEvent actionEvent) {
-            EacCpfFrame.inUse(false);
-            closeFrame();
-        }
     }
 }

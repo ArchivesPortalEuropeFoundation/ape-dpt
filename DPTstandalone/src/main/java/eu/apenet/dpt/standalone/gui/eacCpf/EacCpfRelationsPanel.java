@@ -1115,8 +1115,7 @@ public class EacCpfRelationsPanel extends EacCpfPanel {
 		setNextRow();
 		JButton exitBtn = new ButtonTab(this.labels.getString("eaccpf.commons.exit"));
 		builder.add(exitBtn, cc.xy(1, this.rowNb));
-		exitBtn.addActionListener(new ExitBtnAction());
-
+		exitBtn.addActionListener(new ExitBtnAction(this.eaccpf, this.tabbedPane, this.model));
 		JButton saveBtn = new ButtonTab(labels.getString("eaccpf.commons.save"));
 		builder.add(saveBtn, cc.xy (5, this.rowNb));
 		saveBtn.addActionListener(new SaveBtnAction(this.eaccpf, this.tabbedPane, this.model));
@@ -1447,7 +1446,6 @@ public class EacCpfRelationsPanel extends EacCpfPanel {
 				super.updateJAXBObject(true);
 				if(checkStartTabFields()){
 					super.saveFile(eaccpf.getControl().getRecordId().getValue());
-	                closeFrame();
 				}
 			} catch (EacCpfFormException e) {
 				reloadTabbedPanel(new EacCpfRelationsPanel(eaccpf, tabbedPane, mainTabbedPane, eacCpfFrame, model, labels, entityType, firstLanguage, firstScript).buildEditorPanel(errors), 2);
@@ -2061,5 +2059,39 @@ public class EacCpfRelationsPanel extends EacCpfPanel {
 			// Empty.
 		}
 	}
-
+	
+	/**
+	 * Class to performs the action when the user clicks in the exit button
+	 */
+	protected class ExitBtnAction extends UpdateEacCpfObject {
+		/**
+		 * Constructor.
+		 *
+		 * @param eacCpf
+		 * @param tabbedPane
+		 * @param model
+		 */   
+		public ExitBtnAction(EacCpf eaccpf, JTabbedPane tabbedPane, ProfileListModel model) {
+			super(eaccpf, tabbedPane, model);
+		}
+		
+		@Override
+		public void actionPerformed(ActionEvent actionEvent) {
+        	int event = JOptionPane.showConfirmDialog(tabbedPane,labels.getString("eaccpf.commons.exitConfirm"),labels.getString("eaccpf.eacCpfItem"),JOptionPane.YES_NO_OPTION);
+        	try{
+	        	if(event == JOptionPane.YES_OPTION){
+	        		super.updateJAXBObject(true);
+	        		if(checkStartTabFields()){
+	        			super.saveFile(eaccpf.getControl().getRecordId().getValue());
+	        			closeFrame();
+	        		}
+	        	}else if (event == JOptionPane.NO_OPTION){	
+	        		EacCpfFrame.inUse(false);
+	                closeFrame();
+	        	}
+			} catch (EacCpfFormException e) {
+				reloadTabbedPanel(new EacCpfRelationsPanel(eaccpf, tabbedPane, mainTabbedPane, eacCpfFrame, model, labels, entityType, firstLanguage, firstScript).buildEditorPanel(errors), 2);
+			}
+        }
+    }
 }
