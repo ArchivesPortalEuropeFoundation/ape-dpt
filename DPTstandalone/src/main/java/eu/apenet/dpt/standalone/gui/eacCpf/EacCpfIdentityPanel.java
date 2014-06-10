@@ -1388,7 +1388,7 @@ public class EacCpfIdentityPanel extends EacCpfPanel {
 			try {
 				super.updateJAXBObject(false);
 			} catch (EacCpfFormException e) {
-				reloadTabbedPanel(new EacCpfIdentityPanel(eaccpf, tabbedPane, mainTabbedPane, eacCpfFrame, model, isNew, labels, entityType, firstLanguage, firstScript, mainagencycode).buildEditorPanel(errors), 0);
+//				reloadTabbedPanel(new EacCpfIdentityPanel(eaccpf, tabbedPane, mainTabbedPane, eacCpfFrame, model, isNew, labels, entityType, firstLanguage, firstScript, mainagencycode).buildEditorPanel(errors), 0);
 			}
 
 			boolean emptyId = false;
@@ -1405,11 +1405,11 @@ public class EacCpfIdentityPanel extends EacCpfPanel {
 					emptytype = true;
 				}
 			}
-
-			if ((!emptyId && !emptytype) || (emptyId && emptytype)) {
-				eaccpf.getCpfDescription().getIdentity().getEntityId().add(new EntityId());
+			List<EntityId> listEntityId = eaccpf.getCpfDescription().getIdentity().getEntityId();
+			if ((!emptyId && !emptytype)
+					|| (listEntityId.size() > 0  && emptyId && emptytype)) {
+				listEntityId.add(new EntityId());
 			}
-
 			reloadTabbedPanel(new EacCpfIdentityPanel(eaccpf, tabbedPane, mainTabbedPane, eacCpfFrame, model, isNew, labels, entityType, firstLanguage, firstScript, mainagencycode).buildEditorPanel(errors), 0);
 		}
 	}
