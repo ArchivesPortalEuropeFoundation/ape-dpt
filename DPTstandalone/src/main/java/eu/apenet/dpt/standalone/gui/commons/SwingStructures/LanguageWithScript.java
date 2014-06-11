@@ -18,15 +18,12 @@ package eu.apenet.dpt.standalone.gui.commons.SwingStructures;
  * #L%
  */
 
-import javax.swing.*;
-
-import eu.apenet.dpt.standalone.gui.eacCpf.SwingStructures.TextFieldWithComboBoxEacCpf;
-
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.ResourceBundle;
+
+import javax.swing.JComboBox;
 
 /**
  * User: Yoann Moranville
@@ -36,7 +33,7 @@ import java.util.ResourceBundle;
  */
 public class LanguageWithScript extends StructureWithLanguage {
     private JComboBox<String> scriptBox;
-    private static final String[] scripts = {"Arab", "Armn", "Cprt", "Cyrl", "Geor", "Grek", "Hebr", "Latn"};
+    private static final String[] scripts = {"Arab", "Armn", "Cyrl", "Geor", "Grek", "Hebr", "Latn"};
     private static String[] scriptsDisplay;
     
     public LanguageWithScript(String language, String script, ResourceBundle labels) {
