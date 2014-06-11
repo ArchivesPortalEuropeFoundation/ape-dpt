@@ -582,11 +582,13 @@
                                     <xsl:attribute name="standardDate">
                                         <xsl:text>0001</xsl:text>
                                     </xsl:attribute>
+                                    <xsl:text>unknown</xsl:text>
                                 </fromDate>
                                 <toDate>
                                     <xsl:attribute name="standardDate">
                                         <xsl:text>2099</xsl:text>
                                     </xsl:attribute>
+                                    <xsl:text>unknown</xsl:text>
                                 </toDate>
                             </dateRange>
                         </existDates>
@@ -726,11 +728,13 @@
                                 <xsl:attribute name="standardDate">
                                     <xsl:text>0001</xsl:text>
                                 </xsl:attribute>
+                                <xsl:text>unknown</xsl:text>
                             </fromDate>
                             <toDate>
                                 <xsl:attribute name="standardDate">
                                     <xsl:text>2099</xsl:text>
                                 </xsl:attribute>
+                                <xsl:text>unknown</xsl:text>
                             </toDate>
                         </dateRange>
                     </existDates>
@@ -840,11 +844,13 @@
                             <xsl:attribute name="standardDate">
                                 <xsl:text>0001</xsl:text>
                             </xsl:attribute>
+                            <xsl:text>unknown</xsl:text>
                         </fromDate>
                         <toDate>
                             <xsl:attribute name="standardDate">
                                 <xsl:text>2099</xsl:text>
                             </xsl:attribute>
+                            <xsl:text>unknown</xsl:text>
                         </toDate>
                     </dateRange>
                     <xsl:message select="ape:resource('eaccpf.message.existDates', $currentLanguage)"/>
@@ -898,11 +904,12 @@
     <!-- place -->
     <xsl:template match="place" mode="copy">
         <place>
+            <xsl:apply-templates select="placeRole" mode="copy"/>
             <xsl:if test="not(placeEntry)">
                 <placeEntry/>
                 <xsl:message select="ape:resource('eaccpf.message.placeEntry', $currentLanguage)"/>
             </xsl:if>
-            <xsl:apply-templates select="node()" mode="copy"/>
+            <xsl:apply-templates select="node()[not(placeRole)]" mode="copy"/>
         </place>
     </xsl:template>
 
