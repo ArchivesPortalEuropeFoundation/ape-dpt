@@ -1447,6 +1447,7 @@ public class EacCpfRelationsPanel extends EacCpfPanel {
 				if(checkStartTabFields()){
 					super.saveFile(eaccpf.getControl().getRecordId().getValue());
 				}
+				reloadTabbedPanel(new EacCpfRelationsPanel(eaccpf, tabbedPane, mainTabbedPane, eacCpfFrame, model, labels, entityType, firstLanguage, firstScript).buildEditorPanel(errors), 2);
 			} catch (EacCpfFormException e) {
 				reloadTabbedPanel(new EacCpfRelationsPanel(eaccpf, tabbedPane, mainTabbedPane, eacCpfFrame, model, labels, entityType, firstLanguage, firstScript).buildEditorPanel(errors), 2);
 			}

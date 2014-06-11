@@ -81,11 +81,4 @@ public abstract class EagPanels extends CommonsPropertiesPanels{
     public void setRepositoryNb(int repositoryNb) {
         this.repositoryNb = repositoryNb;
     }
-
-    protected class ExitBtnAction implements ActionListener {
-        public void actionPerformed(ActionEvent actionEvent) {
-            Eag2012Frame.inUse(false);
-            closeFrame();
-        }
-    }
 }

@@ -379,11 +379,9 @@ public class EacCpfControlPanel extends EacCpfPanel {
 			try {
 				super.updateJAXBObject(true);
 				String content = eaccpf.getControl().getMaintenanceAgency().getAgencyCode().getValue()!=null?eaccpf.getControl().getMaintenanceAgency().getAgencyCode().getValue():"";
-				if(StringUtils.isEmpty(content)){
-					reloadTabbedPanel(new EacCpfControlPanel(eaccpf, tabbedPane, mainTabbedPane, eacCpfFrame, model, labels, entityType, firstLanguage, firstScript).buildEditorPanel(errors), 3);
-				}else if(checkStartTabFields()){
+				if(!StringUtils.isEmpty(content))
 					super.saveFile(eaccpf.getControl().getRecordId().getValue());
-				}
+				reloadTabbedPanel(new EacCpfControlPanel(eaccpf, tabbedPane, mainTabbedPane, eacCpfFrame, model, labels, entityType, firstLanguage, firstScript).buildEditorPanel(errors), 3);
 			} catch (EacCpfFormException e) {
 				reloadTabbedPanel(new EacCpfControlPanel(eaccpf, tabbedPane, mainTabbedPane, eacCpfFrame, model, labels, entityType, firstLanguage, firstScript).buildEditorPanel(errors), 3);
 			}

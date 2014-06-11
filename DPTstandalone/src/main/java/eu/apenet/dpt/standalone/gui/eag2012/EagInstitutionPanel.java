@@ -22,8 +22,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.text.SimpleDateFormat;
@@ -57,9 +55,6 @@ import eu.apenet.dpt.standalone.gui.commons.ButtonTab;
 import eu.apenet.dpt.standalone.gui.commons.DefaultBtnAction;
 import eu.apenet.dpt.standalone.gui.commons.TextChanger;
 import eu.apenet.dpt.standalone.gui.commons.SwingStructures.TextFieldWithLanguage;
-import eu.apenet.dpt.standalone.gui.eag2012.EagContactPanel.AddAddressAction;
-import eu.apenet.dpt.standalone.gui.eag2012.EagContactPanel.UpdateCoordsText;
-import eu.apenet.dpt.standalone.gui.eag2012.EagIdentityPanel.UpdateEagObject;
 import eu.apenet.dpt.standalone.gui.eag2012.SwingStructures.LocationType;
 import eu.apenet.dpt.standalone.gui.eag2012.SwingStructures.TextFieldWithCheckbox;
 import eu.apenet.dpt.utils.eag2012.Access;
@@ -496,7 +491,7 @@ public class EagInstitutionPanel extends EagPanels {
         setNextRow();
         JButton exitBtn = new ButtonTab(labels.getString("eag2012.commons.exit"));
         builder.add(exitBtn, cc.xy(1, rowNb));
-        exitBtn.addActionListener(new ExitBtnAction());
+        exitBtn.addActionListener(new ExitBtnAction(eag, tabbedPane, model));
         JButton saveBtn = new ButtonTab(labels.getString("eag2012.commons.save"));
         builder.add(saveBtn, cc.xy (5, rowNb));
         saveBtn.addActionListener(new SaveBtnAction(eag, tabbedPane, model));
@@ -549,7 +544,8 @@ public class EagInstitutionPanel extends EagPanels {
             try {
                 super.updateJAXBObject(true);
                 super.saveFile(eag.getControl().getRecordId().getValue());
-                closeFrame();
+                reloadTabbedPanel(new EagInstitutionPanel(eag, tabbedPane, mainTabbedPane, eag2012Frame, model, isNew, labels, repositoryNb).buildEditorPanel(errors), 0);
+
             } catch (Eag2012FormException e) {
                 reloadTabbedPanel(new EagInstitutionPanel(eag, tabbedPane, mainTabbedPane, eag2012Frame, model, isNew, labels, repositoryNb).buildEditorPanel(errors), 0);
             }
@@ -1153,6 +1149,41 @@ public class EagInstitutionPanel extends EagPanels {
             }
 
             reloadTabbedPanel(new EagInstitutionPanel(eag, tabbedPane, mainTabbedPane, eag2012Frame, model, isNew, labels, repositoryNb).buildEditorPanel(errors), 0);
+        }
+    }
+    
+	/**
+	 * Class to performs the action when the user clicks in the exit button
+	 */
+	protected class ExitBtnAction extends UpdateEagObject {
+		/**
+		 * Constructor.
+		 *
+		 * @param eag2012
+		 * @param tabbedPane
+		 * @param model
+		 */   
+		public ExitBtnAction(Eag eag, JTabbedPane tabbedPane, ProfileListModel model) {
+			super(eag, tabbedPane, model);
+		}
+		
+		@Override
+		public void actionPerformed(ActionEvent actionEvent) {
+			int event = JOptionPane.showConfirmDialog(tabbedPane,labels.getString("eaccpf.commons.exitConfirm"),labels.getString("eag2012.eag2012Item"),JOptionPane.YES_NO_OPTION);
+        	
+			try{
+	        	if(event == JOptionPane.YES_OPTION){
+	                super.updateJAXBObject(true);
+	                super.saveFile(eag.getControl().getRecordId().getValue());
+	                closeFrame();
+	        	}else if(event == JOptionPane.NO_OPTION){	
+	        		Eag2012Frame.inUse(false);
+	                closeFrame();
+	        	}
+			} catch (Eag2012FormException e) {		
+	            reloadTabbedPanel(new EagInstitutionPanel(eag, tabbedPane, mainTabbedPane, eag2012Frame, model, isNew, labels, repositoryNb).buildEditorPanel(errors), 0);
+
+			}
         }
     }
     

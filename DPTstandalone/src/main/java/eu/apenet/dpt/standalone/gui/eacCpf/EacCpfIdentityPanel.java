@@ -1436,6 +1436,7 @@ public class EacCpfIdentityPanel extends EacCpfPanel {
 				if(checkStartTabFields()){
 					super.saveFile(eaccpf.getControl().getRecordId().getValue());
 				}
+				reloadTabbedPanel(new EacCpfIdentityPanel(eaccpf, tabbedPane, mainTabbedPane, eacCpfFrame, model, isNew, labels, entityType, firstLanguage, firstScript, mainagencycode).buildEditorPanel(errors), 0);
 			} catch (EacCpfFormException e) {
 				reloadTabbedPanel(new EacCpfIdentityPanel(eaccpf, tabbedPane, mainTabbedPane, eacCpfFrame, model, isNew, labels, entityType, firstLanguage, firstScript, mainagencycode).buildEditorPanel(errors), 0);
 			}

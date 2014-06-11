@@ -1511,7 +1511,6 @@ public class EacCpfDescriptionPanel extends EacCpfPanel {
 			super(eaccpf, tabbedPane, model);
 		}
 		
-
 		@Override
 		public void actionPerformed(ActionEvent actionEvent) {
 			try {
@@ -1519,6 +1518,7 @@ public class EacCpfDescriptionPanel extends EacCpfPanel {
 				if(checkStartTabFields()){
 					super.saveFile(eaccpf.getControl().getRecordId().getValue());
 				}
+				reloadTabbedPanel(new EacCpfDescriptionPanel(eaccpf, tabbedPane, mainTabbedPane, eacCpfFrame, model, labels,entityType,firstLanguage,firstScript).buildEditorPanel(errors), 1);
 			} catch (EacCpfFormException e) {
 				reloadTabbedPanel(new EacCpfDescriptionPanel(eaccpf, tabbedPane, mainTabbedPane, eacCpfFrame, model, labels,entityType,firstLanguage,firstScript).buildEditorPanel(errors), 1);
 			}
