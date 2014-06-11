@@ -970,7 +970,7 @@
     <xsl:template match="div/p/list | div/p/list/item" mode="frontmatter">
         <xsl:apply-templates mode="frontmatter"/>
     </xsl:template>
-    
+
     <xsl:template match="archdesc/note" mode="copy"/>
 
     <!-- copy fonds intermediate lowest: did/note -->
@@ -1088,14 +1088,14 @@
             </p>
         </scopecontent>
     </xsl:template>
-    
+
     <!-- Special archdesc/did/abstract templates for German software -->
     <xsl:template match="archdesc/did/abstract[@encodinganalog='Kopfzeile']" mode="abstractGer">
         <head>
             <xsl:apply-templates select="node()" mode="copy"/>
         </head>
     </xsl:template>
-    
+
     <xsl:template match="archdesc/did/abstract[@encodinganalog='Zusammenfassung']" mode="abstractGer">
         <scopecontent encodinganalog="summary">
             <xsl:if test="following-sibling::abstract[@encodinganalog='Kopfzeile' and position()=1]">
@@ -1296,14 +1296,14 @@
             <xsl:apply-templates select="node()" mode="#current"/>
         </corpname>
     </xsl:template>
-    
+
     <!-- fonds intermediate lowest: repository/name -->
     <xsl:template match="repository/name" mode="copy fonds intermediate lowest">
         <name>
             <xsl:apply-templates select="node()" mode="#current"/>
         </name>
     </xsl:template>
-    
+
     <!-- copy fonds intermediate lowest: physloc -->
     <xsl:template match="physloc" mode="copy fonds intermediate lowest">
         <physloc>
@@ -1724,7 +1724,7 @@
     <!--P-->
     <!-- #all -->
     <xsl:template
-        match="processinfo/p | relatedmaterial/p | bioghist/p | appraisal/p | accruals/p | odd/p | accessrestrict/p | accessrestrict/legalstatus | userestrict/p | altformavail/p | otherfindaid/p | custodhist/p"
+        match="processinfo/p | relatedmaterial/p | bioghist/p | appraisal/p | accruals/p | odd/p | accessrestrict/p | accessrestrict/legalstatus | userestrict/p | altformavail/p | otherfindaid/p | custodhist/p | bibliography/p"
         mode="copy fonds intermediate lowest nested">
         <xsl:if
             test="(count(child::node()[not(name()='list' or name()='chronlist' or name()='table')]) &gt; 0) or (not(following-sibling::p) and not(preceding-sibling::list) and not(following-sibling::list) and not(preceding-sibling::chronlist) and not(following-sibling::chronlist) and not(preceding-sibling::table) and not(following-sibling::table))">
