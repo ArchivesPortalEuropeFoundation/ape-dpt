@@ -669,7 +669,7 @@ public class EacCpfIdentityPanel extends EacCpfPanel {
 			}
 
 			builder.add(identifierTf, cc.xy(3, this.rowNb));
-			builder.addLabel(this.labels.getString("eaccpf.identity.identifier.type"), cc.xy(5, this.rowNb));
+			builder.addLabel(this.labels.getString("eaccpf.commons.identifier.type"), cc.xy(5, this.rowNb));
 			builder.add(identifierTypeTf, cc.xy(7, this.rowNb));
 			this.setNextRow();
 		}

@@ -32,7 +32,6 @@ import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
-import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextField;
 import javax.swing.event.ChangeEvent;
@@ -72,6 +71,7 @@ public class EacCpfControlPanel extends EacCpfPanel {
 	private JTextField personInstitutionResponsibleTextField;
 	private JTextField identifiersOfInstitution;
 	private List<JTextField> localIdentifierForInstitution;
+	private List<JTextField> listIdentifierType; 
 	
 	private JComboBox<String> scriptFirst;
 	private JComboBox languageFirst;
@@ -243,28 +243,29 @@ public class EacCpfControlPanel extends EacCpfPanel {
 			builder.add(createErrorLabel(this.labels.getString("eaccpf.control.error.emptyidentifier")), cc.xyw(1, this.rowNb, 3));
 			setNextRow();
 		}
-		if (this.eaccpf.getControl() != null && this.eaccpf.getControl().getOtherRecordId() != null) {
-            for (int i = 0; i < this.eaccpf.getControl().getOtherRecordId().size(); i++) { //each element
-            	if(i==0){ this.localIdentifierForInstitution = new ArrayList<JTextField>(); }
-                OtherRecordId otherRecordId = this.eaccpf.getControl().getOtherRecordId().get(i);
-                
-                JLabel jLabelLocalIdentifierPersonResponsible = new JLabel(this.labels.getString("eaccpf.control.localidentifierforinstitution"));
-        		builder.add(jLabelLocalIdentifierPersonResponsible, cc.xy (1, rowNb));
-        		JTextField jTextFieldLocalIdentifierPersonResponsible = new JTextField(otherRecordId.getContent()!=null?otherRecordId.getContent():"");
-        		builder.add(jTextFieldLocalIdentifierPersonResponsible, cc.xy (3, rowNb));
-        		setNextRow();
-        		
-        		this.localIdentifierForInstitution.add(jTextFieldLocalIdentifierPersonResponsible);
-            }
-        }else{ //only one
-        	JLabel jLabelLocalIdentifierPersonResponsible = new JLabel(this.labels.getString("eaccpf.control.localidentifierforinstitution"));
-    		builder.add(jLabelLocalIdentifierPersonResponsible, cc.xy (1, rowNb));
-    		JTextField jTextFieldLocalIdentifierPersonResponsible = new JTextField();
-    		builder.add(jTextFieldLocalIdentifierPersonResponsible, cc.xy (3, rowNb));
-    		this.localIdentifierForInstitution = new ArrayList<JTextField>();
-    		this.localIdentifierForInstitution.add(jTextFieldLocalIdentifierPersonResponsible);
-    		setNextRow();
-        }
+		if (this.eaccpf.getControl().getOtherRecordId().isEmpty()) {
+			this.eaccpf.getControl().getOtherRecordId().add(new OtherRecordId());
+		}
+
+		List<OtherRecordId> otherRecordIds = this.eaccpf.getControl().getOtherRecordId();
+
+		this.localIdentifierForInstitution = new ArrayList<JTextField>(otherRecordIds.size());
+		this.listIdentifierType = new ArrayList<JTextField>(otherRecordIds.size());
+
+		for (OtherRecordId otherRecordId : otherRecordIds) {
+			// Create element.
+			JTextField jTextFieldLocalIdentifierPersonResponsible = new JTextField(otherRecordId.getContent());
+			JTextField jTextFieldIdentifierType = new JTextField(otherRecordId.getLocalType());
+
+			// Add elements to the list.
+			this.localIdentifierForInstitution.add(jTextFieldLocalIdentifierPersonResponsible);
+			this.listIdentifierType.add(jTextFieldIdentifierType);
+			builder.addLabel(this.labels.getString("eaccpf.control.otherRecordIdentifier"), cc.xy(1, this.rowNb));
+			builder.add(jTextFieldLocalIdentifierPersonResponsible, cc.xy(3, this.rowNb));
+			builder.addLabel(this.labels.getString("eaccpf.commons.identifier.type"), cc.xy(5, this.rowNb));
+			builder.add(jTextFieldIdentifierType, cc.xy(7, this.rowNb));
+			this.setNextRow();
+		}
 		
 		JButton nextTabBtn = new ButtonTab(this.labels.getString("eaccpf.control.addlocalidentifier"));
 		builder.add(nextTabBtn, cc.xy (1, this.rowNb));
@@ -321,13 +322,20 @@ public class EacCpfControlPanel extends EacCpfPanel {
 
 		private void addLocalIdentifierToControl() {
 			boolean showMessage = false;
+			boolean identifierType = false;
 			if(localIdentifierForInstitution!=null && localIdentifierForInstitution.size()>0){
-				showMessage = localIdentifierForInstitution.get(localIdentifierForInstitution.size()-1).getText().isEmpty();
+				for (int i = 0; !showMessage && i < localIdentifierForInstitution.size(); i++) {
+					showMessage = localIdentifierForInstitution.get(i).getText().isEmpty();
+					identifierType = listIdentifierType.get(i).getText().isEmpty();
+				}
 			}
 			if(showMessage){
 				JOptionPane.showMessageDialog(this.tabbedPane, labels.getString("eaccpf.control.error.emptyfields"));
 			}
-			this.eaccpf.getControl().getOtherRecordId().add(new OtherRecordId());
+			if ((!showMessage && identifierType) || (!showMessage && !identifierType) 
+					|| (localIdentifierForInstitution.size() > 0 && showMessage && identifierType)){
+				this.eaccpf.getControl().getOtherRecordId().add(new OtherRecordId());
+			}
 		}
 	}
 
@@ -444,10 +452,20 @@ public class EacCpfControlPanel extends EacCpfPanel {
 			}
 			if(localIdentifierForInstitution!=null){
 				this.eaccpf.getControl().getOtherRecordId().clear();
-				for(JTextField localIdentifierJTextField : localIdentifierForInstitution){
-					OtherRecordId otherRecordId = new OtherRecordId();
-					otherRecordId.setContent(localIdentifierJTextField.getText());
-					if(!localIdentifierJTextField.getText().isEmpty()){
+				for (int i = 0; i < localIdentifierForInstitution.size(); i++) {
+					boolean updated = false;
+					JTextField identifier = localIdentifierForInstitution.get(i);
+					JTextField identifierType = listIdentifierType.get(i);
+					OtherRecordId otherRecordId= new OtherRecordId();
+					if (!identifierType.getText().isEmpty()){
+						otherRecordId.setLocalType(identifierType.getText());
+						updated = true;
+					}
+					if(!identifier.getText().isEmpty()){
+						otherRecordId.setContent(identifier.getText());
+						updated = true;
+					}
+					if (updated) {
 						this.eaccpf.getControl().getOtherRecordId().add(otherRecordId);
 					}
 				}
