@@ -1002,7 +1002,7 @@ This version of the apeEAC-CPF schema has been written from the official 2010 ea
             <xs:complexContent>
                 <xs:extension base="m.relationBody">
                     <!--					<xs:attribute ref="xml:id"/>-->
-                    <xs:attribute ref="xml:lang"/>
+                    <!--                    <xs:attribute ref="xml:lang"/>-->
                     <xs:attribute name="resourceRelationType">
                         <xs:simpleType>
                             <xs:restriction base="xs:token">
@@ -1021,7 +1021,7 @@ This version of the apeEAC-CPF schema has been written from the official 2010 ea
             <xs:complexContent>
                 <xs:extension base="m.relationBody">
                     <!--					<xs:attribute ref="xml:id"/>-->
-                    <xs:attribute ref="xml:lang"/>
+                    <!--                    <xs:attribute ref="xml:lang"/>-->
                     <xs:attribute name="functionRelationType">
                         <xs:simpleType>
                             <xs:restriction base="xs:token">
