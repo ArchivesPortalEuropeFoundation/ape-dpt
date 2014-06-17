@@ -39,6 +39,7 @@ import eu.apenet.dpt.utils.util.Xsd_enum;
 import javax.swing.*;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Marshaller;
+
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
@@ -52,6 +53,9 @@ import java.util.ResourceBundle;
  * @author Yoann Moranville
  */
 public abstract class DefaultBtnAction implements ActionListener {
+	
+	protected static final String SIMPLE = "simple";
+	
     protected Eag eag;
     protected EacCpf eaccpf;
     protected JTabbedPane tabbedPane;

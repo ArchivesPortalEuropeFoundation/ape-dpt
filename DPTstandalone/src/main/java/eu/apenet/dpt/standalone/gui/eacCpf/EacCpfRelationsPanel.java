@@ -1216,7 +1216,7 @@ public class EacCpfRelationsPanel extends EacCpfPanel {
 						eaccpf.getCpfDescription().getAlternativeSet().getSetComponent().get(this.currentRelation).getComponentEntry().add(componentEntryCode);
 					}
 				}else{ //cpf part
-					int targetIndex = (this.currentRelation - eaccpf.getCpfDescription().getAlternativeSet().getSetComponent().size());
+					int targetIndex = (eaccpf.getCpfDescription().getAlternativeSet()!=null && eaccpf.getCpfDescription().getAlternativeSet().getSetComponent()!=null)?(this.currentRelation - eaccpf.getCpfDescription().getAlternativeSet().getSetComponent().size()):0;
 					if (((emptyName && emptyCode) || (!emptyName && !emptyCode))
 							&& eaccpf.getCpfDescription().getRelations().getCpfRelation().size() > targetIndex) { //this part is necessary because reordenation can change the targetIndexes and needs to be discarded until targetIndex is refreshed
 						RelationEntry relationEntryName = new RelationEntry();
@@ -1303,6 +1303,7 @@ public class EacCpfRelationsPanel extends EacCpfPanel {
 
 		public AddFurtherResource(EacCpf eacCpf, JTabbedPane tabbedPane,ProfileListModel model) {
 			super(eacCpf, tabbedPane, model);
+			this.saveResources = false;
 		}
 
 		@Override
@@ -1321,6 +1322,14 @@ public class EacCpfRelationsPanel extends EacCpfPanel {
 					empty = true;
 				}
 			}
+			if(!empty){
+				for(int i=0;i<resourceRelationHrefAndTypeTfs.size();i++){
+					if (resourceRelationHrefAndTypeTfs.get(i).getComboBox().getSelectedItem().equals(TextFieldWithComboBoxEacCpf.DEFAULT_VALUE)) {
+						JOptionPane.showMessageDialog(this.tabbedPane, labels.getString("eaccpf.relations.error.empty.relation"));
+						empty = true;
+					}
+				}
+			}
 
 			// Check the content and add the elements.
 			if (eaccpf.getCpfDescription() == null) {
@@ -1329,9 +1338,9 @@ public class EacCpfRelationsPanel extends EacCpfPanel {
 			if (eaccpf.getCpfDescription().getRelations() == null) {
 				eaccpf.getCpfDescription().setRelations(new Relations());
 			}
-
-			eaccpf.getCpfDescription().getRelations().getResourceRelation().add(new ResourceRelation());
-
+			if(!empty){
+				eaccpf.getCpfDescription().getRelations().getResourceRelation().add(new ResourceRelation());
+			}
 			reloadTabbedPanel(new EacCpfRelationsPanel(eaccpf, tabbedPane, mainTabbedPane, eacCpfFrame, model, labels, entityType, firstLanguage, firstScript).buildEditorPanel(errors), 2);
 		}
 		
@@ -1345,6 +1354,7 @@ public class EacCpfRelationsPanel extends EacCpfPanel {
 
 		public AddFurtherFunction(EacCpf eacCpf, JTabbedPane tabbedPane,ProfileListModel model) {
 			super(eacCpf, tabbedPane, model);
+			this.saveFunctions = false;
 		}
 
 		@Override
@@ -1363,6 +1373,14 @@ public class EacCpfRelationsPanel extends EacCpfPanel {
 					empty = true;
 				}
 			}
+			if(!empty){
+				for(int i=0;i<functionRelationHrefAndTypeTfs.size();i++){
+					if (functionRelationHrefAndTypeTfs.get(i).getComboBox().getSelectedItem().equals(TextFieldWithComboBoxEacCpf.DEFAULT_VALUE)) {
+						JOptionPane.showMessageDialog(this.tabbedPane, labels.getString("eaccpf.relations.error.empty.relation"));
+						empty = true;
+					}
+				}
+			}
 
 			// Check the content and add the elements.
 			if (eaccpf.getCpfDescription() == null) {
@@ -1371,8 +1389,9 @@ public class EacCpfRelationsPanel extends EacCpfPanel {
 			if (eaccpf.getCpfDescription().getRelations() == null) {
 				eaccpf.getCpfDescription().setRelations(new Relations());
 			}
-
-			eaccpf.getCpfDescription().getRelations().getFunctionRelation().add(new FunctionRelation());
+			if(!empty){
+				eaccpf.getCpfDescription().getRelations().getFunctionRelation().add(new FunctionRelation());
+			}
 
 			reloadTabbedPanel(new EacCpfRelationsPanel(eaccpf, tabbedPane, mainTabbedPane, eacCpfFrame, model, labels, entityType, firstLanguage, firstScript).buildEditorPanel(errors), 2);
 		}
@@ -1387,6 +1406,7 @@ public class EacCpfRelationsPanel extends EacCpfPanel {
 		
 		public AddFurtherCPF(EacCpf eaccpf, JTabbedPane tabbedPane, ProfileListModel model) {
 			super(eaccpf, tabbedPane, model);
+			this.saveCPF = false;
 		}
 
 		@Override
@@ -1405,6 +1425,14 @@ public class EacCpfRelationsPanel extends EacCpfPanel {
 					empty = true;
 				}
 			}
+			if(!empty){
+				for(int i=0;i<cpfRelationHrefAndTypeTfs.size();i++){
+					if (cpfRelationHrefAndTypeTfs.get(i).getComboBox().getSelectedItem().equals(TextFieldWithComboBoxEacCpf.DEFAULT_VALUE)) {
+						JOptionPane.showMessageDialog(this.tabbedPane, labels.getString("eaccpf.relations.error.empty.relation"));
+						empty = true;
+					}
+				}
+			}
 
 			// Check the content and add the elements.
 			if (eaccpf.getCpfDescription() == null) {
@@ -1413,8 +1441,9 @@ public class EacCpfRelationsPanel extends EacCpfPanel {
 			if (eaccpf.getCpfDescription().getRelations() == null) {
 				eaccpf.getCpfDescription().setRelations(new Relations());
 			}
-
-			eaccpf.getCpfDescription().getRelations().getCpfRelation().add(new CpfRelation());
+			if(!empty){
+				eaccpf.getCpfDescription().getRelations().getCpfRelation().add(new CpfRelation());
+			}
 
 			reloadTabbedPanel(new EacCpfRelationsPanel(eaccpf, tabbedPane, mainTabbedPane, eacCpfFrame, model, labels, entityType, firstLanguage, firstScript).buildEditorPanel(errors), 2);
 		}
@@ -1486,6 +1515,10 @@ public class EacCpfRelationsPanel extends EacCpfPanel {
 	 */
 	public abstract class UpdateEacCpfObject extends DefaultBtnAction {
 		
+		protected boolean saveCPF = true;
+		protected boolean saveResources = true;
+		protected boolean saveFunctions = true;
+		
 		UpdateEacCpfObject(EacCpf eacCpf, JTabbedPane tabbedPane, ProfileListModel model) {
 			super(eacCpf, tabbedPane, model);
 		}
@@ -1537,7 +1570,6 @@ public class EacCpfRelationsPanel extends EacCpfPanel {
 				String type = functionRelationHrefAndTypeTf.getComboBoxValue(TextFieldWithComboBoxEacCpf.TYPE_FUNCTION_RELATION, entityType);
 				if (StringUtils.isNotEmpty(type) && !type.equalsIgnoreCase(TextFieldWithComboBoxEacCpf.DEFAULT_VALUE)) {
 					functionRelation.setFunctionRelationType(type);
-//					functionRelation.setType(type);
 					hasChanged = true;
 				}
 				// Try to recover the href of the relation.
@@ -1545,6 +1577,7 @@ public class EacCpfRelationsPanel extends EacCpfPanel {
 				String link = functionRelationHrefAndTypeTf.getTextFieldValue();
 				if (StringUtils.isNotEmpty(link) && !link.equalsIgnoreCase(TextFieldWithComboBoxEacCpf.DEFAULT_VALUE)) {
 					functionRelation.setHref(link);
+					functionRelation.setType(SIMPLE);
 					hasChanged = true;
 				}
 				// Try to recover the descriptive note of the relation.
@@ -1618,7 +1651,7 @@ public class EacCpfRelationsPanel extends EacCpfPanel {
 						}
 					}
 				}
-				if (hasChanged) {
+				if (hasChanged || (!saveFunctions && i+1 == functionRelationNameTfs.size())) {
 					relations.getFunctionRelation().add(functionRelation);
 				}
 			}
@@ -1645,7 +1678,6 @@ public class EacCpfRelationsPanel extends EacCpfPanel {
 				String type = resourceRelationHrefAndTypeTf.getComboBoxValue(TextFieldWithComboBoxEacCpf.TYPE_RESOURCE_RELATION, entityType);
 				if (StringUtils.isNotEmpty(type) && !type.equalsIgnoreCase(TextFieldWithComboBoxEacCpf.DEFAULT_VALUE)) {
 					resourceRelation.setResourceRelationType(type);
-//					resourceRelation.setType(type);
 					hasChanged = true;
 				}
 				// Try to recover the href of the relation.
@@ -1653,6 +1685,7 @@ public class EacCpfRelationsPanel extends EacCpfPanel {
 				String link = resourceRelationHrefAndTypeTf.getTextFieldValue();
 				if (StringUtils.isNotEmpty(link) && !link.equalsIgnoreCase(TextFieldWithComboBoxEacCpf.DEFAULT_VALUE)) {
 					resourceRelation.setHref(link);
+					resourceRelation.setType(SIMPLE);
 					hasChanged = true;
 				}
 				// Try to recover the descriptive note of the relation.
@@ -1726,7 +1759,7 @@ public class EacCpfRelationsPanel extends EacCpfPanel {
 						}
 					}
 				}
-				if (hasChanged) {
+				if (hasChanged || (!saveResources && i+1 == resourceRelationNameTfs.size())) {
 					relations.getResourceRelation().add(resourceRelation);
 				}
 			}
@@ -1788,8 +1821,6 @@ public class EacCpfRelationsPanel extends EacCpfPanel {
 		 */
 		private boolean buildAlternativeSet(int currentIndex) {
 			
-			final String DEFAULT_TYPE = "simple";
-			
 			boolean hasChanged = false;
 			SetComponent setComponent = new SetComponent();
 			
@@ -1803,12 +1834,12 @@ public class EacCpfRelationsPanel extends EacCpfPanel {
 			// Try to recover the type of the relation, always should be the same
 			// /eacCpf/alternativeSet/setComponent@type
 			TextFieldWithComboBoxEacCpf cpfRelationHrefAndTypeTf = cpfRelationHrefAndTypeTfs.get(currentIndex);
-			setComponent.setType(DEFAULT_TYPE);
 			// Try to recover the href of the relation.
 			// /eacCpf/cpfDescription/setComponent@xlink:href
 			String link = cpfRelationHrefAndTypeTf.getTextFieldValue();
 			if (StringUtils.isNotEmpty(link) && !link.equalsIgnoreCase(TextFieldWithComboBoxEacCpf.DEFAULT_VALUE)) {
 				setComponent.setHref(link);
+				setComponent.setType(SIMPLE);
 				hasChanged = true;
 			}
 			// textarea with combobox 
@@ -1892,7 +1923,7 @@ public class EacCpfRelationsPanel extends EacCpfPanel {
 				}
 			}
 			
-			if(hasChanged){
+			if(hasChanged || (!saveCPF && currentIndex+1 == cpfRelationOrganisationNameAndIdTfs.size())){
 				this.eaccpf.getCpfDescription().getAlternativeSet().getSetComponent().add(setComponent);
 			}
 			return hasChanged;
@@ -1923,7 +1954,6 @@ public class EacCpfRelationsPanel extends EacCpfPanel {
 			String type = cpfRelationHrefAndTypeTf.getComboBoxValue(TextFieldWithComboBoxEacCpf.TYPE_CPF_RELATION, entityType);
 			if (StringUtils.isNotEmpty(type) && !type.equalsIgnoreCase(TextFieldWithComboBoxEacCpf.DEFAULT_VALUE)) {
 				cpfRelation.setCpfRelationType(type);
-//				cpfRelation.setType(type);
 				hasChanged = true;
 			}
 
@@ -1932,6 +1962,7 @@ public class EacCpfRelationsPanel extends EacCpfPanel {
 			String link = cpfRelationHrefAndTypeTf.getTextFieldValue();
 			if (StringUtils.isNotEmpty(link) && !link.equalsIgnoreCase(TextFieldWithComboBoxEacCpf.DEFAULT_VALUE)) {
 				cpfRelation.setHref(link);
+				cpfRelation.setType(SIMPLE);
 				hasChanged = true;
 			}
 
@@ -2010,7 +2041,7 @@ public class EacCpfRelationsPanel extends EacCpfPanel {
 					}
 				}
 			}
-			if (hasChanged) {
+			if (hasChanged || (!saveCPF && currentIndex+1 == cpfRelationOrganisationNameAndIdTfs.size())) {
 				relations.getCpfRelation().add(cpfRelation);
 			}
 			
