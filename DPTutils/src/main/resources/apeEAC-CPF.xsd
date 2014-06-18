@@ -1,12 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
     apeEAC-CPF Schema (XSD 1.1)
-    Version: 0.2
-    Date: 20130705
+    Version: 0.3
+    Date: 20140612
     Editor: APEx project, Work Package 4. Send comments to s.waidmann.apex@bundesarchiv.de
 
 This version of the apeEAC-CPF schema has been written from the official 2010 eac-cpf schema to accommodate the needs of the APEx project due to the Archivesportal Europe.
 
+-->
+<!--
+Change log:
+
+0.3    - Removed @xml:lang from resourceRelation and functionRelation
 -->
 
 <xs:schema elementFormDefault="qualified" targetNamespace="urn:isbn:1-931666-33-4"
