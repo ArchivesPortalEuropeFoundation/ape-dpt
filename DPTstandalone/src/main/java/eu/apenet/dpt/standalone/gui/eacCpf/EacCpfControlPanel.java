@@ -272,7 +272,7 @@ public class EacCpfControlPanel extends EacCpfPanel {
 		nextTabBtn.addActionListener(new AddLocalIdentifier(eaccpf,tabbedPane,model));
 		setNextRow();
 		
-		builder.addLabel(labels.getString("eaccpf.start.language") + ":", cc.xy(1, rowNb));
+		builder.addLabel(labels.getString("eaccpf.start.language")+ "*" + ":", cc.xy(1, rowNb));
         LanguageWithScript languageWithScript = new LanguageWithScript(firstLanguage, firstScript, labels);
         JComboBox<String> scriptBox = languageWithScript.getScriptBox();
         //fix for script part, it's not selecting values
@@ -288,7 +288,7 @@ public class EacCpfControlPanel extends EacCpfPanel {
         //end fix for script part
         builder.add(languageWithScript.getLanguageBox(), cc.xy (3, rowNb));
         this.languageFirst = languageWithScript.getLanguageBox();
-        builder.addLabel(labels.getString("eaccpf.start.script") + ":", cc.xy(5, rowNb));
+        builder.addLabel(labels.getString("eaccpf.start.script")+ "*" + ":", cc.xy(5, rowNb));
         builder.add(languageWithScript.getScriptBox(), cc.xy(7, rowNb));
         this.scriptFirst = languageWithScript.getScriptBox();
         this.languageWithScript = languageWithScript;
