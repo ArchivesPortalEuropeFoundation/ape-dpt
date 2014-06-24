@@ -1392,14 +1392,14 @@
     <!--Beginning of big chunk-->
     <!--Elements in archdesc and c@fonds-->
     <!-- acqinfo -->
-    <xsl:template match="acqinfo" mode="copy fonds intermediate lowest">
+    <xsl:template match="acqinfo" mode="copy fonds intermediate lowest" priority="2">
         <acqinfo encodinganalog="3.2.4">
             <xsl:apply-templates select="node() except acqinfo" mode="#current"/>
             <xsl:apply-templates select="acqinfo" mode="nested"/>
         </acqinfo>
     </xsl:template>
 
-    <xsl:template match="acqinfo" mode="nested">
+    <xsl:template match="acqinfo" mode="nested" priority="2">
         <xsl:apply-templates select="node()" mode="#current"/>
     </xsl:template>
 
@@ -1478,7 +1478,7 @@
     </xsl:template>
 
     <!-- archdesc/separatedmaterial -->
-    <xsl:template match="separatedmaterial" mode="copy fonds intermediate lowest">
+    <xsl:template match="separatedmaterial" mode="copy fonds intermediate lowest" priority="2">
         <separatedmaterial encodinganalog="3.5.3">
             <xsl:apply-templates select="node() except separatedmaterial" mode="#current"/>
             <xsl:apply-templates select="separatedmaterial/*" mode="nested"/>
@@ -1513,7 +1513,7 @@
     </xsl:template>
 
     <!-- prefercite -->
-    <xsl:template match="prefercite" mode="copy fonds intermediate lowest">
+    <xsl:template match="prefercite" mode="copy fonds intermediate lowest" priority="2">
         <prefercite>
             <xsl:apply-templates select="node() except prefercite" mode="#current"/>
             <xsl:apply-templates select="prefercite/*" mode="nested"/>
@@ -1521,19 +1521,19 @@
     </xsl:template>
 
     <!-- archdesc/arrangement -->
-    <xsl:template match="arrangement" mode="copy fonds intermediate lowest">
+    <xsl:template match="arrangement" mode="copy fonds intermediate lowest" priority="2">
         <arrangement encodinganalog="3.3.4">
             <xsl:apply-templates select="node() except arrangement" mode="#current"/>
             <xsl:apply-templates select="arrangement" mode="nested"/>
         </arrangement>
     </xsl:template>
 
-    <xsl:template match="arrangement" mode="nested">
+    <xsl:template match="arrangement" mode="nested" priority="2">
         <xsl:apply-templates select="node()" mode="#current"/>
     </xsl:template>
 
     <!-- archdesc/originalsloc (2x ?)-->
-    <xsl:template match="originalsloc" mode="copy fonds intermediate lowest">
+    <xsl:template match="originalsloc" mode="copy fonds intermediate lowest" priority="2">
         <originalsloc encodinganalog="3.5.1">
             <xsl:apply-templates select="node() except originalsloc" mode="#current"/>
             <xsl:apply-templates select="originalsloc/*" mode="nested"/>
@@ -1695,7 +1695,7 @@
     <!-- archdesc and c@fonds -->
     <xsl:template
         match="acqinfo/head | separatedmaterial/head | prefercite/head | arrangement/head | originalsloc/head | fileplan/head"
-        mode="copy fonds">
+        mode="copy fonds intermediate lowest">
         <head>
             <xsl:value-of select="text()"/>
         </head>
@@ -1724,7 +1724,7 @@
     <!--P-->
     <!-- #all -->
     <xsl:template
-        match="processinfo/p | relatedmaterial/p | bioghist/p | appraisal/p | accruals/p | odd/p | accessrestrict/p | accessrestrict/legalstatus | userestrict/p | altformavail/p | otherfindaid/p | custodhist/p | bibliography/p"
+        match="processinfo/p | relatedmaterial/p | bioghist/p | appraisal/p | accruals/p | odd/p | accessrestrict/p | accessrestrict/legalstatus | userestrict/p | altformavail/p | otherfindaid/p | custodhist/p"
         mode="copy fonds intermediate lowest nested">
         <xsl:if
             test="(count(child::node()[not(name()='list' or name()='chronlist' or name()='table')]) &gt; 0) or (not(following-sibling::p) and not(preceding-sibling::list) and not(following-sibling::list) and not(preceding-sibling::chronlist) and not(following-sibling::chronlist) and not(preceding-sibling::table) and not(following-sibling::table))">
@@ -1745,7 +1745,7 @@
     <!--archdesc and c@fonds-->
     <xsl:template
         match="acqinfo/p | separatedmaterial/p | prefercite/p | arrangement/p | originalsloc/p | fileplan/p"
-        mode="copy fonds nested">
+        mode="copy fonds nested intermediate lowest">
         <xsl:if
             test="(count(child::node()[not(name()='list' or name()='chronlist' or name()='table')]) &gt; 0) or (not(following-sibling::p) and not(preceding-sibling::list) and not(following-sibling::list) and not(preceding-sibling::chronlist) and not(following-sibling::chronlist) and not(preceding-sibling::table) and not(following-sibling::table))">
             <p>
@@ -1828,7 +1828,7 @@
     <!-- archdesc and c@fonds -->
     <xsl:template
         match="acqinfo/list | acqinfo/p/list | separatedmaterial/list | prefercite/list | arrangement/list | arrangement/p/list | originalsloc/list | fileplan/list"
-        mode="copy fonds nested">
+        mode="copy fonds nested intermediate lowest">
         <xsl:choose>
             <xsl:when test="@type='deflist' or (not(@type) and ./child::*[name()='defitem'])">
                 <table>
@@ -1861,7 +1861,7 @@
     <!-- archdesc and c@fonds -->
     <xsl:template
         match="acqinfo/list/head | acqinfo/p/list/head | separatedmaterial/list/head | prefercite/list/head | arrangement/list/head | arrangement/p/list/head | originalsloc/list/head | fileplan/list/head"
-        mode="copy fonds nested">
+        mode="copy fonds nested intermediate lowest">
         <head>
             <xsl:apply-templates select="node()" mode="#current"/>
         </head>
@@ -1880,7 +1880,7 @@
     <!-- archdesc and c@fonds -->
     <xsl:template
         match="acqinfo/list/item | acqinfo/p/list/item | separatedmaterial/list/item | prefercite/list/item | arrangement/list/item | arrangement/p/list/item | originalsloc/list/item | fileplan/list/item"
-        mode="copy fonds nested">
+        mode="copy fonds nested intermediate lowest">
         <item>
             <xsl:value-of select="node()"/>
             <xsl:apply-templates select="extref" mode="#current"/>
@@ -1898,7 +1898,7 @@
     <!-- archdesc and c@fonds -->
     <xsl:template
         match="acqinfo/list/item//* | acqinfo/p/list/item//* | separatedmaterial/list/item//* | prefercite/list/item//* | arrangement/list/item//* | arrangement/p/list/item//* | originalsloc/list/item//* | fileplan/list/item//*"
-        mode="copy fonds nested">
+        mode="copy fonds nested intermediate lowest">
         <xsl:value-of select="text()"/>
     </xsl:template>
 
@@ -3139,7 +3139,9 @@
 
     <xsl:template match="index" mode="copy fonds intermediate lowest">
         <xsl:choose>
-            <xsl:when test="../controlaccess"/>
+            <xsl:when test="../controlaccess">
+                <xsl:call-template name="excludeElement"/>
+            </xsl:when>
             <xsl:otherwise>
                 <xsl:call-template name="controlaccess"/>
             </xsl:otherwise>
