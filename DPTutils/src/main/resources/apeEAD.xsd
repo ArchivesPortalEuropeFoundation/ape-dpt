@@ -909,7 +909,7 @@
             <xs:element maxOccurs="1" minOccurs="0" name="phystech" type="phystech"/>
             <xs:element maxOccurs="1" minOccurs="0" name="processinfo" type="processinfo"/>
             <xs:element maxOccurs="1" minOccurs="0" name="relatedmaterial" type="relatedmaterial"/>
-            <xs:element maxOccurs="2" minOccurs="0" name="scopecontent" type="scopecontent"/>
+            <xs:element maxOccurs="unbounded" minOccurs="0" name="scopecontent" type="scopecontent"/>
             <xs:element maxOccurs="1" minOccurs="0" name="userestrict" type="userestrict"/>
         </xs:choice>
     </xs:group>
