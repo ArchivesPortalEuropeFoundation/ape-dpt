@@ -727,13 +727,20 @@
                     </p>
                 </prefercite>
             </xsl:if>
-            <xsl:apply-templates select="node() except did" mode="copy"/>
+            <xsl:apply-templates select="node() except (did|dsc)" mode="copy"/>
+            <xsl:if
+                test="descendant::geogname[parent::item|parent::entry|parent::p|parent::unittitle] or descendant::subject[parent::item|parent::entry|parent::p|parent::unittitle] or descendant::famname[parent::item|parent::entry|parent::p|parent::unittitle] or descendant::persname[parent::item|parent::entry|parent::p|parent::unittitle] or descendant::corpname[parent::item|parent::entry|parent::p|parent::unittitle] or descendant::occupation[parent::item|parent::entry|parent::p|parent::unittitle] or descendant::genreform[parent::item|parent::entry|parent::p|parent::unittitle] or descendant::function[parent::item|parent::entry|parent::p|parent::unittitle] or descendant::title[parent::item|parent::entry|parent::p|parent::unittitle] or descendant::name[parent::item|parent::entry|parent::p|parent::unittitle]">
+                <xsl:call-template name="createControlaccess">
+                    <xsl:with-param name="context" select="*[not(c)]"/>
+                </xsl:call-template>
+            </xsl:if>
+            <xsl:apply-templates select="dsc" mode="copy"/>
         </archdesc>
     </xsl:template>
 
     <!-- All p/persname, p/geogname and p/date are just discarded, we take the data but not the elements -->
     <xsl:template
-        match="p/persname | p/geogname | p/corpname | p/title | p/date | p/name | p/subject"
+        match="p/persname | p/geogname | p/corpname | p/title | p/date | p/name | p/subject | p/famname | p/function | p/genreform | p/occupation"
         mode="#all">
         <xsl:value-of select="normalize-space(.)"/>
     </xsl:template>
@@ -2039,7 +2046,7 @@
         </entry>
     </xsl:template>
     <!--table/tgroup/tbody/row/entry-->
-    <xsl:template match="table/tgroup/tbody/row/entry/geogname"
+    <xsl:template match="table/tgroup/tbody/row/entry/corpname | table/tgroup/tbody/row/entry/famname | table/tgroup/tbody/row/entry/function | table/tgroup/tbody/row/entry/genreform | table/tgroup/tbody/row/entry/geogname | table/tgroup/tbody/row/entry/name | table/tgroup/tbody/row/entry/occupation | table/tgroup/tbody/row/entry/persname | table/tgroup/tbody/row/entry/subject | table/tgroup/tbody/row/entry/title"
                   mode="copy fonds intermediate lowest nested">
         <xsl:apply-templates select="node()" mode="#current"/>
     </xsl:template>
@@ -2474,7 +2481,7 @@
         <xsl:param name="context"/>
         <controlaccess>
             <xsl:for-each
-                select="$context/did//geogname[parent::item|parent::entry|parent::p|parent::unittitle] | $context/did//subject[parent::item|parent::entry|parent::p|parent::unittitle] | $context/did//famname[parent::item|parent::entry|parent::p|parent::unittitle] | $context/did//persname[parent::item|parent::entry|parent::p|parent::unittitle] | $context/did//corpname[parent::item|parent::entry|parent::p|parent::unittitle] | $context/did//occupation[parent::item|parent::entry|parent::p|parent::unittitle] | $context/did//genreform[parent::item|parent::entry|parent::p|parent::unittitle] | $context/did//function[parent::item|parent::entry|parent::p|parent::unittitle] | $context/did//title[parent::item|parent::entry|parent::p|parent::unittitle] | $context/did//name[parent::item|parent::entry|parent::p|parent::unittitle]">
+                select="$context//geogname[parent::item|parent::entry|parent::p|parent::unittitle] | $context//subject[parent::item|parent::entry|parent::p|parent::unittitle] | $context//famname[parent::item|parent::entry|parent::p|parent::unittitle] | $context//persname[parent::item|parent::entry|parent::p|parent::unittitle] | $context//corpname[parent::item|parent::entry|parent::p|parent::unittitle] | $context//occupation[parent::item|parent::entry|parent::p|parent::unittitle] | $context//genreform[parent::item|parent::entry|parent::p|parent::unittitle] | $context//function[parent::item|parent::entry|parent::p|parent::unittitle] | $context//title[parent::item|parent::entry|parent::p|parent::unittitle] | $context//name[parent::item|parent::entry|parent::p|parent::unittitle]">
                 <xsl:element name="{local-name()}" namespace="urn:isbn:1-931666-22-9">
                     <xsl:apply-templates select="node()" mode="#current"/>
                 </xsl:element>
@@ -2558,7 +2565,7 @@
             </xsl:for-each>
         </xsl:if>
     </xsl:template>
-    <xsl:template match="unittitle/geogname | unittitle/persname | unittitle/title"
+    <xsl:template match="unittitle/corpname | unittitle/famname | unittitle/function | unittitle/genreform | unittitle/geogname | unittitle/name | unittitle/occupation | unittitle/persname | unittitle/subject | unittitle/title"
                   mode="fonds intermediate lowest">
         <xsl:apply-templates select="node()" mode="#current"/>
     </xsl:template>
@@ -3423,7 +3430,7 @@
                         <xsl:attribute name="encodinganalog" select="'3.1.4'"/>
                         <xsl:apply-templates mode="fonds"/>
                     </xsl:if>
-                    <!--<xsl:if test="not(controlaccess) and not(did/controlaccess) and not(index) and not(did/index)">-->
+                   <!--<xsl:if test="not(controlaccess) and not(did/controlaccess) and not(index) and not(did/index)">-->
                     <!--<xsl:call-template name="createControlaccess">-->
                     <!--<xsl:with-param name="context" select="."/>-->
                     <!--</xsl:call-template>-->
