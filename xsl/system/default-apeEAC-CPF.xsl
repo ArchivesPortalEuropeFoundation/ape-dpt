@@ -909,7 +909,7 @@
                 <placeEntry/>
                 <xsl:message select="ape:resource('eaccpf.message.placeEntry', $currentLanguage)"/>
             </xsl:if>
-            <xsl:apply-templates select="node()[not(placeRole)]" mode="copy"/>
+            <xsl:apply-templates select="node() except placeRole" mode="copy"/>
         </place>
     </xsl:template>
 
