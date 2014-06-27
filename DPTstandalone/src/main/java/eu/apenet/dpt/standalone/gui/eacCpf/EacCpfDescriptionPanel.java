@@ -1516,6 +1516,8 @@ public class EacCpfDescriptionPanel extends EacCpfPanel {
 			try {
 				super.updateJAXBObject(true);
 				if(checkStartTabFields()){
+					eaccpf = cleanIncompleteData(eaccpf);
+					eaccpf = updatesControl(eaccpf);
 					super.saveFile(eaccpf.getControl().getRecordId().getValue());
 				}
 				reloadTabbedPanel(new EacCpfDescriptionPanel(eaccpf, tabbedPane, mainTabbedPane, eacCpfFrame, model, labels,entityType,firstLanguage,firstScript).buildEditorPanel(errors), 1);
@@ -2477,14 +2479,14 @@ public class EacCpfDescriptionPanel extends EacCpfPanel {
 					String placeEntryPlaceText = placeEntryPlaceTextFields.get(i).getText();
 					if(placeEntryPlaceText!=null && !StringUtils.isEmpty(placeEntryPlaceText)){
 						write = true;
-						placeEntry.setContent(placeEntryPlaceText);
+						placeEntry.setContent(trimStringValue(placeEntryPlaceText));
 					}
 					
 					if(placeEntryPlaceJComboBoxs!=null && placeEntryPlaceJComboBoxs.size()>i && placeEntryPlaceJComboBoxs.get(i).getSelectedItem()!=null){
 						String item = placeEntryPlaceJComboBoxs.get(i).getSelectedItem().toString();
 						if(item!=null && !item.isEmpty() && !item.equals(TextFieldWithComboBoxEacCpf.DEFAULT_VALUE)){
 //							write = true;
-							placeEntry.setLang(LanguageIsoList.getIsoCode(item));
+							placeEntry.setLang(LanguageIsoList.getIsoCode(trimStringValue(item)));
 						}
 					}
 					if(placeEntryCountryJComboBoxs!=null && placeEntryCountryJComboBoxs.size()>i){
@@ -2504,14 +2506,14 @@ public class EacCpfDescriptionPanel extends EacCpfPanel {
 						String item = placeEntryPlaceRoles.get(i).getComboBoxValue(TextFieldWithComboBoxEacCpf.TYPE_PLACE_ROLE, entityType);
 						if(item!=null && !item.isEmpty() && !item.equals(TextFieldWithComboBoxEacCpf.DEFAULT_VALUE)){
 							write = true;
-							placeEntry.setLocalType(item);
+							placeEntry.setLocalType(trimStringValue(item));
 						}
 					}
 					
 					if(placeEntryPlaceVocabularies!=null && placeEntryPlaceVocabularies.size()>i){
 						if(!placeEntryPlaceVocabularies.get(i).getText().isEmpty()){
 							write = true;
-							placeEntry.setVocabularySource(placeEntryPlaceVocabularies.get(i).getText().toString());
+							placeEntry.setVocabularySource(trimStringValue(placeEntryPlaceVocabularies.get(i).getText().toString()));
 						}
 					}
 					
@@ -2531,7 +2533,7 @@ public class EacCpfDescriptionPanel extends EacCpfPanel {
 							String item = placeEntryPlaceJComboBoxs.get(i).getSelectedItem().toString();
 							if(item!=null && !item.isEmpty() && !item.equals(TextFieldWithComboBoxEacCpf.DEFAULT_VALUE)){
 								write2 = true;
-								addressLine.setLang(LanguageIsoList.getIsoCode(item)); //the only lang element available from this part of the form is the same that contains placeEntry
+								addressLine.setLang(LanguageIsoList.getIsoCode(trimStringValue(item))); //the only lang element available from this part of the form is the same that contains placeEntry
 							}
 						}
 						
@@ -2539,13 +2541,13 @@ public class EacCpfDescriptionPanel extends EacCpfPanel {
 							String addressLineContent = addressJTextField.getTextFieldValue();
 							if(addressLineContent!=null && !addressLineContent.isEmpty()){
 								write2 = true;
-								addressLine.setContent(addressLineContent);
+								addressLine.setContent(trimStringValue(addressLineContent));
 							}
 							//component
 							String addressLineComponent = addressJTextField.getComboBoxValue(TextFieldWithComboBoxEacCpf.TYPE_ADDRESS_COMPONENT, entityType);
 							if(!addressLineComponent.isEmpty() && !TextFieldWithComboBoxEacCpf.DEFAULT_VALUE.equalsIgnoreCase(addressLineComponent)){
 								write2 = true;
-								addressLine.setLocalType(addressLineComponent);
+								addressLine.setLocalType(trimStringValue(addressLineComponent));
 							}
 						}
 						
@@ -2581,16 +2583,16 @@ public class EacCpfDescriptionPanel extends EacCpfPanel {
 					Term term = new Term();
 					String content = placesFunctionJTextfield.get(i).getText();
 					if(content!=null && !content.isEmpty()){
-						term.setContent(content);
+						term.setContent(trimStringValue(content));
 						write = true;
 					}
 					
 					if(placesFunctionJComboBoxes!=null && placesFunctionJComboBoxes.size()>i && placesFunctionJComboBoxes.get(i).getSelectedItem()!=null){
-						term.setLang(LanguageIsoList.getIsoCode(placesFunctionJComboBoxes.get(i).getSelectedItem().toString()));
+						term.setLang(LanguageIsoList.getIsoCode(trimStringValue(placesFunctionJComboBoxes.get(i).getSelectedItem().toString())));
 						write = true;
 					}
 					if(placesVocabularyJTextFields!=null && placesVocabularyJTextFields.size()>i){
-						term.setVocabularySource(placesVocabularyJTextFields.get(i).getText());
+						term.setVocabularySource(trimStringValue(placesVocabularyJTextFields.get(i).getText()));
 						write = true;
 					}
 					if(write){
@@ -2603,7 +2605,7 @@ public class EacCpfDescriptionPanel extends EacCpfPanel {
 						
 						DescriptiveNote descriptiveNote = new DescriptiveNote();
 						P p = new P();
-						p.setContent(placesDescriptionTextfields.get(i).getTextValue());
+						p.setContent(trimStringValue(placesDescriptionTextfields.get(i).getTextValue()));
 						
 						if(placesFunctionJComboBoxes!=null && placesFunctionJComboBoxes.size()>i && placesFunctionJComboBoxes.get(i).getSelectedItem()!=null){
 							p.setLang(LanguageIsoList.getIsoCode(placesFunctionJComboBoxes.get(i).getSelectedItem().toString())); //the only lang element available from this part of the form is the same that contains term
@@ -2619,7 +2621,7 @@ public class EacCpfDescriptionPanel extends EacCpfPanel {
 						for(int j=0; j<placeFunctionPlaceJtextfields.get(i).size();j++){
 							JTextField placeFunctionJTextField = placeFunctionPlaceJtextfields.get(i).get(j); 
 							PlaceEntry placeEntry = new PlaceEntry();
-							String contentFunctionPlace = placeFunctionJTextField.getText();
+							String contentFunctionPlace = trimStringValue(placeFunctionJTextField.getText());
 							if(contentFunctionPlace!=null && !contentFunctionPlace.isEmpty()){
 								write3 = true;
 								placeEntry.setContent(contentFunctionPlace);
@@ -2670,7 +2672,7 @@ public class EacCpfDescriptionPanel extends EacCpfPanel {
 					Occupation occupation = new Occupation();
 					
 					Term term = new Term();
-					String termContent = ocupationPlaceOcupationJTextfields.get(i).getText();
+					String termContent = trimStringValue(ocupationPlaceOcupationJTextfields.get(i).getText());
 					
 					boolean write = false;
 					
@@ -2685,7 +2687,7 @@ public class EacCpfDescriptionPanel extends EacCpfPanel {
 					}
 					
 					if(ocupationPlaceLinkToControlledVocabularyTextFields!=null && ocupationPlaceLinkToControlledVocabularyTextFields.size()>i){
-						term.setVocabularySource(ocupationPlaceLinkToControlledVocabularyTextFields.get(i).getText());
+						term.setVocabularySource(trimStringValue(ocupationPlaceLinkToControlledVocabularyTextFields.get(i).getText()));
 						write = true;
 					}
 					if(write){
@@ -2700,7 +2702,7 @@ public class EacCpfDescriptionPanel extends EacCpfPanel {
 							p.setLang(LanguageIsoList.getIsoCode(ocupationPlaceOcupationLanguagesJComboboxes.get(i).getSelectedItem().toString()));
 							write2 = true;
 						}
-	                    String pContent = ocupationPlaceOcupationDescriptionTextFields.get(i).getTextValue();
+	                    String pContent = trimStringValue(ocupationPlaceOcupationDescriptionTextFields.get(i).getTextValue());
 	                    if(pContent!=null && !pContent.isEmpty()){
 	                    	p.setContent(pContent);
 	                    	descriptiveNote.getP().add(p);
@@ -2729,7 +2731,7 @@ public class EacCpfDescriptionPanel extends EacCpfPanel {
 							}
 							
 							if(ocupationPlacePlaceJTextFields!=null && ocupationPlacePlaceJTextFields.size()>i){
-								String placeEntryContent = ocupationPlacePlaceJTextFields.get(i).get(x).getText();
+								String placeEntryContent = trimStringValue(ocupationPlacePlaceJTextFields.get(i).get(x).getText());
 								if(placeEntryContent!=null && !placeEntryContent.isEmpty()){
 									placeEntry.setContent(placeEntryContent);
 									write3 = true;

@@ -110,10 +110,6 @@ public class EacCpfIdentityPanel extends EacCpfPanel {
 
 	// Constants for maintenance.
 	private static final String MAINTENANCE_AGENCY_NAME = "European test archives";
-	private static final String MAINTENANCE_AGENT_HUMAN = "human";
-	private static final String MAINTENANCE_EVENT_CREATED = "created";
-	private static final String MAINTENANCE_EVENT_NEW = "new";
-	private static final String MAINTENANCE_EVENT_REVISED = "revised";
 
 	// Initial values.
 	private boolean isNew; // Indicates if is new file.
@@ -284,7 +280,7 @@ public class EacCpfIdentityPanel extends EacCpfPanel {
 			this.eaccpf.getCpfDescription().getIdentity().getNameEntryParallelOrNameEntry().add(new NameEntry());
 		}
 
-		List<NameEntry> nameEntries = this.getAllNameEntries();
+		List<NameEntry> nameEntries = getAllNameEntries(eaccpf);
 
 		this.namePartComponentTfsWCbs = new HashMap<Integer, List<TextFieldWithComboBoxEacCpf>>(nameEntries.size());
 		this.nameFormTfsWCbs = new ArrayList<TextFieldWithComboBoxEacCpf>(nameEntries.size());
@@ -358,33 +354,6 @@ public class EacCpfIdentityPanel extends EacCpfPanel {
 		this.setNextRow();
 
 		return builder;
-	}
-
-	/**
-	 * Method to recover all the elements NameEntry in the object.
-	 *
-	 * @return the list of NameEntry.
-	 */
-	private List<NameEntry> getAllNameEntries() {
-		List<Object> nameEntryParallelOrNameEntryList = this.eaccpf.getCpfDescription().getIdentity().getNameEntryParallelOrNameEntry();
-		List<NameEntry> nameEntries = new ArrayList<NameEntry>();
-
-		for (Object object : nameEntryParallelOrNameEntryList) {
-			if (object instanceof NameEntryParallel) {
-				NameEntryParallel nameEntryParallel = (NameEntryParallel) object;
-				for (Object nameEntry : nameEntryParallel.getContent()) {
-					if (nameEntry instanceof NameEntry) {
-						nameEntries.add((NameEntry) nameEntry);
-					}
-				}
-			}
-
-			if (object instanceof NameEntry) {
-				nameEntries.add((NameEntry) object);
-			}
-		}
-
-		return nameEntries;
 	}
 
 	/**
@@ -924,35 +893,6 @@ public class EacCpfIdentityPanel extends EacCpfPanel {
 	}
 
 	/**
-	 * Method to remove duplicate whitespaces and trim string.
-	 *
-	 * @param content
-	 * @return the string without whitespaces.
-	 */
-	private String trimStringValue(String str) {
-		String result = str;
-
-		if (result!= null && !result.isEmpty()) {
-
-			String strWith = result.trim().replaceAll("[\\s+]", " ");
-			StringBuilder sb = new StringBuilder();
-			boolean space = false;
-			for (int i = 0; i < strWith.length() ; i ++) {
-				if (!space && strWith.charAt(i) == ' ') {
-					sb.append(' ');
-					space = true;
-				} else if (strWith.charAt(i) != ' ') {
-					sb.append(strWith.charAt(i));
-					space = false;
-				}
-			}
-			result = sb.toString();
-		}
-
-		return result;
-	}
-
-	/**
 	 * Method that removes the existing "ChangeTabListener".
 	 */
 	private void removeChangeListener() {
@@ -1011,7 +951,7 @@ public class EacCpfIdentityPanel extends EacCpfPanel {
 				}
 			}
 
-			List<NameEntry> nameEntries = getAllNameEntries();
+			List<NameEntry> nameEntries = getAllNameEntries(eaccpf);
 
 			if (nameEntries.size() > this.currentNameEntry) {
 				NameEntry nameEntry = nameEntries.get(this.currentNameEntry);
@@ -1303,7 +1243,7 @@ public class EacCpfIdentityPanel extends EacCpfPanel {
 			ExistDates existDates = null;
 			UseDates useDates = null;
 			if (this.isNameSection) {
-				List<NameEntry> nameEntryList = getAllNameEntries();
+				List<NameEntry> nameEntryList = getAllNameEntries(eaccpf);
 				if (nameEntryList.size() > this.currentNameEntry) {
 					if (nameEntryList.get(this.currentNameEntry).getUseDates() == null) {
 						nameEntryList.get(this.currentNameEntry).setUseDates(new UseDates());
@@ -1324,7 +1264,7 @@ public class EacCpfIdentityPanel extends EacCpfPanel {
 
 			// Checks elements in the dates list.
 			DateSet dateSet = null;
-			if (!datesList.isEmpty()) {
+			if (datesList!=null && !datesList.isEmpty()) {
 				if (date != null || dateRange != null) {
 					dateSet = new DateSet();
 					dateSet.getDateOrDateRange().addAll(datesList);
@@ -1440,6 +1380,8 @@ public class EacCpfIdentityPanel extends EacCpfPanel {
 			try {
 				super.updateJAXBObject(true);
 				if(checkStartTabFields()){
+					eaccpf = cleanIncompleteData(eaccpf);
+					eaccpf = updatesControl(eaccpf);
 					super.saveFile(eaccpf.getControl().getRecordId().getValue());
 				}
 				reloadTabbedPanel(new EacCpfIdentityPanel(eaccpf, tabbedPane, mainTabbedPane, eacCpfFrame, model, isNew, labels, entityType, firstLanguage, firstScript, mainagencycode).buildEditorPanel(errors), 0);
@@ -1480,7 +1422,6 @@ public class EacCpfIdentityPanel extends EacCpfPanel {
 	 * Class for update the JABX EAC-CPF object.
 	 */
 	public abstract class UpdateEacCpfObject extends DefaultBtnAction {
-		private static final String CONVERTED_STRING = "Converted_apeEAC-CPF_version_";
 
 		/**
 		 * Constructor.
@@ -1585,43 +1526,6 @@ public class EacCpfIdentityPanel extends EacCpfPanel {
 			// Update maintenance agency.
 			hasChanged = this.updateMaintenanceAgency(control);
 
-			if (save) {
-				// Update maintenance status.
-				hasChanged = this.updateMaintenanceStatus(control);
-
-				// Update language declaration.
-				hasChanged = this.updateLanguageDeclaration(control);
-
-				// Update convention declaration.
-				hasChanged = this.updateConventionDeclaration(control);
-
-				// Update maintenance history.
-				hasChanged = this.updateMaintenanceHistory(control);
-			}
-
-			return hasChanged;
-		}
-
-		/**
-		 * Method to update the maintenance status of the apeEAC-CPF file.
-		 *
-		 * @param control
-		 * @return boolean value.
-		 */
-		private boolean updateMaintenanceStatus(Control control) {
-			boolean hasChanged = false;
-
-			// Maintenance status.
-			if (control.getMaintenanceStatus() == null) {
-	            MaintenanceStatus maintenanceStatus = new MaintenanceStatus();
-	            maintenanceStatus.setValue(EacCpfIdentityPanel.MAINTENANCE_EVENT_NEW);
-	            control.setMaintenanceStatus(maintenanceStatus);
-	            hasChanged = true;
-	        } else {
-	            control.getMaintenanceStatus().setValue(EacCpfIdentityPanel.MAINTENANCE_EVENT_REVISED);
-	            hasChanged = true;
-	        }
-
 			return hasChanged;
 		}
 
@@ -1653,129 +1557,6 @@ public class EacCpfIdentityPanel extends EacCpfPanel {
             }
 	        control.getMaintenanceAgency().getAgencyName().setContent(EacCpfIdentityPanel.MAINTENANCE_AGENCY_NAME);
 	        hasChanged = true;
-
-			return hasChanged;
-		}
-
-		/**
-		 * Method to update the language declaration of the apeEAC-CPF file.
-		 *
-		 * @param control
-		 * @return boolean value.
-		 */
-		private boolean updateLanguageDeclaration(Control control) {
-			boolean hasChanged = false;
-			
-			if (control.getLanguageDeclaration()==null
-					|| (control.getLanguageDeclaration()!=null && control.getLanguageDeclaration().getLanguage()==null && control.getLanguageDeclaration().getScript()==null && control.getLanguageDeclaration().getDescriptiveNote()==null)){
-		        // Language declaration.
-		        if ((StringUtils.isNotEmpty(firstLanguage)
-		        		&& !firstLanguage.equals(TextFieldWithComboBoxEacCpf.DEFAULT_VALUE))
-		        		|| (StringUtils.isNotEmpty(firstScript)
-	        				&& !firstScript.equals(TextFieldWithComboBoxEacCpf.DEFAULT_VALUE))) {
-		        	LanguageDeclaration languageDeclaration = new LanguageDeclaration();
-	
-		        	if (!firstLanguage.equals(TextFieldWithComboBoxEacCpf.DEFAULT_VALUE)) {
-		        		Language language = new Language();
-		        		language.setLanguageCode(firstLanguage);
-		        		languageDeclaration.setLanguage(language);
-		        	}
-	
-		        	if (!firstScript.equals(TextFieldWithComboBoxEacCpf.DEFAULT_VALUE)) {
-		        		Script script = new Script();
-		        		script.setScriptCode(firstScript);
-		        		languageDeclaration.setScript(script);
-		        	}
-		        	control.setLanguageDeclaration(languageDeclaration);
-		        	hasChanged = true;
-		        }
-			}
-			return hasChanged;
-		}
-
-		/**
-		 * Method to update the convention declaration of the apeEAC-CPF file.
-		 *
-		 * @param control
-		 * @return boolean value.
-		 */
-		private boolean updateConventionDeclaration(Control control) {
-			boolean hasChanged = false;
-			
-			if (control.getConventionDeclaration().isEmpty()){
-		        // Convention declaration items.
-		        String[] conventionValues = {"ISO 639-2b", "ISO 3166-1", "ISO 8601", "ISO 15511", "ISO 15924"};
-		        for (String conventionValue : conventionValues) {
-		            ConventionDeclaration conventionDeclaration = new ConventionDeclaration();
-		            Abbreviation abbreviation = new Abbreviation();
-	
-		            abbreviation.setValue(conventionValue);
-		            conventionDeclaration.setAbbreviation(abbreviation);
-		            conventionDeclaration.setCitation(new Citation());
-		            control.getConventionDeclaration().add(conventionDeclaration);
-		            hasChanged = true;
-		        }
-			}
-			return hasChanged;
-		}
-
-		/**
-		 * Method to update the maintenance history of the apeEAC-CPF file.
-		 *
-		 * @param control
-		 * @return boolean value.
-		 */
-		private boolean updateMaintenanceHistory(Control control) {
-			boolean hasChanged = false;
-
-			// Maintenance time.
-			if (EacCpfFrame.getTimeMaintenance() == null) {
-				EacCpfFrame.setTimeMaintenance(new java.util.Date());
-			}
-
-			// Maintenance event size.
-			int sizeMaintenanceEvents = control.getMaintenanceHistory().getMaintenanceEvent().size();
-			String languagePerson = "";
-
-			if (sizeMaintenanceEvents > 0) {
-				MaintenanceEvent maintenanceEvent = control.getMaintenanceHistory().getMaintenanceEvent().get(sizeMaintenanceEvents - 1);
-				languagePerson = maintenanceEvent.getAgent().getLang();
-			} else if (firstLanguage!=null && !firstLanguage.equals(TextFieldWithComboBoxEacCpf.DEFAULT_VALUE)) {
-				languagePerson = firstLanguage;
-			}
-
-			MaintenanceEvent maintenanceEvent = TextChanger.getEacCpfMaintenanceEventSaved(EacCpfFrame.getTimeMaintenance(), control.getMaintenanceHistory().getMaintenanceEvent());
-			if (maintenanceEvent == null) {
-				maintenanceEvent = new MaintenanceEvent();
-				maintenanceEvent.setAgent(new Agent());
-				maintenanceEvent.setEventType(new EventType());
-				if (sizeMaintenanceEvents == 0) {
-					maintenanceEvent.getEventType().setValue(EacCpfIdentityPanel.MAINTENANCE_EVENT_CREATED);
-				} else {
-					maintenanceEvent.getEventType().setValue(EacCpfIdentityPanel.MAINTENANCE_EVENT_REVISED);
-				}
-				maintenanceEvent.setAgentType(new AgentType());
-				maintenanceEvent.getAgentType().setValue(EacCpfIdentityPanel.MAINTENANCE_AGENT_HUMAN);
-				maintenanceEvent.setEventDateTime(new EventDateTime());
-                SimpleDateFormat format = new SimpleDateFormat("dd.MM.yyyy");
-                SimpleDateFormat formatStandard = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
-                maintenanceEvent.getEventDateTime().setContent(format.format(EacCpfFrame.getTimeMaintenance()));
-                maintenanceEvent.getEventDateTime().setStandardDateTime(formatStandard.format(EacCpfFrame.getTimeMaintenance()));
-                EventDescription eventDescription = new EventDescription();
-                eventDescription.setContent(CONVERTED_STRING+DataPreparationToolGUI.VERSION_NB);
-                maintenanceEvent.setEventDescription(eventDescription);
-			} else {
-				control.getMaintenanceHistory().getMaintenanceEvent().remove(maintenanceEvent);
-			}
-
-			maintenanceEvent.getAgent().setContent(EacCpfIdentityPanel.MAINTENANCE_AGENT_HUMAN);
-
-			if (StringUtils.isNotEmpty(languagePerson)) {
-				maintenanceEvent.getAgent().setLang(languagePerson);
-			}
-
-			control.getMaintenanceHistory().getMaintenanceEvent().add(maintenanceEvent);
-			hasChanged = true;
 
 			return hasChanged;
 		}

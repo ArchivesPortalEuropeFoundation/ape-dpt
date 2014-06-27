@@ -78,8 +78,6 @@ public class EacCpfControlPanel extends EacCpfPanel {
 	private JComboBox languageFirst;
 	private LanguageWithScript languageWithScript;
 
-	//Constant to the value publicationStatus
-	private static final String PUBLICATIONSTATUS_VALUE = "approved";
 	/**
 	 * Constructor.
 	 *
@@ -228,6 +226,8 @@ public class EacCpfControlPanel extends EacCpfPanel {
                 && this.eaccpf.getControl().getMaintenanceHistory().getMaintenanceEvent().get(this.eaccpf.getControl().getMaintenanceHistory().getMaintenanceEvent().size() - 1).getAgent().getContent() != null
                 && !this.eaccpf.getControl().getMaintenanceHistory().getMaintenanceEvent().get(this.eaccpf.getControl().getMaintenanceHistory().getMaintenanceEvent().size() - 1).getAgent().getContent().isEmpty()) {
             content = this.eaccpf.getControl().getMaintenanceHistory().getMaintenanceEvent().get(this.eaccpf.getControl().getMaintenanceHistory().getMaintenanceEvent().size() - 1).getAgent().getContent();
+        } else {
+        	content = MAINTENANCE_AGENT_HUMAN;
         }
 		
 		JTextField jTextFieldPersonResponsible = new JTextField(content);
@@ -390,8 +390,11 @@ public class EacCpfControlPanel extends EacCpfPanel {
 			try {
 				super.updateJAXBObject(true);
 				String content = eaccpf.getControl().getMaintenanceAgency().getAgencyCode().getValue()!=null?eaccpf.getControl().getMaintenanceAgency().getAgencyCode().getValue():"";
-				if(!StringUtils.isEmpty(content))
+				if(!StringUtils.isEmpty(content)){
+					eaccpf = cleanIncompleteData(eaccpf);
+					eaccpf = updatesControl(eaccpf);
 					super.saveFile(eaccpf.getControl().getRecordId().getValue());
+				}
 				reloadTabbedPanel(new EacCpfControlPanel(eaccpf, tabbedPane, mainTabbedPane, eacCpfFrame, model, labels, entityType, firstLanguage, firstScript).buildEditorPanel(errors), 3);
 			} catch (EacCpfFormException e) {
 				reloadTabbedPanel(new EacCpfControlPanel(eaccpf, tabbedPane, mainTabbedPane, eacCpfFrame, model, labels, entityType, firstLanguage, firstScript).buildEditorPanel(errors), 3);
@@ -453,11 +456,6 @@ public class EacCpfControlPanel extends EacCpfPanel {
 			if(this.eaccpf.getControl().getRecordId()==null){
 				this.eaccpf.getControl().setRecordId(new RecordId());
 			}
-			if(this.eaccpf.getControl().getPublicationStatus() == null){
-				PublicationStatus publicationStatus = new PublicationStatus();
-				publicationStatus.setValue(PUBLICATIONSTATUS_VALUE);
-				this.eaccpf.getControl().setPublicationStatus(publicationStatus);
-			}
 			if(localIdentifierForInstitution!=null){
 				this.eaccpf.getControl().getOtherRecordId().clear();
 				for (int i = 0; i < localIdentifierForInstitution.size(); i++) {
@@ -465,12 +463,12 @@ public class EacCpfControlPanel extends EacCpfPanel {
 					JTextField identifier = localIdentifierForInstitution.get(i);
 					JTextField identifierType = listIdentifierType.get(i);
 					OtherRecordId otherRecordId= new OtherRecordId();
-					if (!identifierType.getText().isEmpty()){
-						otherRecordId.setLocalType(identifierType.getText());
+					if (!trimStringValue(identifierType.getText()).isEmpty()){
+						otherRecordId.setLocalType(trimStringValue(identifierType.getText()));
 						updated = true;
 					}
-					if(!identifier.getText().isEmpty()){
-						otherRecordId.setContent(identifier.getText());
+					if(!trimStringValue(identifier.getText()).isEmpty()){
+						otherRecordId.setContent(trimStringValue(identifier.getText()));
 						updated = true;
 					}
 					if (updated) {
@@ -479,9 +477,9 @@ public class EacCpfControlPanel extends EacCpfPanel {
 				}
 			}
 			//idControl
-			this.eaccpf.getControl().getMaintenanceAgency().getAgencyCode().setValue(idControl.getText());
+			this.eaccpf.getControl().getMaintenanceAgency().getAgencyCode().setValue(trimStringValue(idControl.getText()));
 			//combox updates
-			firstLanguage = LanguageIsoList.getIsoCode(languageFirst.getSelectedItem().toString());
+			firstLanguage = LanguageIsoList.getIsoCode(trimStringValue(languageFirst.getSelectedItem().toString()));
 			firstScript = scriptFirst.getSelectedItem().toString();
 			//generates a language declaration node
 			LanguageDeclaration languageDeclaration = new LanguageDeclaration();
@@ -492,7 +490,7 @@ public class EacCpfControlPanel extends EacCpfPanel {
             //script converted part
             Script script = new Script();
             if(!languageWithScript.getScriptBox().getSelectedItem().toString().equals("---")){
-            	script.setScriptCode(languageWithScript.getScript());
+            	script.setScriptCode(trimStringValue(languageWithScript.getScript()));
             }
 			languageDeclaration.setScript(script);
 			//update language declaration

@@ -68,8 +68,8 @@ import eu.apenet.dpt.utils.util.XmlTypeEacCpf;
  */
 public class EacCpfRelationsPanel extends EacCpfPanel {
 	// Constants for localType.
-	private static final String LOCALTYPE_AGENCYNAME = "agencyName";
-	private static final String LOCALTYPE_AGENCYCODE = "agencyCode";
+	protected static final String LOCALTYPE_AGENCYNAME = "agencyName";
+	protected static final String LOCALTYPE_AGENCYCODE = "agencyCode";
 	private static final String LOCALTYPE_ID = "id";
 	private static final String LOCALTYPE_TITLE = "title";
 
@@ -1474,6 +1474,8 @@ public class EacCpfRelationsPanel extends EacCpfPanel {
 			try {
 				super.updateJAXBObject(true);
 				if(checkStartTabFields()){
+					eaccpf = cleanIncompleteData(eaccpf);
+					eaccpf = updatesControl(eaccpf);
 					super.saveFile(eaccpf.getControl().getRecordId().getValue());
 				}
 				reloadTabbedPanel(new EacCpfRelationsPanel(eaccpf, tabbedPane, mainTabbedPane, eacCpfFrame, model, labels, entityType, firstLanguage, firstScript).buildEditorPanel(errors), 2);
@@ -1538,18 +1540,18 @@ public class EacCpfRelationsPanel extends EacCpfPanel {
 			Relations relations = this.eaccpf.getCpfDescription().getRelations();
 
 			// Call method to save the information about CPF relations.
-			this.updateCPFRelations(relations);
+			this.updateCPFRelations(relations,save);
 			// Call method to save the information about Resource relations.
-			updateResourceRelations(relations);
+			updateResourceRelations(relations,save);
 			// Call method to save the information about Function relations.
-			updateFunctionRelations(relations);
+			updateFunctionRelations(relations,save);
 
 			if(!errors.isEmpty()) {
 				throw new EacCpfFormException("Errors in validation of EAC-CPF");
 			}
 		}
 
-		private void updateFunctionRelations(Relations relations) {
+		private void updateFunctionRelations(Relations relations, boolean save) {
 			// Clear the current function relations list.
 			relations.getFunctionRelation().clear();
 			// Check the number of relations.
@@ -1627,9 +1629,9 @@ public class EacCpfRelationsPanel extends EacCpfPanel {
 					for (TextFieldWithLanguage cpfRelationOrganisationNameAndIdTf : cpfRelationOrganisationNameAndIdTfsList) {
 						// /eacCpf/cpfDescription/relations/functionRelation/relationEntry@localType='agencyName'
 						String agencyName = cpfRelationOrganisationNameAndIdTf.getTextValue();
-						if (StringUtils.isNotEmpty(agencyName)) {
+						if (/*StringUtils.isNotEmpty(agencyName)*/agencyName!=null) {
 							RelationEntry relationEntry = new RelationEntry();
-							relationEntry.setContent(agencyName);
+							relationEntry.setContent(trimStringValue(agencyName));
 							relationEntry.setLocalType(EacCpfRelationsPanel.LOCALTYPE_AGENCYNAME);
 							if (StringUtils.isNotEmpty(language)) {
 								relationEntry.setLang(language);
@@ -1639,14 +1641,18 @@ public class EacCpfRelationsPanel extends EacCpfPanel {
 						}
 						// /eacCpf/cpfDescription/relations/functionRelation/relationEntry@localType='agencyCode'
 						String agencyCode = cpfRelationOrganisationNameAndIdTf.getExtraValue();
-						if (StringUtils.isNotEmpty(agencyCode)) {
+						if (/*StringUtils.isNotEmpty(agencyCode)*/agencyCode!=null) {
 							RelationEntry relationEntry = new RelationEntry();
-							relationEntry.setContent(agencyCode);
+							relationEntry.setContent(trimStringValue(agencyCode));
 							relationEntry.setLocalType(EacCpfRelationsPanel.LOCALTYPE_AGENCYCODE);
 							if (StringUtils.isNotEmpty(language)) {
 								relationEntry.setLang(language);
 							}
-							functionRelation.getRelationEntry().add(relationEntry);
+							if(!save || (save && StringUtils.isNotEmpty(agencyCode) && StringUtils.isNotEmpty(agencyName))){
+								functionRelation.getRelationEntry().add(relationEntry);
+							}else if(functionRelation.getRelationEntry().size()>0){
+								functionRelation.getRelationEntry().remove(functionRelation.getRelationEntry().size()-1);
+							}
 							hasChanged = true;
 						}
 					}
@@ -1657,7 +1663,7 @@ public class EacCpfRelationsPanel extends EacCpfPanel {
 			}
 		}
 
-		private void updateResourceRelations(Relations relations) {
+		private void updateResourceRelations(Relations relations, boolean save) {
 			// Clear the current resource relations list.
 			relations.getResourceRelation().clear();
 			// Check the number of relations.
@@ -1735,9 +1741,9 @@ public class EacCpfRelationsPanel extends EacCpfPanel {
 					for (TextFieldWithLanguage resourceRelationOrganisationNameAndIdTf : resourceRelationOrganisationNameAndIdTfsList) {
 						// /eacCpf/cpfDescription/relations/resourceRelation/relationEntry@localType='agencyName'
 						String agencyName = resourceRelationOrganisationNameAndIdTf.getTextValue();
-						if (StringUtils.isNotEmpty(agencyName)) {
+						if (/*StringUtils.isNotEmpty(agencyName)*/agencyName!=null) {
 							RelationEntry relationEntry = new RelationEntry();
-							relationEntry.setContent(agencyName);
+							relationEntry.setContent(trimStringValue(agencyName));
 							relationEntry.setLocalType(EacCpfRelationsPanel.LOCALTYPE_AGENCYNAME);
 							if (StringUtils.isNotEmpty(language)) {
 								relationEntry.setLang(language);
@@ -1747,14 +1753,18 @@ public class EacCpfRelationsPanel extends EacCpfPanel {
 						}
 						// /eacCpf/cpfDescription/relations/resourceRelation/relationEntry@localType='agencyCode'
 						String agencyCode = resourceRelationOrganisationNameAndIdTf.getExtraValue();
-						if (StringUtils.isNotEmpty(agencyCode)) {
+						if (/*StringUtils.isNotEmpty(agencyCode)*/agencyCode!=null) {
 							RelationEntry relationEntry = new RelationEntry();
-							relationEntry.setContent(agencyCode);
+							relationEntry.setContent(trimStringValue(agencyCode));
 							relationEntry.setLocalType(EacCpfRelationsPanel.LOCALTYPE_AGENCYCODE);
 							if (StringUtils.isNotEmpty(language)) {
 								relationEntry.setLang(language);
 							}
-							resourceRelation.getRelationEntry().add(relationEntry);
+							if(!save || (save && StringUtils.isNotEmpty(agencyCode) && StringUtils.isNotEmpty(agencyName))){
+								resourceRelation.getRelationEntry().add(relationEntry);
+							}else if(resourceRelation.getRelationEntry().size()>0){
+								resourceRelation.getRelationEntry().remove(resourceRelation.getRelationEntry().size()-1);
+							}
 							hasChanged = true;
 						}
 					}
@@ -1769,9 +1779,10 @@ public class EacCpfRelationsPanel extends EacCpfPanel {
 		 * Method to update the CPF relations of the apeEAC-CPF file.
 		 *
 		 * @param relations
+		 * @param save 
 		 * @return boolean value.
 		 */
-		private boolean updateCPFRelations(Relations relations) {
+		private boolean updateCPFRelations(Relations relations, boolean save) {
 			boolean hasChanged = false;
 
 			// Clear the current CPF relations list.
@@ -1798,16 +1809,15 @@ public class EacCpfRelationsPanel extends EacCpfPanel {
 				//control flag, decide if it's an old part for alternativeSet
 				boolean continueWithEacCpfPart = false; 
 				TextFieldWithComboBoxEacCpf cpfRelationHrefAndTypeTf = cpfRelationHrefAndTypeTfs.get(i);
-				String type = cpfRelationHrefAndTypeTf.getComboBoxValue(TextFieldWithComboBoxEacCpf.TYPE_CPF_RELATION, entityType);
+				String type = trimStringValue(cpfRelationHrefAndTypeTf.getComboBoxValue(TextFieldWithComboBoxEacCpf.TYPE_CPF_RELATION, entityType));
 				if (StringUtils.isNotEmpty(type) && !type.equalsIgnoreCase(TextFieldWithComboBoxEacCpf.SELECTED_ALTERNATIVE_SET_VALUE)) {
 					continueWithEacCpfPart = true; //controls if a eaccpf part is selected or if needs jump to alternativeSet part
 				}
 				//now continue if necesary
 				if(continueWithEacCpfPart || StringUtils.isEmpty(type)){
-					relations = buildCPFRelationPart(relations,i); //builds the old CpfRelation part
+					relations = buildCPFRelationPart(relations,i,save); //builds the old CpfRelation part
 				}else{
-					
-					hasChanged = buildAlternativeSet(i); //builds the new alternativeSet, it works with global 'eaccpf' -> this.eaccpf.getCpfDescription().getAlternativeSet().getSetComponent()
+					hasChanged = buildAlternativeSet(i,save); //builds the new alternativeSet, it works with global 'eaccpf' -> this.eaccpf.getCpfDescription().getAlternativeSet().getSetComponent()
 				}
 			}
 			
@@ -1818,8 +1828,9 @@ public class EacCpfRelationsPanel extends EacCpfPanel {
 		 * Builds an <setComponent> into <alternativeSet>
 		 * Based on new encoding in apeEAC-CPF (08.04.2015).
 		 * See new_encoding_same_entity-20140508.doc for more details into #836
+		 * @param save 
 		 */
-		private boolean buildAlternativeSet(int currentIndex) {
+		private boolean buildAlternativeSet(int currentIndex, boolean save) {
 			
 			boolean hasChanged = false;
 			SetComponent setComponent = new SetComponent();
@@ -1836,7 +1847,7 @@ public class EacCpfRelationsPanel extends EacCpfPanel {
 			TextFieldWithComboBoxEacCpf cpfRelationHrefAndTypeTf = cpfRelationHrefAndTypeTfs.get(currentIndex);
 			// Try to recover the href of the relation.
 			// /eacCpf/cpfDescription/setComponent@xlink:href
-			String link = cpfRelationHrefAndTypeTf.getTextFieldValue();
+			String link = trimStringValue(cpfRelationHrefAndTypeTf.getTextFieldValue());
 			if (StringUtils.isNotEmpty(link) && !link.equalsIgnoreCase(TextFieldWithComboBoxEacCpf.DEFAULT_VALUE)) {
 				setComponent.setHref(link);
 				setComponent.setType(SIMPLE);
@@ -1846,7 +1857,7 @@ public class EacCpfRelationsPanel extends EacCpfPanel {
 			// /eacCpf/cpfDescription/alternativeSet/setComponent/descriptiveNote/p
 			// /eacCpf/cpfDescription/alternativeSet/setComponent/descriptiveNote/p@lang
 			TextAreaWithLanguage cpfRelationDescriptionTa = cpfRelationDescriptionTas.get(currentIndex);
-			String description = cpfRelationDescriptionTa.getTextValue();
+			String description = trimStringValue(cpfRelationDescriptionTa.getTextValue());
 			if (StringUtils.isNotEmpty(description)) {
 				DescriptiveNote descriptiveNote = new DescriptiveNote();
 				P p = new P();
@@ -1861,7 +1872,7 @@ public class EacCpfRelationsPanel extends EacCpfPanel {
 			
 			// Try to recover the name of the relation.
 			// /eacCpf/cpfDescription/relations/cpfRelation/relationEntry@localType='title'
-			String name = relationNameTf.getTextValue();
+			String name = trimStringValue(relationNameTf.getTextValue());
 			if (StringUtils.isNotEmpty(name)) {
 				ComponentEntry componentEntry = new ComponentEntry();
 				componentEntry.setContent(name);
@@ -1875,7 +1886,7 @@ public class EacCpfRelationsPanel extends EacCpfPanel {
 			
 			// Try to recover the identifier of the relation.
 			// /eacCpf/cpfDescription/alternativeSet/setComponent/componentEntry@localType='id'
-			String id = cpfRelationIdentifierTfs.get(currentIndex).getText();
+			String id = trimStringValue(cpfRelationIdentifierTfs.get(currentIndex).getText());
 			if (StringUtils.isNotEmpty(id)) {
 				ComponentEntry componentEntry = new ComponentEntry();
 				componentEntry.setContent(id);
@@ -1896,10 +1907,10 @@ public class EacCpfRelationsPanel extends EacCpfPanel {
 			if(cpfRelationOrganisationNameAndIdTfsList!=null){
 				for (TextFieldWithLanguage cpfRelationOrganisationNameAndIdTf : cpfRelationOrganisationNameAndIdTfsList) {
 					// /eacCpf/cpfDescription/relations/cpfRelation/relationEntry@localType='agencyName'
-					String agencyName = cpfRelationOrganisationNameAndIdTf.getTextValue();
-					if (StringUtils.isNotEmpty(agencyName)) {
+					String agencyName = trimStringValue(cpfRelationOrganisationNameAndIdTf.getTextValue());
+					if (/*StringUtils.isNotEmpty(agencyName)*/agencyName!=null) {
 						ComponentEntry componentEntry = new ComponentEntry();
-						componentEntry.setContent(agencyName);
+						componentEntry.setContent(trimStringValue(agencyName));
 						componentEntry.setLocalType(EacCpfRelationsPanel.LOCALTYPE_AGENCYNAME);
 						if (StringUtils.isNotEmpty(language)) {
 							componentEntry.setLang(language);
@@ -1909,15 +1920,19 @@ public class EacCpfRelationsPanel extends EacCpfPanel {
 					}
 
 					// /eacCpf/cpfDescription/relations/cpfRelation/relationEntry@localType='agencyCode'
-					String agencyCode = cpfRelationOrganisationNameAndIdTf.getExtraValue();
-					if (StringUtils.isNotEmpty(agencyCode)) {
+					String agencyCode = trimStringValue(cpfRelationOrganisationNameAndIdTf.getExtraValue());
+					if (/*StringUtils.isNotEmpty(agencyCode)*/agencyCode!=null) {
 						ComponentEntry componentEntry = new ComponentEntry();
-						componentEntry.setContent(agencyCode);
+						componentEntry.setContent(trimStringValue(agencyCode));
 						componentEntry.setLocalType(EacCpfRelationsPanel.LOCALTYPE_AGENCYCODE);
 						if (StringUtils.isNotEmpty(language)) {
 							componentEntry.setLang(language);
 						}
-						setComponent.getComponentEntry().add(componentEntry);
+						if(!save || (save && StringUtils.isNotEmpty(agencyCode) && StringUtils.isNotEmpty(agencyName))){
+							setComponent.getComponentEntry().add(componentEntry);
+						}else if(setComponent.getComponentEntry().size()>0){
+							setComponent.getComponentEntry().remove(setComponent.getComponentEntry().size()-1);
+						}
 						hasChanged = true;
 					}
 				}
@@ -1934,7 +1949,7 @@ public class EacCpfRelationsPanel extends EacCpfPanel {
 		 * based on old encoding in apeEAC-CPF.
 		 * See new_encoding_same_entity-20140508.doc for more details into #836
 		 */
-		private Relations buildCPFRelationPart(Relations relations, int currentIndex) {
+		private Relations buildCPFRelationPart(Relations relations, int currentIndex,boolean save) {
 			
 			boolean hasChanged = false;
 			
@@ -1951,7 +1966,7 @@ public class EacCpfRelationsPanel extends EacCpfPanel {
 			// /eacCpf/cpfDescription/relations/cpfRelation@cpfRelationType
 			// /eacCpf/cpfDescription/relations/cpfRelation@type
 			TextFieldWithComboBoxEacCpf cpfRelationHrefAndTypeTf = cpfRelationHrefAndTypeTfs.get(currentIndex);
-			String type = cpfRelationHrefAndTypeTf.getComboBoxValue(TextFieldWithComboBoxEacCpf.TYPE_CPF_RELATION, entityType);
+			String type = trimStringValue(cpfRelationHrefAndTypeTf.getComboBoxValue(TextFieldWithComboBoxEacCpf.TYPE_CPF_RELATION, entityType));
 			if (StringUtils.isNotEmpty(type) && !type.equalsIgnoreCase(TextFieldWithComboBoxEacCpf.DEFAULT_VALUE)) {
 				cpfRelation.setCpfRelationType(type);
 				hasChanged = true;
@@ -1959,7 +1974,7 @@ public class EacCpfRelationsPanel extends EacCpfPanel {
 
 			// Try to recover the href of the relation.
 			// /eacCpf/cpfDescription/relations/cpfRelation@xlink:href
-			String link = cpfRelationHrefAndTypeTf.getTextFieldValue();
+			String link = trimStringValue(cpfRelationHrefAndTypeTf.getTextFieldValue());
 			if (StringUtils.isNotEmpty(link) && !link.equalsIgnoreCase(TextFieldWithComboBoxEacCpf.DEFAULT_VALUE)) {
 				cpfRelation.setHref(link);
 				cpfRelation.setType(SIMPLE);
@@ -1969,7 +1984,7 @@ public class EacCpfRelationsPanel extends EacCpfPanel {
 			// Try to recover the descriptive note of the relation.
 			// /eacCpf/cpfDescription/relations/cpfRelation/descriptiveNote
 			TextAreaWithLanguage cpfRelationDescriptionTa = cpfRelationDescriptionTas.get(currentIndex);
-			String description = cpfRelationDescriptionTa.getTextValue();
+			String description = trimStringValue(cpfRelationDescriptionTa.getTextValue());
 			if (StringUtils.isNotEmpty(description)) {
 				DescriptiveNote descriptiveNote = new DescriptiveNote();
 				P p = new P();
@@ -1984,7 +1999,7 @@ public class EacCpfRelationsPanel extends EacCpfPanel {
 
 			// Try to recover the name of the relation.
 			// /eacCpf/cpfDescription/relations/cpfRelation/relationEntry@localType='title'
-			String name = cpfRelationNameTf.getTextValue();
+			String name = trimStringValue(cpfRelationNameTf.getTextValue());
 			if (StringUtils.isNotEmpty(name)) {
 				RelationEntry relationEntry = new RelationEntry();
 				relationEntry.setContent(name);
@@ -1998,7 +2013,7 @@ public class EacCpfRelationsPanel extends EacCpfPanel {
 
 			// Try to recover the identifier of the relation.
 			// /eacCpf/cpfDescription/relations/cpfRelation/relationEntry@localType='id'
-			String id = cpfRelationIdentifierTfs.get(currentIndex).getText();
+			String id = trimStringValue(cpfRelationIdentifierTfs.get(currentIndex).getText());
 			if (StringUtils.isNotEmpty(id)) {
 				RelationEntry relationEntry = new RelationEntry();
 				relationEntry.setContent(id);
@@ -2015,10 +2030,10 @@ public class EacCpfRelationsPanel extends EacCpfPanel {
 			if(cpfRelationOrganisationNameAndIdTfsList!=null){
 				for (TextFieldWithLanguage cpfRelationOrganisationNameAndIdTf : cpfRelationOrganisationNameAndIdTfsList) {
 					// /eacCpf/cpfDescription/relations/cpfRelation/relationEntry@localType='agencyName'
-					String agencyName = cpfRelationOrganisationNameAndIdTf.getTextValue();
-					if (StringUtils.isNotEmpty(agencyName)) {
+					String agencyName = trimStringValue(cpfRelationOrganisationNameAndIdTf.getTextValue());
+					if (/*StringUtils.isNotEmpty(agencyName)*/agencyName!=null) {
 						RelationEntry relationEntry = new RelationEntry();
-						relationEntry.setContent(agencyName);
+						relationEntry.setContent(trimStringValue(agencyName));
 						relationEntry.setLocalType(EacCpfRelationsPanel.LOCALTYPE_AGENCYNAME);
 						if (StringUtils.isNotEmpty(language)) {
 							relationEntry.setLang(language);
@@ -2028,15 +2043,19 @@ public class EacCpfRelationsPanel extends EacCpfPanel {
 					}
 
 					// /eacCpf/cpfDescription/relations/cpfRelation/relationEntry@localType='agencyCode'
-					String agencyCode = cpfRelationOrganisationNameAndIdTf.getExtraValue();
-					if (StringUtils.isNotEmpty(agencyCode)) {
+					String agencyCode = trimStringValue(cpfRelationOrganisationNameAndIdTf.getExtraValue());
+					if (/*StringUtils.isNotEmpty(agencyCode)*/agencyCode!=null) {
 						RelationEntry relationEntry = new RelationEntry();
-						relationEntry.setContent(agencyCode);
+						relationEntry.setContent(trimStringValue(agencyCode));
 						relationEntry.setLocalType(EacCpfRelationsPanel.LOCALTYPE_AGENCYCODE);
 						if (StringUtils.isNotEmpty(language)) {
 							relationEntry.setLang(language);
 						}
-						cpfRelation.getRelationEntry().add(relationEntry);
+						if(!save || (save && StringUtils.isNotEmpty(agencyCode) && StringUtils.isNotEmpty(agencyName))){
+							cpfRelation.getRelationEntry().add(relationEntry);
+						}else if(cpfRelation.getRelationEntry().size()>0){
+							cpfRelation.getRelationEntry().remove(cpfRelation.getRelationEntry().size()-1);
+						}
 						hasChanged = true;
 					}
 				}
@@ -2065,7 +2084,7 @@ public class EacCpfRelationsPanel extends EacCpfPanel {
 			// Checks if clicks in different tab.
 			if (this.currentTab != selectedIndex) {
 				try {
-					super.updateJAXBObject(true);
+					super.updateJAXBObject(false);
 					removeChangeListener();
 					switch (selectedIndex) {
 						case 0:
@@ -2112,7 +2131,7 @@ public class EacCpfRelationsPanel extends EacCpfPanel {
         	int event = JOptionPane.showConfirmDialog(tabbedPane,labels.getString("eaccpf.commons.exitConfirm"),labels.getString("eaccpf.eacCpfItem"),JOptionPane.YES_NO_OPTION);
         	try{
 	        	if(event == JOptionPane.YES_OPTION){
-	        		super.updateJAXBObject(true);
+	        		super.updateJAXBObject(false);
 	        		if(checkStartTabFields()){
 	        			super.saveFile(eaccpf.getControl().getRecordId().getValue());
 	        			closeFrame();
