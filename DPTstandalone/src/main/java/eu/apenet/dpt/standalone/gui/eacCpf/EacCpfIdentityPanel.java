@@ -402,14 +402,20 @@ public class EacCpfIdentityPanel extends EacCpfPanel {
 		TextFieldWithComboBoxEacCpf nameFormTfWCb = new TextFieldWithComboBoxEacCpf(null, nameEntry.getLocalType(), TextFieldWithComboBoxEacCpf.TYPE_FORM, this.entityType, this.labels);
 		StructureWithLanguage structureWithLanguageCb = null;
 		String lang = "";
+		boolean hasContent = false;
 		for (Part part : nameEntry.getPart()) {
 			if (part.getLang() != null
 					&& !part.getLang().isEmpty()) {
 				lang = part.getLang();
 			}
+
+			if (!StringUtils.isEmpty(part.getContent())) {
+				hasContent = true;
+			}
 		}
 
-		if (lang != null && !lang.isEmpty()) {
+		if ((lang != null && !lang.isEmpty())
+				|| hasContent) {
 			structureWithLanguageCb = new StructureWithLanguage(lang);
 		} else {
 			structureWithLanguageCb = new StructureWithLanguage(this.firstLanguage);

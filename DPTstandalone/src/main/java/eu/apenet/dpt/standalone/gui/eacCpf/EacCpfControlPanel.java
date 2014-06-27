@@ -56,6 +56,7 @@ import eu.apenet.dpt.utils.eaccpf.LanguageDeclaration;
 import eu.apenet.dpt.utils.eaccpf.MaintenanceAgency;
 import eu.apenet.dpt.utils.eaccpf.MaintenanceHistory;
 import eu.apenet.dpt.utils.eaccpf.OtherRecordId;
+import eu.apenet.dpt.utils.eaccpf.PublicationStatus;
 import eu.apenet.dpt.utils.eaccpf.RecordId;
 import eu.apenet.dpt.utils.eaccpf.Script;
 import eu.apenet.dpt.utils.util.LanguageIsoList;
@@ -77,6 +78,8 @@ public class EacCpfControlPanel extends EacCpfPanel {
 	private JComboBox languageFirst;
 	private LanguageWithScript languageWithScript;
 
+	//Constant to the value publicationStatus
+	private static final String PUBLICATIONSTATUS_VALUE = "approved";
 	/**
 	 * Constructor.
 	 *
@@ -449,6 +452,11 @@ public class EacCpfControlPanel extends EacCpfPanel {
 			}
 			if(this.eaccpf.getControl().getRecordId()==null){
 				this.eaccpf.getControl().setRecordId(new RecordId());
+			}
+			if(this.eaccpf.getControl().getPublicationStatus() == null){
+				PublicationStatus publicationStatus = new PublicationStatus();
+				publicationStatus.setValue(PUBLICATIONSTATUS_VALUE);
+				this.eaccpf.getControl().setPublicationStatus(publicationStatus);
 			}
 			if(localIdentifierForInstitution!=null){
 				this.eaccpf.getControl().getOtherRecordId().clear();

@@ -766,7 +766,7 @@ public class EacCpfDescriptionPanel extends EacCpfPanel {
 			addBiographyHistoryJTextfield(textFieldWithLanguage);
 			JLabel jLabelLanguageBiography = new JLabel(this.labels.getString("eaccpf.description.selectlanguage"));
 			builder.add(jLabelLanguageBiography, cc.xy (5, rowNb));
-			JComboBox jComboboxLanguageBiography = buildLanguageJComboBox(isFirst);
+			JComboBox jComboboxLanguageBiography = buildLanguageJComboBox(/*isFirst*/);
 			builder.add(jComboboxLanguageBiography, cc.xy (7, rowNb));
 			addBiographyHistoryJComboBoxes(jComboboxLanguageBiography);
 		}
@@ -820,7 +820,7 @@ public class EacCpfDescriptionPanel extends EacCpfPanel {
 			addGenealogyTextField(jTextFieldLinkDescriptionGenealogy);
 			JLabel jLabelLanguageGenealogy = new JLabel(this.labels.getString("eaccpf.description.selectlanguage"));
 			builder.add(jLabelLanguageGenealogy, cc.xy (5, rowNb));
-			JComboBox jComboboxLanguageGenealogy = buildLanguageJComboBox(isFirst);
+			JComboBox jComboboxLanguageGenealogy = buildLanguageJComboBox(/*isFirst*/);
 			builder.add(jComboboxLanguageGenealogy, cc.xy (7, rowNb));
 			addGenealogyLanguage(jComboboxLanguageGenealogy);
 			setNextRow();
@@ -840,9 +840,9 @@ public class EacCpfDescriptionPanel extends EacCpfPanel {
 	 * Builds a JComboBox with all languages used in several parts of this form.
 	 * Languages are provided by CommonsPropertiesPanels class.
 	 */
-	private JComboBox buildLanguageJComboBox(boolean flag){
+	private JComboBox buildLanguageJComboBox(){
 		JComboBox jComboboxLanguageGenealogy = new JComboBox(CommonsPropertiesPanels.languagesDisplay);
-		if(flag && StringUtils.isNotEmpty(this.firstLanguage)){
+		if(StringUtils.isNotEmpty(this.firstLanguage)){
 //			Locale.ENGLISH.getISO3Language()
 			jComboboxLanguageGenealogy.setSelectedItem(LanguageIsoList.getLanguageStr(this.firstLanguage));
 		}else{
@@ -879,7 +879,7 @@ public class EacCpfDescriptionPanel extends EacCpfPanel {
 		JLabel jLabelOcupation = new JLabel(this.labels.getString("eaccpf.description.ocupation"));
 		builder.add(jLabelOcupation, cc.xy (1, rowNb));
 		TextFieldWithLanguage textFieldWithLanguage = null;
-		if(occupation!=null && occupation.getTerm()!=null){
+		if(occupation!=null && occupation.getTerm()!=null && occupation.getTerm().getContent()!=null){
 			textFieldWithLanguage = new TextFieldWithLanguage(occupation.getTerm().getContent(), occupation.getTerm().getLang());
 			JTextField textField = textFieldWithLanguage.getTextField();
 			builder.add(textField, cc.xy (3, rowNb));
@@ -897,10 +897,10 @@ public class EacCpfDescriptionPanel extends EacCpfPanel {
 			builder.add(jComboBoxLanguage, cc.xy (7, rowNb));
 			addOcupationPlaceOcupationLanguageJComboBox(jComboBoxLanguage);
 		}else{
-			JComboBox jComboboxLanguage = buildLanguageJComboBox(flag);
-			if(!flag){
-				jComboboxLanguage.setSelectedItem("---");
-			}
+			JComboBox jComboboxLanguage = buildLanguageJComboBox(/*flag*/);
+//			if(!flag){
+//				jComboboxLanguage.setSelectedItem("---");
+//			}
 			builder.add(jComboboxLanguage, cc.xy (7, rowNb));
 			addOcupationPlaceOcupationLanguageJComboBox(jComboboxLanguage);
 		}
@@ -1033,10 +1033,10 @@ public class EacCpfDescriptionPanel extends EacCpfPanel {
 			builder.add(languageBox, cc.xy (7, rowNb));
 			addPlaceFunctionLanguageJComboBox(languageBox);
 		}else{
-			JComboBox jComboboxLanguage = buildLanguageJComboBox(flag);
-			if(!flag){
-				jComboboxLanguage.setSelectedItem("---");
-			}
+			JComboBox jComboboxLanguage = buildLanguageJComboBox(/*flag*/);
+//			if(!flag){
+//				jComboboxLanguage.setSelectedItem("---");
+//			}
 			builder.add(jComboboxLanguage, cc.xy (7, rowNb));
 			addPlaceFunctionLanguageJComboBox(jComboboxLanguage);
 		}
@@ -1323,7 +1323,7 @@ public class EacCpfDescriptionPanel extends EacCpfPanel {
 			builder.add(jTextfieldPlace, cc.xy (3, rowNb));
 			JLabel jLabelLanguage = new JLabel(this.labels.getString("eaccpf.description.selectlanguage"));
 			builder.add(jLabelLanguage, cc.xy (5, rowNb));
-			JComboBox jComboboxLanguage = buildLanguageJComboBox(flag);
+			JComboBox jComboboxLanguage = buildLanguageJComboBox(/*flag*/);
 			if(!flag){
 				jComboboxLanguage.setSelectedItem("---");
 			}
@@ -1646,7 +1646,9 @@ public class EacCpfDescriptionPanel extends EacCpfPanel {
 					if((p.getContent()==null || p.getContent().isEmpty())){
 						JOptionPane.showMessageDialog(this.tabbedPane, labels.getString("eaccpf.commons.error.empty.genealogy"));
 					}else{
-						lastGenealogy.getMDiscursiveSet().add(new P());
+						P emptyP = new P();
+						emptyP.setLang((firstLanguage!=null && !StringUtils.isEmpty(firstLanguage) && !firstLanguage.equals("---"))?firstLanguage:null);
+						lastGenealogy.getMDiscursiveSet().add(emptyP);
 					}
 				}else{
 					JOptionPane.showMessageDialog(this.tabbedPane, labels.getString("eaccpf.commons.error.empty.genealogy"));
@@ -1682,6 +1684,10 @@ public class EacCpfDescriptionPanel extends EacCpfPanel {
 		}
 
 		private void putEmptyOcupation() {
+			Occupation occupation = new Occupation();
+			PlaceEntry emptyPlaceEntry = new PlaceEntry();
+			emptyPlaceEntry.setLang((firstLanguage!=null && !StringUtils.isEmpty(firstLanguage) && !firstLanguage.equals("---"))?firstLanguage:null);
+			occupation.getPlaceEntry().add(emptyPlaceEntry);
 			int lastIndex = ocupationPlaceOcupationJTextfields.size()-1;
 			boolean isEmptyOccupation = (ocupationPlaceOcupationJTextfields.size()>lastIndex && (ocupationPlaceOcupationJTextfields.get(lastIndex).getText().isEmpty()));
 			if(isEmptyOccupation){
@@ -1698,7 +1704,7 @@ public class EacCpfDescriptionPanel extends EacCpfPanel {
 					}
 				}
 				if(lastOccupations!=null && found){
-					lastOccupations.getOccupation().add(new Occupation());
+					lastOccupations.getOccupation().add(occupation);
 				}
 			}
 		}
@@ -1778,7 +1784,10 @@ public class EacCpfDescriptionPanel extends EacCpfPanel {
 		}
 
 		private void putEmptyFurtherFunctionIntoDescriptionNode() {
-			
+			Function function = new Function();
+			PlaceEntry emptyPlaceEntry = new PlaceEntry();
+			emptyPlaceEntry.setLang((firstLanguage!=null && !StringUtils.isEmpty(firstLanguage) && !firstLanguage.equals("---"))?firstLanguage:null);
+			function.getPlaceEntry().add(emptyPlaceEntry);
 			if(placesFunctionJTextfield!=null){
 				boolean thereAreSomeFieldsFilled = false;
 				int lastIndex = placesFunctionJTextfield.size()-1;
@@ -1801,7 +1810,9 @@ public class EacCpfDescriptionPanel extends EacCpfPanel {
 						}
 					}
 					if(found && lastFunctions!=null){
-						lastFunctions.getFunction().add(new Function()); //put an empty one
+						lastFunctions.getFunction().add(function); //put an empty one
+					}else if (lastFunctions!=null){
+						lastFunctions.getFunction().add(function);
 					}
 				}
 			}
@@ -1943,6 +1954,9 @@ public class EacCpfDescriptionPanel extends EacCpfPanel {
 			Place emptyPlace = new Place();
 			emptyPlace.setAddress(new Address());
 			emptyPlace.setPlaceRole(new PlaceRole());
+			PlaceEntry emptyPlaceEntry = new PlaceEntry();
+			emptyPlaceEntry.setLang((firstLanguage!=null && !StringUtils.isEmpty(firstLanguage) && !firstLanguage.equals("---"))?firstLanguage:null);
+			emptyPlace.getPlaceEntry().add(emptyPlaceEntry);
 			boolean found = false;
 			Places lastPlaces = null;
 			int counter = eaccpf.getCpfDescription().getDescription().getPlacesOrLocalDescriptionsOrLegalStatuses().size();
@@ -2461,7 +2475,7 @@ public class EacCpfDescriptionPanel extends EacCpfPanel {
 					PlaceEntry placeEntry = new PlaceEntry();
 					
 					String placeEntryPlaceText = placeEntryPlaceTextFields.get(i).getText();
-					if(placeEntryPlaceText!=null){
+					if(placeEntryPlaceText!=null && !StringUtils.isEmpty(placeEntryPlaceText)){
 						write = true;
 						placeEntry.setContent(placeEntryPlaceText);
 					}
@@ -2469,7 +2483,7 @@ public class EacCpfDescriptionPanel extends EacCpfPanel {
 					if(placeEntryPlaceJComboBoxs!=null && placeEntryPlaceJComboBoxs.size()>i && placeEntryPlaceJComboBoxs.get(i).getSelectedItem()!=null){
 						String item = placeEntryPlaceJComboBoxs.get(i).getSelectedItem().toString();
 						if(item!=null && !item.isEmpty() && !item.equals(TextFieldWithComboBoxEacCpf.DEFAULT_VALUE)){
-							write = true;
+//							write = true;
 							placeEntry.setLang(LanguageIsoList.getIsoCode(item));
 						}
 					}
