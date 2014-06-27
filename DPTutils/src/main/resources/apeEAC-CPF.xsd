@@ -12,6 +12,8 @@ This version of the apeEAC-CPF schema has been written from the official 2010 ea
 Change log:
 
 0.3    - Removed @xml:lang from resourceRelation and functionRelation
+       - Re-inserted @localtype to date and dateRange
+       - Restricted values of @localtype for date and dateRange to the following values: "unknown", "unknownStart", "unknownEnd", "open"
 -->
 
 <xs:schema elementFormDefault="qualified" targetNamespace="urn:isbn:1-931666-33-4"
@@ -1136,7 +1138,16 @@ Change log:
         <xs:complexType mixed="true">
             <!--			<xs:attribute ref="xml:id"/>-->
             <xs:attribute ref="xml:lang"/>
-            <!--<xs:attribute name="localType" type="xs:anyURI"/>-->
+            <xs:attribute name="localType">
+                <xs:simpleType>
+                    <xs:restriction base="xs:token">
+                        <xs:enumeration value="unknown"/>
+                        <xs:enumeration value="unknownStart"/>
+                        <xs:enumeration value="unknownEnd"/>
+                        <xs:enumeration value="open"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:attribute>
             <xs:attributeGroup ref="m.dateSingle"/>
         </xs:complexType>
     </xs:element>
@@ -1153,7 +1164,16 @@ Change log:
             </xs:sequence>
             <!--			<xs:attribute ref="xml:id"/>-->
             <!--			<xs:attribute ref="xml:lang"/>-->
-            <!--			<xs:attribute name="localType" type="xs:anyURI"/>-->
+            <xs:attribute name="localType">
+                <xs:simpleType>
+                    <xs:restriction base="xs:token">
+                        <xs:enumeration value="unknown"/>
+                        <xs:enumeration value="unknownStart"/>
+                        <xs:enumeration value="unknownEnd"/>
+                        <xs:enumeration value="open"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:attribute>
         </xs:complexType>
     </xs:element>
     <xs:element name="fromDate">
