@@ -1,4 +1,4 @@
-package eu.apenet.dpt.standalone.gui.eacCpf;
+package eu.apenet.dpt.standalone.gui.eaccpf;
 
 /*
  * #%L
@@ -46,9 +46,9 @@ import eu.apenet.dpt.standalone.gui.ProfileListModel;
 import eu.apenet.dpt.standalone.gui.Utilities;
 import eu.apenet.dpt.standalone.gui.commons.ButtonTab;
 import eu.apenet.dpt.standalone.gui.commons.DefaultBtnAction;
-import eu.apenet.dpt.standalone.gui.commons.SwingStructures.TextAreaWithLanguage;
-import eu.apenet.dpt.standalone.gui.commons.SwingStructures.TextFieldWithLanguage;
-import eu.apenet.dpt.standalone.gui.eacCpf.SwingStructures.TextFieldWithComboBoxEacCpf;
+import eu.apenet.dpt.standalone.gui.commons.swingstructures.TextAreaWithLanguage;
+import eu.apenet.dpt.standalone.gui.commons.swingstructures.TextFieldWithLanguage;
+import eu.apenet.dpt.standalone.gui.eaccpf.swingstructures.TextFieldWithComboBoxEacCpf;
 import eu.apenet.dpt.utils.eaccpf.AlternativeSet;
 import eu.apenet.dpt.utils.eaccpf.ComponentEntry;
 import eu.apenet.dpt.utils.eaccpf.CpfDescription;
@@ -259,8 +259,8 @@ public class EacCpfRelationsPanel extends EacCpfPanel {
 						language = componentEntry.getLang();
 					}
 				}
-			} else if (StringUtils.isNotEmpty(this.firstLanguage)) {
-				language = this.firstLanguage;
+			} else if (StringUtils.isNotEmpty(firstLanguage)) {
+				language = firstLanguage;
 			}
 
 			// Name and language of the relation.
@@ -514,8 +514,8 @@ public class EacCpfRelationsPanel extends EacCpfPanel {
 						language = relationEntry.getLang();
 					}
 				}
-			} else if (StringUtils.isNotEmpty(this.firstLanguage)) {
-				language = this.firstLanguage;
+			} else if (StringUtils.isNotEmpty(firstLanguage)) {
+				language = firstLanguage;
 			}
 
 			// Name and language of the relation.
@@ -735,8 +735,8 @@ public class EacCpfRelationsPanel extends EacCpfPanel {
 						language = relationEntry.getLang();
 					}
 				}
-			} else if (StringUtils.isNotEmpty(this.firstLanguage)) {
-				language = this.firstLanguage;
+			} else if (StringUtils.isNotEmpty(firstLanguage)) {
+				language = firstLanguage;
 			}
 
 			// Name and language of the relation.
@@ -959,8 +959,8 @@ public class EacCpfRelationsPanel extends EacCpfPanel {
 						language = relationEntry.getLang();
 					}
 				}
-			} else if (StringUtils.isNotEmpty(this.firstLanguage)) {
-				language = this.firstLanguage;
+			} else if (StringUtils.isNotEmpty(firstLanguage)) {
+				language = firstLanguage;
 			}
 
 			// Name and language of the relation.
@@ -1164,7 +1164,7 @@ public class EacCpfRelationsPanel extends EacCpfPanel {
 		 * @param eaccpf
 		 * @param tabbedPane
 		 * @param model
-		 * @param isNextTab
+		 * @param relationKind
 		 * @param counter
 		 */
 		public AddFurtherAgency(EacCpf eaccpf, JTabbedPane tabbedPane, ProfileListModel model, String relationKind, int counter) {
@@ -2118,7 +2118,7 @@ public class EacCpfRelationsPanel extends EacCpfPanel {
 		/**
 		 * Constructor.
 		 *
-		 * @param eacCpf
+		 * @param eaccpf
 		 * @param tabbedPane
 		 * @param model
 		 */   

@@ -1,4 +1,4 @@
-package eu.apenet.dpt.standalone.gui.eacCpf;
+package eu.apenet.dpt.standalone.gui.eaccpf;
 
 /*
  * #%L

@@ -18,28 +18,35 @@ package eu.apenet.dpt.standalone.gui.eag2012;
  * #L%
  */
 
+import java.awt.event.ActionEvent;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.ResourceBundle;
+
+import javax.swing.JButton;
+import javax.swing.JComponent;
+import javax.swing.JFrame;
+import javax.swing.JOptionPane;
+import javax.swing.JTabbedPane;
+
+import org.apache.commons.lang.StringUtils;
+
 import com.jgoodies.forms.builder.PanelBuilder;
 import com.jgoodies.forms.layout.CellConstraints;
 import com.jgoodies.forms.layout.FormLayout;
+
 import eu.apenet.dpt.standalone.gui.ProfileListModel;
 import eu.apenet.dpt.standalone.gui.Utilities;
 import eu.apenet.dpt.standalone.gui.commons.ButtonTab;
 import eu.apenet.dpt.standalone.gui.commons.DefaultBtnAction;
-import eu.apenet.dpt.standalone.gui.eag2012.EagControlPanel.UpdateEagObject;
 import eu.apenet.dpt.standalone.gui.eag2012.SwingStructures.ResourceRelationType;
-import eu.apenet.dpt.utils.eag2012.*;
-
-import org.apache.commons.lang.StringUtils;
-
-import javax.swing.*;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.ResourceBundle;
+import eu.apenet.dpt.utils.eag2012.DescriptiveNote;
+import eu.apenet.dpt.utils.eag2012.Eag;
+import eu.apenet.dpt.utils.eag2012.EagRelation;
+import eu.apenet.dpt.utils.eag2012.P;
+import eu.apenet.dpt.utils.eag2012.RelationEntry;
+import eu.apenet.dpt.utils.eag2012.Relations;
+import eu.apenet.dpt.utils.eag2012.ResourceRelation;
 
 /**
  * User: Yoann Moranville

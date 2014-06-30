@@ -18,28 +18,46 @@ package eu.apenet.dpt.standalone.gui.eag2012;
  * #L%
  */
 
+import java.awt.event.ActionEvent;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.ResourceBundle;
+import java.util.Set;
+
+import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JComponent;
+import javax.swing.JFrame;
+import javax.swing.JOptionPane;
+import javax.swing.JTabbedPane;
+
+import org.apache.commons.lang.StringUtils;
+
 import com.jgoodies.forms.builder.PanelBuilder;
 import com.jgoodies.forms.layout.CellConstraints;
 import com.jgoodies.forms.layout.FormLayout;
+
 import eu.apenet.dpt.standalone.gui.ProfileListModel;
 import eu.apenet.dpt.standalone.gui.Utilities;
 import eu.apenet.dpt.standalone.gui.commons.ButtonTab;
 import eu.apenet.dpt.standalone.gui.commons.DefaultBtnAction;
 import eu.apenet.dpt.standalone.gui.commons.TextChanger;
-import eu.apenet.dpt.standalone.gui.commons.SwingStructures.TextFieldWithDate;
-import eu.apenet.dpt.standalone.gui.commons.SwingStructures.TextFieldWithLanguage;
-import eu.apenet.dpt.standalone.gui.eag2012.EagInstitutionPanel.UpdateEagObject;
+import eu.apenet.dpt.standalone.gui.commons.swingstructures.TextFieldWithDate;
+import eu.apenet.dpt.standalone.gui.commons.swingstructures.TextFieldWithLanguage;
 import eu.apenet.dpt.standalone.gui.eag2012.SwingStructures.FormerlyUsedName;
-import eu.apenet.dpt.utils.eag2012.*;
-
-import org.apache.commons.lang.StringUtils;
-
-import javax.swing.*;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.util.*;
+import eu.apenet.dpt.utils.eag2012.Autform;
+import eu.apenet.dpt.utils.eag2012.DateRange;
+import eu.apenet.dpt.utils.eag2012.DateSet;
+import eu.apenet.dpt.utils.eag2012.Eag;
+import eu.apenet.dpt.utils.eag2012.FromDate;
+import eu.apenet.dpt.utils.eag2012.Nonpreform;
+import eu.apenet.dpt.utils.eag2012.OtherRecordId;
+import eu.apenet.dpt.utils.eag2012.Parform;
+import eu.apenet.dpt.utils.eag2012.RepositoryType;
+import eu.apenet.dpt.utils.eag2012.ToDate;
+import eu.apenet.dpt.utils.eag2012.UseDates;
 
 /**
  * User: Yoann Moranville

@@ -1,4 +1,4 @@
-package eu.apenet.dpt.standalone.gui.eacCpf;
+package eu.apenet.dpt.standalone.gui.eaccpf;
 
 /*
  * #%L
@@ -23,7 +23,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -48,23 +47,16 @@ import com.jgoodies.forms.builder.PanelBuilder;
 import com.jgoodies.forms.layout.CellConstraints;
 import com.jgoodies.forms.layout.FormLayout;
 
-import eu.apenet.dpt.standalone.gui.DataPreparationToolGUI;
 import eu.apenet.dpt.standalone.gui.ProfileListModel;
 import eu.apenet.dpt.standalone.gui.Utilities;
 import eu.apenet.dpt.standalone.gui.commons.ButtonTab;
 import eu.apenet.dpt.standalone.gui.commons.DefaultBtnAction;
-import eu.apenet.dpt.standalone.gui.commons.TextChanger;
-import eu.apenet.dpt.standalone.gui.commons.SwingStructures.StructureWithLanguage;
-import eu.apenet.dpt.standalone.gui.eacCpf.SwingStructures.TextFieldWithComboBoxEacCpf;
-import eu.apenet.dpt.standalone.gui.eacCpf.SwingStructures.TextFieldsWithCheckBoxForDates;
-import eu.apenet.dpt.utils.eaccpf.Abbreviation;
+import eu.apenet.dpt.standalone.gui.commons.swingstructures.StructureWithLanguage;
+import eu.apenet.dpt.standalone.gui.eaccpf.swingstructures.TextFieldWithComboBoxEacCpf;
+import eu.apenet.dpt.standalone.gui.eaccpf.swingstructures.TextFieldsWithCheckBoxForDates;
 import eu.apenet.dpt.utils.eaccpf.AgencyCode;
 import eu.apenet.dpt.utils.eaccpf.AgencyName;
-import eu.apenet.dpt.utils.eaccpf.Agent;
-import eu.apenet.dpt.utils.eaccpf.AgentType;
-import eu.apenet.dpt.utils.eaccpf.Citation;
 import eu.apenet.dpt.utils.eaccpf.Control;
-import eu.apenet.dpt.utils.eaccpf.ConventionDeclaration;
 import eu.apenet.dpt.utils.eaccpf.CpfDescription;
 import eu.apenet.dpt.utils.eaccpf.Date;
 import eu.apenet.dpt.utils.eaccpf.DateRange;
@@ -73,22 +65,13 @@ import eu.apenet.dpt.utils.eaccpf.Description;
 import eu.apenet.dpt.utils.eaccpf.EacCpf;
 import eu.apenet.dpt.utils.eaccpf.EntityId;
 import eu.apenet.dpt.utils.eaccpf.EntityType;
-import eu.apenet.dpt.utils.eaccpf.EventDateTime;
-import eu.apenet.dpt.utils.eaccpf.EventDescription;
-import eu.apenet.dpt.utils.eaccpf.EventType;
 import eu.apenet.dpt.utils.eaccpf.ExistDates;
 import eu.apenet.dpt.utils.eaccpf.FromDate;
 import eu.apenet.dpt.utils.eaccpf.Identity;
 import eu.apenet.dpt.utils.eaccpf.Identity.NameEntry;
-import eu.apenet.dpt.utils.eaccpf.Language;
-import eu.apenet.dpt.utils.eaccpf.LanguageDeclaration;
 import eu.apenet.dpt.utils.eaccpf.MaintenanceAgency;
-import eu.apenet.dpt.utils.eaccpf.MaintenanceEvent;
-import eu.apenet.dpt.utils.eaccpf.MaintenanceStatus;
-import eu.apenet.dpt.utils.eaccpf.NameEntryParallel;
 import eu.apenet.dpt.utils.eaccpf.Part;
 import eu.apenet.dpt.utils.eaccpf.RecordId;
-import eu.apenet.dpt.utils.eaccpf.Script;
 import eu.apenet.dpt.utils.eaccpf.ToDate;
 import eu.apenet.dpt.utils.eaccpf.UseDates;
 import eu.apenet.dpt.utils.util.XmlTypeEacCpf;
@@ -305,7 +288,7 @@ public class EacCpfIdentityPanel extends EacCpfPanel {
 			for (int i = 0; i < nameEntry.getPart().size(); i++) {
 				Part part = nameEntry.getPart().get(i);
 				// Create element.
-				TextFieldWithComboBoxEacCpf namePartComponentTfWCb = new TextFieldWithComboBoxEacCpf(this.trimStringValue(part.getContent()), part.getLocalType(), TextFieldWithComboBoxEacCpf.TYPE_COMPONENT, this.entityType, this.labels);
+				TextFieldWithComboBoxEacCpf namePartComponentTfWCb = new TextFieldWithComboBoxEacCpf(trimStringValue(part.getContent()), part.getLocalType(), TextFieldWithComboBoxEacCpf.TYPE_COMPONENT, this.entityType, this.labels);
 
 				// Add elements to the list.
 				namePartComponentTfWCbList.add(namePartComponentTfWCb);
@@ -387,7 +370,7 @@ public class EacCpfIdentityPanel extends EacCpfPanel {
 				|| hasContent) {
 			structureWithLanguageCb = new StructureWithLanguage(lang);
 		} else {
-			structureWithLanguageCb = new StructureWithLanguage(this.firstLanguage);
+			structureWithLanguageCb = new StructureWithLanguage(firstLanguage);
 		}
 
 		// Add elements to the list.
@@ -2014,7 +1997,7 @@ public class EacCpfIdentityPanel extends EacCpfPanel {
 		/**
 		 * Constructor.
 		 *
-		 * @param eacCpf
+		 * @param eaccpf
 		 * @param tabbedPane
 		 * @param model
 		 */

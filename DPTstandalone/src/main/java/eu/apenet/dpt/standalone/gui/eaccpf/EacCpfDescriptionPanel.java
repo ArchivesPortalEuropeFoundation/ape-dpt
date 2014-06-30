@@ -1,4 +1,4 @@
-package eu.apenet.dpt.standalone.gui.eacCpf;
+package eu.apenet.dpt.standalone.gui.eaccpf;
 
 /*
  * #%L
@@ -55,12 +55,12 @@ import eu.apenet.dpt.standalone.gui.ProfileListModel;
 import eu.apenet.dpt.standalone.gui.Utilities;
 import eu.apenet.dpt.standalone.gui.commons.ButtonTab;
 import eu.apenet.dpt.standalone.gui.commons.DefaultBtnAction;
-import eu.apenet.dpt.standalone.gui.commons.SwingStructures.CommonsPropertiesPanels;
-import eu.apenet.dpt.standalone.gui.commons.SwingStructures.ScrollPane;
-import eu.apenet.dpt.standalone.gui.commons.SwingStructures.TextAreaWithLanguage;
-import eu.apenet.dpt.standalone.gui.commons.SwingStructures.TextFieldWithLanguage;
-import eu.apenet.dpt.standalone.gui.eacCpf.SwingStructures.TextFieldWithComboBoxEacCpf;
-import eu.apenet.dpt.standalone.gui.eacCpf.SwingStructures.TextFieldsWithCheckBoxForDates;
+import eu.apenet.dpt.standalone.gui.commons.swingstructures.CommonsPropertiesPanels;
+import eu.apenet.dpt.standalone.gui.commons.swingstructures.ScrollPane;
+import eu.apenet.dpt.standalone.gui.commons.swingstructures.TextAreaWithLanguage;
+import eu.apenet.dpt.standalone.gui.commons.swingstructures.TextFieldWithLanguage;
+import eu.apenet.dpt.standalone.gui.eaccpf.swingstructures.TextFieldWithComboBoxEacCpf;
+import eu.apenet.dpt.standalone.gui.eaccpf.swingstructures.TextFieldsWithCheckBoxForDates;
 import eu.apenet.dpt.utils.eaccpf.Address;
 import eu.apenet.dpt.utils.eaccpf.AddressLine;
 import eu.apenet.dpt.utils.eaccpf.BiogHist;
@@ -2010,8 +2010,9 @@ public class EacCpfDescriptionPanel extends EacCpfPanel {
 		 * @param eacCpf
 		 * @param tabbedPane
 		 * @param model
-		 * @param isNameSection
+		 * @param sectionType
 		 * @param isDateRange
+		 * @param index
 		 */
 		public AddSingleOrRangeDateAction(EacCpf eacCpf, JTabbedPane tabbedPane, ProfileListModel model, String sectionType, boolean isDateRange, Integer index) {
 			super(eacCpf, tabbedPane, model);
@@ -2986,7 +2987,7 @@ public class EacCpfDescriptionPanel extends EacCpfPanel {
 		/**
 		 * Constructor.
 		 *
-		 * @param eacCpf
+		 * @param eaccpf
 		 * @param tabbedPane
 		 * @param model
 		 */   

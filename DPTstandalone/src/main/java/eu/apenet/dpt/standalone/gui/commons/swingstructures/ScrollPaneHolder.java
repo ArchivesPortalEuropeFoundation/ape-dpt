@@ -1,4 +1,5 @@
-package eu.apenet.dpt.standalone.gui.commons.SwingStructures;
+package eu.apenet.dpt.standalone.gui.commons.swingstructures;
+
 
 /*
  * #%L
@@ -18,8 +19,6 @@ package eu.apenet.dpt.standalone.gui.commons.SwingStructures;
  * #L%
  */
 
-import javax.swing.*;
-
 
 /**
  * User: Yoann Moranville
@@ -27,13 +26,20 @@ import javax.swing.*;
  *
  * @author Yoann Moranville
  */
-public class ScrollPane extends JScrollPane {
+public class ScrollPaneHolder {
     private TextAreaScrollable textAreaScrollable;
+    private ScrollPane scrollPane;
 
-    public ScrollPane(TextAreaScrollable textAreaScrollable) {
-        super(textAreaScrollable);
-        this.textAreaScrollable = textAreaScrollable;
-        this.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+    public ScrollPaneHolder(String title) {
+        textAreaScrollable = new TextAreaScrollable(title);
+        scrollPane = new ScrollPane(textAreaScrollable);
+    }
+    public ScrollPaneHolder() {
+        new ScrollPaneHolder("");
+    }
+
+    public ScrollPane getScrollPane() {
+        return scrollPane;
     }
 
     public String getText() {

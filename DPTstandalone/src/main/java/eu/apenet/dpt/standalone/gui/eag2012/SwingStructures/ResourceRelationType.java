@@ -20,7 +20,7 @@ package eu.apenet.dpt.standalone.gui.eag2012.SwingStructures;
 
 import javax.swing.*;
 
-import eu.apenet.dpt.standalone.gui.commons.SwingStructures.TextAreaWithLanguage;
+import eu.apenet.dpt.standalone.gui.commons.swingstructures.TextAreaWithLanguage;
 
 import java.util.*;
 

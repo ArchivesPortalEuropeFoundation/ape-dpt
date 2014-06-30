@@ -1,4 +1,4 @@
-package eu.apenet.dpt.standalone.gui.commons.SwingStructures;
+package eu.apenet.dpt.standalone.gui.commons.swingstructures;
 
 /*
  * #%L
@@ -20,36 +20,35 @@ package eu.apenet.dpt.standalone.gui.commons.SwingStructures;
 
 import javax.swing.JTextField;
 
+
 /**
  * User: Yoann Moranville
- * Date: 05/12/2012
- *
- * To be used when a TextField also has a language
+ * Date: 26/04/2013
  *
  * @author Yoann Moranville
  */
-public class TextFieldWithLanguage extends StructureWithLanguage {
-    private JTextField textField;
+public class TextAreaWithLanguage extends StructureWithLanguage {
+    private ScrollPaneHolder scrollPaneHolder;
     private JTextField extraField;
     private JTextField secondExtraField;
 
-    public TextFieldWithLanguage(String text, String language, String extraText, String secondExtraText) {
+    public TextAreaWithLanguage(String text, String language, String extraText, String secondExtraText) {
         super(language);
-        textField = new JTextField(text);
+        scrollPaneHolder = new ScrollPaneHolder(text);
         extraField = new JTextField(extraText);
         secondExtraField = new JTextField(secondExtraText);
     }
 
-    public TextFieldWithLanguage(String text, String language, String extraText) {
+    public TextAreaWithLanguage(String text, String language, String extraText) {
         this(text, language, extraText, "");
     }
 
-    public TextFieldWithLanguage(String text, String language) {
+    public TextAreaWithLanguage(String text, String language) {
         this(text, language, "");
     }
 
-    public JTextField getTextField() {
-        return textField;
+    public ScrollPane getTextField() {
+        return scrollPaneHolder.getScrollPane();
     }
 
     public JTextField getExtraField() {
@@ -61,7 +60,7 @@ public class TextFieldWithLanguage extends StructureWithLanguage {
     }
 
     public String getTextValue() {
-        return textField.getText();
+        return scrollPaneHolder.getText();
     }
 
     public String getExtraValue() {

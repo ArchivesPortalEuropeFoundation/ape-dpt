@@ -18,15 +18,29 @@ package eu.apenet.dpt.standalone.gui.eag2012;
  * #L%
  */
 
-import com.jgoodies.forms.builder.PanelBuilder;
-import com.jgoodies.forms.layout.CellConstraints;
-import com.jgoodies.forms.layout.FormLayout;
-import eu.apenet.dpt.standalone.gui.ProfileListModel;
-import eu.apenet.dpt.utils.eag2012.*;
-
-import javax.swing.*;
 import java.util.List;
 import java.util.ResourceBundle;
+
+import javax.swing.JComponent;
+import javax.swing.JFrame;
+import javax.swing.JScrollPane;
+import javax.swing.JTabbedPane;
+
+import eu.apenet.dpt.standalone.gui.ProfileListModel;
+import eu.apenet.dpt.utils.eag2012.Access;
+import eu.apenet.dpt.utils.eag2012.Accessibility;
+import eu.apenet.dpt.utils.eag2012.Country;
+import eu.apenet.dpt.utils.eag2012.Eag;
+import eu.apenet.dpt.utils.eag2012.Email;
+import eu.apenet.dpt.utils.eag2012.Geogarea;
+import eu.apenet.dpt.utils.eag2012.Location;
+import eu.apenet.dpt.utils.eag2012.MunicipalityPostalcode;
+import eu.apenet.dpt.utils.eag2012.Opening;
+import eu.apenet.dpt.utils.eag2012.Repository;
+import eu.apenet.dpt.utils.eag2012.Street;
+import eu.apenet.dpt.utils.eag2012.Telephone;
+import eu.apenet.dpt.utils.eag2012.Timetable;
+import eu.apenet.dpt.utils.eag2012.Webpage;
 
 /**
  * User: Yoann Moranville

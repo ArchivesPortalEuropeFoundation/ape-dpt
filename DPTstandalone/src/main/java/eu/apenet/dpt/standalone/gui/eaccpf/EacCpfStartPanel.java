@@ -1,4 +1,4 @@
-package eu.apenet.dpt.standalone.gui.eacCpf;
+package eu.apenet.dpt.standalone.gui.eaccpf;
 
 /*
  * #%L
@@ -47,9 +47,9 @@ import com.jgoodies.forms.layout.FormLayout;
 import eu.apenet.dpt.standalone.gui.ProfileListModel;
 import eu.apenet.dpt.standalone.gui.Utilities;
 import eu.apenet.dpt.standalone.gui.commons.ButtonTab;
-import eu.apenet.dpt.standalone.gui.commons.SwingStructures.LanguageWithScript;
+import eu.apenet.dpt.standalone.gui.commons.swingstructures.LanguageWithScript;
 import eu.apenet.dpt.standalone.gui.db.RetrieveFromDb;
-import eu.apenet.dpt.standalone.gui.eacCpf.SwingStructures.TextFieldWithComboBoxEacCpf;
+import eu.apenet.dpt.standalone.gui.eaccpf.swingstructures.TextFieldWithComboBoxEacCpf;
 import eu.apenet.dpt.utils.eaccpf.EacCpf;
 import eu.apenet.dpt.utils.eaccpf.Language;
 import eu.apenet.dpt.utils.eaccpf.LanguageDeclaration;

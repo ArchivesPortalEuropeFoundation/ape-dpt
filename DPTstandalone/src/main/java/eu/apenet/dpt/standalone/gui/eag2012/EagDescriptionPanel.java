@@ -18,29 +18,54 @@ package eu.apenet.dpt.standalone.gui.eag2012;
  * #L%
  */
 
-import com.jgoodies.forms.builder.PanelBuilder;
-import com.jgoodies.forms.layout.CellConstraints;
-import com.jgoodies.forms.layout.FormLayout;
-import eu.apenet.dpt.standalone.gui.ProfileListModel;
-import eu.apenet.dpt.standalone.gui.Utilities;
-
-import eu.apenet.dpt.standalone.gui.commons.ButtonTab;
-import eu.apenet.dpt.standalone.gui.commons.DefaultBtnAction;
-import eu.apenet.dpt.standalone.gui.commons.TextChanger;
-import eu.apenet.dpt.standalone.gui.commons.SwingStructures.TextAreaWithLanguage;
-import eu.apenet.dpt.standalone.gui.commons.SwingStructures.TextFieldWithDate;
-import eu.apenet.dpt.standalone.gui.commons.SwingStructures.TextFieldWithLanguage;
-import eu.apenet.dpt.standalone.gui.eag2012.EagAccessAndServicesPanel.UpdateEagObject;
-import eu.apenet.dpt.utils.eag2012.*;
-
-import org.apache.commons.lang.StringUtils;
-
-import javax.swing.*;
-
 import java.awt.event.ActionEvent;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
+
+import javax.swing.JButton;
+import javax.swing.JComponent;
+import javax.swing.JFrame;
+import javax.swing.JOptionPane;
+import javax.swing.JTabbedPane;
+import javax.swing.JTextField;
+
+import org.apache.commons.lang.StringUtils;
+
+import com.jgoodies.forms.builder.PanelBuilder;
+import com.jgoodies.forms.layout.CellConstraints;
+import com.jgoodies.forms.layout.FormLayout;
+
+import eu.apenet.dpt.standalone.gui.ProfileListModel;
+import eu.apenet.dpt.standalone.gui.Utilities;
+import eu.apenet.dpt.standalone.gui.commons.ButtonTab;
+import eu.apenet.dpt.standalone.gui.commons.DefaultBtnAction;
+import eu.apenet.dpt.standalone.gui.commons.TextChanger;
+import eu.apenet.dpt.standalone.gui.commons.swingstructures.TextAreaWithLanguage;
+import eu.apenet.dpt.standalone.gui.commons.swingstructures.TextFieldWithDate;
+import eu.apenet.dpt.standalone.gui.commons.swingstructures.TextFieldWithLanguage;
+import eu.apenet.dpt.utils.eag2012.Adminhierarchy;
+import eu.apenet.dpt.utils.eag2012.Adminunit;
+import eu.apenet.dpt.utils.eag2012.Building;
+import eu.apenet.dpt.utils.eag2012.Buildinginfo;
+import eu.apenet.dpt.utils.eag2012.Date;
+import eu.apenet.dpt.utils.eag2012.DateRange;
+import eu.apenet.dpt.utils.eag2012.DateSet;
+import eu.apenet.dpt.utils.eag2012.DescriptiveNote;
+import eu.apenet.dpt.utils.eag2012.Eag;
+import eu.apenet.dpt.utils.eag2012.Extent;
+import eu.apenet.dpt.utils.eag2012.FromDate;
+import eu.apenet.dpt.utils.eag2012.Holdings;
+import eu.apenet.dpt.utils.eag2012.Lengthshelf;
+import eu.apenet.dpt.utils.eag2012.Num;
+import eu.apenet.dpt.utils.eag2012.P;
+import eu.apenet.dpt.utils.eag2012.Repositorarea;
+import eu.apenet.dpt.utils.eag2012.Repositorfound;
+import eu.apenet.dpt.utils.eag2012.Repositorhist;
+import eu.apenet.dpt.utils.eag2012.Repositorsup;
+import eu.apenet.dpt.utils.eag2012.Repository;
+import eu.apenet.dpt.utils.eag2012.Rule;
+import eu.apenet.dpt.utils.eag2012.ToDate;
 
 /**
  * User: Yoann Moranville Date: 28/11/2012

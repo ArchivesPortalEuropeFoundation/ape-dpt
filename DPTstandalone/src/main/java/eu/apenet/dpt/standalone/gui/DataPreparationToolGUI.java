@@ -25,7 +25,7 @@ import eu.apenet.dpt.standalone.gui.conversion.ConvertActionListener;
 import eu.apenet.dpt.standalone.gui.databasechecker.DatabaseCheckerActionListener;
 import eu.apenet.dpt.standalone.gui.dateconversion.DateConversionRulesDialog;
 import eu.apenet.dpt.standalone.gui.db.RetrieveFromDb;
-import eu.apenet.dpt.standalone.gui.eacCpf.EacCpfFrame;
+import eu.apenet.dpt.standalone.gui.eaccpf.EacCpfFrame;
 import eu.apenet.dpt.standalone.gui.ead2edm.ConvertEdmActionListener;
 import eu.apenet.dpt.standalone.gui.ead2ese.ConvertEseActionListener;
 import eu.apenet.dpt.standalone.gui.eag2012.Eag2012Frame;

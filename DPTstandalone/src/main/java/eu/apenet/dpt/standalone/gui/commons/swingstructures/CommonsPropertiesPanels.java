@@ -1,4 +1,4 @@
-package eu.apenet.dpt.standalone.gui.commons.SwingStructures;
+package eu.apenet.dpt.standalone.gui.commons.swingstructures;
 
 /*
  * #%L

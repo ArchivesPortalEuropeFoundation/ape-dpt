@@ -1,4 +1,4 @@
-package eu.apenet.dpt.standalone.gui.commons.SwingStructures;
+package eu.apenet.dpt.standalone.gui.commons.swingstructures;
 
 /*
  * #%L
@@ -20,35 +20,36 @@ package eu.apenet.dpt.standalone.gui.commons.SwingStructures;
 
 import javax.swing.JTextField;
 
-
 /**
  * User: Yoann Moranville
- * Date: 26/04/2013
+ * Date: 05/12/2012
+ *
+ * To be used when a TextField also has a language
  *
  * @author Yoann Moranville
  */
-public class TextAreaWithLanguage extends StructureWithLanguage {
-    private ScrollPaneHolder scrollPaneHolder;
+public class TextFieldWithLanguage extends StructureWithLanguage {
+    private JTextField textField;
     private JTextField extraField;
     private JTextField secondExtraField;
 
-    public TextAreaWithLanguage(String text, String language, String extraText, String secondExtraText) {
+    public TextFieldWithLanguage(String text, String language, String extraText, String secondExtraText) {
         super(language);
-        scrollPaneHolder = new ScrollPaneHolder(text);
+        textField = new JTextField(text);
         extraField = new JTextField(extraText);
         secondExtraField = new JTextField(secondExtraText);
     }
 
-    public TextAreaWithLanguage(String text, String language, String extraText) {
+    public TextFieldWithLanguage(String text, String language, String extraText) {
         this(text, language, extraText, "");
     }
 
-    public TextAreaWithLanguage(String text, String language) {
+    public TextFieldWithLanguage(String text, String language) {
         this(text, language, "");
     }
 
-    public ScrollPane getTextField() {
-        return scrollPaneHolder.getScrollPane();
+    public JTextField getTextField() {
+        return textField;
     }
 
     public JTextField getExtraField() {
@@ -60,7 +61,7 @@ public class TextAreaWithLanguage extends StructureWithLanguage {
     }
 
     public String getTextValue() {
-        return scrollPaneHolder.getText();
+        return textField.getText();
     }
 
     public String getExtraValue() {

@@ -1,4 +1,4 @@
-package eu.apenet.dpt.standalone.gui.eacCpf.SwingStructures;
+package eu.apenet.dpt.standalone.gui.eaccpf.swingstructures;
 
 import java.util.LinkedList;
 import java.util.List;

@@ -18,16 +18,17 @@ package eu.apenet.dpt.standalone.gui.eag2012;
  * #L%
  */
 
-import eu.apenet.dpt.standalone.gui.ProfileListModel;
-import eu.apenet.dpt.standalone.gui.commons.SwingStructures.CommonsPropertiesPanels;
-import eu.apenet.dpt.utils.eag2012.Eag;
-import eu.apenet.dpt.utils.util.LanguageIsoList;
+import java.util.ResourceBundle;
+
+import javax.swing.JComboBox;
+import javax.swing.JFrame;
+import javax.swing.JTabbedPane;
+
 import org.apache.log4j.Logger;
 
-import javax.swing.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.util.*;
+import eu.apenet.dpt.standalone.gui.ProfileListModel;
+import eu.apenet.dpt.standalone.gui.commons.swingstructures.CommonsPropertiesPanels;
+import eu.apenet.dpt.utils.eag2012.Eag;
 
 /**
  * User: Yoann Moranville

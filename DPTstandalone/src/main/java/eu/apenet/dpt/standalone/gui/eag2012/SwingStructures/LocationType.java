@@ -18,7 +18,7 @@ package eu.apenet.dpt.standalone.gui.eag2012.SwingStructures;
  * #L%
  */
 
-import eu.apenet.dpt.standalone.gui.commons.SwingStructures.TextFieldWithLanguage;
+import eu.apenet.dpt.standalone.gui.commons.swingstructures.TextFieldWithLanguage;
 import eu.apenet.dpt.utils.eag2012.*;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;

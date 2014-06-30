@@ -1,4 +1,4 @@
-package eu.apenet.dpt.standalone.gui.eacCpf;
+package eu.apenet.dpt.standalone.gui.eaccpf;
 
 /*
  * #%L
@@ -33,14 +33,13 @@ import org.apache.log4j.Logger;
 import eu.apenet.dpt.standalone.gui.DataPreparationToolGUI;
 import eu.apenet.dpt.standalone.gui.ProfileListModel;
 import eu.apenet.dpt.standalone.gui.commons.TextChanger;
-import eu.apenet.dpt.standalone.gui.commons.SwingStructures.CommonsPropertiesPanels;
-import eu.apenet.dpt.standalone.gui.eacCpf.SwingStructures.TextFieldWithComboBoxEacCpf;
+import eu.apenet.dpt.standalone.gui.commons.swingstructures.CommonsPropertiesPanels;
+import eu.apenet.dpt.standalone.gui.eaccpf.swingstructures.TextFieldWithComboBoxEacCpf;
 import eu.apenet.dpt.utils.eaccpf.Abbreviation;
 import eu.apenet.dpt.utils.eaccpf.AddressLine;
 import eu.apenet.dpt.utils.eaccpf.Agent;
 import eu.apenet.dpt.utils.eaccpf.AgentType;
 import eu.apenet.dpt.utils.eaccpf.Citation;
-import eu.apenet.dpt.utils.eaccpf.ComponentEntry;
 import eu.apenet.dpt.utils.eaccpf.Control;
 import eu.apenet.dpt.utils.eaccpf.ConventionDeclaration;
 import eu.apenet.dpt.utils.eaccpf.CpfRelation;
@@ -55,6 +54,7 @@ import eu.apenet.dpt.utils.eaccpf.ExistDates;
 import eu.apenet.dpt.utils.eaccpf.Function;
 import eu.apenet.dpt.utils.eaccpf.FunctionRelation;
 import eu.apenet.dpt.utils.eaccpf.Functions;
+import eu.apenet.dpt.utils.eaccpf.Identity.NameEntry;
 import eu.apenet.dpt.utils.eaccpf.Language;
 import eu.apenet.dpt.utils.eaccpf.LanguageDeclaration;
 import eu.apenet.dpt.utils.eaccpf.MaintenanceEvent;
@@ -67,11 +67,9 @@ import eu.apenet.dpt.utils.eaccpf.Place;
 import eu.apenet.dpt.utils.eaccpf.PlaceEntry;
 import eu.apenet.dpt.utils.eaccpf.Places;
 import eu.apenet.dpt.utils.eaccpf.PublicationStatus;
-import eu.apenet.dpt.utils.eaccpf.RelationEntry;
 import eu.apenet.dpt.utils.eaccpf.ResourceRelation;
 import eu.apenet.dpt.utils.eaccpf.Script;
 import eu.apenet.dpt.utils.eaccpf.SetComponent;
-import eu.apenet.dpt.utils.eaccpf.Identity.NameEntry;
 import eu.apenet.dpt.utils.util.XmlTypeEacCpf;
 
 /**
@@ -239,7 +237,9 @@ public abstract class EacCpfPanel extends CommonsPropertiesPanels {
         							if(checkDateRange(function.getDateRange())){
         								function.setDateRange(null);
         							}
-        							function.getDateSet().getDateOrDateRange().removeAll(getListDateOrDateSetToBeDeleted(function.getDateSet().getDateOrDateRange()));
+        							if(function.getDateSet()!=null){
+        								function.getDateSet().getDateOrDateRange().removeAll(getListDateOrDateSetToBeDeleted(function.getDateSet().getDateOrDateRange()));
+        							}
         						}
     							if(markToBeDeleted){
     								functionsToBeDeleted.add(function);
@@ -273,7 +273,9 @@ public abstract class EacCpfPanel extends CommonsPropertiesPanels {
         							if(checkDateRange(occupation.getDateRange())){
         								occupation.setDateRange(null);
         							}
-        							occupation.getDateSet().getDateOrDateRange().removeAll(getListDateOrDateSetToBeDeleted(occupation.getDateSet().getDateOrDateRange()));
+        							if(occupation.getDateSet()!=null){
+        								occupation.getDateSet().getDateOrDateRange().removeAll(getListDateOrDateSetToBeDeleted(occupation.getDateSet().getDateOrDateRange()));
+        							}
         						}
     							if(markToBeDeleted){
     								occupationsToBeDeleted.add(occupation);
@@ -621,7 +623,7 @@ public abstract class EacCpfPanel extends CommonsPropertiesPanels {
 	/**
 	 * Method to remove duplicate whitespaces and trim string.
 	 *
-	 * @param content
+	 * @param str
 	 * @return the string without whitespaces.
 	 */
 	protected static String trimStringValue(String str) {

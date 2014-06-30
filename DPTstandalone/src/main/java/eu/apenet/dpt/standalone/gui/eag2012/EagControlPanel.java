@@ -18,27 +18,40 @@ package eu.apenet.dpt.standalone.gui.eag2012;
  * #L%
  */
 
-import com.jgoodies.forms.builder.PanelBuilder;
-
-import com.jgoodies.forms.layout.CellConstraints;
-import com.jgoodies.forms.layout.FormLayout;
-import eu.apenet.dpt.standalone.gui.ProfileListModel;
-import eu.apenet.dpt.standalone.gui.Utilities;
-import eu.apenet.dpt.standalone.gui.commons.ButtonTab;
-import eu.apenet.dpt.standalone.gui.commons.DefaultBtnAction;
-import eu.apenet.dpt.standalone.gui.commons.SwingStructures.LanguageWithScript;
-import eu.apenet.dpt.standalone.gui.commons.SwingStructures.TextFieldWithLanguage;
-import eu.apenet.dpt.standalone.gui.eag2012.EagDescriptionPanel.UpdateEagObject;
-import eu.apenet.dpt.utils.eag2012.*;
-import eu.apenet.dpt.utils.util.LanguageIsoList;
-import org.apache.commons.lang.StringUtils;
-
-import javax.swing.*;
-
 import java.awt.event.ActionEvent;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
+
+import javax.swing.JButton;
+import javax.swing.JComponent;
+import javax.swing.JFrame;
+import javax.swing.JOptionPane;
+import javax.swing.JTabbedPane;
+import javax.swing.JTextField;
+
+import org.apache.commons.lang.StringUtils;
+
+import com.jgoodies.forms.builder.PanelBuilder;
+import com.jgoodies.forms.layout.CellConstraints;
+import com.jgoodies.forms.layout.FormLayout;
+
+import eu.apenet.dpt.standalone.gui.ProfileListModel;
+import eu.apenet.dpt.standalone.gui.Utilities;
+import eu.apenet.dpt.standalone.gui.commons.ButtonTab;
+import eu.apenet.dpt.standalone.gui.commons.DefaultBtnAction;
+import eu.apenet.dpt.standalone.gui.commons.swingstructures.LanguageWithScript;
+import eu.apenet.dpt.standalone.gui.commons.swingstructures.TextFieldWithLanguage;
+import eu.apenet.dpt.utils.eag2012.Abbreviation;
+import eu.apenet.dpt.utils.eag2012.Citation;
+import eu.apenet.dpt.utils.eag2012.ConventionDeclaration;
+import eu.apenet.dpt.utils.eag2012.Eag;
+import eu.apenet.dpt.utils.eag2012.Language;
+import eu.apenet.dpt.utils.eag2012.LanguageDeclaration;
+import eu.apenet.dpt.utils.eag2012.LanguageDeclarations;
+import eu.apenet.dpt.utils.eag2012.MaintenanceEvent;
+import eu.apenet.dpt.utils.eag2012.Script;
+import eu.apenet.dpt.utils.util.LanguageIsoList;
 
 /**
  * User: Yoann Moranville

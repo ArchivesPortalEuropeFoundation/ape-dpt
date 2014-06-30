@@ -1,4 +1,4 @@
-package eu.apenet.dpt.standalone.gui.eacCpf;
+package eu.apenet.dpt.standalone.gui.eaccpf;
 
 /*
  * #%L
@@ -47,7 +47,7 @@ import eu.apenet.dpt.standalone.gui.ProfileListModel;
 import eu.apenet.dpt.standalone.gui.Utilities;
 import eu.apenet.dpt.standalone.gui.commons.ButtonTab;
 import eu.apenet.dpt.standalone.gui.commons.DefaultBtnAction;
-import eu.apenet.dpt.standalone.gui.commons.SwingStructures.LanguageWithScript;
+import eu.apenet.dpt.standalone.gui.commons.swingstructures.LanguageWithScript;
 import eu.apenet.dpt.utils.eaccpf.AgencyCode;
 import eu.apenet.dpt.utils.eaccpf.Control;
 import eu.apenet.dpt.utils.eaccpf.EacCpf;
@@ -56,7 +56,6 @@ import eu.apenet.dpt.utils.eaccpf.LanguageDeclaration;
 import eu.apenet.dpt.utils.eaccpf.MaintenanceAgency;
 import eu.apenet.dpt.utils.eaccpf.MaintenanceHistory;
 import eu.apenet.dpt.utils.eaccpf.OtherRecordId;
-import eu.apenet.dpt.utils.eaccpf.PublicationStatus;
 import eu.apenet.dpt.utils.eaccpf.RecordId;
 import eu.apenet.dpt.utils.eaccpf.Script;
 import eu.apenet.dpt.utils.util.LanguageIsoList;
@@ -558,7 +557,7 @@ public class EacCpfControlPanel extends EacCpfPanel {
 		/**
 		 * Constructor.
 		 *
-		 * @param eacCpf
+		 * @param eaccpf
 		 * @param tabbedPane
 		 * @param model
 		 */   

@@ -1,4 +1,4 @@
-package eu.apenet.dpt.standalone.gui.eacCpf.SwingStructures;
+package eu.apenet.dpt.standalone.gui.eaccpf.swingstructures;
 
 /*
  * #%L
@@ -21,7 +21,7 @@ package eu.apenet.dpt.standalone.gui.eacCpf.SwingStructures;
 import javax.swing.JCheckBox;
 import javax.swing.JTextField;
 
-import eu.apenet.dpt.standalone.gui.commons.SwingStructures.TextFieldWithDate;
+import eu.apenet.dpt.standalone.gui.commons.swingstructures.TextFieldWithDate;
 
 /**
  * Class to create a JTextFields with a JCheckBoxs for the dates for an
