@@ -160,7 +160,7 @@
         <xsl:choose>
             <xsl:when test="parent::bibref or parent::extref"/>
             <xsl:when
-                test="parent::corpname or parent::origination or parent::physfacet or parent::persname or parent::head or parent::titleproper or parent::unitdate or parent::archref or parent::emph or parent::unittitle">
+                test="parent::corpname or parent::origination or parent::physfacet or parent::persname or parent::head or parent::titleproper or parent::unitdate or parent::archref or parent::emph or parent::unittitle or parent::physdesc">
                 <!--unittitle here is a hack - better fix it in the display xsl of portal/dashboard-->
                 <xsl:value-of select="normalize-space(.)"/>
                 <xsl:text> </xsl:text>
@@ -921,18 +921,27 @@
 
     <!-- archdesc/did -->
     <xsl:template match="archdesc/did" mode="copy">
-        <did>
-            <xsl:apply-templates select="node() except abstract" mode="copy"/>
-            <xsl:if test="not(repository) and normalize-space($repository)">
-                <xsl:call-template name="repository"/>
-            </xsl:if>
-            <xsl:if test="not(langmaterial) and $langmaterial">
-                <xsl:call-template name="langmaterial"/>
-            </xsl:if>
-            <xsl:for-each select="following-sibling::note">
-                <xsl:call-template name="note"/>
-            </xsl:for-each>
-        </did>
+        <xsl:choose>
+            <xsl:when test="count(child::*) = 1 and child::*[local-name()='abstract']">
+                <did>
+                    <unitid/>
+                </did>
+            </xsl:when>
+            <xsl:otherwise>
+                <did>
+                    <xsl:apply-templates select="node() except abstract" mode="copy"/>
+                    <xsl:if test="not(repository) and normalize-space($repository)">
+                        <xsl:call-template name="repository"/>
+                    </xsl:if>
+                    <xsl:if test="not(langmaterial) and $langmaterial">
+                        <xsl:call-template name="langmaterial"/>
+                    </xsl:if>
+                    <xsl:for-each select="following-sibling::note">
+                        <xsl:call-template name="note"/>
+                    </xsl:for-each>
+                </did>
+            </xsl:otherwise>
+        </xsl:choose>
         <xsl:if test="//eadid/@countrycode='fr' and /ead/frontmatter">
             <xsl:call-template name="frontmatter2scopecontent"/>
         </xsl:if>
@@ -1253,6 +1262,10 @@
         </address>
     </xsl:template>
 
+    <xsl:template match="repository/corpname" mode="copy fonds intermediate lowest">
+        <xsl:apply-templates select="node()" mode="#current" />
+    </xsl:template>
+    
     <!-- fonds intermediate lowest: repository/address/addressline -->
     <xsl:template match="repository/address/addressline" mode="copy fonds intermediate lowest">
         <addressline>
@@ -2283,7 +2296,7 @@
         </p>
     </xsl:template>
 
-    <xsl:template match="separatedmaterial/bibref" mode="copy fonds nested">
+    <xsl:template match="separatedmaterial/bibref | separatedmaterial/archref" mode="copy fonds nested">
         <p>
             <xsl:if test="@href or @*:href">
                 <extref>
@@ -2311,6 +2324,23 @@
         <title>
             <xsl:apply-templates select="node()" mode="#current"/>
         </title>
+    </xsl:template>
+    <xsl:template match="separatedmaterial/archref/unittitle" mode="copy fonds nested">
+        <xsl:if test="preceding-sibling::*"> - </xsl:if><xsl:apply-templates select="node()" mode="#current"/>
+    </xsl:template>
+    <xsl:template match="separatedmaterial/archref/unittitle/emph" mode="copy fonds nested">
+        <emph>
+            <xsl:if test="@render">
+                <xsl:attribute name="render" select="@render"/>
+            </xsl:if>
+            <xsl:if test="preceding-sibling::*"> - </xsl:if><xsl:apply-templates select="node()" mode="#current"/>
+        </emph>
+    </xsl:template>
+    <xsl:template match="separatedmaterial/archref/unitid" mode="copy fonds nested">
+        <xsl:if test="preceding-sibling::*"> - </xsl:if><xsl:apply-templates select="node()" mode="#current"/>
+    </xsl:template>
+    <xsl:template match="separatedmaterial/archref/repository" mode="copy fonds nested">
+        <xsl:if test="preceding-sibling::*"> - </xsl:if><xsl:apply-templates select="node()" mode="#current"/>
     </xsl:template>
 
     <xsl:template name="deflist_table">
@@ -2572,6 +2602,7 @@
                 test="(@type='call number' or @type='ABS' or @type='bestellnummer' or @type='Bestellnummer' or @type='series_code' or @type='reference' or @type='Sygnatura' or @type='REFERENCE_CODE' or @type='cote-de-consultation' or @type='cote-groupee' or @type='identifiant' or @type='cote' or @type='persistent' or (not(@type))) and (text()[string-length(normalize-space(.)) ge 1] or exists(extptr))">
                 <!-- and not(preceding-sibling::unitid) and not(following-sibling::unitid)-->
                 <xsl:choose>
+                    <xsl:when test="@type = 'cote-groupee' and (following-sibling::unitid or preceding-sibling::unitid)"/> <!-- todo: test with french data, ticket #935 -->
                     <xsl:when test="@countrycode and @repositorycode">
                         <xsl:choose>
                             <xsl:when test="//eadid/@countrycode = 'SE'">
@@ -2834,7 +2865,7 @@
             <xsl:if test="not(unittitle)">
                 <unittitle/>
             </xsl:if>
-            <xsl:apply-templates select="node() except abstract" mode="#current"/>
+            <xsl:apply-templates select="node()[not(local-name() = 'abstract') and not(local-name() = 'scopecontent') and not(local-name() = 'bioghist')]" mode="#current"/>
             <xsl:for-each select="following-sibling::dao">
                 <!--<dao xlink:href="{@href}"/>-->
                 <xsl:call-template name="dao"/>
@@ -2895,7 +2926,7 @@
             </xsl:call-template>
         </xsl:if>
 
-        <xsl:apply-templates select="abstract" mode="#current"/>
+        <xsl:apply-templates select="abstract | scopecontent | bioghist" mode="#current" />
     </xsl:template>
 
     <xsl:template
