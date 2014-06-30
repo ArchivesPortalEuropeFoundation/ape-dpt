@@ -94,15 +94,18 @@
             <xsl:if test="@xml:lang">
                 <xsl:attribute name="xml:lang" select="@xml:lang"/>
             </xsl:if>
+            <xsl:if test="@localType != ('unknown', 'unknownStart', 'unknownEnd', 'open')">
+                <xsl:message select="ape:resource('eaccpf.message.unknownLocalTypeDate', $currentLanguage)"/>
+            </xsl:if>
             <xsl:choose>
                 <xsl:when test="string-length(.)!=0">
-                    <xsl:if test="@standardDate">
+                    <xsl:if test="@standardDate and not(@standardDate = '2099')">
                         <xsl:attribute name="standardDate" select="@standardDate"/>
                     </xsl:if>
                     <xsl:value-of select="."/>
                 </xsl:when>
                 <xsl:otherwise>
-                    <xsl:attribute name="standardDate" select="'2099'"/>
+                    <xsl:attribute name="localType" select="'unknown'"/>
                     <xsl:value-of select="'unknown'"/>
                 </xsl:otherwise>
             </xsl:choose>
@@ -112,6 +115,32 @@
     <!-- dateRange -->
     <xsl:template match="dateRange" name="singleDateRange" mode="#all">
         <dateRange>
+            <xsl:if test="@localType != ('unknown', 'unknownStart', 'unknownEnd', 'open')">
+                <xsl:message select="ape:resource('eaccpf.message.unknownLocalTypeDate', $currentLanguage)"/>
+            </xsl:if>
+            <xsl:choose>
+                <xsl:when test="fromDate = 'unknown'">
+                    <xsl:choose>
+                        <xsl:when test="toDate ='unknown'">
+                            <xsl:attribute name="localType" select="'unknown'"/>
+                        </xsl:when>
+                        <xsl:when test="toDate ='open'">
+                            <xsl:attribute name="localType" select="'open'"/>
+                        </xsl:when>
+                        <xsl:otherwise>
+                            <xsl:attribute name="localType" select="'unknownStart'"/>
+                        </xsl:otherwise>
+                    </xsl:choose>
+                </xsl:when>
+                <xsl:otherwise>
+                        <xsl:if test="toDate ='unknown'">
+                            <xsl:attribute name="localType" select="'unknownEnd'"/>
+                        </xsl:if>
+                        <xsl:if test="toDate ='open'">
+                            <xsl:attribute name="localType" select="'open'"/>
+                        </xsl:if>
+                </xsl:otherwise>
+            </xsl:choose>
             <fromDate>
                 <xsl:if test="fromDate/@notAfter">
                     <xsl:attribute name="notAfter" select="fromDate/@notAfter"/>
@@ -122,18 +151,12 @@
                 <xsl:if test="fromDate/@xml:lang">
                     <xsl:attribute name="xml:lang" select="fromDate/@xml:lang"/>
                 </xsl:if>
-                <xsl:choose>
-                    <xsl:when test="string-length(fromDate)!=0">
-                        <xsl:if test="fromDate/@standardDate">
-                            <xsl:attribute name="standardDate" select="fromDate/@standardDate"/>
-                        </xsl:if>
-                        <xsl:value-of select="fromDate"/>
-                    </xsl:when>
-                    <xsl:otherwise>
-                        <xsl:attribute name="standardDate" select="'0001'"/>
-                        <xsl:value-of select="'unknown'"/>
-                    </xsl:otherwise>
-                </xsl:choose>
+                <xsl:if test="string-length(fromDate)!=0">
+                    <xsl:if test="fromDate/@standardDate and not(fromDate/@standardDate = '0001')">
+                        <xsl:attribute name="standardDate" select="fromDate/@standardDate"/>
+                    </xsl:if>
+                    <xsl:value-of select="fromDate"/>
+                </xsl:if>
             </fromDate>
             <toDate>
                 <xsl:if test="toDate/@notAfter">
@@ -145,18 +168,12 @@
                 <xsl:if test="toDate/@xml:lang">
                     <xsl:attribute name="xml:lang" select="toDate/@xml:lang"/>
                 </xsl:if>
-                <xsl:choose>
-                    <xsl:when test="string-length(toDate)!=0">
-                        <xsl:if test="toDate/@standardDate">
-                            <xsl:attribute name="standardDate" select="toDate/@standardDate"/>
-                        </xsl:if>
-                        <xsl:value-of select="toDate"/>
-                    </xsl:when>
-                    <xsl:otherwise>
-                        <xsl:attribute name="standardDate" select="'2099'"/>
-                        <xsl:value-of select="'unknown'"/>
-                    </xsl:otherwise>
-                </xsl:choose>
+                <xsl:if test="string-length(toDate)!=0">
+                    <xsl:if test="toDate/@standardDate and not(fromDate/@standardDate = '2099')">
+                        <xsl:attribute name="standardDate" select="toDate/@standardDate"/>
+                    </xsl:if>
+                    <xsl:value-of select="toDate"/>
+                </xsl:if>
             </toDate>
         </dateRange>
     </xsl:template>
@@ -578,21 +595,17 @@
                     <description>
                         <existDates>
                             <dateRange>
+                                <xsl:attribute name="localType" select="'unknown'"/>
                                 <fromDate>
-                                    <xsl:attribute name="standardDate">
-                                        <xsl:text>0001</xsl:text>
-                                    </xsl:attribute>
                                     <xsl:text>unknown</xsl:text>
                                 </fromDate>
                                 <toDate>
-                                    <xsl:attribute name="standardDate">
-                                        <xsl:text>2099</xsl:text>
-                                    </xsl:attribute>
                                     <xsl:text>unknown</xsl:text>
                                 </toDate>
                             </dateRange>
                         </existDates>
-                        <xsl:message select="ape:resource('eaccpf.message.existDates', $currentLanguage)"/>
+                        <xsl:message
+                            select="ape:resource('eaccpf.message.existDates', $currentLanguage)"/>
                     </description>
                 </xsl:when>
                 <xsl:otherwise>
@@ -686,7 +699,8 @@
                 </xsl:when>
                 <xsl:otherwise/>
             </xsl:choose>
-            <xsl:if test="@localType = ('corpname', 'famname', 'persname', 'surname', 'firstname', 'birthname', 'title', 'prefix', 'suffix', 'alias', 'patronymic', 'legalform')">
+            <xsl:if
+                test="@localType = ('corpname', 'famname', 'persname', 'surname', 'firstname', 'birthname', 'title', 'prefix', 'suffix', 'alias', 'patronymic', 'legalform')">
                 <xsl:attribute name="localType" select="@localType"/>
             </xsl:if>
             <xsl:value-of select="."/>
@@ -724,21 +738,17 @@
                 <xsl:when test="not(existDates)">
                     <existDates>
                         <dateRange>
+                            <xsl:attribute name="localType" select="'unknown'"/>
                             <fromDate>
-                                <xsl:attribute name="standardDate">
-                                    <xsl:text>0001</xsl:text>
-                                </xsl:attribute>
                                 <xsl:text>unknown</xsl:text>
                             </fromDate>
                             <toDate>
-                                <xsl:attribute name="standardDate">
-                                    <xsl:text>2099</xsl:text>
-                                </xsl:attribute>
                                 <xsl:text>unknown</xsl:text>
                             </toDate>
                         </dateRange>
                     </existDates>
-                    <xsl:message select="ape:resource('eaccpf.message.existDates', $currentLanguage)"/>
+                    <xsl:message
+                        select="ape:resource('eaccpf.message.existDates', $currentLanguage)"/>
                 </xsl:when>
                 <xsl:otherwise>
                     <xsl:apply-templates select="existDates" mode="copy"/>
@@ -840,20 +850,16 @@
             <xsl:choose>
                 <xsl:when test="count(date) = 0 and count(dateRange) = 0">
                     <dateRange>
+                        <xsl:attribute name="localType" select="'unknown'"/>
                         <fromDate>
-                            <xsl:attribute name="standardDate">
-                                <xsl:text>0001</xsl:text>
-                            </xsl:attribute>
-                            <xsl:text>unknown</xsl:text>
+                           <xsl:text>unknown</xsl:text>
                         </fromDate>
                         <toDate>
-                            <xsl:attribute name="standardDate">
-                                <xsl:text>2099</xsl:text>
-                            </xsl:attribute>
                             <xsl:text>unknown</xsl:text>
                         </toDate>
                     </dateRange>
-                    <xsl:message select="ape:resource('eaccpf.message.existDates', $currentLanguage)"/>
+                    <xsl:message
+                        select="ape:resource('eaccpf.message.existDates', $currentLanguage)"/>
                 </xsl:when>
                 <xsl:when test="count(date) = 1 and count(dateRange) = 0">
                     <xsl:apply-templates select="date" mode="copy"/>
@@ -992,27 +998,27 @@
     <xsl:template match="localDescriptions" mode="copy">
         <xsl:if test="descendant::*[text()]">
             <localDescriptions>
-            <xsl:attribute name="localType" select="@localType"/>
-            <xsl:choose>
-                <xsl:when test="p|list|citation">
-                    <localDescription>
-                        <descriptiveNote>
-                            <xsl:for-each select="p|list/item|citation">
-                                <p>
-                                    <xsl:if test="@xml:lang">
-                                        <xsl:attribute name="xml:lang" select="@xml:lang"/>
-                                    </xsl:if>
-                                    <xsl:value-of select="normalize-space(text())"/>
-                                </p>
-                            </xsl:for-each>
-                        </descriptiveNote>
-                    </localDescription>
-                </xsl:when>
-                <xsl:otherwise>
-                    <xsl:apply-templates select="node()" mode="copy"/>
-                </xsl:otherwise>
-            </xsl:choose>
-        </localDescriptions>
+                <xsl:attribute name="localType" select="@localType"/>
+                <xsl:choose>
+                    <xsl:when test="p|list|citation">
+                        <localDescription>
+                            <descriptiveNote>
+                                <xsl:for-each select="p|list/item|citation">
+                                    <p>
+                                        <xsl:if test="@xml:lang">
+                                            <xsl:attribute name="xml:lang" select="@xml:lang"/>
+                                        </xsl:if>
+                                        <xsl:value-of select="normalize-space(text())"/>
+                                    </p>
+                                </xsl:for-each>
+                            </descriptiveNote>
+                        </localDescription>
+                    </xsl:when>
+                    <xsl:otherwise>
+                        <xsl:apply-templates select="node()" mode="copy"/>
+                    </xsl:otherwise>
+                </xsl:choose>
+            </localDescriptions>
         </xsl:if>
     </xsl:template>
 
@@ -1028,26 +1034,26 @@
     <xsl:template match="legalStatuses" mode="copy">
         <xsl:if test="descendant::*[text()]">
             <legalStatuses>
-            <xsl:choose>
-                <xsl:when test="p|list|citation">
-                    <legalStatus>
-                        <descriptiveNote>
-                            <xsl:for-each select="p|list/item|citation">
-                                <p>
-                                    <xsl:if test="@xml:lang">
-                                        <xsl:attribute name="xml:lang" select="@xml:lang"/>
-                                    </xsl:if>
-                                    <xsl:value-of select="normalize-space(text())"/>
-                                </p>
-                            </xsl:for-each>
-                        </descriptiveNote>
-                    </legalStatus>
-                </xsl:when>
-                <xsl:otherwise>
-                    <xsl:apply-templates select="node()" mode="copy"/>
-                </xsl:otherwise>
-            </xsl:choose>
-        </legalStatuses>
+                <xsl:choose>
+                    <xsl:when test="p|list|citation">
+                        <legalStatus>
+                            <descriptiveNote>
+                                <xsl:for-each select="p|list/item|citation">
+                                    <p>
+                                        <xsl:if test="@xml:lang">
+                                            <xsl:attribute name="xml:lang" select="@xml:lang"/>
+                                        </xsl:if>
+                                        <xsl:value-of select="normalize-space(text())"/>
+                                    </p>
+                                </xsl:for-each>
+                            </descriptiveNote>
+                        </legalStatus>
+                    </xsl:when>
+                    <xsl:otherwise>
+                        <xsl:apply-templates select="node()" mode="copy"/>
+                    </xsl:otherwise>
+                </xsl:choose>
+            </legalStatuses>
         </xsl:if>
     </xsl:template>
 
