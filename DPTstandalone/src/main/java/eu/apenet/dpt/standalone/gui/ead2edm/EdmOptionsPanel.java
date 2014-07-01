@@ -992,7 +992,7 @@ public class EdmOptionsPanel extends JPanel {
                 }
                 File outputFile = new File(xmlOutputFilename);
                 config.getTransformerXML2XML().transform(new File(loc), outputFile);
-                if (XMLUtil.analyzeESEXML(outputFile) <= 1) {
+                if (XMLUtil.analyzeESEXML(outputFile).getNumberOfProvidedCHO() <= 1) {
                     apeTabbedPane.appendEseConversionErrorText(labels.getString("ese.fileEmpty"));
                 } else {
                     fileInstance.setEseLocation(outputFile.getAbsolutePath());
