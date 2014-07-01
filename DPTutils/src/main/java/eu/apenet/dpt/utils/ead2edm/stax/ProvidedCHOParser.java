@@ -1,17 +1,19 @@
 package eu.apenet.dpt.utils.ead2edm.stax;
+import org.apache.log4j.Logger;
+
 import javax.xml.namespace.QName;
 import javax.xml.stream.XMLStreamConstants;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 import javax.xml.stream.XMLStreamWriter;
 
-public class IsShownAtParser extends AbstractParser {
+public class ProvidedCHOParser extends AbstractParser {
 
-	private static final QName IS_SHOWN_AT = new QName(EDM, "isShownAt");
-	private int numberOfIsShownAt = 0;
+	private static final QName PROVIDED_CHO = new QName(EDM, "ProvidedCHO");
+	private int numberOfProvidedCHO = 0;
 
-	public IsShownAtParser() {
-		super(IS_SHOWN_AT);
+	public ProvidedCHOParser() {
+		super(PROVIDED_CHO);
 		registerParser(new DefaultTextParser());
 	}
 
@@ -22,7 +24,7 @@ public class IsShownAtParser extends AbstractParser {
 	public String parse(XMLStreamReader xmlReader, XMLStreamWriter xmlWriter) throws XMLStreamException {
 		QName elementName = xmlReader.getName();
 		writeStartElement(xmlWriter);
-		numberOfIsShownAt++;
+		numberOfProvidedCHO++;
 		boolean foundEndElement = false;
 		String identifier = null;
 		for (int event = xmlReader.next(); !foundEndElement && event != XMLStreamConstants.END_DOCUMENT; event = xmlReader.next()) {
@@ -46,8 +48,8 @@ public class IsShownAtParser extends AbstractParser {
 
 	}
 
-	public int getNumberOfIsShownAt() {
-		return numberOfIsShownAt;
+	public int getNumberOfProvidedCHO() {
+		return numberOfProvidedCHO;
 	}
 
 }

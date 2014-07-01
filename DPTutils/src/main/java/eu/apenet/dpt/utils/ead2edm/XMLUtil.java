@@ -15,7 +15,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import eu.apenet.dpt.utils.ead2edm.stax.EDMParser;
-import eu.apenet.dpt.utils.ead2edm.stax.IsShownAtParser;
+import eu.apenet.dpt.utils.ead2edm.stax.ProvidedCHOParser;
+import eu.apenet.dpt.utils.ead2edm.stax.WebResourceParser;
 import eu.apenet.dpt.utils.util.APEXmlCatalogResolver;
 import javanet.staxutils.IndentingXMLStreamWriter;
 
@@ -93,24 +94,28 @@ public class XMLUtil {
 		transformer.transform(source, result);
 	}
 
-	public static int analyzeESEXML(File outputFile) throws XMLStreamException, SAXException,
+	public static DigitalObjectCounter analyzeESEXML(File outputFile) throws XMLStreamException, SAXException,
 			IOException {
 
 		XMLStreamReader xmlReader = XMLUtil.getXMLStreamReader(outputFile);
 		EDMParser parser = new EDMParser();
-		IsShownAtParser recordParser = new IsShownAtParser();
-		parser.registerParser(recordParser);
+		ProvidedCHOParser providedCHOParser = new ProvidedCHOParser();
+        WebResourceParser webResourceParser = new WebResourceParser();
+		parser.registerParser(providedCHOParser);
+		parser.registerParser(webResourceParser);
 		// count number of records
 		parser.parse(xmlReader, null);
-		int numberOfIsShownAt = recordParser.getNumberOfIsShownAt();
-		if (numberOfIsShownAt == 0) {
+        int numberOfProvidedCHO = providedCHOParser.getNumberOfProvidedCHO();
+		int numberOfWebResource = webResourceParser.getNumberOfWebResource();
+        DigitalObjectCounter digitalObjectCounter = new DigitalObjectCounter(numberOfProvidedCHO, numberOfWebResource);
+		if (numberOfProvidedCHO == 0) {
 			outputFile.delete();
 //TODO Re-enable validation; currently disabled because of strange exception in code (although oXygen says file is valid)
 //		} else {
 //			XMLUtil.validateEDM(outputFile);
 		}
 		xmlReader.close();
-		return numberOfIsShownAt;
+		return digitalObjectCounter;
 	}
 
 	private static void validateEDM(File file) throws SAXException, IOException, XMLStreamException {
