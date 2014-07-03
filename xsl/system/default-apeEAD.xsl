@@ -2501,14 +2501,16 @@
 
     <xsl:template name="createControlaccess">
         <xsl:param name="context"/>
-        <controlaccess>
-            <xsl:for-each
-                select="$context//geogname[parent::item|parent::entry|parent::p|parent::unittitle] | $context//subject[parent::item|parent::entry|parent::p|parent::unittitle] | $context//famname[parent::item|parent::entry|parent::p|parent::unittitle] | $context//persname[parent::item|parent::entry|parent::p|parent::unittitle] | $context//corpname[parent::item|parent::entry|parent::p|parent::unittitle] | $context//occupation[parent::item|parent::entry|parent::p|parent::unittitle] | $context//genreform[parent::item|parent::entry|parent::p|parent::unittitle] | $context//function[parent::item|parent::entry|parent::p|parent::unittitle] | $context//title[parent::item|parent::entry|parent::p|parent::unittitle] | $context//name[parent::item|parent::entry|parent::p|parent::unittitle]">
-                <xsl:element name="{local-name()}" namespace="urn:isbn:1-931666-22-9">
-                    <xsl:apply-templates select="node()" mode="#current"/>
-                </xsl:element>
-            </xsl:for-each>
-        </controlaccess>
+        <xsl:if test="$context//geogname[parent::item|parent::entry|parent::p|parent::unittitle] | $context//subject[parent::item|parent::entry|parent::p|parent::unittitle] | $context//famname[parent::item|parent::entry|parent::p|parent::unittitle] | $context//persname[parent::item|parent::entry|parent::p|parent::unittitle] | $context//corpname[parent::item|parent::entry|parent::p|parent::unittitle] | $context//occupation[parent::item|parent::entry|parent::p|parent::unittitle] | $context//genreform[parent::item|parent::entry|parent::p|parent::unittitle] | $context//function[parent::item|parent::entry|parent::p|parent::unittitle] | $context//title[parent::item|parent::entry|parent::p|parent::unittitle] | $context//name[parent::item|parent::entry|parent::p|parent::unittitle]">
+            <controlaccess>
+                <xsl:for-each
+                        select="$context//geogname[parent::item|parent::entry|parent::p|parent::unittitle] | $context//subject[parent::item|parent::entry|parent::p|parent::unittitle] | $context//famname[parent::item|parent::entry|parent::p|parent::unittitle] | $context//persname[parent::item|parent::entry|parent::p|parent::unittitle] | $context//corpname[parent::item|parent::entry|parent::p|parent::unittitle] | $context//occupation[parent::item|parent::entry|parent::p|parent::unittitle] | $context//genreform[parent::item|parent::entry|parent::p|parent::unittitle] | $context//function[parent::item|parent::entry|parent::p|parent::unittitle] | $context//title[parent::item|parent::entry|parent::p|parent::unittitle] | $context//name[parent::item|parent::entry|parent::p|parent::unittitle]">
+                    <xsl:element name="{local-name()}" namespace="urn:isbn:1-931666-22-9">
+                        <xsl:apply-templates select="node()" mode="#current"/>
+                    </xsl:element>
+                </xsl:for-each>
+            </controlaccess>
+        </xsl:if>
     </xsl:template>
 
     <!--<xsl:template name="createControlaccess">-->
