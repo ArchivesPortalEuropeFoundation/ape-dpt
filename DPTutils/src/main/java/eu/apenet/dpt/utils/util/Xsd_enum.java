@@ -1,5 +1,7 @@
 package eu.apenet.dpt.utils.util;
 
+import org.apache.commons.lang.StringUtils;
+
 /**
  * User: Yoann Moranville
  * Date: Aug 10, 2010
@@ -30,6 +32,17 @@ public enum Xsd_enum {
 
     public String getReadableName(){
         return readableName;
+    }
+
+    public static boolean doesXsdExist(String schema, String stripString) {
+        if(StringUtils.isNotEmpty(stripString))
+            schema = schema.replaceAll(stripString, "");
+        for(Xsd_enum value : Xsd_enum.values()) {
+            if(value.getPath().equals(schema)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     @Override
