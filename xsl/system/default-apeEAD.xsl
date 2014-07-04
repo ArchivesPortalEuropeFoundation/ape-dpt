@@ -2501,30 +2501,18 @@
 
     <xsl:template name="createControlaccess">
         <xsl:param name="context"/>
-        <xsl:if test="$context//geogname[parent::item|parent::entry|parent::p|parent::unittitle] | $context//subject[parent::item|parent::entry|parent::p|parent::unittitle] | $context//famname[parent::item|parent::entry|parent::p|parent::unittitle] | $context//persname[parent::item|parent::entry|parent::p|parent::unittitle] | $context//corpname[parent::item|parent::entry|parent::p|parent::unittitle] | $context//occupation[parent::item|parent::entry|parent::p|parent::unittitle] | $context//genreform[parent::item|parent::entry|parent::p|parent::unittitle] | $context//function[parent::item|parent::entry|parent::p|parent::unittitle] | $context//title[parent::item|parent::entry|parent::p|parent::unittitle] | $context//name[parent::item|parent::entry|parent::p|parent::unittitle]">
+        <xsl:for-each
+            select="$context/descendant::unittitle[descendant::geogname or descendant::subject or descendant::famname or descendant::persname or descendant::corpname or descendant::occupation or descendant::genreform or descendant::function or descendant::title or descendant::name] | $context/descendant::p[descendant::geogname or descendant::subject or descendant::famname or descendant::persname or descendant::corpname or descendant::occupation or descendant::genreform or descendant::function or descendant::title or descendant::name] | $context/descendant::entry[descendant::geogname or descendant::subject or descendant::famname or descendant::persname or descendant::corpname or descendant::occupation or descendant::genreform or descendant::function or descendant::title or descendant::name] | $context/descendant::item[descendant::geogname or descendant::subject or descendant::famname or descendant::persname or descendant::corpname or descendant::occupation or descendant::genreform or descendant::function or descendant::title or descendant::name]">
             <controlaccess>
                 <xsl:for-each
-                        select="$context//geogname[parent::item|parent::entry|parent::p|parent::unittitle] | $context//subject[parent::item|parent::entry|parent::p|parent::unittitle] | $context//famname[parent::item|parent::entry|parent::p|parent::unittitle] | $context//persname[parent::item|parent::entry|parent::p|parent::unittitle] | $context//corpname[parent::item|parent::entry|parent::p|parent::unittitle] | $context//occupation[parent::item|parent::entry|parent::p|parent::unittitle] | $context//genreform[parent::item|parent::entry|parent::p|parent::unittitle] | $context//function[parent::item|parent::entry|parent::p|parent::unittitle] | $context//title[parent::item|parent::entry|parent::p|parent::unittitle] | $context//name[parent::item|parent::entry|parent::p|parent::unittitle]">
+                    select="descendant::geogname | descendant::subject | descendant::famname | descendant::persname | descendant::corpname | descendant::occupation | descendant::genreform | descendant::function | descendant::title | descendant::name">
                     <xsl:element name="{local-name()}" namespace="urn:isbn:1-931666-22-9">
                         <xsl:apply-templates select="node()" mode="#current"/>
                     </xsl:element>
                 </xsl:for-each>
             </controlaccess>
-        </xsl:if>
+        </xsl:for-each>
     </xsl:template>
-
-    <!--<xsl:template name="createControlaccess">-->
-    <!--<xsl:param name="context" />-->
-    <!--<controlaccess>-->
-    <!--<xsl:for-each select="$context/did/unittitle and $context/bibref">-->
-    <!--<xsl:for-each select="geogname | subject | famname | persname | corpname | occupation | genreform | function">-->
-    <!--<xsl:element name="{local-name()}" namespace="urn:isbn:1-931666-22-9">-->
-    <!--<xsl:apply-templates select="node()" mode="#current"/>-->
-    <!--</xsl:element>-->
-    <!--</xsl:for-each>-->
-    <!--</xsl:for-each>-->
-    <!--</controlaccess>-->
-    <!--</xsl:template>-->
 
     <!-- copy: dsc -->
     <xsl:template match="dsc" mode="copy">
