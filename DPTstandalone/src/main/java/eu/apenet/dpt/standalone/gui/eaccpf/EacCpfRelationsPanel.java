@@ -259,16 +259,15 @@ public class EacCpfRelationsPanel extends EacCpfPanel {
 						language = componentEntry.getLang();
 					}
 				}
-			} else if (StringUtils.isNotEmpty(firstLanguage)) {
+			} else if (StringUtils.isNotEmpty(firstLanguage)
+					&& StringUtils.isEmpty(setComponent.getHref())
+					&& StringUtils.isEmpty(setComponent.getType())
+					&& (setComponent.getDescriptiveNote() == null
+					 || (setComponent.getDescriptiveNote() != null
+							 && setComponent.getDescriptiveNote().getP().isEmpty()))) {
 				language = firstLanguage;
 			}
-
-			// Name and language of the relation.
-			if (title.isEmpty()) {
-				title = other;
-			}
-			setComponentNameTf = new TextFieldWithLanguage(title, language);
-
+			
 			// Identifier of the relation.
 			setComponentIdentifierTf = new JTextField(id);
 
@@ -279,9 +278,18 @@ public class EacCpfRelationsPanel extends EacCpfPanel {
 			if(setComponent.getDescriptiveNote() != null && !setComponent.getDescriptiveNote().getP().isEmpty()
 	                && StringUtils.isNotEmpty(setComponent.getDescriptiveNote().getP().get(0).getContent())){
 				descriptiveNote = setComponent.getDescriptiveNote().getP().get(0).getContent();
+				if (StringUtils.isEmpty(language)) {
+					language = setComponent.getDescriptiveNote().getP().get(0).getLang();
+				}
 			}
 			setComponentDescriptionTa = new TextAreaWithLanguage(descriptiveNote, "");
-
+			
+			// Name and language of the relation.
+			if (title.isEmpty()) {
+				title = other;
+			}
+			setComponentNameTf = new TextFieldWithLanguage(title, language);
+			
 			// Agency code and name of the relation.
 			int size = 0;
 			if (agencyNameList.size() > agencyCodeList.size()) {
@@ -443,7 +451,11 @@ public class EacCpfRelationsPanel extends EacCpfPanel {
 	private PanelBuilder buildCPFRelation(PanelBuilder builder, CellConstraints cc) {
 		// Define values of the part.
 		if (this.eaccpf.getCpfDescription().getRelations().getCpfRelation().isEmpty()) {
-			this.eaccpf.getCpfDescription().getRelations().getCpfRelation().add(new CpfRelation());
+			if (this.eaccpf.getCpfDescription().getAlternativeSet() == null
+					|| (this.eaccpf.getCpfDescription().getAlternativeSet() != null
+						&& this.eaccpf.getCpfDescription().getAlternativeSet().getSetComponent().isEmpty())) {
+				this.eaccpf.getCpfDescription().getRelations().getCpfRelation().add(new CpfRelation());
+			}
 		}
 
 		List<CpfRelation> cpfRelations = this.eaccpf.getCpfDescription().getRelations().getCpfRelation();
@@ -514,15 +526,14 @@ public class EacCpfRelationsPanel extends EacCpfPanel {
 						language = relationEntry.getLang();
 					}
 				}
-			} else if (StringUtils.isNotEmpty(firstLanguage)) {
+			} else if (StringUtils.isNotEmpty(firstLanguage)
+					&& StringUtils.isEmpty(cpfRelation.getHref())
+					&& StringUtils.isEmpty(cpfRelation.getCpfRelationType())
+					&& (cpfRelation.getDescriptiveNote() == null
+					 || (cpfRelation.getDescriptiveNote() != null
+							 && cpfRelation.getDescriptiveNote().getP().isEmpty()))) {
 				language = firstLanguage;
 			}
-
-			// Name and language of the relation.
-			if (title.isEmpty()) {
-				title = other;
-			}
-			cpfRelationNameTf = new TextFieldWithLanguage(title, language);
 
 			// Identifier of the relation.
 			cpfRelationIdentifierTf = new JTextField(id);
@@ -553,8 +564,17 @@ public class EacCpfRelationsPanel extends EacCpfPanel {
 	                && !cpfRelation.getDescriptiveNote().getP().isEmpty()
 	                && StringUtils.isNotEmpty(cpfRelation.getDescriptiveNote().getP().get(0).getContent())){
 				descriptiveNote = cpfRelation.getDescriptiveNote().getP().get(0).getContent();
+				if (StringUtils.isEmpty(language)) {
+					language = cpfRelation.getDescriptiveNote().getP().get(0).getLang();
+				}
 			}
 			cpfRelationDescriptionTa = new TextAreaWithLanguage(descriptiveNote, "");
+
+			// Name and language of the relation.
+			if (title.isEmpty()) {
+				title = other;
+			}
+			cpfRelationNameTf = new TextFieldWithLanguage(title, language);
 
 			// Agency code and name of the relation.
 			int size = 0;
@@ -735,16 +755,15 @@ public class EacCpfRelationsPanel extends EacCpfPanel {
 						language = relationEntry.getLang();
 					}
 				}
-			} else if (StringUtils.isNotEmpty(firstLanguage)) {
+			} else if (StringUtils.isNotEmpty(firstLanguage)
+					&& StringUtils.isEmpty(resourceRelation.getHref())
+					&& StringUtils.isEmpty(resourceRelation.getResourceRelationType())
+					&& (resourceRelation.getDescriptiveNote() == null
+					 || (resourceRelation.getDescriptiveNote() != null
+							 && resourceRelation.getDescriptiveNote().getP().isEmpty()))) {
 				language = firstLanguage;
 			}
-
-			// Name and language of the relation.
-			if (title.isEmpty()) {
-				title = other;
-			}
-			resourceRelationNameTf = new TextFieldWithLanguage(title, language);
-
+			
 			// Identifier of the relation.
 			resourceRelationIdentifierTf = new JTextField(id);
 
@@ -772,9 +791,18 @@ public class EacCpfRelationsPanel extends EacCpfPanel {
 			if(resourceRelation.getDescriptiveNote() != null && !resourceRelation.getDescriptiveNote().getP().isEmpty()
 	                && StringUtils.isNotEmpty(resourceRelation.getDescriptiveNote().getP().get(0).getContent())){
 				descriptiveNote = resourceRelation.getDescriptiveNote().getP().get(0).getContent();
+				if (StringUtils.isEmpty(language)) {
+					language = resourceRelation.getDescriptiveNote().getP().get(0).getLang();
+				}	
+				
 			}
 			resourceRelationDescriptionTa = new TextAreaWithLanguage(descriptiveNote, "");
-
+			
+			// Name and language of the relation.
+			if (title.isEmpty()) {
+				title = other;
+			}
+			resourceRelationNameTf = new TextFieldWithLanguage(title, language);
 			// Agency code and name of the relation.
 			int size = 0;
 			if (agencyNameList.size() > agencyCodeList.size()) {
@@ -959,16 +987,15 @@ public class EacCpfRelationsPanel extends EacCpfPanel {
 						language = relationEntry.getLang();
 					}
 				}
-			} else if (StringUtils.isNotEmpty(firstLanguage)) {
+			} else if (StringUtils.isNotEmpty(firstLanguage)
+					&& StringUtils.isEmpty(functionRelation.getHref())
+					&& StringUtils.isEmpty(functionRelation.getFunctionRelationType())
+					&& (functionRelation.getDescriptiveNote() == null
+					 || (functionRelation.getDescriptiveNote() != null
+							 && functionRelation.getDescriptiveNote().getP().isEmpty()))) {
 				language = firstLanguage;
 			}
-
-			// Name and language of the relation.
-			if (title.isEmpty()) {
-				title = other;
-			}
-			resourceRelationNameTf = new TextFieldWithLanguage(title, language);
-
+			
 			// Identifier of the relation.
 			resourceRelationIdentifierTf = new JTextField(id);
 
@@ -997,9 +1024,18 @@ public class EacCpfRelationsPanel extends EacCpfPanel {
 			if(functionRelation.getDescriptiveNote() != null && !functionRelation.getDescriptiveNote().getP().isEmpty()
 	                && StringUtils.isNotEmpty(functionRelation.getDescriptiveNote().getP().get(0).getContent())){
 				descriptiveNote = functionRelation.getDescriptiveNote().getP().get(0).getContent();
+				if (StringUtils.isEmpty(language)) {
+					language = functionRelation.getDescriptiveNote().getP().get(0).getLang();
+				}
 			}
 			resourceRelationDescriptionTa = new TextAreaWithLanguage(descriptiveNote, "");
-
+			
+			// Name and language of the relation.
+			if (title.isEmpty()) {
+				title = other;
+			}
+			resourceRelationNameTf = new TextFieldWithLanguage(title, language);
+			
 			// Agency code and name of the relation.
 			int size = 0;
 			if (agencyNameList.size() > agencyCodeList.size()) {
@@ -1338,7 +1374,8 @@ public class EacCpfRelationsPanel extends EacCpfPanel {
 			if (eaccpf.getCpfDescription().getRelations() == null) {
 				eaccpf.getCpfDescription().setRelations(new Relations());
 			}
-			if(!empty){
+			if(!empty 
+					|| (empty && resourceRelationHrefAndTypeTfs.size() > eaccpf.getCpfDescription().getRelations().getResourceRelation().size())){
 				eaccpf.getCpfDescription().getRelations().getResourceRelation().add(new ResourceRelation());
 			}
 			reloadTabbedPanel(new EacCpfRelationsPanel(eaccpf, tabbedPane, mainTabbedPane, eacCpfFrame, model, labels, entityType, firstLanguage, firstScript).buildEditorPanel(errors), 2);
@@ -1389,9 +1426,10 @@ public class EacCpfRelationsPanel extends EacCpfPanel {
 			if (eaccpf.getCpfDescription().getRelations() == null) {
 				eaccpf.getCpfDescription().setRelations(new Relations());
 			}
-			if(!empty){
+			if(!empty
+					|| (empty && functionRelationNameTfs.size() > eaccpf.getCpfDescription().getRelations().getFunctionRelation().size())){
 				eaccpf.getCpfDescription().getRelations().getFunctionRelation().add(new FunctionRelation());
-			}
+		}
 
 			reloadTabbedPanel(new EacCpfRelationsPanel(eaccpf, tabbedPane, mainTabbedPane, eacCpfFrame, model, labels, entityType, firstLanguage, firstScript).buildEditorPanel(errors), 2);
 		}
@@ -1441,7 +1479,12 @@ public class EacCpfRelationsPanel extends EacCpfPanel {
 			if (eaccpf.getCpfDescription().getRelations() == null) {
 				eaccpf.getCpfDescription().setRelations(new Relations());
 			}
-			if(!empty){
+			if (eaccpf.getCpfDescription().getAlternativeSet() == null) {
+				eaccpf.getCpfDescription().setAlternativeSet(new AlternativeSet());
+			}
+
+			int size = eaccpf.getCpfDescription().getRelations().getCpfRelation().size() + eaccpf.getCpfDescription().getAlternativeSet().getSetComponent().size();
+			if(!empty || (empty && cpfRelationHrefAndTypeTfs.size() > size)){
 				eaccpf.getCpfDescription().getRelations().getCpfRelation().add(new CpfRelation());
 			}
 
@@ -1628,39 +1671,52 @@ public class EacCpfRelationsPanel extends EacCpfPanel {
 				if(cpfRelationOrganisationNameAndIdTfsList!=null){
 					for (TextFieldWithLanguage cpfRelationOrganisationNameAndIdTf : cpfRelationOrganisationNameAndIdTfsList) {
 						// /eacCpf/cpfDescription/relations/functionRelation/relationEntry@localType='agencyName'
+						RelationEntry nameRelationEntry = new RelationEntry();
 						String agencyName = cpfRelationOrganisationNameAndIdTf.getTextValue();
-						if (/*StringUtils.isNotEmpty(agencyName)*/agencyName!=null) {
-							RelationEntry relationEntry = new RelationEntry();
-							relationEntry.setContent(trimStringValue(agencyName));
-							relationEntry.setLocalType(EacCpfRelationsPanel.LOCALTYPE_AGENCYNAME);
-							if (StringUtils.isNotEmpty(language)) {
-								relationEntry.setLang(language);
+						if ((!save && agencyName != null)
+								|| (save && agencyName != null && StringUtils.isNotEmpty(trimStringValue(agencyName)))) {
+							nameRelationEntry.setContent(agencyName);
+							nameRelationEntry.setLocalType(EacCpfRelationsPanel.LOCALTYPE_AGENCYNAME);
+							if (StringUtils.isNotEmpty(language)
+									&& StringUtils.isNotEmpty(trimStringValue(agencyName))) {
+								nameRelationEntry.setLang(language);
 							}
-							functionRelation.getRelationEntry().add(relationEntry);
-							hasChanged = true;
 						}
 						// /eacCpf/cpfDescription/relations/functionRelation/relationEntry@localType='agencyCode'
+						RelationEntry codeRelationEntry = new RelationEntry();
 						String agencyCode = cpfRelationOrganisationNameAndIdTf.getExtraValue();
-						if (/*StringUtils.isNotEmpty(agencyCode)*/agencyCode!=null) {
-							RelationEntry relationEntry = new RelationEntry();
-							relationEntry.setContent(trimStringValue(agencyCode));
-							relationEntry.setLocalType(EacCpfRelationsPanel.LOCALTYPE_AGENCYCODE);
-							if (StringUtils.isNotEmpty(language)) {
-								relationEntry.setLang(language);
+						if ((!save && agencyCode != null)
+								|| (save && agencyCode != null && StringUtils.isNotEmpty(trimStringValue(agencyCode)))) {
+							codeRelationEntry.setContent(agencyCode);
+							codeRelationEntry.setLocalType(EacCpfRelationsPanel.LOCALTYPE_AGENCYCODE);
+							if (StringUtils.isNotEmpty(language)
+									&& StringUtils.isNotEmpty(trimStringValue(agencyCode))) {
+								codeRelationEntry.setLang(language);
 							}
-							if(!save || (save && StringUtils.isNotEmpty(agencyCode) && StringUtils.isNotEmpty(agencyName))){
-								functionRelation.getRelationEntry().add(relationEntry);
-							}else if(functionRelation.getRelationEntry().size()>0){
-								functionRelation.getRelationEntry().remove(functionRelation.getRelationEntry().size()-1);
-							}
+						}
+						if (!save
+								&& (StringUtils.isNotEmpty(trimStringValue(agencyName))
+										|| StringUtils.isNotEmpty(trimStringValue(agencyCode)))) {
+							functionRelation.getRelationEntry().add(nameRelationEntry);
+							functionRelation.getRelationEntry().add(codeRelationEntry);
+							hasChanged = true;
+						} else if (save
+								&& StringUtils.isNotEmpty(trimStringValue(agencyName))
+										&& StringUtils.isNotEmpty(trimStringValue(agencyCode))) {
+							functionRelation.getRelationEntry().add(nameRelationEntry);
+							functionRelation.getRelationEntry().add(codeRelationEntry);
 							hasChanged = true;
 						}
 					}
 				}
-				if (hasChanged || (!saveFunctions && i+1 == functionRelationNameTfs.size())) {
+				if (hasChanged || (!saveFunctions && i+1 == functionRelationNameTfs.size()) && !(functionRelation.getRelationEntry().isEmpty())) {
+					
 					relations.getFunctionRelation().add(functionRelation);
 				}
 			}
+
+			// Add correct relations to the object.
+			setCorrectRelations(relations);
 		}
 
 		private void updateResourceRelations(Relations relations, boolean save) {
@@ -1740,39 +1796,53 @@ public class EacCpfRelationsPanel extends EacCpfPanel {
 				if(resourceRelationOrganisationNameAndIdTfsList!=null){
 					for (TextFieldWithLanguage resourceRelationOrganisationNameAndIdTf : resourceRelationOrganisationNameAndIdTfsList) {
 						// /eacCpf/cpfDescription/relations/resourceRelation/relationEntry@localType='agencyName'
+						RelationEntry nameRelationEntry = new RelationEntry();
 						String agencyName = resourceRelationOrganisationNameAndIdTf.getTextValue();
-						if (/*StringUtils.isNotEmpty(agencyName)*/agencyName!=null) {
-							RelationEntry relationEntry = new RelationEntry();
-							relationEntry.setContent(trimStringValue(agencyName));
-							relationEntry.setLocalType(EacCpfRelationsPanel.LOCALTYPE_AGENCYNAME);
-							if (StringUtils.isNotEmpty(language)) {
-								relationEntry.setLang(language);
+						if ((!save && agencyName != null)
+								|| (save && agencyName != null && StringUtils.isNotEmpty(trimStringValue(agencyName)))) {
+							nameRelationEntry.setContent(agencyName);
+							nameRelationEntry.setLocalType(EacCpfRelationsPanel.LOCALTYPE_AGENCYNAME);
+							if (StringUtils.isNotEmpty(language)
+									&& StringUtils.isNotEmpty(trimStringValue(agencyName))) {
+								nameRelationEntry.setLang(language);
 							}
-							resourceRelation.getRelationEntry().add(relationEntry);
-							hasChanged = true;
 						}
+
 						// /eacCpf/cpfDescription/relations/resourceRelation/relationEntry@localType='agencyCode'
+						RelationEntry codeRelationEntry = new RelationEntry();
 						String agencyCode = resourceRelationOrganisationNameAndIdTf.getExtraValue();
-						if (/*StringUtils.isNotEmpty(agencyCode)*/agencyCode!=null) {
-							RelationEntry relationEntry = new RelationEntry();
-							relationEntry.setContent(trimStringValue(agencyCode));
-							relationEntry.setLocalType(EacCpfRelationsPanel.LOCALTYPE_AGENCYCODE);
-							if (StringUtils.isNotEmpty(language)) {
-								relationEntry.setLang(language);
+						if ((!save && agencyCode != null)
+								|| (save && agencyCode != null && StringUtils.isNotEmpty(trimStringValue(agencyCode)))) {
+							codeRelationEntry.setContent(agencyCode);
+							codeRelationEntry.setLocalType(EacCpfRelationsPanel.LOCALTYPE_AGENCYCODE);
+							if (StringUtils.isNotEmpty(language)
+									&& StringUtils.isNotEmpty(trimStringValue(agencyCode))) {
+								codeRelationEntry.setLang(language);
 							}
-							if(!save || (save && StringUtils.isNotEmpty(agencyCode) && StringUtils.isNotEmpty(agencyName))){
-								resourceRelation.getRelationEntry().add(relationEntry);
-							}else if(resourceRelation.getRelationEntry().size()>0){
-								resourceRelation.getRelationEntry().remove(resourceRelation.getRelationEntry().size()-1);
-							}
+						}
+
+						if (!save
+								&& (StringUtils.isNotEmpty(trimStringValue(agencyName))
+										|| StringUtils.isNotEmpty(trimStringValue(agencyCode)))) {
+							resourceRelation.getRelationEntry().add(nameRelationEntry);
+							resourceRelation.getRelationEntry().add(codeRelationEntry);
+							hasChanged = true;
+						} else if (save
+								&& StringUtils.isNotEmpty(trimStringValue(agencyName))
+										&& StringUtils.isNotEmpty(trimStringValue(agencyCode))) {
+							resourceRelation.getRelationEntry().add(nameRelationEntry);
+							resourceRelation.getRelationEntry().add(codeRelationEntry);
 							hasChanged = true;
 						}
 					}
 				}
-				if (hasChanged || (!saveResources && i+1 == resourceRelationNameTfs.size())) {
+				if (hasChanged || (!saveResources && i+1 == resourceRelationNameTfs.size())  && !(resourceRelation.getRelationEntry().isEmpty())) {
 					relations.getResourceRelation().add(resourceRelation);
 				}
 			}
+
+			// Add correct relations to the object.
+			setCorrectRelations(relations);
 		}
 
 		/**
@@ -1813,12 +1883,21 @@ public class EacCpfRelationsPanel extends EacCpfPanel {
 				if (StringUtils.isNotEmpty(type) && !type.equalsIgnoreCase(TextFieldWithComboBoxEacCpf.SELECTED_ALTERNATIVE_SET_VALUE)) {
 					continueWithEacCpfPart = true; //controls if a eaccpf part is selected or if needs jump to alternativeSet part
 				}
-				//now continue if necesary
+				//now continue if necessary
 				if(continueWithEacCpfPart || StringUtils.isEmpty(type)){
 					relations = buildCPFRelationPart(relations,i,save); //builds the old CpfRelation part
 				}else{
 					hasChanged = buildAlternativeSet(i,save); //builds the new alternativeSet, it works with global 'eaccpf' -> this.eaccpf.getCpfDescription().getAlternativeSet().getSetComponent()
 				}
+			}
+
+			// Add correct relations to the object.
+			setCorrectRelations(relations);
+
+			if((this.eaccpf.getCpfDescription()!=null && this.eaccpf.getCpfDescription().getAlternativeSet()!=null &&
+					this.eaccpf.getCpfDescription().getAlternativeSet().getSetComponent()!=null &&
+					this.eaccpf.getCpfDescription().getAlternativeSet().getSetComponent().isEmpty())) {
+				this.eaccpf.getCpfDescription().setAlternativeSet(null);
 			}
 			
 			return hasChanged;
@@ -1907,38 +1986,51 @@ public class EacCpfRelationsPanel extends EacCpfPanel {
 			if(cpfRelationOrganisationNameAndIdTfsList!=null){
 				for (TextFieldWithLanguage cpfRelationOrganisationNameAndIdTf : cpfRelationOrganisationNameAndIdTfsList) {
 					// /eacCpf/cpfDescription/relations/cpfRelation/relationEntry@localType='agencyName'
+					ComponentEntry nameRelationEntry = new ComponentEntry();
 					String agencyName = trimStringValue(cpfRelationOrganisationNameAndIdTf.getTextValue());
-					if (/*StringUtils.isNotEmpty(agencyName)*/agencyName!=null) {
-						ComponentEntry componentEntry = new ComponentEntry();
-						componentEntry.setContent(trimStringValue(agencyName));
-						componentEntry.setLocalType(EacCpfRelationsPanel.LOCALTYPE_AGENCYNAME);
-						if (StringUtils.isNotEmpty(language)) {
-							componentEntry.setLang(language);
+					if ((!save && agencyName != null)
+							|| (save && agencyName != null && StringUtils.isNotEmpty(trimStringValue(agencyName)))) {
+						nameRelationEntry.setContent(agencyName);
+						nameRelationEntry.setLocalType(EacCpfRelationsPanel.LOCALTYPE_AGENCYNAME);
+						if (StringUtils.isNotEmpty(language)
+								&& StringUtils.isNotEmpty(trimStringValue(agencyName))) {
+							nameRelationEntry.setLang(language);
 						}
-						setComponent.getComponentEntry().add(componentEntry);
-						hasChanged = true;
 					}
 
 					// /eacCpf/cpfDescription/relations/cpfRelation/relationEntry@localType='agencyCode'
+					ComponentEntry codeRelationEntry = new ComponentEntry();
 					String agencyCode = trimStringValue(cpfRelationOrganisationNameAndIdTf.getExtraValue());
-					if (/*StringUtils.isNotEmpty(agencyCode)*/agencyCode!=null) {
-						ComponentEntry componentEntry = new ComponentEntry();
-						componentEntry.setContent(trimStringValue(agencyCode));
-						componentEntry.setLocalType(EacCpfRelationsPanel.LOCALTYPE_AGENCYCODE);
-						if (StringUtils.isNotEmpty(language)) {
-							componentEntry.setLang(language);
+					if ((!save && agencyCode != null)
+							|| (save && agencyCode != null && StringUtils.isNotEmpty(trimStringValue(agencyCode)))) {
+						codeRelationEntry.setContent(agencyCode);
+						codeRelationEntry.setLocalType(EacCpfRelationsPanel.LOCALTYPE_AGENCYCODE);
+						if (StringUtils.isNotEmpty(language)
+								&& StringUtils.isNotEmpty(trimStringValue(agencyCode))) {
+							codeRelationEntry.setLang(language);
 						}
-						if(!save || (save && StringUtils.isNotEmpty(agencyCode) && StringUtils.isNotEmpty(agencyName))){
-							setComponent.getComponentEntry().add(componentEntry);
-						}else if(setComponent.getComponentEntry().size()>0){
-							setComponent.getComponentEntry().remove(setComponent.getComponentEntry().size()-1);
-						}
+					}
+					if (!save
+							&& (StringUtils.isNotEmpty(trimStringValue(agencyName))
+									|| StringUtils.isNotEmpty(trimStringValue(agencyCode)))) {
+						setComponent.getComponentEntry().add(nameRelationEntry);
+						setComponent.getComponentEntry().add(codeRelationEntry);
+						hasChanged = true;
+					} else if (save
+							&& StringUtils.isNotEmpty(trimStringValue(agencyName))
+									&& StringUtils.isNotEmpty(trimStringValue(agencyCode))) {
+						setComponent.getComponentEntry().add(nameRelationEntry);
+						setComponent.getComponentEntry().add(codeRelationEntry);
 						hasChanged = true;
 					}
 				}
 			}
-			
-			if(hasChanged || (!saveCPF && currentIndex+1 == cpfRelationOrganisationNameAndIdTfs.size())){
+
+			String type = cpfRelationHrefAndTypeTf.getComboBoxValue(TextFieldWithComboBoxEacCpf.TYPE_CPF_RELATION, entityType);
+			if(hasChanged 
+					|| (!saveCPF && currentIndex+1 == cpfRelationOrganisationNameAndIdTfs.size())
+					&& !(setComponent.getComponentEntry().isEmpty())
+					|| (!hasChanged && !save && StringUtils.isNotEmpty(trimStringValue(type)))) {
 				this.eaccpf.getCpfDescription().getAlternativeSet().getSetComponent().add(setComponent);
 			}
 			return hasChanged;
@@ -2030,41 +2122,96 @@ public class EacCpfRelationsPanel extends EacCpfPanel {
 			if(cpfRelationOrganisationNameAndIdTfsList!=null){
 				for (TextFieldWithLanguage cpfRelationOrganisationNameAndIdTf : cpfRelationOrganisationNameAndIdTfsList) {
 					// /eacCpf/cpfDescription/relations/cpfRelation/relationEntry@localType='agencyName'
+					RelationEntry nameRelationEntry = new RelationEntry();
 					String agencyName = trimStringValue(cpfRelationOrganisationNameAndIdTf.getTextValue());
-					if (/*StringUtils.isNotEmpty(agencyName)*/agencyName!=null) {
-						RelationEntry relationEntry = new RelationEntry();
-						relationEntry.setContent(trimStringValue(agencyName));
-						relationEntry.setLocalType(EacCpfRelationsPanel.LOCALTYPE_AGENCYNAME);
-						if (StringUtils.isNotEmpty(language)) {
-							relationEntry.setLang(language);
+					if ((!save && agencyName != null)
+							|| (save && agencyName != null && StringUtils.isNotEmpty(agencyName))) {
+						nameRelationEntry.setContent(agencyName);
+						nameRelationEntry.setLocalType(EacCpfRelationsPanel.LOCALTYPE_AGENCYNAME);
+						if (StringUtils.isNotEmpty(language)
+								&& StringUtils.isNotEmpty(agencyName)) {
+							nameRelationEntry.setLang(language);
 						}
-						cpfRelation.getRelationEntry().add(relationEntry);
-						hasChanged = true;
 					}
-
 					// /eacCpf/cpfDescription/relations/cpfRelation/relationEntry@localType='agencyCode'
+					RelationEntry codeRelationEntry = new RelationEntry();
 					String agencyCode = trimStringValue(cpfRelationOrganisationNameAndIdTf.getExtraValue());
-					if (/*StringUtils.isNotEmpty(agencyCode)*/agencyCode!=null) {
-						RelationEntry relationEntry = new RelationEntry();
-						relationEntry.setContent(trimStringValue(agencyCode));
-						relationEntry.setLocalType(EacCpfRelationsPanel.LOCALTYPE_AGENCYCODE);
-						if (StringUtils.isNotEmpty(language)) {
-							relationEntry.setLang(language);
+					if ((!save && agencyCode != null)
+							|| (save && agencyCode != null && StringUtils.isNotEmpty(agencyCode))) {
+						codeRelationEntry.setContent(agencyCode);
+						codeRelationEntry.setLocalType(EacCpfRelationsPanel.LOCALTYPE_AGENCYCODE);
+						if (StringUtils.isNotEmpty(language)
+								&& StringUtils.isNotEmpty(agencyCode)) {
+							codeRelationEntry.setLang(language);
 						}
-						if(!save || (save && StringUtils.isNotEmpty(agencyCode) && StringUtils.isNotEmpty(agencyName))){
-							cpfRelation.getRelationEntry().add(relationEntry);
-						}else if(cpfRelation.getRelationEntry().size()>0){
-							cpfRelation.getRelationEntry().remove(cpfRelation.getRelationEntry().size()-1);
-						}
+					}
+					if (!save
+							&& (StringUtils.isNotEmpty(trimStringValue(agencyName))
+									|| StringUtils.isNotEmpty(trimStringValue(agencyCode)))) {
+						cpfRelation.getRelationEntry().add(nameRelationEntry);
+						cpfRelation.getRelationEntry().add(codeRelationEntry);
+						hasChanged = true;
+					} else if (save
+							&& StringUtils.isNotEmpty(trimStringValue(agencyName))
+									&& StringUtils.isNotEmpty(trimStringValue(agencyCode))) {
+						cpfRelation.getRelationEntry().add(nameRelationEntry);
+						cpfRelation.getRelationEntry().add(codeRelationEntry);
 						hasChanged = true;
 					}
 				}
 			}
-			if (hasChanged || (!saveCPF && currentIndex+1 == cpfRelationOrganisationNameAndIdTfs.size())) {
+			if (hasChanged || (!saveCPF && currentIndex+1 == cpfRelationOrganisationNameAndIdTfs.size()) && !(cpfRelation.getRelationEntry().isEmpty())) {
 				relations.getCpfRelation().add(cpfRelation);
 			}
 			
 			return relations;
+		}
+	}
+
+	/**
+	 * Method to add the correct relations elements to the EAC-CPF object.
+	 *
+	 * @param relations
+	 */
+	private void setCorrectRelations(Relations relations) {
+		if(relations!=null) {
+			Relations relationsNew = new Relations();
+			boolean exits = false;
+
+			// CPF relations.
+			if (relations.getCpfRelation()!= null && !relations.getCpfRelation().isEmpty()){
+				relationsNew.getCpfRelation().addAll(relations.getCpfRelation());
+				exits = true;
+			}
+
+			// Resource relations.
+			if (relations.getResourceRelation()!=null && !relations.getResourceRelation().isEmpty()) {
+				relationsNew.getResourceRelation().addAll(relations.getResourceRelation());
+				exits = true;
+			}
+
+			// Function relations.
+			if (relations.getFunctionRelation()!=null && !relations.getFunctionRelation().isEmpty()) {
+				relationsNew.getFunctionRelation().addAll(relations.getFunctionRelation());
+				exits = true;
+			}
+
+			if (exits) {
+				this.eaccpf.getCpfDescription().setRelations(relationsNew);
+			} else {
+				this.eaccpf.getCpfDescription().setRelations(null);
+			}
+		}
+		
+		if(relations!=null && relations.getCpfRelation().isEmpty()){
+			Relations relationsNew = new Relations();
+			if (relations.getFunctionRelation()!=null && !relations.getFunctionRelation().isEmpty()) {
+				relationsNew.getFunctionRelation().addAll(relations.getFunctionRelation());
+			}
+			if (relations.getResourceRelation()!=null && !relations.getResourceRelation().isEmpty()) {
+				relationsNew.getResourceRelation().addAll(relations.getResourceRelation());
+			}
+			this.eaccpf.getCpfDescription().setRelations(relationsNew);
 		}
 	}
 
