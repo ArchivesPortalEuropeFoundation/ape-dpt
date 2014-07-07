@@ -194,14 +194,23 @@ public class EagInstitutionPanel extends EagPanels {
 
         otherRecordIdTfs = new ArrayList<TextFieldWithCheckbox>(eag.getControl().getOtherRecordId().size());
         for (OtherRecordId otherRecordId : eag.getControl().getOtherRecordId()) {
-            TextFieldWithCheckbox textFieldWithCheckbox = new TextFieldWithCheckbox(otherRecordId.getValue(), otherRecordId.getLocalType());
+            
+         	String mandatoryStar = "*";
+             if(otherRecordId !=  eag.getControl().getOtherRecordId().get(0))
+                 mandatoryStar = "";
+             
+        	TextFieldWithCheckbox textFieldWithCheckbox = new TextFieldWithCheckbox(otherRecordId.getValue(), otherRecordId.getLocalType());
             otherRecordIdTfs.add(textFieldWithCheckbox);
-            builder.addLabel(labels.getString("eag2012.control.identifierInstitution"), cc.xy(1, rowNb));
+            builder.addLabel(labels.getString("eag2012.control.identifierInstitution") + mandatoryStar, cc.xy(1, rowNb));
             builder.add(textFieldWithCheckbox.getTextField(), cc.xy(3, rowNb));
             builder.addLabel(labels.getString("eag2012.isil.isThisISIL"), cc.xy(5, rowNb));
             textFieldWithCheckbox.getTextField().addKeyListener(new CheckKeyListener());
             builder.add(textFieldWithCheckbox.getIsilOrNotCombo(), cc.xy(7, rowNb));
             textFieldWithCheckbox.getIsilOrNotCombo().addActionListener(new ComboboxActionListener(textFieldWithCheckbox));
+            setNextRow();
+        }
+        if(errors.contains("otherRecordIdTfs")) {
+            builder.add(createErrorLabel(labels.getString("eag2012.errors.notIdentifierInstitution")), cc.xy (1, rowNb));
             setNextRow();
         }
 
@@ -326,6 +335,11 @@ public class EagInstitutionPanel extends EagPanels {
                     setNextRow();
                     builder.add(createErrorLabel(labels.getString("eag2012.errors.street")), cc.xy(1, rowNb));
                 }
+	            if(errors.contains("streetTf") && StringUtils.isEmpty(locationType.getStreetTfValue())) 
+	            {
+	                setNextRow();
+	                builder.add(createErrorLabel(labels.getString("eag2012.errors.street")), cc.xy (1, rowNb));
+	            }
                 setNextRow();
 
                 builder.addLabel(labels.getString("eag2012.commons.cityTownWithPostalcode") + mandatoryStar, cc.xy(1, rowNb));
@@ -336,24 +350,21 @@ public class EagInstitutionPanel extends EagPanels {
                     setNextRow();
                     builder.add(createErrorLabel(labels.getString("eag2012.errors.city")), cc.xy(1, rowNb));
                 }
+	            if(errors.contains("cityTf") && StringUtils.isEmpty(locationType.getCityTfValue())) 
+	            {
+	                setNextRow();
+	                builder.add(createErrorLabel(labels.getString("eag2012.errors.city")), cc.xy (1, rowNb));
+	            }
                 setNextRow();
 
                 builder.addLabel(labels.getString("eag2012.commons.country") + mandatoryStar, cc.xy(1, rowNb));
                 builder.add(locationType.getCountryTf().getTextField(), cc.xy(3, rowNb));
                 builder.addLabel(labels.getString("eag2012.commons.language"), cc.xy(5, rowNb));
                 builder.add(locationType.getCountryTf().getLanguageBox(), cc.xy(7, rowNb));
-                if (errors.contains("countryTf") && StringUtils.isEmpty(locationType.getCountryTfValue())) {
-                    setNextRow();
-                    builder.add(createErrorLabel(labels.getString("eag2012.errors.country")), cc.xy(1, rowNb));
-                }
-                setNextRow();
-
-                builder.addLabel(labels.getString("eag2012.commons.latitude"), cc.xy(1, rowNb));
-                locationType.getLatitudeTf().addFocusListener(new UpdateCoordsText(locationType, EagContactPanel.LATITUDE));
-                builder.add(locationType.getLatitudeTf(), cc.xy(3, rowNb));
-                builder.addLabel(labels.getString("eag2012.commons.longitude"), cc.xy(5, rowNb));
-                locationType.getLongitudeTf().addFocusListener(new UpdateCoordsText(locationType, EagContactPanel.LONGITUDE));
-                builder.add(locationType.getLongitudeTf(), cc.xy(7, rowNb));
+	            if(errors.contains("countryTf") && StringUtils.isEmpty(locationType.getCountryTfValue())) {
+	                setNextRow();
+	                builder.add(createErrorLabel(labels.getString("eag2012.errors.country")), cc.xy(1, rowNb));
+	            }
                 setNextRow();
 
             }
@@ -852,6 +863,10 @@ public class EagInstitutionPanel extends EagPanels {
                         eag.getControl().getOtherRecordId().add(otherRecordId);
                         hasChanged = true;
                     }
+                    if(textFieldWithCheckbox == otherRecordIdTfs.get(0)
+                    		&& (textFieldWithCheckbox.getTextFieldValue()==null  || StringUtils.isEmpty(textFieldWithCheckbox.getTextFieldValue().trim()))) {
+                    	errors.add("otherRecordIdTfs");
+                    }
                 }
             }
 
@@ -916,7 +931,7 @@ public class EagInstitutionPanel extends EagPanels {
                     repository.getLocation().add(location);
                 }
             }
-            locations.addAll(postalAddresses);
+            //locations.addAll(postalAddresses);
 
             if (!continentCombo.getSelectedItem().equals(repository.getGeogarea().getValue())) {
                 repository.getGeogarea().setValue(continentCombo.getSelectedItem().toString());

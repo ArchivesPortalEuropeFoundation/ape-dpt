@@ -165,6 +165,8 @@ public class EagContactPanel extends EagPanels {
 	            setNextRow();
 
 	            String mandatoryStar = "*";
+                if(location != repository.getLocation().get(0))
+                    mandatoryStar = "";
 	
 	            builder.addLabel(labels.getString("eag2012.commons.street") + mandatoryStar, cc.xy (1, rowNb));
 	            builder.add(locationType.getStreetTf().getTextField(), cc.xy (3, rowNb));
@@ -206,7 +208,7 @@ public class EagContactPanel extends EagPanels {
 	            builder.add(locationType.getRegionTf().getLanguageBox(), cc.xy (7, rowNb));
 	            setNextRow();
 	
-	            builder.addLabel(labels.getString("eag2012.commons.country") + "*", cc.xy (1, rowNb));
+	            builder.addLabel(labels.getString("eag2012.commons.country") + mandatoryStar, cc.xy (1, rowNb));
 	            builder.add(locationType.getCountryTf().getTextField(), cc.xy (3, rowNb));
 	            builder.addLabel(labels.getString("eag2012.commons.language"), cc.xy (5, rowNb));
 	            builder.add(locationType.getCountryTf().getLanguageBox(), cc.xy (7, rowNb));
@@ -838,7 +840,6 @@ public class EagContactPanel extends EagPanels {
             }
 
             repository.getLocation().clear();
-
             String defaultCountry = "";
             boolean isFirst = true;
             for(LocationType locationType : locationFields) {
