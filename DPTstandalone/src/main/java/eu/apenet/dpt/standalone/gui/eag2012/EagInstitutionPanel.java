@@ -335,11 +335,6 @@ public class EagInstitutionPanel extends EagPanels {
                     setNextRow();
                     builder.add(createErrorLabel(labels.getString("eag2012.errors.street")), cc.xy(1, rowNb));
                 }
-	            if(errors.contains("streetTf") && StringUtils.isEmpty(locationType.getStreetTfValue())) 
-	            {
-	                setNextRow();
-	                builder.add(createErrorLabel(labels.getString("eag2012.errors.street")), cc.xy (1, rowNb));
-	            }
                 setNextRow();
 
                 builder.addLabel(labels.getString("eag2012.commons.cityTownWithPostalcode") + mandatoryStar, cc.xy(1, rowNb));
@@ -350,11 +345,6 @@ public class EagInstitutionPanel extends EagPanels {
                     setNextRow();
                     builder.add(createErrorLabel(labels.getString("eag2012.errors.city")), cc.xy(1, rowNb));
                 }
-	            if(errors.contains("cityTf") && StringUtils.isEmpty(locationType.getCityTfValue())) 
-	            {
-	                setNextRow();
-	                builder.add(createErrorLabel(labels.getString("eag2012.errors.city")), cc.xy (1, rowNb));
-	            }
                 setNextRow();
 
                 builder.addLabel(labels.getString("eag2012.commons.country") + mandatoryStar, cc.xy(1, rowNb));
