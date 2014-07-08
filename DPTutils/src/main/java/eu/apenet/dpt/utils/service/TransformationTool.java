@@ -56,6 +56,7 @@ import eu.apenet.dpt.utils.util.extendxsl.XmlQualityCheckerCall;
  */
 public class TransformationTool {
     private static final String CONVERTED_APE_EAD_VERSION = "Converted_apeEAD_version_";
+    private static final String CONVERTED_APE_EAC_CPF_VERSION = "Converted_apeEAC-CPF_version_";
 	private static final Logger LOG = Logger.getLogger(TransformationTool.class);
     private static final String CHARACTER_SET = "UTF-8";
 
@@ -258,7 +259,10 @@ public class TransformationTool {
         }
         return version;
     }
-    public static String getFullVersion(){
+    public static String getFullEADVersion(){
     	 return CONVERTED_APE_EAD_VERSION + getVersion();
     }
+    public static String getFullEACCPFVersion(){
+   	 return CONVERTED_APE_EAD_VERSION + getVersion();
+   }
 }
