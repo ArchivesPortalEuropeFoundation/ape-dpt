@@ -1441,7 +1441,7 @@ public class EacCpfIdentityPanel extends EacCpfPanel {
 					int fakeId = random.nextInt(1000000000);
 					RecordId recordId = new RecordId();
 //					recordId.setValue(Integer.toString(fakeId));
-					recordId.setValue("eac_"+mainagencycode+"_"+Integer.toString(fakeId));
+					recordId.setValue(Integer.toString(fakeId));
 	
 					this.eaccpf.getControl().setRecordId(recordId);
 				}
