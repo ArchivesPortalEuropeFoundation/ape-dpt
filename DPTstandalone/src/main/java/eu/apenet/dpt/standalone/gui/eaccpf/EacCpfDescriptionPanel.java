@@ -1192,16 +1192,7 @@ public class EacCpfDescriptionPanel extends EacCpfPanel {
 		}
 		return builder;
 	}
-	/**
-	 * Used for describe undefined dates. Extracted from Identity tab
-	 */
-	private boolean isUndefinedDate(String standardDate) {
-		boolean result = false;
-		if (standardDate != null && !standardDate.isEmpty() && (standardDate.equals(EacCpfIdentityPanel.UNKNOWN_INITIAL_DATE) || standardDate.equals(EacCpfIdentityPanel.UNKNOWN_END_DATE))) {
-			result = true;
-		}
-		return result;
-	}
+
 	/**
 	 * Index must indicate section part 
 	 */
