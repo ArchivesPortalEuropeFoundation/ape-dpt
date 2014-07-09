@@ -629,7 +629,14 @@
             <xs:element name="localentity" type="localentity" minOccurs="0"/>
             <xs:element name="street" type="street"/>
         </xs:sequence>
-        <xs:attribute name="localType" type="xs:anyURI" use="required"/>
+        <xs:attribute name="localType" use="required">
+            <xs:simpleType>
+                <xs:restriction base="xs:token">
+                    <xs:enumeration value="visitors address"/>
+                    <xs:enumeration value="postal address"/>
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:attribute>
         <xs:attribute name="longitude" type="xs:NMTOKEN"/>
         <xs:attribute name="latitude" type="xs:NMTOKEN"/>
     </xs:complexType>
