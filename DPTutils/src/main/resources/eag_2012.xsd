@@ -13,6 +13,7 @@
             - added elements <useDates>, <authorizedForm>, <aternativeForm> to element <nameEntry>
             - restricted @localType for <part> to values "corpname", "famname", "persname", "surname", "firstname", "birthname", "title", "prefix", "suffix", "alias", "patronymic", "legalform"/>
             - added elements <objectBinWrap>, <objectXMLWrap>, <placeEntry> to element <resourceRelation>
+            - restricted @localType for <location> to "visitors address" and "postal address"
 -->
 <xs:schema xmlns="http://www.archivesportaleurope.net/Portal/profiles/eag_2012/"
     targetNamespace="http://www.archivesportaleurope.net/Portal/profiles/eag_2012/"
