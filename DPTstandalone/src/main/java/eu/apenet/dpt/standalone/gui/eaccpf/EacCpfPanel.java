@@ -18,6 +18,8 @@ package eu.apenet.dpt.standalone.gui.eaccpf;
  * #L%
  */
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -35,6 +37,7 @@ import eu.apenet.dpt.standalone.gui.ProfileListModel;
 import eu.apenet.dpt.standalone.gui.commons.TextChanger;
 import eu.apenet.dpt.standalone.gui.commons.swingstructures.CommonsPropertiesPanels;
 import eu.apenet.dpt.standalone.gui.eaccpf.swingstructures.TextFieldWithComboBoxEacCpf;
+import eu.apenet.dpt.standalone.gui.eaccpf.swingstructures.TextFieldsWithRadioButtonForDates;
 import eu.apenet.dpt.utils.eaccpf.Abbreviation;
 import eu.apenet.dpt.utils.eaccpf.AddressLine;
 import eu.apenet.dpt.utils.eaccpf.Agent;
@@ -674,5 +677,264 @@ public abstract class EacCpfPanel extends CommonsPropertiesPanels {
 		}
 
 		return nameEntries;
+	}
+	
+	protected List<Object> getAllDates(ExistDates existDates) {
+		List<Object> datesList = new ArrayList<Object>();
+
+		// Only Date element.
+		if (existDates.getDate() != null) {
+			datesList.add(existDates.getDate());
+		}
+		// Only DateRange element.
+		if (existDates.getDateRange() != null) {
+			datesList.add(existDates.getDateRange());
+		}
+		// Any combination of Date and DateRange elements.
+		if (existDates.getDateSet() != null) {
+			for (Object object : existDates.getDateSet().getDateOrDateRange()) {
+				if (object != null) {
+					datesList.add(object);
+				}
+			}
+		}
+
+		return datesList;
+	}
+
+	protected boolean isUndefinedDate(String standardDate) {
+		boolean result = false;
+		if (standardDate != null && !standardDate.isEmpty()
+			&& (standardDate.equals(EacCpfIdentityPanel.UNKNOWN_INITIAL_DATE)
+			|| standardDate.equals(EacCpfIdentityPanel.UNKNOWN_END_DATE)
+			|| standardDate.equals(EacCpfIdentityPanel.UNKNOWN))) {
+			result = true;
+		}
+		return result;
+	}
+	
+	protected boolean isUndefinedFromDate(DateRange dateRange){
+		boolean result = false;
+		if (dateRange != null && dateRange.getLocalType()!=null && !dateRange.getLocalType().isEmpty()
+			&& (dateRange.getLocalType().equals(EacCpfIdentityPanel.UNKNOWN_INITIAL_DATE)
+			|| dateRange.getLocalType().equals(EacCpfIdentityPanel.UNKNOWN))) {
+			result = true;
+		}
+		else if(dateRange != null && dateRange.getLocalType()!=null &&dateRange.getLocalType().equals("open") && dateRange.getFromDate()!=null &&
+				dateRange.getFromDate().getContent()!=null && 
+				dateRange.getFromDate().getContent().equals(EacCpfIdentityPanel.UNKNOWN) 
+			){
+			result = true;
+		}
+		return result;
+	}
+	
+	protected boolean isOpenFromDate(DateRange dateRange){
+		boolean result = false;
+		if(dateRange != null && dateRange.getLocalType()!=null &&dateRange.getLocalType().equals("open") && dateRange.getFromDate()!=null &&
+				dateRange.getFromDate().getContent()!=null && 
+				dateRange.getFromDate().getContent().equals("open") 
+			){
+			result = true;
+		}
+		return result;
+	}
+	
+	protected boolean isOpenToDate(DateRange dateRange){
+		boolean result = false;
+		if(dateRange != null && dateRange.getLocalType()!=null &&dateRange.getLocalType().equals("open") && dateRange.getToDate()!=null &&
+				dateRange.getToDate().getContent()!=null && 
+				dateRange.getToDate().getContent().equals("open") 
+			){
+			result = true;
+		}
+		return result;
+	}
+	
+	protected boolean isUndefinedToDate(DateRange dateRange){
+		boolean result = false;
+		if (dateRange != null && dateRange.getLocalType()!=null && !dateRange.getLocalType().isEmpty()
+				&& (dateRange.getLocalType().equals(EacCpfIdentityPanel.UNKNOWN_END_DATE)
+				|| dateRange.getLocalType().equals(EacCpfIdentityPanel.UNKNOWN))) {
+				result = true;
+			}
+		else if(dateRange != null && dateRange.getLocalType()!=null &&dateRange.getLocalType().equals("open") && dateRange.getToDate()!=null &&
+				dateRange.getToDate().getContent()!=null && 
+				dateRange.getToDate().getContent().equals(EacCpfIdentityPanel.UNKNOWN) 
+			){
+			result = true;
+		}
+		return result;
+	}
+	
+	/**
+	 * Class to performs the addition of unknown values for dates or dateRanges
+	 * in name section and existence section.
+	 */
+	public class AddUndefinedTexts implements ActionListener {
+		private TextFieldsWithRadioButtonForDates tfwcbfDates;
+		private String dateType;
+
+		/**
+		 * Constructor.
+		 *
+		 * @param tfwcbfDates
+		 * @param dateType
+		 */
+		public AddUndefinedTexts(TextFieldsWithRadioButtonForDates tfwcbfDates, String dateType) {
+			this.tfwcbfDates = tfwcbfDates;
+			this.dateType = dateType;
+		}
+
+		@Override
+		public void actionPerformed(ActionEvent actionEvent) {
+			
+			if (EacCpfIdentityPanel.UNKNOWN_DATE.equalsIgnoreCase(this.dateType)) {
+				// Check if event is select or deselect for Date.
+//				if (this.tfwcbfDates.isSelectedDateUndefinedRB()) {
+					// Date unknown.
+					this.tfwcbfDates.getDateTextField().setText(""/*labels.getString("eaccpf.commons.unknown.date")*/);
+					this.tfwcbfDates.getDateTextField().setEditable(false);
+//					this.tfwcbfDates.getStandardDateTextField().setText(EacCpfIdentityPanel.UNKNOWN_INITIAL_DATE);
+					this.tfwcbfDates.getStandardDateTextField().setEditable(false);
+					
+					this.tfwcbfDates.getDateUndefinedRB().setSelected(true);
+					this.tfwcbfDates.getDateDefinedRB().setSelected(false);
+					this.tfwcbfDates.getDateStillRB().setSelected(false);
+//				} 
+			} else if (EacCpfIdentityPanel.UNKNOWN_DATE_FROM.equalsIgnoreCase(this.dateType)) {
+				// Check if event is select or deselect for FromDate.
+//				if (this.tfwcbfDates.isSelectedDateFromUndefinedRB()) {
+					// FromDate unknown.
+					this.tfwcbfDates.getDateFromTextField().setText(""/*labels.getString("eaccpf.commons.unknown.date")*/);
+					this.tfwcbfDates.getDateFromTextField().setEditable(false);
+//					this.tfwcbfDates.getStandardDateFromTextField().setText(EacCpfIdentityPanel.UNKNOWN_INITIAL_DATE);
+					this.tfwcbfDates.getStandardDateFromTextField().setEditable(false);
+					
+					this.tfwcbfDates.getDateFromUndefinedRB().setSelected(true);
+					this.tfwcbfDates.getDateFromDefinedRB().setSelected(false);
+					this.tfwcbfDates.getDateFromStillRB().setSelected(false);
+//				} 
+			} else if (EacCpfIdentityPanel.UNKNOWN_DATE_TO.equalsIgnoreCase(this.dateType)) {
+				// Check if event is select or deselect for ToDate.
+//				if (this.tfwcbfDates.isSelectedDateToUndefinedRB()) {
+					// ToDate unknown.
+					this.tfwcbfDates.getDateToTextField().setText(""/*labels.getString("eaccpf.commons.unknown.date")*/);
+					this.tfwcbfDates.getDateToTextField().setEditable(false);
+//					this.tfwcbfDates.getStandardDateToTextField().setText(EacCpfIdentityPanel.UNKNOWN_END_DATE);
+					this.tfwcbfDates.getStandardDateToTextField().setEditable(false);
+					
+					this.tfwcbfDates.getDateToUndefinedRB().setSelected(true);
+					this.tfwcbfDates.getDateToDefinedRB().setSelected(false);
+					this.tfwcbfDates.getDateToStillRB().setSelected(false);
+//				} 
+			} else if(EacCpfIdentityPanel.KNOWN_DATE.equalsIgnoreCase(this.dateType)){
+				// Check if event is select or deselect for ToDate.
+//				if (this.tfwcbfDates.isSelectedDateDefinedRB()) {
+					// ToDate unknown.
+				if (this.tfwcbfDates.isSelectedDateDefinedRB()) {
+					this.tfwcbfDates.getDateTextField().setText("");
+				}
+					this.tfwcbfDates.getDateTextField().setEditable(true);
+					
+				if (this.tfwcbfDates.isSelectedDateDefinedRB()) {
+					this.tfwcbfDates.getStandardDateTextField().setText("");
+				}
+					this.tfwcbfDates.getStandardDateTextField().setEditable(true);
+					
+					this.tfwcbfDates.getDateUndefinedRB().setSelected(false);
+					this.tfwcbfDates.getDateDefinedRB().setSelected(true);
+					this.tfwcbfDates.getDateStillRB().setSelected(false);
+					
+					this.tfwcbfDates.getStandardDateTextField().setEditable(true);
+//				}
+			} else if (EacCpfIdentityPanel.KNOWN_DATE_FROM.equalsIgnoreCase(this.dateType)) {
+//				if (this.tfwcbfDates.isSelectedDateFromDefinedRB()) {
+					// Date known.
+				if (this.tfwcbfDates.isSelectedDateFromDefinedRB()) {
+					this.tfwcbfDates.getDateFromTextField().setText("");
+				}
+					this.tfwcbfDates.getDateFromTextField().setEditable(true);
+				if (this.tfwcbfDates.isSelectedDateFromDefinedRB()) {
+					this.tfwcbfDates.getStandardDateFromTextField().setText("");
+				}
+					this.tfwcbfDates.getStandardDateFromTextField().setEditable(true);
+					
+					this.tfwcbfDates.getDateFromUndefinedRB().setSelected(false);
+					this.tfwcbfDates.getDateFromDefinedRB().setSelected(true);
+					this.tfwcbfDates.getDateFromStillRB().setSelected(false);
+					
+					this.tfwcbfDates.getStandardDateFromTextField().setEditable(true);
+//				}
+			} else if (EacCpfIdentityPanel.KNOWN_DATE_TO.equalsIgnoreCase(this.dateType)) {
+//				if (this.tfwcbfDates.isSelectedDateToDefinedRB()) {
+				if (this.tfwcbfDates.isSelectedDateToDefinedRB()) {
+					this.tfwcbfDates.getDateToTextField().setText("");
+				}
+					this.tfwcbfDates.getDateToTextField().setEditable(true);
+				if (this.tfwcbfDates.isSelectedDateToDefinedRB()) {
+					this.tfwcbfDates.getStandardDateToTextField().setText("");
+				}
+					this.tfwcbfDates.getStandardDateToTextField().setEditable(true);
+					
+					this.tfwcbfDates.getDateToUndefinedRB().setSelected(false);
+					this.tfwcbfDates.getDateToDefinedRB().setSelected(true);
+					this.tfwcbfDates.getDateToStillRB().setSelected(false);
+					
+					this.tfwcbfDates.getStandardDateToTextField().setEditable(true);
+//				}
+			} else if(EacCpfIdentityPanel.STILL_DATE.equalsIgnoreCase(this.dateType)){
+//				if (this.tfwcbfDates.isSelectedDateStillRB()) {
+				if (this.tfwcbfDates.isSelectedDateStillRB()) {
+					this.tfwcbfDates.getDateTextField().setText(""/*"open"*/);
+				}
+					this.tfwcbfDates.getDateTextField().setEditable(false);
+				if (this.tfwcbfDates.isSelectedDateStillRB()) {
+					this.tfwcbfDates.getStandardDateTextField().setText("");
+				}
+					this.tfwcbfDates.getStandardDateTextField().setEditable(true);
+					
+					this.tfwcbfDates.getDateUndefinedRB().setSelected(false);
+					this.tfwcbfDates.getDateDefinedRB().setSelected(false);
+					this.tfwcbfDates.getDateStillRB().setSelected(true);
+					
+					this.tfwcbfDates.getStandardDateTextField().setEditable(false);
+//				}
+			} else if (EacCpfIdentityPanel.STILL_DATE_FROM.equalsIgnoreCase(this.dateType)) {
+//				if (this.tfwcbfDates.isSelectedDateFromStillRB()) {
+				if (this.tfwcbfDates.isSelectedDateFromStillRB()) {
+					this.tfwcbfDates.getDateFromTextField().setText(""/*"open"*/);
+				}
+					this.tfwcbfDates.getDateFromTextField().setEditable(false);
+				if (this.tfwcbfDates.isSelectedDateFromStillRB()) {
+					this.tfwcbfDates.getStandardDateFromTextField().setText("");
+				}
+					this.tfwcbfDates.getStandardDateFromTextField().setEditable(true);
+					
+					this.tfwcbfDates.getDateFromUndefinedRB().setSelected(false);
+					this.tfwcbfDates.getDateFromDefinedRB().setSelected(false);
+					this.tfwcbfDates.getDateFromStillRB().setSelected(true);
+					
+					this.tfwcbfDates.getStandardDateFromTextField().setEditable(false);
+//				}
+			} else if (EacCpfIdentityPanel.STILL_DATE_TO.equalsIgnoreCase(this.dateType)) {
+//				if (this.tfwcbfDates.isSelectedDateToStillRB()) {
+				if (this.tfwcbfDates.isSelectedDateToStillRB()) {
+					this.tfwcbfDates.getDateToTextField().setText(""/*"open"*/);
+				}
+					this.tfwcbfDates.getDateToTextField().setEditable(false);
+				if (this.tfwcbfDates.isSelectedDateToStillRB()) {
+					this.tfwcbfDates.getStandardDateToTextField().setText("");
+				}
+					this.tfwcbfDates.getStandardDateToTextField().setEditable(true);
+					
+					this.tfwcbfDates.getDateToUndefinedRB().setSelected(false);
+					this.tfwcbfDates.getDateToDefinedRB().setSelected(false);
+					this.tfwcbfDates.getDateToStillRB().setSelected(true);
+					
+					this.tfwcbfDates.getStandardDateToTextField().setEditable(false);
+//				}
+			}
+		}
 	}
 }

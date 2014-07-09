@@ -28,6 +28,7 @@ import eu.apenet.dpt.standalone.gui.commons.swingstructures.TextFieldWithDate;
  * apeEAC-CPF file.
  */
 public class TextFieldsWithRadioButtonForDates {
+	
 	private TextFieldWithDate textFieldWithDate;
 	private JRadioButton dateUndefinedRB;
 	private JRadioButton dateDefinedRB;
@@ -60,8 +61,8 @@ public class TextFieldsWithRadioButtonForDates {
 	 * @param dateTo
 	 * @param standardDateTo
 	 */
-	public TextFieldsWithRadioButtonForDates(
-			String rbUndefinedText, String rbDefinedText, String rbStillText, String date, boolean dateUndefined, boolean stillIfKnown, 
+	public TextFieldsWithRadioButtonForDates(String rbUndefinedText, String rbDefinedText, String rbStillText, String date, boolean dateUndefined, 
+			boolean stillIfKnownFrom, boolean stillIfKnownTo, 
 			String standardDate, String dateFrom, boolean dateFromUndefined, String standardDateFrom, 
 			String dateTo, boolean dateToUndefined, String standardDateTo, boolean isDateRange) {
 		this.textFieldWithDate = new TextFieldWithDate("", "", dateFrom, dateTo, date);
@@ -71,13 +72,16 @@ public class TextFieldsWithRadioButtonForDates {
 		this.dateStillRB = new JRadioButton(rbStillText);
 		this.standardDateTF = new JTextField(standardDate);
 		if (dateUndefined) {
-			this.textFieldWithDate.getDateField().setText(this.dateUndefinedRB.getText());
+			this.textFieldWithDate.getDateField().setText(""/*this.dateUndefinedRB.getText()*/);
 			this.textFieldWithDate.getDateField().setEditable(false);
 			this.dateUndefinedRB.setSelected(true);
 			this.standardDateTF.setEditable(false);
 		}else{
-			if(stillIfKnown){
+			if(stillIfKnownFrom || stillIfKnownTo){
 				this.dateStillRB.setSelected(true);
+				this.standardDateTF.setEditable(false);
+				this.textFieldWithDate.getDateField().setText("");
+				this.textFieldWithDate.getDateField().setEditable(false);
 			}else{
 				this.dateDefinedRB.setSelected(true);
 			}
@@ -88,15 +92,22 @@ public class TextFieldsWithRadioButtonForDates {
 		this.dateFromStillRB = new JRadioButton(rbStillText);
 		this.standardDateFromTF = new JTextField(standardDateFrom);
 		if (dateFromUndefined) {
-			this.textFieldWithDate.getFromDateField().setText(this.dateFromUndefinedRB.getText());
+			this.textFieldWithDate.getFromDateField().setText(""/*this.dateFromUndefinedRB.getText()*/);
 			this.textFieldWithDate.getFromDateField().setEditable(false);
 			this.dateFromUndefinedRB.setSelected(true);
 			this.standardDateFromTF.setEditable(false);
 		}else{
-			if(stillIfKnown){
+			if(stillIfKnownFrom){
 				this.dateFromStillRB.setSelected(true);
+				this.dateFromDefinedRB.setSelected(false);
+				this.dateFromUndefinedRB.setSelected(false);
+//				this.standardDateFromTF.setEditable(false);
+//				this.textFieldWithDate.getFromDateField().setText("");
+//				this.textFieldWithDate.getFromDateField().setEditable(false);
 			}else{
+				this.dateFromStillRB.setSelected(false);
 				this.dateFromDefinedRB.setSelected(true);
+				this.dateFromUndefinedRB.setSelected(false);
 			}
 		}
 
@@ -105,13 +116,16 @@ public class TextFieldsWithRadioButtonForDates {
 		this.dateToStillRB = new JRadioButton(rbStillText);
 		this.standardDateToTF = new JTextField(standardDateTo);
 		if (dateToUndefined) {
-			this.textFieldWithDate.getToDateField().setText(this.dateToUndefinedRB.getText());
+			this.textFieldWithDate.getToDateField().setText(""/*this.dateToUndefinedRB.getText()*/);
 			this.textFieldWithDate.getToDateField().setEditable(false);
 			this.dateToUndefinedRB.setSelected(true);
 			this.standardDateToTF.setEditable(false);
 		}else{
-			if(stillIfKnown){
+			if(stillIfKnownTo){
 				this.dateToStillRB.setSelected(true);
+				this.standardDateToTF.setEditable(false);
+				this.textFieldWithDate.getToDateField().setText("");
+				this.textFieldWithDate.getToDateField().setEditable(false);
 			}else{
 				this.dateToDefinedRB.setSelected(true);
 			}
