@@ -798,6 +798,8 @@ public abstract class EacCpfPanel extends CommonsPropertiesPanels {
 //					this.tfwcbfDates.getStandardDateTextField().setText(EacCpfIdentityPanel.UNKNOWN_INITIAL_DATE);
 					this.tfwcbfDates.getStandardDateTextField().setEditable(false);
 					
+					this.tfwcbfDates.getStandardDateTextField().setText("");
+					
 					this.tfwcbfDates.getDateUndefinedRB().setSelected(true);
 					this.tfwcbfDates.getDateDefinedRB().setSelected(false);
 					this.tfwcbfDates.getDateStillRB().setSelected(false);
@@ -814,6 +816,8 @@ public abstract class EacCpfPanel extends CommonsPropertiesPanels {
 					this.tfwcbfDates.getDateFromUndefinedRB().setSelected(true);
 					this.tfwcbfDates.getDateFromDefinedRB().setSelected(false);
 					this.tfwcbfDates.getDateFromStillRB().setSelected(false);
+					
+					this.tfwcbfDates.getStandardDateFromTextField().setText("");
 //				} 
 			} else if (EacCpfIdentityPanel.UNKNOWN_DATE_TO.equalsIgnoreCase(this.dateType)) {
 				// Check if event is select or deselect for ToDate.
@@ -827,6 +831,8 @@ public abstract class EacCpfPanel extends CommonsPropertiesPanels {
 					this.tfwcbfDates.getDateToUndefinedRB().setSelected(true);
 					this.tfwcbfDates.getDateToDefinedRB().setSelected(false);
 					this.tfwcbfDates.getDateToStillRB().setSelected(false);
+					
+					this.tfwcbfDates.getStandardDateToTextField().setText("");
 //				} 
 			} else if(EacCpfIdentityPanel.KNOWN_DATE.equalsIgnoreCase(this.dateType)){
 				// Check if event is select or deselect for ToDate.
