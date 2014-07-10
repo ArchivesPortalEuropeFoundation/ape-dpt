@@ -3,13 +3,13 @@
         EAC-CPF default conversion into APE-EAC-CPF
 -->
 <xsl:stylesheet version="2.0" xmlns="urn:isbn:1-931666-33-4"
-    xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:fo="http://www.w3.org/1999/XSL/Format"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:none="none"
-    xmlns:ape="http://www.archivesportaleurope.net/functions"
-    xmlns:xlink="http://www.w3.org/1999/xlink"
-    xsi:schemaLocation="urn:isbn:1-931666-33-4 http://eac.staatsbibliothek-berlin.de/schema/cpf.xsd"
-    xpath-default-namespace="urn:isbn:1-931666-33-4" exclude-result-prefixes="xsl fo xs none ape">
+                xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:fo="http://www.w3.org/1999/XSL/Format"
+                xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:none="none"
+                xmlns:ape="http://www.archivesportaleurope.net/functions"
+                xmlns:xlink="http://www.w3.org/1999/xlink"
+                xsi:schemaLocation="urn:isbn:1-931666-33-4 http://eac.staatsbibliothek-berlin.de/schema/cpf.xsd"
+                xpath-default-namespace="urn:isbn:1-931666-33-4" exclude-result-prefixes="xsl fo xs none ape">
 
     <xsl:param name="recordId" select="''"/>
     <xsl:param name="mainagencycode" select="''"/>
@@ -43,8 +43,8 @@
     <!-- eac-cpf -->
     <xsl:template match="eac-cpf" name="eac-cpf" mode="top">
         <eac-cpf xmlns="urn:isbn:1-931666-33-4" xmlns:xlink="http://www.w3.org/1999/xlink"
-            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-            xsi:schemaLocation="urn:isbn:1-931666-33-4 http://www.archivesportaleurope.net/Portal/profiles/apeEAC-CPF.xsd http://www.w3.org/1999/xlink http://www.loc.gov/standards/xlink/xlink.xsd">
+                 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                 xsi:schemaLocation="urn:isbn:1-931666-33-4 http://www.archivesportaleurope.net/Portal/profiles/apeEAC-CPF.xsd http://www.w3.org/1999/xlink http://www.loc.gov/standards/xlink/xlink.xsd">
             <xsl:if test="@xml:base">
                 <xsl:attribute name="xml:base" select="@xml:base"/>
             </xsl:if>
@@ -97,6 +97,12 @@
             <xsl:if test="@localType != ('unknown', 'unknownStart', 'unknownEnd', 'open')">
                 <xsl:message select="ape:resource('eaccpf.message.unknownLocalTypeDate', $currentLanguage)"/>
             </xsl:if>
+            <xsl:if test=". = 'unknown'">
+                <xsl:attribute name="localType" select="'unknown'"/>
+            </xsl:if>
+            <xsl:if test=". = 'open'">
+                <xsl:attribute name="localType" select="'open'"/>
+            </xsl:if>
             <xsl:choose>
                 <xsl:when test="string-length(.)!=0">
                     <xsl:if test="@standardDate and not(@standardDate = '2099')">
@@ -118,6 +124,9 @@
             <xsl:if test="@localType != ('unknown', 'unknownStart', 'unknownEnd', 'open')">
                 <xsl:message select="ape:resource('eaccpf.message.unknownLocalTypeDate', $currentLanguage)"/>
             </xsl:if>
+            <xsl:if test="not(child::*)">
+                <xsl:attribute name="localType" select="'unknown'"/>
+            </xsl:if>
             <xsl:choose>
                 <xsl:when test="fromDate = 'unknown'">
                     <xsl:choose>
@@ -133,12 +142,12 @@
                     </xsl:choose>
                 </xsl:when>
                 <xsl:otherwise>
-                        <xsl:if test="toDate ='unknown'">
-                            <xsl:attribute name="localType" select="'unknownEnd'"/>
-                        </xsl:if>
-                        <xsl:if test="toDate ='open'">
-                            <xsl:attribute name="localType" select="'open'"/>
-                        </xsl:if>
+                    <xsl:if test="toDate ='unknown'">
+                        <xsl:attribute name="localType" select="'unknownEnd'"/>
+                    </xsl:if>
+                    <xsl:if test="toDate ='open'">
+                        <xsl:attribute name="localType" select="'open'"/>
+                    </xsl:if>
                 </xsl:otherwise>
             </xsl:choose>
             <fromDate>
@@ -151,12 +160,20 @@
                 <xsl:if test="fromDate/@xml:lang">
                     <xsl:attribute name="xml:lang" select="fromDate/@xml:lang"/>
                 </xsl:if>
-                <xsl:if test="string-length(fromDate)!=0">
-                    <xsl:if test="fromDate/@standardDate and not(fromDate/@standardDate = '0001')">
-                        <xsl:attribute name="standardDate" select="fromDate/@standardDate"/>
-                    </xsl:if>
-                    <xsl:value-of select="fromDate"/>
-                </xsl:if>
+                <xsl:choose>
+                    <xsl:when test="string-length(fromDate)!=0">
+                        <xsl:if test="fromDate/@standardDate and not(fromDate/@standardDate = '0001')">
+                            <xsl:attribute name="standardDate" select="fromDate/@standardDate"/>
+                        </xsl:if>
+                        <xsl:value-of select="fromDate"/>
+                    </xsl:when>
+                    <xsl:when test="fromDate = 'unknown' or not(fromDate)">
+                        <xsl:value-of select="'unknown'"/>
+                    </xsl:when>
+                    <xsl:otherwise>
+                        <xsl:value-of select="'unknown'"/>
+                    </xsl:otherwise>
+                </xsl:choose>
             </fromDate>
             <toDate>
                 <xsl:if test="toDate/@notAfter">
@@ -168,12 +185,23 @@
                 <xsl:if test="toDate/@xml:lang">
                     <xsl:attribute name="xml:lang" select="toDate/@xml:lang"/>
                 </xsl:if>
-                <xsl:if test="string-length(toDate)!=0">
-                    <xsl:if test="toDate/@standardDate and not(fromDate/@standardDate = '2099')">
-                        <xsl:attribute name="standardDate" select="toDate/@standardDate"/>
-                    </xsl:if>
-                    <xsl:value-of select="toDate"/>
-                </xsl:if>
+                <xsl:choose>
+                    <xsl:when test="string-length(toDate)!=0">
+                        <xsl:if test="toDate/@standardDate and not(toDate/@standardDate = '2099')">
+                            <xsl:attribute name="standardDate" select="toDate/@standardDate"/>
+                        </xsl:if>
+                        <xsl:value-of select="toDate"/>
+                    </xsl:when>
+                    <xsl:when test="toDate = ('unknown') or not(toDate)">
+                        <xsl:value-of select="'unknown'"/>
+                    </xsl:when>
+                    <xsl:when test="toDate = ('open')">
+                        <xsl:value-of select="'open'"/>
+                    </xsl:when>
+                    <xsl:otherwise>
+                        <xsl:value-of select="'unknown'"/>
+                    </xsl:otherwise>
+                </xsl:choose>
             </toDate>
         </dateRange>
     </xsl:template>
@@ -402,7 +430,7 @@
                 </eventType>
                 <eventDateTime>
                     <xsl:attribute name="standardDateTime"
-                        select="format-date(current-date(), '[Y0001]-[M01]-[D01]')"/>
+                                   select="format-date(current-date(), '[Y0001]-[M01]-[D01]')"/>
                     <xsl:value-of select="format-date(current-date(), '[Y0001]-[M01]-[D01]')"/>
                 </eventDateTime>
                 <agentType>
@@ -852,7 +880,7 @@
                     <dateRange>
                         <xsl:attribute name="localType" select="'unknown'"/>
                         <fromDate>
-                           <xsl:text>unknown</xsl:text>
+                            <xsl:text>unknown</xsl:text>
                         </fromDate>
                         <toDate>
                             <xsl:text>unknown</xsl:text>
@@ -1553,7 +1581,7 @@
 
     <!-- Ignore structureOrGenealogy/citation, objectXMLWrap, objectBinWrap - they are not used -->
     <xsl:template match="citation[parent::structureOrGenealogy] | objectXMLWrap | objectBinWrap"
-        mode="#all">
+                  mode="#all">
         <xsl:call-template name="excludeElement"/>
     </xsl:template>
 
@@ -1583,31 +1611,36 @@
             <xsl:if test="name(../../../../../../../..) != ''">
                 <xsl:value-of select="name(../../../../../../../..)"/>
                 <xsl:if test="name(../../../../../../../..)='c'">@<xsl:value-of
-                        select="../../../../../../../../@level"/></xsl:if>
+                        select="../../../../../../../../@level"/>
+                </xsl:if>
                 <xsl:text>/</xsl:text>
             </xsl:if>
             <xsl:if test="name(../../../../../../..) != ''">
                 <xsl:value-of select="name(../../../../../../..)"/>
                 <xsl:if test="name(../../../../../../..)='c'">@<xsl:value-of
-                        select="../../../../../../../@level"/></xsl:if>
+                        select="../../../../../../../@level"/>
+                </xsl:if>
                 <xsl:text>/</xsl:text>
             </xsl:if>
             <xsl:if test="name(../../../../../..) != ''">
                 <xsl:value-of select="name(../../../../../..)"/>
                 <xsl:if test="name(../../../../../..)='c'">@<xsl:value-of
-                        select="../../../../../../@level"/></xsl:if>
+                        select="../../../../../../@level"/>
+                </xsl:if>
                 <xsl:text>/</xsl:text>
             </xsl:if>
             <xsl:if test="name(../../../../..) != ''">
                 <xsl:value-of select="name(../../../../..)"/>
                 <xsl:if test="name(../../../../..)='c'">@<xsl:value-of
-                        select="../../../../../@level"/></xsl:if>
+                        select="../../../../../@level"/>
+                </xsl:if>
                 <xsl:text>/</xsl:text>
             </xsl:if>
             <xsl:if test="name(../../../..) != ''">
                 <xsl:value-of select="name(../../../..)"/>
                 <xsl:if test="name(../../../..)='c'">@<xsl:value-of select="../../../../@level"
-                    /></xsl:if>
+                    />
+                </xsl:if>
                 <xsl:text>/</xsl:text>
             </xsl:if>
             <xsl:if test="name(../../..) != ''">
