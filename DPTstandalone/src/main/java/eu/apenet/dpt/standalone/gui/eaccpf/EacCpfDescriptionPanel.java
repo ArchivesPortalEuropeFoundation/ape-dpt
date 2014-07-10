@@ -2265,35 +2265,6 @@ public class EacCpfDescriptionPanel extends EacCpfPanel {
 		}
 	}
 	
-	private String parseStandardDate(String text) {
-		boolean pattern1 = Pattern.matches("\\d{4}", text); //yyyy
-		boolean pattern2 = Pattern.matches("\\d{4}[\\-\\./:\\s]\\d{2}", text); //yyyy-MM
-		boolean pattern3 = Pattern.matches("\\d{4}[\\-\\./:\\s]\\d{2}[\\-\\./:\\s]\\d{2}", text); //yyyy-MM-dd
-		boolean pattern4 = Pattern.matches("\\d{2}[\\-\\./:\\s]\\d{2}[\\-\\./:\\s]\\d{4}", text); //dd-MM-yyyy
-		if (pattern4){
-			String yearStandardDate = text.substring(6);
-			String monthStandardDate = text.substring(2,6);
-			String dateStandardDate = text.substring(0,2);
-			String reverseString =yearStandardDate+monthStandardDate+dateStandardDate;
-			text = text.replaceAll(text, reverseString);
-		}
-		if (pattern1){
-			return text;
-		} else if (pattern2) {
-			String monthStandardDate = text.substring(5,7);
-
-			if (Integer.parseInt(monthStandardDate) <= 12) {
-				text = text.replaceAll("[\\./:\\s]", "-");
-				return text;
-			}
-		} else if (pattern3 || pattern4) {
-			text = text.replaceAll("[\\./:\\s]", "-");
-			return text;
-		}
-
-		return "";
-	}
-	
 	public class AddUndefinedTexts implements ActionListener {
 		private TextFieldsWithCheckBoxForDates tfwcbfDates;
 		private String dateType;
