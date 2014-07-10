@@ -261,7 +261,14 @@
         <mets:metsHdr CREATEDATE="{current-dateTime()}" LASTMODDATE="{current-dateTime()}">
             <mets:agent ROLE="CUSTODIAN">
                 <mets:name>
-                    <xsl:value-of select="$value_settings/mets_name" />
+                    <xsl:choose>
+                        <xsl:when test="normalize-space(/ead/eadheader/filedesc/publicationstmt/publisher/text()) != ''">
+                            <xsl:value-of select="normalize-space(/ead/eadheader/filedesc/publicationstmt/publisher/text())"/>
+                        </xsl:when>
+                        <xsl:otherwise>
+                            <xsl:value-of select="$value_settings/mets_name" />
+                        </xsl:otherwise>
+                    </xsl:choose>
                 </mets:name>
             </mets:agent>
             <mets:altRecordID TYPE="apeID">
@@ -290,29 +297,77 @@
     <!-- Build filegrp's -->
     <!-- Work todo: Get this to work, problems with the different filegrp that needs to be created from the information in the dao -->
     <xsl:template name="fileSec">
-        <xsl:variable name="node">
-            <xsl:copy-of select="self::node()"/>
-        </xsl:variable>
         <mets:fileSec>
-            <!-- Work todo: this needs refinement and adjustment to get it to work -->
-            <xsl:for-each select="descendant-or-self::node()[local-name(.)='dao'][1]">
-                <xsl:variable name="link_role" select="me:get_role(.)"/>
-                <!-- Find the value in the table of filegrp of use values -->
-                <!-- Work todo: get the reading of the use list to work -->
-                <!-- todo: Should there be more than one fileGrp? If so for which files (thumbnails and rest) so they are separated? And the @USE should say THUMB or DEFAULT ? -->
-                <mets:fileGrp USE="DEFAULT">
-                    <!-- USE="{if(some $h in $file_grp_values/child::node() satisfies $h/me:get_role(.) = $link_role) then $file_grp_values/child::node()[me:get_role(.)=$link_role] else concat('DEFAULT_',position())}">-->
-                    <xsl:for-each select="$node/descendant::node()/node()[me:is_correct_dao(.)=true()]">
-                        <xsl:if test="self::node()[me:get_role(.)=$link_role]">
-                            <!-- Work todo: Size is mandatory according to the profile but we need to get the value can it be done or does it require a change in the profile? -->
-                            <!-- Work todo: mimetype is a fixed value it should be created by another look up this requires knowledge of all possible filetypes that will be used in apeEAD for dao's is that possible? Does this require a change in the profile? -->
-                            <mets:file ID="{concat('FILE_',position(),'_',dao[me:get_role(.)=$link_role]/me:get_role(.),self::node()[me:get_role(.)=$link_role]/me:get_role(.))}" SIZE="0" MIMETYPE="{$value_settings/mimetype}">
-                                <mets:FLocat LOCTYPE="URL" xlink:type="simple" xlink:href="{concat(dao[me:get_role(.)=$link_role]/me:get_href(.), self::node()[me:get_role(.)=$link_role]/me:get_href(.))}" />
-                            </mets:file>
-                        </xsl:if>
+            <xsl:if test="did/dao[@xlink:role='VIDEO']">
+                <mets:fileGrp USE="VIDEO">
+                    <xsl:for-each select="did/dao[@xlink:role='VIDEO']">
+                        <xsl:variable name="link_role" select="me:get_role(.)"/>
+                        <mets:file ID="{concat('FILE_', position(), '_', dao[me:get_role(.)=$link_role]/me:get_role(.))}" SIZE="0" MIMETYPE="{$value_settings/mimetype}">
+                            <mets:FLocat LOCTYPE="URL" xlink:type="simple" xlink:href="{concat(dao[me:get_role(.)=$link_role]/me:get_href(.), self::node()[me:get_role(.)=$link_role]/me:get_href(.))}" />
+                        </mets:file>
                     </xsl:for-each>
                 </mets:fileGrp>
-            </xsl:for-each>
+            </xsl:if>
+            <xsl:if test="did/dao[@xlink:role='IMAGE']">
+                <mets:fileGrp USE="DISPLAY">
+                    <xsl:for-each select="did/dao[@xlink:role='IMAGE']">
+                        <xsl:variable name="link_role" select="me:get_role(.)"/>
+                        <mets:file ID="{concat('FILE_', position(), '_', dao[me:get_role(.)=$link_role]/me:get_role(.))}" SIZE="0" MIMETYPE="{$value_settings/mimetype}">
+                            <mets:FLocat LOCTYPE="URL" xlink:type="simple" xlink:href="{concat(dao[me:get_role(.)=$link_role]/me:get_href(.), self::node()[me:get_role(.)=$link_role]/me:get_href(.))}" />
+                        </mets:file>
+                    </xsl:for-each>
+                </mets:fileGrp>
+            </xsl:if>
+            <xsl:if test="did/dao[@xlink:role='3D']">
+                <mets:fileGrp USE="3D">
+                    <xsl:for-each select="did/dao[@xlink:role='3D']">
+                        <xsl:variable name="link_role" select="me:get_role(.)"/>
+                        <mets:file ID="{concat('FILE_', position(), '_', dao[me:get_role(.)=$link_role]/me:get_role(.))}" SIZE="0" MIMETYPE="{$value_settings/mimetype}">
+                            <mets:FLocat LOCTYPE="URL" xlink:type="simple" xlink:href="{concat(dao[me:get_role(.)=$link_role]/me:get_href(.), self::node()[me:get_role(.)=$link_role]/me:get_href(.))}" />
+                        </mets:file>
+                    </xsl:for-each>
+                </mets:fileGrp>
+            </xsl:if>
+            <xsl:if test="did/dao[@xlink:role='SOUND']">
+                <mets:fileGrp USE="SOUND">
+                    <xsl:for-each select="did/dao[@xlink:role='SOUND']">
+                        <xsl:variable name="link_role" select="me:get_role(.)"/>
+                        <mets:file ID="{concat('FILE_', position(), '_', dao[me:get_role(.)=$link_role]/me:get_role(.))}" SIZE="0" MIMETYPE="{$value_settings/mimetype}">
+                            <mets:FLocat LOCTYPE="URL" xlink:type="simple" xlink:href="{concat(dao[me:get_role(.)=$link_role]/me:get_href(.), self::node()[me:get_role(.)=$link_role]/me:get_href(.))}" />
+                        </mets:file>
+                    </xsl:for-each>
+                </mets:fileGrp>
+            </xsl:if>
+            <xsl:if test="did/dao[@xlink:role='TEXT']">
+                <mets:fileGrp USE="TEXT">
+                    <xsl:for-each select="did/dao[@xlink:role='TEXT']">
+                        <xsl:variable name="link_role" select="me:get_role(.)"/>
+                        <mets:file ID="{concat('FILE_', position(), '_', dao[me:get_role(.)=$link_role]/me:get_role(.))}" SIZE="0" MIMETYPE="{$value_settings/mimetype}">
+                            <mets:FLocat LOCTYPE="URL" xlink:type="simple" xlink:href="{concat(dao[me:get_role(.)=$link_role]/me:get_href(.), self::node()[me:get_role(.)=$link_role]/me:get_href(.))}" />
+                        </mets:file>
+                    </xsl:for-each>
+                </mets:fileGrp>
+            </xsl:if>
+            <xsl:if test="did/dao[(@xlink:role='UNSPECIFIED' or not(@xlink:role)) and not(@xlink:title='thumbnail')]">
+                <mets:fileGrp USE="DEFAULT">
+                    <xsl:for-each select="did/dao[(@xlink:role='UNSPECIFIED' or not(@xlink:role)) and not(@xlink:title='thumbnail')]">
+                        <xsl:variable name="link_role" select="me:get_role(.)"/>
+                        <mets:file ID="{concat('FILE_', position(), '_UNSPECIFIED')}" SIZE="0" MIMETYPE="{$value_settings/mimetype}">
+                            <mets:FLocat LOCTYPE="URL" xlink:type="simple" xlink:href="{concat(dao[me:get_role(.)=$link_role]/me:get_href(.), self::node()[me:get_role(.)=$link_role]/me:get_href(.))}" />
+                        </mets:file>
+                    </xsl:for-each>
+                </mets:fileGrp>
+            </xsl:if>
+            <xsl:if test="did/dao[@xlink:title='thumbnail']">
+                <mets:fileGrp USE="THUMBS">
+                    <xsl:for-each select="did/dao[@xlink:title='thumbnail']">
+                        <xsl:variable name="link_role" select="me:get_role(.)"/>
+                        <mets:file ID="{concat('FILE_', position(), '_THUMB')}" SIZE="0" MIMETYPE="{$value_settings/mimetype}">
+                            <mets:FLocat LOCTYPE="URL" xlink:type="simple" xlink:href="{concat(dao[me:get_role(.)=$link_role]/me:get_href(.), self::node()[me:get_role(.)=$link_role]/me:get_href(.))}" />
+                        </mets:file>
+                    </xsl:for-each>
+                </mets:fileGrp>
+            </xsl:if>
         </mets:fileSec>
     </xsl:template>
 
@@ -364,22 +419,168 @@
     <!--Build the physical map-->
     <xsl:template name="structMap_phys">
         <mets:structMap TYPE="PHYSICAL">
-            <mets:div ID="{concat('PHYS_','1')}">
-                <xsl:for-each select="did/dao">
-                    <mets:div ID="{concat('PHYS_',position()+1)}" ORDER="{position()}" LABEL="{me:get_title(.)}">
-                        <!-- position() has to be saved here, if daogrp and dao are mixed up-->
-                        <xsl:variable name="pos" select="position()"/>
-                        <!-- create a  file pointer for each daogrp or dao link-->
+            <mets:div ID="PHYS_1">
+
+                <xsl:variable name="thumbnail" select='did/dao[@xlink:title="thumbnail"]' />
+                <xsl:variable name="numberOfThumbnails" select='count($thumbnail)' />
+                <xsl:for-each select="did/dao[@xlink:title != 'thumbnail' or not(@xlink:title)][@xlink:role='VIDEO']">
+                    <xsl:variable name="linkPosition" select="position()" />
+                    <xsl:variable name="title">
                         <xsl:choose>
-                            <xsl:when test="local-name(.)='daogrp'">
-                                <xsl:for-each select="self::node()/daoloc">
-                                    <mets:fptr FILEID="{concat('FILE_',$pos,'_',me:get_role(.))}"/>
-                                </xsl:for-each>
-                            </xsl:when>
-                            <xsl:when test="local-name(.)='dao'">
-                                <mets:fptr FILEID="{concat('FILE_',$pos,'_',me:get_role(.))}"/>
+                            <xsl:when test="normalize-space(@xlink:title) != ''"><xsl:value-of select="./@xlink:title" /></xsl:when>
+                            <xsl:otherwise><xsl:value-of select="../unittitle[1]/text()" /></xsl:otherwise>
+                        </xsl:choose>
+                    </xsl:variable>
+                    <!-- if thumbnail exists -->
+                    <xsl:variable name="thumbnailHref">
+                        <xsl:choose>
+                            <xsl:when test="$thumbnail">
+                                <xsl:choose>
+                                    <xsl:when test="$numberOfThumbnails >= $linkPosition">
+                                        <xsl:value-of select="$thumbnail[$linkPosition]/@xlink:href" />
+                                    </xsl:when>
+                                    <xsl:otherwise>
+                                        <xsl:value-of select="$thumbnail[1]/@xlink:href" />
+                                    </xsl:otherwise>
+                                </xsl:choose>
                             </xsl:when>
                         </xsl:choose>
+                    </xsl:variable>
+                    <xsl:variable name="positionInList" select="position()"/>
+                    <xsl:variable name="positionInListThumbnail" select="count(preceding-sibling::dao[@xlink:title='thumbnail']) + 1"/>
+                    <mets:div ID="{concat('PHYS_', $positionInListThumbnail + 1)}" ORDER="{$positionInListThumbnail}" LABEL="{$title}">
+                        <mets:fptr FILEID="{concat('FILE_', $positionInList, '_', me:get_role(.))}"/>
+                        <xsl:if test="$thumbnailHref">
+                            <mets:fptr FILEID="{concat('FILE_', $positionInListThumbnail, '_THUMB')}"/>
+                        </xsl:if>
+                    </mets:div>
+                </xsl:for-each>
+                <xsl:for-each select="did/dao[@xlink:title != 'thumbnail' or not(@xlink:title)][@xlink:role='IMAGE']">
+                    <xsl:variable name="linkPosition" select="position()" />
+                    <xsl:variable name="title">
+                        <xsl:choose>
+                            <xsl:when test="normalize-space(@xlink:title) != ''"><xsl:value-of select="./@xlink:title" /></xsl:when>
+                            <xsl:otherwise><xsl:value-of select="../unittitle[1]/text()" /></xsl:otherwise>
+                        </xsl:choose>
+                    </xsl:variable>
+                    <!-- if thumbnail exists -->
+                    <xsl:variable name="thumbnailHref">
+                        <xsl:choose>
+                            <xsl:when test="$thumbnail">
+                                <xsl:choose>
+                                    <xsl:when test="$numberOfThumbnails >= $linkPosition">
+                                        <xsl:value-of select="$thumbnail[$linkPosition]/@xlink:href" />
+                                    </xsl:when>
+                                    <xsl:otherwise>
+                                        <xsl:value-of select="$thumbnail[1]/@xlink:href" />
+                                    </xsl:otherwise>
+                                </xsl:choose>
+                            </xsl:when>
+                        </xsl:choose>
+                    </xsl:variable>
+                    <xsl:variable name="positionInList" select="position()"/>
+                    <xsl:variable name="positionInListThumbnail" select="count(preceding-sibling::dao[@xlink:title='thumbnail']) + 1"/>
+                    <mets:div ID="{concat('PHYS_', $positionInListThumbnail + 1)}" ORDER="{$positionInListThumbnail}" LABEL="{$title}">
+                        <mets:fptr FILEID="{concat('FILE_', $positionInList, '_', me:get_role(.))}"/>
+                        <xsl:if test="$thumbnailHref">
+                            <mets:fptr FILEID="{concat('FILE_', $positionInListThumbnail, '_THUMB')}"/>
+                        </xsl:if>
+                    </mets:div>
+                </xsl:for-each>
+                <xsl:for-each select="did/dao[@xlink:title != 'thumbnail' or not(@xlink:title)][@xlink:role='3D']">
+                    <xsl:variable name="linkPosition" select="position()" />
+                    <xsl:variable name="title">
+                        <xsl:choose>
+                            <xsl:when test="normalize-space(@xlink:title) != ''"><xsl:value-of select="./@xlink:title" /></xsl:when>
+                            <xsl:otherwise><xsl:value-of select="../unittitle[1]/text()" /></xsl:otherwise>
+                        </xsl:choose>
+                    </xsl:variable>
+                    <!-- if thumbnail exists -->
+                    <xsl:variable name="thumbnailHref">
+                        <xsl:choose>
+                            <xsl:when test="$thumbnail">
+                                <xsl:choose>
+                                    <xsl:when test="$numberOfThumbnails >= $linkPosition">
+                                        <xsl:value-of select="$thumbnail[$linkPosition]/@xlink:href" />
+                                    </xsl:when>
+                                    <xsl:otherwise>
+                                        <xsl:value-of select="$thumbnail[1]/@xlink:href" />
+                                    </xsl:otherwise>
+                                </xsl:choose>
+                            </xsl:when>
+                        </xsl:choose>
+                    </xsl:variable>
+                    <xsl:variable name="positionInList" select="position()"/>
+                    <xsl:variable name="positionInListThumbnail" select="count(preceding-sibling::dao[@xlink:title='thumbnail']) + 1"/>
+                    <mets:div ID="{concat('PHYS_', $positionInListThumbnail + 1)}" ORDER="{$positionInListThumbnail}" LABEL="{$title}">
+                        <mets:fptr FILEID="{concat('FILE_', $positionInList, '_', me:get_role(.))}"/>
+                        <xsl:if test="$thumbnailHref">
+                            <mets:fptr FILEID="{concat('FILE_', $positionInListThumbnail, '_THUMB')}"/>
+                        </xsl:if>
+                    </mets:div>
+                </xsl:for-each>
+                <xsl:for-each select="did/dao[@xlink:title != 'thumbnail' or not(@xlink:title)][@xlink:role='SOUND']">
+                    <xsl:variable name="linkPosition" select="position()" />
+                    <xsl:variable name="title">
+                        <xsl:choose>
+                            <xsl:when test="normalize-space(@xlink:title) != ''"><xsl:value-of select="./@xlink:title" /></xsl:when>
+                            <xsl:otherwise><xsl:value-of select="../unittitle[1]/text()" /></xsl:otherwise>
+                        </xsl:choose>
+                    </xsl:variable>
+                    <!-- if thumbnail exists -->
+                    <xsl:variable name="thumbnailHref">
+                        <xsl:choose>
+                            <xsl:when test="$thumbnail">
+                                <xsl:choose>
+                                    <xsl:when test="$numberOfThumbnails >= $linkPosition">
+                                        <xsl:value-of select="$thumbnail[$linkPosition]/@xlink:href" />
+                                    </xsl:when>
+                                    <xsl:otherwise>
+                                        <xsl:value-of select="$thumbnail[1]/@xlink:href" />
+                                    </xsl:otherwise>
+                                </xsl:choose>
+                            </xsl:when>
+                        </xsl:choose>
+                    </xsl:variable>
+                    <xsl:variable name="positionInList" select="position()"/>
+                    <xsl:variable name="positionInListThumbnail" select="count(preceding-sibling::dao[@xlink:title='thumbnail']) + 1"/>
+                    <mets:div ID="{concat('PHYS_', $positionInListThumbnail + 1)}" ORDER="{$positionInListThumbnail}" LABEL="{$title}">
+                        <mets:fptr FILEID="{concat('FILE_', $positionInList, '_', me:get_role(.))}"/>
+                        <xsl:if test="$thumbnailHref">
+                            <mets:fptr FILEID="{concat('FILE_', $positionInListThumbnail, '_THUMB')}"/>
+                        </xsl:if>
+                    </mets:div>
+                </xsl:for-each>
+                <xsl:for-each select="did/dao[@xlink:title != 'thumbnail' or not(@xlink:title)][@xlink:role='UNSPECIFIED' or not(@xlink:role)]">
+                    <xsl:variable name="linkPosition" select="position()" />
+                    <xsl:variable name="title">
+                        <xsl:choose>
+                            <xsl:when test="normalize-space(@xlink:title) != ''"><xsl:value-of select="./@xlink:title" /></xsl:when>
+                            <xsl:otherwise><xsl:value-of select="../unittitle[1]/text()" /></xsl:otherwise>
+                        </xsl:choose>
+                    </xsl:variable>
+                    <!-- if thumbnail exists -->
+                    <xsl:variable name="thumbnailHref">
+                        <xsl:choose>
+                            <xsl:when test="$thumbnail">
+                                <xsl:choose>
+                                    <xsl:when test="$numberOfThumbnails >= $linkPosition">
+                                        <xsl:value-of select="$thumbnail[$linkPosition]/@xlink:href" />
+                                    </xsl:when>
+                                    <xsl:otherwise>
+                                        <xsl:value-of select="$thumbnail[1]/@xlink:href" />
+                                    </xsl:otherwise>
+                                </xsl:choose>
+                            </xsl:when>
+                        </xsl:choose>
+                    </xsl:variable>
+                    <xsl:variable name="positionInList" select="position()"/>
+                    <xsl:variable name="positionInListThumbnail" select="count(preceding-sibling::dao[@xlink:title='thumbnail']) + 1"/>
+                    <mets:div ID="{concat('PHYS_', $positionInListThumbnail + 1)}" ORDER="{$positionInListThumbnail}" LABEL="{$title}">
+                        <mets:fptr FILEID="{concat('FILE_', $positionInList, '_', me:get_role(.))}"/>
+                        <xsl:if test="$thumbnailHref">
+                            <mets:fptr FILEID="{concat('FILE_', $positionInListThumbnail, '_THUMB')}"/>
+                        </xsl:if>
                     </mets:div>
                 </xsl:for-each>
             </mets:div>
