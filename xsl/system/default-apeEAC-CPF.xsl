@@ -685,7 +685,7 @@
     <!-- nameEntry -->
     <xsl:template match="nameEntry" mode="copy">
         <nameEntry>
-            <xsl:if test="parent::identity">
+            <xsl:if test="parent::identity or parent::nameEntryParallel">
                 <xsl:if test="@localType">
                     <xsl:attribute name="localType">
                         <xsl:choose>
