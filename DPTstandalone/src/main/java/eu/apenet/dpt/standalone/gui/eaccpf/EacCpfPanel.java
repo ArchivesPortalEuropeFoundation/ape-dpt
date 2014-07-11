@@ -306,9 +306,7 @@ public abstract class EacCpfPanel extends CommonsPropertiesPanels {
     					for(CpfRelation cpfRelation: eac.getCpfDescription().getRelations().getCpfRelation()){
         					boolean removeCpfRelation = false;
         					if (StringUtils.isEmpty(cpfRelation.getCpfRelationType())
-        							|| StringUtils.isEmpty(trimStringValue(cpfRelation.getCpfRelationType()))
-        							|| StringUtils.isEmpty(cpfRelation.getHref())
-        							|| StringUtils.isEmpty(trimStringValue(cpfRelation.getHref()))) {
+        							|| StringUtils.isEmpty(trimStringValue(cpfRelation.getCpfRelationType()))) {
         						removeCpfRelation = true;
         					} else if (cpfRelation.getRelationEntry() == null || cpfRelation.getRelationEntry().isEmpty()) {
         						removeCpfRelation = true;
@@ -346,9 +344,7 @@ public abstract class EacCpfPanel extends CommonsPropertiesPanels {
     					for(ResourceRelation resourceRelation:eac.getCpfDescription().getRelations().getResourceRelation()){
     						boolean removeCpfRelation = false;
         					if (StringUtils.isEmpty(resourceRelation.getResourceRelationType())
-        							|| StringUtils.isEmpty(trimStringValue(resourceRelation.getResourceRelationType()))
-        							|| StringUtils.isEmpty(resourceRelation.getHref())
-        							|| StringUtils.isEmpty(trimStringValue(resourceRelation.getHref()))) {
+        							|| StringUtils.isEmpty(trimStringValue(resourceRelation.getResourceRelationType()))) {
         						removeCpfRelation = true;
         					} else if (resourceRelation.getRelationEntry() == null || resourceRelation.getRelationEntry().isEmpty()) {
         						removeCpfRelation = true;
@@ -386,9 +382,7 @@ public abstract class EacCpfPanel extends CommonsPropertiesPanels {
     					for(FunctionRelation functionRelation:eac.getCpfDescription().getRelations().getFunctionRelation()){
     						boolean removeCpfRelation = false;
         					if (StringUtils.isEmpty(functionRelation.getFunctionRelationType())
-        							|| StringUtils.isEmpty(trimStringValue(functionRelation.getFunctionRelationType()))
-        							|| StringUtils.isEmpty(functionRelation.getHref())
-        							|| StringUtils.isEmpty(trimStringValue(functionRelation.getHref()))) {
+        							|| StringUtils.isEmpty(trimStringValue(functionRelation.getFunctionRelationType()))) {
         						removeCpfRelation = true;
         					} else if (functionRelation.getRelationEntry() == null || functionRelation.getRelationEntry().isEmpty()) {
         						removeCpfRelation = true;
@@ -431,10 +425,7 @@ public abstract class EacCpfPanel extends CommonsPropertiesPanels {
     				List<SetComponent> setComponentsToBeDeleted = new ArrayList<SetComponent>();
         			for(SetComponent setComponent: eac.getCpfDescription().getAlternativeSet().getSetComponent()){
         				boolean removeSetComponent = false;
-    					if (StringUtils.isEmpty(setComponent.getHref())
-    							|| StringUtils.isEmpty(trimStringValue(setComponent.getHref()))) {
-    						removeSetComponent = true;
-    					} else if (setComponent.getComponentEntry() == null || setComponent.getComponentEntry().isEmpty()) {
+    					if (setComponent.getComponentEntry() == null || setComponent.getComponentEntry().isEmpty()) {
     						removeSetComponent = true;
     					} else if(setComponent.getComponentEntry()!=null && setComponent.getComponentEntry().size()>0){
     						if (StringUtils.isEmpty(setComponent.getComponentEntry().get(0).getLocalType())
