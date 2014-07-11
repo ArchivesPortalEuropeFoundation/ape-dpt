@@ -327,8 +327,16 @@
     <!-- control -->
     <xsl:template match="control" mode="copy">
         <control>
+            <xsl:choose>
+                <xsl:when test="$recordId">
             <xsl:call-template name="apeRecordId"/>
-            <xsl:apply-templates select="node()" mode="copy"/>
+                <xsl:apply-templates select="recordId" mode="copy"/>
+                </xsl:when>
+                <xsl:otherwise>
+                    <xsl:apply-templates select="recordId" mode="keepExisting"/>
+                </xsl:otherwise>
+            </xsl:choose>
+            <xsl:apply-templates select="node() except recordId" mode="copy"/>
         </control>
     </xsl:template>
 
@@ -339,6 +347,13 @@
         </recordId>
     </xsl:template>
 
+    <!-- If $recordId has no value (e.g. in DPT), keep existing recordId -->
+    <xsl:template match="recordId" mode="keepExisting">
+        <recordId>
+            <xsl:value-of select="."/>
+        </recordId>
+    </xsl:template>
+    
     <!-- existing recordId (will be moved to otherRecordId)-->
     <xsl:template match="recordId | otherRecordId" mode="copy">
         <otherRecordId>
@@ -357,7 +372,7 @@
             <xsl:value-of select="."/>
         </otherRecordId>
     </xsl:template>
-
+    
     <!-- maintenanceAgency -->
     <xsl:template match="maintenanceAgency" mode="copy">
         <maintenanceAgency>
