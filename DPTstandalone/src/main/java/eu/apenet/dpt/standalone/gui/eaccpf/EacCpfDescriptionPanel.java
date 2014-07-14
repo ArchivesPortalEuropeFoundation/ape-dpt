@@ -1280,17 +1280,17 @@ public class EacCpfDescriptionPanel extends EacCpfPanel {
 				builder.add(dateTextField.getDateToTextField(), cc.xy(7, this.rowNb));
 
 				// Second date row. Radio buttons.
-				this.setNextRow();
-				dateTextField.getDateFromUndefinedRB().addActionListener(new AddUndefinedTexts(dateTextField, EacCpfIdentityPanel.UNKNOWN_DATE_FROM));
-				dateTextField.getDateToUndefinedRB().addActionListener(new AddUndefinedTexts(dateTextField, EacCpfIdentityPanel.UNKNOWN_DATE_TO));
-				builder.add(dateTextField.getDateFromUndefinedRB(), cc.xy(3, this.rowNb));
-				builder.add(dateTextField.getDateToUndefinedRB(), cc.xy(7, this.rowNb));
-				
 				setNextRow();
 				dateTextField.getDateFromDefinedRB().addActionListener(new AddUndefinedTexts(dateTextField, EacCpfIdentityPanel.KNOWN_DATE_FROM));
 				dateTextField.getDateToDefinedRB().addActionListener(new AddUndefinedTexts(dateTextField, EacCpfIdentityPanel.KNOWN_DATE_TO));
 				builder.add(dateTextField.getDateFromDefinedRB(), cc.xy(3, this.rowNb));
 				builder.add(dateTextField.getDateToDefinedRB(), cc.xy(7, this.rowNb));
+				
+				this.setNextRow();
+				dateTextField.getDateFromUndefinedRB().addActionListener(new AddUndefinedTexts(dateTextField, EacCpfIdentityPanel.UNKNOWN_DATE_FROM));
+				dateTextField.getDateToUndefinedRB().addActionListener(new AddUndefinedTexts(dateTextField, EacCpfIdentityPanel.UNKNOWN_DATE_TO));
+				builder.add(dateTextField.getDateFromUndefinedRB(), cc.xy(3, this.rowNb));
+				builder.add(dateTextField.getDateToUndefinedRB(), cc.xy(7, this.rowNb));
 				
 				setNextRow();
 //				dateTextField.getDateFromStillRB().addActionListener(new AddUndefinedTexts(dateTextField, EacCpfIdentityPanel.STILL_DATE_FROM));
@@ -1313,12 +1313,12 @@ public class EacCpfDescriptionPanel extends EacCpfPanel {
 				builder.add(dateTextField.getDateTextField(), cc.xy(3, this.rowNb));
 
 				// Second date row. Unknown radiobuttons.
-				this.setNextRow();
-				dateTextField.getDateUndefinedRB().addActionListener(new AddUndefinedTexts(dateTextField, EacCpfIdentityPanel.UNKNOWN_DATE));
-				builder.add(dateTextField.getDateUndefinedRB(), cc.xy(3, this.rowNb));
 				setNextRow();
 				dateTextField.getDateDefinedRB().addActionListener(new AddUndefinedTexts(dateTextField, EacCpfIdentityPanel.KNOWN_DATE));
 				builder.add(dateTextField.getDateDefinedRB(), cc.xy(3, this.rowNb));
+				this.setNextRow();
+				dateTextField.getDateUndefinedRB().addActionListener(new AddUndefinedTexts(dateTextField, EacCpfIdentityPanel.UNKNOWN_DATE));
+				builder.add(dateTextField.getDateUndefinedRB(), cc.xy(3, this.rowNb));
 				setNextRow();
 				dateTextField.getDateStillRB().addActionListener(new AddUndefinedTexts(dateTextField, EacCpfIdentityPanel.STILL_DATE));
 				builder.add(dateTextField.getDateStillRB(), cc.xy(3, this.rowNb));
