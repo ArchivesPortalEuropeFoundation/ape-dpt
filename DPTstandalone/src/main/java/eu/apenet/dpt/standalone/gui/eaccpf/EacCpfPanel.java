@@ -20,6 +20,8 @@ package eu.apenet.dpt.standalone.gui.eaccpf;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -952,31 +954,176 @@ public abstract class EacCpfPanel extends CommonsPropertiesPanels {
 	 * @return the ISO date.
 	 */
 	protected static String parseStandardDate(String text) {
+		String yearStandardDate = "";
+		String monthStandardDate = "";
+		String dateStandardDate = "";
+		String reverseString = "";
+		String type = "ymd";
+		
 		boolean pattern1 = Pattern.matches("\\d{4}", text); //yyyy
 		boolean pattern2 = Pattern.matches("\\d{4}[\\-\\./:\\s]\\d{2}", text); //yyyy-MM
 		boolean pattern3 = Pattern.matches("\\d{4}[\\-\\./:\\s]\\d{2}[\\-\\./:\\s]\\d{2}", text); //yyyy-MM-dd
 		boolean pattern4 = Pattern.matches("\\d{2}[\\-\\./:\\s]\\d{2}[\\-\\./:\\s]\\d{4}", text); //dd-MM-yyyy
+		boolean pattern5 = Pattern.matches("\\d{1}[\\-\\./:\\s]\\d{1}[\\-\\./:\\s]\\d{4}", text); //d-M-yyyy
+		boolean pattern6 = Pattern.matches("\\d{1}[\\-\\./:\\s]\\d{2}[\\-\\./:\\s]\\d{4}", text); //d-MM-yyyy
+		boolean pattern7 = Pattern.matches("\\d{2}[\\-\\./:\\s]\\d{1}[\\-\\./:\\s]\\d{4}", text); //dd-M-yyyy
+		boolean pattern8 = Pattern.matches("\\d{4}[\\-\\./:\\s]\\d{1}[\\-\\./:\\s]\\d{2}", text); //yyyy-M-dd
+		boolean pattern9 = Pattern.matches("\\d{4}[\\-\\./:\\s]\\d{2}[\\-\\./:\\s]\\d{1}", text); //yyyy-MM-d
+		boolean pattern0 = Pattern.matches("\\d{4}[\\-\\./:\\s]\\d{1}[\\-\\./:\\s]\\d{1}", text); //yyyy-M-d
+		
 		if (pattern4){
-			String yearStandardDate = text.substring(6);
-			String monthStandardDate = text.substring(2,6);
-			String dateStandardDate = text.substring(0,2);
-			String reverseString =yearStandardDate+monthStandardDate+dateStandardDate;
+			yearStandardDate = text.substring(6);
+			monthStandardDate = text.substring(2,6);
+			dateStandardDate = text.substring(0,2);
+			reverseString =yearStandardDate+monthStandardDate+dateStandardDate;
 			text = text.replaceAll(text, reverseString);
 		}
 		if (pattern1){
-			return text;
+			type = "y";
 		} else if (pattern2) {
-			String monthStandardDate = text.substring(5,7);
-
+			monthStandardDate = text.substring(5,7);
 			if (Integer.parseInt(monthStandardDate) <= 12) {
 				text = text.replaceAll("[\\./:\\s]", "-");
-				return text;
 			}
-		} else if (pattern3 || pattern4) {
+			type = "ym";
+		} else if (pattern3 || pattern4 ) {
 			text = text.replaceAll("[\\./:\\s]", "-");
-			return text;
+		} 
+		else if (pattern5) {
+			//d-M-yyyy
+			yearStandardDate = text.substring(4);
+			monthStandardDate = "0"+text.substring(2,3);
+			dateStandardDate = "0"+text.substring(0,1);
+		}else if ( pattern6) {
+			//d-MM-yyyy
+			yearStandardDate = text.substring(5);
+			monthStandardDate = text.substring(2,4);
+			dateStandardDate = "0"+text.substring(0,1);
+		} else if (pattern7) {
+			//dd-M-yyyy
+			yearStandardDate = text.substring(5);
+			monthStandardDate = "0"+text.substring(3,4);
+			dateStandardDate = text.substring(0,2);
+		}
+		else if (pattern8) {
+			//yyyy-M-dd
+			yearStandardDate = text.substring(0,4);
+			monthStandardDate = "0"+text.substring(5,6);
+			dateStandardDate = text.substring(7);
+		}else if (pattern9) {
+			//yyyy-MM-d
+			yearStandardDate = text.substring(0,4);
+			monthStandardDate = text.substring(5,7);
+			dateStandardDate = "0"+text.substring(8);
+		}else if (pattern0) {
+			//yyyy-M-d
+			yearStandardDate = text.substring(0,4);
+			monthStandardDate = "0"+text.substring(5,6);
+			dateStandardDate = "0"+text.substring(7);			
+		}
+		
+		if (pattern5 || pattern6 || pattern7 || pattern8 || pattern9 || pattern0){
+			String strAux = yearStandardDate + "-" + monthStandardDate + "-" + dateStandardDate;
+			text = strAux;
 		}
 
-		return "";
+		if (isValidDate(text, type))
+			return text;
+		else 
+			return "";
+	
+	}
+	
+	/***
+	 * Checks if there is a valid ISO date candidate
+	 * @param date date to check
+	 * @param type only a year (yyyy), year with month (yyyy-MM) or a complete date (yyyy-MM-dd)
+	 * @return true if there is a valid candidate or false if not
+	 */
+	public static boolean isValidDate(String date, String type){
+	    SimpleDateFormat dateFormat = null;
+	    
+    	dateFormat = checkDateFormat(type);
+
+	    dateFormat.setLenient(false);
+	    java.util.Date testDate = null;
+    
+	    try{
+	      testDate = dateFormat.parse(date);
+	    }
+	    catch (ParseException e) {
+	      return false;
+	    }
+
+	    if (!dateFormat.format(testDate).equals(date)) 
+	      return false;
+
+	    return true;
+	}
+	
+	/***
+	 * Sets DateFormat from a type
+	 * @param type only a year (yyyy), year with month (yyyy-MM) or a complete date (yyyy-MM-dd)
+	 * @return SimpleDateFormat dateFormat
+	 */
+	public static SimpleDateFormat checkDateFormat(String type){
+		SimpleDateFormat dateFormat = null;
+		
+		 if (type.equalsIgnoreCase("y")) 
+		    	dateFormat = new SimpleDateFormat("yyyy");
+	    else if (type.equalsIgnoreCase("ym")) 
+	    	dateFormat = new SimpleDateFormat("yyyy-MM");
+	    else 
+	    	dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+		 
+		return dateFormat;
+	}
+	
+	/***
+	 * Checks if the From date is before than To date
+	 * @param dateFrom Date range: From
+	 * @param dateTo Date range: To
+	 * @return true if From date is lower than To date, false if not
+	 */
+	protected static boolean checkDates(String dateFrom, String dateTo){
+		boolean result = true;
+		try{
+	    	if(!dateFrom.isEmpty() && !dateTo.isEmpty()){
+	    		java.util.Date ToDate = null;
+	    		java.util.Date FromDate = null;
+	    		SimpleDateFormat dateFormatFrom = null;
+	    		SimpleDateFormat dateFormatTo = null;
+	    		String type="";
+	    		
+	    		if (dateFrom.length()==4)
+	    			type="y";
+	    		else if (dateFrom.length()==7)
+	    			type="yM";
+	    		else
+	    			type="yMd";
+	    		
+	    		dateFormatFrom = checkDateFormat(type);
+	    		FromDate = dateFormatFrom.parse(dateFrom);
+	    		
+	    		if (dateTo.length()==4)
+	    			type="y";
+	    		else if (dateTo.length()==7)
+	    			type="yM";
+	    		else
+	    			type="yMd";
+	    		
+	    		dateFormatTo = checkDateFormat(type);
+	    		ToDate = dateFormatTo.parse(dateTo);
+	    		
+	    		if (FromDate.after(ToDate))
+	    			result = false;
+				
+	    	}
+	    }
+	    catch (ParseException e) {
+	      return result;
+	    }
+	    
+	    return result;
 	}
 }
