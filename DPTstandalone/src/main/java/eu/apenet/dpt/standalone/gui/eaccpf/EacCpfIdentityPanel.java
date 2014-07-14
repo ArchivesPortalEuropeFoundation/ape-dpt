@@ -53,7 +53,7 @@ import eu.apenet.dpt.standalone.gui.commons.ButtonTab;
 import eu.apenet.dpt.standalone.gui.commons.DefaultBtnAction;
 import eu.apenet.dpt.standalone.gui.commons.swingstructures.StructureWithLanguage;
 import eu.apenet.dpt.standalone.gui.eaccpf.swingstructures.TextFieldWithComboBoxEacCpf;
-import eu.apenet.dpt.standalone.gui.eaccpf.swingstructures.TextFieldsWithCheckBoxForDates;
+import eu.apenet.dpt.standalone.gui.eaccpf.swingstructures.TextFieldsWithRadioButtonForDates;
 import eu.apenet.dpt.utils.eaccpf.AgencyCode;
 import eu.apenet.dpt.utils.eaccpf.AgencyName;
 import eu.apenet.dpt.utils.eaccpf.Control;
@@ -86,10 +86,19 @@ public class EacCpfIdentityPanel extends EacCpfPanel {
 
 	// Constants for the unknown dates.
 	protected static final String UNKNOWN_DATE = "date";
+	protected static final String KNOWN_DATE = "known_date";
+	protected static final String STILL_DATE = "still_date";
 	protected static final String UNKNOWN_DATE_FROM = "from";
 	protected static final String UNKNOWN_DATE_TO = "to";
-	protected static final String UNKNOWN_END_DATE = "2099";
-	protected static final String UNKNOWN_INITIAL_DATE = "0001";
+	protected static final String KNOWN_DATE_FROM = "known_from";
+	protected static final String KNOWN_DATE_TO = "known_to";
+	protected static final String STILL_DATE_FROM = "still_from";
+	protected static final String STILL_DATE_TO = "still_to";
+//	protected static final String UNKNOWN_END_DATE = "2099";
+//	protected static final String UNKNOWN_INITIAL_DATE = "0001";
+	protected static final String UNKNOWN_END_DATE = "unknownEnd";
+	protected static final String UNKNOWN_INITIAL_DATE = "unknownStart";
+	protected static final String UNKNOWN = "unknown";
 
 	// Constants for maintenance.
 	private static final String MAINTENANCE_AGENCY_NAME = "European test archives";
@@ -103,12 +112,12 @@ public class EacCpfIdentityPanel extends EacCpfPanel {
 	private Map<Integer, List<TextFieldWithComboBoxEacCpf>> namePartComponentTfsWCbs;
 	private List<TextFieldWithComboBoxEacCpf> nameFormTfsWCbs;
 	private List<StructureWithLanguage> nameLanguageCbs;
-	private Map<Integer, List<TextFieldsWithCheckBoxForDates>> useDateTFs;
+	private Map<Integer, List<TextFieldsWithRadioButtonForDates>> useDateTFs;
 	// Identifiers section.
 	private List<JTextField> identifierTfs;
 	private List<JTextField> identifierTypeTfs;
 	// Dates of existence section.
-	private List<TextFieldsWithCheckBoxForDates> existenceDateTFs;
+	private List<TextFieldsWithRadioButtonForDates> existenceDateTFs;
 
 	/**
 	 * Constructor.
@@ -268,7 +277,7 @@ public class EacCpfIdentityPanel extends EacCpfPanel {
 		this.namePartComponentTfsWCbs = new HashMap<Integer, List<TextFieldWithComboBoxEacCpf>>(nameEntries.size());
 		this.nameFormTfsWCbs = new ArrayList<TextFieldWithComboBoxEacCpf>(nameEntries.size());
 		this.nameLanguageCbs = new ArrayList<StructureWithLanguage>(nameEntries.size());
-		this.useDateTFs = new HashMap<Integer, List<TextFieldsWithCheckBoxForDates>>(nameEntries.size());
+		this.useDateTFs = new HashMap<Integer, List<TextFieldsWithRadioButtonForDates>>(nameEntries.size());
 
 		int index = 0;
 
@@ -295,7 +304,7 @@ public class EacCpfIdentityPanel extends EacCpfPanel {
 
 				// Add elements to the panel.
 				if (i == 0) {
-					builder.addLabel(this.labels.getString("eaccpf.identity.name.full") + "*", cc.xy(1, this.rowNb));
+					builder.addLabel(this.labels.getString("eaccpf.identity.name.full") + (index==0?"*":""), cc.xy(1, this.rowNb));
 				} else {
 					builder.addLabel(this.labels.getString("eaccpf.identity.name.part"), cc.xy(1, this.rowNb));
 				}
@@ -404,7 +413,7 @@ public class EacCpfIdentityPanel extends EacCpfPanel {
 		}
 
 		List<Object> useDates = this.getAllDates(nameEntry.getUseDates());
-		List<TextFieldsWithCheckBoxForDates> tfwcfdList = new ArrayList<TextFieldsWithCheckBoxForDates>();
+		List<TextFieldsWithRadioButtonForDates> tfwcfdList = new ArrayList<TextFieldsWithRadioButtonForDates>();
 
 		for (Object object : useDates) {
 			this.setNextRow();
@@ -413,12 +422,15 @@ public class EacCpfIdentityPanel extends EacCpfPanel {
 			boolean isDateRange = false;
 
 			// Create element.
-			TextFieldsWithCheckBoxForDates useDateTF = null;
+			TextFieldsWithRadioButtonForDates useDateTF = null;
 			if (object instanceof Date) {
 				Date date = (Date) object;
-				boolean isDateUndefined = this.isUndefinedDate(date.getStandardDate());
-				useDateTF = new TextFieldsWithCheckBoxForDates(this.labels.getString("eaccpf.commons.unknown.date"),
-												date.getContent(), isDateUndefined, date.getStandardDate(),
+				boolean isDateUndefined = this.isUndefinedDate(date.getLocalType());
+				boolean isStillDate = (!isDateUndefined && date.getLocalType()!=null && (date.getLocalType().equals("open")));
+				useDateTF = new TextFieldsWithRadioButtonForDates(this.labels.getString("eaccpf.commons.unknown.date"), this.labels.getString("eaccpf.commons.date.known"),
+						(this.entityType.getName().equals(XmlTypeEacCpf.EAC_CPF_PERSON.getName()))?this.labels.getString("eaccpf.commons.date.open.person"):this.labels.getString("eaccpf.commons.date.open.corpfam"),
+						date.getContent(), 
+						isDateUndefined, isStillDate,isStillDate, date.getStandardDate(),
 												"", false, "", "", false, "", false);
 			} else if (object instanceof DateRange) {
 				isDateRange = true;
@@ -449,12 +461,26 @@ public class EacCpfIdentityPanel extends EacCpfPanel {
 					}
 				}
 
-				boolean isDateFromUndefined = this.isUndefinedDate(dateFromStandard);
-				boolean isDateToUndefined = this.isUndefinedDate(dateToStandard);
-
-				useDateTF = new TextFieldsWithCheckBoxForDates(this.labels.getString("eaccpf.commons.unknown.date"), "", false, "",
-												dateFrom, isDateFromUndefined, dateFromStandard,
-												dateTo, isDateToUndefined, dateToStandard, true);
+				boolean isDateFromUndefined = isUndefinedFromDate(dateRange);
+				boolean isDateToUndefined = isUndefinedToDate(dateRange);
+				boolean isDateFromOpen = isOpenFromDate(dateRange);
+				boolean isDateToOpen = isOpenToDate(dateRange);
+				boolean isStillDate = (!isDateToUndefined && (isDateFromOpen || isDateToOpen));
+				useDateTF = new TextFieldsWithRadioButtonForDates(
+						this.labels.getString("eaccpf.commons.unknown.date"),
+						this.labels.getString("eaccpf.commons.date.known"),
+						(this.entityType.getName().equals(XmlTypeEacCpf.EAC_CPF_PERSON.getName()))?this.labels.getString("eaccpf.commons.date.open.person"):this.labels.getString("eaccpf.commons.date.open.corpfam"),
+						"", 
+						false ,
+						isDateFromOpen , isDateToOpen,
+						"", 
+						dateFrom, 
+						isDateFromUndefined, 
+						dateFromStandard, 
+						dateTo, 
+						isDateToUndefined, 
+						dateToStandard, 
+						true);
 			}
 
 			// Add elements to the list.
@@ -470,15 +496,27 @@ public class EacCpfIdentityPanel extends EacCpfPanel {
 				useDateTF.getDateToTextField().addFocusListener(new AddIsoText(useDateTF, EacCpfIdentityPanel.UNKNOWN_DATE_TO));
 				builder.add(useDateTF.getDateToTextField(), cc.xy(7, this.rowNb));
 
-				// Second date row. Unknown check boxes.
+				// Second date row. Radio buttons.
+				setNextRow();
+				useDateTF.getDateFromDefinedRB().addActionListener(new AddUndefinedTexts(useDateTF, EacCpfIdentityPanel.KNOWN_DATE_FROM));
+				useDateTF.getDateToDefinedRB().addActionListener(new AddUndefinedTexts(useDateTF, EacCpfIdentityPanel.KNOWN_DATE_TO));
+				builder.add(useDateTF.getDateFromDefinedRB(), cc.xy(3, this.rowNb));
+				builder.add(useDateTF.getDateToDefinedRB(), cc.xy(7, this.rowNb));
+				
 				this.setNextRow();
-				useDateTF.getDateFromUndefinedCB().addActionListener(new AddUndefinedTexts(useDateTF, EacCpfIdentityPanel.UNKNOWN_DATE_FROM));
-				useDateTF.getDateToUndefinedCB().addActionListener(new AddUndefinedTexts(useDateTF, EacCpfIdentityPanel.UNKNOWN_DATE_TO));
-				builder.add(useDateTF.getDateFromUndefinedCB(), cc.xy(3, this.rowNb));
-				builder.add(useDateTF.getDateToUndefinedCB(), cc.xy(7, this.rowNb));
+				useDateTF.getDateFromUndefinedRB().addActionListener(new AddUndefinedTexts(useDateTF, EacCpfIdentityPanel.UNKNOWN_DATE_FROM));
+				useDateTF.getDateToUndefinedRB().addActionListener(new AddUndefinedTexts(useDateTF, EacCpfIdentityPanel.UNKNOWN_DATE_TO));
+				builder.add(useDateTF.getDateFromUndefinedRB(), cc.xy(3, this.rowNb));
+				builder.add(useDateTF.getDateToUndefinedRB(), cc.xy(7, this.rowNb));
+				
+				setNextRow();
+//				useDateTF.getDateFromStillRB().addActionListener(new AddUndefinedTexts(useDateTF, EacCpfIdentityPanel.STILL_DATE_FROM));
+				useDateTF.getDateToStillRB().addActionListener(new AddUndefinedTexts(useDateTF, EacCpfIdentityPanel.STILL_DATE_TO));
+//				builder.add(useDateTF.getDateFromStillRB(), cc.xy(3, this.rowNb));
+				builder.add(useDateTF.getDateToStillRB(), cc.xy(7, this.rowNb));
 
 				// Third date row. Standard dates.
-				this.setNextRow();
+				setNextRow();
 				builder.addLabel(this.labels.getString("eaccpf.commons.iso.date"), cc.xy(1, this.rowNb));
 				useDateTF.getStandardDateFromTextField().addFocusListener(new CheckIsoText(useDateTF, EacCpfIdentityPanel.UNKNOWN_DATE_FROM));
 				builder.add(useDateTF.getStandardDateFromTextField(), cc.xy(3, this.rowNb));
@@ -491,10 +529,18 @@ public class EacCpfIdentityPanel extends EacCpfPanel {
 				useDateTF.getDateTextField().addFocusListener(new AddIsoText(useDateTF, EacCpfIdentityPanel.UNKNOWN_DATE));
 				builder.add(useDateTF.getDateTextField(), cc.xy(3, this.rowNb));
 
-				// Second date row. Unknown check boxes.
+				// Second date row. Unknown radiobuttons.
+				setNextRow();
+				useDateTF.getDateDefinedRB().addActionListener(new AddUndefinedTexts(useDateTF, EacCpfIdentityPanel.KNOWN_DATE));
+				builder.add(useDateTF.getDateDefinedRB(), cc.xy(3, this.rowNb));
+				
 				this.setNextRow();
-				useDateTF.getDateUndefinedCB().addActionListener(new AddUndefinedTexts(useDateTF, EacCpfIdentityPanel.UNKNOWN_DATE));
-				builder.add(useDateTF.getDateUndefinedCB(), cc.xy(3, this.rowNb));
+				useDateTF.getDateUndefinedRB().addActionListener(new AddUndefinedTexts(useDateTF, EacCpfIdentityPanel.UNKNOWN_DATE));
+				builder.add(useDateTF.getDateUndefinedRB(), cc.xy(3, this.rowNb));
+				setNextRow();
+				
+				useDateTF.getDateStillRB().addActionListener(new AddUndefinedTexts(useDateTF, EacCpfIdentityPanel.STILL_DATE));
+				builder.add(useDateTF.getDateStillRB(), cc.xy(3, this.rowNb));
 
 				// Third date row. Standard dates.
 				this.setNextRow();
@@ -544,40 +590,6 @@ public class EacCpfIdentityPanel extends EacCpfPanel {
 		return datesList;
 	}
 
-	/**
-	 * Method to parse the value of the date to an ISO one if possible.
-	 *
-	 * @param text
-	 * @return the ISO date.
-	 */
-	private String parseStandardDate(String text) {
-		boolean pattern1 = Pattern.matches("\\d{4}", text); //yyyy
-		boolean pattern2 = Pattern.matches("\\d{4}[\\-\\./:\\s]\\d{2}", text); //yyyy-MM
-		boolean pattern3 = Pattern.matches("\\d{4}[\\-\\./:\\s]\\d{2}[\\-\\./:\\s]\\d{2}", text); //yyyy-MM-dd
-		boolean pattern4 = Pattern.matches("\\d{2}[\\-\\./:\\s]\\d{2}[\\-\\./:\\s]\\d{4}", text); //dd-MM-yyyy
-		if (pattern4){
-			String yearStandardDate = text.substring(6);
-			String monthStandardDate = text.substring(2,6);
-			String dateStandardDate = text.substring(0,2);
-			String reverseString =yearStandardDate+monthStandardDate+dateStandardDate;
-			text = text.replaceAll(text, reverseString);
-		}
-		if (pattern1){
-			return text;
-		} else if (pattern2) {
-			String monthStandardDate = text.substring(5,7);
-
-			if (Integer.parseInt(monthStandardDate) <= 12) {
-				text = text.replaceAll("[\\./:\\s]", "-");
-				return text;
-			}
-		} else if (pattern3 || pattern4) {
-			text = text.replaceAll("[\\./:\\s]", "-");
-			return text;
-		}
-
-		return "";
-	}
 
 	/**
 	 * Main method to build the identifier section.
@@ -670,8 +682,8 @@ public class EacCpfIdentityPanel extends EacCpfPanel {
 			this.eaccpf.getCpfDescription().getDescription().getExistDates().setDateRange(new DateRange());
 		}
 
-		List<Object> existingDates = this.getAllDates(this.eaccpf.getCpfDescription().getDescription().getExistDates());
-		this.existenceDateTFs = new ArrayList<TextFieldsWithCheckBoxForDates>(existingDates.size());
+		List<Object> existingDates = getAllDates(this.eaccpf.getCpfDescription().getDescription().getExistDates());
+		this.existenceDateTFs = new ArrayList<TextFieldsWithRadioButtonForDates>(existingDates.size());
 
 		int position = 0;
 
@@ -681,12 +693,15 @@ public class EacCpfIdentityPanel extends EacCpfPanel {
 			// Type of date.
 			boolean isDateRange = false;
 			// Create element.
-			TextFieldsWithCheckBoxForDates existenceDateTF = null;
+			TextFieldsWithRadioButtonForDates existenceDateTF = null;
 			if (object instanceof Date) {
 				Date date = (Date) object;
-				boolean isDateUndefined = this.isUndefinedDate(date.getStandardDate());
-				existenceDateTF = new TextFieldsWithCheckBoxForDates(this.labels.getString("eaccpf.commons.unknown.date"),
-												date.getContent(), isDateUndefined, date.getStandardDate(),
+				boolean isDateUndefined = this.isUndefinedDate(date.getLocalType());
+				boolean isStillDate = (!isDateUndefined && (date!=null && date.getLocalType()!=null && date.getLocalType().equals("open")));
+				existenceDateTF = new TextFieldsWithRadioButtonForDates(this.labels.getString("eaccpf.commons.unknown.date"),
+						this.labels.getString("eaccpf.commons.date.known"),
+						(this.entityType.getName().equals(XmlTypeEacCpf.EAC_CPF_PERSON.getName()))?this.labels.getString("eaccpf.commons.date.open.person"):this.labels.getString("eaccpf.commons.date.open.corpfam"),
+												date.getContent(), isDateUndefined, isStillDate,isStillDate, date.getStandardDate(),
 												"", false, "", "", false, "", false);
 			} else if (object instanceof DateRange) {
 				isDateRange = true;
@@ -717,12 +732,14 @@ public class EacCpfIdentityPanel extends EacCpfPanel {
 					}
 				}
 
-				boolean isDateFromUndefined = this.isUndefinedDate(dateFromStandard);
-				boolean isDateToUndefined = this.isUndefinedDate(dateToStandard);
-
-				existenceDateTF = new TextFieldsWithCheckBoxForDates(this.labels.getString("eaccpf.commons.unknown.date"), "", false, "",
-												dateFrom, isDateFromUndefined, dateFromStandard,
-												dateTo, isDateToUndefined, dateToStandard, true);
+				boolean isDateFromUndefined = this.isUndefinedFromDate(dateRange);
+				boolean isDateToUndefined = this.isUndefinedToDate(dateRange);
+				boolean isDateFromOpen = isOpenFromDate(dateRange);
+				boolean isDateToOpen = isOpenToDate(dateRange);
+				existenceDateTF = new TextFieldsWithRadioButtonForDates(this.labels.getString("eaccpf.commons.unknown.date"),
+						this.labels.getString("eaccpf.commons.date.known"),
+						(this.entityType.getName().equals(XmlTypeEacCpf.EAC_CPF_PERSON.getName()))?this.labels.getString("eaccpf.commons.date.open.person"):this.labels.getString("eaccpf.commons.date.open.corpfam"),
+						"", false, isDateFromOpen , isDateToOpen, "",dateFrom, isDateFromUndefined, dateFromStandard, dateTo, isDateToUndefined, dateToStandard, true);
 			}
 
 			// Add elements to the list.
@@ -738,15 +755,27 @@ public class EacCpfIdentityPanel extends EacCpfPanel {
 				existenceDateTF.getDateToTextField().addFocusListener(new AddIsoText(existenceDateTF, EacCpfIdentityPanel.UNKNOWN_DATE_TO));
 				builder.add(existenceDateTF.getDateToTextField(), cc.xy(7, this.rowNb));
 
-				// Second date row. Unknown check boxes.
+				// Second date row. Unknown radio boxes.
+				setNextRow();
+				existenceDateTF.getDateFromDefinedRB().addActionListener(new AddUndefinedTexts(existenceDateTF, EacCpfIdentityPanel.KNOWN_DATE_FROM));
+				existenceDateTF.getDateToDefinedRB().addActionListener(new AddUndefinedTexts(existenceDateTF, EacCpfIdentityPanel.KNOWN_DATE_TO));
+				builder.add(existenceDateTF.getDateFromDefinedRB(), cc.xy(3, this.rowNb));
+				builder.add(existenceDateTF.getDateToDefinedRB(), cc.xy(7, this.rowNb));
+				
 				this.setNextRow();
-				existenceDateTF.getDateFromUndefinedCB().addActionListener(new AddUndefinedTexts(existenceDateTF, EacCpfIdentityPanel.UNKNOWN_DATE_FROM));
-				existenceDateTF.getDateToUndefinedCB().addActionListener(new AddUndefinedTexts(existenceDateTF, EacCpfIdentityPanel.UNKNOWN_DATE_TO));
-				builder.add(existenceDateTF.getDateFromUndefinedCB(), cc.xy(3, this.rowNb));
-				builder.add(existenceDateTF.getDateToUndefinedCB(), cc.xy(7, this.rowNb));
+				existenceDateTF.getDateFromUndefinedRB().addActionListener(new AddUndefinedTexts(existenceDateTF, EacCpfIdentityPanel.UNKNOWN_DATE_FROM));
+				existenceDateTF.getDateToUndefinedRB().addActionListener(new AddUndefinedTexts(existenceDateTF, EacCpfIdentityPanel.UNKNOWN_DATE_TO));
+				builder.add(existenceDateTF.getDateFromUndefinedRB(), cc.xy(3, this.rowNb));
+				builder.add(existenceDateTF.getDateToUndefinedRB(), cc.xy(7, this.rowNb));
+				
+				setNextRow();
+				existenceDateTF.getDateFromStillRB().addActionListener(new AddUndefinedTexts(existenceDateTF, EacCpfIdentityPanel.STILL_DATE_FROM));
+				existenceDateTF.getDateToStillRB().addActionListener(new AddUndefinedTexts(existenceDateTF, EacCpfIdentityPanel.STILL_DATE_TO));
+//				builder.add(existenceDateTF.getDateFromStillRB(), cc.xy(3, this.rowNb));
+				builder.add(existenceDateTF.getDateToStillRB(), cc.xy(7, this.rowNb));
 
 				// Third date row. Standard dates.
-				this.setNextRow();
+				setNextRow();
 				builder.addLabel(this.labels.getString("eaccpf.commons.iso.date"), cc.xy(1, this.rowNb));
 				existenceDateTF.getStandardDateFromTextField().addFocusListener(new CheckIsoText(existenceDateTF, EacCpfIdentityPanel.UNKNOWN_DATE_FROM));
 				builder.add(existenceDateTF.getStandardDateFromTextField(), cc.xy(3, this.rowNb));
@@ -754,8 +783,7 @@ public class EacCpfIdentityPanel extends EacCpfPanel {
 				existenceDateTF.getStandardDateToTextField().addFocusListener(new CheckIsoText(existenceDateTF, EacCpfIdentityPanel.UNKNOWN_DATE_TO));
 				builder.add(existenceDateTF.getStandardDateToTextField(), cc.xy(7, this.rowNb));
 
-				if (errors.contains(EacCpfIdentityPanel.ERROR_EXISTENCE_DATES)
-						&& position == 0) {
+				if (errors.contains(EacCpfIdentityPanel.ERROR_EXISTENCE_DATES) && position == 0) {
 					this.setNextRow();
 					builder.add(createErrorLabel(this.labels.getString("eaccpf.identity.error.empty.date.label")), cc.xyw(1, this.rowNb, 3));
 				}
@@ -765,10 +793,17 @@ public class EacCpfIdentityPanel extends EacCpfPanel {
 				existenceDateTF.getDateTextField().addFocusListener(new AddIsoText(existenceDateTF, EacCpfIdentityPanel.UNKNOWN_DATE));
 				builder.add(existenceDateTF.getDateTextField(), cc.xy(3, this.rowNb));
 
-				// Second date row. Unknown check boxes.
+				// Second date row. Unknown radiobuttons.
+				setNextRow();
+				existenceDateTF.getDateDefinedRB().addActionListener(new AddUndefinedTexts(existenceDateTF, EacCpfIdentityPanel.KNOWN_DATE));
+				builder.add(existenceDateTF.getDateDefinedRB(), cc.xy(3, this.rowNb));
+				
 				this.setNextRow();
-				existenceDateTF.getDateUndefinedCB().addActionListener(new AddUndefinedTexts(existenceDateTF, EacCpfIdentityPanel.UNKNOWN_DATE));
-				builder.add(existenceDateTF.getDateUndefinedCB(), cc.xy(3, this.rowNb));
+				existenceDateTF.getDateUndefinedRB().addActionListener(new AddUndefinedTexts(existenceDateTF, EacCpfIdentityPanel.UNKNOWN_DATE));
+				builder.add(existenceDateTF.getDateUndefinedRB(), cc.xy(3, this.rowNb));
+				setNextRow();
+				existenceDateTF.getDateStillRB().addActionListener(new AddUndefinedTexts(existenceDateTF, EacCpfIdentityPanel.STILL_DATE));
+				builder.add(existenceDateTF.getDateStillRB(), cc.xy(3, this.rowNb));
 
 				// Third date row. Standard dates.
 				this.setNextRow();
@@ -796,54 +831,6 @@ public class EacCpfIdentityPanel extends EacCpfPanel {
 		builder.add(addRangeDateBtn, cc.xy(3, this.rowNb));
 
 		return builder;
-	}
-
-	/**
-	 * Method to recover all the elements Date and DateRange in the object.
-	 *
-	 * @param existDates
-	 * @return The list of dates
-	 */
-	private List<Object> getAllDates(ExistDates existDates) {
-		List<Object> datesList = new ArrayList<Object>();
-
-		// Only Date element.
-		if (existDates.getDate() != null) {
-			datesList.add(existDates.getDate());
-		}
-		// Only DateRange element.
-		if (existDates.getDateRange() != null) {
-			datesList.add(existDates.getDateRange());
-		}
-		// Any combination of Date and DateRange elements.
-		if (existDates.getDateSet() != null) {
-			for (Object object : existDates.getDateSet().getDateOrDateRange()) {
-				if (object != null) {
-					datesList.add(object);
-				}
-			}
-		}
-
-		return datesList;
-	}
-
-	/**
-	 * Method to check if the date is an undefined value.
-	 *
-	 * @param standardDate
-	 * @return Is undefined or not.
-	 */
-	private boolean isUndefinedDate(String standardDate) {
-		boolean result = false;
-
-		if (standardDate != null
-				&& !standardDate.isEmpty()
-				&& (standardDate.equals(EacCpfIdentityPanel.UNKNOWN_INITIAL_DATE)
-						|| standardDate.equals(EacCpfIdentityPanel.UNKNOWN_END_DATE))) {
-			result = true;
-		}
-		
-		return result;
 	}
 
 	/**
@@ -993,7 +980,7 @@ public class EacCpfIdentityPanel extends EacCpfPanel {
 	 * in name section and existence section if possible.
 	 */
 	public class AddIsoText implements FocusListener {
-		private TextFieldsWithCheckBoxForDates tfwcbfDates;
+		private TextFieldsWithRadioButtonForDates tfwcbfDates;
 		private String dateType;
 
 		/**
@@ -1002,7 +989,7 @@ public class EacCpfIdentityPanel extends EacCpfPanel {
 		 * @param tfwcbfDates
 		 * @param dateType
 		 */
-		public AddIsoText(TextFieldsWithCheckBoxForDates tfwcbfDates, String dateType) {
+		public AddIsoText(TextFieldsWithRadioButtonForDates tfwcbfDates, String dateType) {
 			this.tfwcbfDates = tfwcbfDates;
 			this.dateType = dateType;
 		}
@@ -1029,7 +1016,7 @@ public class EacCpfIdentityPanel extends EacCpfPanel {
 	 * in name section and existence section if possible.
 	 */
 	public class CheckIsoText implements FocusListener {
-		private TextFieldsWithCheckBoxForDates tfwcbfDates;
+		private TextFieldsWithRadioButtonForDates tfwcbfDates;
 		private String dateType;
 
 		/**
@@ -1038,7 +1025,7 @@ public class EacCpfIdentityPanel extends EacCpfPanel {
 		 * @param tfwcbfDates
 		 * @param dateType
 		 */
-		public CheckIsoText(TextFieldsWithCheckBoxForDates tfwcbfDates, String dateType) {
+		public CheckIsoText(TextFieldsWithRadioButtonForDates tfwcbfDates, String dateType) {
 			this.tfwcbfDates = tfwcbfDates;
 			this.dateType = dateType;
 		}
@@ -1070,76 +1057,6 @@ public class EacCpfIdentityPanel extends EacCpfPanel {
 						JOptionPane.showMessageDialog(tabbedPane, labels.getString("eaccpf.commons.error.no.standard.date"));
 						this.tfwcbfDates.getStandardDateToTextField().setText("");
 					}
-				}
-			}
-		}
-	}
-
-	/**
-	 * Class to performs the addition of unknown values for dates or dateRanges
-	 * in name section and existence section.
-	 */
-	public class AddUndefinedTexts implements ActionListener {
-		private TextFieldsWithCheckBoxForDates tfwcbfDates;
-		private String dateType;
-
-		/**
-		 * Constructor.
-		 *
-		 * @param tfwcbfDates
-		 * @param dateType
-		 */
-		public AddUndefinedTexts(TextFieldsWithCheckBoxForDates tfwcbfDates, String dateType) {
-			this.tfwcbfDates = tfwcbfDates;
-			this.dateType = dateType;
-		}
-
-		@Override
-		public void actionPerformed(ActionEvent actionEvent) {
-			if (EacCpfIdentityPanel.UNKNOWN_DATE.equalsIgnoreCase(this.dateType)) {
-				// Check if event is select or deselect for Date.
-				if (this.tfwcbfDates.isSelectedDateUndefinedCB()) {
-					// Date unknown.
-					this.tfwcbfDates.getDateTextField().setText(labels.getString("eaccpf.commons.unknown.date"));
-					this.tfwcbfDates.getDateTextField().setEditable(false);
-					this.tfwcbfDates.getStandardDateTextField().setText(EacCpfIdentityPanel.UNKNOWN_INITIAL_DATE);
-						this.tfwcbfDates.getStandardDateTextField().setEditable(false);
-				} else {
-					// Date known.
-					this.tfwcbfDates.getDateTextField().setText("");
-					this.tfwcbfDates.getDateTextField().setEditable(true);
-					this.tfwcbfDates.getStandardDateTextField().setText("");
-					this.tfwcbfDates.getStandardDateTextField().setEditable(true);
-				}
-			} else if (EacCpfIdentityPanel.UNKNOWN_DATE_FROM.equalsIgnoreCase(this.dateType)) {
-				// Check if event is select or deselect for FromDate.
-				if (this.tfwcbfDates.isSelectedDateFromUndefinedCB()) {
-					// FromDate unknown.
-					this.tfwcbfDates.getDateFromTextField().setText(labels.getString("eaccpf.commons.unknown.date"));
-					this.tfwcbfDates.getDateFromTextField().setEditable(false);
-					this.tfwcbfDates.getStandardDateFromTextField().setText(EacCpfIdentityPanel.UNKNOWN_INITIAL_DATE);
-					this.tfwcbfDates.getStandardDateFromTextField().setEditable(false);
-				} else {
-					// FromDate known.
-					this.tfwcbfDates.getDateFromTextField().setText("");
-					this.tfwcbfDates.getDateFromTextField().setEditable(true);
-					this.tfwcbfDates.getStandardDateFromTextField().setText("");
-					this.tfwcbfDates.getStandardDateFromTextField().setEditable(true);
-				}
-			} else if (EacCpfIdentityPanel.UNKNOWN_DATE_TO.equalsIgnoreCase(this.dateType)) {
-				// Check if event is select or deselect for ToDate.
-				if (this.tfwcbfDates.isSelectedDateToUndefinedCB()) {
-					// ToDate unknown.
-					this.tfwcbfDates.getDateToTextField().setText(labels.getString("eaccpf.commons.unknown.date"));
-					this.tfwcbfDates.getDateToTextField().setEditable(false);
-					this.tfwcbfDates.getStandardDateToTextField().setText(EacCpfIdentityPanel.UNKNOWN_END_DATE);
-					this.tfwcbfDates.getStandardDateToTextField().setEditable(false);
-				} else {
-					// ToDate known.
-					this.tfwcbfDates.getDateToTextField().setText("");
-					this.tfwcbfDates.getDateToTextField().setEditable(true);
-					this.tfwcbfDates.getStandardDateToTextField().setText("");
-					this.tfwcbfDates.getStandardDateToTextField().setEditable(true);
 				}
 			}
 		}
@@ -1180,31 +1097,40 @@ public class EacCpfIdentityPanel extends EacCpfPanel {
 			}
 
 			// Recover the lists of elements for the current section.
-			List<TextFieldsWithCheckBoxForDates> textFieldsWithCheckBoxForDatesList = null;
+			List<TextFieldsWithRadioButtonForDates> textFieldsWithRadioButtonsForDatesList = null;
 			if (this.isNameSection) {
-				textFieldsWithCheckBoxForDatesList = useDateTFs.get(this.currentNameEntry);
+				textFieldsWithRadioButtonsForDatesList = useDateTFs.get(this.currentNameEntry);
 			} else {
-				textFieldsWithCheckBoxForDatesList = existenceDateTFs;
+				textFieldsWithRadioButtonsForDatesList = existenceDateTFs;
 			}
 
 			// Check if some element is empty
 			boolean emptyDate = false;
 			boolean emptyDateRange = false;
-			for (int i = 0; !emptyDate && !emptyDateRange && i < textFieldsWithCheckBoxForDatesList.size(); i++) {
-				TextFieldsWithCheckBoxForDates textFieldsWithCheckBoxForDates = textFieldsWithCheckBoxForDatesList.get(i);
+			for (int i = 0; !emptyDate && !emptyDateRange && i < textFieldsWithRadioButtonsForDatesList.size(); i++) {
+				TextFieldsWithRadioButtonForDates textFieldsWithRadioButtonsForDates = textFieldsWithRadioButtonsForDatesList.get(i);
 
 				// Check if is date or dateRange.
-				if (!this.isDateRange && !textFieldsWithCheckBoxForDates.isDateRange()) {
+				if (textFieldsWithRadioButtonsForDates.isSelectedDateDefinedRB() && !textFieldsWithRadioButtonsForDates.isDateRange()) {
 					// Check if some date value is empty.
-					if (StringUtils.isEmpty(textFieldsWithCheckBoxForDates.getDateValue())) {
-						JOptionPane.showMessageDialog(this.tabbedPane, labels.getString("eaccpf.commons.error.empty.single.date"));
+					if (StringUtils.isEmpty(textFieldsWithRadioButtonsForDates.getDateValue())) {
+						if(!this.isDateRange){
+							JOptionPane.showMessageDialog(this.tabbedPane, labels.getString("eaccpf.commons.error.empty.single.date"));
+						}
 						emptyDate = true;
 					}
-				} else  if (this.isDateRange && textFieldsWithCheckBoxForDates.isDateRange()) {
+				} else  if (textFieldsWithRadioButtonsForDates.isDateRange()) {
 					// Check if some dateRage is empty (both dateFrom and dateTo).
-					if (StringUtils.isEmpty(textFieldsWithCheckBoxForDates.getDateFromValue())
-							&& StringUtils.isEmpty(textFieldsWithCheckBoxForDates.getDateToValue())) {
-						JOptionPane.showMessageDialog(this.tabbedPane, labels.getString("eaccpf.commons.error.empty.range.date"));
+					if ((textFieldsWithRadioButtonsForDates.isSelectedDateFromDefinedRB() && StringUtils.isEmpty(textFieldsWithRadioButtonsForDates.getDateFromValue()) )
+							|| (textFieldsWithRadioButtonsForDates.isSelectedDateToDefinedRB() && StringUtils.isEmpty(textFieldsWithRadioButtonsForDates.getDateToValue()))) {
+						if(this.isDateRange || 
+								!(!this.isDateRange && (StringUtils.isEmpty(textFieldsWithRadioButtonsForDates.getDateFromValue()) && StringUtils.isEmpty(textFieldsWithRadioButtonsForDates.getDateToValue()))) ||
+								((StringUtils.isEmpty(textFieldsWithRadioButtonsForDates.getDateFromValue()) || StringUtils.isEmpty(textFieldsWithRadioButtonsForDates.getDateToValue())) && 
+										!((StringUtils.isEmpty(textFieldsWithRadioButtonsForDates.getDateFromValue()) && textFieldsWithRadioButtonsForDates.isSelectedDateFromDefinedRB() )&& 
+												StringUtils.isEmpty(textFieldsWithRadioButtonsForDates.getDateToValue()) && textFieldsWithRadioButtonsForDates.isSelectedDateToDefinedRB()))
+							){
+							JOptionPane.showMessageDialog(this.tabbedPane, labels.getString("eaccpf.commons.error.empty.range.date"));
+						}
 						emptyDateRange = true;
 					}
 				}
@@ -1245,22 +1171,35 @@ public class EacCpfIdentityPanel extends EacCpfPanel {
 				datesList = getAllDates(existDates);
 			}
 
+			int dateSize = 0;
+			int dateRangeSize = 0;
+			for (int i = 0; i < textFieldsWithRadioButtonsForDatesList.size(); i++) {
+				TextFieldsWithRadioButtonForDates textFieldsWithCheckBoxForDates = textFieldsWithRadioButtonsForDatesList.get(i);
+
+				if (textFieldsWithCheckBoxForDates.isDateRange()) {
+					dateRangeSize++;
+				} else {
+					dateSize++;
+				}
+			}
+
 			// Checks elements in the dates list.
 			DateSet dateSet = null;
 			if (datesList!=null && !datesList.isEmpty()) {
 				if (date != null || dateRange != null) {
 					dateSet = new DateSet();
 					dateSet.getDateOrDateRange().addAll(datesList);
-					if (date != null) {
+					int eacDatesSize = datesList.size();
+					if (date != null && (!(emptyDate || emptyDateRange) || dateSize > (eacDatesSize - dateRangeSize))) {
 						dateSet.getDateOrDateRange().add(date);
-					} else {
+					} else if (dateRange != null && (!(emptyDate || emptyDateRange) || dateRangeSize > (eacDatesSize - dateSize))) {
 						dateSet.getDateOrDateRange().add(dateRange);
 					}
 				}
 			}
 
 			// Add dates to the desired section.
-			if (this.isNameSection) {
+			if (this.isNameSection && useDates!=null) {
 				if (dateSet != null) {
 					useDates.setDate(null);
 					useDates.setDateRange(null);
@@ -1274,7 +1213,7 @@ public class EacCpfIdentityPanel extends EacCpfPanel {
 					useDates.setDateRange(dateRange);
 					useDates.setDateSet(null);
 				}
-			} else {
+			} else if(existDates!=null){
 				if (dateSet != null) {
 					existDates.setDate(null);
 					existDates.setDateRange(null);
@@ -1619,12 +1558,12 @@ public class EacCpfIdentityPanel extends EacCpfPanel {
 //				}
 
 				// Use dates.
-				List<TextFieldsWithCheckBoxForDates> useDatesTfsWCbList = useDateTFs.get(i);
+				List<TextFieldsWithRadioButtonForDates> useDatesTfsWCbList = useDateTFs.get(i);
 				/*hasChanged = */this.updateUseDates(nameEntry, useDatesTfsWCbList);
 
 				if (hasChanged) {
 					nameEntries.add(nameEntry);
-				} else {
+				} else if(i==0){
 					this.errors.add(EacCpfIdentityPanel.ERROR_NAME_PART + i);
 				}
 			}
@@ -1648,7 +1587,7 @@ public class EacCpfIdentityPanel extends EacCpfPanel {
 		 * @param useDatesTfsWCbList
 		 * @return boolean value.
 		 */
-		private boolean updateUseDates(NameEntry nameEntry, List<TextFieldsWithCheckBoxForDates> useDatesTfsWCbList) {
+		private boolean updateUseDates(NameEntry nameEntry, List<TextFieldsWithRadioButtonForDates> useDatesTfsWCbList) {
 			boolean hasChanged = false;
 			UseDates useDates = new UseDates();
 
@@ -1678,7 +1617,7 @@ public class EacCpfIdentityPanel extends EacCpfPanel {
 				// DateSet.
 				DateSet dateSet = new DateSet();
 
-				for (TextFieldsWithCheckBoxForDates tfwcbfDates: useDatesTfsWCbList) {
+				for (TextFieldsWithRadioButtonForDates tfwcbfDates: useDatesTfsWCbList) {
 					if (tfwcbfDates.isDateRange()) {
 						// DateRange.
 						DateRange dateRange = this.fillDateRangeValues(tfwcbfDates);
@@ -1712,7 +1651,7 @@ public class EacCpfIdentityPanel extends EacCpfPanel {
 					if (object instanceof DateRange) {
 						DateRange dateRange = (DateRange) object;
 						if (dateRange.getFromDate() != null
-								&& StringUtils.isNotEmpty(trimStringValue(dateRange.getFromDate().getContent()))
+								&& (StringUtils.isNotEmpty(trimStringValue(dateRange.getFromDate().getContent())))
 								&& dateRange.getToDate() != null
 								&& StringUtils.isNotEmpty(trimStringValue(dateRange.getToDate().getContent()))) {
 							useDates.setDateRange(dateRange);
@@ -1798,9 +1737,9 @@ public class EacCpfIdentityPanel extends EacCpfPanel {
 				DateRange dateRange = this.fillDateRangeValues(existenceDateTFs.get(0));
 				if (dateRange != null) {
 					if (dateRange.getFromDate() == null
-							|| StringUtils.isEmpty(trimStringValue(dateRange.getFromDate().getContent()))
+							|| (StringUtils.isEmpty(trimStringValue(dateRange.getFromDate().getContent())) && (dateRange.getLocalType().equals("known") || dateRange.getLocalType().equals("unknownEnd")))
 							|| dateRange.getToDate() == null
-							|| StringUtils.isEmpty(trimStringValue(dateRange.getToDate().getContent()))) {
+							|| StringUtils.isEmpty(trimStringValue(dateRange.getToDate().getContent())) && (dateRange.getLocalType().equals("known") || dateRange.getLocalType().equals("unknownStart"))) {
 						this.errors.add(EacCpfIdentityPanel.ERROR_EXISTENCE_DATES);
 					}
 					existDates.setDateRange(dateRange);
@@ -1814,7 +1753,7 @@ public class EacCpfIdentityPanel extends EacCpfPanel {
 				// DateSet.
 				DateSet dateSet = new DateSet();
 
-				for (TextFieldsWithCheckBoxForDates tfwcbfDates: existenceDateTFs) {
+				for (TextFieldsWithRadioButtonForDates tfwcbfDates: existenceDateTFs) {
 					if (tfwcbfDates.isDateRange()) {
 						// DateRange.
 						DateRange dateRange = this.fillDateRangeValues(tfwcbfDates);
@@ -1885,7 +1824,7 @@ public class EacCpfIdentityPanel extends EacCpfPanel {
 		 * @param tfwcbfDates
 		 * @return the Date.
 		 */
-		private Date fillDateValues(TextFieldsWithCheckBoxForDates tfwcbfDates) {
+		private Date fillDateValues(TextFieldsWithRadioButtonForDates tfwcbfDates) {
 			Date date = null;
 			if (StringUtils.isNotEmpty(trimStringValue(tfwcbfDates.getDateValue()))) {
 				date = new Date();
@@ -1893,9 +1832,21 @@ public class EacCpfIdentityPanel extends EacCpfPanel {
 				if (StringUtils.isNotEmpty(parseStandardDate(trimStringValue(tfwcbfDates.getStandardDateValue())))) {
 					date.setStandardDate(parseStandardDate(trimStringValue(tfwcbfDates.getStandardDateValue())));
 				}
+			} else if (tfwcbfDates.isSelectedDateUndefinedRB()) {
+				date = new Date();
+				date.setContent(EacCpfIdentityPanel.UNKNOWN);
+			} else if (tfwcbfDates.isSelectedDateStillRB()) {
+				date = new Date();
+				date.setContent("open");
 			}
 
+			if(date != null && tfwcbfDates.isSelectedDateUndefinedRB()){
+				date.setLocalType(EacCpfIdentityPanel.UNKNOWN);
+			}else if(date != null && tfwcbfDates.isSelectedDateStillRB()){
+				date.setLocalType("open");
+			}
 			return date;
+
 		}
 
 		/**
@@ -1904,7 +1855,7 @@ public class EacCpfIdentityPanel extends EacCpfPanel {
 		 * @param tfwcbfDates
 		 * @return the tfwcbfDateRanges.
 		 */
-		private DateRange fillDateRangeValues(TextFieldsWithCheckBoxForDates tfwcbfDateRanges) {
+		private DateRange fillDateRangeValues(TextFieldsWithRadioButtonForDates tfwcbfDateRanges) {
 			DateRange dateRange = null;
 			FromDate fromDate = null;
 			ToDate toDate = null;
@@ -1917,6 +1868,9 @@ public class EacCpfIdentityPanel extends EacCpfPanel {
 				if (StringUtils.isNotEmpty(parseStandardDate(trimStringValue(tfwcbfDateRanges.getStandardDateFromValue())))) {
 					fromDate.setStandardDate(parseStandardDate(trimStringValue(tfwcbfDateRanges.getStandardDateFromValue())));
 				}
+			} else if (tfwcbfDateRanges.isSelectedDateFromUndefinedRB()) {
+				fromDate = new FromDate();
+				fromDate.setContent(EacCpfIdentityPanel.UNKNOWN);
 			}
 
 			// To date.
@@ -1927,12 +1881,29 @@ public class EacCpfIdentityPanel extends EacCpfPanel {
 				if (StringUtils.isNotEmpty(parseStandardDate(trimStringValue(tfwcbfDateRanges.getStandardDateToValue())))) {
 					toDate.setStandardDate(parseStandardDate(trimStringValue(tfwcbfDateRanges.getStandardDateToValue())));
 				}
+			} else if (tfwcbfDateRanges.isSelectedDateToUndefinedRB()) {
+				toDate = new ToDate();
+				toDate.setContent(EacCpfIdentityPanel.UNKNOWN);
+			} else if (tfwcbfDateRanges.isSelectedDateToStillRB()) {
+				toDate = new ToDate();
+				toDate.setContent("open");
 			}
 
+			// Date range.
 			if (fromDate != null || toDate != null) {
 				dateRange = new DateRange();
 				dateRange.setFromDate(fromDate);
 				dateRange.setToDate(toDate);
+				
+				if(tfwcbfDateRanges.isSelectedDateFromUndefinedRB() && tfwcbfDateRanges.isSelectedDateToUndefinedRB()){
+					dateRange.setLocalType(EacCpfIdentityPanel.UNKNOWN);
+				}else if(tfwcbfDateRanges.isSelectedDateFromUndefinedRB() && tfwcbfDateRanges.isSelectedDateToDefinedRB()){
+					dateRange.setLocalType(EacCpfIdentityPanel.UNKNOWN_INITIAL_DATE);
+				}else if(tfwcbfDateRanges.isSelectedDateFromDefinedRB() && tfwcbfDateRanges.isSelectedDateToUndefinedRB()){
+					dateRange.setLocalType(EacCpfIdentityPanel.UNKNOWN_END_DATE);
+				}else if(tfwcbfDateRanges.isSelectedDateToStillRB()){
+					dateRange.setLocalType("open");
+				}
 			}
 
 			return dateRange;
