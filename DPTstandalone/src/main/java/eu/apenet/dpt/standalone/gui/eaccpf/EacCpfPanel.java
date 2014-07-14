@@ -94,6 +94,9 @@ public abstract class EacCpfPanel extends CommonsPropertiesPanels {
 	
 	//Constant to the value publicationStatus
 	private static final String PUBLICATIONSTATUS_VALUE = "approved";
+	
+	//Constant to check the value of the relationEntry.
+	private static final String TITLE = "title";
     
     protected JTabbedPane tabbedPane;
     protected JTabbedPane mainTabbedPane;
@@ -104,6 +107,7 @@ public abstract class EacCpfPanel extends CommonsPropertiesPanels {
     protected XmlTypeEacCpf entityType;
     protected static String firstLanguage;
     protected static String firstScript;
+    protected static String responsible;
 
   
     public EacCpfPanel(EacCpf eaccpf, JTabbedPane tabbedPane, JTabbedPane mainTabbedPane, JFrame eacCpfFrame, ProfileListModel model, ResourceBundle labels, XmlTypeEacCpf entityType, String firstLanguage, String firstScript) {
@@ -298,13 +302,21 @@ public abstract class EacCpfPanel extends CommonsPropertiesPanels {
     		}
     		//3. Relations tab part
     		if(eac.getCpfDescription()!=null){
-    			if(eac.getCpfDescription().getRelations()!=null && eac.getCpfDescription().getRelations()!=null){
+    			if(eac.getCpfDescription().getRelations()!=null){
     				if(eac.getCpfDescription().getRelations().getCpfRelation()!=null){
     					List<CpfRelation> cpfRelationsToBeDeleted = new ArrayList<CpfRelation>();
     					for(CpfRelation cpfRelation: eac.getCpfDescription().getRelations().getCpfRelation()){
         					boolean removeCpfRelation = false;
-        					if(cpfRelation.getRelationEntry()!=null && cpfRelation.getRelationEntry().size()>0){
-        						if(StringUtils.isEmpty(cpfRelation.getRelationEntry().get(0).getContent())){
+        					if (StringUtils.isEmpty(cpfRelation.getCpfRelationType())
+        							|| StringUtils.isEmpty(trimStringValue(cpfRelation.getCpfRelationType()))) {
+        						removeCpfRelation = true;
+        					} else if (cpfRelation.getRelationEntry() == null || cpfRelation.getRelationEntry().isEmpty()) {
+        						removeCpfRelation = true;
+        					} else if(cpfRelation.getRelationEntry()!=null && cpfRelation.getRelationEntry().size()>0){
+        						if (StringUtils.isEmpty(cpfRelation.getRelationEntry().get(0).getLocalType())
+        								|| StringUtils.isEmpty(trimStringValue(cpfRelation.getRelationEntry().get(0).getLocalType()))
+        								|| !cpfRelation.getRelationEntry().get(0).getLocalType().equalsIgnoreCase(EacCpfPanel.TITLE)
+        								|| StringUtils.isEmpty(cpfRelation.getRelationEntry().get(0).getContent())) {
         							removeCpfRelation = true;
         						}else{
         							/*List<RelationEntry> listToBeDeleted = new ArrayList<RelationEntry>();
@@ -321,10 +333,11 @@ public abstract class EacCpfPanel extends CommonsPropertiesPanels {
                 					}
         							cpfRelation.getRelationEntry().removeAll(listToBeDeleted);*/
         						}
-        						if(removeCpfRelation){
-        							cpfRelationsToBeDeleted.add(cpfRelation);
-        						}
         					}
+
+    						if(removeCpfRelation){
+    							cpfRelationsToBeDeleted.add(cpfRelation);
+    						}
         				}
     					eac.getCpfDescription().getRelations().getCpfRelation().removeAll(cpfRelationsToBeDeleted);
     				}
@@ -332,8 +345,16 @@ public abstract class EacCpfPanel extends CommonsPropertiesPanels {
     					List<ResourceRelation> resourceRelationsToBeDeleted = new ArrayList<ResourceRelation>();
     					for(ResourceRelation resourceRelation:eac.getCpfDescription().getRelations().getResourceRelation()){
     						boolean removeCpfRelation = false;
-        					if(resourceRelation.getRelationEntry()!=null && resourceRelation.getRelationEntry().size()>0){
-        						if(StringUtils.isEmpty(resourceRelation.getRelationEntry().get(0).getContent())){
+        					if (StringUtils.isEmpty(resourceRelation.getResourceRelationType())
+        							|| StringUtils.isEmpty(trimStringValue(resourceRelation.getResourceRelationType()))) {
+        						removeCpfRelation = true;
+        					} else if (resourceRelation.getRelationEntry() == null || resourceRelation.getRelationEntry().isEmpty()) {
+        						removeCpfRelation = true;
+        					} else if(resourceRelation.getRelationEntry()!=null && resourceRelation.getRelationEntry().size()>0){
+        						if (StringUtils.isEmpty(resourceRelation.getRelationEntry().get(0).getLocalType())
+        								|| StringUtils.isEmpty(trimStringValue(resourceRelation.getRelationEntry().get(0).getLocalType()))
+        								|| !resourceRelation.getRelationEntry().get(0).getLocalType().equalsIgnoreCase(EacCpfPanel.TITLE)
+        								|| StringUtils.isEmpty(resourceRelation.getRelationEntry().get(0).getContent())) {
         							removeCpfRelation = true;
         						}else{
         							/*List<RelationEntry> listToBeDeleted = new ArrayList<RelationEntry>();
@@ -350,10 +371,11 @@ public abstract class EacCpfPanel extends CommonsPropertiesPanels {
                 					}
         							resourceRelation.getRelationEntry().removeAll(listToBeDeleted);*/
         						}
-        						if(removeCpfRelation){
-        							resourceRelationsToBeDeleted.add(resourceRelation);
-        						}
         					}
+
+    						if(removeCpfRelation){
+    							resourceRelationsToBeDeleted.add(resourceRelation);
+    						}
     					}
     					eac.getCpfDescription().getRelations().getResourceRelation().removeAll(resourceRelationsToBeDeleted);
     				}
@@ -361,8 +383,16 @@ public abstract class EacCpfPanel extends CommonsPropertiesPanels {
     					List<FunctionRelation> functionRelationsToBeDeleted = new ArrayList<FunctionRelation>();
     					for(FunctionRelation functionRelation:eac.getCpfDescription().getRelations().getFunctionRelation()){
     						boolean removeCpfRelation = false;
-        					if(functionRelation.getRelationEntry()!=null && functionRelation.getRelationEntry().size()>0){
-        						if(StringUtils.isEmpty(functionRelation.getRelationEntry().get(0).getContent())){
+        					if (StringUtils.isEmpty(functionRelation.getFunctionRelationType())
+        							|| StringUtils.isEmpty(trimStringValue(functionRelation.getFunctionRelationType()))) {
+        						removeCpfRelation = true;
+        					} else if (functionRelation.getRelationEntry() == null || functionRelation.getRelationEntry().isEmpty()) {
+        						removeCpfRelation = true;
+        					} else if(functionRelation.getRelationEntry()!=null && functionRelation.getRelationEntry().size()>0){
+        						if (StringUtils.isEmpty(functionRelation.getRelationEntry().get(0).getLocalType())
+        								|| StringUtils.isEmpty(trimStringValue(functionRelation.getRelationEntry().get(0).getLocalType()))
+        								|| !functionRelation.getRelationEntry().get(0).getLocalType().equalsIgnoreCase(EacCpfPanel.TITLE)
+        								|| StringUtils.isEmpty(functionRelation.getRelationEntry().get(0).getContent())) {
         							removeCpfRelation = true;
         						}else{
         							/*List<RelationEntry> listToBeDeleted = new ArrayList<RelationEntry>();
@@ -379,16 +409,17 @@ public abstract class EacCpfPanel extends CommonsPropertiesPanels {
                 					}
         							functionRelation.getRelationEntry().removeAll(listToBeDeleted);*/
         						}
-        						if(removeCpfRelation){
-        							functionRelationsToBeDeleted.add(functionRelation);
-        						}
         					}
+
+    						if(removeCpfRelation){
+    							functionRelationsToBeDeleted.add(functionRelation);
+    						}
     					}
     					eac.getCpfDescription().getRelations().getFunctionRelation().removeAll(functionRelationsToBeDeleted);
     				}
-    				if(eac.getCpfDescription().getRelations().getCpfRelation().isEmpty()
-    						&& eac.getCpfDescription().getRelations().getResourceRelation().isEmpty()
-    						&& eac.getCpfDescription().getRelations().getFunctionRelation().isEmpty()){
+    				if((eac.getCpfDescription().getRelations().getCpfRelation() == null || eac.getCpfDescription().getRelations().getCpfRelation().isEmpty())
+    						&& (eac.getCpfDescription().getRelations().getResourceRelation() == null || eac.getCpfDescription().getRelations().getResourceRelation().isEmpty())
+    						&& (eac.getCpfDescription().getRelations().getFunctionRelation() == null || eac.getCpfDescription().getRelations().getFunctionRelation().isEmpty())){
     					eac.getCpfDescription().setRelations(null);
     				}
     			}
@@ -396,8 +427,13 @@ public abstract class EacCpfPanel extends CommonsPropertiesPanels {
     				List<SetComponent> setComponentsToBeDeleted = new ArrayList<SetComponent>();
         			for(SetComponent setComponent: eac.getCpfDescription().getAlternativeSet().getSetComponent()){
         				boolean removeSetComponent = false;
-        				if(setComponent.getComponentEntry()!=null && setComponent.getComponentEntry().size()>0){
-        					if(StringUtils.isEmpty(setComponent.getComponentEntry().get(0).getContent())){
+    					if (setComponent.getComponentEntry() == null || setComponent.getComponentEntry().isEmpty()) {
+    						removeSetComponent = true;
+    					} else if(setComponent.getComponentEntry()!=null && setComponent.getComponentEntry().size()>0){
+    						if (StringUtils.isEmpty(setComponent.getComponentEntry().get(0).getLocalType())
+    								|| StringUtils.isEmpty(trimStringValue(setComponent.getComponentEntry().get(0).getLocalType()))
+    								|| !setComponent.getComponentEntry().get(0).getLocalType().equalsIgnoreCase(EacCpfPanel.TITLE)
+    								|| StringUtils.isEmpty(setComponent.getComponentEntry().get(0).getContent())) {
         						removeSetComponent = true;
         					}else{
         						/*List<ComponentEntry> listToBeDeleted = new ArrayList<ComponentEntry>();
@@ -429,7 +465,7 @@ public abstract class EacCpfPanel extends CommonsPropertiesPanels {
     		if(eac.getControl()!=null && eac.getControl().getOtherRecordId()!=null){
     			List<OtherRecordId> listToBeDeleted = new ArrayList<OtherRecordId>();
     			for(OtherRecordId otherRecordId:eac.getControl().getOtherRecordId()){
-    				if(StringUtils.isEmpty(otherRecordId.getContent())/* || StringUtils.isEmpty(otherRecordId.getLocalType())*/){
+    				if(StringUtils.isEmpty(otherRecordId.getContent()) || StringUtils.isEmpty(otherRecordId.getLocalType())){
     					listToBeDeleted.add(otherRecordId);
     				}
     			}
@@ -614,7 +650,12 @@ public abstract class EacCpfPanel extends CommonsPropertiesPanels {
 			control.getMaintenanceHistory().getMaintenanceEvent().remove(maintenanceEvent);
 		}
 
-		maintenanceEvent.getAgent().setContent(MAINTENANCE_AGENT_HUMAN);
+		if (StringUtils.isNotEmpty(responsible)
+				&& StringUtils.isNotEmpty(trimStringValue(responsible))) {
+			maintenanceEvent.getAgent().setContent(responsible);
+		} else {
+			maintenanceEvent.getAgent().setContent(MAINTENANCE_AGENT_HUMAN);
+		}
 
 		if (StringUtils.isNotEmpty(languagePerson)) {
 			maintenanceEvent.getAgent().setLang(languagePerson);
@@ -800,9 +841,9 @@ public abstract class EacCpfPanel extends CommonsPropertiesPanels {
 					this.tfwcbfDates.getDateTextField().setEditable(false);
 //					this.tfwcbfDates.getStandardDateTextField().setText(EacCpfIdentityPanel.UNKNOWN_INITIAL_DATE);
 					this.tfwcbfDates.getStandardDateTextField().setEditable(false);
-					
+
 					this.tfwcbfDates.getStandardDateTextField().setText("");
-					
+
 					this.tfwcbfDates.getDateUndefinedRB().setSelected(true);
 					this.tfwcbfDates.getDateDefinedRB().setSelected(false);
 					this.tfwcbfDates.getDateStillRB().setSelected(false);
@@ -819,7 +860,7 @@ public abstract class EacCpfPanel extends CommonsPropertiesPanels {
 					this.tfwcbfDates.getDateFromUndefinedRB().setSelected(true);
 					this.tfwcbfDates.getDateFromDefinedRB().setSelected(false);
 					this.tfwcbfDates.getDateFromStillRB().setSelected(false);
-					
+
 					this.tfwcbfDates.getStandardDateFromTextField().setText("");
 //				} 
 			} else if (EacCpfIdentityPanel.UNKNOWN_DATE_TO.equalsIgnoreCase(this.dateType)) {
@@ -834,7 +875,7 @@ public abstract class EacCpfPanel extends CommonsPropertiesPanels {
 					this.tfwcbfDates.getDateToUndefinedRB().setSelected(true);
 					this.tfwcbfDates.getDateToDefinedRB().setSelected(false);
 					this.tfwcbfDates.getDateToStillRB().setSelected(false);
-					
+
 					this.tfwcbfDates.getStandardDateToTextField().setText("");
 //				} 
 			} else if(EacCpfIdentityPanel.KNOWN_DATE.equalsIgnoreCase(this.dateType)){
@@ -946,7 +987,7 @@ public abstract class EacCpfPanel extends CommonsPropertiesPanels {
 			}
 		}
 	}
-	
+
 	/**
 	 * Method to parse the value of the date to an ISO one if possible.
 	 *
