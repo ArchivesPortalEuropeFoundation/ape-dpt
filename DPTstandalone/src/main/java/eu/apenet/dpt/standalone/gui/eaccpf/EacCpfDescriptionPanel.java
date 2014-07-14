@@ -124,6 +124,16 @@ public class EacCpfDescriptionPanel extends EacCpfPanel {
 	private Map<Integer, List<TextFieldsWithRadioButtonForDates>> occupationsDates;
 	private Map<String, String> countriesMap;
 	
+	private boolean showErrorDateRange = true;
+
+	public boolean isShowErrorDateRange() {
+		return this.showErrorDateRange;
+	}
+
+	public void setShowErrorDateRange(boolean showErrorDateRange) {
+		this.showErrorDateRange = showErrorDateRange;
+	}
+	
 	
 	/** METHODS TO APPEND FORM OBJECTS TO BE MANAGED IN UPDATE EACCPF OBJECT **/
 	private void appendPlaceEntryRole(TextFieldWithComboBoxEacCpf jTextfieldRolePlace) {
@@ -1517,11 +1527,31 @@ public class EacCpfDescriptionPanel extends EacCpfPanel {
 						this.tfwcbfDates.getStandardDateFromTextField().setText("");
 					}
 				}
+
+				if(!checkDates(this.tfwcbfDates.getStandardDateFromValue(), this.tfwcbfDates.getStandardDateToValue())){
+					if (isShowErrorDateRange()) {
+						setShowErrorDateRange(false);
+						JOptionPane.showMessageDialog(tabbedPane, labels.getString("eaccpf.commons.error.no.standard.dateRange"));
+						this.tfwcbfDates.getDateFromTextField().setText("");
+						this.tfwcbfDates.getStandardDateFromTextField().setText("");
+						setShowErrorDateRange(true);
+					}
+				}
 			} else if (EacCpfIdentityPanel.UNKNOWN_DATE_TO.equalsIgnoreCase(this.dateType)) {
 				if (!this.tfwcbfDates.getStandardDateToValue().isEmpty()) {
 					if (parseStandardDate(this.tfwcbfDates.getStandardDateToValue()).isEmpty()) {
 						JOptionPane.showMessageDialog(tabbedPane, labels.getString("eaccpf.commons.error.no.standard.date"));
 						this.tfwcbfDates.getStandardDateToTextField().setText("");
+					}
+				}
+
+				if(!checkDates(this.tfwcbfDates.getStandardDateFromValue(), this.tfwcbfDates.getStandardDateToValue())){
+					if (isShowErrorDateRange()) {
+						setShowErrorDateRange(false);
+						JOptionPane.showMessageDialog(tabbedPane, labels.getString("eaccpf.commons.error.no.standard.dateRange"));
+						this.tfwcbfDates.getDateToTextField().setText("");
+						this.tfwcbfDates.getStandardDateToTextField().setText("");
+						setShowErrorDateRange(true);
 					}
 				}
 			}
@@ -2431,8 +2461,28 @@ public class EacCpfDescriptionPanel extends EacCpfPanel {
 				this.tfwcbfDates.getStandardDateTextField().setText(parseStandardDate(this.tfwcbfDates.getDateValue()));
 			} else if (EacCpfIdentityPanel.UNKNOWN_DATE_FROM.equalsIgnoreCase(this.dateType)) {
 				this.tfwcbfDates.getStandardDateFromTextField().setText(parseStandardDate(this.tfwcbfDates.getDateFromValue()));
+
+				if(!checkDates(this.tfwcbfDates.getStandardDateFromValue(), this.tfwcbfDates.getStandardDateToValue())){
+					if (isShowErrorDateRange()) {
+						setShowErrorDateRange(false);
+						JOptionPane.showMessageDialog(tabbedPane, labels.getString("eaccpf.commons.error.no.standard.dateRange"));
+						this.tfwcbfDates.getDateFromTextField().setText("");
+						this.tfwcbfDates.getStandardDateFromTextField().setText("");
+						setShowErrorDateRange(true);
+					}
+				}
 			} else if (EacCpfIdentityPanel.UNKNOWN_DATE_TO.equalsIgnoreCase(this.dateType)) {
 				this.tfwcbfDates.getStandardDateToTextField().setText(parseStandardDate(this.tfwcbfDates.getDateToValue()));
+
+				if(!checkDates(this.tfwcbfDates.getStandardDateFromValue(), this.tfwcbfDates.getStandardDateToValue())){
+					if (isShowErrorDateRange()) {
+						setShowErrorDateRange(false);
+						JOptionPane.showMessageDialog(tabbedPane, labels.getString("eaccpf.commons.error.no.standard.dateRange"));
+						this.tfwcbfDates.getDateToTextField().setText("");
+						this.tfwcbfDates.getStandardDateToTextField().setText("");
+						setShowErrorDateRange(true);
+					}
+				}
 			}
 		}
 	}
