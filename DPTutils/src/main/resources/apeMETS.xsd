@@ -23,7 +23,8 @@
 	18. Removed attribute "optional" from structMap/div/fptr/@FILEID
 	19. Marked all other unused elements/attributes accordingly
 	20. Made MDTYPE value "OTHER" mandatory and OTHERMDTYPE mandatory with value apeMETSRights to be used in rightsMD.
-	21. Attributes MIMETYPE and SIZE for files are mandatory 
+	21. Attributes MIMETYPE and SIZE for files are mandatory
+	22. Attribute SIZE is now optional
 -->
 <!-- METS: Metadata Encoding and Transmission Standard -->
 <!-- Copyright © 2001, 2002, 2003, 2004, 2005, 2006, 2008, 2009, 2010, 2012 Digital Library Federation -->
@@ -1977,11 +1978,12 @@ TCF.
 				<xsd:documentation xml:lang="en">apeMETS, Dec 2013: mandatory</xsd:documentation>
 			</xsd:annotation>
 		</xsd:attribute>
-		<xsd:attribute name="SIZE" type="xsd:long" use="required">
+		<xsd:attribute name="SIZE" type="xsd:long">
 			<xsd:annotation>
 				<xsd:documentation xml:lang="en">SIZE (long/O): Specifies the size in bytes of the associated file or wrapped content.
 				</xsd:documentation>
 				<xsd:documentation xml:lang="en">apeMETS, Dec 2013: mandatory</xsd:documentation>
+				<xsd:documentation xml:lang="en">apeMETS, July 2014: optional</xsd:documentation>
 			</xsd:annotation>
 		</xsd:attribute>
 		<xsd:attribute name="CREATED" type="xsd:dateTime" use="optional">
