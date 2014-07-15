@@ -357,6 +357,13 @@ public class EagInstitutionPanel extends EagPanels {
 	            }
                 setNextRow();
 
+                builder.addLabel(labels.getString("eag2012.commons.latitude"), cc.xy(1, rowNb));
+                locationType.getLatitudeTf().addFocusListener(new UpdateCoordsText(locationType, EagContactPanel.LATITUDE));
+                builder.add(locationType.getLatitudeTf(), cc.xy(3, rowNb));
+                builder.addLabel(labels.getString("eag2012.commons.longitude"), cc.xy(5, rowNb));
+                locationType.getLongitudeTf().addFocusListener(new UpdateCoordsText(locationType, EagContactPanel.LONGITUDE));
+                builder.add(locationType.getLongitudeTf(), cc.xy(7, rowNb));
+                setNextRow();
             }
         }
 
