@@ -3341,10 +3341,10 @@
                         </xsl:otherwise>
                     </xsl:choose>
                 </xsl:when>
-                <xsl:when test="@level='otherlevel'">
+                <xsl:when test="@level='otherlevel' or not(@level)">
                     <xsl:choose>
                         <xsl:when
-                            test="@otherlevel='filegrp' or @otherlevel=' filegrp' or @otherlevel='filegroup' or @otherlevel='file' or @otherlevel='subseries' or @otherlevel='subsubseries' or @otherlevel='sous-serie' or @otherlevel='sous-sous-serie' or @otherlevel='sous-sous-sous-serie' or @otherlevel='sous-sous-sous-sous-série' or @otherlevel='subsubsubseries' or @otherlevel='subsubsusbseries' or @otherlevel='subsubsubsubseries' or @otherlevel='sous-sous-série' or @otherlevel='sous-sous-sous-série' or @otherlevel='partie-de-subgp' or @otherlevel='partie-de-subgrp' or @otherlevel='partie-de-sbgrp' or @otherlevel='subsubsubsubsubseries' or @otherlevel='sous-série' or @otherlevel='sous-dossiers' or @otherlevel='sous-sous-serie-organique' or @otherlevel='sous-sous-sous-serie-organique' or @otherlevel='sub-subseries' or @otherlevel='box'">
+                            test="@otherlevel='filegrp' or @otherlevel=' filegrp' or @otherlevel='filegroup' or @otherlevel='file' or @otherlevel='subseries' or @otherlevel='subsubseries' or @otherlevel='sous-serie' or @otherlevel='sous-sous-serie' or @otherlevel='sous-sous-sous-serie' or @otherlevel='sous-sous-sous-sous-série' or @otherlevel='subsubsubseries' or @otherlevel='subsubsusbseries' or @otherlevel='subsubsubsubseries' or @otherlevel='sous-sous-série' or @otherlevel='sous-sous-sous-série' or @otherlevel='partie-de-subgp' or @otherlevel='partie-de-subgrp' or @otherlevel='partie-de-sbgrp' or @otherlevel='subsubsubsubsubseries' or @otherlevel='sous-série' or @otherlevel='sous-dossiers' or @otherlevel='sous-sous-serie-organique' or @otherlevel='sous-sous-sous-serie-organique' or @otherlevel='sub-subseries' or @otherlevel='box' or @otherlevel='S2' or @otherlevel='S3' or @otherlevel='S4' or @otherlevel='S5' or @otherlevel='S6' or @otherlevel='S7' or @otherlevel='S8'">
                             <xsl:value-of select="'subseries'"/>
                         </xsl:when>
                         <xsl:when
@@ -3352,7 +3352,7 @@
                             <xsl:value-of select="'fonds'"/>
                         </xsl:when>
                         <xsl:when
-                            test="@otherlevel='groupe-de-fonds-et-de-collections' or @otherlevel='groupe-de-series' or @otherlevel='groupe-de-fonds-et-de-sous-fonds' or @otherlevel='SC' or @otherlevel='SSC' or @otherlevel='SSSC' or @otherlevel='SR' or @otherlevel='SSR' or @otherlevel='SSSR' or @otherlevel='partie-de-fonds' or @otherlevel='partie-de-sous-fonds' or @otherlevel='sous-collection' or @otherlevel='article' or @otherlevel='SubCollection' or @otherlevel='sub-subfonds' or @otherlevel='sub sub fonds' or @otherlevel='sub-sub-subfonds' or @otherlevel='sub sub sub fonds' or @otherlevel='Section' or @otherlevel='SubSection'">
+                            test="@otherlevel='groupe-de-fonds-et-de-collections' or @otherlevel='groupe-de-series' or @otherlevel='groupe-de-fonds-et-de-sous-fonds' or @otherlevel='SC' or @otherlevel='SSC' or @otherlevel='SSSC' or @otherlevel='SR' or @otherlevel='SSR' or @otherlevel='SSSR' or @otherlevel='partie-de-fonds' or @otherlevel='partie-de-sous-fonds' or @otherlevel='sous-collection' or @otherlevel='article' or @otherlevel='SubCollection' or @otherlevel='sub-subfonds' or @otherlevel='sub sub fonds' or @otherlevel='sub-sub-subfonds' or @otherlevel='sub sub sub fonds' or @otherlevel='Section' or @otherlevel='SubSection' or @otherlevel='S1'">
                             <xsl:value-of select="'series'"/>
                         </xsl:when>
                         <xsl:when
