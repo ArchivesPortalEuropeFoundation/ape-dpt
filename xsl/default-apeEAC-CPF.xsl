@@ -225,7 +225,7 @@
                             <xsl:value-of select="'birth'"/>
                         </xsl:when>
                         <xsl:when test="@localType='foundation'">
-                            <xsl:value-of select="'foundationm'"/>
+                            <xsl:value-of select="'foundation'"/>
                         </xsl:when>
                         <xsl:when test="@localType='private-residence'">
                             <xsl:value-of select="'private-residence'"/>
@@ -353,7 +353,7 @@
             <xsl:value-of select="."/>
         </recordId>
     </xsl:template>
-    
+
     <!-- existing recordId (will be moved to otherRecordId)-->
     <xsl:template match="recordId | otherRecordId" mode="copy">
         <otherRecordId>
@@ -372,7 +372,7 @@
             <xsl:value-of select="."/>
         </otherRecordId>
     </xsl:template>
-    
+
     <!-- maintenanceAgency -->
     <xsl:template match="maintenanceAgency" mode="copy">
         <maintenanceAgency>
