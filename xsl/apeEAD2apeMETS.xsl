@@ -57,7 +57,7 @@
         <!-- Work todo: This list can be extended -->
         <type_anchor>Finding aid</type_anchor>
         <type_structure>Archival</type_structure>
-        <mimetype>image/jpg</mimetype>
+        <mimetype>image/jpeg</mimetype>
         <mets_name>Institution name</mets_name>
     </xsl:variable>
 
