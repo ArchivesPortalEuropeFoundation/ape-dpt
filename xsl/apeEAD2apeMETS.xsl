@@ -22,6 +22,8 @@
     <xsl:variable name="settings">
         <!-- Values: mets_minimum/mest_maximum-->
         <mets_profil>mets_minimum</mets_profil>
+        <addSizeArgument>false</addSizeArgument>
+        <addRightsInfo>false</addRightsInfo>
         <split_ead>fonds</split_ead>
         <!-- Values: mods/ead_long/ead_medium/ead_short/ead_minimum-->
         <metadata>ead_short</metadata>
@@ -37,7 +39,7 @@
             <rts:RightsDeclarationMD
                     xmlns="http://www.archivesportaleurope.net/Portal/profiles/rights/"
                     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-                    xsi:schemaLocation="http://www.archivesportaleurope.net/Portal/profiles/rights/ apeMETSRights.xsd"
+                    xsi:schemaLocation="http://www.archivesportaleurope.net/Portal/profiles/rights/ http://test.archivesportaleurope.net/Portal/profiles/apeMETSRights.xsd"
                     RIGHTSDECID="RIGHTSDECID1" RIGHTSCATEGORY="COPYRIGHTED"
                     OTHERCATEGORYTYPE="FREE ACCESS">
                 <rts:RightsDeclaration CONTEXT="None">Rights declaration</rts:RightsDeclaration>
@@ -213,7 +215,7 @@
     <xsl:template match="c[did/dao]" mode="create_mets_simple">
         <xsl:for-each select=".">
             <xsl:result-document href="{concat($output_directory, me:get_id(.), '.xml')}" format="my-xhtml-output">
-                <mets:mets xmlns:mets="http://www.loc.gov/METS/" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.loc.gov/METS/ http://www.archivesportaleurope.net/Portal/profiles/apeMETS.xsd" PROFILE="apeMETS">
+                <mets:mets xmlns:mets="http://www.loc.gov/METS/" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.loc.gov/METS/ http://test.archivesportaleurope.net/Portal/profiles/apeMETS.xsd" PROFILE="apeMETS">
                     <xsl:call-template name="metsHdr" />
                     <!--get the correct dmdSec-->
                     <!-- Work todo: Get it to work if it should be here check values!!! -->
@@ -238,7 +240,9 @@
                         </xsl:choose>
                     </xsl:for-each>-->
                     <!-- Create the rest of the METS -->
-                    <xsl:call-template name="amdSec"/>
+                    <xsl:if test="$settings/addRightsInfo = 'true'">
+                        <xsl:call-template name="amdSec"/>
+                    </xsl:if>
                     <xsl:call-template name="fileSec"/>
                     <xsl:call-template name="structMap_phys"/>
                     <!-- Work todo: Should we have alogical structmap??? -->
@@ -302,7 +306,8 @@
                 <mets:fileGrp USE="VIDEO">
                     <xsl:for-each select="did/dao[@xlink:role='VIDEO']">
                         <xsl:variable name="link_role" select="me:get_role(.)"/>
-                        <mets:file ID="{concat('FILE_', position(), '_', .[me:get_role(.)=$link_role]/me:get_role(.))}" SIZE="0" MIMETYPE="{$value_settings/mimetype}">
+                        <mets:file ID="{concat('FILE_', position(), '_', .[me:get_role(.)=$link_role]/me:get_role(.))}" MIMETYPE="{$value_settings/mimetype}">
+                            <xsl:if test="$settings/addSizeArgument = 'true'"><xsl:attribute name="SIZE" select="'0'"/></xsl:if>
                             <mets:FLocat LOCTYPE="URL" xlink:type="simple" xlink:href="{.[me:get_role(.)=$link_role]/me:get_href(.)}" />
                         </mets:file>
                     </xsl:for-each>
@@ -312,7 +317,8 @@
                 <mets:fileGrp USE="DISPLAY">
                     <xsl:for-each select="did/dao[@xlink:role='IMAGE']">
                         <xsl:variable name="link_role" select="me:get_role(.)"/>
-                        <mets:file ID="{concat('FILE_', position(), '_', .[me:get_role(.)=$link_role]/me:get_role(.))}" SIZE="0" MIMETYPE="{$value_settings/mimetype}">
+                        <mets:file ID="{concat('FILE_', position(), '_', .[me:get_role(.)=$link_role]/me:get_role(.))}" MIMETYPE="{$value_settings/mimetype}">
+                            <xsl:if test="$settings/addSizeArgument = 'true'"><xsl:attribute name="SIZE" select="'0'"/></xsl:if>
                             <mets:FLocat LOCTYPE="URL" xlink:type="simple" xlink:href="{.[me:get_role(.)=$link_role]/me:get_href(.)}" />
                         </mets:file>
                     </xsl:for-each>
@@ -322,7 +328,8 @@
                 <mets:fileGrp USE="3D">
                     <xsl:for-each select="did/dao[@xlink:role='3D']">
                         <xsl:variable name="link_role" select="me:get_role(.)"/>
-                        <mets:file ID="{concat('FILE_', position(), '_', .[me:get_role(.)=$link_role]/me:get_role(.))}" SIZE="0" MIMETYPE="{$value_settings/mimetype}">
+                        <mets:file ID="{concat('FILE_', position(), '_', .[me:get_role(.)=$link_role]/me:get_role(.))}" MIMETYPE="{$value_settings/mimetype}">
+                            <xsl:if test="$settings/addSizeArgument = 'true'"><xsl:attribute name="SIZE" select="'0'"/></xsl:if>
                             <mets:FLocat LOCTYPE="URL" xlink:type="simple" xlink:href="{.[me:get_role(.)=$link_role]/me:get_href(.)}" />
                         </mets:file>
                     </xsl:for-each>
@@ -332,7 +339,8 @@
                 <mets:fileGrp USE="SOUND">
                     <xsl:for-each select="did/dao[@xlink:role='SOUND']">
                         <xsl:variable name="link_role" select="me:get_role(.)"/>
-                        <mets:file ID="{concat('FILE_', position(), '_', .[me:get_role(.)=$link_role]/me:get_role(.))}" SIZE="0" MIMETYPE="{$value_settings/mimetype}">
+                        <mets:file ID="{concat('FILE_', position(), '_', .[me:get_role(.)=$link_role]/me:get_role(.))}" MIMETYPE="{$value_settings/mimetype}">
+                            <xsl:if test="$settings/addSizeArgument = 'true'"><xsl:attribute name="SIZE" select="'0'"/></xsl:if>
                             <mets:FLocat LOCTYPE="URL" xlink:type="simple" xlink:href="{.[me:get_role(.)=$link_role]/me:get_href(.)}" />
                         </mets:file>
                     </xsl:for-each>
@@ -342,7 +350,8 @@
                 <mets:fileGrp USE="TEXT">
                     <xsl:for-each select="did/dao[@xlink:role='TEXT']">
                         <xsl:variable name="link_role" select="me:get_role(.)"/>
-                        <mets:file ID="{concat('FILE_', position(), '_', .[me:get_role(.)=$link_role]/me:get_role(.))}" SIZE="0" MIMETYPE="{$value_settings/mimetype}">
+                        <mets:file ID="{concat('FILE_', position(), '_', .[me:get_role(.)=$link_role]/me:get_role(.))}" MIMETYPE="{$value_settings/mimetype}">
+                            <xsl:if test="$settings/addSizeArgument = 'true'"><xsl:attribute name="SIZE" select="'0'"/></xsl:if>
                             <mets:FLocat LOCTYPE="URL" xlink:type="simple" xlink:href="{.[me:get_role(.)=$link_role]/me:get_href(.)}" />
                         </mets:file>
                     </xsl:for-each>
@@ -352,7 +361,8 @@
                 <mets:fileGrp USE="DEFAULT">
                     <xsl:for-each select="did/dao[(@xlink:role='UNSPECIFIED' or not(@xlink:role)) and not(@xlink:title='thumbnail')]">
                         <xsl:variable name="link_role" select="me:get_role(.)"/>
-                        <mets:file ID="{concat('FILE_', position(), '_UNSPECIFIED')}" SIZE="0" MIMETYPE="{$value_settings/mimetype}">
+                        <mets:file ID="{concat('FILE_', position(), '_UNSPECIFIED')}" MIMETYPE="{$value_settings/mimetype}">
+                            <xsl:if test="$settings/addSizeArgument = 'true'"><xsl:attribute name="SIZE" select="'0'"/></xsl:if>
                             <mets:FLocat LOCTYPE="URL" xlink:type="simple" xlink:href="{.[me:get_role(.)=$link_role]/me:get_href(.)}" />
                         </mets:file>
                     </xsl:for-each>
@@ -362,7 +372,8 @@
                 <mets:fileGrp USE="THUMBS">
                     <xsl:for-each select="did/dao[@xlink:title='thumbnail']">
                         <xsl:variable name="link_role" select="me:get_role(.)"/>
-                        <mets:file ID="{concat('FILE_', position(), '_THUMB')}" SIZE="0" MIMETYPE="{$value_settings/mimetype}">
+                        <mets:file ID="{concat('FILE_', position(), '_THUMB')}" MIMETYPE="{$value_settings/mimetype}">
+                            <xsl:if test="$settings/addSizeArgument = 'true'"><xsl:attribute name="SIZE" select="'0'"/></xsl:if>
                             <mets:FLocat LOCTYPE="URL" xlink:type="simple" xlink:href="{.[me:get_role(.)=$link_role]/me:get_href(.)}" />
                         </mets:file>
                     </xsl:for-each>
