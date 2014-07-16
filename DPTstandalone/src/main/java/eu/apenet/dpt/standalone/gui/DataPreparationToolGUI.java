@@ -37,6 +37,7 @@ import eu.apenet.dpt.standalone.gui.validation.ValidateSelectionActionListener;
 import eu.apenet.dpt.standalone.gui.xsdaddition.XsdObject;
 //import eu.apenet.dpt.utils.service.MultiResourceBundle;
 import eu.apenet.dpt.utils.service.ResourceBundlesWrapper;
+import eu.apenet.dpt.utils.util.LoggerJAXB;
 import eu.apenet.dpt.utils.util.ReadXml;
 import eu.apenet.dpt.utils.util.XmlChecker;
 import eu.apenet.dpt.utils.util.Xsd_enum;
@@ -195,6 +196,7 @@ public class DataPreparationToolGUI extends JFrame {
     }
 
     private void setupTool() {
+        LoggerJAXB.outputJaxpImplementationInfo();
         Locale currentLocale = Locale.getDefault();
 
         labels = new ResourceBundlesWrapper(I18N_BASENAMES, currentLocale);

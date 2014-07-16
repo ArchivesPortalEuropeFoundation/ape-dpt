@@ -160,7 +160,7 @@
         <xsl:choose>
             <xsl:when test="parent::bibref or parent::extref"/>
             <xsl:when
-                test="parent::corpname or parent::origination or parent::physfacet or parent::persname or parent::head or parent::titleproper or parent::unitdate or parent::archref or parent::emph or parent::unittitle or parent::physdesc">
+                test="parent::corpname or parent::origination or parent::physfacet or parent::persname or parent::head or parent::titleproper or parent::unitdate or parent::archref or parent::emph or parent::unittitle or parent::physdesc or parent::entry">
                 <!--unittitle here is a hack - better fix it in the display xsl of portal/dashboard-->
                 <xsl:value-of select="normalize-space(.)"/>
                 <xsl:text> </xsl:text>
