@@ -16,6 +16,9 @@ public enum Xsd_enum {
     XSD_EAC_SCHEMA("EAC-CPF", "cpf.xsd"),
     XSD_EAG_SCHEMA("EAG 0.2", "eag.xsd"),
     XSD_EAG_2012_SCHEMA("EAG 2012", "eag_2012.xsd"),
+    XSD_METS_SCHEMA("apeMETS", "apeMETS.xsd"),
+    XSD_METS_RIGHTS_SCHEMA("apeMETS Rights", "apeMETSRights.xsd"),
+    XSD_METS_XLINK_SCHEMA("apeMETS Xlink", "apeMETSxlink.xsd"),
     DTD_EAD_2002("EAD 2002 DTD", "dtd/ead.dtd");
 
     private String path;
