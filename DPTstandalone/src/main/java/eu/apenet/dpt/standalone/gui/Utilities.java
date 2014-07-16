@@ -60,7 +60,7 @@ public final class Utilities {
 
     public final static ImageIcon icon = new ImageIcon(Utilities.class.getResource("/ape_logo.png"), "APE Logo");
 
-    public final static String[] SYSTEM_FILES = {XSL_BEFORE_NAME, XSL_DEFAULT_APEEAD_NAME, XML_LANGUAGES_NAME, "changeNS.xsl", "frontmatter.xsl", "import.xsl", "levels.xsl", "eag2eag2012.xsl", XSL_DEFAULT_APEEAC_NAME};
+    public final static String[] SYSTEM_FILES = {XSL_BEFORE_NAME, XSL_DEFAULT_APEEAD_NAME, XML_LANGUAGES_NAME, "changeNS.xsl", "frontmatter.xsl", "import.xsl", "levels.xsl", "eag2eag2012.xsl"};
     public final static String[] FILES_NOT_SHOWN = {XSL_BEFORE_NAME, "frontmatter.xsl", "import.xsl", "levels.xsl"};
 
 //    public static final Color FLASHING_RED_COLOR = new Color(255, 30, 30);
@@ -74,7 +74,7 @@ public final class Utilities {
     public final static String SYSTEM_DIR = CONFIG_DIR + SYSTEM_DIR_SIMPLE + DIR_SEPARATOR;
 
     public final static String DEFAULT_APEEAD_XSL_FILE_PATH = SYSTEM_DIR + XSL_DEFAULT_APEEAD_NAME;
-    public final static String DEFAULT_APEEAC_XSL_FILE_PATH = SYSTEM_DIR + XSL_DEFAULT_APEEAC_NAME;
+    public final static String DEFAULT_APEEAC_XSL_FILE_PATH = CONFIG_DIR + XSL_DEFAULT_APEEAC_NAME;
     public final static String BEFORE_XSL_FILE_PATH = SYSTEM_DIR + XSL_BEFORE_NAME;
     public final static String LANGUAGES_XML_FILE_PATH = SYSTEM_DIR + XML_LANGUAGES_NAME;
     public final static String HG_TREE_SER_FILE_PATH = LOG_DIR + SER_HG_TREE_NAME;
