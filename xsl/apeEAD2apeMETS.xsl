@@ -4,7 +4,6 @@
 <!-- Comments marked "Work todo" describes how the scripts needs to be expanded -->
 <!-- More explanations is needed to be added and the whole script needs more testing with all different versions of apeEAD outputs -->
 <!-- Work todo: Not all METS documents are created, and sometimes more than one ends up in the same EMTS-documetn though it should be in seperate ones. -->
-
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
                 xmlns:mets="http://www.loc.gov/METS/"
                 xmlns:rts="http://www.archivesportaleurope.net/Portal/profiles/rights/"
