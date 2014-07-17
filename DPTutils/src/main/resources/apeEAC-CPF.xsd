@@ -463,7 +463,7 @@ Change log:
                     <xs:element name="structureOrGenealogy" type="structureOrGenealogy"/>
                     <xs:element name="generalContext" type="generalContext"/>
                 </xs:choice>
-                <xs:element name="biogHist" type="biogHist"/>
+                <xs:element maxOccurs="unbounded" minOccurs="0" name="biogHist" type="biogHist"/>
             </xs:sequence>
             <!--			<xs:attribute ref="xml:id"/>-->
             <!--			<xs:attribute ref="xml:lang"/>-->
