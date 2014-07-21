@@ -1405,8 +1405,8 @@ public class DataPreparationToolGUI extends JFrame {
     private void doChecks() {
         //2 Files MUST exist - xsl/default-apeEAD.xsl and xsl/languages.xml
         String errorMsg = "";
-        if (isFileMissing(Utilities.DEFAULT_XSL_FILE_PATH)) {
-            errorMsg = MessageFormat.format(labels.getString("fileNotFound"), Utilities.DEFAULT_XSL_FILE_PATH) + "\n";
+        if (isFileMissing(Utilities.DEFAULT_APEEAD_XSL_FILE_PATH)) {
+            errorMsg = MessageFormat.format(labels.getString("fileNotFound"), Utilities.DEFAULT_APEEAD_XSL_FILE_PATH) + "\n";
         }
 
         if (isFileMissing(Utilities.LANGUAGES_XML_FILE_PATH)) {

@@ -9,9 +9,9 @@ package eu.apenet.dpt.standalone.gui;
  * Licensed under the EUPL, Version 1.1 or - as soon they will be approved by the European Commission - subsequent versions of the EUPL (the "Licence");
  * You may not use this work except in compliance with the Licence.
  * You may obtain a copy of the Licence at:
- * 
+ *
  * http://ec.europa.eu/idabc/eupl5
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software distributed under the Licence is distributed on an "AS IS" basis,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the Licence for the specific language governing permissions and limitations under the Licence.
@@ -51,7 +51,8 @@ public final class Utilities {
     private final static String LOG_DIR_SIMPLE = "output";
     private final static String TEMP_DIR_SIMPLE = "temp";
 
-    public final static String XSL_DEFAULT_NAME = "default-apeEAD.xsl";
+    public final static String XSL_DEFAULT_APEEAD_NAME = "default-apeEAD.xsl";
+    public final static String XSL_DEFAULT_APEEAC_NAME = "default-apeEAC-CPF.xsl";
     public final static String XSL_BEFORE_NAME = "before.xsl";
 
     public final static int XSLT_GROUP = 0;
@@ -59,7 +60,7 @@ public final class Utilities {
 
     public final static ImageIcon icon = new ImageIcon(Utilities.class.getResource("/ape_logo.png"), "APE Logo");
 
-    public final static String[] SYSTEM_FILES = {XSL_BEFORE_NAME, XSL_DEFAULT_NAME, XML_LANGUAGES_NAME, "changeNS.xsl", "frontmatter.xsl", "import.xsl", "levels.xsl", "eag2eag2012.xsl"};
+    public final static String[] SYSTEM_FILES = {XSL_BEFORE_NAME, XSL_DEFAULT_APEEAD_NAME, XML_LANGUAGES_NAME, "changeNS.xsl", "frontmatter.xsl", "import.xsl", "levels.xsl", "eag2eag2012.xsl"};
     public final static String[] FILES_NOT_SHOWN = {XSL_BEFORE_NAME, "frontmatter.xsl", "import.xsl", "levels.xsl"};
 
 //    public static final Color FLASHING_RED_COLOR = new Color(255, 30, 30);
@@ -72,7 +73,8 @@ public final class Utilities {
     public final static String TEMP_DIR = TEMP_DIR_SIMPLE + DIR_SEPARATOR;
     public final static String SYSTEM_DIR = CONFIG_DIR + SYSTEM_DIR_SIMPLE + DIR_SEPARATOR;
 
-    public final static String DEFAULT_XSL_FILE_PATH = SYSTEM_DIR + XSL_DEFAULT_NAME;
+    public final static String DEFAULT_APEEAD_XSL_FILE_PATH = SYSTEM_DIR + XSL_DEFAULT_APEEAD_NAME;
+    public final static String DEFAULT_APEEAC_XSL_FILE_PATH = CONFIG_DIR + XSL_DEFAULT_APEEAC_NAME;
     public final static String BEFORE_XSL_FILE_PATH = SYSTEM_DIR + XSL_BEFORE_NAME;
     public final static String LANGUAGES_XML_FILE_PATH = SYSTEM_DIR + XML_LANGUAGES_NAME;
     public final static String HG_TREE_SER_FILE_PATH = LOG_DIR + SER_HG_TREE_NAME;

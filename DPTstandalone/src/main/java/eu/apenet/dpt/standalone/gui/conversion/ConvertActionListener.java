@@ -83,7 +83,7 @@ public class ConvertActionListener implements ActionListener {
         }
 
         boolean isDefaultTransformation = false;
-        if(fileInstance.getConversionScriptName().equals(Utilities.XSL_DEFAULT_NAME))
+        if(fileInstance.getConversionScriptName().equals(Utilities.XSL_DEFAULT_APEEAD_NAME))
             isDefaultTransformation = true;
 
         String eadid = "";
@@ -182,7 +182,7 @@ public class ConvertActionListener implements ActionListener {
                 File xslFile = new File(fileInstance.getConversionScriptPath());
                 File outputFile = new File(Utilities.TEMP_DIR + "temp_" + file.getName());
                 outputFile.deleteOnExit();
-                if(fileInstance.getConversionScriptName().equals(Utilities.XSL_DEFAULT_NAME)){
+                if(fileInstance.getConversionScriptName().equals(Utilities.XSL_DEFAULT_APEEAD_NAME)){
                     File outputFile_temp = new File(Utilities.TEMP_DIR + ".temp_"+file.getName());
                     TransformationTool.createTransformation(FileUtils.openInputStream(file), outputFile_temp, FileUtils.openInputStream(Utilities.BEFORE_XSL_FILE), paramMap, true, true, null, true, null);
                     xslMessages = TransformationTool.createTransformation(FileUtils.openInputStream(outputFile_temp), outputFile, FileUtils.openInputStream(xslFile), paramMap, true, true, null, true, counterCLevelCall);
@@ -196,7 +196,7 @@ public class ConvertActionListener implements ActionListener {
                 fileInstance.setConverted();
 
                 if(xslMessages.toString().equals("")) {
-                    if(fileInstance.getConversionScriptName().equals(Utilities.XSL_DEFAULT_NAME))
+                    if(fileInstance.getConversionScriptName().equals(Utilities.XSL_DEFAULT_APEEAD_NAME))
                         fileInstance.setConversionErrors(labels.getString("conversion.noExcludedElements"));
                     else
                         fileInstance.setConversionErrors(labels.getString("conversion.finished"));

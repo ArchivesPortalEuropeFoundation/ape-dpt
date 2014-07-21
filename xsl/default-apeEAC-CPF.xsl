@@ -225,7 +225,7 @@
                             <xsl:value-of select="'birth'"/>
                         </xsl:when>
                         <xsl:when test="@localType='foundation'">
-                            <xsl:value-of select="'foundationm'"/>
+                            <xsl:value-of select="'foundation'"/>
                         </xsl:when>
                         <xsl:when test="@localType='private-residence'">
                             <xsl:value-of select="'private-residence'"/>
@@ -270,7 +270,7 @@
             <xsl:if test="@lastDateTimeVerified">
                 <xsl:attribute name="lastDateTimeVerified" select="@lastDateTimeVerified"/>
             </xsl:if>
-            <xsl:if test="@xml:scriptCode">
+            <xsl:if test="@scriptCode">
                 <xsl:attribute name="scriptCode" select="@scriptCode"/>
             </xsl:if>
             <xsl:if test="@transliteration">
@@ -293,6 +293,9 @@
                 <xsl:attribute name="lastDateTimeVerified" select="@lastDateTimeVerified"/>
             </xsl:if>
             <xsl:attribute name="xlink:type" select="'simple'"/>
+            <xsl:if test="@xlink:actuate">
+                <xsl:attribute name="xlink:actuate" select="@xlink:actuate"/>
+            </xsl:if>
             <xsl:if test="@xlink:href">
                 <xsl:attribute name="xlink:href" select="@xlink:href"/>
             </xsl:if>
@@ -301,6 +304,9 @@
             </xsl:if>
             <xsl:if test="@xlink:title">
                 <xsl:attribute name="xlink:title" select="@xlink:title"/>
+            </xsl:if>
+            <xsl:if test="@xml:lang">
+                <xsl:attribute name="xml:lang" select="@xml:lang"/>
             </xsl:if>
             <xsl:value-of select="."/>
         </citation>
@@ -353,7 +359,7 @@
             <xsl:value-of select="."/>
         </recordId>
     </xsl:template>
-    
+
     <!-- existing recordId (will be moved to otherRecordId)-->
     <xsl:template match="recordId | otherRecordId" mode="copy">
         <otherRecordId>
@@ -372,7 +378,7 @@
             <xsl:value-of select="."/>
         </otherRecordId>
     </xsl:template>
-    
+
     <!-- maintenanceAgency -->
     <xsl:template match="maintenanceAgency" mode="copy">
         <maintenanceAgency>
@@ -565,6 +571,9 @@
                 <xsl:attribute name="lastDateTimeVerified" select="@lastDateTimeVerified"/>
             </xsl:if>
             <xsl:attribute name="xlink:type" select="'simple'"/>
+            <xsl:if test="@xlink:actuate">
+                <xsl:attribute name="xlink:actuate" select="@xlink:actuate"/>
+            </xsl:if>
             <xsl:if test="@xlink:href">
                 <xsl:attribute name="xlink:href" select="@xlink:href"/>
             </xsl:if>
@@ -940,7 +949,7 @@
                                         <xsl:if test="@xml:lang">
                                             <xsl:attribute name="xml:lang" select="@xml:lang"/>
                                         </xsl:if>
-                                        <xsl:value-of select="normalize-space(text())"/>
+                                        <xsl:value-of select="normalize-space(.)"/>
                                     </p>
                                 </xsl:for-each>
                             </descriptiveNote>
@@ -1449,7 +1458,15 @@
                 <xsl:if test="@localType">
                     <xsl:attribute name="localType" select="@localType"/>
                 </xsl:if>
-                <xsl:apply-templates select="node()" mode="copy"/>
+                <xsl:apply-templates select="abstract | chronList | citation" mode="copy"/>
+                <xsl:apply-templates select="p" mode="copy"/>
+                <xsl:if test="list">
+                    <xsl:for-each select="list/item">
+                        <p>
+                            <xsl:value-of select="normalize-space(.)"/>
+                        </p>
+                    </xsl:for-each>
+                </xsl:if>
             </biogHist>
         </xsl:if>
     </xsl:template>
