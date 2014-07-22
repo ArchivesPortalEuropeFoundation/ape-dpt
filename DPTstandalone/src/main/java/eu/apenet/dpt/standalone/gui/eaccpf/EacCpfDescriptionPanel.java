@@ -1609,12 +1609,16 @@ public class EacCpfDescriptionPanel extends EacCpfPanel {
 		public void actionPerformed(ActionEvent actionEvent) {
 			try {
 				super.updateJAXBObject(false);
-				removeChangeListener();
-				if (this.isNextTab) {
-					reloadTabbedPanel(new EacCpfRelationsPanel(eaccpf, tabbedPane, mainTabbedPane, eacCpfFrame, model, labels, entityType, firstLanguage, firstScript).buildEditorPanel(errors), 2);
-				} else if(checkStartTabFields()){
-					String mainagencycode = eaccpf.getControl().getMaintenanceAgency().getAgencyCode().getValue();
-					reloadTabbedPanel(new EacCpfIdentityPanel(eaccpf, tabbedPane, mainTabbedPane, eacCpfFrame, model, false, labels, entityType, firstLanguage, firstScript,mainagencycode).buildEditorPanel(errors), 0);
+				if(areRightDates()){
+					removeChangeListener();
+					if (this.isNextTab) {
+						reloadTabbedPanel(new EacCpfRelationsPanel(eaccpf, tabbedPane, mainTabbedPane, eacCpfFrame, model, labels, entityType, firstLanguage, firstScript).buildEditorPanel(errors), 2);
+					} else if(checkStartTabFields()){
+						String mainagencycode = eaccpf.getControl().getMaintenanceAgency().getAgencyCode().getValue();
+						reloadTabbedPanel(new EacCpfIdentityPanel(eaccpf, tabbedPane, mainTabbedPane, eacCpfFrame, model, false, labels, entityType, firstLanguage, firstScript,mainagencycode).buildEditorPanel(errors), 0);
+					}
+				}else{
+					reloadTabbedPanel(new EacCpfDescriptionPanel(eaccpf, tabbedPane, mainTabbedPane, eacCpfFrame, model, labels,entityType,firstLanguage,firstScript).buildEditorPanel(errors), 1);
 				}
 			} catch (EacCpfFormException e) {
 				reloadTabbedPanel(new EacCpfDescriptionPanel(eaccpf, tabbedPane, mainTabbedPane, eacCpfFrame, model, labels,entityType,firstLanguage,firstScript).buildEditorPanel(errors), 1);
@@ -3156,7 +3160,8 @@ public class EacCpfDescriptionPanel extends EacCpfPanel {
 				try {
 					super.updateJAXBObject(false);
 					removeChangeListener();
-					switch (selectedIndex) {
+					if(areRightDates()){
+						switch (selectedIndex) {
 						case 0:
 							String mainagencycode = eaccpf.getControl().getMaintenanceAgency().getAgencyCode().getValue();
 							reloadTabbedPanel(new EacCpfIdentityPanel(eaccpf, tabbedPane, mainTabbedPane, eacCpfFrame, model, false, labels,entityType,firstLanguage,firstScript,mainagencycode).buildEditorPanel(errors), 0);
@@ -3170,16 +3175,50 @@ public class EacCpfDescriptionPanel extends EacCpfPanel {
 						default:
 							reloadTabbedPanel(new EacCpfDescriptionPanel(eaccpf, tabbedPane, mainTabbedPane, eacCpfFrame, model, labels,entityType,firstLanguage,firstScript).buildEditorPanel(errors), 1);
 					}
+					}else{
+						reloadTabbedPanel(new EacCpfDescriptionPanel(eaccpf, tabbedPane, mainTabbedPane, eacCpfFrame, model, labels,entityType,firstLanguage,firstScript).buildEditorPanel(errors), 1);
+					}
 				} catch (EacCpfFormException ex) {
 					reloadTabbedPanel(new EacCpfDescriptionPanel(eaccpf, tabbedPane, mainTabbedPane, eacCpfFrame, model, labels,entityType,firstLanguage,firstScript).buildEditorPanel(errors), 1);
 				}
 			}
 		}
+		
 		@Override
 		public void actionPerformed(ActionEvent actionEvent) {
 			// Empty.
 		}
 	}
+	
+	private boolean areRightDates() {
+		boolean error = false;
+		if(placesDates!=null && !placesDates.isEmpty()){
+			Iterator<Integer> keySetIt = placesDates.keySet().iterator();
+			while(!error && keySetIt.hasNext()){
+				List<TextFieldsWithRadioButtonForDates> useDatesTfsWCbList = placesDates.get(keySetIt.next()); 
+				error = !isRightDate(useDatesTfsWCbList);
+			}
+		}
+		if(!error && (functionsDates!=null && !functionsDates.isEmpty()) ){
+			Iterator<Integer> keySetIt = functionsDates.keySet().iterator();
+			while(!error && keySetIt.hasNext()){
+				List<TextFieldsWithRadioButtonForDates> useDatesTfsWCbList = functionsDates.get(keySetIt.next()); 
+				error = !isRightDate(useDatesTfsWCbList);
+			}
+		}
+		if(!error && (occupationsDates!=null && !occupationsDates.isEmpty()) ){
+			Iterator<Integer> keySetIt = occupationsDates.keySet().iterator();
+			while(!error && keySetIt.hasNext()){
+				List<TextFieldsWithRadioButtonForDates> useDatesTfsWCbList = occupationsDates.get(keySetIt.next()); 
+				error = !isRightDate(useDatesTfsWCbList);
+			}
+		}
+		if(error){
+			JOptionPane.showMessageDialog(this.tabbedPane, labels.getString("eaccpf.commons.error.empty.date"));
+		}
+		return !error;
+	}
+
 
 	/**
 	 * Class to performs the action when the user clicks in the exit button

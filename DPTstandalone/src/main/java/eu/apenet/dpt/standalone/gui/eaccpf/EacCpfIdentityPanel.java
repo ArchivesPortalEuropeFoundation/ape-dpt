@@ -20,22 +20,23 @@ package eu.apenet.dpt.standalone.gui.eaccpf;
 
 
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
 import java.util.ResourceBundle;
-import java.util.regex.Pattern;
+import java.util.Set;
 
 import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextField;
 import javax.swing.event.ChangeEvent;
@@ -892,7 +893,28 @@ public class EacCpfIdentityPanel extends EacCpfPanel {
 			}
 		}
 	}
-
+	
+	/**
+	 * Check dates for events
+	 */
+	protected boolean areRightDates() {
+		boolean error = false;
+		if(useDateTFs!=null && !useDateTFs.isEmpty()){
+			Iterator<Integer> keySetIt = useDateTFs.keySet().iterator();
+			while(!error && keySetIt.hasNext()){
+				List<TextFieldsWithRadioButtonForDates> useDatesTfsWCbList = useDateTFs.get(keySetIt.next()); 
+				error = !isRightDate(useDatesTfsWCbList);
+			}
+		}
+		if(!error && existenceDateTFs!=null && !existenceDateTFs.isEmpty()){
+			error = !isRightDate(existenceDateTFs);
+		}
+		if(error){
+			JOptionPane.showMessageDialog(this.tabbedPane, labels.getString("eaccpf.commons.error.empty.date"));
+		}
+		return !error;
+	}
+	
 	/**
 	 * Class to performs the addition of new row inside name part in name
 	 * section if the previous values are filled.
@@ -1277,9 +1299,13 @@ public class EacCpfIdentityPanel extends EacCpfPanel {
 					existDates.setDateSet(null);
 				}
 			}
-			
-
-			reloadTabbedPanel(new EacCpfIdentityPanel(eaccpf, tabbedPane, mainTabbedPane, eacCpfFrame, model, isNew, labels, entityType, firstLanguage, firstScript, mainagencycode).buildEditorPanel(errors), 0);
+			boolean flag = true;
+			if(!emptyDate && !emptyDateRange){
+				flag = areRightDates();
+			}
+			if(flag){
+				reloadTabbedPanel(new EacCpfIdentityPanel(eaccpf, tabbedPane, mainTabbedPane, eacCpfFrame, model, isNew, labels, entityType, firstLanguage, firstScript, mainagencycode).buildEditorPanel(errors), 0);
+			}
 		}
 	}
 
@@ -1350,7 +1376,7 @@ public class EacCpfIdentityPanel extends EacCpfPanel {
 		public void actionPerformed(ActionEvent actionEvent) {
 			try {
 				super.updateJAXBObject(true);
-				if(checkStartTabFields()){
+				if(checkStartTabFields() && areRightDates()){
 					eaccpf = cleanIncompleteData(eaccpf);
 					eaccpf = updatesControl(eaccpf);
 					super.saveFile(eaccpf.getControl().getRecordId().getValue());
@@ -1382,7 +1408,11 @@ public class EacCpfIdentityPanel extends EacCpfPanel {
 			try {
 				super.updateJAXBObject(true);
 				removeChangeListener();
-				reloadTabbedPanel(new EacCpfDescriptionPanel(eaccpf, tabbedPane, mainTabbedPane, eacCpfFrame, model, labels, entityType, firstLanguage, firstScript).buildEditorPanel(errors), 1);
+				if(areRightDates()){
+					reloadTabbedPanel(new EacCpfDescriptionPanel(eaccpf, tabbedPane, mainTabbedPane, eacCpfFrame, model, labels, entityType, firstLanguage, firstScript).buildEditorPanel(errors), 1);
+				}else{
+					reloadTabbedPanel(new EacCpfIdentityPanel(eaccpf, tabbedPane, mainTabbedPane, eacCpfFrame, model, isNew, labels, entityType, firstLanguage, firstScript, mainagencycode).buildEditorPanel(errors), 0);
+				}
 			} catch (EacCpfFormException e) {
 				reloadTabbedPanel(new EacCpfIdentityPanel(eaccpf, tabbedPane, mainTabbedPane, eacCpfFrame, model, isNew, labels, entityType, firstLanguage, firstScript, mainagencycode).buildEditorPanel(errors), 0);
 			}
@@ -1983,20 +2013,24 @@ public class EacCpfIdentityPanel extends EacCpfPanel {
 			// Checks if clicks in different tab.
 			if (this.currentTab != selectedIndex) {
 				try {
-					super.updateJAXBObject(true);
+					super.updateJAXBObject(false);
 					removeChangeListener();
-					switch (selectedIndex) {
-						case 1:
-							reloadTabbedPanel(new EacCpfDescriptionPanel(eaccpf, tabbedPane, mainTabbedPane, eacCpfFrame, model, labels, entityType, firstLanguage, firstScript).buildEditorPanel(errors), 1);
-							break;
-						case 2:
-							reloadTabbedPanel(new EacCpfRelationsPanel(eaccpf, tabbedPane, mainTabbedPane, eacCpfFrame, model, labels, entityType, firstLanguage, firstScript).buildEditorPanel(errors), 2);
-							break;
-						case 3:
-							reloadTabbedPanel(new EacCpfControlPanel(eaccpf, tabbedPane, mainTabbedPane, eacCpfFrame, model, labels, entityType, firstLanguage, firstScript).buildEditorPanel(errors), 3);
-							break;
-						default:
-							reloadTabbedPanel(new EacCpfIdentityPanel(eaccpf, tabbedPane, mainTabbedPane, eacCpfFrame, model, isNew, labels, entityType, firstLanguage, firstScript, mainagencycode).buildEditorPanel(errors), 0);
+					if(areRightDates()){
+						switch (selectedIndex) {
+							case 1:
+								reloadTabbedPanel(new EacCpfDescriptionPanel(eaccpf, tabbedPane, mainTabbedPane, eacCpfFrame, model, labels, entityType, firstLanguage, firstScript).buildEditorPanel(errors), 1);
+								break;
+							case 2:
+								reloadTabbedPanel(new EacCpfRelationsPanel(eaccpf, tabbedPane, mainTabbedPane, eacCpfFrame, model, labels, entityType, firstLanguage, firstScript).buildEditorPanel(errors), 2);
+								break;
+							case 3:
+								reloadTabbedPanel(new EacCpfControlPanel(eaccpf, tabbedPane, mainTabbedPane, eacCpfFrame, model, labels, entityType, firstLanguage, firstScript).buildEditorPanel(errors), 3);
+								break;
+							default:
+								reloadTabbedPanel(new EacCpfIdentityPanel(eaccpf, tabbedPane, mainTabbedPane, eacCpfFrame, model, isNew, labels, entityType, firstLanguage, firstScript, mainagencycode).buildEditorPanel(errors), 0);
+						}
+					}else{
+						reloadTabbedPanel(new EacCpfIdentityPanel(eaccpf, tabbedPane, mainTabbedPane, eacCpfFrame, model, isNew, labels, entityType, firstLanguage, firstScript, mainagencycode).buildEditorPanel(errors), 0);
 					}
 				} catch (EacCpfFormException ex) {
 					reloadTabbedPanel(new EacCpfIdentityPanel(eaccpf, tabbedPane, mainTabbedPane, eacCpfFrame, model, isNew, labels, entityType, firstLanguage, firstScript, mainagencycode).buildEditorPanel(errors), 0);
@@ -2031,7 +2065,7 @@ public class EacCpfIdentityPanel extends EacCpfPanel {
         	try{
 	        	if(event == JOptionPane.YES_OPTION){
 	        		super.updateJAXBObject(true);
-	        		if(checkStartTabFields()){
+	        		if(checkStartTabFields() && areRightDates()){
 	        			super.saveFile(eaccpf.getControl().getRecordId().getValue());
 	        			closeFrame();
 	        		}
