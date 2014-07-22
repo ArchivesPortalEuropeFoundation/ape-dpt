@@ -99,6 +99,9 @@
                     </xsl:otherwise>
                 </xsl:choose>
             </edm:isShownAt>
+            <edm:isShownBy>
+                <xsl:attribute name="rdf:resource" select="'http://test.archivesportaleurope.net/Portal-theme/images/ape/icons/dao_types/europeana/text.png'"/>
+            </edm:isShownBy>
             <edm:provider>
                 <xsl:value-of select="$europeana_provider"/>
             </edm:provider>
@@ -340,6 +343,9 @@
                         </xsl:otherwise>
                     </xsl:choose>
                 </edm:isShownAt>
+                <edm:isShownBy>
+                    <xsl:attribute name="rdf:resorce" select="'http://test.archivesportaleurope.net/Portal-theme/images/ape/icons/dao_types/europeana/text.png'"/>
+                </edm:isShownBy>
                 <edm:provider>
                     <xsl:value-of select="$europeana_provider"/>
                 </edm:provider>
@@ -515,34 +521,52 @@
                 </xsl:choose>
                 <xsl:choose>
                     <xsl:when test="@href">
-                        <xsl:choose>
-                            <xsl:when test="@title = 'thumbnail'">
-                                <edm:isShownBy>
-                                    <xsl:attribute name="rdf:resource" select="@href"/>
-                                </edm:isShownBy>
-                            </xsl:when>
-                            <xsl:otherwise>
-                                <edm:isShownAt>
-                                    <xsl:attribute name="rdf:resource" select="@href"/>
-                                </edm:isShownAt>
-                            </xsl:otherwise>
-                        </xsl:choose>
+                        <edm:isShownAt>
+                            <xsl:attribute name="rdf:resource" select="@href"/>
+                        </edm:isShownAt>
                     </xsl:when>
                     <xsl:when test="@xlink:href">
-                        <xsl:choose>
-                            <xsl:when test="@xlink:title = 'thumbnail'">
-                                <edm:isShownBy>
-                                    <xsl:attribute name="rdf:resource" select="@xlink:href"/>
-                                </edm:isShownBy>
-                            </xsl:when>
-                            <xsl:otherwise>
-                                <edm:isShownAt>
-                                    <xsl:attribute name="rdf:resource" select="@xlink:href"/>
-                                </edm:isShownAt>
-                            </xsl:otherwise>
-                        </xsl:choose>
+                        <edm:isShownAt>
+                            <xsl:attribute name="rdf:resource" select="@xlink:href"/>
+                        </edm:isShownAt>
                     </xsl:when>
                 </xsl:choose>
+                <!-- <xsl:variable name="thumbnail" select='$didnode/dao[@xlink:role="THUMBNAIL"]'/>-->
+                <xsl:variable name="thumbnail" select='$didnode/dao[@xlink:title="thumbnail"]'/>
+                <edm:isShownBy>
+                    <xsl:attribute name="rdf:resource"> 
+                    <!-- if thumbnail exists -->
+                    <xsl:choose>
+                        <xsl:when test="$thumbnail">
+                            <!-- if more than one thumbnail exists -->                        
+                            <xsl:choose>
+                                <xsl:when test="count($thumbnail) >= $linkPosition">
+                                    <xsl:value-of select="$thumbnail[$linkPosition]/@xlink:href"/>
+                                </xsl:when>
+                                <xsl:otherwise>
+                                    <xsl:value-of select="$thumbnail[1]/@xlink:href" />
+                                </xsl:otherwise>
+                            </xsl:choose>
+                        </xsl:when>
+                        <xsl:otherwise>
+                            <xsl:choose>
+                                <xsl:when test="fn:string-length($europeana_type) > 0">
+                                    <xsl:call-template name="generateThumbnailLink">
+                                        <xsl:with-param name="role" select="$europeana_type"/>
+                                    </xsl:call-template>
+                                </xsl:when>
+                                <xsl:otherwise>
+                                    <xsl:if test="./@xlink:role">
+                                        <xsl:call-template name="generateThumbnailLink">
+                                            <xsl:with-param name="role" select="./@xlink:role"/>
+                                        </xsl:call-template>
+                                    </xsl:if>
+                                </xsl:otherwise>
+                            </xsl:choose>
+                        </xsl:otherwise>
+                    </xsl:choose>
+                    </xsl:attribute>
+                </edm:isShownBy>
                 <edm:provider>
                     <xsl:value-of select="$europeana_provider"/>
                 </edm:provider>
@@ -1267,6 +1291,31 @@
                 <xsl:value-of select="fn:replace(normalize-space($content), '[\n\t\r]', '')"/>
             </dcterms:provenance>
         </xsl:for-each>
+    </xsl:template>
+    <xsl:template name="generateThumbnailLink">
+        <xsl:param name="role"/>
+        <xsl:choose>
+            <xsl:when test=" &quot;TEXT&quot; eq fn:string($role)">
+                <xsl:text>http://test.archivesportaleurope.net/Portal-theme/images/ape/icons/dao_types/europeana/text.png</xsl:text>
+            </xsl:when>
+            <xsl:when test=" &quot;IMAGE&quot; eq fn:string($role)">
+                <xsl:text>http://test.archivesportaleurope.net/Portal-theme/images/ape/icons/dao_types/europeana/image.png</xsl:text>
+            </xsl:when>
+            <xsl:when test=" &quot;SOUND&quot; eq fn:string($role)">
+                <xsl:text>http://test.archivesportaleurope.net/Portal-theme/images/ape/icons/dao_types/europeana/sound.png</xsl:text>
+            </xsl:when>
+            <xsl:when test=" &quot;VIDEO&quot; eq fn:string($role)">
+                <xsl:text>http://test.archivesportaleurope.net/Portal-theme/images/ape/icons/dao_types/europeana/video.png</xsl:text>
+            </xsl:when>
+            <xsl:when test=" &quot;3D&quot; eq fn:string($role)">
+                <xsl:text>http://test.archivesportaleurope.net/Portal-theme/images/ape/icons/dao_types/europeana/3d.png</xsl:text>
+            </xsl:when>
+            <xsl:otherwise>
+                <xsl:call-template name="convertToEdmType">
+                    <xsl:with-param name="role" select="$europeana_type"/>
+                </xsl:call-template>
+            </xsl:otherwise>
+        </xsl:choose>
     </xsl:template>
     <xsl:template name="language">
         <xsl:param name="langmaterials"/>
