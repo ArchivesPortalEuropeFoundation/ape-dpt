@@ -954,6 +954,7 @@
                                 </xsl:for-each>
                             </descriptiveNote>
                         </place>
+                        <xsl:apply-templates select="node() except (p | list | citation)" mode="copy"/>
                     </xsl:when>
                     <xsl:otherwise>
                         <xsl:apply-templates select="node()" mode="copy"/>
@@ -977,12 +978,18 @@
                 </xsl:otherwise>
             </xsl:choose>
             <xsl:apply-templates select="address" mode="copy"/>
-            <xsl:if test="date or dateRange or dateSet[child::*]">
+            <xsl:if test="date or dateRange or dateSet[descendant::*[text()]]">
                 <xsl:choose>
-                    <xsl:when test="count(date) = 1 and count(dateRange) = 0">
+                    <xsl:when test="count(date) = 1 and count(dateRange) = 0 and count(dateSet[1]/date) = 0 and count(dateSet[1]/dateRange) = 0">
                         <xsl:apply-templates select="date" mode="copy"/>
                     </xsl:when>
-                    <xsl:when test="count(dateRange) = 1 and count(date) = 0">
+                    <xsl:when test="count(dateRange) = 1 and count(date) = 0 and count(dateSet[1]/date) = 0 and count(dateSet[1]/dateRange) = 0">
+                        <xsl:apply-templates select="dateRange" mode="copy"/>
+                    </xsl:when>
+                    <xsl:when test="count(date) = 0 and count(dateRange) = 0 and count(dateSet[1]/date) = 1 and count(dateSet[1]/dateRange) = 0">
+                        <xsl:apply-templates select="date" mode="copy"/>
+                    </xsl:when>
+                    <xsl:when test="count(dateRange) = 0 and count(date) = 0 and count(dateSet[1]/date) = 0 and count(dateSet[1]/dateRange) = 1">
                         <xsl:apply-templates select="dateRange" mode="copy"/>
                     </xsl:when>
                     <xsl:otherwise>
@@ -1108,10 +1115,16 @@
             <xsl:apply-templates select="term | placeEntry" mode="copy"/>
             <xsl:if test="date or dateRange or dateSet[child::*]">
                 <xsl:choose>
-                    <xsl:when test="count(date) = 1 and count(dateRange) = 0">
+                    <xsl:when test="count(date) = 1 and count(dateRange) = 0 and count(dateSet[1]/date) = 0 and count(dateSet[1]/dateRange) = 0">
                         <xsl:apply-templates select="date" mode="copy"/>
                     </xsl:when>
-                    <xsl:when test="count(dateRange) = 1 and count(date) = 0">
+                    <xsl:when test="count(dateRange) = 1 and count(date) = 0 and count(dateSet[1]/date) = 0 and count(dateSet[1]/dateRange) = 0">
+                        <xsl:apply-templates select="dateRange" mode="copy"/>
+                    </xsl:when>
+                    <xsl:when test="count(date) = 0 and count(dateRange) = 0 and count(dateSet[1]/date) = 1 and count(dateSet[1]/dateRange) = 0">
+                        <xsl:apply-templates select="date" mode="copy"/>
+                    </xsl:when>
+                    <xsl:when test="count(dateRange) = 0 and count(date) = 0 and count(dateSet[1]/date) = 0 and count(dateSet[1]/dateRange) = 1">
                         <xsl:apply-templates select="dateRange" mode="copy"/>
                     </xsl:when>
                     <xsl:otherwise>
@@ -1164,10 +1177,16 @@
             <xsl:apply-templates select="term | placeEntry" mode="copy"/>
             <xsl:if test="date or dateRange or dateSet[child::*]">
                 <xsl:choose>
-                    <xsl:when test="count(date) = 1 and count(dateRange) = 0">
+                    <xsl:when test="count(date) = 1 and count(dateRange) = 0 and count(dateSet[1]/date) = 0 and count(dateSet[1]/dateRange) = 0">
                         <xsl:apply-templates select="date" mode="copy"/>
                     </xsl:when>
-                    <xsl:when test="count(dateRange) = 1 and count(date) = 0">
+                    <xsl:when test="count(dateRange) = 1 and count(date) = 0 and count(dateSet[1]/date) = 0 and count(dateSet[1]/dateRange) = 0">
+                        <xsl:apply-templates select="dateRange" mode="copy"/>
+                    </xsl:when>
+                    <xsl:when test="count(date) = 0 and count(dateRange) = 0 and count(dateSet[1]/date) = 1 and count(dateSet[1]/dateRange) = 0">
+                        <xsl:apply-templates select="date" mode="copy"/>
+                    </xsl:when>
+                    <xsl:when test="count(dateRange) = 0 and count(date) = 0 and count(dateSet[1]/date) = 0 and count(dateSet[1]/dateRange) = 1">
                         <xsl:apply-templates select="dateRange" mode="copy"/>
                     </xsl:when>
                     <xsl:otherwise>
@@ -1221,10 +1240,16 @@
             <xsl:apply-templates select="term | placeEntry" mode="copy"/>
             <xsl:if test="date or dateRange or dateSet[child::*]">
                 <xsl:choose>
-                    <xsl:when test="count(date) = 1 and count(dateRange) = 0">
+                    <xsl:when test="count(date) = 1 and count(dateRange) = 0 and count(dateSet[1]/date) = 0 and count(dateSet[1]/dateRange) = 0">
                         <xsl:apply-templates select="date" mode="copy"/>
                     </xsl:when>
-                    <xsl:when test="count(dateRange) = 1 and count(date) = 0">
+                    <xsl:when test="count(dateRange) = 1 and count(date) = 0 and count(dateSet[1]/date) = 0 and count(dateSet[1]/dateRange) = 0">
+                        <xsl:apply-templates select="dateRange" mode="copy"/>
+                    </xsl:when>
+                    <xsl:when test="count(date) = 0 and count(dateRange) = 0 and count(dateSet[1]/date) = 1 and count(dateSet[1]/dateRange) = 0">
+                        <xsl:apply-templates select="date" mode="copy"/>
+                    </xsl:when>
+                    <xsl:when test="count(dateRange) = 0 and count(date) = 0 and count(dateSet[1]/date) = 0 and count(dateSet[1]/dateRange) = 1">
                         <xsl:apply-templates select="dateRange" mode="copy"/>
                     </xsl:when>
                     <xsl:otherwise>
@@ -1277,10 +1302,16 @@
             <xsl:apply-templates select="term | placeEntry" mode="copy"/>
             <xsl:if test="date or dateRange or dateSet[child::*]">
                 <xsl:choose>
-                    <xsl:when test="count(date) = 1 and count(dateRange) = 0">
+                    <xsl:when test="count(date) = 1 and count(dateRange) = 0 and count(dateSet[1]/date) = 0 and count(dateSet[1]/dateRange) = 0">
                         <xsl:apply-templates select="date" mode="copy"/>
                     </xsl:when>
-                    <xsl:when test="count(dateRange) = 1 and count(date) = 0">
+                    <xsl:when test="count(dateRange) = 1 and count(date) = 0 and count(dateSet[1]/date) = 0 and count(dateSet[1]/dateRange) = 0">
+                        <xsl:apply-templates select="dateRange" mode="copy"/>
+                    </xsl:when>
+                    <xsl:when test="count(date) = 0 and count(dateRange) = 0 and count(dateSet[1]/date) = 1 and count(dateSet[1]/dateRange) = 0">
+                        <xsl:apply-templates select="date" mode="copy"/>
+                    </xsl:when>
+                    <xsl:when test="count(dateRange) = 0 and count(date) = 0 and count(dateSet[1]/date) = 0 and count(dateSet[1]/dateRange) = 1">
                         <xsl:apply-templates select="dateRange" mode="copy"/>
                     </xsl:when>
                     <xsl:otherwise>
@@ -1333,10 +1364,16 @@
             <xsl:apply-templates select="term | placeEntry" mode="copy"/>
             <xsl:if test="date or dateRange or dateSet[child::*]">
                 <xsl:choose>
-                    <xsl:when test="count(date) = 1 and count(dateRange) = 0">
+                    <xsl:when test="count(date) = 1 and count(dateRange) = 0 and count(dateSet[1]/date) = 0 and count(dateSet[1]/dateRange) = 0">
                         <xsl:apply-templates select="date" mode="copy"/>
                     </xsl:when>
-                    <xsl:when test="count(dateRange) = 1 and count(date) = 0">
+                    <xsl:when test="count(dateRange) = 1 and count(date) = 0 and count(dateSet[1]/date) = 0 and count(dateSet[1]/dateRange) = 0">
+                        <xsl:apply-templates select="dateRange" mode="copy"/>
+                    </xsl:when>
+                    <xsl:when test="count(date) = 0 and count(dateRange) = 0 and count(dateSet[1]/date) = 1 and count(dateSet[1]/dateRange) = 0">
+                        <xsl:apply-templates select="date" mode="copy"/>
+                    </xsl:when>
+                    <xsl:when test="count(dateRange) = 0 and count(date) = 0 and count(dateSet[1]/date) = 0 and count(dateSet[1]/dateRange) = 1">
                         <xsl:apply-templates select="dateRange" mode="copy"/>
                     </xsl:when>
                     <xsl:otherwise>
