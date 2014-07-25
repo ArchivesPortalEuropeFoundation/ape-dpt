@@ -18,6 +18,7 @@ package eu.apenet.dpt.standalone.gui.eag2012;
  * #L%
  */
 
+import java.awt.KeyboardFocusManager;
 import java.awt.event.ActionEvent;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -31,6 +32,7 @@ import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 
 import org.apache.commons.lang.StringUtils;
@@ -47,6 +49,7 @@ import eu.apenet.dpt.standalone.gui.commons.TextChanger;
 import eu.apenet.dpt.standalone.gui.commons.swingstructures.TextFieldWithDate;
 import eu.apenet.dpt.standalone.gui.commons.swingstructures.TextFieldWithLanguage;
 import eu.apenet.dpt.standalone.gui.eag2012.SwingStructures.FormerlyUsedName;
+import eu.apenet.dpt.standalone.gui.listener.FocusManagerListener;
 import eu.apenet.dpt.utils.eag2012.Autform;
 import eu.apenet.dpt.utils.eag2012.DateRange;
 import eu.apenet.dpt.utils.eag2012.DateSet;
@@ -306,7 +309,9 @@ public class EagIdentityPanel extends EagPanels {
 //            tabbedPane.addChangeListener(new TabChangeListener(eag, tabbedPane, model));
 //        }
 
-        return builder.getPanel();
+		JPanel panel = builder.getPanel();
+		KeyboardFocusManager.getCurrentKeyboardFocusManager().addPropertyChangeListener(new FocusManagerListener(panel));
+		return panel;
     }
 
     public class NextInstitutionTabBtnAction extends UpdateEagObject {

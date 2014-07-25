@@ -18,6 +18,7 @@ package eu.apenet.dpt.standalone.gui.eag2012;
  * #L%
  */
 
+import java.awt.KeyboardFocusManager;
 import java.awt.event.ActionEvent;
 import java.util.ArrayList;
 import java.util.List;
@@ -27,6 +28,7 @@ import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 
 import org.apache.commons.lang.StringUtils;
@@ -40,6 +42,7 @@ import eu.apenet.dpt.standalone.gui.Utilities;
 import eu.apenet.dpt.standalone.gui.commons.ButtonTab;
 import eu.apenet.dpt.standalone.gui.commons.DefaultBtnAction;
 import eu.apenet.dpt.standalone.gui.eag2012.SwingStructures.ResourceRelationType;
+import eu.apenet.dpt.standalone.gui.listener.FocusManagerListener;
 import eu.apenet.dpt.utils.eag2012.DescriptiveNote;
 import eu.apenet.dpt.utils.eag2012.Eag;
 import eu.apenet.dpt.utils.eag2012.EagRelation;
@@ -210,7 +213,9 @@ public class EagRelationsPanel extends EagPanels {
         nextInstitutionTabBtn.addActionListener(new NextInstitutionTabBtnAction(eag, tabbedPane, model));
         builder.add(nextInstitutionTabBtn, cc.xy(5, rowNb));
 
-        return builder.getPanel();
+		JPanel panel = builder.getPanel();
+		KeyboardFocusManager.getCurrentKeyboardFocusManager().addPropertyChangeListener(new FocusManagerListener(panel));
+		return panel;
     }
 
     public class NextInstitutionTabBtnAction extends UpdateEagObject {

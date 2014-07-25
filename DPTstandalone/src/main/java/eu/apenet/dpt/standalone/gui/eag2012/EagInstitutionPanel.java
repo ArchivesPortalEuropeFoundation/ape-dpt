@@ -17,6 +17,7 @@ package eu.apenet.dpt.standalone.gui.eag2012;
  * See the Licence for the specific language governing permissions and limitations under the Licence.
  * #L%
  */
+import java.awt.KeyboardFocusManager;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusEvent;
@@ -39,6 +40,7 @@ import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextField;
 
@@ -56,6 +58,7 @@ import eu.apenet.dpt.standalone.gui.commons.TextChanger;
 import eu.apenet.dpt.standalone.gui.commons.swingstructures.TextFieldWithLanguage;
 import eu.apenet.dpt.standalone.gui.eag2012.SwingStructures.LocationType;
 import eu.apenet.dpt.standalone.gui.eag2012.SwingStructures.TextFieldWithCheckbox;
+import eu.apenet.dpt.standalone.gui.listener.FocusManagerListener;
 import eu.apenet.dpt.utils.eag2012.Access;
 import eu.apenet.dpt.utils.eag2012.Accessibility;
 import eu.apenet.dpt.utils.eag2012.Agent;
@@ -544,7 +547,9 @@ public class EagInstitutionPanel extends EagPanels {
 //            LOG.info("Add listener");
 //            tabbedPane.addChangeListener(new TabChangeListener(eag, tabbedPane, model));
 //        }
-        return builder.getPanel();
+		JPanel panel = builder.getPanel();
+		KeyboardFocusManager.getCurrentKeyboardFocusManager().addPropertyChangeListener(new FocusManagerListener(panel));
+		return panel;
     }
 
     public class ChangeComboActioin extends UpdateEagObject {

@@ -19,6 +19,7 @@ package eu.apenet.dpt.standalone.gui.eaccpf;
  */
 
 
+import java.awt.KeyboardFocusManager;
 import java.awt.event.ActionEvent;
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -32,6 +33,7 @@ import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextField;
 import javax.swing.event.ChangeEvent;
@@ -48,6 +50,7 @@ import eu.apenet.dpt.standalone.gui.Utilities;
 import eu.apenet.dpt.standalone.gui.commons.ButtonTab;
 import eu.apenet.dpt.standalone.gui.commons.DefaultBtnAction;
 import eu.apenet.dpt.standalone.gui.commons.swingstructures.LanguageWithScript;
+import eu.apenet.dpt.standalone.gui.listener.FocusManagerListener;
 import eu.apenet.dpt.utils.eaccpf.AgencyCode;
 import eu.apenet.dpt.utils.eaccpf.Control;
 import eu.apenet.dpt.utils.eaccpf.EacCpf;
@@ -148,7 +151,9 @@ public class EacCpfControlPanel extends EacCpfPanel {
 		this.removeChangeListener();
 		this.tabbedPane.addChangeListener(new ChangeTabListener (this.eaccpf, this.tabbedPane, this.model, 3));
 
-		return builder.getPanel();
+		JPanel panel = builder.getPanel();
+		KeyboardFocusManager.getCurrentKeyboardFocusManager().addPropertyChangeListener(new FocusManagerListener(panel));
+		return panel;
 	}
 	
 	/**

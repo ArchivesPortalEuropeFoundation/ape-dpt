@@ -18,6 +18,7 @@ package eu.apenet.dpt.standalone.gui.eaccpf;
  * #L%
  */
 
+import java.awt.KeyboardFocusManager;
 import java.awt.event.ActionEvent;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
@@ -36,6 +37,7 @@ import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextField;
@@ -54,10 +56,13 @@ import eu.apenet.dpt.standalone.gui.commons.ButtonTab;
 import eu.apenet.dpt.standalone.gui.commons.DefaultBtnAction;
 import eu.apenet.dpt.standalone.gui.commons.swingstructures.CommonsPropertiesPanels;
 import eu.apenet.dpt.standalone.gui.commons.swingstructures.ScrollPane;
+import eu.apenet.dpt.standalone.gui.commons.swingstructures.ScrollPaneHolder;
+import eu.apenet.dpt.standalone.gui.commons.swingstructures.TextAreaScrollable;
 import eu.apenet.dpt.standalone.gui.commons.swingstructures.TextAreaWithLanguage;
 import eu.apenet.dpt.standalone.gui.commons.swingstructures.TextFieldWithLanguage;
 import eu.apenet.dpt.standalone.gui.eaccpf.swingstructures.TextFieldWithComboBoxEacCpf;
 import eu.apenet.dpt.standalone.gui.eaccpf.swingstructures.TextFieldsWithRadioButtonForDates;
+import eu.apenet.dpt.standalone.gui.listener.FocusManagerListener;
 import eu.apenet.dpt.utils.eaccpf.Address;
 import eu.apenet.dpt.utils.eaccpf.AddressLine;
 import eu.apenet.dpt.utils.eaccpf.BiogHist;
@@ -355,7 +360,9 @@ public class EacCpfDescriptionPanel extends EacCpfPanel {
 		this.removeChangeListener();
 		this.tabbedPane.addChangeListener(new ChangeTabListener (this.eaccpf, this.tabbedPane, this.model, 1));
 
-		return builder.getPanel();
+		JPanel panel = builder.getPanel();
+		KeyboardFocusManager.getCurrentKeyboardFocusManager().addPropertyChangeListener(new FocusManagerListener(panel));
+		return panel;
 	}
 
 	/**
