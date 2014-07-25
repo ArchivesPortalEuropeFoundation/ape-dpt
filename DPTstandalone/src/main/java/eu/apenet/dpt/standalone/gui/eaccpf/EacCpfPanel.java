@@ -25,6 +25,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.regex.Pattern;
@@ -986,6 +987,50 @@ public abstract class EacCpfPanel extends CommonsPropertiesPanels {
 //				}
 			}
 		}
+	}
+	
+	/**
+	 * Check dates for events.
+	 */
+	protected boolean isRightDate(List<TextFieldsWithRadioButtonForDates> useDatesTfsWCbList) {
+		boolean error = false;
+		if(useDatesTfsWCbList!=null){
+			Iterator<TextFieldsWithRadioButtonForDates> itUseDates = useDatesTfsWCbList.iterator();
+			while(!error && itUseDates.hasNext()){
+				TextFieldsWithRadioButtonForDates useDates = itUseDates.next();
+				if(useDates.isSelectedDateDefinedRB()){
+					if(StringUtils.isNotEmpty(useDates.getDateValue())){
+						error = StringUtils.isEmpty(parseStandardDate(useDates.getDateValue()));
+						error = (error && matchWithDatePatterns(useDates.getDateValue()));
+					}
+				}else if(useDates.isSelectedDateFromDefinedRB()){
+					if(StringUtils.isNotEmpty(useDates.getDateFromValue())){
+						error = StringUtils.isEmpty(parseStandardDate(useDates.getStandardDateFromValue()));
+						error = (error && matchWithDatePatterns(useDates.getStandardDateFromValue()));
+					}
+				}else if(useDates.isSelectedDateToDefinedRB()){
+					if(StringUtils.isNotEmpty(useDates.getDateToValue())){
+						error = StringUtils.isEmpty(parseStandardDate(useDates.getStandardDateToValue()));
+						error = (error && matchWithDatePatterns(useDates.getStandardDateToValue()));
+					}
+				}
+			}
+		}
+		return !error;
+	}
+	
+	protected static boolean matchWithDatePatterns(String text){
+		boolean pattern1 = Pattern.matches("\\d{4}", text); //yyyy
+		boolean pattern2 = Pattern.matches("\\d{4}[\\-\\./:\\s]\\d{2}", text); //yyyy-MM
+		boolean pattern3 = Pattern.matches("\\d{4}[\\-\\./:\\s]\\d{2}[\\-\\./:\\s]\\d{2}", text); //yyyy-MM-dd
+		boolean pattern4 = Pattern.matches("\\d{2}[\\-\\./:\\s]\\d{2}[\\-\\./:\\s]\\d{4}", text); //dd-MM-yyyy
+		boolean pattern5 = Pattern.matches("\\d{1}[\\-\\./:\\s]\\d{1}[\\-\\./:\\s]\\d{4}", text); //d-M-yyyy
+		boolean pattern6 = Pattern.matches("\\d{1}[\\-\\./:\\s]\\d{2}[\\-\\./:\\s]\\d{4}", text); //d-MM-yyyy
+		boolean pattern7 = Pattern.matches("\\d{2}[\\-\\./:\\s]\\d{1}[\\-\\./:\\s]\\d{4}", text); //dd-M-yyyy
+		boolean pattern8 = Pattern.matches("\\d{4}[\\-\\./:\\s]\\d{1}[\\-\\./:\\s]\\d{2}", text); //yyyy-M-dd
+		boolean pattern9 = Pattern.matches("\\d{4}[\\-\\./:\\s]\\d{2}[\\-\\./:\\s]\\d{1}", text); //yyyy-MM-d
+		boolean pattern0 = Pattern.matches("\\d{4}[\\-\\./:\\s]\\d{1}[\\-\\./:\\s]\\d{1}", text); //yyyy-M-d
+		return pattern0 || pattern1 || pattern2 || pattern3 || pattern4 || pattern5 || pattern6 || pattern7 || pattern8 || pattern9;
 	}
 
 	/**
