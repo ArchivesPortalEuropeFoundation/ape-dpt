@@ -44,7 +44,7 @@ public class TextFieldWithComboBoxEacCpf {
 	private static final String[] NAME_COMPONENT_FAMILY = { "famname", "surname", "prefix", "suffix", "alias" };
 	private static final String[] NAME_COMPONENT_PERSON = { "persname", "surname", "firstname", "birthname", "title", "prefix", "suffix", "alias", "patronymic" };
 	private static final String[] NAME_FORM = { "authorized", "alternative", "preferred" , "abbreviation" , "other" };
-	private static final String[] PLACE_ADDRESS = { "firstdem", "secondem", "postalcode", "localentity", "street", "country", "other" };
+	private static final String[] PLACE_ADDRESS = { "street", "postalcode", "localentity", "firstdem", "secondem", "country", "other" };
 	private static final String[] PLACE_ROLE_CORPORATE_BODY = { "foundation", "business-residence", "suppression", "other" };
 	private static final String[] PLACE_ROLE_FAMILY = { "private-residence", "business-residence", "other" };
 	private static final String[] PLACE_ROLE_PERSON = { "birth", "private-residence", "business-residence", "death", "other" };
