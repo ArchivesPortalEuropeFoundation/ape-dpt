@@ -1556,7 +1556,7 @@ public class EacCpfIdentityPanel extends EacCpfPanel {
 	        if (control.getMaintenanceAgency().getAgencyName() == null) {
                 control.getMaintenanceAgency().setAgencyName(new AgencyName());
             }
-	        control.getMaintenanceAgency().getAgencyName().setContent(EacCpfIdentityPanel.MAINTENANCE_AGENCY_NAME);
+//	        control.getMaintenanceAgency().getAgencyName().setContent(EacCpfIdentityPanel.MAINTENANCE_AGENCY_NAME);
 	        hasChanged = true;
 
 			return hasChanged;

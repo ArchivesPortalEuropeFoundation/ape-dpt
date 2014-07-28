@@ -75,6 +75,7 @@ public class EacCpfControlPanel extends EacCpfPanel {
 	private JComboBox<String> scriptFirst;
 	private JComboBox<String> languageFirst;
 	private LanguageWithScript languageWithScript;
+	private JTextField jTextFieldInstitutionForPersonResponsible;
 
 	/**
 	 * Constructor.
@@ -240,6 +241,14 @@ public class EacCpfControlPanel extends EacCpfPanel {
 		builder.add(jTextFieldIdentifierForPersonResponsible, cc.xy (3, rowNb));
 		this.idControl = jTextFieldIdentifierForPersonResponsible;
 		setNextRow();
+		//Field to Institution responsible for the description
+		JLabel jLabelInstitutionForPersonResponsible = new JLabel(this.labels.getString("eaccpf.control.institutionResponsibleForTheDescription"));
+		builder.add(jLabelInstitutionForPersonResponsible, cc.xy(1, this.rowNb));
+		String contentInstitution = this.eaccpf.getControl().getMaintenanceAgency().getAgencyName().getContent()!=null?this.eaccpf.getControl().getMaintenanceAgency().getAgencyName().getContent():"";
+		this.jTextFieldInstitutionForPersonResponsible = new JTextField(contentInstitution);
+		builder.add(this.jTextFieldInstitutionForPersonResponsible, cc.xy(3, this.rowNb));
+		setNextRow();
+		
 		if(StringUtils.isEmpty(content)){
 			builder.add(createErrorLabel(this.labels.getString("eaccpf.control.error.emptyidentifier")), cc.xyw(1, this.rowNb, 3));
 			setNextRow();
@@ -483,6 +492,8 @@ public class EacCpfControlPanel extends EacCpfPanel {
 			}
 			//idControl
 			this.eaccpf.getControl().getMaintenanceAgency().getAgencyCode().setValue(trimStringValue(idControl.getText()));
+			//agencyName
+			this.eaccpf.getControl().getMaintenanceAgency().getAgencyName().setContent(jTextFieldInstitutionForPersonResponsible.getText());
 			//comboBox updates
 			firstLanguage = LanguageIsoList.getIsoCode(trimStringValue(languageFirst.getSelectedItem().toString()));
 			firstScript = scriptFirst.getSelectedItem().toString();
