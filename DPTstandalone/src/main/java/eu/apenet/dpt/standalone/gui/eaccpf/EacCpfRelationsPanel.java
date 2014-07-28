@@ -372,10 +372,10 @@ public class EacCpfRelationsPanel extends EacCpfPanel {
 			}
 
 			// Button to add new agency information.
-			this.setNextRow();
-			JButton addFurtherAgencyBtn = new ButtonTab(this.labels.getString("eaccpf.relations.add.further.organisation"));
-			addFurtherAgencyBtn.addActionListener(new AddFurtherAgency(this.eaccpf, this.tabbedPane, this.model,AddFurtherAgency.CPF,i));
-			builder.add(addFurtherAgencyBtn, cc.xy(1, this.rowNb));
+//			this.setNextRow();
+//			JButton addFurtherAgencyBtn = new ButtonTab(this.labels.getString("eaccpf.relations.add.further.organisation"));
+//			addFurtherAgencyBtn.addActionListener(new AddFurtherAgency(this.eaccpf, this.tabbedPane, this.model,AddFurtherAgency.CPF,i));
+//			builder.add(addFurtherAgencyBtn, cc.xy(1, this.rowNb));
 		}
 
 		return builder;
@@ -658,10 +658,10 @@ public class EacCpfRelationsPanel extends EacCpfPanel {
 			}
 
 			// Button to add new agency information.
-			this.setNextRow();
-			JButton addFurtherAgencyBtn = new ButtonTab(this.labels.getString("eaccpf.relations.add.further.organisation"));
-			addFurtherAgencyBtn.addActionListener(new AddFurtherAgency(this.eaccpf, this.tabbedPane, this.model,AddFurtherAgency.CPF,i+this.eaccpf.getCpfDescription().getAlternativeSet().getSetComponent().size()));
-			builder.add(addFurtherAgencyBtn, cc.xy(1, this.rowNb));
+//			this.setNextRow();
+//			JButton addFurtherAgencyBtn = new ButtonTab(this.labels.getString("eaccpf.relations.add.further.organisation"));
+//			addFurtherAgencyBtn.addActionListener(new AddFurtherAgency(this.eaccpf, this.tabbedPane, this.model,AddFurtherAgency.CPF,i+this.eaccpf.getCpfDescription().getAlternativeSet().getSetComponent().size()));
+//			builder.add(addFurtherAgencyBtn, cc.xy(1, this.rowNb));
 		}
 
 		return builder;
@@ -884,10 +884,10 @@ public class EacCpfRelationsPanel extends EacCpfPanel {
 			}
 
 			// Button to add new agency information.
-			this.setNextRow();
-			JButton addFurtherAgencyBtn = new ButtonTab(this.labels.getString("eaccpf.relations.add.further.organisation"));
-			addFurtherAgencyBtn.addActionListener(new AddFurtherAgency(this.eaccpf, this.tabbedPane, this.model, AddFurtherAgency.RESOURCE, i));
-			builder.add(addFurtherAgencyBtn, cc.xy(1, this.rowNb));
+//			this.setNextRow();
+//			JButton addFurtherAgencyBtn = new ButtonTab(this.labels.getString("eaccpf.relations.add.further.organisation"));
+//			addFurtherAgencyBtn.addActionListener(new AddFurtherAgency(this.eaccpf, this.tabbedPane, this.model, AddFurtherAgency.RESOURCE, i));
+//			builder.add(addFurtherAgencyBtn, cc.xy(1, this.rowNb));
 		}
 
 		// Button to add new resource relation.
@@ -1117,10 +1117,10 @@ public class EacCpfRelationsPanel extends EacCpfPanel {
 			}
 
 			// Button to add new agency information.
-			this.setNextRow();
-			JButton addFurtherAgencyBtn = new ButtonTab(this.labels.getString("eaccpf.relations.add.further.organisation"));
-			addFurtherAgencyBtn.addActionListener(new AddFurtherAgency(this.eaccpf, this.tabbedPane, this.model, AddFurtherAgency.FUNCTION,i));
-			builder.add(addFurtherAgencyBtn, cc.xy(1, this.rowNb));
+//			this.setNextRow();
+//			JButton addFurtherAgencyBtn = new ButtonTab(this.labels.getString("eaccpf.relations.add.further.organisation"));
+//			addFurtherAgencyBtn.addActionListener(new AddFurtherAgency(this.eaccpf, this.tabbedPane, this.model, AddFurtherAgency.FUNCTION,i));
+//			builder.add(addFurtherAgencyBtn, cc.xy(1, this.rowNb));
 		}
 
 		// Button to add new resource relation.
@@ -1186,155 +1186,155 @@ public class EacCpfRelationsPanel extends EacCpfPanel {
 		}
 	}
 
-	/**
-	 * Class to performs the addition of new row for the organization name and
-	 * code in CPF relations section if the previous values are filled.
-	 */
-	public class AddFurtherAgency extends UpdateEacCpfObject {
-		/** CONSTANTS **/
-		public static final String CPF = "cpf-kind";
-		public static final String RESOURCE = "resource-kind";
-		public static final String FUNCTION = "function-kind";
-		
-		private int currentRelation; //figure relation
-		private String relationKind; //kind of relation, {cpf,resource,function}
-
-		/**
-		 * Constructor.
-		 *
-		 * @param eaccpf
-		 * @param tabbedPane
-		 * @param model
-		 * @param relationKind
-		 * @param counter
-		 */
-		public AddFurtherAgency(EacCpf eaccpf, JTabbedPane tabbedPane, ProfileListModel model, String relationKind, int counter) {
-			super(eaccpf, tabbedPane, model);
-			this.currentRelation = counter;
-			this.relationKind = relationKind;
-		}
-
-		@Override
-		public void actionPerformed(ActionEvent actionEvent) {
-			try {
-				super.updateJAXBObject(false);
-			} catch (EacCpfFormException e) {
-				reloadTabbedPanel(new EacCpfRelationsPanel(eaccpf, tabbedPane, mainTabbedPane, eacCpfFrame, model, labels, entityType, firstLanguage, firstScript).buildEditorPanel(errors), 2);
-			}
-
-			boolean emptyName = false;
-			boolean emptyCode = false;
-			
-			//decide which case is for each kind of relation
-			if(this.relationKind.equalsIgnoreCase(CPF)){
-				List<TextFieldWithLanguage> cpfRelationOrganisationNameAndIdTf = cpfRelationOrganisationNameAndIdTfs.get(this.currentRelation);
-				for (int i = 0; !emptyName && !emptyCode && i < cpfRelationOrganisationNameAndIdTf.size(); i++) {
-					if (StringUtils.isEmpty(cpfRelationOrganisationNameAndIdTf.get(i).getTextValue())
-							|| StringUtils.isEmpty(cpfRelationOrganisationNameAndIdTf.get(i).getExtraValue())) {
-						JOptionPane.showMessageDialog(this.tabbedPane, labels.getString("eaccpf.relations.error.empty.agency"));
-					}
-					if (StringUtils.isEmpty(cpfRelationOrganisationNameAndIdTf.get(i).getTextValue())) {
-						emptyName = true;
-					}
-					if (StringUtils.isEmpty(cpfRelationOrganisationNameAndIdTf.get(i).getExtraValue())) {
-						emptyCode = true;
-					}
-				}
-				//Check the content and add the elements.
-				if (eaccpf.getCpfDescription() == null) {
-					eaccpf.setCpfDescription(new CpfDescription());
-				}
-				if (eaccpf.getCpfDescription().getRelations() == null) {
-					eaccpf.getCpfDescription().setRelations(new Relations());
-				}
-				if(cpfRelationHrefAndTypeTfs.get(this.currentRelation).getComboBoxValue(TextFieldWithComboBoxEacCpf.TYPE_CPF_RELATION, entityType).equals(TextFieldWithComboBoxEacCpf.SELECTED_ALTERNATIVE_SET_VALUE)){ //setComponent part
-					if (((emptyName && emptyCode)|| (!emptyName && !emptyCode)) && eaccpf.getCpfDescription().getAlternativeSet().getSetComponent().size() > this.currentRelation) {
-						ComponentEntry componentEntryName = new ComponentEntry();
-						componentEntryName.setLocalType(EacCpfRelationsPanel.LOCALTYPE_AGENCYNAME);
-						eaccpf.getCpfDescription().getAlternativeSet().getSetComponent().get(this.currentRelation).getComponentEntry().add(componentEntryName);
-						ComponentEntry componentEntryCode = new ComponentEntry();
-						componentEntryCode.setLocalType(EacCpfRelationsPanel.LOCALTYPE_AGENCYCODE);
-						eaccpf.getCpfDescription().getAlternativeSet().getSetComponent().get(this.currentRelation).getComponentEntry().add(componentEntryCode);
-					}
-				}else{ //cpf part
-					int targetIndex = (eaccpf.getCpfDescription().getAlternativeSet()!=null && eaccpf.getCpfDescription().getAlternativeSet().getSetComponent()!=null)?(this.currentRelation - eaccpf.getCpfDescription().getAlternativeSet().getSetComponent().size()):0;
-					if (((emptyName && emptyCode) || (!emptyName && !emptyCode))
-							&& eaccpf.getCpfDescription().getRelations().getCpfRelation().size() > targetIndex) { //this part is necessary because reordenation can change the targetIndexes and needs to be discarded until targetIndex is refreshed
-						RelationEntry relationEntryName = new RelationEntry();
-						relationEntryName.setLocalType(EacCpfRelationsPanel.LOCALTYPE_AGENCYNAME);
-						eaccpf.getCpfDescription().getRelations().getCpfRelation().get(targetIndex).getRelationEntry().add(relationEntryName);
-						RelationEntry relationEntryCode = new RelationEntry();
-						relationEntryCode.setLocalType(EacCpfRelationsPanel.LOCALTYPE_AGENCYCODE);
-						eaccpf.getCpfDescription().getRelations().getCpfRelation().get(targetIndex).getRelationEntry().add(relationEntryCode);
-					}
-				}
-			}else if(this.relationKind.equalsIgnoreCase(RESOURCE)){
-				List<TextFieldWithLanguage> resourceRelationOrganisationNameAndIdTf = resourceRelationOrganisationNameAndIdTfs.get(this.currentRelation);
-				for (int i = 0; !emptyName && !emptyCode && i < resourceRelationOrganisationNameAndIdTf.size(); i++) {
-					if (StringUtils.isEmpty(resourceRelationOrganisationNameAndIdTf.get(i).getTextValue())
-							|| StringUtils.isEmpty(resourceRelationOrganisationNameAndIdTf.get(i).getExtraValue())) {
-						JOptionPane.showMessageDialog(this.tabbedPane, labels.getString("eaccpf.relations.error.empty.agency"));
-					}
-					if (StringUtils.isEmpty(resourceRelationOrganisationNameAndIdTf.get(i).getTextValue())) {
-						emptyName = true;
-					}
-					if (StringUtils.isEmpty(resourceRelationOrganisationNameAndIdTf.get(i).getExtraValue())) {
-						emptyCode = true;
-					}
-				}
-				// Check the content and add the elements.
-				if (eaccpf.getCpfDescription() == null) {
-					eaccpf.setCpfDescription(new CpfDescription());
-				}
-				if (eaccpf.getCpfDescription().getRelations() == null) {
-					eaccpf.getCpfDescription().setRelations(new Relations());
-				}
-				if (((emptyName && emptyCode)
-						|| (!emptyName && !emptyCode))
-						&& eaccpf.getCpfDescription().getRelations().getResourceRelation().size() > this.currentRelation) {
-					RelationEntry relationEntryName = new RelationEntry();
-					relationEntryName.setLocalType(EacCpfRelationsPanel.LOCALTYPE_AGENCYNAME);
-					eaccpf.getCpfDescription().getRelations().getResourceRelation().get(this.currentRelation).getRelationEntry().add(relationEntryName);
-					RelationEntry relationEntryCode = new RelationEntry();
-					relationEntryCode.setLocalType(EacCpfRelationsPanel.LOCALTYPE_AGENCYCODE);
-					eaccpf.getCpfDescription().getRelations().getResourceRelation().get(this.currentRelation).getRelationEntry().add(relationEntryCode);
-				}
-			}else if(this.relationKind.equalsIgnoreCase(FUNCTION)){
-				List<TextFieldWithLanguage> functionRelationOrganisationNameAndIdTf = functionRelationOrganisationNameAndIdTfs.get(this.currentRelation);
-				for (int i = 0; !emptyName && !emptyCode && i < functionRelationOrganisationNameAndIdTf.size(); i++) {
-					if (StringUtils.isEmpty(functionRelationOrganisationNameAndIdTf.get(i).getTextValue())
-							|| StringUtils.isEmpty(functionRelationOrganisationNameAndIdTf.get(i).getExtraValue())) {
-						JOptionPane.showMessageDialog(this.tabbedPane, labels.getString("eaccpf.relations.error.empty.agency"));
-					}
-					if (StringUtils.isEmpty(functionRelationOrganisationNameAndIdTf.get(i).getTextValue())) {
-						emptyName = true;
-					}
-					if (StringUtils.isEmpty(functionRelationOrganisationNameAndIdTf.get(i).getExtraValue())) {
-						emptyCode = true;
-					}
-				}
-				// Check the content and add the elements.
-				if (eaccpf.getCpfDescription() == null) {
-					eaccpf.setCpfDescription(new CpfDescription());
-				}
-				if (eaccpf.getCpfDescription().getRelations() == null) {
-					eaccpf.getCpfDescription().setRelations(new Relations());
-				}
-				if (((emptyName && emptyCode)
-						|| (!emptyName && !emptyCode))
-						&& eaccpf.getCpfDescription().getRelations().getFunctionRelation().size() > this.currentRelation) {
-					RelationEntry relationEntryName = new RelationEntry();
-					relationEntryName.setLocalType(EacCpfRelationsPanel.LOCALTYPE_AGENCYNAME);
-					eaccpf.getCpfDescription().getRelations().getFunctionRelation().get(this.currentRelation).getRelationEntry().add(relationEntryName);
-					RelationEntry relationEntryCode = new RelationEntry();
-					relationEntryCode.setLocalType(EacCpfRelationsPanel.LOCALTYPE_AGENCYCODE);
-					eaccpf.getCpfDescription().getRelations().getFunctionRelation().get(this.currentRelation).getRelationEntry().add(relationEntryCode);
-				}
-			}
-			//finally reload panel
-			reloadTabbedPanel(new EacCpfRelationsPanel(eaccpf, tabbedPane, mainTabbedPane, eacCpfFrame, model, labels, entityType, firstLanguage, firstScript).buildEditorPanel(errors), 2);
-		}
-	}
+//	/**
+//	 * Class to performs the addition of new row for the organization name and
+//	 * code in CPF relations section if the previous values are filled.
+//	 */
+//	public class AddFurtherAgency extends UpdateEacCpfObject {
+//		/** CONSTANTS **/
+//		public static final String CPF = "cpf-kind";
+//		public static final String RESOURCE = "resource-kind";
+//		public static final String FUNCTION = "function-kind";
+//		
+//		private int currentRelation; //figure relation
+//		private String relationKind; //kind of relation, {cpf,resource,function}
+//
+//		/**
+//		 * Constructor.
+//		 *
+//		 * @param eaccpf
+//		 * @param tabbedPane
+//		 * @param model
+//		 * @param relationKind
+//		 * @param counter
+//		 */
+//		public AddFurtherAgency(EacCpf eaccpf, JTabbedPane tabbedPane, ProfileListModel model, String relationKind, int counter) {
+//			super(eaccpf, tabbedPane, model);
+//			this.currentRelation = counter;
+//			this.relationKind = relationKind;
+//		}
+//
+//		@Override
+//		public void actionPerformed(ActionEvent actionEvent) {
+//			try {
+//				super.updateJAXBObject(false);
+//			} catch (EacCpfFormException e) {
+//				reloadTabbedPanel(new EacCpfRelationsPanel(eaccpf, tabbedPane, mainTabbedPane, eacCpfFrame, model, labels, entityType, firstLanguage, firstScript).buildEditorPanel(errors), 2);
+//			}
+//
+//			boolean emptyName = false;
+//			boolean emptyCode = false;
+//			
+//			//decide which case is for each kind of relation
+//			if(this.relationKind.equalsIgnoreCase(CPF)){
+//				List<TextFieldWithLanguage> cpfRelationOrganisationNameAndIdTf = cpfRelationOrganisationNameAndIdTfs.get(this.currentRelation);
+//				for (int i = 0; !emptyName && !emptyCode && i < cpfRelationOrganisationNameAndIdTf.size(); i++) {
+//					if (StringUtils.isEmpty(cpfRelationOrganisationNameAndIdTf.get(i).getTextValue())
+//							|| StringUtils.isEmpty(cpfRelationOrganisationNameAndIdTf.get(i).getExtraValue())) {
+//						JOptionPane.showMessageDialog(this.tabbedPane, labels.getString("eaccpf.relations.error.empty.agency"));
+//					}
+//					if (StringUtils.isEmpty(cpfRelationOrganisationNameAndIdTf.get(i).getTextValue())) {
+//						emptyName = true;
+//					}
+//					if (StringUtils.isEmpty(cpfRelationOrganisationNameAndIdTf.get(i).getExtraValue())) {
+//						emptyCode = true;
+//					}
+//				}
+//				//Check the content and add the elements.
+//				if (eaccpf.getCpfDescription() == null) {
+//					eaccpf.setCpfDescription(new CpfDescription());
+//				}
+//				if (eaccpf.getCpfDescription().getRelations() == null) {
+//					eaccpf.getCpfDescription().setRelations(new Relations());
+//				}
+//				if(cpfRelationHrefAndTypeTfs.get(this.currentRelation).getComboBoxValue(TextFieldWithComboBoxEacCpf.TYPE_CPF_RELATION, entityType).equals(TextFieldWithComboBoxEacCpf.SELECTED_ALTERNATIVE_SET_VALUE)){ //setComponent part
+//					if (((emptyName && emptyCode)|| (!emptyName && !emptyCode)) && eaccpf.getCpfDescription().getAlternativeSet().getSetComponent().size() > this.currentRelation) {
+//						ComponentEntry componentEntryName = new ComponentEntry();
+//						componentEntryName.setLocalType(EacCpfRelationsPanel.LOCALTYPE_AGENCYNAME);
+//						eaccpf.getCpfDescription().getAlternativeSet().getSetComponent().get(this.currentRelation).getComponentEntry().add(componentEntryName);
+//						ComponentEntry componentEntryCode = new ComponentEntry();
+//						componentEntryCode.setLocalType(EacCpfRelationsPanel.LOCALTYPE_AGENCYCODE);
+//						eaccpf.getCpfDescription().getAlternativeSet().getSetComponent().get(this.currentRelation).getComponentEntry().add(componentEntryCode);
+//					}
+//				}else{ //cpf part
+//					int targetIndex = (eaccpf.getCpfDescription().getAlternativeSet()!=null && eaccpf.getCpfDescription().getAlternativeSet().getSetComponent()!=null)?(this.currentRelation - eaccpf.getCpfDescription().getAlternativeSet().getSetComponent().size()):0;
+//					if (((emptyName && emptyCode) || (!emptyName && !emptyCode))
+//							&& eaccpf.getCpfDescription().getRelations().getCpfRelation().size() > targetIndex) { //this part is necessary because reordenation can change the targetIndexes and needs to be discarded until targetIndex is refreshed
+//						RelationEntry relationEntryName = new RelationEntry();
+//						relationEntryName.setLocalType(EacCpfRelationsPanel.LOCALTYPE_AGENCYNAME);
+//						eaccpf.getCpfDescription().getRelations().getCpfRelation().get(targetIndex).getRelationEntry().add(relationEntryName);
+//						RelationEntry relationEntryCode = new RelationEntry();
+//						relationEntryCode.setLocalType(EacCpfRelationsPanel.LOCALTYPE_AGENCYCODE);
+//						eaccpf.getCpfDescription().getRelations().getCpfRelation().get(targetIndex).getRelationEntry().add(relationEntryCode);
+//					}
+//				}
+//			}else if(this.relationKind.equalsIgnoreCase(RESOURCE)){
+//				List<TextFieldWithLanguage> resourceRelationOrganisationNameAndIdTf = resourceRelationOrganisationNameAndIdTfs.get(this.currentRelation);
+//				for (int i = 0; !emptyName && !emptyCode && i < resourceRelationOrganisationNameAndIdTf.size(); i++) {
+//					if (StringUtils.isEmpty(resourceRelationOrganisationNameAndIdTf.get(i).getTextValue())
+//							|| StringUtils.isEmpty(resourceRelationOrganisationNameAndIdTf.get(i).getExtraValue())) {
+//						JOptionPane.showMessageDialog(this.tabbedPane, labels.getString("eaccpf.relations.error.empty.agency"));
+//					}
+//					if (StringUtils.isEmpty(resourceRelationOrganisationNameAndIdTf.get(i).getTextValue())) {
+//						emptyName = true;
+//					}
+//					if (StringUtils.isEmpty(resourceRelationOrganisationNameAndIdTf.get(i).getExtraValue())) {
+//						emptyCode = true;
+//					}
+//				}
+//				// Check the content and add the elements.
+//				if (eaccpf.getCpfDescription() == null) {
+//					eaccpf.setCpfDescription(new CpfDescription());
+//				}
+//				if (eaccpf.getCpfDescription().getRelations() == null) {
+//					eaccpf.getCpfDescription().setRelations(new Relations());
+//				}
+//				if (((emptyName && emptyCode)
+//						|| (!emptyName && !emptyCode))
+//						&& eaccpf.getCpfDescription().getRelations().getResourceRelation().size() > this.currentRelation) {
+//					RelationEntry relationEntryName = new RelationEntry();
+//					relationEntryName.setLocalType(EacCpfRelationsPanel.LOCALTYPE_AGENCYNAME);
+//					eaccpf.getCpfDescription().getRelations().getResourceRelation().get(this.currentRelation).getRelationEntry().add(relationEntryName);
+//					RelationEntry relationEntryCode = new RelationEntry();
+//					relationEntryCode.setLocalType(EacCpfRelationsPanel.LOCALTYPE_AGENCYCODE);
+//					eaccpf.getCpfDescription().getRelations().getResourceRelation().get(this.currentRelation).getRelationEntry().add(relationEntryCode);
+//				}
+//			}else if(this.relationKind.equalsIgnoreCase(FUNCTION)){
+//				List<TextFieldWithLanguage> functionRelationOrganisationNameAndIdTf = functionRelationOrganisationNameAndIdTfs.get(this.currentRelation);
+//				for (int i = 0; !emptyName && !emptyCode && i < functionRelationOrganisationNameAndIdTf.size(); i++) {
+//					if (StringUtils.isEmpty(functionRelationOrganisationNameAndIdTf.get(i).getTextValue())
+//							|| StringUtils.isEmpty(functionRelationOrganisationNameAndIdTf.get(i).getExtraValue())) {
+//						JOptionPane.showMessageDialog(this.tabbedPane, labels.getString("eaccpf.relations.error.empty.agency"));
+//					}
+//					if (StringUtils.isEmpty(functionRelationOrganisationNameAndIdTf.get(i).getTextValue())) {
+//						emptyName = true;
+//					}
+//					if (StringUtils.isEmpty(functionRelationOrganisationNameAndIdTf.get(i).getExtraValue())) {
+//						emptyCode = true;
+//					}
+//				}
+//				// Check the content and add the elements.
+//				if (eaccpf.getCpfDescription() == null) {
+//					eaccpf.setCpfDescription(new CpfDescription());
+//				}
+//				if (eaccpf.getCpfDescription().getRelations() == null) {
+//					eaccpf.getCpfDescription().setRelations(new Relations());
+//				}
+//				if (((emptyName && emptyCode)
+//						|| (!emptyName && !emptyCode))
+//						&& eaccpf.getCpfDescription().getRelations().getFunctionRelation().size() > this.currentRelation) {
+//					RelationEntry relationEntryName = new RelationEntry();
+//					relationEntryName.setLocalType(EacCpfRelationsPanel.LOCALTYPE_AGENCYNAME);
+//					eaccpf.getCpfDescription().getRelations().getFunctionRelation().get(this.currentRelation).getRelationEntry().add(relationEntryName);
+//					RelationEntry relationEntryCode = new RelationEntry();
+//					relationEntryCode.setLocalType(EacCpfRelationsPanel.LOCALTYPE_AGENCYCODE);
+//					eaccpf.getCpfDescription().getRelations().getFunctionRelation().get(this.currentRelation).getRelationEntry().add(relationEntryCode);
+//				}
+//			}
+//			//finally reload panel
+//			reloadTabbedPanel(new EacCpfRelationsPanel(eaccpf, tabbedPane, mainTabbedPane, eacCpfFrame, model, labels, entityType, firstLanguage, firstScript).buildEditorPanel(errors), 2);
+//		}
+//	}
 	
 	/**
 	 * Class to performs the addition of new resource relation in the relations tab
