@@ -22,6 +22,8 @@ import java.awt.KeyboardFocusManager;
 import java.awt.event.ActionEvent;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -105,6 +107,9 @@ public class EacCpfDescriptionPanel extends EacCpfPanel {
 	private List<JComboBox> placeEntryCountryJComboBoxs;
 	private List<TextFieldWithComboBoxEacCpf> placeEntryPlaceRoles;
 	private List<List<TextFieldWithComboBoxEacCpf>> addressDetailsTextFieldsWithComboBoxes;
+	private List<JButton> placeEntryAddressDetailsButton;
+	private List<JButton> placeEntryDateButton;
+	private List<JButton> placeEntryDateRangeButton;
 	private List<JTextField> placesFunctionJTextfield;
 	private List<JComboBox> placesFunctionJComboBoxes;
 	private List<JTextField> placesVocabularyJTextFields;
@@ -209,6 +214,27 @@ public class EacCpfDescriptionPanel extends EacCpfPanel {
 			this.addressDetailsTextFieldsWithComboBoxes.add(new ArrayList<TextFieldWithComboBoxEacCpf>());
 		}
 		this.addressDetailsTextFieldsWithComboBoxes.get(this.addressDetailsTextFieldsWithComboBoxes.size()-1).add(jTextfieldAddress);
+	}
+
+	private void addPlaceEntryAddressDetailsButton(JButton targetAddressDetailsButton) {
+		if(this.placeEntryAddressDetailsButton==null){
+			this.placeEntryAddressDetailsButton = new ArrayList<JButton>();
+		}
+		this.placeEntryAddressDetailsButton.add(targetAddressDetailsButton);
+	}
+
+	private void addPlaceEntryDateButton(JButton targetDateButton) {
+		if(this.placeEntryDateButton==null){
+			this.placeEntryDateButton = new ArrayList<JButton>();
+		}
+		this.placeEntryDateButton.add(targetDateButton);
+	}
+
+	private void addPlaceEntryDateRangeButton(JButton targetDateRangeButton) {
+		if(this.placeEntryDateRangeButton==null){
+			this.placeEntryDateRangeButton = new ArrayList<JButton>();
+		}
+		this.placeEntryDateRangeButton.add(targetDateRangeButton);
 	}
 	
 	private void addOcupationPlaceOcupationDescription(TextAreaWithLanguage jTextFieldLinkDescriptionOcupation) {
@@ -713,7 +739,7 @@ public class EacCpfDescriptionPanel extends EacCpfPanel {
          			builder = buildDatesOrDatesRangeFunctions(builder,cc,function,i);
              		setNextRow();
          		 }
-                 builder = buildAddDateDateRangeLabelAndJButtons(builder,cc,FUNCTIONS,i);
+                 builder = buildAddDateDateRangeLabelAndJButtons(builder,cc,FUNCTIONS,i, true);
             }
 		}else{
             builder = buildPlaceFunction(builder,cc,null,isFirst);
@@ -726,7 +752,7 @@ public class EacCpfDescriptionPanel extends EacCpfPanel {
             
             builder = buildDatesOrDatesRangeFunctions(builder,cc,null,0);
      		setNextRow();
-     		builder = buildAddDateDateRangeLabelAndJButtons(builder,cc,FUNCTIONS,0);
+     		builder = buildAddDateDateRangeLabelAndJButtons(builder,cc,FUNCTIONS,0, true);
 		}
 		
  		JButton jButtonAddFurtherFunction = new ButtonTab(this.labels.getString("eaccpf.description.button.addFurtherFunction"));
@@ -879,9 +905,9 @@ public class EacCpfDescriptionPanel extends EacCpfPanel {
 			}else{
 				dateOrDateRange.addAll(occupation.getDateSet().getDateOrDateRange());
 			}
-			builder = buildListDatesAndRefreshGlobalListElements(builder,cc,dateOrDateRange,OCCUPATIONS,index);
+			builder = buildListDatesAndRefreshGlobalListElements(builder,cc,dateOrDateRange,OCCUPATIONS,index, true);
 		}
-		builder = buildAddDateDateRangeLabelAndJButtons(builder,cc,OCCUPATIONS,index);
+		builder = buildAddDateDateRangeLabelAndJButtons(builder,cc,OCCUPATIONS,index, true);
 		return builder;
 	}
 	
@@ -1018,7 +1044,7 @@ public class EacCpfDescriptionPanel extends EacCpfPanel {
 			}else if(function.getDateRange()!=null){
 				listDates.add(function.getDateRange());
 			}
-			builder = buildListDatesAndRefreshGlobalListElements(builder,cc,listDates,FUNCTIONS,index);
+			builder = buildListDatesAndRefreshGlobalListElements(builder,cc,listDates,FUNCTIONS,index, true);
 		}
 		return builder;
 	}
@@ -1124,28 +1150,32 @@ public class EacCpfDescriptionPanel extends EacCpfPanel {
 	 */
 	private PanelBuilder buildPlace(PanelBuilder builder, CellConstraints cc,Place place, Integer placeNumber) {
 		placeNumber = placeNumber!=null?placeNumber:0; //checks for null values, index must be controlled
+		boolean filled = false;
 		if(place!=null && place.getPlaceEntry()!=null){ //each one
 			if (!place.getPlaceEntry().isEmpty()) {
 				for (PlaceEntry placeEntry : place.getPlaceEntry()) {
-					builder = buildPlaceEntry(builder,cc,placeEntry,true);
+					if (StringUtils.isNotEmpty(trimStringValue(placeEntry.getContent()))) {
+						filled = true;
+					}
+					builder = buildPlaceEntry(builder,cc,placeEntry,true, placeNumber, filled);
 				}
 			} else {
-				builder = buildPlaceEntry(builder,cc,null,true);
+				builder = buildPlaceEntry(builder,cc,null,true, placeNumber, filled);
 			}
 			if (place.getAddress() != null && place.getAddress().getAddressLine() != null && !place.getAddress().getAddressLine().isEmpty()) {
-				builder = buildAddressDetails(builder,cc,place.getAddress().getAddressLine());
+				builder = buildAddressDetails(builder,cc,place.getAddress().getAddressLine(), filled);
 			}else{
-				builder = buildAddressDetails(builder,cc,null);
+				builder = buildAddressDetails(builder,cc,null, filled);
 			}
-			builder = buildButtonAddFurtherAddressDetails(builder,cc,placeNumber);
-			builder = buildPlaceDateRange(builder,cc,place,placeNumber);
-			builder = buildPlaceDateRangeButton(builder,cc,placeNumber);
+			builder = buildButtonAddFurtherAddressDetails(builder,cc, placeNumber, filled);
+			builder = buildPlaceDateRange(builder,cc,place,placeNumber, filled);
+			builder = buildPlaceDateRangeButton(builder,cc,placeNumber, filled);
 		}else{ //empty one
-			builder = buildPlaceEntry(builder,cc,null,true);
-			builder = buildAddressDetails(builder,cc,null);
-			builder = buildButtonAddFurtherAddressDetails(builder,cc,null);
-			builder = buildPlaceDateRange(builder,cc,null,placeNumber);
-			builder = buildPlaceDateRangeButton(builder,cc,placeNumber);
+			builder = buildPlaceEntry(builder,cc,null,true, placeNumber, filled);
+			builder = buildAddressDetails(builder,cc,null, filled);
+			builder = buildButtonAddFurtherAddressDetails(builder,cc, null, filled);
+			builder = buildPlaceDateRange(builder,cc,null,placeNumber, filled);
+			builder = buildPlaceDateRangeButton(builder,cc,placeNumber, filled);
 		}
 		setNextRow();
 		return builder;
@@ -1153,9 +1183,11 @@ public class EacCpfDescriptionPanel extends EacCpfPanel {
 	/**
 	 * Functions add further part with a button.
 	 */
-	private PanelBuilder buildButtonAddFurtherAddressDetails(PanelBuilder builder, CellConstraints cc,Integer index) {
+	private PanelBuilder buildButtonAddFurtherAddressDetails(PanelBuilder builder, CellConstraints cc, Integer index, boolean filled) {
 		JButton addAddressDetails = new ButtonTab(this.labels.getString("eaccpf.description.button.addaddressdetails"));
-		addAddressDetails.addActionListener(new AddFurtherAddressAndComponentButton(this.eaccpf, this.tabbedPane, this.model,index));
+		addAddressDetails.addActionListener(new AddFurtherAddressAndComponentButton(this.eaccpf, this.tabbedPane, this.model, index));
+		addAddressDetails.setEnabled(filled);
+		this.addPlaceEntryAddressDetailsButton(addAddressDetails);
 		builder.add(addAddressDetails, cc.xy (1, rowNb));
 		setNextRow();
 		return builder;
@@ -1164,15 +1196,15 @@ public class EacCpfDescriptionPanel extends EacCpfPanel {
 	/**
 	 * Little method which builds and returns a builder with Date Range form part
 	 */
-	private PanelBuilder buildPlaceDateRangeButton(PanelBuilder builder,CellConstraints cc,Integer index) {
-		builder = buildAddDateDateRangeLabelAndJButtons(builder,cc,PLACES,index);
+	private PanelBuilder buildPlaceDateRangeButton(PanelBuilder builder,CellConstraints cc,Integer index, boolean filled) {
+		builder = buildAddDateDateRangeLabelAndJButtons(builder,cc,PLACES,index, filled);
 		return builder;
 	}
 	/**
 	 * Similar to buildAddDateDateRangeRadioButtons but the behavior now 
 	 * works with buttons
 	 */
-	private PanelBuilder buildAddDateDateRangeLabelAndJButtons(final PanelBuilder builder,final CellConstraints cc,String section,Integer index) {
+	private PanelBuilder buildAddDateDateRangeLabelAndJButtons(final PanelBuilder builder,final CellConstraints cc,String section,Integer index, boolean filled) {
 		//Buttons to add new entries.
 		if(section!=null){
 			setNextRow();
@@ -1180,9 +1212,17 @@ public class EacCpfDescriptionPanel extends EacCpfPanel {
 			builder.addLabel(this.labels.getString((section.equals(PLACES)?"eaccpf.description.adddatesofusefortheplace":(section.equals(FUNCTIONS)?"eaccpf.description.adddatesofuseforthefunction":"eaccpf.description.adddatesofusefortheoccupation"))), cc.xy(1, this.rowNb));
 			JButton addSingleDateBtn = new ButtonTab(this.labels.getString("eaccpf.commons.add.single.date"));
 			addSingleDateBtn.addActionListener(new AddSingleOrRangeDateAction(this.eaccpf, this.tabbedPane, this.model, section, false, index));
+			addSingleDateBtn.setEnabled(filled);
+			if (section.equals(PLACES)) {
+				this.addPlaceEntryDateButton(addSingleDateBtn);
+			}
 			builder.add(addSingleDateBtn, cc.xy(3, this.rowNb));
 			JButton addRangeDateBtn = new ButtonTab(this.labels.getString("eaccpf.commons.add.range.date"));
 			addRangeDateBtn.addActionListener(new AddSingleOrRangeDateAction(this.eaccpf, this.tabbedPane, this.model, section, true, index));
+			addRangeDateBtn.setEnabled(filled);
+			if (section.equals(PLACES)) {
+				this.addPlaceEntryDateRangeButton(addRangeDateBtn);
+			}
 			builder.add(addRangeDateBtn, cc.xy(5, this.rowNb));
 		}
 		setNextRow();
@@ -1193,7 +1233,7 @@ public class EacCpfDescriptionPanel extends EacCpfPanel {
 	 * Method which build and returns a Place Date Range form part.
 	 * It could call to buildPlaceDateRangeDateSet or buildPlaceDateRangeDateRange
 	 */
-	private PanelBuilder buildPlaceDateRange(PanelBuilder builder,CellConstraints cc, Place place,Integer index) {
+	private PanelBuilder buildPlaceDateRange(PanelBuilder builder,CellConstraints cc, Place place,Integer index, boolean filled) {
 		if(place!=null){
 			index = index!=null?index:0;
 			if (place.getDateSet() != null || place.getDateRange() != null || place.getDate() != null) {
@@ -1205,7 +1245,7 @@ public class EacCpfDescriptionPanel extends EacCpfPanel {
 				}else if(place.getDateRange()!=null){
 					listDates.add(place.getDateRange());
 				}
-        		builder = buildListDatesAndRefreshGlobalListElements(builder,cc,listDates,PLACES,index);
+        		builder = buildListDatesAndRefreshGlobalListElements(builder,cc,listDates,PLACES,index, filled);
 			}
 		}
 		return builder;
@@ -1214,7 +1254,7 @@ public class EacCpfDescriptionPanel extends EacCpfPanel {
 	/**
 	 * Index must indicate section part 
 	 */
-	private PanelBuilder buildListDatesAndRefreshGlobalListElements(PanelBuilder builder, CellConstraints cc, List<Object> sectionDates, String section , Integer index) {
+	private PanelBuilder buildListDatesAndRefreshGlobalListElements(PanelBuilder builder, CellConstraints cc, List<Object> sectionDates, String section , Integer index, boolean filled) {
 		index = index!=null?index:0; //index must be controlled, assigned to 0 if it's not found
 		setNextRow();
 		List<TextFieldsWithRadioButtonForDates> datesForSectionList = new ArrayList<TextFieldsWithRadioButtonForDates>();
@@ -1291,27 +1331,35 @@ public class EacCpfDescriptionPanel extends EacCpfPanel {
 				// First date row. Normal date text fields.
 				builder.addLabel(this.labels.getString("eaccpf.commons.from.date"), cc.xy(1, this.rowNb));
 				dateTextField.getDateFromTextField().addFocusListener(new AddIsoText(dateTextField, EacCpfIdentityPanel.UNKNOWN_DATE_FROM));
+				dateTextField.getDateFromTextField().setEnabled(filled);
 				builder.add(dateTextField.getDateFromTextField(), cc.xy(3, this.rowNb));
 				builder.addLabel(this.labels.getString("eaccpf.commons.to.date"), cc.xy(5, this.rowNb));
 				dateTextField.getDateToTextField().addFocusListener(new AddIsoText(dateTextField, EacCpfIdentityPanel.UNKNOWN_DATE_TO));
+				dateTextField.getDateToTextField().setEnabled(filled);
 				builder.add(dateTextField.getDateToTextField(), cc.xy(7, this.rowNb));
 
 				// Second date row. Radio buttons.
 				setNextRow();
 				dateTextField.getDateFromDefinedRB().addActionListener(new AddUndefinedTexts(dateTextField, EacCpfIdentityPanel.KNOWN_DATE_FROM));
 				dateTextField.getDateToDefinedRB().addActionListener(new AddUndefinedTexts(dateTextField, EacCpfIdentityPanel.KNOWN_DATE_TO));
+				dateTextField.getDateFromDefinedRB().setEnabled(filled);
+				dateTextField.getDateToDefinedRB().setEnabled(filled);
 				builder.add(dateTextField.getDateFromDefinedRB(), cc.xy(3, this.rowNb));
 				builder.add(dateTextField.getDateToDefinedRB(), cc.xy(7, this.rowNb));
 				
 				this.setNextRow();
 				dateTextField.getDateFromUndefinedRB().addActionListener(new AddUndefinedTexts(dateTextField, EacCpfIdentityPanel.UNKNOWN_DATE_FROM));
 				dateTextField.getDateToUndefinedRB().addActionListener(new AddUndefinedTexts(dateTextField, EacCpfIdentityPanel.UNKNOWN_DATE_TO));
+				dateTextField.getDateFromUndefinedRB().setEnabled(filled);
+				dateTextField.getDateToUndefinedRB().setEnabled(filled);
 				builder.add(dateTextField.getDateFromUndefinedRB(), cc.xy(3, this.rowNb));
 				builder.add(dateTextField.getDateToUndefinedRB(), cc.xy(7, this.rowNb));
 				
 				setNextRow();
 //				dateTextField.getDateFromStillRB().addActionListener(new AddUndefinedTexts(dateTextField, EacCpfIdentityPanel.STILL_DATE_FROM));
 				dateTextField.getDateToStillRB().addActionListener(new AddUndefinedTexts(dateTextField, EacCpfIdentityPanel.STILL_DATE_TO));
+//				useDateTF.getDateFromStillRB().setEnabled(filled);
+				dateTextField.getDateToStillRB().setEnabled(filled);
 //				builder.add(useDateTF.getDateFromStillRB(), cc.xy(3, this.rowNb));
 				builder.add(dateTextField.getDateToStillRB(), cc.xy(7, this.rowNb));
 
@@ -1319,31 +1367,38 @@ public class EacCpfDescriptionPanel extends EacCpfPanel {
 				setNextRow();
 				builder.addLabel(this.labels.getString("eaccpf.commons.iso.date"), cc.xy(1, this.rowNb));
 				dateTextField.getStandardDateFromTextField().addFocusListener(new CheckIsoText(dateTextField, EacCpfIdentityPanel.UNKNOWN_DATE_FROM));
+				dateTextField.getStandardDateFromTextField().setEnabled(filled);
 				builder.add(dateTextField.getStandardDateFromTextField(), cc.xy(3, this.rowNb));
 				builder.addLabel(this.labels.getString("eaccpf.commons.iso.date"), cc.xy(5, this.rowNb));
 				dateTextField.getStandardDateToTextField().addFocusListener(new CheckIsoText(dateTextField, EacCpfIdentityPanel.UNKNOWN_DATE_TO));
+				dateTextField.getStandardDateToTextField().setEnabled(filled);
 				builder.add(dateTextField.getStandardDateToTextField(), cc.xy(7, this.rowNb));
 			}else{
 				// First date row. Normal date text fields.
 				builder.addLabel(this.labels.getString("eaccpf.commons.date"), cc.xy(1, this.rowNb));
 				dateTextField.getDateTextField().addFocusListener(new AddIsoText(dateTextField, EacCpfIdentityPanel.UNKNOWN_DATE));
+				dateTextField.getDateTextField().setEnabled(filled);
 				builder.add(dateTextField.getDateTextField(), cc.xy(3, this.rowNb));
 
 				// Second date row. Unknown radiobuttons.
 				setNextRow();
 				dateTextField.getDateDefinedRB().addActionListener(new AddUndefinedTexts(dateTextField, EacCpfIdentityPanel.KNOWN_DATE));
+				dateTextField.getDateDefinedRB().setEnabled(filled);
 				builder.add(dateTextField.getDateDefinedRB(), cc.xy(3, this.rowNb));
 				this.setNextRow();
 				dateTextField.getDateUndefinedRB().addActionListener(new AddUndefinedTexts(dateTextField, EacCpfIdentityPanel.UNKNOWN_DATE));
+				dateTextField.getDateUndefinedRB().setEnabled(filled);
 				builder.add(dateTextField.getDateUndefinedRB(), cc.xy(3, this.rowNb));
 				setNextRow();
 				dateTextField.getDateStillRB().addActionListener(new AddUndefinedTexts(dateTextField, EacCpfIdentityPanel.STILL_DATE));
+				dateTextField.getDateStillRB().setEnabled(filled);
 				builder.add(dateTextField.getDateStillRB(), cc.xy(3, this.rowNb));
 
 				// Third date row. Standard dates.
 				this.setNextRow();
 				builder.addLabel(this.labels.getString("eaccpf.commons.iso.date"), cc.xy(1, this.rowNb));
 				dateTextField.getStandardDateTextField().addFocusListener(new CheckIsoText(dateTextField, EacCpfIdentityPanel.UNKNOWN_DATE));
+				dateTextField.getStandardDateTextField().setEnabled(filled);
 				builder.add(dateTextField.getStandardDateTextField(), cc.xy(3, this.rowNb));
 			}
 		}
@@ -1361,20 +1416,23 @@ public class EacCpfDescriptionPanel extends EacCpfPanel {
 	/**
 	 * Builds placeEntry form part.
 	 */
-	private PanelBuilder buildPlaceEntry(PanelBuilder builder,CellConstraints cc, PlaceEntry placeEntry, boolean flag) {
+	private PanelBuilder buildPlaceEntry(PanelBuilder builder,CellConstraints cc, PlaceEntry placeEntry, boolean flag, int index, boolean filled) {
 		JLabel jLabelPlace = new JLabel(this.labels.getString("eaccpf.description.place"));
 		builder.add(jLabelPlace, cc.xy (1, rowNb));
 		if(placeEntry!=null){ //placeEntry part
 			TextFieldWithLanguage textFieldWithLanguage = new TextFieldWithLanguage(placeEntry.getContent(), placeEntry.getLang());
 			JTextField placeEntryTextField = textFieldWithLanguage.getTextField();
+			placeEntryTextField.addKeyListener(new CheckPlaceContent(placeEntryTextField, index));
 			builder.add(placeEntryTextField, cc.xy (3, rowNb));
 			JLabel jLabelLanguage = new JLabel(this.labels.getString("eaccpf.description.selectlanguage"));
 			builder.add(jLabelLanguage, cc.xy (5, rowNb));
 			JComboBox placeEntryLanguage = textFieldWithLanguage.getLanguageBox();
+			placeEntryLanguage.setEnabled(filled);
 			builder.add(placeEntryLanguage, cc.xy (7, rowNb));
 			appendPlaceEntryPlace(placeEntryTextField,placeEntryLanguage);
 		}else{ //empty one
 			JTextField jTextfieldPlace = new JTextField();
+			jTextfieldPlace.addKeyListener(new CheckPlaceContent(jTextfieldPlace, index));
 			builder.add(jTextfieldPlace, cc.xy (3, rowNb));
 			JLabel jLabelLanguage = new JLabel(this.labels.getString("eaccpf.description.selectlanguage"));
 			builder.add(jLabelLanguage, cc.xy (5, rowNb));
@@ -1382,6 +1440,8 @@ public class EacCpfDescriptionPanel extends EacCpfPanel {
 			if(!flag){
 				jComboboxLanguage.setSelectedItem("---");
 			}
+			// Disable combo action.
+			jComboboxLanguage.setEnabled(filled);
 			builder.add(jComboboxLanguage, cc.xy (7, rowNb));
 			appendPlaceEntryPlace(jTextfieldPlace,jComboboxLanguage);
 		}
@@ -1394,6 +1454,7 @@ public class EacCpfDescriptionPanel extends EacCpfPanel {
 			String vocabLink = placeEntry.getVocabularySource();
 			jTextfieldControlledLabelPlace.setText(vocabLink);
 		}
+		jTextfieldControlledLabelPlace.setEnabled(filled);
 		builder.add(jTextfieldControlledLabelPlace, cc.xy (3, rowNb));
 		appendPlaceEntryVocabularyPlace(jTextfieldControlledLabelPlace);
 		setNextRow();
@@ -1407,6 +1468,7 @@ public class EacCpfDescriptionPanel extends EacCpfPanel {
 				jComboboxCountry.setSelectedItem(parseIsoToCountry(isoCountry));
 			}
 		}
+		jComboboxCountry.setEnabled(filled);
 		builder.add(jComboboxCountry, cc.xy (3, rowNb));
 		appendPlaceEntryCountry(jComboboxCountry);
 		setNextRow();
@@ -1421,6 +1483,7 @@ public class EacCpfDescriptionPanel extends EacCpfPanel {
 		} else {
 			jComboBoxRolePlace = new TextFieldWithComboBoxEacCpf("", "", TextFieldWithComboBoxEacCpf.TYPE_PLACE_ROLE, this.entityType, this.labels);
 		}
+		jComboBoxRolePlace.getComboBox().setEnabled(filled);
 		builder.add(jComboBoxRolePlace.getComboBox(), cc.xy (3, rowNb));
 		appendPlaceEntryRole(jComboBoxRolePlace);
 		setNextRow();
@@ -1438,7 +1501,7 @@ public class EacCpfDescriptionPanel extends EacCpfPanel {
 	/**
 	 * Build address details form part.
 	 */
-	private PanelBuilder buildAddressDetails(PanelBuilder builder, CellConstraints cc, List<AddressLine> addressLines) {
+	private PanelBuilder buildAddressDetails(PanelBuilder builder, CellConstraints cc, List<AddressLine> addressLines, boolean filled) {
 		if(addressLines!=null && !addressLines.isEmpty()){
 			for(int i=0;i<addressLines.size();i++){ //each address detail
 				AddressLine address = addressLines.get(i); 
@@ -1456,9 +1519,11 @@ public class EacCpfDescriptionPanel extends EacCpfPanel {
 				TextFieldWithComboBoxEacCpf addressDetailsComponentTFWCb = buildComponentsJComboBox(address);
 				JLabel jAddressDetailsLabel = new JLabel(this.labels.getString("eaccpf.description.addressdetails"));
 				builder.add(jAddressDetailsLabel, cc.xy (1, rowNb));
+				addressDetailsComponentTFWCb.getTextField().setEnabled(filled);
 				builder.add(addressDetailsComponentTFWCb.getTextField(), cc.xy (3, rowNb));
 				JLabel jComponentLabel = new JLabel(this.labels.getString("eaccpf.description.component"));
 				builder.add(jComponentLabel, cc.xy (5, rowNb));
+				addressDetailsComponentTFWCb.getComboBox().setEnabled(filled);
 				builder.add(addressDetailsComponentTFWCb.getComboBox(), cc.xy (7, rowNb));
 				setNextRow();
 				appendAddressDetails(i==0,addressDetailsComponentTFWCb);
@@ -1467,9 +1532,11 @@ public class EacCpfDescriptionPanel extends EacCpfPanel {
 			TextFieldWithComboBoxEacCpf addressDetailsComponentTFWCb = buildComponentsJComboBox(new AddressLine());
 			JLabel jAddressDetailsLabel = new JLabel(this.labels.getString("eaccpf.description.addressdetails"));
 			builder.add(jAddressDetailsLabel, cc.xy (1, rowNb));
+			addressDetailsComponentTFWCb.getTextField().setEnabled(filled);
 			builder.add(addressDetailsComponentTFWCb.getTextField(), cc.xy (3, rowNb));
 			JLabel jComponentLabel = new JLabel(this.labels.getString("eaccpf.description.component"));
 			builder.add(jComponentLabel, cc.xy (5, rowNb));
+			addressDetailsComponentTFWCb.getComboBox().setEnabled(filled);
 			builder.add(addressDetailsComponentTFWCb.getComboBox(), cc.xy (7, rowNb));
 			setNextRow();
 			appendAddressDetails(true,addressDetailsComponentTFWCb);
@@ -1497,7 +1564,125 @@ public class EacCpfDescriptionPanel extends EacCpfPanel {
 	}
 	
 	/** INTERNAL CLASS AND EVENTS **/ 
-	
+
+	/**
+	 * Class to enable or disable the fields and buttons in "Place" section
+	 * when the value on the field "Place" is filled or not.
+	 */
+	public class CheckPlaceContent implements KeyListener {
+		private JTextField placeField;
+		private int index;
+
+		/**
+		 * Constructor.
+		 *
+		 * @param placeField
+		 */
+		public CheckPlaceContent(JTextField placeField, int index) {
+			this.placeField = placeField;
+			this.index = index;
+		}
+
+		@Override
+		public void keyTyped(KeyEvent e) {
+			this.setCorrectEnableValue();
+		}
+
+		@Override
+		public void keyPressed(KeyEvent e) {
+			this.setCorrectEnableValue();
+		}
+
+		@Override
+		public void keyReleased(KeyEvent e) {
+			this.setCorrectEnableValue();
+		}
+
+		/**
+		 * Method to enable or to disable the fields, selects and combo boxes
+		 * accordingly to the value of the "place" field.
+		 */
+		private void setCorrectEnableValue() {
+			boolean filled = false;
+			if (StringUtils.isNotEmpty(trimStringValue(this.placeField.getText()))) {
+				filled = true;
+			}
+
+			// @xml:lang of the <placeEntry>.
+			placeEntryPlaceJComboBoxs.get(this.index).setEnabled(filled);
+
+			// @vocabularySource of the <placeEntry>.
+			placeEntryPlaceVocabularies.get(this.index).setEnabled(filled);
+
+			// @countryCode of the <placeEntry>.
+			placeEntryCountryJComboBoxs.get(this.index).setEnabled(filled);
+
+			// @localType of the <placeEntry>.
+			placeEntryPlaceRoles.get(this.index).getComboBox().setEnabled(filled);
+
+			// Content and @localType of the <addressLine>.
+			List<TextFieldWithComboBoxEacCpf> addressLineTFWCBs = addressDetailsTextFieldsWithComboBoxes.get(this.index);
+			if (addressLineTFWCBs != null && !addressLineTFWCBs.isEmpty()) {
+				for (TextFieldWithComboBoxEacCpf textFieldWithComboBoxEacCpf: addressLineTFWCBs) {
+					// Content of the <addressLine>.
+					textFieldWithComboBoxEacCpf.getTextField().setEnabled(filled);
+					// @localType of the <addressLine>.
+					textFieldWithComboBoxEacCpf.getComboBox().setEnabled(filled);
+				}
+			}
+
+			// Button "Add further address details".
+			placeEntryAddressDetailsButton.get(this.index).setEnabled(filled);
+
+			// Date information of the <place>.
+			List<TextFieldsWithRadioButtonForDates> datesTFWRBs = placesDates.get(this.index);
+			if (datesTFWRBs != null && !datesTFWRBs.isEmpty()) {
+				for(TextFieldsWithRadioButtonForDates textFieldsWithRadioButtonForDates: datesTFWRBs) {
+					if (textFieldsWithRadioButtonForDates.isDateRange()) {
+						// Content of the <dateFrom>.
+						textFieldsWithRadioButtonForDates.getDateFromTextField().setEnabled(filled);
+						// Known value of the <dateFrom>.
+						textFieldsWithRadioButtonForDates.getDateFromDefinedRB().setEnabled(filled);
+						// @localtype="open" of the <dateFrom>.
+//						textFieldsWithRadioButtonForDates.getDateFromStillRB().setEnabled(filled);
+						// @localtype="unknown" of the <dateFrom>.
+						textFieldsWithRadioButtonForDates.getDateFromUndefinedRB().setEnabled(filled);
+						// @standardDate of the <dateFrom>.
+						textFieldsWithRadioButtonForDates.getStandardDateFromTextField().setEnabled(filled);
+
+						// Content of the <dateTo>.
+						textFieldsWithRadioButtonForDates.getDateToTextField().setEnabled(filled);
+						// Known value of the <dateTo>.
+						textFieldsWithRadioButtonForDates.getDateToDefinedRB().setEnabled(filled);
+						// @localtype="open" of the <dateTo>.
+						textFieldsWithRadioButtonForDates.getDateToStillRB().setEnabled(filled);
+						// @localtype="unknown" of the <dateTo>.
+						textFieldsWithRadioButtonForDates.getDateToUndefinedRB().setEnabled(filled);
+						// @standardDate of the <dateTo>.
+						textFieldsWithRadioButtonForDates.getStandardDateToTextField().setEnabled(filled);
+					} else {
+						// Content of the <date>.
+						textFieldsWithRadioButtonForDates.getDateTextField().setEnabled(filled);
+						// Known value of the <date>.
+						textFieldsWithRadioButtonForDates.getDateDefinedRB().setEnabled(filled);
+						// @localtype="open" of the <date>.
+						textFieldsWithRadioButtonForDates.getDateStillRB().setEnabled(filled);
+						// @localtype="unknown" of the <date>.
+						textFieldsWithRadioButtonForDates.getDateUndefinedRB().setEnabled(filled);
+						// @standardDate of the <date>.
+						textFieldsWithRadioButtonForDates.getStandardDateTextField().setEnabled(filled);
+					}
+				}
+			}
+
+			// Button "Add single date".
+			placeEntryDateButton.get(this.index).setEnabled(filled);
+
+			// Button "Add date range".
+			placeEntryDateRangeButton.get(this.index).setEnabled(filled);
+		}
+	}
+
 	public class CheckIsoText implements FocusListener {
 		private TextFieldsWithRadioButtonForDates tfwcbfDates;
 		private String dateType;
@@ -2014,25 +2199,32 @@ public class EacCpfDescriptionPanel extends EacCpfPanel {
 
 		private void putEmptyAddressComponentIntoPlaces() {
 			if(addressDetailsTextFieldsWithComboBoxes!=null && placeEntryPlaceJComboBoxs!=null){
-				String lastAddressDetails = addressDetailsTextFieldsWithComboBoxes.get(index).get(addressDetailsTextFieldsWithComboBoxes.get(index).size()-1).getTextFieldValue();
-				
-//				String lastPlaceEntryPlaceJComboBoxs = placeEntryPlaceJComboBoxs.get(placeEntryPlaceJComboBoxs.size()-1).getSelectedItem().toString();
-				if(lastAddressDetails.isEmpty()/* && (lastPlaceEntryPlaceJComboBoxs.isEmpty() || lastPlaceEntryPlaceJComboBoxs.equals(TextFieldWithComboBoxEacCpf.DEFAULT_VALUE) ) */){
-					JOptionPane.showMessageDialog(this.tabbedPane, labels.getString("eaccpf.commons.error.empty.place"));
-				}else{
-					int counter = eaccpf.getCpfDescription().getDescription().getPlacesOrLocalDescriptionsOrLegalStatuses().size();
-					int i = 0;
-					Places lastPlaces = null;
-					boolean found = false;
-					for(;!found && i<counter;i++){
-						if(!(eaccpf.getCpfDescription().getDescription().getPlacesOrLocalDescriptionsOrLegalStatuses().get(i) instanceof Places)){
-							found = true;
-						}else{
-							lastPlaces = (Places) eaccpf.getCpfDescription().getDescription().getPlacesOrLocalDescriptionsOrLegalStatuses().get(i);
+				List<TextFieldWithComboBoxEacCpf> addressDetailsList = addressDetailsTextFieldsWithComboBoxes.get(index);
+				if (addressDetailsList != null && !addressDetailsList.isEmpty()) {
+					boolean emptyText = false;
+					boolean emptyCombo = false;
+
+					for (int i = 0; !emptyText && i < addressDetailsList.size(); i++) {
+						emptyCombo = false;
+						TextFieldWithComboBoxEacCpf textFieldWithComboBoxEacCpf = addressDetailsList.get(i);
+						String text = textFieldWithComboBoxEacCpf.getTextFieldValue();
+						String combo = textFieldWithComboBoxEacCpf.getComboBoxValue(TextFieldWithComboBoxEacCpf.TYPE_ADDRESS_COMPONENT, entityType);
+						if (StringUtils.isEmpty(trimStringValue(text))) {
+							JOptionPane.showMessageDialog(this.tabbedPane, labels.getString("eaccpf.commons.error.empty.place"));
+							emptyText = true;
+						}
+
+						if (StringUtils.isEmpty(trimStringValue(combo))
+										|| combo.equals(TextFieldWithComboBoxEacCpf.DEFAULT_VALUE)) {
+							emptyCombo = true;
 						}
 					}
-					if(found && lastPlaces!=null){
-						lastPlaces.getPlace().get(index).getAddress().getAddressLine().add(new AddressLine()); //put a new one
+
+					if ((!emptyText && !emptyCombo)
+							|| (emptyText && emptyCombo)
+							|| (!emptyText && emptyCombo)) {
+						Places currentPlaces = (Places) eaccpf.getCpfDescription().getDescription().getPlacesOrLocalDescriptionsOrLegalStatuses().get(0);
+						currentPlaces.getPlace().get(index).getAddress().getAddressLine().add(new AddressLine()); //put a new one
 					}
 				}
 			}
