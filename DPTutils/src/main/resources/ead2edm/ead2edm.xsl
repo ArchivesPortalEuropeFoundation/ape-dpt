@@ -43,7 +43,7 @@
     <xsl:param name="xml_type_name"/>
     <!-- Variables -->
     <xsl:variable name="id_base"
-                  select="concat($prefix_url, '/' , $repository_code, '/', $xml_type_name, '/')"/>
+                  select="concat($prefix_url, '/' , $repository_code, '/type/', $xml_type_name, '/id/')"/>
 
     <xsl:template match="/">
         <rdf:RDF
@@ -117,9 +117,9 @@
                     <xsl:value-of select="normalize-space(/ead/archdesc/did/origination)"/>
                 </dc:creator>
             </xsl:if>
-            <xsl:if test="/ead/archdesc/did/scopecontent">
+            <xsl:if test="/ead/archdesc/scopecontent">
                 <dc:description>
-                    <xsl:value-of select="/ead/archdesc/did/scopecontent"/>
+                    <xsl:value-of select="/ead/archdesc/scopecontent"/>
                 </dc:description>
             </xsl:if>
             <xsl:if test="/ead/archdesc/did/unitid">
@@ -131,14 +131,14 @@
                 <xsl:value-of select="$language"/>
             </dc:language>
             <dc:subject>
-                <xsl:value-of select="/ead/archdesc/@level"/>
+                <xsl:apply-templates select="/ead/archdesc/@level"/>
             </dc:subject>
-            <xsl:if test="/ead/eadheader/filedesc/titlestmt/titleproper">
-                <xsl:apply-templates select="/ead/eadheader/filedesc/titlestmt/titleproper"/>
+            <xsl:if test="/ead/archdesc/did/unittitle">
+                <xsl:apply-templates select="/ead/archdesc/did/unittitle"/>
             </xsl:if>
             <xsl:if test="/ead/archdesc/@level">
                 <dc:type>
-                    <xsl:value-of select="/ead/archdesc/@level"/>
+                    <xsl:apply-templates select="/ead/archdesc/@level"/>
                 </dc:type>
             </xsl:if>
             <xsl:if test="/ead/archdesc/dsc/c">
@@ -170,7 +170,7 @@
             </xsl:attribute>
             <xsl:if test="/ead/archdesc/@level">
                 <dc:description>
-                    <xsl:value-of select="/ead/archdesc/@level"/>
+                    <xsl:apply-templates select="/ead/archdesc/@level"/>
                 </dc:description>
             </xsl:if>
             <edm:rights>
@@ -339,7 +339,7 @@
                         </xsl:when>
                         <xsl:otherwise>
                             <xsl:attribute name="rdf:resource"
-                                           select="concat($id_base, did/unitid)"/>
+                                select="concat($id_base, normalize-space(/ead//eadid), '/unitid/', replace(normalize-space(did/unitid), ' ', '+'))"/>
                         </xsl:otherwise>
                     </xsl:choose>
                 </edm:isShownAt>
@@ -375,7 +375,7 @@
                     <xsl:value-of select="$language"/>
                 </dc:language>
                 <dc:subject>
-                    <xsl:value-of select="@level"/>
+                    <xsl:apply-templates select="@level"/>
                 </dc:subject>
                 <xsl:if test="did/unittitle">
                     <dc:title>
@@ -384,7 +384,7 @@
                 </xsl:if>
                 <xsl:if test="@level">
                     <dc:type>
-                        <xsl:value-of select="@level"/>
+                        <xsl:apply-templates select="@level"/>
                     </dc:type>
                 </xsl:if>
                 <xsl:if test="c">
@@ -429,13 +429,13 @@
                             <xsl:value-of select="@url"/>
                         </xsl:when>
                         <xsl:otherwise>
-                            <xsl:value-of select="concat($id_base, normalize-space(did/unitid))"/>
+                            <xsl:value-of select="concat($id_base, normalize-space(/ead//eadid), '/unitid/', replace(normalize-space(did/unitid), ' ', '+'))"/>
                         </xsl:otherwise>
                     </xsl:choose>
                 </xsl:attribute>
                 <xsl:if test="@level">
                     <dc:description>
-                        <xsl:value-of select="@level"/>
+                        <xsl:apply-templates select="@level"/>
                     </dc:description>
                 </xsl:if>
                 <edm:rights>
@@ -587,7 +587,7 @@
                     <xsl:apply-templates select="$didnode/unitid"/>
                 </dc:identifier>
                 <dc:type>
-                    <xsl:value-of select="$cnode/@level"/>
+                    <xsl:apply-templates select="$cnode/@level"/>
                 </dc:type>
                 <xsl:choose>
                     <xsl:when test="$cnode/controlaccess">
@@ -1097,10 +1097,13 @@
                 </xsl:if>
                 <xsl:if test="/ead//archdesc/custodhist">
                     <dcterms:provenance>
-                        <xsl:value-of select="/ead//archdesc/custodhist/child::*[1]"/>
+                        <xsl:if test="/ead//archdesc/custodhist/head[1]">
+                            <xsl:value-of select="concat(normalize-space(/ead//archdesc/custodhist/head[1]), ': ')"/>
+                        </xsl:if>
+                        <xsl:value-of select="normalize-space(/ead//archdesc/custodhist/p[1])"/>
                     </dcterms:provenance>
                 </xsl:if>
-                <xsl:if test="count(/ead//archdesc/custodhist/child::*) > 1">
+                <xsl:if test="(count(/ead//archdesc/custodhist/head) > 1) or (count(/ead//archdesc/custodhist/p) > 1)">
                     <dcterms:provenance>
                         <xsl:attribute name="rdf:resource">
                             <xsl:choose>
@@ -1108,7 +1111,7 @@
                                     <xsl:value-of select="/ead//eadid/@url"/>
                                 </xsl:when>
                                 <xsl:otherwise>
-                                    <xsl:value-of select="concat($id_base, /ead//eadid)"/>
+                                    <xsl:value-of select="concat($id_base, normalize-space(/ead//eadid))"/>
                                 </xsl:otherwise>
                             </xsl:choose>
                         </xsl:attribute>
@@ -1479,6 +1482,9 @@
         <xsl:if test="@type ='call number'">
             <xsl:value-of select="fn:replace(normalize-space(.), '[\n\t\r]', '')"/>
         </xsl:if>
+    </xsl:template>
+    <xsl:template match="@level">
+        <xsl:value-of select="concat(upper-case(substring(.,1,1)), substring(., 2))"/>
     </xsl:template>
 
     <xsl:template mode="all-but-address" match="address"/>
