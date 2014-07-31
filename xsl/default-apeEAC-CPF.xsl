@@ -1392,7 +1392,7 @@
 
     <!-- languagesUsed -->
     <xsl:template match="languagesUsed" mode="copy">
-        <xsl:if test="descendant::*[text()]">
+        <xsl:if test="descendant::*[text() | @*]">
             <languagesUsed>
                 <xsl:choose>
                     <xsl:when test="p|list|citation">
