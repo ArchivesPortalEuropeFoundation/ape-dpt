@@ -106,8 +106,7 @@
                 <xsl:value-of select="$europeana_provider"/>
             </edm:provider>
             <edm:rights>
-                <xsl:attribute name="rdf:resource"
-                               select="'http://creativecommons.org/publicdomain/zero/1.0/'"/>
+                <xsl:attribute name="rdf:resource" select="'http://creativecommons.org/publicdomain/zero/1.0/'"/>
             </edm:rights>
         </ore:Aggregation>
         <edm:ProvidedCHO>
@@ -524,38 +523,7 @@
                     <xsl:apply-templates select="did/dao[not(@xlink:title='thumbnail')][position() > 1]" mode="additionalLinks"/>
                 </xsl:if>
                 <xsl:apply-templates select="did/dao[not(@xlink:title='thumbnail')][1]" mode="firstLink"/>
-                <edm:isShownBy>
-                    <xsl:attribute name="rdf:resource"> 
-                    <xsl:choose>
-                        <xsl:when test="did/dao[@xlink:title='thumbnail'][1]">
-                            <xsl:apply-templates select="did/dao[@xlink:title='thumbnail'][1]" mode="thumbnail"/>
-                        </xsl:when>
-                        <xsl:otherwise>
-                            <xsl:choose>
-                                <xsl:when test="fn:string-length($europeana_type) > 0">
-                                    <xsl:call-template name="generateThumbnailLink">
-                                        <xsl:with-param name="role" select="$europeana_type"/>
-                                    </xsl:call-template>
-                                </xsl:when>
-                                <xsl:otherwise>
-                                    <xsl:if test="./@xlink:role">
-                                        <xsl:call-template name="generateThumbnailLink">
-                                            <xsl:with-param name="role" select="./@xlink:role"/>
-                                        </xsl:call-template>
-                                    </xsl:if>
-                                </xsl:otherwise>
-                            </xsl:choose>
-                        </xsl:otherwise>
-                    </xsl:choose>
-                    </xsl:attribute>
-                </edm:isShownBy>
-                <xsl:if test="did/dao[@xlink:title='thumbnail'][1]">
-                    <edm:object>
-                        <xsl:attribute name="rdf:resource">
-                            <xsl:apply-templates select="did/dao[@xlink:title='thumbnail'][1]" mode="thumbnail"/>
-                        </xsl:attribute>
-                    </edm:object>
-                </xsl:if>
+                <xsl:apply-templates select="did/dao[@xlink:title='thumbnail'][1]" mode="thumbnail"/>
                 <edm:provider>
                     <xsl:value-of select="$europeana_provider"/>
                 </edm:provider>
@@ -1377,17 +1345,48 @@
                     <xsl:value-of select="@xlink:title"/>
                 </dc:description>
             </xsl:if>
+            <edm:rights>
+                <xsl:attribute name="rdf:resource" select="$europeana_rights"/>
+            </edm:rights>
         </edm:WebResource>
     </xsl:template>
     <xsl:template match="did/dao[@xlink:title='thumbnail']" mode="thumbnail">
-        <xsl:choose>
-            <xsl:when test="@href">
-                <xsl:value-of select="@href"/>
-            </xsl:when>
-            <xsl:when test="@xlink:href">
-                <xsl:value-of select="@xlink:href"/>
-            </xsl:when>
-        </xsl:choose>
+        <xsl:variable name="link">
+            <xsl:choose>
+                <xsl:when test="@xlink:title='thumbnail'">
+                    <xsl:choose>
+                        <xsl:when test="@href">
+                            <xsl:value-of select="@href"/>
+                        </xsl:when>
+                        <xsl:when test="@xlink:href">
+                            <xsl:value-of select="@xlink:href"/>
+                        </xsl:when>
+                    </xsl:choose>
+                </xsl:when>
+                <xsl:otherwise>
+                    <xsl:choose>
+                        <xsl:when test="fn:string-length($europeana_type) > 0">
+                            <xsl:call-template name="generateThumbnailLink">
+                                <xsl:with-param name="role" select="$europeana_type"/>
+                            </xsl:call-template>
+                        </xsl:when>
+                        <xsl:otherwise>
+                            <xsl:if test="./@xlink:role">
+                                <xsl:call-template name="generateThumbnailLink">
+                                    <xsl:with-param name="role" select="./@xlink:role"/>
+                                </xsl:call-template>
+                            </xsl:if>
+                        </xsl:otherwise>
+                    </xsl:choose>
+                </xsl:otherwise>
+            </xsl:choose>
+        </xsl:variable>
+        <edm:isShownBy>
+            <xsl:attribute name="rdf:resource" select="$link"/>
+        </edm:isShownBy>
+        <edm:object>
+            <xsl:attribute name="rdf:resource" select="$link"/>
+        </edm:object>
     </xsl:template>
     <xsl:template match="head">
         <xsl:value-of select="node()"/>
