@@ -1088,6 +1088,7 @@
                 <xsl:choose>
                     <xsl:when test="p|list|citation">
                         <localDescription>
+                            <xsl:attribute name="localType" select="@localType"/>
                             <descriptiveNote>
                                 <xsl:for-each select="p|list/item|citation">
                                     <p>
@@ -1495,11 +1496,27 @@
                 <xsl:if test="@localType">
                     <xsl:attribute name="localType" select="@localType"/>
                 </xsl:if>
-                <xsl:apply-templates select="abstract | chronList | citation" mode="copy"/>
+                <xsl:apply-templates select="abstract" mode="copy"/>
+                <xsl:apply-templates select="chronList" mode="copy"/>
+                <!-- <xsl:if test="list and not(p) and chronList"> ==> see chronList-template below -->
+                <xsl:apply-templates select="citation" mode="copy"/>
+                <xsl:if test="list and not(p) and not(chronList)">
+                    <xsl:for-each select="list/item">
+                        <citation>
+                            <xsl:if test="@xml:lang">
+                                <xsl:attribute name="xml:lang" select="@xml:lang"/>
+                            </xsl:if>
+                            <xsl:value-of select="normalize-space(.)"/>
+                        </citation>
+                    </xsl:for-each>
+                </xsl:if>
                 <xsl:apply-templates select="p" mode="copy"/>
-                <xsl:if test="list">
+                <xsl:if test="list and p">
                     <xsl:for-each select="list/item">
                         <p>
+                            <xsl:if test="@xml:lang">
+                                <xsl:attribute name="xml:lang" select="@xml:lang"/>
+                            </xsl:if>
                             <xsl:value-of select="normalize-space(.)"/>
                         </p>
                     </xsl:for-each>
@@ -1526,6 +1543,19 @@
                     <xsl:apply-templates select="node()" mode="copy"/>
                 </chronItem>
             </xsl:for-each>
+            <xsl:if test="parent::node()/list and not(parent::node()/p)">
+                <xsl:for-each select="parent::node()/list/item">
+                    <chronItem>
+                        <date/>
+                        <event>
+                            <xsl:if test="@xml:lang">
+                                <xsl:attribute name="xml:lang" select="@xml:lang"/>
+                            </xsl:if>
+                            <xsl:value-of select="normalize-space(.)"/>
+                        </event>
+                    </chronItem>
+                </xsl:for-each>
+            </xsl:if>
         </chronList>
     </xsl:template>
 
