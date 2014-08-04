@@ -9,9 +9,9 @@ package eu.apenet.dpt.standalone.gui.eaccpf;
  * Licensed under the EUPL, Version 1.1 or - as soon they will be approved by the European Commission - subsequent versions of the EUPL (the "Licence");
  * You may not use this work except in compliance with the Licence.
  * You may obtain a copy of the Licence at:
- * 
+ *
  * http://ec.europa.eu/idabc/eupl5
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software distributed under the Licence is distributed on an "AS IS" basis,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the Licence for the specific language governing permissions and limitations under the Licence.
@@ -146,19 +146,19 @@ public class EacCpfRelationsPanel extends EacCpfPanel {
 
 		// Call method to build the text of the entity type.
 		builder = this.buildEntityTypeText(builder, cc);
-		
+
 		// init globals
 		initCPFGlobals();
-		
+
 		// Set section title.
 		this.setNextRow();
 		builder.addLabel(this.labels.getString("eaccpf.relations.cpf.section"), cc.xyw(1, this.rowNb, 7));
-		
+
 		//Call method to build sets relations section.
 		builder = buildSetRelationsSection(builder, cc);
 		// Call method to build cpf relations section.
 		builder = this.buildCPFRelationsSection(builder, cc);
-		
+
 		// Button to add new CPF/identity relation.
 		this.setNextRow();
 		JButton addFurtherCPFBtn = new ButtonTab(this.labels.getString("eaccpf.relations.add.further.cpf"));
@@ -182,12 +182,12 @@ public class EacCpfRelationsPanel extends EacCpfPanel {
 	}
 
 	private PanelBuilder buildSetRelationsSection(PanelBuilder builder,CellConstraints cc) {
-		
+
 		// Define values of the part.
 		if(this.eaccpf.getCpfDescription().getAlternativeSet()==null){
 			this.eaccpf.getCpfDescription().setAlternativeSet(new AlternativeSet());
 		}
-		
+
 		if (this.eaccpf.getCpfDescription().getAlternativeSet().getSetComponent().isEmpty()) {
 //			this.eaccpf.getCpfDescription().getAlternativeSet().getSetComponent().add(new SetComponent());
 		}
@@ -251,7 +251,7 @@ public class EacCpfRelationsPanel extends EacCpfPanel {
 						}
 						other = other + componentEntry.getContent();
 					}
-							
+
 
 					// Language of the relation.
 					// /eacCpf/cpfDescription/relations/setComponent/componentEntry@lang
@@ -267,7 +267,7 @@ public class EacCpfRelationsPanel extends EacCpfPanel {
 							 && setComponent.getDescriptiveNote().getP().isEmpty()))) {
 				language = firstLanguage;
 			}
-			
+
 			// Identifier of the relation.
 			setComponentIdentifierTf = new JTextField(id);
 
@@ -283,13 +283,13 @@ public class EacCpfRelationsPanel extends EacCpfPanel {
 				}
 			}
 			setComponentDescriptionTa = new TextAreaWithLanguage(descriptiveNote, "");
-			
+
 			// Name and language of the relation.
 			if (title.isEmpty()) {
 				title = other;
 			}
 			setComponentNameTf = new TextFieldWithLanguage(title, language);
-			
+
 			// Agency code and name of the relation.
 			int size = 0;
 			if (agencyNameList.size() > agencyCodeList.size()) {
@@ -325,19 +325,19 @@ public class EacCpfRelationsPanel extends EacCpfPanel {
 			this.cpfRelationIdentifierTfs.add(setComponentIdentifierTf);
 			this.cpfRelationHrefAndTypeTfs.add(setComponentHrefAndTypeTf);
 			this.cpfRelationDescriptionTas.add(setComponentDescriptionTa);
-			
+
 			cpfRelationOrganisationNameAndIdTfs.add(setComponentOrganisationNameAndIdTfList);
-			
+
 			// Add elements to the panel.
 			// Name and language.
-			builder.addLabel(this.labels.getString("eaccpf.relations.name"), cc.xy(1, this.rowNb));
+			builder.addLabel(this.labels.getString("eaccpf.relations.cpf.relation.name"), cc.xy(1, this.rowNb));
 			builder.add(setComponentNameTf.getTextField(), cc.xy(3, this.rowNb));
 			builder.addLabel(this.labels.getString("eaccpf.commons.select.language"), cc.xy(5, this.rowNb));
 			builder.add(setComponentNameTf.getLanguageBox(), cc.xy(7, this.rowNb));
 
 			// Identity.
 			this.setNextRow();
-			builder.addLabel(this.labels.getString("eaccpf.relations.cpf.identifier"), cc.xy(1, this.rowNb));
+			builder.addLabel(this.labels.getString("eaccpf.relations.cpf.relation.identifier"), cc.xy(1, this.rowNb));
 			builder.add(setComponentIdentifierTf, cc.xy(3, this.rowNb));
 
 			// Link and relation type.
@@ -355,7 +355,7 @@ public class EacCpfRelationsPanel extends EacCpfPanel {
 			// Agency part.
 			// Title.
 			this.setNextRow();
-			builder.addLabel(this.labels.getString("eaccpf.relations.organisation"), cc.xyw(1, this.rowNb, 7));
+			builder.addLabel(this.labels.getString("eaccpf.relations.cpf.relation.organisation"), cc.xyw(1, this.rowNb, 7));
 
 			for (int j = 0; j < setComponentOrganisationNameAndIdTfList.size(); j++) {
 				// Name and identifier.
@@ -426,7 +426,7 @@ public class EacCpfRelationsPanel extends EacCpfPanel {
 	 * @return the PanelBuilder
 	 */
 	private PanelBuilder buildCPFRelationsSection(PanelBuilder builder, CellConstraints cc) {
-		
+
 		// Call method to build cpf relations part.
 		builder = this.buildCPFRelation(builder, cc);
 
@@ -517,7 +517,7 @@ public class EacCpfRelationsPanel extends EacCpfPanel {
 						}
 						other = other + relationEntry.getContent();
 					}
-					
+
 
 					// Language of the relation.
 					// /eacCpf/cpfDescription/relations/cpfRelation/relationEntry@lang
@@ -616,14 +616,14 @@ public class EacCpfRelationsPanel extends EacCpfPanel {
 
 			// Add elements to the panel.
 			// Name and language.
-			builder.addLabel(this.labels.getString("eaccpf.relations.name"), cc.xy(1, this.rowNb));
+			builder.addLabel(this.labels.getString("eaccpf.relations.cpf.relation.name"), cc.xy(1, this.rowNb));
 			builder.add(cpfRelationNameTf.getTextField(), cc.xy(3, this.rowNb));
 			builder.addLabel(this.labels.getString("eaccpf.commons.select.language"), cc.xy(5, this.rowNb));
 			builder.add(cpfRelationNameTf.getLanguageBox(), cc.xy(7, this.rowNb));
 
 			// Identity.
 			this.setNextRow();
-			builder.addLabel(this.labels.getString("eaccpf.relations.cpf.identifier"), cc.xy(1, this.rowNb));
+			builder.addLabel(this.labels.getString("eaccpf.relations.cpf.relation.identifier"), cc.xy(1, this.rowNb));
 			builder.add(cpfRelationIdentifierTf, cc.xy(3, this.rowNb));
 
 			// Link and relation type.
@@ -641,7 +641,7 @@ public class EacCpfRelationsPanel extends EacCpfPanel {
 			// Agency part.
 			// Title.
 			this.setNextRow();
-			builder.addLabel(this.labels.getString("eaccpf.relations.organisation"), cc.xyw(1, this.rowNb, 7));
+			builder.addLabel(this.labels.getString("eaccpf.relations.cpf.relation.organisation"), cc.xyw(1, this.rowNb, 7));
 
 			for (int j = 0; j < size; j++) {
 				// Name and identifier.
@@ -747,7 +747,7 @@ public class EacCpfRelationsPanel extends EacCpfPanel {
 						}
 						other = other + relationEntry.getContent();
 					}
-					
+
 
 					// Language of the relation.
 					// /eacCpf/cpfDescription/relations/resourceRelation/relationEntry@lang
@@ -763,7 +763,7 @@ public class EacCpfRelationsPanel extends EacCpfPanel {
 							 && resourceRelation.getDescriptiveNote().getP().isEmpty()))) {
 				language = firstLanguage;
 			}
-			
+
 			// Identifier of the relation.
 			resourceRelationIdentifierTf = new JTextField(id);
 
@@ -793,11 +793,11 @@ public class EacCpfRelationsPanel extends EacCpfPanel {
 				descriptiveNote = resourceRelation.getDescriptiveNote().getP().get(0).getContent();
 				if (StringUtils.isEmpty(language)) {
 					language = resourceRelation.getDescriptiveNote().getP().get(0).getLang();
-				}	
-				
+				}
+
 			}
 			resourceRelationDescriptionTa = new TextAreaWithLanguage(descriptiveNote, "");
-			
+
 			// Name and language of the relation.
 			if (title.isEmpty()) {
 				title = other;
@@ -842,14 +842,14 @@ public class EacCpfRelationsPanel extends EacCpfPanel {
 
 			// Add elements to the panel.
 			// Name and language.
-			builder.addLabel(this.labels.getString("eaccpf.relations.name"), cc.xy(1, this.rowNb));
+			builder.addLabel(this.labels.getString("eaccpf.relations.resource.relation.name"), cc.xy(1, this.rowNb));
 			builder.add(resourceRelationNameTf.getTextField(), cc.xy(3, this.rowNb));
 			builder.addLabel(this.labels.getString("eaccpf.commons.select.language"), cc.xy(5, this.rowNb));
 			builder.add(resourceRelationNameTf.getLanguageBox(), cc.xy(7, this.rowNb));
 
 			// Identity.
 			this.setNextRow();
-			builder.addLabel(this.labels.getString("eaccpf.relations.cpf.identifier"), cc.xy(1, this.rowNb));
+			builder.addLabel(this.labels.getString("eaccpf.relations.resource.relation.identifier"), cc.xy(1, this.rowNb));
 			builder.add(resourceRelationIdentifierTf, cc.xy(3, this.rowNb));
 
 			// Link and relation type.
@@ -867,7 +867,7 @@ public class EacCpfRelationsPanel extends EacCpfPanel {
 			// Agency part.
 			// Title.
 			this.setNextRow();
-			builder.addLabel(this.labels.getString("eaccpf.relations.organisation"), cc.xyw(1, this.rowNb, 7));
+			builder.addLabel(this.labels.getString("eaccpf.relations.resource.relation.organisation"), cc.xyw(1, this.rowNb, 7));
 
 			for (int j = 0; j < size; j++) {
 				// Name and identifier.
@@ -979,7 +979,7 @@ public class EacCpfRelationsPanel extends EacCpfPanel {
 						}
 						other = other + relationEntry.getContent();
 					}
-					
+
 
 					// Language of the relation.
 					// /eacCpf/cpfDescription/relations/functionRelation/relationEntry@lang
@@ -995,7 +995,7 @@ public class EacCpfRelationsPanel extends EacCpfPanel {
 							 && functionRelation.getDescriptiveNote().getP().isEmpty()))) {
 				language = firstLanguage;
 			}
-			
+
 			// Identifier of the relation.
 			resourceRelationIdentifierTf = new JTextField(id);
 
@@ -1029,13 +1029,13 @@ public class EacCpfRelationsPanel extends EacCpfPanel {
 				}
 			}
 			resourceRelationDescriptionTa = new TextAreaWithLanguage(descriptiveNote, "");
-			
+
 			// Name and language of the relation.
 			if (title.isEmpty()) {
 				title = other;
 			}
 			resourceRelationNameTf = new TextFieldWithLanguage(title, language);
-			
+
 			// Agency code and name of the relation.
 			int size = 0;
 			if (agencyNameList.size() > agencyCodeList.size()) {
@@ -1075,14 +1075,14 @@ public class EacCpfRelationsPanel extends EacCpfPanel {
 
 			// Add elements to the panel.
 			// Name and language.
-			builder.addLabel(this.labels.getString("eaccpf.relations.name"), cc.xy(1, this.rowNb));
+			builder.addLabel(this.labels.getString("eaccpf.relations.function.relation.name"), cc.xy(1, this.rowNb));
 			builder.add(resourceRelationNameTf.getTextField(), cc.xy(3, this.rowNb));
 			builder.addLabel(this.labels.getString("eaccpf.commons.select.language"), cc.xy(5, this.rowNb));
 			builder.add(resourceRelationNameTf.getLanguageBox(), cc.xy(7, this.rowNb));
 
 			// Identity.
 			this.setNextRow();
-			builder.addLabel(this.labels.getString("eaccpf.relations.cpf.identifier"), cc.xy(1, this.rowNb));
+			builder.addLabel(this.labels.getString("eaccpf.relations.function.relation.identifier"), cc.xy(1, this.rowNb));
 			builder.add(resourceRelationIdentifierTf, cc.xy(3, this.rowNb));
 
 			// Link and relation type.
@@ -1100,7 +1100,7 @@ public class EacCpfRelationsPanel extends EacCpfPanel {
 			// Agency part.
 			// Title.
 			this.setNextRow();
-			builder.addLabel(this.labels.getString("eaccpf.relations.organisation"), cc.xyw(1, this.rowNb, 7));
+			builder.addLabel(this.labels.getString("eaccpf.relations.function.relation.organisation"), cc.xyw(1, this.rowNb, 7));
 
 			for (int j = 0; j < size; j++) {
 				// Name and identifier.
@@ -1190,7 +1190,7 @@ public class EacCpfRelationsPanel extends EacCpfPanel {
 //		public static final String CPF = "cpf-kind";
 //		public static final String RESOURCE = "resource-kind";
 //		public static final String FUNCTION = "function-kind";
-//		
+//
 //		private int currentRelation; //figure relation
 //		private String relationKind; //kind of relation, {cpf,resource,function}
 //
@@ -1219,7 +1219,7 @@ public class EacCpfRelationsPanel extends EacCpfPanel {
 //
 //			boolean emptyName = false;
 //			boolean emptyCode = false;
-//			
+//
 //			//decide which case is for each kind of relation
 //			if(this.relationKind.equalsIgnoreCase(CPF)){
 //				List<TextFieldWithLanguage> cpfRelationOrganisationNameAndIdTf = cpfRelationOrganisationNameAndIdTfs.get(this.currentRelation);
@@ -1330,7 +1330,7 @@ public class EacCpfRelationsPanel extends EacCpfPanel {
 //			reloadTabbedPanel(new EacCpfRelationsPanel(eaccpf, tabbedPane, mainTabbedPane, eacCpfFrame, model, labels, entityType, firstLanguage, firstScript).buildEditorPanel(errors), 2);
 //		}
 //	}
-	
+
 	/**
 	 * Class to performs the addition of new resource relation in the relations tab
 	 * section if the previous values are filled.
@@ -1374,15 +1374,15 @@ public class EacCpfRelationsPanel extends EacCpfPanel {
 			if (eaccpf.getCpfDescription().getRelations() == null) {
 				eaccpf.getCpfDescription().setRelations(new Relations());
 			}
-			if(!empty 
+			if(!empty
 					|| (empty && resourceRelationHrefAndTypeTfs.size() > eaccpf.getCpfDescription().getRelations().getResourceRelation().size())){
 				eaccpf.getCpfDescription().getRelations().getResourceRelation().add(new ResourceRelation());
 			}
 			reloadTabbedPanel(new EacCpfRelationsPanel(eaccpf, tabbedPane, mainTabbedPane, eacCpfFrame, model, labels, entityType, firstLanguage, firstScript).buildEditorPanel(errors), 2);
 		}
-		
+
 	}
-	
+
 	/**
 	 * Class to performs the addition of new function relation in the relations tab
 	 * section if the previous values are filled.
@@ -1433,7 +1433,7 @@ public class EacCpfRelationsPanel extends EacCpfPanel {
 
 			reloadTabbedPanel(new EacCpfRelationsPanel(eaccpf, tabbedPane, mainTabbedPane, eacCpfFrame, model, labels, entityType, firstLanguage, firstScript).buildEditorPanel(errors), 2);
 		}
-		
+
 	}
 
 	/**
@@ -1441,7 +1441,7 @@ public class EacCpfRelationsPanel extends EacCpfPanel {
 	 * section if the previous values are filled.
 	 */
 	public class AddFurtherCPF extends UpdateEacCpfObject {
-		
+
 		public AddFurtherCPF(EacCpf eaccpf, JTabbedPane tabbedPane, ProfileListModel model) {
 			super(eaccpf, tabbedPane, model);
 			this.saveCPF = false;
@@ -1491,7 +1491,7 @@ public class EacCpfRelationsPanel extends EacCpfPanel {
 			reloadTabbedPanel(new EacCpfRelationsPanel(eaccpf, tabbedPane, mainTabbedPane, eacCpfFrame, model, labels, entityType, firstLanguage, firstScript).buildEditorPanel(errors), 2);
 		}
 	}
-	
+
 	protected boolean checkStartTabFields() {
 		boolean state = true;
 		if(firstLanguage==null || firstLanguage.isEmpty() || firstLanguage.equals("---")){
@@ -1559,11 +1559,11 @@ public class EacCpfRelationsPanel extends EacCpfPanel {
 	 * Class for update the JABX EAC-CPF object.
 	 */
 	public abstract class UpdateEacCpfObject extends DefaultBtnAction {
-		
+
 		protected boolean saveCPF = true;
 		protected boolean saveResources = true;
 		protected boolean saveFunctions = true;
-		
+
 		UpdateEacCpfObject(EacCpf eacCpf, JTabbedPane tabbedPane, ProfileListModel model) {
 			super(eacCpf, tabbedPane, model);
 		}
@@ -1710,7 +1710,7 @@ public class EacCpfRelationsPanel extends EacCpfPanel {
 					}
 				}
 				if (hasChanged || (!saveFunctions && i+1 == functionRelationNameTfs.size()) && !(functionRelation.getRelationEntry().isEmpty())) {
-					
+
 					relations.getFunctionRelation().add(functionRelation);
 				}
 			}
@@ -1849,7 +1849,7 @@ public class EacCpfRelationsPanel extends EacCpfPanel {
 		 * Method to update the CPF relations of the apeEAC-CPF file.
 		 *
 		 * @param relations
-		 * @param save 
+		 * @param save
 		 * @return boolean value.
 		 */
 		private boolean updateCPFRelations(Relations relations, boolean save) {
@@ -1877,7 +1877,7 @@ public class EacCpfRelationsPanel extends EacCpfPanel {
 
 			for (int i = 0; i < cpfRelationOrganisationNameAndIdTfs.size(); i++) {
 				//control flag, decide if it's an old part for alternativeSet
-				boolean continueWithEacCpfPart = false; 
+				boolean continueWithEacCpfPart = false;
 				TextFieldWithComboBoxEacCpf cpfRelationHrefAndTypeTf = cpfRelationHrefAndTypeTfs.get(i);
 				String type = trimStringValue(cpfRelationHrefAndTypeTf.getComboBoxValue(TextFieldWithComboBoxEacCpf.TYPE_CPF_RELATION, entityType));
 				if (StringUtils.isNotEmpty(type) && !type.equalsIgnoreCase(TextFieldWithComboBoxEacCpf.SELECTED_ALTERNATIVE_SET_VALUE)) {
@@ -1899,21 +1899,21 @@ public class EacCpfRelationsPanel extends EacCpfPanel {
 					this.eaccpf.getCpfDescription().getAlternativeSet().getSetComponent().isEmpty())) {
 				this.eaccpf.getCpfDescription().setAlternativeSet(null);
 			}
-			
+
 			return hasChanged;
 		}
-		
+
 		/**
 		 * Builds an <setComponent> into <alternativeSet>
 		 * Based on new encoding in apeEAC-CPF (08.04.2015).
 		 * See new_encoding_same_entity-20140508.doc for more details into #836
-		 * @param save 
+		 * @param save
 		 */
 		private boolean buildAlternativeSet(int currentIndex, boolean save) {
-			
+
 			boolean hasChanged = false;
 			SetComponent setComponent = new SetComponent();
-			
+
 			// Try to recover the language of the relation (@lang).
 			TextFieldWithLanguage relationNameTf = cpfRelationNameTfs.get(currentIndex);
 			String language = null;
@@ -1932,7 +1932,7 @@ public class EacCpfRelationsPanel extends EacCpfPanel {
 				setComponent.setType(SIMPLE);
 				hasChanged = true;
 			}
-			// textarea with combobox 
+			// textarea with combobox
 			// /eacCpf/cpfDescription/alternativeSet/setComponent/descriptiveNote/p
 			// /eacCpf/cpfDescription/alternativeSet/setComponent/descriptiveNote/p@lang
 			TextAreaWithLanguage cpfRelationDescriptionTa = cpfRelationDescriptionTas.get(currentIndex);
@@ -1948,7 +1948,7 @@ public class EacCpfRelationsPanel extends EacCpfPanel {
 				setComponent.setDescriptiveNote(descriptiveNote);
 				hasChanged = true;
 			}
-			
+
 			// Try to recover the name of the relation.
 			// /eacCpf/cpfDescription/relations/cpfRelation/relationEntry@localType='title'
 			String name = trimStringValue(relationNameTf.getTextValue());
@@ -1962,7 +1962,7 @@ public class EacCpfRelationsPanel extends EacCpfPanel {
 				setComponent.getComponentEntry().add(componentEntry);
 				hasChanged = true;
 			}
-			
+
 			// Try to recover the identifier of the relation.
 			// /eacCpf/cpfDescription/alternativeSet/setComponent/componentEntry@localType='id'
 			String id = trimStringValue(cpfRelationIdentifierTfs.get(currentIndex).getText());
@@ -1976,11 +1976,11 @@ public class EacCpfRelationsPanel extends EacCpfPanel {
 				setComponent.getComponentEntry().add(componentEntry);
 				hasChanged = true;
 			}
-			
+
 			// Try to recover the agency name and agency code of the relation.
-			
+
 			List<TextFieldWithLanguage> cpfRelationOrganisationNameAndIdTfsList = null;
-			
+
 			cpfRelationOrganisationNameAndIdTfsList = cpfRelationOrganisationNameAndIdTfs.get(currentIndex);
 
 			if(cpfRelationOrganisationNameAndIdTfsList!=null){
@@ -2027,7 +2027,7 @@ public class EacCpfRelationsPanel extends EacCpfPanel {
 			}
 
 			String type = cpfRelationHrefAndTypeTf.getComboBoxValue(TextFieldWithComboBoxEacCpf.TYPE_CPF_RELATION, entityType);
-			if(hasChanged 
+			if(hasChanged
 					|| (!saveCPF && currentIndex+1 == cpfRelationOrganisationNameAndIdTfs.size())
 					&& !(setComponent.getComponentEntry().isEmpty())
 					|| (!hasChanged && !save && StringUtils.isNotEmpty(trimStringValue(type)))) {
@@ -2042,9 +2042,9 @@ public class EacCpfRelationsPanel extends EacCpfPanel {
 		 * See new_encoding_same_entity-20140508.doc for more details into #836
 		 */
 		private Relations buildCPFRelationPart(Relations relations, int currentIndex,boolean save) {
-			
+
 			boolean hasChanged = false;
-			
+
 			CpfRelation cpfRelation = new CpfRelation();
 
 			// Try to recover the language of the relation (@lang).
@@ -2163,7 +2163,7 @@ public class EacCpfRelationsPanel extends EacCpfPanel {
 			if (hasChanged || (!saveCPF && currentIndex+1 == cpfRelationOrganisationNameAndIdTfs.size()) && !(cpfRelation.getRelationEntry().isEmpty())) {
 				relations.getCpfRelation().add(cpfRelation);
 			}
-			
+
 			return relations;
 		}
 	}
@@ -2202,7 +2202,7 @@ public class EacCpfRelationsPanel extends EacCpfPanel {
 				this.eaccpf.getCpfDescription().setRelations(null);
 			}
 		}
-		
+
 		if(relations!=null && relations.getCpfRelation().isEmpty()){
 			Relations relationsNew = new Relations();
 			if (relations.getFunctionRelation()!=null && !relations.getFunctionRelation().isEmpty()) {
@@ -2257,7 +2257,7 @@ public class EacCpfRelationsPanel extends EacCpfPanel {
 			// Empty.
 		}
 	}
-	
+
 	/**
 	 * Class to performs the action when the user clicks in the exit button
 	 */
@@ -2268,11 +2268,11 @@ public class EacCpfRelationsPanel extends EacCpfPanel {
 		 * @param eaccpf
 		 * @param tabbedPane
 		 * @param model
-		 */   
+		 */
 		public ExitBtnAction(EacCpf eaccpf, JTabbedPane tabbedPane, ProfileListModel model) {
 			super(eaccpf, tabbedPane, model);
 		}
-		
+
 		@Override
 		public void actionPerformed(ActionEvent actionEvent) {
         	int event = JOptionPane.showConfirmDialog(tabbedPane,labels.getString("eaccpf.commons.exitConfirm"),labels.getString("eaccpf.eacCpfItem"),JOptionPane.YES_NO_OPTION);
@@ -2283,7 +2283,7 @@ public class EacCpfRelationsPanel extends EacCpfPanel {
 	        			super.saveFile(eaccpf.getControl().getRecordId().getValue());
 	        			closeFrame();
 	        		}
-	        	}else if (event == JOptionPane.NO_OPTION){	
+	        	}else if (event == JOptionPane.NO_OPTION){
 	        		EacCpfFrame.inUse(false);
 	                closeFrame();
 	        	}
