@@ -48,7 +48,7 @@ Change log:
     <xs:complexType name="cpfDescription">
         <xs:sequence>
             <xs:element name="identity" type="identity"/>
-            <xs:element minOccurs="0" name="description" type="description"/>
+            <xs:element name="description" type="description"/>
             <xs:element minOccurs="0" name="relations" type="relations"/>
             <xs:element minOccurs="0" name="alternativeSet" type="alternativeSet"/>
         </xs:sequence>
