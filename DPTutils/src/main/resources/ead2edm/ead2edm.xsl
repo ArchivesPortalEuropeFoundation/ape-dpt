@@ -113,7 +113,7 @@
             <xsl:attribute name="rdf:about" select="concat('providedCHO_', .)"/>
             <xsl:if test="/ead/archdesc/did/origination">
                 <dc:creator>
-                    <xsl:value-of select="normalize-space(/ead/archdesc/did/origination)"/>
+                    <xsl:value-of select="normalize-space(/ead/archdesc/did/origination[1])"/>
                 </dc:creator>
             </xsl:if>
             <xsl:if test="/ead/archdesc/scopecontent">
@@ -301,9 +301,9 @@
         <!-- CREATE LEVEL INFORMATION IF C IS FONDS OR (SUB)SERIES -->
         <xsl:if test="@level = ('fonds', 'series', 'subseries')">
             <ore:Aggregation>
-                <xsl:attribute name="rdf:about" select="concat('aggregation_', did/unitid)"/>
+                <xsl:attribute name="rdf:about" select="concat('aggregation_', did/unitid[@type='call number'])"/>
                 <edm:aggregatedCHO>
-                    <xsl:attribute name="rdf:resource" select="concat('providedCHO_', did/unitid)"/>
+                    <xsl:attribute name="rdf:resource" select="concat('providedCHO_', did/unitid[@type='call number'])"/>
                 </edm:aggregatedCHO>
                 <xsl:choose>
                     <xsl:when test="$useExistingRepository='true'">
@@ -338,7 +338,7 @@
                         </xsl:when>
                         <xsl:otherwise>
                             <xsl:attribute name="rdf:resource"
-                                select="concat($id_base, normalize-space(/ead//eadid), '/unitid/', replace(normalize-space(did/unitid), ' ', '+'))"/>
+                                select="concat($id_base, normalize-space(/ead//eadid), '/unitid/', replace(normalize-space(did/unitid[@type='call number']), ' ', '+'))"/>
                         </xsl:otherwise>
                     </xsl:choose>
                 </edm:isShownAt>
@@ -354,7 +354,7 @@
                 </edm:rights>
             </ore:Aggregation>
             <edm:ProvidedCHO>
-                <xsl:attribute name="rdf:about" select="concat('providedCHO_', did/unitid)"/>
+                <xsl:attribute name="rdf:about" select="concat('providedCHO_', did/unitid[@type='call number'])"/>
                 <xsl:if test="did/origination">
                     <dc:creator>
                         <xsl:value-of select="normalize-space(did/origination)"/>
@@ -365,9 +365,9 @@
                         <xsl:value-of select="did/scopecontent"/>
                     </dc:description>
                 </xsl:if>
-                <xsl:if test="did/unitid">
+                <xsl:if test="did/unitid[@type='call number']">
                     <dc:identifier>
-                        <xsl:value-of select="did/unitid"/>
+                        <xsl:value-of select="did/unitid[@type='call number']"/>
                     </dc:identifier>
                 </xsl:if>
                 <dc:language>
@@ -395,10 +395,10 @@
                         </dcterms:hasPart>
                     </xsl:for-each>
                 </xsl:if>
-                <xsl:if test="parent::node()/parent::node()/did/unitid">
+                <xsl:if test="parent::node()/parent::node()/did/unitid[@type='call number']">
                     <dcterms:isPartOf>
                         <xsl:attribute name="rdf:resource">
-                            <xsl:value-of select="normalize-space(parent::node()/parent::node()/did/unitid)"/>
+                            <xsl:value-of select="normalize-space(parent::node()/parent::node()/did/unitid[@type='call number'])"/>
                         </xsl:attribute> 
                     </dcterms:isPartOf>
                 </xsl:if>
@@ -414,7 +414,7 @@
                 </xsl:if>
                 <xsl:if test="preceding-sibling::c">
                     <edm:isNextInSequence>
-                        <xsl:attribute name="rdf:resource" select="normalize-space(preceding-sibling::c[position()=1]/did/unitid)"/>
+                        <xsl:attribute name="rdf:resource" select="normalize-space(preceding-sibling::c[position()=1]/did/unitid[@type='call number'])"/>
                     </edm:isNextInSequence>
                 </xsl:if>
                 <edm:type>
@@ -428,7 +428,7 @@
                             <xsl:value-of select="@url"/>
                         </xsl:when>
                         <xsl:otherwise>
-                            <xsl:value-of select="concat($id_base, normalize-space(/ead//eadid), '/unitid/', replace(normalize-space(did/unitid), ' ', '+'))"/>
+                            <xsl:value-of select="concat($id_base, normalize-space(/ead//eadid), '/unitid/', replace(normalize-space(did/unitid[@type='call number']), ' ', '+'))"/>
                         </xsl:otherwise>
                     </xsl:choose>
                 </xsl:attribute>
@@ -470,8 +470,8 @@
         <xsl:variable name="inheritFromParent" select="$currentnode[@level=&quot;item&quot;] and $parentcnode[@level=&quot;file&quot;] and $inheritElementsFromFileLevel=&quot;true&quot;"/>
         <xsl:variable name="unitid">
             <xsl:choose>
-                <xsl:when test="$currentnode/did/unitid">
-                    <xsl:apply-templates select="$currentnode/did/unitid"/>
+                <xsl:when test="$currentnode/did/unitid[@type='call number']">
+                    <xsl:apply-templates select="$currentnode/did/unitid[@type='call number']"/>
                 </xsl:when>
                 <xsl:otherwise>
                     <xsl:value-of select="//eadid"/>
@@ -539,7 +539,7 @@
                     </dc:creator>
                 </xsl:if>
                 <dc:identifier>
-                    <xsl:apply-templates select="$currentnode/did/unitid"/>
+                    <xsl:apply-templates select="$currentnode/did/unitid[@type='call number']"/>
                 </dc:identifier>
                 <dc:type>
                     <xsl:apply-templates select="$currentnode/@level"/>
@@ -1075,7 +1075,7 @@
                 </xsl:if>
                 <xsl:if test="$currentnode/preceding-sibling::c">
                     <edm:isNextInSequence>
-                        <xsl:attribute name="rdf:resource" select="normalize-space($currentnode/preceding-sibling::c[position()=1]/did/unitid)"/>
+                        <xsl:attribute name="rdf:resource" select="normalize-space($currentnode/preceding-sibling::c[position()=1]/did/unitid[@type='call number'])"/>
                     </edm:isNextInSequence>
                 </xsl:if>
                 <xsl:choose>
