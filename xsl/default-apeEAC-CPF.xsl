@@ -65,10 +65,16 @@
     <xsl:template match="useDates" mode="copy">
         <useDates>
             <xsl:choose>
-                <xsl:when test="count(date) = 1 and count(dateRange) = 0">
+                <xsl:when test="count(date) = 1 and count(dateRange) = 0 and count(dateSet[1]/date) = 0 and count(dateSet[1]/dateRange) = 0">
                     <xsl:apply-templates select="date" mode="copy"/>
                 </xsl:when>
-                <xsl:when test="count(dateRange) = 1 and count(date) = 0">
+                <xsl:when test="count(dateRange) = 1 and count(date) = 0 and count(dateSet[1]/date) = 0 and count(dateSet[1]/dateRange) = 0">
+                    <xsl:apply-templates select="dateRange" mode="copy"/>
+                </xsl:when>
+                <xsl:when test="count(date) = 0 and count(dateRange) = 0 and count(dateSet[1]/date) = 1 and count(dateSet[1]/dateRange) = 0">
+                    <xsl:apply-templates select="date" mode="copy"/>
+                </xsl:when>
+                <xsl:when test="count(dateRange) = 0 and count(date) = 0 and count(dateSet[1]/date) = 0 and count(dateSet[1]/dateRange) = 1">
                     <xsl:apply-templates select="dateRange" mode="copy"/>
                 </xsl:when>
                 <xsl:otherwise>
@@ -98,7 +104,7 @@
                 <xsl:message
                     select="ape:resource('eaccpf.message.unknownLocalTypeDate', $currentLanguage)"/>
             </xsl:if>
-            <xsl:if test=". = 'unknown'">
+            <xsl:if test=". = ('unknown', '')">
                 <xsl:attribute name="localType" select="'unknown'"/>
             </xsl:if>
             <xsl:if test=". = 'open'">
@@ -108,6 +114,9 @@
                 <xsl:when test="string-length(.)!=0">
                     <xsl:if test="@standardDate and not(@standardDate = '2099')">
                         <xsl:attribute name="standardDate" select="@standardDate"/>
+                    </xsl:if>
+                    <xsl:if test="not(@standardDate)">
+                        <xsl:call-template name="normalizeDate"/>
                     </xsl:if>
                     <xsl:value-of select="."/>
                 </xsl:when>
@@ -130,9 +139,9 @@
                 <xsl:attribute name="localType" select="'unknown'"/>
             </xsl:if>
             <xsl:choose>
-                <xsl:when test="fromDate = 'unknown'">
+                <xsl:when test="fromDate = ('unknown', '')">
                     <xsl:choose>
-                        <xsl:when test="toDate ='unknown'">
+                        <xsl:when test="toDate = ('unknown', '')">
                             <xsl:attribute name="localType" select="'unknown'"/>
                         </xsl:when>
                         <xsl:when test="toDate ='open'">
@@ -144,7 +153,7 @@
                     </xsl:choose>
                 </xsl:when>
                 <xsl:otherwise>
-                    <xsl:if test="toDate ='unknown'">
+                    <xsl:if test="toDate = ('unknown', '')">
                         <xsl:attribute name="localType" select="'unknownEnd'"/>
                     </xsl:if>
                     <xsl:if test="toDate ='open'">
@@ -167,6 +176,9 @@
                         <xsl:if
                             test="fromDate/@standardDate and not(fromDate/@standardDate = '0001')">
                             <xsl:attribute name="standardDate" select="fromDate/@standardDate"/>
+                        </xsl:if>
+                        <xsl:if test="not(fromDate/@standardDate)">
+                            <xsl:call-template name="normalizeDate"/>
                         </xsl:if>
                         <xsl:value-of select="fromDate"/>
                     </xsl:when>
@@ -192,6 +204,9 @@
                     <xsl:when test="string-length(toDate)!=0">
                         <xsl:if test="toDate/@standardDate and not(toDate/@standardDate = '2099')">
                             <xsl:attribute name="standardDate" select="toDate/@standardDate"/>
+                        </xsl:if>
+                        <xsl:if test="not(toDate/@standardDate)">
+                            <xsl:call-template name="normalizeDate"/>
                         </xsl:if>
                         <xsl:value-of select="toDate"/>
                     </xsl:when>
@@ -904,7 +919,7 @@
     <xsl:template match="existDates" mode="copy">
         <existDates>
             <xsl:choose>
-                <xsl:when test="count(date) = 0 and count(dateRange) = 0">
+                <xsl:when test="count(date) = 0 and count(dateRange) = 0 and count(dateSet) = 0">
                     <dateRange>
                         <xsl:attribute name="localType" select="'unknown'"/>
                         <fromDate>
@@ -917,10 +932,16 @@
                     <xsl:message
                         select="ape:resource('eaccpf.message.existDates', $currentLanguage)"/>
                 </xsl:when>
-                <xsl:when test="count(date) = 1 and count(dateRange) = 0">
+                <xsl:when test="count(date) = 1 and count(dateRange) = 0 and count(dateSet[1]/date) = 0 and count(dateSet[1]/dateRange) = 0">
                     <xsl:apply-templates select="date" mode="copy"/>
                 </xsl:when>
-                <xsl:when test="count(dateRange) = 1 and count(date) = 0">
+                <xsl:when test="count(dateRange) = 1 and count(date) = 0 and count(dateSet[1]/date) = 0 and count(dateSet[1]/dateRange) = 0">
+                    <xsl:apply-templates select="dateRange" mode="copy"/>
+                </xsl:when>
+                <xsl:when test="count(date) = 0 and count(dateRange) = 0 and count(dateSet[1]/date) = 1 and count(dateSet[1]/dateRange) = 0">
+                    <xsl:apply-templates select="date" mode="copy"/>
+                </xsl:when>
+                <xsl:when test="count(dateRange) = 0 and count(date) = 0 and count(dateSet[1]/date) = 0 and count(dateSet[1]/dateRange) = 1">
                     <xsl:apply-templates select="dateRange" mode="copy"/>
                 </xsl:when>
                 <xsl:otherwise>
@@ -1875,5 +1896,47 @@
             <xsl:if test="name(.)='c'">@<xsl:value-of select="@level"/></xsl:if>
         </xsl:variable>
         <xsl:message select="normalize-space($excludedElement)"/>
+    </xsl:template>
+    
+    <!--
+      normalize date
+      takes as input: DD.MM.YYYY
+      outputs: YYYY-MM-DD
+    -->
+    <xsl:template name="normalizeDate">
+        <xsl:choose>
+            <xsl:when test="@standardDate">
+                <xsl:variable name="standardDate">
+                    <xsl:value-of select="ape:normalizeDate(normalize-space(@standardDate))"/>
+                </xsl:variable>
+                <xsl:choose>
+                    <xsl:when test="normalize-space($standardDate)">
+                        <xsl:attribute name="standardDate">
+                            <xsl:value-of select="$standardDate"/>
+                        </xsl:attribute>
+                    </xsl:when>
+                    <xsl:otherwise>
+                        <xsl:variable name="standardDate_2">
+                            <xsl:value-of select="ape:normalizeDate(normalize-space(.))"/>
+                        </xsl:variable>
+                        <xsl:if test="normalize-space($standardDate_2)">
+                            <xsl:attribute name="standardDate">
+                                <xsl:value-of select="$standardDate_2"/>
+                            </xsl:attribute>
+                        </xsl:if>
+                    </xsl:otherwise>
+                </xsl:choose>
+            </xsl:when>
+            <xsl:otherwise>
+                <xsl:variable name="standardDate">
+                    <xsl:value-of select="ape:normalizeDate(normalize-space(.))"/>
+                </xsl:variable>
+                <xsl:if test="normalize-space($standardDate)">
+                    <xsl:attribute name="standardDate">
+                        <xsl:value-of select="$standardDate"/>
+                    </xsl:attribute>
+                </xsl:if>
+            </xsl:otherwise>
+        </xsl:choose>
     </xsl:template>
 </xsl:stylesheet>
