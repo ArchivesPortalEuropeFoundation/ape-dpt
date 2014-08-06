@@ -381,7 +381,7 @@
             <xsl:choose>
                 <xsl:when test="name(.) = 'recordId'">
                     <xsl:attribute name="localType">
-                        <xsl:text>localIDconverted</xsl:text>
+                        <xsl:text>original</xsl:text>
                     </xsl:attribute>
                 </xsl:when>
                 <xsl:otherwise>
