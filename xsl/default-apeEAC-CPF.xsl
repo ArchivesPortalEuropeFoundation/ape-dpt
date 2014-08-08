@@ -116,7 +116,9 @@
                         <xsl:attribute name="standardDate" select="@standardDate"/>
                     </xsl:if>
                     <xsl:if test="not(@standardDate)">
-                        <xsl:call-template name="normalizeDate"/>
+                        <xsl:call-template name="normalizeDate">
+                            <xsl:with-param name="date" select="."></xsl:with-param>
+                        </xsl:call-template>
                     </xsl:if>
                     <xsl:value-of select="."/>
                 </xsl:when>
@@ -178,7 +180,9 @@
                             <xsl:attribute name="standardDate" select="fromDate/@standardDate"/>
                         </xsl:if>
                         <xsl:if test="not(fromDate/@standardDate)">
-                            <xsl:call-template name="normalizeDate"/>
+                            <xsl:call-template name="normalizeDate">
+                                <xsl:with-param name="date" select="fromDate"/>
+                            </xsl:call-template>
                         </xsl:if>
                         <xsl:value-of select="fromDate"/>
                     </xsl:when>
@@ -206,7 +210,9 @@
                             <xsl:attribute name="standardDate" select="toDate/@standardDate"/>
                         </xsl:if>
                         <xsl:if test="not(toDate/@standardDate)">
-                            <xsl:call-template name="normalizeDate"/>
+                            <xsl:call-template name="normalizeDate">
+                                <xsl:with-param name="date" select="toDate"/>
+                            </xsl:call-template>
                         </xsl:if>
                         <xsl:value-of select="toDate"/>
                     </xsl:when>
@@ -350,8 +356,8 @@
         <control>
             <xsl:choose>
                 <xsl:when test="$recordId">
-            <xsl:call-template name="apeRecordId"/>
-                <xsl:apply-templates select="recordId" mode="copy"/>
+                    <xsl:call-template name="apeRecordId"/>
+                    <xsl:apply-templates select="recordId" mode="copy"/>
                 </xsl:when>
                 <xsl:otherwise>
                     <xsl:apply-templates select="recordId" mode="keepExisting"/>
@@ -1904,10 +1910,11 @@
       outputs: YYYY-MM-DD
     -->
     <xsl:template name="normalizeDate">
+        <xsl:param name="date"/>
         <xsl:choose>
             <xsl:when test="@standardDate">
                 <xsl:variable name="standardDate">
-                    <xsl:value-of select="ape:normalizeDate(normalize-space(@standardDate))"/>
+                    <xsl:value-of select="ape:normalizeDate(normalize-space($date/@standardDate))"/>
                 </xsl:variable>
                 <xsl:choose>
                     <xsl:when test="normalize-space($standardDate)">
@@ -1917,7 +1924,7 @@
                     </xsl:when>
                     <xsl:otherwise>
                         <xsl:variable name="standardDate_2">
-                            <xsl:value-of select="ape:normalizeDate(normalize-space(.))"/>
+                            <xsl:value-of select="ape:normalizeDate(normalize-space($date))"/>
                         </xsl:variable>
                         <xsl:if test="normalize-space($standardDate_2)">
                             <xsl:attribute name="standardDate">
@@ -1929,7 +1936,7 @@
             </xsl:when>
             <xsl:otherwise>
                 <xsl:variable name="standardDate">
-                    <xsl:value-of select="ape:normalizeDate(normalize-space(.))"/>
+                    <xsl:value-of select="ape:normalizeDate(normalize-space($date))"/>
                 </xsl:variable>
                 <xsl:if test="normalize-space($standardDate)">
                     <xsl:attribute name="standardDate">
