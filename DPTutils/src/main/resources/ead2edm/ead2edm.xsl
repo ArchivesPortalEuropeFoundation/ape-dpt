@@ -118,7 +118,7 @@
             </xsl:if>
             <xsl:if test="/ead/archdesc/scopecontent">
                 <dc:description>
-                    <xsl:value-of select="normalize-space(/ead/archdesc/scopecontent)"/>
+                    <xsl:value-of select="/ead/archdesc/scopecontent"/>
                 </dc:description>
             </xsl:if>
             <xsl:if test="/ead/archdesc/did/unitid">
@@ -399,7 +399,7 @@
                     <dcterms:isPartOf>
                         <xsl:attribute name="rdf:resource">
                             <xsl:value-of select="normalize-space(parent::node()/parent::node()/did/unitid[@type='call number'])"/>
-                        </xsl:attribute> 
+                        </xsl:attribute>
                     </dcterms:isPartOf>
                 </xsl:if>
                 <xsl:if test="parent::node()/did/unitid[@type='call number']">
@@ -480,7 +480,7 @@
         </xsl:variable>
         <xsl:variable name="parentdidnode" select="$parentcnode/did"/>
         <xsl:variable name="parentofparentcnode" select="$parentcnode/parent::node()"/>
-        
+
         <!-- for each dao found, create a set of classes -->
         <!--<xsl:for-each select="did/dao[not(@xlink:title=&quot;thumbnail&quot;)]">-->
 
