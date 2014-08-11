@@ -190,7 +190,7 @@ public class ConvertActionListener implements ActionListener {
                 } else {
                     xslMessages = TransformationTool.createTransformation(FileUtils.openInputStream(file), outputFile, FileUtils.openInputStream(xslFile), paramMap, true, true, null, true, null);
                 }
-                apePanel.getApeTabbedPane().setConversionErrorText(xslMessages.toString());
+                apePanel.getApeTabbedPane().setConversionErrorText(replaceGtAndLt(xslMessages.toString()));
                 fileInstance.setConversionErrors(xslMessages.toString());
                 fileInstance.setCurrentLocation(Utilities.TEMP_DIR + "temp_" + file.getName());
                 fileInstance.setConverted();
@@ -201,7 +201,7 @@ public class ConvertActionListener implements ActionListener {
                     else
                         fileInstance.setConversionErrors(labels.getString("conversion.finished"));
                     apePanel.getApeTabbedPane().checkFlashingTab(APETabbedPane.TAB_CONVERSION, Utilities.FLASHING_GREEN_COLOR);
-                    apePanel.getApeTabbedPane().setConversionErrorText(fileInstance.getConversionErrors());
+                    apePanel.getApeTabbedPane().setConversionErrorText(replaceGtAndLt(fileInstance.getConversionErrors()));
                 } else
                     apePanel.getApeTabbedPane().checkFlashingTab(APETabbedPane.TAB_CONVERSION, Utilities.FLASHING_RED_COLOR);
                 dataPreparationToolGUI.enableValidationBtns();
@@ -231,5 +231,14 @@ public class ConvertActionListener implements ActionListener {
                 dataPreparationToolGUI.setResultAreaText(labels.getString("conversionFinished"));
             }
         }
+    }
+
+    /**
+     * Method that change the texts "&gt;" and "&lt;" to ">" and "<".
+     * @param string
+     * @return
+     */
+    private String replaceGtAndLt(String string) {
+    	return string.replaceAll("&gt;", ">").replaceAll("&lt;", "<");
     }
 }
