@@ -500,13 +500,13 @@ public class EacCpfDescriptionPanel extends EacCpfPanel {
 		//fill countries
 		String[] locales = Locale.getISOCountries();
 		countriesListWithEmpty = new ArrayList<String>();
+        countriesListWithEmpty.add(TextFieldWithComboBoxEacCpf.DEFAULT_VALUE);
 		countriesMap = new HashMap<String,String>();
         for (String countryCode : locales) {
             Locale obj = new Locale("", countryCode);
             countriesListWithEmpty.add(obj.getDisplayCountry(Locale.ENGLISH));
             countriesMap.put(obj.getDisplayCountry(Locale.ENGLISH),obj.getISO3Country());
         }
-        countriesListWithEmpty.add(TextFieldWithComboBoxEacCpf.DEFAULT_VALUE);
         //DATES
         this.placesDates = new HashMap<Integer, List<TextFieldsWithRadioButtonForDates>>();
         this.functionsDates = new HashMap<Integer, List<TextFieldsWithRadioButtonForDates>>();
