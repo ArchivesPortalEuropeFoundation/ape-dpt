@@ -20,7 +20,6 @@ package eu.apenet.dpt.standalone.gui.eaccpf;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -90,6 +89,7 @@ public abstract class EacCpfPanel extends CommonsPropertiesPanels {
     
 	protected static final String MAINTENANCE_AGENT_HUMAN = "human";
 	private static final String MAINTENANCE_EVENT_CREATED = "created";
+	private static final String MAINTENANCE_EVENT_DERIVED = "derived";
 	private static final String MAINTENANCE_EVENT_NEW = "new";
 	private static final String MAINTENANCE_EVENT_REVISED = "revised";
 	
@@ -632,11 +632,15 @@ public abstract class EacCpfPanel extends CommonsPropertiesPanels {
 			maintenanceEvent = new MaintenanceEvent();
 			maintenanceEvent.setAgent(new Agent());
 			maintenanceEvent.setEventType(new EventType());
-			if (sizeMaintenanceEvents == 0) {
-				maintenanceEvent.getEventType().setValue(MAINTENANCE_EVENT_CREATED);
-			} else {
-				maintenanceEvent.getEventType().setValue(MAINTENANCE_EVENT_REVISED);
-			}
+//			if (sizeMaintenanceEvents == 0) {
+//				maintenanceEvent.getEventType().setValue(MAINTENANCE_EVENT_CREATED);
+//			} else {
+//				maintenanceEvent.getEventType().setValue(MAINTENANCE_EVENT_REVISED);
+//			}
+			// In order to be recognized by the Dashboard as an apeEAC-CPF
+			// created by the DPT the "<eventType>" always should be "derived".
+			// (See comment 14 on issue #761).
+			maintenanceEvent.getEventType().setValue(MAINTENANCE_EVENT_DERIVED);
 			maintenanceEvent.setAgentType(new AgentType());
 			maintenanceEvent.getAgentType().setValue(MAINTENANCE_AGENT_HUMAN);
 			maintenanceEvent.setEventDateTime(new EventDateTime());
