@@ -913,8 +913,8 @@ public class EdmOptionsPanel extends JPanel {
                         ProgressFrame.ApeProgressBar progressBar = progressFrame.getProgressBarBatch();
 
                         try {
-                            apeTabbedPane.setEseConversionErrorText(labels.getString("edm.conversionEseStarted") + "\n");
-                            writer.append(labels.getString("edm.conversionEseStarted") + "\n");
+                            apeTabbedPane.setEseConversionErrorText(labels.getString("edm.conversionEdmStarted") + "\n");
+                            writer.append(labels.getString("edm.conversionEdmStarted") + "\n");
                             SummaryWorking summaryWorking = new SummaryWorking(dataPreparationToolGUI.getResultArea(), progressBar);
                             summaryWorking.setTotalNumberFiles(numberOfFiles);
                             summaryWorking.setCurrentFileNumberBatch(currentFileNumberBatch);

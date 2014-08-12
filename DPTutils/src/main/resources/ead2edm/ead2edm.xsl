@@ -117,9 +117,14 @@
                 </dc:creator>
             </xsl:if>
             <xsl:if test="/ead/archdesc/scopecontent">
-                <dc:description>
-                    <xsl:value-of select="/ead/archdesc/scopecontent"/>
-                </dc:description>
+                <xsl:for-each select="/ead/archdesc/scopecontent">
+                    <dc:description>
+                        <xsl:if test="head">
+                            <xsl:value-of select="concat(head/text(), ' - ')"/>
+                        </xsl:if>
+                        <xsl:value-of select="p/text()"/>
+                    </dc:description>
+                </xsl:for-each>
             </xsl:if>
             <xsl:if test="/ead/archdesc/did/unitid">
                 <dc:identifier>
