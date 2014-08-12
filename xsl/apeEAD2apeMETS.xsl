@@ -19,8 +19,6 @@
 
     <!-- Settings -->
     <xsl:variable name="settings">
-        <!-- Values: mets_minimum/mest_maximum-->
-        <mets_profil>mets_minimum</mets_profil>
         <addSizeArgument>false</addSizeArgument>
         <addRightsInfo>false</addRightsInfo>
         <split_ead>fonds</split_ead>
@@ -112,87 +110,10 @@
     <xsl:template match="/">
         <create_files>
             <xsl:for-each select="ead/child::node()">
-                <xsl:choose>
-                    <xsl:when test="upper-case($settings/mets_profil)='METS_MINIMUM'">
-                        <xsl:apply-templates select="node()|@*" mode="create_mets_simple"/>
-                    </xsl:when>
-                    <xsl:when test="upper-case($settings/mets_profil)='METS_MAXIMUM'">
-                        <xsl:apply-templates select="node()|@*" mode="create_mets_full"/>
-                    </xsl:when>
-                    <xsl:otherwise>
-                        <xsl:message>Wrong value use: mets_minimum/mets_maximum</xsl:message>
-                    </xsl:otherwise>
-                </xsl:choose>
+                <xsl:apply-templates select="node()|@*" mode="create_mets_simple"/>
             </xsl:for-each>
             <xsl:call-template name="create_new_ead"/>
         </create_files>
-    </xsl:template>
-
-    <!-- Create METS anchors -->
-    <!-- todo: Those 3 templates are weird, to test and maybe delete -->
-    <xsl:template match="node()" mode="create_mets_full">
-        <xsl:apply-templates mode="create_mets_full">
-            <xsl:with-param name="metadata_collector">
-                <xsl:element name="{if(local-name(.)='archdesc') then 'archdesc' else 'c'}">
-                    <xsl:copy-of select="@*[local-name(.)!='c_pos' and local-name(.)!='c_dao_pos' and local-name(.)!='c_meta']"/>
-                    <xsl:copy-of select="child::node()[me:is_element_c(.)=false()]"/>
-                </xsl:element>
-            </xsl:with-param>
-        </xsl:apply-templates>
-    </xsl:template>
-    <xsl:template match="node()" mode="create_mets_full">
-        <xsl:param name="metadata_collector"/>
-        <xsl:apply-templates mode="create_mets_full">
-            <xsl:with-param name="metadata_collector">
-                <xsl:copy-of select="$metadata_collector"/>
-                <xsl:element name="{if(local-name(.)='archdesc') then 'archdesc' else 'c'}">
-                    <xsl:copy-of select="@*[local-name(.)!='c_pos' and local-name(.)!='c_dao_pos' and local-name(.)!='c_meta']"/>
-                    <xsl:copy-of select="child::node()[me:is_element_c(.)=false()]"/>
-                </xsl:element>
-            </xsl:with-param>
-        </xsl:apply-templates>
-    </xsl:template>
-    <xsl:template match="node()" mode="create_mets_full">
-        <xsl:param name="metadata_collector"/>
-        <xsl:for-each select=".">
-            <xsl:result-document href="{concat(me:get_id(.),'.xml')}" format="my-xhtml-output">
-                <mets:mets xmlns:mets="http://www.loc.gov/METS/" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.loc.gov/METS/ apeMETS.xsd urn:isbn:1-931666-22-9 http://www.loc.gov/ead/ead.xsd" PROFILE="apeMETS">
-                    <xsl:call-template name="metsHdr"/>
-                    <!-- Work todo: should there be a dmdSec??? not in the profile though!!!! -->
-                    <!--<xsl:for-each
-                        select="descendant-or-self::node()[me:all_c2(.)=true()][child::node() or local-name(.)='dao'][me:only_dao(.)=true()]">
-                        <xsl:choose>
-                            <xsl:when test="upper-case($settings/metadata)='MODS'">
-                                <!-\- Work todo: Should it be a call to a dmdSec? not in apeMETS but can be locally -\->
-                                <!-\-xsl:call-template name="dmdSec_???"/-\->
-                            </xsl:when>
-                            <xsl:when test="contains(upper-case($settings/metadata),'EAD')">
-                                <!-\- Work todo: Should this be done: not present in the profile though! -\->
-                                <xsl:call-template name="dmdSec_ead">
-                                    <xsl:with-param name="metadata_collector"
-                                        select="$metadata_collector"/>
-                                    <!-\- Work todo: check so its working properly -\->
-                                    <!-\-<xsl:with-param name="identifier" select="me:get_id(.)"/>-\->
-                                    <xsl:with-param name="position" select="position()"/>
-                                </xsl:call-template>
-                            </xsl:when>
-
-                            <xsl:otherwise>
-                                <!-\- Work todo: Check this and get correct values -\->
-                                <xsl:message>Values wrong use:
-                                    Values: mods/ead_long/ead_middle/ead_short</xsl:message>
-                            </xsl:otherwise>
-                        </xsl:choose>
-                    </xsl:for-each>-->
-
-                    <!--call other METS parts-->
-                    <!-- Work todo: should we have a logical structmap??? -->
-                    <xsl:call-template name="amdSec"/>
-                    <xsl:call-template name="fileSec"/>
-                    <xsl:call-template name="structMap_phys"/>
-                </mets:mets>
-            </xsl:result-document>
-        </xsl:for-each>
     </xsl:template>
 
     <!-- Create logical structmap anchors -->
@@ -214,46 +135,13 @@
     <xsl:template match="c[did/dao]" mode="create_mets_simple">
         <xsl:for-each select=".">
             <xsl:result-document href="{concat($output_directory, me:get_id(.), '.xml')}" format="my-xhtml-output">
-                <mets:mets xmlns:mets="http://www.loc.gov/METS/" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.loc.gov/METS/ http://test.archivesportaleurope.net/Portal/profiles/apeMETS.xsd" PROFILE="apeMETS">
+                <mets:mets xmlns:mets="http://www.loc.gov/METS/" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.loc.gov/METS/ http://www.archivesportaleurope.net/Portal/profiles/apeMETS.xsd" PROFILE="apeMETS">
                     <xsl:call-template name="metsHdr" />
-                    <!--get the correct dmdSec-->
-                    <!-- Work todo: Get it to work if it should be here check values!!! -->
-                    <!--<xsl:for-each select="self::node()[me:all_c2(.)=true()][me:only_dao(.)=true()]">
-                        <xsl:choose>
-                            <!-\- Work todo: Should we be able to add MODS??? -\->
-                            <xsl:when test="upper-case($settings/metadata)='MODS'">
-                                <xsl:call-template name="dmdSec_mods"/>
-                            </xsl:when>
-                            <xsl:when test="contains(upper-case($settings/metadata),'EAD')">
-                                <!-\- Work todo: should EAD be entered? Check and get to work-\->
-                                <xsl:call-template name="dmdSec_ead">
-                                                                        <!-\-<xsl:with-param name="metadata_collector" select="$metadata_collector"/>
-                                                                        <xsl:with-param name="identifier" select="me:get_id(.)"/>-\->
-                                    <xsl:with-param name="position" select="position()"/>
-                                </xsl:call-template>
-                            </xsl:when>
-                            <xsl:otherwise>
-                                <xsl:message>Values not correct use
-                                    Values: mods/ead_long/ead_middle/short</xsl:message>
-                            </xsl:otherwise>
-                        </xsl:choose>
-                    </xsl:for-each>-->
-                    <!-- Create the rest of the METS -->
                     <xsl:if test="$settings/addRightsInfo = 'true'">
                         <xsl:call-template name="amdSec"/>
                     </xsl:if>
                     <xsl:call-template name="fileSec"/>
                     <xsl:call-template name="structMap_phys"/>
-                    <!-- Work todo: Should we have alogical structmap??? -->
-                    <!--<mets:structMap TYPE="LOGICAL">
-                        <mets:div>
-                            <mets:div ID="{concat('LOG_','1')}" ADMID="AMD1" DMDID="{concat('DMDLOG_','1')}" TYPE="map" />
-                        </mets:div>
-                    </mets:structMap>-->
-                    <!-- Work todo: o structlink in profile should we have it here? -->
-                    <!--<mets:structLink>
-                        <mets:smLink xlink:from="{concat('LOG_','1')}" xlink:to="{concat('PHYS_','1')}" />
-                    </mets:structLink>-->
                 </mets:mets>
             </xsl:result-document>
             <xsl:apply-templates mode="create_mets_simple"/>
@@ -297,8 +185,6 @@
     </xsl:template>
 
     <!--file_sec-->
-    <!-- Build filegrp's -->
-    <!-- Work todo: Get this to work, problems with the different filegrp that needs to be created from the information in the dao -->
     <xsl:template name="fileSec">
         <mets:fileSec>
             <xsl:if test="did/dao[@xlink:role='VIDEO']">
@@ -382,8 +268,6 @@
     </xsl:template>
 
     <!--structmap-->
-    <!--create the logical map-->
-    <!-- Work todo: Get the logical to work if we should have it?! -->
     <xsl:template name="structMap_log">
         <xsl:param name="identifier"/>
         <mets:structMap TYPE="LOGICAL">
@@ -818,16 +702,13 @@
     </xsl:template>
 
     <xsl:template match="dao" mode="delete_double_ead_mets">
-        <!-- Work todo: the wrong id gets collected so the EAD dao don't point to the correct METS document -->
         <xsl:variable name="ger" select="me:get_id(../..)"/>
         <xsl:if test="local-name(.)='dao'">
-            <!--xsl:copy-of select="count(preceding-sibling::dao) "/-->
             <xsl:if test="count(preceding-sibling::dao)=0">
                 <xsl:copy>
                     <xsl:attribute name="xlink:role" select="'METS'"/>
                     <xsl:attribute name="xlink:type" select="'simple'"/>
-                    <xsl:attribute name="xlink:href"
-                                   select="concat($settings/path_mets,$ger,'.xml')"/>
+                    <xsl:attribute name="xlink:href" select="concat($settings/path_mets, $ger, '.xml')"/>
                 </xsl:copy>
             </xsl:if>
         </xsl:if>
