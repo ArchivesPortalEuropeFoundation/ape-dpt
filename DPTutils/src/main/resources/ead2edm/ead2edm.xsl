@@ -38,12 +38,12 @@
     <xsl:param name="minimalConversion"/>
     <!-- Params from Ese2Edm -->
     <xsl:param name="edm_identifier"/>
-    <xsl:param name="prefix_url"/>
+    <xsl:param name="host"/>
     <xsl:param name="repository_code"/>
     <xsl:param name="xml_type_name"/>
     <!-- Variables -->
     <xsl:variable name="id_base"
-                  select="concat($prefix_url, '/' , $repository_code, '/type/', $xml_type_name, '/id/')"/>
+                  select="concat('http://', $host, '/web/guest/ead-display/-/ead/fp/' , $repository_code, '/type/', $xml_type_name, '/id/')"/>
 
     <xsl:template match="/">
         <rdf:RDF
@@ -100,7 +100,7 @@
                 </xsl:choose>
             </edm:isShownAt>
             <edm:isShownBy>
-                <xsl:attribute name="rdf:resource" select="'http://test.archivesportaleurope.net/Portal-theme/images/ape/icons/dao_types/europeana/text.png'"/>
+                <xsl:attribute name="rdf:resource" select="concat('http://', $host, '/Portal-theme/images/ape/icons/dao_types/europeana/text.png')"/>
             </edm:isShownBy>
             <edm:provider>
                 <xsl:value-of select="$europeana_provider"/>
@@ -343,7 +343,7 @@
                     </xsl:choose>
                 </edm:isShownAt>
                 <edm:isShownBy>
-                    <xsl:attribute name="rdf:resource" select="'http://test.archivesportaleurope.net/Portal-theme/images/ape/icons/dao_types/europeana/text.png'"/>
+                    <xsl:attribute name="rdf:resource" select="concat('http://', $host, '/Portal-theme/images/ape/icons/dao_types/europeana/text.png')"/>
                 </edm:isShownBy>
                 <edm:provider>
                     <xsl:value-of select="$europeana_provider"/>
@@ -1235,19 +1235,19 @@
         <xsl:param name="role"/>
         <xsl:choose>
             <xsl:when test=" &quot;TEXT&quot; eq fn:string($role)">
-                <xsl:text>http://test.archivesportaleurope.net/Portal-theme/images/ape/icons/dao_types/europeana/text.png</xsl:text>
+                <xsl:value-of select="concat('http://', $host, '/Portal-theme/images/ape/icons/dao_types/europeana/text.png')"/>
             </xsl:when>
             <xsl:when test=" &quot;IMAGE&quot; eq fn:string($role)">
-                <xsl:text>http://test.archivesportaleurope.net/Portal-theme/images/ape/icons/dao_types/europeana/image.png</xsl:text>
+                <xsl:value-of select="concat('http://', $host, '/Portal-theme/images/ape/icons/dao_types/europeana/image.png')"/>
             </xsl:when>
             <xsl:when test=" &quot;SOUND&quot; eq fn:string($role)">
-                <xsl:text>http://test.archivesportaleurope.net/Portal-theme/images/ape/icons/dao_types/europeana/sound.png</xsl:text>
+                <xsl:value-of select="concat('http://', $host, '/Portal-theme/images/ape/icons/dao_types/europeana/sound.png')"/>
             </xsl:when>
             <xsl:when test=" &quot;VIDEO&quot; eq fn:string($role)">
-                <xsl:text>http://test.archivesportaleurope.net/Portal-theme/images/ape/icons/dao_types/europeana/video.png</xsl:text>
+                <xsl:value-of select="concat('http://', $host, '/Portal-theme/images/ape/icons/dao_types/europeana/video.png')"/>
             </xsl:when>
             <xsl:when test=" &quot;3D&quot; eq fn:string($role)">
-                <xsl:text>http://test.archivesportaleurope.net/Portal-theme/images/ape/icons/dao_types/europeana/3d.png</xsl:text>
+                <xsl:value-of select="concat('http://', $host, '/Portal-theme/images/ape/icons/dao_types/europeana/3d.png')"/>
             </xsl:when>
             <xsl:otherwise>
                 <xsl:call-template name="convertToEdmType">
