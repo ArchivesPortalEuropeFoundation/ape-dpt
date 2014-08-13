@@ -756,15 +756,16 @@ public class EacCpfIdentityPanel extends EacCpfPanel {
 			// Add elements to the panel.
 			if (isDateRange) {
 				// First date row. Normal date text fields.
-				builder.addLabel(this.labels.getString("eaccpf.commons.from.date"), cc.xy(1, this.rowNb));
+				builder.addLabel(this.labels.getString("eaccpf.commons.from.date") +((position==0)?"*":""), cc.xy(1, this.rowNb));
 				existenceDateTF.getDateFromTextField().addFocusListener(new AddIsoText(existenceDateTF, EacCpfIdentityPanel.UNKNOWN_DATE_FROM));
 				builder.add(existenceDateTF.getDateFromTextField(), cc.xy(3, this.rowNb));
-				builder.addLabel(this.labels.getString("eaccpf.commons.to.date"), cc.xy(5, this.rowNb));
+				builder.addLabel(this.labels.getString("eaccpf.commons.to.date") +((position==0)?"*":""), cc.xy(5, this.rowNb));
 				existenceDateTF.getDateToTextField().addFocusListener(new AddIsoText(existenceDateTF, EacCpfIdentityPanel.UNKNOWN_DATE_TO));
 				builder.add(existenceDateTF.getDateToTextField(), cc.xy(7, this.rowNb));
 
 				// Second date row. Unknown radio boxes.
 				setNextRow();
+				builder.addLabel(this.labels.getString("eaccpf.commons.date.type"), cc.xy(1, this.rowNb));
 				existenceDateTF.getDateFromDefinedRB().addActionListener(new AddUndefinedTexts(existenceDateTF, EacCpfIdentityPanel.KNOWN_DATE_FROM));
 				existenceDateTF.getDateToDefinedRB().addActionListener(new AddUndefinedTexts(existenceDateTF, EacCpfIdentityPanel.KNOWN_DATE_TO));
 				builder.add(existenceDateTF.getDateFromDefinedRB(), cc.xy(3, this.rowNb));
@@ -787,7 +788,7 @@ public class EacCpfIdentityPanel extends EacCpfPanel {
 				builder.addLabel(this.labels.getString("eaccpf.commons.iso.date"), cc.xy(1, this.rowNb));
 				existenceDateTF.getStandardDateFromTextField().addFocusListener(new CheckIsoText(existenceDateTF, EacCpfIdentityPanel.UNKNOWN_DATE_FROM));
 				builder.add(existenceDateTF.getStandardDateFromTextField(), cc.xy(3, this.rowNb));
-				builder.addLabel(this.labels.getString("eaccpf.commons.iso.date"), cc.xy(5, this.rowNb));
+				//builder.addLabel(this.labels.getString("eaccpf.commons.iso.date"), cc.xy(5, this.rowNb));
 				existenceDateTF.getStandardDateToTextField().addFocusListener(new CheckIsoText(existenceDateTF, EacCpfIdentityPanel.UNKNOWN_DATE_TO));
 				builder.add(existenceDateTF.getStandardDateToTextField(), cc.xy(7, this.rowNb));
 

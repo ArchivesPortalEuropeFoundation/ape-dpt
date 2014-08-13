@@ -32,6 +32,13 @@ public class TextAreaWithLanguage extends StructureWithLanguage {
     private JTextField extraField;
     private JTextField secondExtraField;
 
+    public TextAreaWithLanguage(String text, String language, String extraText, String secondExtraText, int rows) {
+        super(language);
+        scrollPaneHolder = new ScrollPaneHolder(text,rows);
+        extraField = new JTextField(extraText);
+        secondExtraField = new JTextField(secondExtraText);
+    }
+    
     public TextAreaWithLanguage(String text, String language, String extraText, String secondExtraText) {
         super(language);
         scrollPaneHolder = new ScrollPaneHolder(text);
@@ -42,9 +49,17 @@ public class TextAreaWithLanguage extends StructureWithLanguage {
     public TextAreaWithLanguage(String text, String language, String extraText) {
         this(text, language, extraText, "");
     }
+    
+    public TextAreaWithLanguage(String text, String language, String extraText, int rows) {
+        this(text, language, extraText, "",rows);
+    }
 
     public TextAreaWithLanguage(String text, String language) {
         this(text, language, "");
+    }
+    
+    public TextAreaWithLanguage(String text, String language, int rows) {
+        this(text, language, "", rows);
     }
 
     public ScrollPane getTextField() {

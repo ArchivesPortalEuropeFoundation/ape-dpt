@@ -151,8 +151,8 @@ public class EacCpfRelationsPanel extends EacCpfPanel {
 		initCPFGlobals();
 
 		// Set section title.
-		this.setNextRow();
-		builder.addLabel(this.labels.getString("eaccpf.relations.cpf.section"), cc.xyw(1, this.rowNb, 7));
+		/*this.setNextRow();
+		builder.addLabel(this.labels.getString("eaccpf.relations.cpf.section"), cc.xyw(1, this.rowNb, 7));*/
 
 		//Call method to build sets relations section.
 		builder = buildSetRelationsSection(builder, cc);
@@ -282,7 +282,7 @@ public class EacCpfRelationsPanel extends EacCpfPanel {
 					language = setComponent.getDescriptiveNote().getP().get(0).getLang();
 				}
 			}
-			setComponentDescriptionTa = new TextAreaWithLanguage(descriptiveNote, "");
+			setComponentDescriptionTa = new TextAreaWithLanguage(descriptiveNote, "", 1);
 
 			// Name and language of the relation.
 			if (title.isEmpty()) {
@@ -344,13 +344,8 @@ public class EacCpfRelationsPanel extends EacCpfPanel {
 			this.setNextRow();
 			builder.addLabel(this.labels.getString("eaccpf.relations.link"), cc.xy(1, this.rowNb));
 			builder.add(setComponentHrefAndTypeTf.getTextField(), cc.xy(3, this.rowNb));
-			builder.addLabel(this.labels.getString("eaccpf.relations.relation.type"), cc.xy(5, this.rowNb));
+			builder.addLabel(this.labels.getString("eaccpf.relations.relation.type")+"*", cc.xy(5, this.rowNb));
 			builder.add(setComponentHrefAndTypeTf.getComboBox(), cc.xy(7, this.rowNb));
-
-			// Description.
-			this.setNextRow();
-			builder.addLabel(this.labels.getString("eaccpf.relations.description"), cc.xy(1, this.rowNb));
-			builder.add(setComponentDescriptionTa.getTextField(), cc.xyw(3, this.rowNb, 5));
 
 			// Agency part.
 			// Title.
@@ -365,6 +360,11 @@ public class EacCpfRelationsPanel extends EacCpfPanel {
 				builder.addLabel(this.labels.getString("eaccpf.relations.identifier"), cc.xy(5, this.rowNb));
 				builder.add(setComponentOrganisationNameAndIdTfList.get(j).getExtraField(), cc.xy(7, this.rowNb));
 			}
+			
+			// Description.
+			this.setNextRow();
+			builder.addLabel(this.labels.getString("eaccpf.relations.description"), cc.xy(1, this.rowNb));
+			builder.add(setComponentDescriptionTa.getTextField(), cc.xyw(3, this.rowNb, 5));
 
 			// Button to add new agency information.
 //			this.setNextRow();
@@ -397,7 +397,7 @@ public class EacCpfRelationsPanel extends EacCpfPanel {
 		} else {
 			type = this.entityType.getName();
 		}
-
+/*
 		if (XmlTypeEacCpf.EAC_CPF_CORPORATEBODY.getName().equalsIgnoreCase(type)) {
 			builder.addLabel(this.labels.getString("eaccpf.commons.type") + " " + this.labels.getString("eaccpf.commons.corporateBody"), cc.xyw(1, this.rowNb, 3));
 			this.entityType = XmlTypeEacCpf.EAC_CPF_CORPORATEBODY;
@@ -413,6 +413,7 @@ public class EacCpfRelationsPanel extends EacCpfPanel {
 
         this.setNextRow();
 		builder.addSeparator("", cc.xyw(1, this.rowNb, 7));
+*/
         this.setNextRow();
 
 		return builder;
@@ -568,7 +569,7 @@ public class EacCpfRelationsPanel extends EacCpfPanel {
 					language = cpfRelation.getDescriptiveNote().getP().get(0).getLang();
 				}
 			}
-			cpfRelationDescriptionTa = new TextAreaWithLanguage(descriptiveNote, "");
+			cpfRelationDescriptionTa = new TextAreaWithLanguage(descriptiveNote, "", 1);
 
 			// Name and language of the relation.
 			if (title.isEmpty()) {
@@ -630,13 +631,8 @@ public class EacCpfRelationsPanel extends EacCpfPanel {
 			this.setNextRow();
 			builder.addLabel(this.labels.getString("eaccpf.relations.link"), cc.xy(1, this.rowNb));
 			builder.add(cpfRelationHrefAndTypeTf.getTextField(), cc.xy(3, this.rowNb));
-			builder.addLabel(this.labels.getString("eaccpf.relations.relation.type"), cc.xy(5, this.rowNb));
+			builder.addLabel(this.labels.getString("eaccpf.relations.relation.type")+"*", cc.xy(5, this.rowNb));
 			builder.add(cpfRelationHrefAndTypeTf.getComboBox(), cc.xy(7, this.rowNb));
-
-			// Description.
-			this.setNextRow();
-			builder.addLabel(this.labels.getString("eaccpf.relations.description"), cc.xy(1, this.rowNb));
-			builder.add(cpfRelationDescriptionTa.getTextField(), cc.xyw(3, this.rowNb, 5));
 
 			// Agency part.
 			// Title.
@@ -651,6 +647,11 @@ public class EacCpfRelationsPanel extends EacCpfPanel {
 				builder.addLabel(this.labels.getString("eaccpf.relations.identifier"), cc.xy(5, this.rowNb));
 				builder.add(cpfRelationOrganisationNameAndIdTfList.get(j).getExtraField(), cc.xy(7, this.rowNb));
 			}
+
+			// Description.
+			this.setNextRow();
+			builder.addLabel(this.labels.getString("eaccpf.relations.description"), cc.xy(1, this.rowNb));
+			builder.add(cpfRelationDescriptionTa.getTextField(), cc.xyw(3, this.rowNb, 5));
 
 			// Button to add new agency information.
 //			this.setNextRow();
@@ -672,10 +673,10 @@ public class EacCpfRelationsPanel extends EacCpfPanel {
 	private PanelBuilder buildResourceRelationsSection(PanelBuilder builder, CellConstraints cc) {
 		// Set section title.
 		this.setNextRow();
-		builder.addSeparator("", cc.xyw(1, this.rowNb, 7));
+		/*builder.addSeparator("", cc.xyw(1, this.rowNb, 7));
         this.setNextRow();
 		builder.addLabel(this.labels.getString("eaccpf.relations.resources.section"), cc.xyw(1, this.rowNb, 7));
-		this.setNextRow();
+		this.setNextRow();*/
 
 		// Define values of the part.
 		if (this.eaccpf.getCpfDescription().getRelations().getResourceRelation().isEmpty()) {
@@ -796,7 +797,7 @@ public class EacCpfRelationsPanel extends EacCpfPanel {
 				}
 
 			}
-			resourceRelationDescriptionTa = new TextAreaWithLanguage(descriptiveNote, "");
+			resourceRelationDescriptionTa = new TextAreaWithLanguage(descriptiveNote, "", 1);
 
 			// Name and language of the relation.
 			if (title.isEmpty()) {
@@ -856,13 +857,8 @@ public class EacCpfRelationsPanel extends EacCpfPanel {
 			this.setNextRow();
 			builder.addLabel(this.labels.getString("eaccpf.relations.link"), cc.xy(1, this.rowNb));
 			builder.add(resourceRelationHrefAndTypeTf.getTextField(), cc.xy(3, this.rowNb));
-			builder.addLabel(this.labels.getString("eaccpf.relations.relation.type"), cc.xy(5, this.rowNb));
+			builder.addLabel(this.labels.getString("eaccpf.relations.relation.type")+"*", cc.xy(5, this.rowNb));
 			builder.add(resourceRelationHrefAndTypeTf.getComboBox(), cc.xy(7, this.rowNb));
-
-			// Description.
-			this.setNextRow();
-			builder.addLabel(this.labels.getString("eaccpf.relations.description"), cc.xy(1, this.rowNb));
-			builder.add(resourceRelationDescriptionTa.getTextField(), cc.xyw(3, this.rowNb, 5));
 
 			// Agency part.
 			// Title.
@@ -877,6 +873,11 @@ public class EacCpfRelationsPanel extends EacCpfPanel {
 				builder.addLabel(this.labels.getString("eaccpf.relations.identifier"), cc.xy(5, this.rowNb));
 				builder.add(resourceRelationOrganisationNameAndIdTfsList.get(j).getExtraField(), cc.xy(7, this.rowNb));
 			}
+			
+			// Description.
+			this.setNextRow();
+			builder.addLabel(this.labels.getString("eaccpf.relations.description"), cc.xy(1, this.rowNb));
+			builder.add(resourceRelationDescriptionTa.getTextField(), cc.xyw(3, this.rowNb, 5));
 
 			// Button to add new agency information.
 //			this.setNextRow();
@@ -904,10 +905,10 @@ public class EacCpfRelationsPanel extends EacCpfPanel {
 	private PanelBuilder buildFunctionsRelationsSection(PanelBuilder builder, CellConstraints cc) {
 		// Set section title.
 		this.setNextRow();
-		builder.addSeparator("", cc.xyw(1, this.rowNb, 7));
+		/*builder.addSeparator("", cc.xyw(1, this.rowNb, 7));
         this.setNextRow();
 		builder.addLabel(this.labels.getString("eaccpf.relations.functions.section"), cc.xyw(1, this.rowNb, 7));
-		this.setNextRow();
+		this.setNextRow();*/
 
 		// Define values of the part.
 		if (this.eaccpf.getCpfDescription().getRelations().getFunctionRelation().isEmpty()) {
@@ -1028,7 +1029,7 @@ public class EacCpfRelationsPanel extends EacCpfPanel {
 					language = functionRelation.getDescriptiveNote().getP().get(0).getLang();
 				}
 			}
-			resourceRelationDescriptionTa = new TextAreaWithLanguage(descriptiveNote, "");
+			resourceRelationDescriptionTa = new TextAreaWithLanguage(descriptiveNote, "", 1);
 
 			// Name and language of the relation.
 			if (title.isEmpty()) {
@@ -1089,13 +1090,8 @@ public class EacCpfRelationsPanel extends EacCpfPanel {
 			this.setNextRow();
 			builder.addLabel(this.labels.getString("eaccpf.relations.link"), cc.xy(1, this.rowNb));
 			builder.add(resourceRelationHrefAndTypeTf.getTextField(), cc.xy(3, this.rowNb));
-			builder.addLabel(this.labels.getString("eaccpf.relations.relation.type"), cc.xy(5, this.rowNb));
+			builder.addLabel(this.labels.getString("eaccpf.relations.relation.type")+"*", cc.xy(5, this.rowNb));
 			builder.add(resourceRelationHrefAndTypeTf.getComboBox(), cc.xy(7, this.rowNb));
-
-			// Description.
-			this.setNextRow();
-			builder.addLabel(this.labels.getString("eaccpf.relations.description"), cc.xy(1, this.rowNb));
-			builder.add(resourceRelationDescriptionTa.getTextField(), cc.xyw(3, this.rowNb, 5));
 
 			// Agency part.
 			// Title.
@@ -1110,6 +1106,11 @@ public class EacCpfRelationsPanel extends EacCpfPanel {
 				builder.addLabel(this.labels.getString("eaccpf.relations.identifier"), cc.xy(5, this.rowNb));
 				builder.add(resourceRelationOrganisationNameAndIdTfsList.get(j).getExtraField(), cc.xy(7, this.rowNb));
 			}
+			
+			// Description.
+			this.setNextRow();
+			builder.addLabel(this.labels.getString("eaccpf.relations.description"), cc.xy(1, this.rowNb));
+			builder.add(resourceRelationDescriptionTa.getTextField(), cc.xyw(3, this.rowNb, 5));
 
 			// Button to add new agency information.
 //			this.setNextRow();
@@ -1137,8 +1138,8 @@ public class EacCpfRelationsPanel extends EacCpfPanel {
 	private PanelBuilder buildButtons(PanelBuilder builder, CellConstraints cc) {
 		// Row for the next and previous tab buttons.
 		setNextRow();
-		builder.addSeparator("", cc.xyw(1, this.rowNb, 7));
-		setNextRow();
+		/*builder.addSeparator("", cc.xyw(1, this.rowNb, 7));
+		setNextRow();*/
 		JButton previousTabBtn = new ButtonTab(labels.getString("eaccpf.commons.previousTab"));
 		builder.add(previousTabBtn, cc.xy (1, rowNb));
 		previousTabBtn.addActionListener(new ChangeTabBtnAction(this.eaccpf, this.tabbedPane, this.model, false));

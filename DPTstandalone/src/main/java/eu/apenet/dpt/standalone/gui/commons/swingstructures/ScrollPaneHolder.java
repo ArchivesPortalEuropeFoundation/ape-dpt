@@ -34,6 +34,12 @@ public class ScrollPaneHolder {
         textAreaScrollable = new TextAreaScrollable(title);
         scrollPane = new ScrollPane(textAreaScrollable);
     }
+    
+    public ScrollPaneHolder(String title,int rows) {
+        textAreaScrollable = new TextAreaScrollable(title,rows);
+        scrollPane = new ScrollPane(textAreaScrollable);
+    }
+    
     public ScrollPaneHolder() {
         new ScrollPaneHolder("");
     }
