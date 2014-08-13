@@ -30,6 +30,16 @@ import javax.swing.JTextArea;
  * @author Yoann Moranville
  */
 public class TextAreaScrollable extends JTextArea implements KeyListener {
+	
+	public TextAreaScrollable(String title,int rows) {
+        super(title);
+        this.setLineWrap(true);
+        this.setAutoscrolls(true);
+        this.setWrapStyleWord(true);
+        this.setRows(rows);
+        this.addKeyListener(this);
+    }
+	
     public TextAreaScrollable(String title) {
         super(title);
         this.setLineWrap(true);

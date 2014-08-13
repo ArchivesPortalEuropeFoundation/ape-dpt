@@ -180,7 +180,7 @@ public class EacCpfControlPanel extends EacCpfPanel {
 		} else {
 			type = this.entityType.getName();
 		}
-
+/*
 		if (XmlTypeEacCpf.EAC_CPF_CORPORATEBODY.getName().equalsIgnoreCase(type)) {
 			builder.addLabel(this.labels.getString("eaccpf.commons.type") + " " + this.labels.getString("eaccpf.commons.corporateBody"), cc.xyw(1, this.rowNb, 3));
 			this.entityType = XmlTypeEacCpf.EAC_CPF_CORPORATEBODY;
@@ -196,6 +196,7 @@ public class EacCpfControlPanel extends EacCpfPanel {
 
         this.setNextRow();
 		builder.addSeparator("", cc.xyw(1, this.rowNb, 7));
+*/
         this.setNextRow();
 
 		return builder;
@@ -292,7 +293,10 @@ public class EacCpfControlPanel extends EacCpfPanel {
 		nextTabBtn.addActionListener(new AddLocalIdentifier(eaccpf,tabbedPane,model));
 		setNextRow();
 		
-		builder.addLabel(labels.getString("eaccpf.start.language")+ "*" + ":", cc.xy(1, rowNb));
+		builder.addLabel(this.labels.getString("eaccpf.control.usedlanguagesandscriptsfordescription"), cc.xyw(1, this.rowNb, 7));
+		setNextRow();
+		
+		builder.addLabel(labels.getString("eaccpf.commons.select.language")+ "*" + ":", cc.xy(1, rowNb));
         LanguageWithScript languageWithScript = new LanguageWithScript(firstLanguage, firstScript, labels);
         JComboBox<String> scriptBox = languageWithScript.getScriptBox();
         //fix for script part, it's not selecting values
@@ -308,7 +312,7 @@ public class EacCpfControlPanel extends EacCpfPanel {
         //end fix for script part
         builder.add(languageWithScript.getLanguageBox(), cc.xy (3, rowNb));
         this.languageFirst = languageWithScript.getLanguageBox();
-        builder.addLabel(labels.getString("eaccpf.start.script")+ "*" + ":", cc.xy(5, rowNb));
+        builder.addLabel(labels.getString("eaccpf.control.selectascript")+ "*" + ":", cc.xy(5, rowNb));
         builder.add(languageWithScript.getScriptBox(), cc.xy(7, rowNb));
         this.scriptFirst = languageWithScript.getScriptBox();
         this.languageWithScript = languageWithScript;
