@@ -694,7 +694,7 @@ public class EacCpfRelationsPanel extends EacCpfPanel {
 		for (int i = 0; i < resourceRelations.size(); i++) {
 			// Set title.
 			this.setNextRow();
-			builder.addSeparator(this.labels.getString("eaccpf.relations.resource.relation"), cc.xyw(1, this.rowNb, 7));
+			builder.addSeparator(this.labels.getString("eaccpf.relations.resources.relation"), cc.xyw(1, this.rowNb, 7));
 			this.setNextRow();
 
 			ResourceRelation resourceRelation = resourceRelations.get(i);
