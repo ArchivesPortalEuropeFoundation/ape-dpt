@@ -59,22 +59,23 @@ public class LinkFormatChecker extends ExtensionFunctionDefinition {
     }
 
     public String normalizeLink(String link) {
-        try {
-            URL currentUrl = new URL(link);
-            link = currentUrl.toString();
-        } catch (MalformedURLException ex) {
-            if (ex.getMessage().startsWith("no protocol") || ex.getMessage().startsWith("unknown protocol")) {
-                link = "http://" + link;
-            }
-        }
-        Matcher matcher = URL_PATTERN.matcher(link);
-        try {
-            if (matcher.matches()) {
-                return link;
-            }
-        } catch (Exception ex) {
-            throw new RuntimeException(ex);
-        }
-        return null;
+        return link;
+//        try {
+//            URL currentUrl = new URL(link);
+//            link = currentUrl.toString();
+//        } catch (MalformedURLException ex) {
+//            if (ex.getMessage().startsWith("no protocol") || ex.getMessage().startsWith("unknown protocol")) {
+//                link = "http://" + link;
+//            }
+//        }
+//        Matcher matcher = URL_PATTERN.matcher(link);
+//        try {
+//            if (matcher.matches()) {
+//                return link;
+//            }
+//        } catch (Exception ex) {
+//            throw new RuntimeException(ex);
+//        }
+//        return null;
     }
 }
