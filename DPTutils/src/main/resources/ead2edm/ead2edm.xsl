@@ -549,19 +549,19 @@
                 <dc:type>
                     <xsl:apply-templates select="$currentnode/@level"/>
                 </dc:type>
-                <xsl:choose>
-                    <xsl:when test="$currentnode/controlaccess">
-                        <xsl:call-template name="controlaccess">
-                            <xsl:with-param name="controlaccesses" select="$currentnode/controlaccess"/>
-                        </xsl:call-template>
-                    </xsl:when>
-                    <xsl:otherwise>
-                        <xsl:if
-                            test="$inheritControlaccess = 'true' and fn:string-length($inheritedControlaccesses) > 0">
-                            <xsl:copy-of select="$inheritedControlaccesses"/>
-                        </xsl:if>
-                    </xsl:otherwise>
-                </xsl:choose>
+                <!--<xsl:choose>-->
+                    <!--<xsl:when test="$currentnode/controlaccess">-->
+                        <!--<xsl:call-template name="controlaccess">-->
+                            <!--<xsl:with-param name="controlaccesses" select="$currentnode/controlaccess"/>-->
+                        <!--</xsl:call-template>-->
+                    <!--</xsl:when>-->
+                    <!--<xsl:otherwise>-->
+                        <!--<xsl:if-->
+                            <!--test="$inheritControlaccess = 'true' and fn:string-length($inheritedControlaccesses) > 0">-->
+                            <!--<xsl:copy-of select="$inheritedControlaccesses"/>-->
+                        <!--</xsl:if>-->
+                    <!--</xsl:otherwise>-->
+                <!--</xsl:choose>-->
                 <xsl:choose>
                     <xsl:when test="$inheritFromParent">
                         <dc:title>
@@ -1174,9 +1174,10 @@
             <xsl:for-each
                 select="$controlaccesses/function|$controlaccesses/occupation|$controlaccesses/subject">
                 <dc:subject>
-                    <xsl:if test="$unitid">
-                        <xsl:attribute name="rdf:resource" select="$unitid"/>
-                    </xsl:if>
+                    <!--Stefan: According to Kerstin, it should never be with @rdf:resource-->
+                    <!--<xsl:if test="$unitid">-->
+                        <!--<xsl:attribute name="rdf:resource" select="$unitid"/>-->
+                    <!--</xsl:if>-->
                     <xsl:value-of select="."/>
                 </dc:subject>
             </xsl:for-each>
