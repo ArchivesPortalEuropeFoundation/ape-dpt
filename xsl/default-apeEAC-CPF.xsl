@@ -111,7 +111,7 @@
                 <xsl:attribute name="localType" select="'open'"/>
             </xsl:if>
             <xsl:choose>
-                <xsl:when test="string-length(.)!=0">
+                <xsl:when test="string-length(.) != 0 and not(@notAfter) and not(@notBefore)">
                     <xsl:if test="@standardDate and not(@standardDate = '2099')">
                         <xsl:attribute name="standardDate" select="@standardDate"/>
                     </xsl:if>
@@ -174,7 +174,7 @@
                     <xsl:attribute name="xml:lang" select="fromDate/@xml:lang"/>
                 </xsl:if>
                 <xsl:choose>
-                    <xsl:when test="string-length(fromDate)!=0">
+                    <xsl:when test="string-length(fromDate) != 0 and not(@notAfter) and not(@notBefore)">
                         <xsl:if
                             test="fromDate/@standardDate and not(fromDate/@standardDate = '0001')">
                             <xsl:attribute name="standardDate" select="fromDate/@standardDate"/>
@@ -205,7 +205,7 @@
                     <xsl:attribute name="xml:lang" select="toDate/@xml:lang"/>
                 </xsl:if>
                 <xsl:choose>
-                    <xsl:when test="string-length(toDate)!=0">
+                    <xsl:when test="string-length(toDate) != 0 and not(@notAfter) and not(@notBefore)">
                         <xsl:if test="toDate/@standardDate and not(toDate/@standardDate = '2099')">
                             <xsl:attribute name="standardDate" select="toDate/@standardDate"/>
                         </xsl:if>
