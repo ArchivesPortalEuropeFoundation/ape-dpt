@@ -92,6 +92,7 @@ public abstract class EacCpfPanel extends CommonsPropertiesPanels {
 	private static final String MAINTENANCE_EVENT_DERIVED = "derived";
 	private static final String MAINTENANCE_EVENT_NEW = "new";
 	private static final String MAINTENANCE_EVENT_REVISED = "revised";
+	public static final String LOCAL_TYPE_ORIGINAL = "original";
 	
 	//Constant to the value publicationStatus
 	private static final String PUBLICATIONSTATUS_VALUE = "approved";
