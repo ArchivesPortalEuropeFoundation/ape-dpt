@@ -111,13 +111,13 @@
                 <xsl:attribute name="localType" select="'open'"/>
             </xsl:if>
             <xsl:choose>
-                <xsl:when test="string-length(.) != 0 and not(@notAfter) and not(@notBefore)">
-                    <xsl:if test="@standardDate and not(@standardDate = '2099')">
+                <xsl:when test="string-length(.) != 0">
+                    <xsl:if test="@standardDate and not(@standardDate = '2099') and not(@notAfter) and not(@notBefore)">
                         <xsl:attribute name="standardDate" select="@standardDate"/>
                     </xsl:if>
                     <xsl:if test="not(@standardDate)">
                         <xsl:call-template name="normalizeDate">
-                            <xsl:with-param name="date" select="."></xsl:with-param>
+                            <xsl:with-param name="date" select="."/>
                         </xsl:call-template>
                     </xsl:if>
                     <xsl:value-of select="."/>
@@ -174,9 +174,9 @@
                     <xsl:attribute name="xml:lang" select="fromDate/@xml:lang"/>
                 </xsl:if>
                 <xsl:choose>
-                    <xsl:when test="string-length(fromDate) != 0 and not(@notAfter) and not(@notBefore)">
+                    <xsl:when test="string-length(fromDate) != 0">
                         <xsl:if
-                            test="fromDate/@standardDate and not(fromDate/@standardDate = '0001')">
+                            test="fromDate/@standardDate and not(fromDate/@standardDate = '0001') and not(@notAfter) and not(@notBefore)">
                             <xsl:attribute name="standardDate" select="fromDate/@standardDate"/>
                         </xsl:if>
                         <xsl:if test="not(fromDate/@standardDate)">
@@ -205,8 +205,8 @@
                     <xsl:attribute name="xml:lang" select="toDate/@xml:lang"/>
                 </xsl:if>
                 <xsl:choose>
-                    <xsl:when test="string-length(toDate) != 0 and not(@notAfter) and not(@notBefore)">
-                        <xsl:if test="toDate/@standardDate and not(toDate/@standardDate = '2099')">
+                    <xsl:when test="string-length(toDate) != 0">
+                        <xsl:if test="toDate/@standardDate and not(toDate/@standardDate = '2099') and not(@notAfter) and not(@notBefore)">
                             <xsl:attribute name="standardDate" select="toDate/@standardDate"/>
                         </xsl:if>
                         <xsl:if test="not(toDate/@standardDate)">
@@ -1465,11 +1465,11 @@
     </xsl:template>
 
     <!-- outline -->
-    <xsl:template match="outline" mode="copy">
-        <outline>
-            <xsl:apply-templates select="node()" mode="copy"/>
-        </outline>
-    </xsl:template>
+    <xsl:template match="outline" mode="copy"/>
+        <!--<outline>-->
+            <!--<xsl:apply-templates select="node()" mode="copy"/>-->
+        <!--</outline>-->
+    <!--</xsl:template>-->
 
     <!-- level -->
     <xsl:template match="level" mode="copy">
@@ -1938,9 +1938,17 @@
                 <xsl:variable name="standardDate">
                     <xsl:value-of select="ape:normalizeDate(normalize-space($date))"/>
                 </xsl:variable>
-                <xsl:if test="normalize-space($standardDate)">
+                <xsl:if test="normalize-space($standardDate) and not(contains($standardDate, '/'))">
                     <xsl:attribute name="standardDate">
                         <xsl:value-of select="$standardDate"/>
+                    </xsl:attribute>
+                </xsl:if>
+                <xsl:if test="normalize-space($standardDate) and contains($standardDate, '/')">
+                    <xsl:attribute name="notAfter">
+                        <xsl:value-of select="substring-after($standardDate, '/')"/>
+                    </xsl:attribute>
+                    <xsl:attribute name="notBefore">
+                        <xsl:value-of select="substring-before($standardDate, '/')"/>
                     </xsl:attribute>
                 </xsl:if>
             </xsl:otherwise>

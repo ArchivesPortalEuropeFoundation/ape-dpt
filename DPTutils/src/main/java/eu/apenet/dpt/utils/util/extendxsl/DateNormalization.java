@@ -142,9 +142,9 @@ public class DateNormalization extends ExtensionFunctionDefinition {
             return fromXmlDateFile;
 
         if (date.contains("9999"))
-            date = date.replace("9999", "2999");
+            date = date.replace("9999", "2099");
         if (date.contains("3000"))
-            date = date.replace("3000", "2999");
+            date = date.replace("3000", "2099");
 
         //log.info("Trying to normalize: " + date);
         try {
@@ -232,11 +232,11 @@ public class DateNormalization extends ExtensionFunctionDefinition {
             
             Matcher matcher_4 = PATTERN_4.matcher(date);
             if (matcher_4.matches()) 
-                return "0000/" + matcher_4.group(2);
+                return "0001/" + matcher_4.group(2);
             
             Matcher matcher_5 = PATTERN_5.matcher(date);
             if (matcher_5.matches()) 
-                return matcher_5.group(2) + "/2999";
+                return matcher_5.group(2) + "/2099";
             
             Matcher matcher_6 = PATTERN_6.matcher(date);
             if (matcher_6.matches()) 
