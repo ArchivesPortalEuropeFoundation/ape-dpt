@@ -31,6 +31,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 import java.util.ResourceBundle;
+import java.util.Set;
 
 import javax.swing.JButton;
 import javax.swing.JComponent;
@@ -1465,8 +1466,9 @@ public class EacCpfIdentityPanel extends EacCpfPanel {
 					// The "<recordId>" should follow the pattern
 					//     "eac_[eag:recordId]_[eac-cpf:recordId]"
 					// as is described on issue #1348 comment 5.
-//					recordId.setValue(Integer.toString(fakeId));
-					recordId.setValue("eac_" + mainagencycode + "_" + Integer.toString(fakeId));
+					recordId.setValue(Integer.toString(fakeId));
+					//revert reversion
+//					recordId.setValue("eac_" + mainagencycode + "_" + Integer.toString(fakeId));
 
 					this.eaccpf.getControl().setRecordId(recordId);
 				}
