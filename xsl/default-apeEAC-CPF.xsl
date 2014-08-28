@@ -1944,12 +1944,16 @@
                     </xsl:attribute>
                 </xsl:if>
                 <xsl:if test="normalize-space($standardDate) and contains($standardDate, '/')">
-                    <xsl:attribute name="notAfter">
-                        <xsl:value-of select="substring-after($standardDate, '/')"/>
-                    </xsl:attribute>
-                    <xsl:attribute name="notBefore">
-                        <xsl:value-of select="substring-before($standardDate, '/')"/>
-                    </xsl:attribute>
+                    <xsl:if test="substring-after($standardDate, '/') != '2099'">
+                        <xsl:attribute name="notAfter">
+                            <xsl:value-of select="substring-after($standardDate, '/')"/>
+                        </xsl:attribute>
+                    </xsl:if>
+                    <xsl:if test="substring-before($standardDate, '/') != '0001'">
+                        <xsl:attribute name="notBefore">
+                            <xsl:value-of select="substring-before($standardDate, '/')"/>
+                        </xsl:attribute>
+                    </xsl:if>
                 </xsl:if>
             </xsl:otherwise>
         </xsl:choose>
