@@ -7,9 +7,10 @@
                 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                 xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:none="none"
                 xmlns:ape="http://www.archivesportaleurope.net/functions"
+                xmlns:apeintern="http://www.archivesportaleurope.net/apeInternFunctions"
                 xmlns:xlink="http://www.w3.org/1999/xlink"
                 xsi:schemaLocation="urn:isbn:1-931666-33-4 http://eac.staatsbibliothek-berlin.de/schema/cpf.xsd"
-                xpath-default-namespace="urn:isbn:1-931666-33-4" exclude-result-prefixes="xsl fo xs none ape">
+                xpath-default-namespace="urn:isbn:1-931666-33-4" exclude-result-prefixes="xsl fo xs none ape apeintern">
 
     <xsl:param name="recordId" select="''"/>
     <xsl:param name="mainagencycode" select="''"/>
@@ -17,6 +18,11 @@
 
     <xsl:output indent="yes" method="xml"/>
     <xsl:strip-space elements="*"/>
+
+    <xsl:function name="apeintern:doesElementOnlyContainOutline" as="xs:boolean">
+        <xsl:param name="element" as="element()?"/>
+        <xsl:sequence select="count($element/child::*) eq 1 and $element/child::outline" />
+    </xsl:function>
 
     <!-- The root element -->
     <xsl:template match="/">
@@ -964,7 +970,7 @@
 
     <!-- places -->
     <xsl:template match="places" mode="copy">
-        <xsl:if test="descendant::*[text()]">
+        <xsl:if test="descendant::*[text()] and not(apeintern:doesElementOnlyContainOutline(.))">
             <places>
                 <xsl:choose>
                     <xsl:when test="p|list|citation">
@@ -1109,7 +1115,7 @@
 
     <!-- localDescriptions -->
     <xsl:template match="localDescriptions" mode="copy">
-        <xsl:if test="descendant::*[text()]">
+        <xsl:if test="descendant::*[text()] and not(apeintern:doesElementOnlyContainOutline(.))">
             <localDescriptions>
                 <xsl:attribute name="localType" select="@localType"/>
                 <xsl:choose>
@@ -1171,7 +1177,7 @@
 
     <!-- legalStatuses -->
     <xsl:template match="legalStatuses" mode="copy">
-        <xsl:if test="descendant::*[text()]">
+        <xsl:if test="descendant::*[text()] and not(apeintern:doesElementOnlyContainOutline(.))">
             <legalStatuses>
                 <xsl:choose>
                     <xsl:when test="p|list|citation">
@@ -1233,7 +1239,7 @@
 
     <!-- functions -->
     <xsl:template match="functions" mode="copy">
-        <xsl:if test="descendant::*[text()]">
+        <xsl:if test="descendant::*[text()] and not(apeintern:doesElementOnlyContainOutline(.))">
             <functions>
                 <xsl:choose>
                     <xsl:when test="p|list|citation">
@@ -1296,7 +1302,7 @@
 
     <!-- occupations -->
     <xsl:template match="occupations" mode="copy">
-        <xsl:if test="descendant::*[text()]">
+        <xsl:if test="descendant::*[text()] and not(apeintern:doesElementOnlyContainOutline(.))">
             <occupations>
                 <xsl:choose>
                     <xsl:when test="p|list|citation">
@@ -1358,7 +1364,7 @@
 
     <!-- mandates -->
     <xsl:template match="mandates" mode="copy">
-        <xsl:if test="descendant::*[text()]">
+        <xsl:if test="descendant::*[text()] and not(apeintern:doesElementOnlyContainOutline(.))">
             <mandates>
                 <xsl:choose>
                     <xsl:when test="p|list|citation">
@@ -1518,7 +1524,7 @@
 
     <!-- biogHist -->
     <xsl:template match="biogHist" mode="copy">
-        <xsl:if test="*[text()]">
+        <xsl:if test="*[text()] and not(apeintern:doesElementOnlyContainOutline(.))">
             <biogHist>
                 <xsl:if test="@localType">
                     <xsl:attribute name="localType" select="@localType"/>
