@@ -65,8 +65,8 @@
             <xsl:choose>
                 <xsl:when test="$useExistingRepository='true'">
                     <xsl:choose>
-                        <xsl:when test="/ead/archdesc/did/repository">
-                            <xsl:apply-templates select="/ead/archdesc/did/repository"/>
+                        <xsl:when test="/ead/archdesc/did/repository[1]">
+                            <xsl:apply-templates select="/ead/archdesc/did/repository[1]"/>
                         </xsl:when>
                         <xsl:otherwise>
                             <edm:dataProvider>
@@ -83,7 +83,7 @@
                             </edm:dataProvider>
                         </xsl:when>
                         <xsl:otherwise>
-                            <xsl:apply-templates select="/ead/archdesc/did/repository"/>
+                            <xsl:apply-templates select="/ead/archdesc/did/repository[1]"/>
                         </xsl:otherwise>
                     </xsl:choose>
                 </xsl:otherwise>
@@ -112,9 +112,11 @@
         <edm:ProvidedCHO>
             <xsl:attribute name="rdf:about" select="concat('providedCHO_', .)"/>
             <xsl:if test="/ead/archdesc/did/origination">
-                <dc:creator>
-                    <xsl:value-of select="normalize-space(/ead/archdesc/did/origination[1])"/>
-                </dc:creator>
+                <xsl:for-each select="/ead/archdesc/did/origination">
+                    <dc:creator>
+                        <xsl:value-of select="normalize-space(.)"/>
+                    </dc:creator>
+                </xsl:for-each>
             </xsl:if>
             <xsl:if test="/ead/archdesc/scopecontent">
                 <xsl:for-each select="/ead/archdesc/scopecontent">
@@ -147,9 +149,11 @@
             </xsl:if>
             <xsl:if test="/ead/archdesc/dsc/c">
                 <xsl:for-each select="/ead/archdesc/dsc/c/did/unitid[@type='call number']">
-                    <dcterms:hasPart>
-                        <xsl:value-of select="normalize-space(.)"/>
-                    </dcterms:hasPart>
+                    <xsl:if test="ancestor::node()[2]//dao">
+                        <dcterms:hasPart>
+                            <xsl:value-of select="normalize-space(.)"/>
+                        </dcterms:hasPart>
+                    </xsl:if>
                 </xsl:for-each>
             </xsl:if>
             <xsl:if test="/ead/archdesc/did/unitdate">
@@ -304,7 +308,7 @@
             </xsl:apply-templates>
         </xsl:if>
         <!-- CREATE LEVEL INFORMATION IF C IS FONDS OR (SUB)SERIES -->
-        <xsl:if test="@level = ('fonds', 'series', 'subseries')">
+        <xsl:if test="@level = ('fonds', 'series', 'subseries') and .//dao">
             <ore:Aggregation>
                 <xsl:attribute name="rdf:about" select="concat('aggregation_', did/unitid[@type='call number'])"/>
                 <edm:aggregatedCHO>
@@ -313,8 +317,8 @@
                 <xsl:choose>
                     <xsl:when test="$useExistingRepository='true'">
                         <xsl:choose>
-                            <xsl:when test="did/repository">
-                                <xsl:apply-templates select="did/repository"/>
+                            <xsl:when test="did/repository[1]">
+                                <xsl:apply-templates select="did/repository[1]"/>
                             </xsl:when>
                             <xsl:otherwise>
                                 <edm:dataProvider>
@@ -331,7 +335,7 @@
                                 </edm:dataProvider>
                             </xsl:when>
                             <xsl:otherwise>
-                                <xsl:apply-templates select="did/repository"/>
+                                <xsl:apply-templates select="did/repository[1]"/>
                             </xsl:otherwise>
                         </xsl:choose>
                     </xsl:otherwise>
@@ -360,11 +364,6 @@
             </ore:Aggregation>
             <edm:ProvidedCHO>
                 <xsl:attribute name="rdf:about" select="concat('providedCHO_', did/unitid[@type='call number'])"/>
-                <xsl:if test="did/origination">
-                    <dc:creator>
-                        <xsl:value-of select="normalize-space(did/origination)"/>
-                    </dc:creator>
-                </xsl:if>
                 <xsl:if test="did/scopecontent">
                     <dc:description>
                         <xsl:value-of select="did/scopecontent"/>
@@ -393,11 +392,13 @@
                 </xsl:if>
                 <xsl:if test="c">
                     <xsl:for-each select="c/did/unitid[@type='call number']">
-                        <dcterms:hasPart>
-                            <xsl:attribute name="rdf:resource">
-                                <xsl:value-of select="normalize-space(.)"/>
-                            </xsl:attribute>
-                        </dcterms:hasPart>
+                        <xsl:if test="ancestor::node()[2]//dao">
+                            <dcterms:hasPart>
+                                <xsl:attribute name="rdf:resource">
+                                    <xsl:value-of select="normalize-space(.)"/>
+                                </xsl:attribute>
+                            </dcterms:hasPart>
+                        </xsl:if>
                     </xsl:for-each>
                 </xsl:if>
                 <xsl:if test="parent::node()/parent::node()/did/unitid[@type='call number']">
@@ -498,11 +499,11 @@
                 <xsl:choose>
                     <xsl:when test="$useExistingRepository='true'">
                         <xsl:choose>
-                            <xsl:when test="$currentnode/did/repository">
-                                <xsl:apply-templates select="$currentnode/did/repository"/>
+                            <xsl:when test="$currentnode/did/repository[1]">
+                                <xsl:apply-templates select="$currentnode/did/repository[1]"/>
                             </xsl:when>
-                            <xsl:when test="/ead/archdesc/did/repository">
-                                <xsl:apply-templates select="/ead/archdesc/did/repository"/>
+                            <xsl:when test="/ead/archdesc/did/repository[1]">
+                                <xsl:apply-templates select="/ead/archdesc/did/repository[1]"/>
                             </xsl:when>
                             <xsl:otherwise>
                                 <edm:dataProvider>
@@ -519,7 +520,7 @@
                                 </edm:dataProvider>
                             </xsl:when>
                             <xsl:otherwise>
-                                <xsl:apply-templates select="/ead/archdesc/did/repository"/>
+                                <xsl:apply-templates select="/ead/archdesc/did/repository[1]"/>
                             </xsl:otherwise>
                         </xsl:choose>
                     </xsl:otherwise>
@@ -538,11 +539,13 @@
             </ore:Aggregation>
             <edm:ProvidedCHO>
                 <xsl:attribute name="rdf:about" select="concat('providedCHO_', $unitid)"/>
-                <xsl:if test="//archdesc/did/origination/persname">
-                    <dc:creator>
-                        <xsl:value-of select="//archdesc/did/origination/persname"/>
-                    </dc:creator>
-                </xsl:if>
+                <!--<xsl:if test="//archdesc/did/origination/persname">
+                    <xsl:for-each select="//archdesc/did/origination/persname">
+                        <dc:creator>
+                            <xsl:value-of select="normalize-space(.)"/>
+                        </dc:creator>
+                    </xsl:for-each>
+                </xsl:if>-->
                 <dc:identifier>
                     <xsl:apply-templates select="$currentnode/did/unitid[@type='call number']"/>
                 </dc:identifier>
@@ -851,9 +854,11 @@
                         </xsl:if>
                         <xsl:if test="$currentnode/c">
                             <xsl:for-each select="$currentnode/c/did/unitid[@type='call number']">
-                                <dcterms:hasPart>
-                                    <xsl:value-of select="normalize-space(.)"/>
-                                </dcterms:hasPart>
+                                <xsl:if test="ancestor::node()[2]//dao">
+                                    <dcterms:hasPart>
+                                        <xsl:value-of select="normalize-space(.)"/>
+                                    </dcterms:hasPart>
+                                </xsl:if>
                             </xsl:for-each>
                         </xsl:if>
                         <xsl:if test="$currentnode/did/physdesc/extent">
@@ -872,7 +877,7 @@
                         <xsl:if test="$currentnode/bibliography/bibref">
                             <xsl:apply-templates select="$currentnode/bibliography/bibref"/>
                         </xsl:if>
-                        <xsl:choose>
+                        <!--<xsl:choose>
                             <xsl:when test="$currentnode/did/origination">
                                 <xsl:call-template name="creator">
                                     <xsl:with-param name="originations"
@@ -885,7 +890,7 @@
                                     <xsl:copy-of select="$inheritedOriginations"/>
                                 </xsl:if>
                             </xsl:otherwise>
-                        </xsl:choose>
+                        </xsl:choose>-->
                         <xsl:choose>
                             <xsl:when test="$currentnode/custodhist">
                                 <xsl:call-template name="custodhist">
@@ -1174,10 +1179,6 @@
             <xsl:for-each
                 select="$controlaccesses/function|$controlaccesses/occupation|$controlaccesses/subject">
                 <dc:subject>
-                    <!--Stefan: According to Kerstin, it should never be with @rdf:resource-->
-                    <!--<xsl:if test="$unitid">-->
-                        <!--<xsl:attribute name="rdf:resource" select="$unitid"/>-->
-                    <!--</xsl:if>-->
                     <xsl:value-of select="."/>
                 </dc:subject>
             </xsl:for-each>
