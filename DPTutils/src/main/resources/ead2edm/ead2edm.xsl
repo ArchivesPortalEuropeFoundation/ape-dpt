@@ -766,11 +766,6 @@
                                 <xsl:call-template name="controlaccess">
                                     <xsl:with-param name="controlaccesses"
                                                     select="$currentnode/controlaccess"/>
-                                    <xsl:with-param name="unitid">
-                                        <xsl:if test="$currentnode/@level = 'file'">
-                                            <xsl:value-of select="$unitid"/>
-                                        </xsl:if>
-                                    </xsl:with-param>
                                 </xsl:call-template>
                             </xsl:when>
                             <xsl:otherwise>
@@ -779,11 +774,6 @@
                                         <xsl:call-template name="controlaccess">
                                             <xsl:with-param name="controlaccesses"
                                                             select="$parentcnode/controlaccess"/>
-                                            <xsl:with-param name="unitid">
-                                                <xsl:if test="$currentnode/@level = 'file'">
-                                                    <xsl:value-of select="$unitid"/>
-                                                </xsl:if>
-                                            </xsl:with-param>
                                         </xsl:call-template>
                                     </xsl:when>
                                     <xsl:otherwise>
@@ -923,11 +913,6 @@
                                 <xsl:call-template name="controlaccess">
                                     <xsl:with-param name="controlaccesses"
                                                     select="$currentnode/controlaccess"/>
-                                    <xsl:with-param name="unitid">
-                                        <xsl:if test="$currentnode/@level = 'file'">
-                                            <xsl:value-of select="$unitid"/>
-                                        </xsl:if>
-                                    </xsl:with-param>
                                 </xsl:call-template>
                             </xsl:when>
                             <xsl:otherwise>
@@ -1149,8 +1134,6 @@
     </xsl:template>
     <xsl:template name="controlaccess">
         <xsl:param name="controlaccesses"/>
-        <xsl:param name="unitid"/>
-        <xsl:for-each select="$controlaccesses">
             <xsl:for-each select="$controlaccesses/persname">
                 <dc:coverage>
                     <xsl:value-of select="."/>
@@ -1182,7 +1165,6 @@
                     <xsl:value-of select="."/>
                 </dc:subject>
             </xsl:for-each>
-        </xsl:for-each>
     </xsl:template>
     <xsl:template name="convertToEdmType">
         <xsl:param name="role"/>
