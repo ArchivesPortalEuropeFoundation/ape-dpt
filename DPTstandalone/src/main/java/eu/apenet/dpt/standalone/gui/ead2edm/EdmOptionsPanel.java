@@ -711,7 +711,7 @@ public class EdmOptionsPanel extends JPanel {
 
         //prefixUrl, repositoryCode and xmlTypeName used for EDM element id generation;
         //repositoryCode is taken from the tool while the other two have fixed values.
-        config.setPrefixUrl("http://www.archivesportaleurope.net/web/guest/ead-display/-/ead/fp");
+        config.setHost("http://www.archivesportaleurope.net/web/guest/ead-display/-/ead/fp");
         config.setRepositoryCode(dataPreparationToolGUI.getRepositoryCodeIdentifier());
         config.setXmlTypeName("fa");
 

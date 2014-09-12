@@ -18,7 +18,7 @@ package eu.apenet.dpt.standalone.gui.eaccpf;
  * #L%
  */
 
-
+import java.awt.KeyboardFocusManager;
 import java.awt.event.ActionEvent;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
@@ -55,6 +55,7 @@ import eu.apenet.dpt.standalone.gui.commons.DefaultBtnAction;
 import eu.apenet.dpt.standalone.gui.commons.swingstructures.StructureWithLanguage;
 import eu.apenet.dpt.standalone.gui.eaccpf.swingstructures.TextFieldWithComboBoxEacCpf;
 import eu.apenet.dpt.standalone.gui.eaccpf.swingstructures.TextFieldsWithRadioButtonForDates;
+import eu.apenet.dpt.standalone.gui.listener.FocusManagerListener;
 import eu.apenet.dpt.utils.eaccpf.AgencyCode;
 import eu.apenet.dpt.utils.eaccpf.AgencyName;
 import eu.apenet.dpt.utils.eaccpf.Control;
@@ -206,7 +207,9 @@ public class EacCpfIdentityPanel extends EacCpfPanel {
         this.removeChangeListener();
         this.tabbedPane.addChangeListener(new ChangeTabListener(this.eaccpf, this.tabbedPane, this.model, 0));
 
-        return builder.getPanel();
+        JPanel panel = builder.getPanel();
+        KeyboardFocusManager.getCurrentKeyboardFocusManager().addPropertyChangeListener(new FocusManagerListener(panel));
+        return panel;
     }
 
     /**
@@ -1459,12 +1462,8 @@ public class EacCpfIdentityPanel extends EacCpfPanel {
                     Random random = new Random();
                     int fakeId = random.nextInt(1000000000);
                     RecordId recordId = new RecordId();
-                    // The "<recordId>" should follow the pattern
-                    //     "eac_[eag:recordId]_[eac-cpf:recordId]"
-                    // as is described on issue #1348 comment 5.
                     recordId.setValue(Integer.toString(fakeId));
-                    //revert reversion
-//					recordId.setValue("eac_" + mainagencycode + "_" + Integer.toString(fakeId));
+//                    recordId.setValue("eac_" + mainagencycode + "_" + Integer.toString(fakeId));
 
                     this.eaccpf.getControl().setRecordId(recordId);
                 }

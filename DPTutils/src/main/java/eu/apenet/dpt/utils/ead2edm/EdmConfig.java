@@ -33,7 +33,7 @@ public class EdmConfig implements Serializable {
     private boolean useExistingRepository;
     private boolean minimalConversion;
     private String edmIdentifier;
-    private String prefixUrl;
+    private String host;
     private String repositoryCode;
     private String xmlTypeName;
     private Properties properties;
@@ -251,12 +251,12 @@ public class EdmConfig implements Serializable {
         this.edmIdentifier = edmIdentifier;
     }
 
-    public String getPrefixUrl() {
-        return prefixUrl;
+    public String getHost() {
+        return host;
     }
 
-    public void setPrefixUrl(String prefixUrl) {
-        this.prefixUrl = prefixUrl;
+    public void setHost(String host) {
+        this.host = host;
     }
 
     public String getRepositoryCode() {
@@ -298,7 +298,7 @@ public class EdmConfig implements Serializable {
             properties.put("useExistingRepository", getString(new Boolean(isUseExistingRepository()).toString()));
             properties.put("minimalConversion", getString(new Boolean(isMinimalConversion()).toString()));
             properties.put("edm_identifier", getString(getEdmIdentifier()));
-            properties.put("prefix_url", getString(getPrefixUrl()));
+            properties.put("prefix_url", getString(getHost()));
             String repCodeAfterReplacement = getString(getRepositoryCode()).replace('/', '_');
             properties.put("repository_code", getString(repCodeAfterReplacement));
             properties.put("xml_type_name", getString(getXmlTypeName()));

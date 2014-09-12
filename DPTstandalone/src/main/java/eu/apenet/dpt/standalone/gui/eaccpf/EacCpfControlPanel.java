@@ -18,7 +18,7 @@ package eu.apenet.dpt.standalone.gui.eaccpf;
  * #L%
  */
 
-
+import java.awt.KeyboardFocusManager;
 import java.awt.event.ActionEvent;
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -32,6 +32,7 @@ import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextField;
 import javax.swing.event.ChangeEvent;
@@ -48,6 +49,7 @@ import eu.apenet.dpt.standalone.gui.Utilities;
 import eu.apenet.dpt.standalone.gui.commons.ButtonTab;
 import eu.apenet.dpt.standalone.gui.commons.DefaultBtnAction;
 import eu.apenet.dpt.standalone.gui.commons.swingstructures.LanguageWithScript;
+import eu.apenet.dpt.standalone.gui.listener.FocusManagerListener;
 import eu.apenet.dpt.utils.eaccpf.AgencyCode;
 import eu.apenet.dpt.utils.eaccpf.Control;
 import eu.apenet.dpt.utils.eaccpf.EacCpf;
@@ -76,6 +78,7 @@ public class EacCpfControlPanel extends EacCpfPanel {
 	private JComboBox<String> scriptFirst;
 	private JComboBox languageFirst;
 	private LanguageWithScript languageWithScript;
+	private JTextField jTextFieldInstitutionForPersonResponsible;
 
 	/**
 	 * Constructor.
@@ -149,7 +152,9 @@ public class EacCpfControlPanel extends EacCpfPanel {
 		this.removeChangeListener();
 		this.tabbedPane.addChangeListener(new ChangeTabListener (this.eaccpf, this.tabbedPane, this.model, 3));
 
-		return builder.getPanel();
+		JPanel panel = builder.getPanel();
+		KeyboardFocusManager.getCurrentKeyboardFocusManager().addPropertyChangeListener(new FocusManagerListener(panel));
+		return panel;
 	}
 	
 	/**
@@ -175,7 +180,7 @@ public class EacCpfControlPanel extends EacCpfPanel {
 		} else {
 			type = this.entityType.getName();
 		}
-
+/*
 		if (XmlTypeEacCpf.EAC_CPF_CORPORATEBODY.getName().equalsIgnoreCase(type)) {
 			builder.addLabel(this.labels.getString("eaccpf.commons.type") + " " + this.labels.getString("eaccpf.commons.corporateBody"), cc.xyw(1, this.rowNb, 3));
 			this.entityType = XmlTypeEacCpf.EAC_CPF_CORPORATEBODY;
@@ -191,6 +196,7 @@ public class EacCpfControlPanel extends EacCpfPanel {
 
         this.setNextRow();
 		builder.addSeparator("", cc.xyw(1, this.rowNb, 7));
+*/
         this.setNextRow();
 
 		return builder;
@@ -203,11 +209,11 @@ public class EacCpfControlPanel extends EacCpfPanel {
 		//extracted from dashboard implementation
 		Random random = new Random();
 		String value = "";
-		String mainagencycode = (this.eaccpf.getControl().getMaintenanceAgency().getAgencyCode()!=null && this.eaccpf.getControl().getMaintenanceAgency().getAgencyCode().getValue()!=null )?this.eaccpf.getControl().getMaintenanceAgency().getAgencyCode().getValue():"";
+//		String mainagencycode = (this.eaccpf.getControl().getMaintenanceAgency().getAgencyCode()!=null && this.eaccpf.getControl().getMaintenanceAgency().getAgencyCode().getValue()!=null )?this.eaccpf.getControl().getMaintenanceAgency().getAgencyCode().getValue():"";
 		if(this.eaccpf.getControl().getRecordId().getValue()==null || this.eaccpf.getControl().getRecordId().getValue().isEmpty()){
 			int fakeId = random.nextInt(1000000000);
-//			value = Integer.toString(fakeId);
 			value = Integer.toString(fakeId);
+//			value = "eac_" + mainagencycode + "_" + Integer.toString(fakeId);
 		}else{
 			value = this.eaccpf.getControl().getRecordId().getValue();
 		}
@@ -220,7 +226,9 @@ public class EacCpfControlPanel extends EacCpfPanel {
 		JLabel jLabelLinkPersonResponsible = new JLabel(this.labels.getString("eaccpf.control.personinstitutionresponsiblefordescription"));
 		builder.add(jLabelLinkPersonResponsible, cc.xy (1, rowNb));
 		String content = "";
-		if (this.eaccpf.getControl().getMaintenanceHistory().getMaintenanceEvent().size()>0
+		if (StringUtils.isNotEmpty(responsible)) {
+			content = responsible;
+		} else if (this.eaccpf.getControl().getMaintenanceHistory().getMaintenanceEvent().size()>0
 				&& this.eaccpf.getControl().getMaintenanceHistory().getMaintenanceEvent().get(this.eaccpf.getControl().getMaintenanceHistory().getMaintenanceEvent().size() - 1).getAgent() != null
                 && this.eaccpf.getControl().getMaintenanceHistory().getMaintenanceEvent().get(this.eaccpf.getControl().getMaintenanceHistory().getMaintenanceEvent().size() - 1).getAgent().getContent() != null
                 && !this.eaccpf.getControl().getMaintenanceHistory().getMaintenanceEvent().get(this.eaccpf.getControl().getMaintenanceHistory().getMaintenanceEvent().size() - 1).getAgent().getContent().isEmpty()) {
@@ -233,13 +241,19 @@ public class EacCpfControlPanel extends EacCpfPanel {
 		builder.add(jTextFieldPersonResponsible, cc.xy (3, rowNb));
 		this.personInstitutionResponsibleTextField = jTextFieldPersonResponsible;
 		setNextRow();
-		JLabel jLabelIdentifierForPersonResponsible = new JLabel(this.labels.getString("eaccpf.control.identifierofinstitutionresponsible"));
+		JLabel jLabelIdentifierForPersonResponsible = new JLabel(this.labels.getString("eaccpf.control.identifierofinstitutionresponsible") + "*");
 		builder.add(jLabelIdentifierForPersonResponsible, cc.xy (1, rowNb));
-//		JTextField jTextFieldIdentifierForPersonResponsible = new JTextField(this.eaccpf.getControl().getRecordId().getValue()!=null?this.eaccpf.getControl().getRecordId().getValue():"");
 		content = eaccpf.getControl().getMaintenanceAgency().getAgencyCode().getValue()!=null?eaccpf.getControl().getMaintenanceAgency().getAgencyCode().getValue():"";
 		JTextField jTextFieldIdentifierForPersonResponsible = new JTextField(content);
 		builder.add(jTextFieldIdentifierForPersonResponsible, cc.xy (3, rowNb));
 		this.idControl = jTextFieldIdentifierForPersonResponsible;
+		setNextRow();
+		//Field to Institution responsible for the description
+		JLabel jLabelInstitutionForPersonResponsible = new JLabel(this.labels.getString("eaccpf.control.institutionResponsibleForTheDescription"));
+		builder.add(jLabelInstitutionForPersonResponsible, cc.xy(1, this.rowNb));
+		String contentInstitution = this.eaccpf.getControl().getMaintenanceAgency().getAgencyName().getContent()!=null?this.eaccpf.getControl().getMaintenanceAgency().getAgencyName().getContent():"";
+		this.jTextFieldInstitutionForPersonResponsible = new JTextField(contentInstitution);
+		builder.add(this.jTextFieldInstitutionForPersonResponsible, cc.xy(3, this.rowNb));
 		setNextRow();
 		if(StringUtils.isEmpty(content)){
 			builder.add(createErrorLabel(this.labels.getString("eaccpf.control.error.emptyidentifier")), cc.xyw(1, this.rowNb, 3));
@@ -273,8 +287,11 @@ public class EacCpfControlPanel extends EacCpfPanel {
 		builder.add(nextTabBtn, cc.xy (1, this.rowNb));
 		nextTabBtn.addActionListener(new AddLocalIdentifier(eaccpf,tabbedPane,model));
 		setNextRow();
+
+		builder.addLabel(this.labels.getString("eaccpf.control.usedlanguagesandscriptsfordescription"), cc.xyw(1, this.rowNb, 7));
+		setNextRow();
 		
-		builder.addLabel(labels.getString("eaccpf.start.language")+ "*" + ":", cc.xy(1, rowNb));
+		builder.addLabel(labels.getString("eaccpf.commons.select.language")+ "*" + ":", cc.xy(1, rowNb));
         LanguageWithScript languageWithScript = new LanguageWithScript(firstLanguage, firstScript, labels);
         JComboBox<String> scriptBox = languageWithScript.getScriptBox();
         //fix for script part, it's not selecting values
@@ -290,7 +307,7 @@ public class EacCpfControlPanel extends EacCpfPanel {
         //end fix for script part
         builder.add(languageWithScript.getLanguageBox(), cc.xy (3, rowNb));
         this.languageFirst = languageWithScript.getLanguageBox();
-        builder.addLabel(labels.getString("eaccpf.start.script")+ "*" + ":", cc.xy(5, rowNb));
+        builder.addLabel(labels.getString("eaccpf.control.selectascript")+ "*" + ":", cc.xy(5, rowNb));
         builder.add(languageWithScript.getScriptBox(), cc.xy(7, rowNb));
         this.scriptFirst = languageWithScript.getScriptBox();
         this.languageWithScript = languageWithScript;
@@ -439,6 +456,16 @@ public class EacCpfControlPanel extends EacCpfPanel {
 
 		protected void updateJAXBObject(boolean save) throws EacCpfFormException {
 			errors = new ArrayList<String>();
+
+			// Checks the person responsible
+			String personResponsible = personInstitutionResponsibleTextField.getText();
+			if (StringUtils.isNotEmpty(personResponsible)
+					&& StringUtils.isNotEmpty(trimStringValue(personResponsible))) {
+				responsible = personResponsible;
+			} else {
+				responsible = EacCpfPanel.MAINTENANCE_AGENT_HUMAN;
+			}
+
 			//empty values, instance all if necesary
 			if(this.eaccpf.getControl()==null){
 				this.eaccpf.setControl(new Control());
@@ -462,12 +489,13 @@ public class EacCpfControlPanel extends EacCpfPanel {
 					JTextField identifier = localIdentifierForInstitution.get(i);
 					JTextField identifierType = listIdentifierType.get(i);
 					OtherRecordId otherRecordId= new OtherRecordId();
-					if (!trimStringValue(identifierType.getText()).isEmpty()){
-						otherRecordId.setLocalType(trimStringValue(identifierType.getText()));
-						updated = true;
-					}
 					if(!trimStringValue(identifier.getText()).isEmpty()){
 						otherRecordId.setContent(trimStringValue(identifier.getText()));
+//						otherRecordId.setLocalType(EacCpfPanel.LOCAL_TYPE_ORIGINAL);
+						updated = true;
+					}
+					if (!trimStringValue(identifierType.getText()).isEmpty()){
+						otherRecordId.setLocalType(trimStringValue(identifierType.getText()));
 						updated = true;
 					}
 					if (updated) {
@@ -477,7 +505,9 @@ public class EacCpfControlPanel extends EacCpfPanel {
 			}
 			//idControl
 			this.eaccpf.getControl().getMaintenanceAgency().getAgencyCode().setValue(trimStringValue(idControl.getText()));
-			//combox updates
+			//agencyName
+			this.eaccpf.getControl().getMaintenanceAgency().getAgencyName().setContent(jTextFieldInstitutionForPersonResponsible.getText());
+			//comboBox updates
 			firstLanguage = LanguageIsoList.getIsoCode(trimStringValue(languageFirst.getSelectedItem().toString()));
 			firstScript = scriptFirst.getSelectedItem().toString();
 			//generates a language declaration node
@@ -495,7 +525,8 @@ public class EacCpfControlPanel extends EacCpfPanel {
 			//update language declaration
 			this.eaccpf.getControl().setLanguageDeclaration(languageDeclaration);
 			//update record id
-			this.eaccpf.getControl().getRecordId().setValue(idControl.getText()+"_"+(idAutogeneratedControl.contains("_")?idAutogeneratedControl.substring(idAutogeneratedControl.lastIndexOf("_")+1):""));
+			this.eaccpf.getControl().getRecordId().setValue(idAutogeneratedControl);
+//			this.eaccpf.getControl().getRecordId().setValue(idControl.getText()+"_"+(idAutogeneratedControl.contains("_")?idAutogeneratedControl.substring(idAutogeneratedControl.lastIndexOf("_")+1):""));
 			if(!errors.isEmpty()) {
 				throw new EacCpfFormException("Errors in validation of EAC-CPF");
 			}
