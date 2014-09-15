@@ -31,7 +31,6 @@
     <xsl:param name="inheritCustodhist"/>
     <xsl:param name="inheritAltformavail"/>
     <xsl:param name="inheritControlaccess"/>
-    <xsl:param name="contextInformationPrefix"/>
     <xsl:param name="useExistingDaoRole"/>
     <xsl:param name="useExistingRepository"/>
     <xsl:param name="useExistingLanguage"/>
@@ -44,9 +43,6 @@
     <!-- Variables -->
     <xsl:variable name="id_base"
                   select="concat('http://', $host, '/web/guest/ead-display/-/ead/fp/' , $repository_code, '/type/', $xml_type_name, '/id/')"/>
-    <!-- Variables -->
-    <xsl:variable name="id_base"
-                  select="concat($prefix_url, '/' , $repository_code, '/', $xml_type_name, '/')"/>
 
     <xsl:template match="/">
         <rdf:RDF

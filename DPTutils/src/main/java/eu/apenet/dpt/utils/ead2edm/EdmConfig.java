@@ -3,7 +3,6 @@ package eu.apenet.dpt.utils.ead2edm;
 import java.io.File;
 import java.io.Serializable;
 import java.util.Properties;
-import org.apache.commons.lang.StringUtils;
 
 public class EdmConfig implements Serializable {
 
@@ -24,7 +23,6 @@ public class EdmConfig implements Serializable {
     private boolean inheritCustodhist;
     private boolean inheritAltformavail;
     private boolean inheritControlaccess;
-    private String contextInformationPrefix;
     private String rights;
     private String rightsAdditionalInformation;
     private String dataProvider;
@@ -119,23 +117,6 @@ public class EdmConfig implements Serializable {
 
     public void setInheritControlaccess(boolean inheritControlaccess) {
         this.inheritControlaccess = inheritControlaccess;
-    }
-
-    public String getContextInformationPrefix() {
-        if (StringUtils.isNotBlank(contextInformationPrefix)) {
-            if (StringUtils.endsWith(contextInformationPrefix, ":")) {
-                return contextInformationPrefix + " ";
-            } else if (StringUtils.endsWith(contextInformationPrefix, ": ")) {
-                return contextInformationPrefix;
-            } else {
-                return contextInformationPrefix + ": ";
-            }
-        }
-        return contextInformationPrefix;
-    }
-
-    public void setContextInformationPrefix(String contextInformationPrefix) {
-        this.contextInformationPrefix = contextInformationPrefix;
     }
 
     public String getLanguage() {
@@ -292,7 +273,6 @@ public class EdmConfig implements Serializable {
             properties.put("inheritCustodhist", getString(new Boolean(isInheritCustodhist()).toString()));
             properties.put("inheritAltformavailHead", getString(new Boolean(isInheritAltformavail()).toString()));
             properties.put("inheritControlaccess", getString(new Boolean(isInheritControlaccess()).toString()));
-            properties.put("contextInformationPrefix", getString(getContextInformationPrefix()));
             properties.put("useExistingDaoRole", getString(new Boolean(isUseExistingDaoRole()).toString()));
             properties.put("useExistingLanguage", getString(new Boolean(isUseExistingLanguage()).toString()));
             properties.put("useExistingRepository", getString(new Boolean(isUseExistingRepository()).toString()));

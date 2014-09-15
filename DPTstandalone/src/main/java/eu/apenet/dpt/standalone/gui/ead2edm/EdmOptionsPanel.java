@@ -9,9 +9,9 @@ package eu.apenet.dpt.standalone.gui.ead2edm;
  * Licensed under the EUPL, Version 1.1 or - as soon they will be approved by the European Commission - subsequent versions of the EUPL (the "Licence");
  * You may not use this work except in compliance with the Licence.
  * You may obtain a copy of the Licence at:
- * 
+ *
  * http://ec.europa.eu/idabc/eupl5
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software distributed under the Licence is distributed on an "AS IS" basis,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the Licence for the specific language governing permissions and limitations under the Licence.
@@ -122,7 +122,6 @@ public class EdmOptionsPanel extends JPanel {
     private ButtonGroup creativeCommonsBtnGrp;
     private JComboBox creativeCommonsComboBox;
     private JComboBox europeanaRightsComboBox;
-    private JTextArea contextTextArea;
     private JTextArea dataProviderTextArea;
     private JList languageList;
     private JTextArea additionalRightsTextArea;
@@ -137,11 +136,9 @@ public class EdmOptionsPanel extends JPanel {
     private JCheckBox useExistingLanguageCheckbox;
     private JPanel languageBoxPanel = new LanguageBoxPanel();
     private String conversionMode = MINIMAL;
-    private JPanel hierarchyPrefixPanel;
     private JPanel inheritParentPanel;
     private JPanel inheritOriginationPanel;
     private JPanel inheritLanguagePanel;
-    private JCheckBox hierarchyPrefixCheckbox;
     private JCheckBox inheritParentCheckbox;
     private JCheckBox inheritOriginationCheckbox;
     private JRadioButton inhParYesRadioButton;
@@ -171,7 +168,7 @@ public class EdmOptionsPanel extends JPanel {
         JPanel europeanaRightsPanel = new EuropeanaRightsPanel();
         JPanel emptyPanel = new JPanel();
 
-        JPanel formPanel = new JPanel(new GridLayout(10, 1));
+        JPanel formPanel = new JPanel(new GridLayout(9, 1));
 
         JPanel extraLicenseCardLayoutPanel = new JPanel(new CardLayout());
         extraLicenseCardLayoutPanel.add(creativeCommonsPanel, CREATIVE_COMMONS);
@@ -436,32 +433,6 @@ public class EdmOptionsPanel extends JPanel {
         panel.setBorder(GREY_LINE);
         formPanel.add(panel);
 
-        hierarchyPrefixPanel = new JPanel(new GridLayout(1, 3));
-        hierarchyPrefixCheckbox = new JCheckBox(labels.getString("ese.hierarchyPrefix") + ":");
-        hierarchyPrefixCheckbox.setSelected(true);
-        hierarchyPrefixCheckbox.addItemListener(new ItemListener() {
-            @Override
-            public void itemStateChanged(ItemEvent e) {
-                if (e.getStateChange() == ItemEvent.SELECTED) {
-                    contextTextArea.setEnabled(true);
-                }
-                if (e.getStateChange() == ItemEvent.DESELECTED) {
-                    contextTextArea.setEnabled(false);
-                }
-            }
-        });
-        hierarchyPrefixPanel.add(hierarchyPrefixCheckbox);
-        contextTextArea = new JTextArea(labels.getString("ese.hierarchyPrefixDefault") + ":");
-        contextTextArea.setLineWrap(true);
-        contextTextArea.setWrapStyleWord(true);
-        JScrollPane ctaScrollPane = new JScrollPane(contextTextArea);
-        ctaScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
-        hierarchyPrefixPanel.add(ctaScrollPane);
-        hierarchyPrefixPanel.add(new Label(""));
-        hierarchyPrefixPanel.setBorder(BLACK_LINE);
-        hierarchyPrefixPanel.setVisible(false);
-        formPanel.add(hierarchyPrefixPanel);
-
         inheritParentPanel = new JPanel(new GridLayout(2, 3));
         inheritParentCheckbox = new JCheckBox(labels.getString("ese.inheritParent") + ":" + "*");
         inheritParentCheckbox.setSelected(true);
@@ -683,11 +654,6 @@ public class EdmOptionsPanel extends JPanel {
             config.setUseExistingLanguage(true);
         }
 
-        config.setContextInformationPrefix(labels.getString("ese.hierarchyPrefixDefault") + ":");
-        if (FULL.equals(conversionMode) && hierarchyPrefixCheckbox.isSelected() && contextTextArea != null && StringUtils.isNotEmpty(contextTextArea.getText())) {
-            config.setContextInformationPrefix(contextTextArea.getText());
-        }
-
         enumeration = licenseGroup.getElements();
         while (enumeration.hasMoreElements()) {
             AbstractButton btn = enumeration.nextElement();
@@ -851,10 +817,6 @@ public class EdmOptionsPanel extends JPanel {
         if (ead2EseInformation.getArchdescRepository() != null) {
             archdescRepository = ead2EseInformation.getArchdescRepository();
         }
-    }
-
-    public JPanel getHierarchyPrefixPanel() {
-        return hierarchyPrefixPanel;
     }
 
     public JPanel getInheritParentPanel() {
@@ -1225,13 +1187,11 @@ public class EdmOptionsPanel extends JPanel {
         public void actionPerformed(ActionEvent e) {
             if (MINIMAL.equals(e.getActionCommand())) {
                 conversionMode = MINIMAL;
-                hierarchyPrefixPanel.setVisible(false);
                 inheritOriginationPanel.setVisible(false);
                 inheritParentPanel.setVisible(false);
             }
             if (FULL.equals(e.getActionCommand())) {
                 conversionMode = FULL;
-                hierarchyPrefixPanel.setVisible(true);
                 inheritOriginationPanel.setVisible(true);
                 inheritParentPanel.setVisible(true);
             }
