@@ -7,9 +7,10 @@
                 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                 xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:none="none"
                 xmlns:ape="http://www.archivesportaleurope.net/functions"
+                xmlns:apeintern="http://www.archivesportaleurope.net/apeInternFunctions"
                 xmlns:xlink="http://www.w3.org/1999/xlink"
                 xsi:schemaLocation="urn:isbn:1-931666-33-4 http://eac.staatsbibliothek-berlin.de/schema/cpf.xsd"
-                xpath-default-namespace="urn:isbn:1-931666-33-4" exclude-result-prefixes="xsl fo xs none ape">
+                xpath-default-namespace="urn:isbn:1-931666-33-4" exclude-result-prefixes="xsl fo xs none ape apeintern">
 
     <xsl:param name="recordId" select="''"/>
     <xsl:param name="mainagencycode" select="''"/>
@@ -17,6 +18,11 @@
 
     <xsl:output indent="yes" method="xml"/>
     <xsl:strip-space elements="*"/>
+
+    <xsl:function name="apeintern:doesElementOnlyContainOutline" as="xs:boolean">
+        <xsl:param name="element" as="element()?"/>
+        <xsl:sequence select="count($element/child::*) eq 1 and $element/child::outline" />
+    </xsl:function>
 
     <!-- The root element -->
     <xsl:template match="/">
@@ -65,10 +71,16 @@
     <xsl:template match="useDates" mode="copy">
         <useDates>
             <xsl:choose>
-                <xsl:when test="count(date) = 1 and count(dateRange) = 0">
+                <xsl:when test="count(date) = 1 and count(dateRange) = 0 and count(dateSet[1]/date) = 0 and count(dateSet[1]/dateRange) = 0">
                     <xsl:apply-templates select="date" mode="copy"/>
                 </xsl:when>
-                <xsl:when test="count(dateRange) = 1 and count(date) = 0">
+                <xsl:when test="count(dateRange) = 1 and count(date) = 0 and count(dateSet[1]/date) = 0 and count(dateSet[1]/dateRange) = 0">
+                    <xsl:apply-templates select="dateRange" mode="copy"/>
+                </xsl:when>
+                <xsl:when test="count(date) = 0 and count(dateRange) = 0 and count(dateSet[1]/date) = 1 and count(dateSet[1]/dateRange) = 0">
+                    <xsl:apply-templates select="date" mode="copy"/>
+                </xsl:when>
+                <xsl:when test="count(dateRange) = 0 and count(date) = 0 and count(dateSet[1]/date) = 0 and count(dateSet[1]/dateRange) = 1">
                     <xsl:apply-templates select="dateRange" mode="copy"/>
                 </xsl:when>
                 <xsl:otherwise>
@@ -98,16 +110,21 @@
                 <xsl:message
                     select="ape:resource('eaccpf.message.unknownLocalTypeDate', $currentLanguage)"/>
             </xsl:if>
-            <xsl:if test=". = 'unknown'">
+            <xsl:if test=". = ('unknown', '')">
                 <xsl:attribute name="localType" select="'unknown'"/>
             </xsl:if>
             <xsl:if test=". = 'open'">
                 <xsl:attribute name="localType" select="'open'"/>
             </xsl:if>
             <xsl:choose>
-                <xsl:when test="string-length(.)!=0">
-                    <xsl:if test="@standardDate and not(@standardDate = '2099')">
+                <xsl:when test="string-length(.) != 0">
+                    <xsl:if test="@standardDate and not(@standardDate = '2099') and not(@notAfter) and not(@notBefore)">
                         <xsl:attribute name="standardDate" select="@standardDate"/>
+                    </xsl:if>
+                    <xsl:if test="not(@standardDate)">
+                        <xsl:call-template name="normalizeDate">
+                            <xsl:with-param name="date" select="."/>
+                        </xsl:call-template>
                     </xsl:if>
                     <xsl:value-of select="."/>
                 </xsl:when>
@@ -130,9 +147,9 @@
                 <xsl:attribute name="localType" select="'unknown'"/>
             </xsl:if>
             <xsl:choose>
-                <xsl:when test="fromDate = 'unknown'">
+                <xsl:when test="fromDate = ('unknown', '')">
                     <xsl:choose>
-                        <xsl:when test="toDate ='unknown'">
+                        <xsl:when test="toDate = ('unknown', '')">
                             <xsl:attribute name="localType" select="'unknown'"/>
                         </xsl:when>
                         <xsl:when test="toDate ='open'">
@@ -144,7 +161,7 @@
                     </xsl:choose>
                 </xsl:when>
                 <xsl:otherwise>
-                    <xsl:if test="toDate ='unknown'">
+                    <xsl:if test="toDate = ('unknown', '')">
                         <xsl:attribute name="localType" select="'unknownEnd'"/>
                     </xsl:if>
                     <xsl:if test="toDate ='open'">
@@ -163,10 +180,15 @@
                     <xsl:attribute name="xml:lang" select="fromDate/@xml:lang"/>
                 </xsl:if>
                 <xsl:choose>
-                    <xsl:when test="string-length(fromDate)!=0">
+                    <xsl:when test="string-length(fromDate) != 0">
                         <xsl:if
-                            test="fromDate/@standardDate and not(fromDate/@standardDate = '0001')">
+                            test="fromDate/@standardDate and not(fromDate/@standardDate = '0001') and not(@notAfter) and not(@notBefore)">
                             <xsl:attribute name="standardDate" select="fromDate/@standardDate"/>
+                        </xsl:if>
+                        <xsl:if test="not(fromDate/@standardDate)">
+                            <xsl:call-template name="normalizeDate">
+                                <xsl:with-param name="date" select="fromDate"/>
+                            </xsl:call-template>
                         </xsl:if>
                         <xsl:value-of select="fromDate"/>
                     </xsl:when>
@@ -189,9 +211,14 @@
                     <xsl:attribute name="xml:lang" select="toDate/@xml:lang"/>
                 </xsl:if>
                 <xsl:choose>
-                    <xsl:when test="string-length(toDate)!=0">
-                        <xsl:if test="toDate/@standardDate and not(toDate/@standardDate = '2099')">
+                    <xsl:when test="string-length(toDate) != 0">
+                        <xsl:if test="toDate/@standardDate and not(toDate/@standardDate = '2099') and not(@notAfter) and not(@notBefore)">
                             <xsl:attribute name="standardDate" select="toDate/@standardDate"/>
+                        </xsl:if>
+                        <xsl:if test="not(toDate/@standardDate)">
+                            <xsl:call-template name="normalizeDate">
+                                <xsl:with-param name="date" select="toDate"/>
+                            </xsl:call-template>
                         </xsl:if>
                         <xsl:value-of select="toDate"/>
                     </xsl:when>
@@ -335,8 +362,8 @@
         <control>
             <xsl:choose>
                 <xsl:when test="$recordId">
-            <xsl:call-template name="apeRecordId"/>
-                <xsl:apply-templates select="recordId" mode="copy"/>
+                    <xsl:call-template name="apeRecordId"/>
+                    <xsl:apply-templates select="recordId" mode="copy"/>
                 </xsl:when>
                 <xsl:otherwise>
                     <xsl:apply-templates select="recordId" mode="keepExisting"/>
@@ -366,7 +393,7 @@
             <xsl:choose>
                 <xsl:when test="name(.) = 'recordId'">
                     <xsl:attribute name="localType">
-                        <xsl:text>localIDconverted</xsl:text>
+                        <xsl:text>original</xsl:text>
                     </xsl:attribute>
                 </xsl:when>
                 <xsl:otherwise>
@@ -904,7 +931,7 @@
     <xsl:template match="existDates" mode="copy">
         <existDates>
             <xsl:choose>
-                <xsl:when test="count(date) = 0 and count(dateRange) = 0">
+                <xsl:when test="count(date) = 0 and count(dateRange) = 0 and count(dateSet) = 0">
                     <dateRange>
                         <xsl:attribute name="localType" select="'unknown'"/>
                         <fromDate>
@@ -917,10 +944,16 @@
                     <xsl:message
                         select="ape:resource('eaccpf.message.existDates', $currentLanguage)"/>
                 </xsl:when>
-                <xsl:when test="count(date) = 1 and count(dateRange) = 0">
+                <xsl:when test="count(date) = 1 and count(dateRange) = 0 and count(dateSet[1]/date) = 0 and count(dateSet[1]/dateRange) = 0">
                     <xsl:apply-templates select="date" mode="copy"/>
                 </xsl:when>
-                <xsl:when test="count(dateRange) = 1 and count(date) = 0">
+                <xsl:when test="count(dateRange) = 1 and count(date) = 0 and count(dateSet[1]/date) = 0 and count(dateSet[1]/dateRange) = 0">
+                    <xsl:apply-templates select="dateRange" mode="copy"/>
+                </xsl:when>
+                <xsl:when test="count(date) = 0 and count(dateRange) = 0 and count(dateSet[1]/date) = 1 and count(dateSet[1]/dateRange) = 0">
+                    <xsl:apply-templates select="date" mode="copy"/>
+                </xsl:when>
+                <xsl:when test="count(dateRange) = 0 and count(date) = 0 and count(dateSet[1]/date) = 0 and count(dateSet[1]/dateRange) = 1">
                     <xsl:apply-templates select="dateRange" mode="copy"/>
                 </xsl:when>
                 <xsl:otherwise>
@@ -937,7 +970,7 @@
 
     <!-- places -->
     <xsl:template match="places" mode="copy">
-        <xsl:if test="descendant::*[text()]">
+        <xsl:if test="descendant::*[text()] and not(apeintern:doesElementOnlyContainOutline(.))">
             <places>
                 <xsl:choose>
                     <xsl:when test="p|list|citation">
@@ -954,6 +987,7 @@
                                 </xsl:for-each>
                             </descriptiveNote>
                         </place>
+                        <xsl:apply-templates select="node() except (p | list | citation)" mode="copy"/>
                     </xsl:when>
                     <xsl:otherwise>
                         <xsl:apply-templates select="node()" mode="copy"/>
@@ -977,12 +1011,18 @@
                 </xsl:otherwise>
             </xsl:choose>
             <xsl:apply-templates select="address" mode="copy"/>
-            <xsl:if test="date or dateRange or dateSet[child::*]">
+            <xsl:if test="date or dateRange or dateSet[descendant::*[text()]]">
                 <xsl:choose>
-                    <xsl:when test="count(date) = 1 and count(dateRange) = 0">
+                    <xsl:when test="count(date) = 1 and count(dateRange) = 0 and count(dateSet[1]/date) = 0 and count(dateSet[1]/dateRange) = 0">
                         <xsl:apply-templates select="date" mode="copy"/>
                     </xsl:when>
-                    <xsl:when test="count(dateRange) = 1 and count(date) = 0">
+                    <xsl:when test="count(dateRange) = 1 and count(date) = 0 and count(dateSet[1]/date) = 0 and count(dateSet[1]/dateRange) = 0">
+                        <xsl:apply-templates select="dateRange" mode="copy"/>
+                    </xsl:when>
+                    <xsl:when test="count(date) = 0 and count(dateRange) = 0 and count(dateSet[1]/date) = 1 and count(dateSet[1]/dateRange) = 0">
+                        <xsl:apply-templates select="date" mode="copy"/>
+                    </xsl:when>
+                    <xsl:when test="count(dateRange) = 0 and count(date) = 0 and count(dateSet[1]/date) = 0 and count(dateSet[1]/dateRange) = 1">
                         <xsl:apply-templates select="dateRange" mode="copy"/>
                     </xsl:when>
                     <xsl:otherwise>
@@ -1075,12 +1115,13 @@
 
     <!-- localDescriptions -->
     <xsl:template match="localDescriptions" mode="copy">
-        <xsl:if test="descendant::*[text()]">
+        <xsl:if test="descendant::*[text()] and not(apeintern:doesElementOnlyContainOutline(.))">
             <localDescriptions>
                 <xsl:attribute name="localType" select="@localType"/>
                 <xsl:choose>
                     <xsl:when test="p|list|citation">
                         <localDescription>
+                            <xsl:attribute name="localType" select="@localType"/>
                             <descriptiveNote>
                                 <xsl:for-each select="p|list/item|citation">
                                     <p>
@@ -1108,10 +1149,16 @@
             <xsl:apply-templates select="term | placeEntry" mode="copy"/>
             <xsl:if test="date or dateRange or dateSet[child::*]">
                 <xsl:choose>
-                    <xsl:when test="count(date) = 1 and count(dateRange) = 0">
+                    <xsl:when test="count(date) = 1 and count(dateRange) = 0 and count(dateSet[1]/date) = 0 and count(dateSet[1]/dateRange) = 0">
                         <xsl:apply-templates select="date" mode="copy"/>
                     </xsl:when>
-                    <xsl:when test="count(dateRange) = 1 and count(date) = 0">
+                    <xsl:when test="count(dateRange) = 1 and count(date) = 0 and count(dateSet[1]/date) = 0 and count(dateSet[1]/dateRange) = 0">
+                        <xsl:apply-templates select="dateRange" mode="copy"/>
+                    </xsl:when>
+                    <xsl:when test="count(date) = 0 and count(dateRange) = 0 and count(dateSet[1]/date) = 1 and count(dateSet[1]/dateRange) = 0">
+                        <xsl:apply-templates select="date" mode="copy"/>
+                    </xsl:when>
+                    <xsl:when test="count(dateRange) = 0 and count(date) = 0 and count(dateSet[1]/date) = 0 and count(dateSet[1]/dateRange) = 1">
                         <xsl:apply-templates select="dateRange" mode="copy"/>
                     </xsl:when>
                     <xsl:otherwise>
@@ -1130,7 +1177,7 @@
 
     <!-- legalStatuses -->
     <xsl:template match="legalStatuses" mode="copy">
-        <xsl:if test="descendant::*[text()]">
+        <xsl:if test="descendant::*[text()] and not(apeintern:doesElementOnlyContainOutline(.))">
             <legalStatuses>
                 <xsl:choose>
                     <xsl:when test="p|list|citation">
@@ -1164,10 +1211,16 @@
             <xsl:apply-templates select="term | placeEntry" mode="copy"/>
             <xsl:if test="date or dateRange or dateSet[child::*]">
                 <xsl:choose>
-                    <xsl:when test="count(date) = 1 and count(dateRange) = 0">
+                    <xsl:when test="count(date) = 1 and count(dateRange) = 0 and count(dateSet[1]/date) = 0 and count(dateSet[1]/dateRange) = 0">
                         <xsl:apply-templates select="date" mode="copy"/>
                     </xsl:when>
-                    <xsl:when test="count(dateRange) = 1 and count(date) = 0">
+                    <xsl:when test="count(dateRange) = 1 and count(date) = 0 and count(dateSet[1]/date) = 0 and count(dateSet[1]/dateRange) = 0">
+                        <xsl:apply-templates select="dateRange" mode="copy"/>
+                    </xsl:when>
+                    <xsl:when test="count(date) = 0 and count(dateRange) = 0 and count(dateSet[1]/date) = 1 and count(dateSet[1]/dateRange) = 0">
+                        <xsl:apply-templates select="date" mode="copy"/>
+                    </xsl:when>
+                    <xsl:when test="count(dateRange) = 0 and count(date) = 0 and count(dateSet[1]/date) = 0 and count(dateSet[1]/dateRange) = 1">
                         <xsl:apply-templates select="dateRange" mode="copy"/>
                     </xsl:when>
                     <xsl:otherwise>
@@ -1186,7 +1239,7 @@
 
     <!-- functions -->
     <xsl:template match="functions" mode="copy">
-        <xsl:if test="descendant::*[text()]">
+        <xsl:if test="descendant::*[text()] and not(apeintern:doesElementOnlyContainOutline(.))">
             <functions>
                 <xsl:choose>
                     <xsl:when test="p|list|citation">
@@ -1221,10 +1274,16 @@
             <xsl:apply-templates select="term | placeEntry" mode="copy"/>
             <xsl:if test="date or dateRange or dateSet[child::*]">
                 <xsl:choose>
-                    <xsl:when test="count(date) = 1 and count(dateRange) = 0">
+                    <xsl:when test="count(date) = 1 and count(dateRange) = 0 and count(dateSet[1]/date) = 0 and count(dateSet[1]/dateRange) = 0">
                         <xsl:apply-templates select="date" mode="copy"/>
                     </xsl:when>
-                    <xsl:when test="count(dateRange) = 1 and count(date) = 0">
+                    <xsl:when test="count(dateRange) = 1 and count(date) = 0 and count(dateSet[1]/date) = 0 and count(dateSet[1]/dateRange) = 0">
+                        <xsl:apply-templates select="dateRange" mode="copy"/>
+                    </xsl:when>
+                    <xsl:when test="count(date) = 0 and count(dateRange) = 0 and count(dateSet[1]/date) = 1 and count(dateSet[1]/dateRange) = 0">
+                        <xsl:apply-templates select="date" mode="copy"/>
+                    </xsl:when>
+                    <xsl:when test="count(dateRange) = 0 and count(date) = 0 and count(dateSet[1]/date) = 0 and count(dateSet[1]/dateRange) = 1">
                         <xsl:apply-templates select="dateRange" mode="copy"/>
                     </xsl:when>
                     <xsl:otherwise>
@@ -1243,7 +1302,7 @@
 
     <!-- occupations -->
     <xsl:template match="occupations" mode="copy">
-        <xsl:if test="descendant::*[text()]">
+        <xsl:if test="descendant::*[text()] and not(apeintern:doesElementOnlyContainOutline(.))">
             <occupations>
                 <xsl:choose>
                     <xsl:when test="p|list|citation">
@@ -1277,10 +1336,16 @@
             <xsl:apply-templates select="term | placeEntry" mode="copy"/>
             <xsl:if test="date or dateRange or dateSet[child::*]">
                 <xsl:choose>
-                    <xsl:when test="count(date) = 1 and count(dateRange) = 0">
+                    <xsl:when test="count(date) = 1 and count(dateRange) = 0 and count(dateSet[1]/date) = 0 and count(dateSet[1]/dateRange) = 0">
                         <xsl:apply-templates select="date" mode="copy"/>
                     </xsl:when>
-                    <xsl:when test="count(dateRange) = 1 and count(date) = 0">
+                    <xsl:when test="count(dateRange) = 1 and count(date) = 0 and count(dateSet[1]/date) = 0 and count(dateSet[1]/dateRange) = 0">
+                        <xsl:apply-templates select="dateRange" mode="copy"/>
+                    </xsl:when>
+                    <xsl:when test="count(date) = 0 and count(dateRange) = 0 and count(dateSet[1]/date) = 1 and count(dateSet[1]/dateRange) = 0">
+                        <xsl:apply-templates select="date" mode="copy"/>
+                    </xsl:when>
+                    <xsl:when test="count(dateRange) = 0 and count(date) = 0 and count(dateSet[1]/date) = 0 and count(dateSet[1]/dateRange) = 1">
                         <xsl:apply-templates select="dateRange" mode="copy"/>
                     </xsl:when>
                     <xsl:otherwise>
@@ -1299,7 +1364,7 @@
 
     <!-- mandates -->
     <xsl:template match="mandates" mode="copy">
-        <xsl:if test="descendant::*[text()]">
+        <xsl:if test="descendant::*[text()] and not(apeintern:doesElementOnlyContainOutline(.))">
             <mandates>
                 <xsl:choose>
                     <xsl:when test="p|list|citation">
@@ -1333,10 +1398,16 @@
             <xsl:apply-templates select="term | placeEntry" mode="copy"/>
             <xsl:if test="date or dateRange or dateSet[child::*]">
                 <xsl:choose>
-                    <xsl:when test="count(date) = 1 and count(dateRange) = 0">
+                    <xsl:when test="count(date) = 1 and count(dateRange) = 0 and count(dateSet[1]/date) = 0 and count(dateSet[1]/dateRange) = 0">
                         <xsl:apply-templates select="date" mode="copy"/>
                     </xsl:when>
-                    <xsl:when test="count(dateRange) = 1 and count(date) = 0">
+                    <xsl:when test="count(dateRange) = 1 and count(date) = 0 and count(dateSet[1]/date) = 0 and count(dateSet[1]/dateRange) = 0">
+                        <xsl:apply-templates select="dateRange" mode="copy"/>
+                    </xsl:when>
+                    <xsl:when test="count(date) = 0 and count(dateRange) = 0 and count(dateSet[1]/date) = 1 and count(dateSet[1]/dateRange) = 0">
+                        <xsl:apply-templates select="date" mode="copy"/>
+                    </xsl:when>
+                    <xsl:when test="count(dateRange) = 0 and count(date) = 0 and count(dateSet[1]/date) = 0 and count(dateSet[1]/dateRange) = 1">
                         <xsl:apply-templates select="dateRange" mode="copy"/>
                     </xsl:when>
                     <xsl:otherwise>
@@ -1355,7 +1426,7 @@
 
     <!-- languagesUsed -->
     <xsl:template match="languagesUsed" mode="copy">
-        <xsl:if test="descendant::*[text()]">
+        <xsl:if test="descendant::*[text() | @*]">
             <languagesUsed>
                 <xsl:choose>
                     <xsl:when test="p|list|citation">
@@ -1400,11 +1471,11 @@
     </xsl:template>
 
     <!-- outline -->
-    <xsl:template match="outline" mode="copy">
-        <outline>
-            <xsl:apply-templates select="node()" mode="copy"/>
-        </outline>
-    </xsl:template>
+    <xsl:template match="outline" mode="copy"/>
+        <!--<outline>-->
+            <!--<xsl:apply-templates select="node()" mode="copy"/>-->
+        <!--</outline>-->
+    <!--</xsl:template>-->
 
     <!-- level -->
     <xsl:template match="level" mode="copy">
@@ -1453,16 +1524,32 @@
 
     <!-- biogHist -->
     <xsl:template match="biogHist" mode="copy">
-        <xsl:if test="*[text()]">
+        <xsl:if test="*[text()] and not(apeintern:doesElementOnlyContainOutline(.))">
             <biogHist>
                 <xsl:if test="@localType">
                     <xsl:attribute name="localType" select="@localType"/>
                 </xsl:if>
-                <xsl:apply-templates select="abstract | chronList | citation" mode="copy"/>
+                <xsl:apply-templates select="abstract" mode="copy"/>
+                <xsl:apply-templates select="chronList" mode="copy"/>
+                <!-- <xsl:if test="list and not(p) and chronList"> ==> see chronList-template below -->
+                <xsl:apply-templates select="citation" mode="copy"/>
+                <xsl:if test="list and not(p) and not(chronList)">
+                    <xsl:for-each select="list/item">
+                        <citation>
+                            <xsl:if test="@xml:lang">
+                                <xsl:attribute name="xml:lang" select="@xml:lang"/>
+                            </xsl:if>
+                            <xsl:value-of select="normalize-space(.)"/>
+                        </citation>
+                    </xsl:for-each>
+                </xsl:if>
                 <xsl:apply-templates select="p" mode="copy"/>
-                <xsl:if test="list">
+                <xsl:if test="list and p">
                     <xsl:for-each select="list/item">
                         <p>
+                            <xsl:if test="@xml:lang">
+                                <xsl:attribute name="xml:lang" select="@xml:lang"/>
+                            </xsl:if>
                             <xsl:value-of select="normalize-space(.)"/>
                         </p>
                     </xsl:for-each>
@@ -1489,6 +1576,19 @@
                     <xsl:apply-templates select="node()" mode="copy"/>
                 </chronItem>
             </xsl:for-each>
+            <xsl:if test="parent::node()/list and not(parent::node()/p)">
+                <xsl:for-each select="parent::node()/list/item">
+                    <chronItem>
+                        <date/>
+                        <event>
+                            <xsl:if test="@xml:lang">
+                                <xsl:attribute name="xml:lang" select="@xml:lang"/>
+                            </xsl:if>
+                            <xsl:value-of select="normalize-space(.)"/>
+                        </event>
+                    </chronItem>
+                </xsl:for-each>
+            </xsl:if>
         </chronList>
     </xsl:template>
 
@@ -1808,5 +1908,60 @@
             <xsl:if test="name(.)='c'">@<xsl:value-of select="@level"/></xsl:if>
         </xsl:variable>
         <xsl:message select="normalize-space($excludedElement)"/>
+    </xsl:template>
+    
+    <!--
+      normalize date
+      takes as input: DD.MM.YYYY
+      outputs: YYYY-MM-DD
+    -->
+    <xsl:template name="normalizeDate">
+        <xsl:param name="date"/>
+        <xsl:choose>
+            <xsl:when test="@standardDate">
+                <xsl:variable name="standardDate">
+                    <xsl:value-of select="ape:normalizeDate(normalize-space($date/@standardDate))"/>
+                </xsl:variable>
+                <xsl:choose>
+                    <xsl:when test="normalize-space($standardDate)">
+                        <xsl:attribute name="standardDate">
+                            <xsl:value-of select="$standardDate"/>
+                        </xsl:attribute>
+                    </xsl:when>
+                    <xsl:otherwise>
+                        <xsl:variable name="standardDate_2">
+                            <xsl:value-of select="ape:normalizeDate(normalize-space($date))"/>
+                        </xsl:variable>
+                        <xsl:if test="normalize-space($standardDate_2)">
+                            <xsl:attribute name="standardDate">
+                                <xsl:value-of select="$standardDate_2"/>
+                            </xsl:attribute>
+                        </xsl:if>
+                    </xsl:otherwise>
+                </xsl:choose>
+            </xsl:when>
+            <xsl:otherwise>
+                <xsl:variable name="standardDate">
+                    <xsl:value-of select="ape:normalizeDate(normalize-space($date))"/>
+                </xsl:variable>
+                <xsl:if test="normalize-space($standardDate) and not(contains($standardDate, '/'))">
+                    <xsl:attribute name="standardDate">
+                        <xsl:value-of select="$standardDate"/>
+                    </xsl:attribute>
+                </xsl:if>
+                <xsl:if test="normalize-space($standardDate) and contains($standardDate, '/')">
+                    <xsl:if test="substring-after($standardDate, '/') != '2099'">
+                        <xsl:attribute name="notAfter">
+                            <xsl:value-of select="substring-after($standardDate, '/')"/>
+                        </xsl:attribute>
+                    </xsl:if>
+                    <xsl:if test="substring-before($standardDate, '/') != '0001'">
+                        <xsl:attribute name="notBefore">
+                            <xsl:value-of select="substring-before($standardDate, '/')"/>
+                        </xsl:attribute>
+                    </xsl:if>
+                </xsl:if>
+            </xsl:otherwise>
+        </xsl:choose>
     </xsl:template>
 </xsl:stylesheet>
