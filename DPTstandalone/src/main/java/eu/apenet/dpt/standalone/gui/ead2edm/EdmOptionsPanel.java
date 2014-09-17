@@ -677,7 +677,7 @@ public class EdmOptionsPanel extends JPanel {
 
         //prefixUrl, repositoryCode and xmlTypeName used for EDM element id generation;
         //repositoryCode is taken from the tool while the other two have fixed values.
-        config.setHost("http://www.archivesportaleurope.net/web/guest/ead-display/-/ead/fp");
+        config.setHost("www.archivesportaleurope.net");
         config.setRepositoryCode(dataPreparationToolGUI.getRepositoryCodeIdentifier());
         config.setXmlTypeName("fa");
 
@@ -875,8 +875,8 @@ public class EdmOptionsPanel extends JPanel {
                         ProgressFrame.ApeProgressBar progressBar = progressFrame.getProgressBarBatch();
 
                         try {
-                            apeTabbedPane.setEseConversionErrorText(labels.getString("edm.conversionEseStarted") + "\n");
-                            writer.append(labels.getString("edm.conversionEseStarted") + "\n");
+                            apeTabbedPane.setEseConversionErrorText(labels.getString("edm.conversionEdmStarted") + "\n");
+                            writer.append(labels.getString("edm.conversionEdmStarted") + "\n");
                             SummaryWorking summaryWorking = new SummaryWorking(dataPreparationToolGUI.getResultArea(), progressBar);
                             summaryWorking.setTotalNumberFiles(numberOfFiles);
                             summaryWorking.setCurrentFileNumberBatch(currentFileNumberBatch);

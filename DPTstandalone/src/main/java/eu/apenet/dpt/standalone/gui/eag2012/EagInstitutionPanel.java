@@ -17,7 +17,6 @@ package eu.apenet.dpt.standalone.gui.eag2012;
  * See the Licence for the specific language governing permissions and limitations under the Licence.
  * #L%
  */
-import java.awt.KeyboardFocusManager;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusEvent;
@@ -216,6 +215,10 @@ public class EagInstitutionPanel extends EagPanels {
             builder.add(createErrorLabel(labels.getString("eag2012.errors.notIdentifierInstitution")), cc.xy (1, rowNb));
             setNextRow();
         }
+        if(errors.contains("otherRecordIdTfs")) {
+            builder.add(createErrorLabel(labels.getString("eag2012.errors.notIdentifierInstitution")), cc.xy (1, rowNb));
+            setNextRow();
+        }
 
         JButton addNewOtherIdentifierBtn = new ButtonTab(labels.getString("eag2012.yourinstitution.addOtherIdentifier"));
         addNewOtherIdentifierBtn.addActionListener(new AddOtherIdentifierAction(eag, tabbedPane, model));
@@ -353,25 +356,15 @@ public class EagInstitutionPanel extends EagPanels {
                     setNextRow();
                     builder.add(createErrorLabel(labels.getString("eag2012.errors.city")), cc.xy(1, rowNb));
                 }
-	            if(errors.contains("cityTf") && StringUtils.isEmpty(locationType.getCityTfValue())) 
-	            {
-	                setNextRow();
-	                builder.add(createErrorLabel(labels.getString("eag2012.errors.city")), cc.xy (1, rowNb));
-	            }
                 setNextRow();
 
                 builder.addLabel(labels.getString("eag2012.commons.country") + mandatoryStar, cc.xy(1, rowNb));
                 builder.add(locationType.getCountryTf().getTextField(), cc.xy(3, rowNb));
                 builder.addLabel(labels.getString("eag2012.commons.language"), cc.xy(5, rowNb));
                 builder.add(locationType.getCountryTf().getLanguageBox(), cc.xy(7, rowNb));
-                if (errors.contains("countryTf") && StringUtils.isEmpty(locationType.getCountryTfValue())) {
-                    setNextRow();
-                    builder.add(createErrorLabel(labels.getString("eag2012.errors.country")), cc.xy(1, rowNb));
-                }
-	            if(errors.contains("countryTf") && StringUtils.isEmpty(locationType.getCountryTfValue())) 
-	            {
+	            if(errors.contains("countryTf") && StringUtils.isEmpty(locationType.getCountryTfValue())) {
 	                setNextRow();
-	                builder.add(createErrorLabel(labels.getString("eag2012.errors.country")), cc.xy (1, rowNb));
+	                builder.add(createErrorLabel(labels.getString("eag2012.errors.country")), cc.xy(1, rowNb));
 	            }
                 setNextRow();
 
@@ -382,7 +375,6 @@ public class EagInstitutionPanel extends EagPanels {
                 locationType.getLongitudeTf().addFocusListener(new UpdateCoordsText(locationType, EagContactPanel.LONGITUDE));
                 builder.add(locationType.getLongitudeTf(), cc.xy(7, rowNb));
                 setNextRow();
-
             }
         }
 
@@ -547,9 +539,7 @@ public class EagInstitutionPanel extends EagPanels {
 //            LOG.info("Add listener");
 //            tabbedPane.addChangeListener(new TabChangeListener(eag, tabbedPane, model));
 //        }
-		JPanel panel = builder.getPanel();
-		KeyboardFocusManager.getCurrentKeyboardFocusManager().addPropertyChangeListener(new FocusManagerListener(panel));
-		return panel;
+        return builder.getPanel();
     }
 
     public class ChangeComboActioin extends UpdateEagObject {
@@ -681,7 +671,6 @@ public class EagInstitutionPanel extends EagPanels {
                     JOptionPane.showMessageDialog(eag2012Frame, labels.getString("eag2012.errors.identifierOfTheInstitution"));
                 }
 
-    			
             }
 
             eag.getControl().getOtherRecordId().add(new OtherRecordId());

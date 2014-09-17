@@ -170,6 +170,8 @@ public class EagContactPanel extends EagPanels {
                 String mandatoryStar = "*";
                 if(location != repository.getLocation().get(0))
                     mandatoryStar = "";
+                if(location != repository.getLocation().get(0))
+                    mandatoryStar = "";
 	
 	            builder.addLabel(labels.getString("eag2012.commons.street") + mandatoryStar, cc.xy (1, rowNb));
 	            builder.add(locationType.getStreetTf().getTextField(), cc.xy (3, rowNb));
