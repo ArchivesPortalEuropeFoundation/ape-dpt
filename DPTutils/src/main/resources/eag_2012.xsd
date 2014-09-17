@@ -833,15 +833,6 @@
                     <xs:enumeration value="corpname"/>
                     <xs:enumeration value="famname"/>
                     <xs:enumeration value="persname"/>
-                    <xs:enumeration value="surname"/>
-                    <xs:enumeration value="firstname"/>
-                    <xs:enumeration value="birthname"/>
-                    <xs:enumeration value="title"/>
-                    <xs:enumeration value="prefix"/>
-                    <xs:enumeration value="suffix"/>
-                    <xs:enumeration value="alias"/>
-                    <xs:enumeration value="patronymic"/>
-                    <xs:enumeration value="legalform"/>
                 </xs:restriction>
             </xs:simpleType>
         </xs:attribute>

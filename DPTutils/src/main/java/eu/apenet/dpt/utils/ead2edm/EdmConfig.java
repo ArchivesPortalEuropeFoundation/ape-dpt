@@ -278,7 +278,7 @@ public class EdmConfig implements Serializable {
             properties.put("useExistingRepository", getString(new Boolean(isUseExistingRepository()).toString()));
             properties.put("minimalConversion", getString(new Boolean(isMinimalConversion()).toString()));
             properties.put("edm_identifier", getString(getEdmIdentifier()));
-            properties.put("prefix_url", getString(getHost()));
+            properties.put("host", getString(getHost()));
             String repCodeAfterReplacement = getString(getRepositoryCode()).replace('/', '_');
             properties.put("repository_code", getString(repCodeAfterReplacement));
             properties.put("xml_type_name", getString(getXmlTypeName()));

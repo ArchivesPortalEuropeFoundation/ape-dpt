@@ -44,7 +44,7 @@ public class DateNormalization extends ExtensionFunctionDefinition {
     //1985--1986
     private static final Pattern PATTERN_YYYY_YYYY = Pattern.compile("((0|1|2)([0-9]{3}))--((0|1|2)([0-9]{3}))");
     //1985 - 1987, 1990
-    private static final Pattern PATTERN_YYYY_YYYY_YYYY = Pattern.compile("\\(?\\[?((0|1|2)([0-9]{3}))\\)?\\]?\\s*-*,?\\s*((0|1|2)([0-9]{3}))\\s*,?-*\\s*\\(?\\[?((0|1|2)([0-9]{3}))\\]?\\)?");
+    private static final Pattern PATTERN_YYYY_YYYY_YYYY = Pattern.compile("\\(?\\[?((0|1|2)([0-9]{3}))\\)?\\]?\\s*-*,?\\s*((0|1|2)([0-9]{3}))\\s*-*,?\\s*\\(?\\[?((0|1|2)([0-9]{3}))\\]?\\)?\\s*");
     //03.07.1985 bis (to, à, etc.) 06.07.1985
     private static final Pattern PATTERN_1 = Pattern.compile("([0-9]{2})\\.([0-9]{2})\\.([0-9]{4})\\D+([0-9]{2})\\.([0-9]{2})\\.([0-9]{4})");
     //3.7.1985 bis (to, à, etc.) 6.7.1985
@@ -58,9 +58,9 @@ public class DateNormalization extends ExtensionFunctionDefinition {
     //around 1985
     private static final Pattern PATTERN_6 = Pattern.compile("(environ|around|ca\\.?|env\\.?|etwa\\.?|um\\.?)*\\s*([0-9]{4})");
     //century
-    private static final Pattern PATTERN_7 = Pattern.compile("(1[0-9]{1})(ieme|\\.|th|de)* (siècle|siecle|Jhd|century|Century|Jahrhundert|Jh|eeuw)*\\s*\\.*");
+    private static final Pattern PATTERN_7 = Pattern.compile("(1[0-9]{1})(ieme|\\.|th|de|e|tes)* (siècle|siecle|Jhd|century|Century|Jahrhundert|Jh|eeuw)*\\s*\\.*");
     //century timespan
-    private static final Pattern PATTERN_8 = Pattern.compile("(1[0-9]{1})(ieme|\\.|th|de)* (bis|a|to|bis)* (1[0-9]{1})(ieme|\\.|th|de)* (siècle|siecle|Jhd|century|Century|Jahrhundert|Jh|eeuw)*\\s*\\.*");
+    private static final Pattern PATTERN_8 = Pattern.compile("(1[0-9]{1})(ieme|\\.|th|de|e|tes)* (bis|a|to|bis|à)* (1[0-9]{1})(ieme|\\.|th|de|e|tes)* (siècle|siecle|Jhd|century|Century|Jahrhundert|Jh|eeuw)*\\s*\\.*");
     //([a-zA-Z]*[0-9]{0,3}\\s*\\.*)*([0-9]{4}){1}([a-zA-Z]*[0-9]{0,3}\\s*\\.*)*([0-9]{4}){1}
 //    private final Pattern PATTERN_7 = Pattern.compile("([a-zA-Z]*[0-9]{0,3}\\s*\\.*\\?*)*([0-9]{4}){1}([a-zA-Z]*[0-9]{0,3}\\s*\\.*\\?*)*([0-9]{4}){1}");
 //    private final Pattern PATTERN_8 = Pattern.compile("([a-zA-Z]*[0-9]{0,3}\\s*\\.*\\?*)*([0-9]{4}){1}");
@@ -142,9 +142,9 @@ public class DateNormalization extends ExtensionFunctionDefinition {
             return fromXmlDateFile;
 
         if (date.contains("9999"))
-            date = date.replace("9999", "2999");
+            date = date.replace("9999", "2099");
         if (date.contains("3000"))
-            date = date.replace("3000", "2999");
+            date = date.replace("3000", "2099");
 
         //log.info("Trying to normalize: " + date);
         try {
@@ -207,7 +207,7 @@ public class DateNormalization extends ExtensionFunctionDefinition {
                 return matcher_yyyy_yyyy.group(1) + "/" + matcher_yyyy_yyyy.group(4);
             
             Matcher matcher_yyyy_yyyy_yyyy = PATTERN_YYYY_YYYY_YYYY.matcher(date);
-            if (matcher_yyyy_yyyy_yyyy.matches()) 
+            if (matcher_yyyy_yyyy_yyyy.matches())
                 return matcher_yyyy_yyyy_yyyy.group(1) + "/" + matcher_yyyy_yyyy_yyyy.group(7);
             
             return findNormalizationProcess(date);
@@ -232,11 +232,11 @@ public class DateNormalization extends ExtensionFunctionDefinition {
             
             Matcher matcher_4 = PATTERN_4.matcher(date);
             if (matcher_4.matches()) 
-                return "0000/" + matcher_4.group(2);
+                return "0001/" + matcher_4.group(2);
             
             Matcher matcher_5 = PATTERN_5.matcher(date);
             if (matcher_5.matches()) 
-                return matcher_5.group(2) + "/2999";
+                return matcher_5.group(2) + "/2099";
             
             Matcher matcher_6 = PATTERN_6.matcher(date);
             if (matcher_6.matches()) 
