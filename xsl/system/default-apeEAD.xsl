@@ -1265,7 +1265,7 @@
     <xsl:template match="repository/corpname" mode="copy fonds intermediate lowest">
         <xsl:apply-templates select="node()" mode="#current" />
     </xsl:template>
-    
+
     <!-- fonds intermediate lowest: repository/address/addressline -->
     <xsl:template match="repository/address/addressline" mode="copy fonds intermediate lowest">
         <addressline>
@@ -2243,12 +2243,20 @@
 
     <!-- copy fonds intermediate lowest: bibliography/p -->
     <xsl:template match="bibliography/p" mode="copy fonds intermediate lowest">
-        <p>
-            <xsl:apply-templates select="node() except bibref" mode="#current"/>
-            <xsl:for-each select="bibref">
-                <xsl:apply-templates select="node()" mode="#current"/>
-            </xsl:for-each>
-        </p>
+        <xsl:if test="* except (list | table)">
+            <p>
+                <xsl:apply-templates select="node() except (list | table | bibref)" mode="#current"/>
+                <xsl:for-each select="bibref">
+                    <xsl:apply-templates select="node()" mode="#current"/>
+                </xsl:for-each>
+            </p>
+        </xsl:if>
+        <xsl:for-each select="list">
+            <xsl:call-template name="p_list_bibliography"/>
+        </xsl:for-each>
+        <xsl:for-each select="table">
+            <xsl:call-template name="table_all"/>
+        </xsl:for-each>
     </xsl:template>
 
     <!-- copy fonds intermediate lowest: bibliography/bibref -->
@@ -2268,6 +2276,52 @@
             </xsl:if>
             <xsl:apply-templates select="node()" mode="#current"/>
         </bibref>
+    </xsl:template>
+
+    <!-- copy fonds intermediate: bibliography/list/item/list bibliography/p/list/item/list -->
+    <xsl:template
+        match="bibliography/list/item/list | bibliography/p/list/item/list | bibliography/list/item/list/item/list | bibliography/p/list/item/list/item/list"
+        mode="copy fonds intermediate lowest nested">
+        <xsl:call-template name="p_list_bibliography"/>
+    </xsl:template>
+
+    <!-- copy fonds intermediate: bibliography/list | bibliography/p/list -->
+    <xsl:template match="bibliography/list" name="p_list_bibliography"
+        mode="copy fonds intermediate lowest nested">
+        <xsl:choose>
+            <xsl:when test="@type='deflist' or (not(@type) and ./child::*[name()='defitem'])">
+                <table>
+                    <xsl:call-template name="deflist_table"/>
+                </table>
+            </xsl:when>
+            <xsl:otherwise>
+                <list>
+                    <xsl:if test="@type='ordered' or @type='marked'">
+                        <xsl:attribute name="type" select="@type"/>
+                    </xsl:if>
+                    <xsl:if test="@type='ordered'">
+                        <xsl:attribute name="numeration" select="'arabic'"/>
+                    </xsl:if>
+                    <xsl:apply-templates select="node()" mode="#current"/>
+                </list>
+            </xsl:otherwise>
+        </xsl:choose>
+    </xsl:template>
+
+    <!-- copy fonds intermediate: bibliography/list/item bibliography/p/list/item | bibliography/list/item/list/item | bibliography/p/list/item/list/item -->
+    <xsl:template
+        match="bibliography/list/item | bibliography/p/list/item | bibliography/list/item/list/item | bibliography/p/list/item/list/item | bibliography/list/item/list/item/list/item | bibliography/p/list/item/list/item/list/item"
+        mode="copy fonds intermediate lowest nested">
+        <item>
+            <xsl:apply-templates select="node()" mode="#current"/>
+        </item>
+    </xsl:template>
+
+    <!-- copy fonds intermediate: scopecontent/list/item//* | scopecontent/p/list/item//* -->
+    <xsl:template
+        match="bibliography/list/item/*[not(name()='list')] | bibliography/p/list/item/*[not(name()='list')]"
+        mode="copy fonds intermediate lowest nested">
+        <xsl:apply-templates select="text()" mode="#current"/>
     </xsl:template>
 
     <xsl:template match="otherfindaid/bibref | relatedmaterial/bibref"
@@ -3168,12 +3222,12 @@
         </xsl:choose>
     </xsl:template>
 
-    <!-- all: unittitle/unitdate
+    <!-- all: unittitle/unitdate -->
     <xsl:template match="unittitle/unitdate" mode="#all">
         <xsl:text> </xsl:text>
         <xsl:apply-templates select="node()" mode="#current"/>
         <xsl:text> </xsl:text>
-    </xsl:template>-->
+    </xsl:template>
 
     <!-- all: unittitle/archref -->
     <xsl:template match="unittitle/archref" mode="#all">
