@@ -21,6 +21,7 @@ package eu.apenet.dpt.standalone.gui.eag2012;
 import java.awt.KeyboardFocusManager;
 import java.awt.event.ActionEvent;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.ResourceBundle;
 
@@ -31,6 +32,8 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextField;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 
 import org.apache.commons.lang.StringUtils;
 
@@ -412,15 +415,36 @@ public class EagDescriptionPanel extends EagPanels {
         nextInstitutionTabBtn.addActionListener(new NextInstitutionTabBtnAction(eag, tabbedPane, model));
         builder.add(nextInstitutionTabBtn, cc.xy(5, rowNb));
 
-//        if(tabbedPane.getChangeListeners().length < 2) {
-//            LOG.info("Add listener");
-//            tabbedPane.addChangeListener(new TabChangeListener(eag, tabbedPane, model));
-//        }
+        // Define the change tab listener.
+        this.removeChangeListener();
+        this.tabbedPane.addChangeListener(new ChangeTabListener(this.eag, this.tabbedPane, this.model, 4));
 
 		JPanel panel = builder.getPanel();
 		KeyboardFocusManager.getCurrentKeyboardFocusManager().addPropertyChangeListener(new FocusManagerListener(panel));
 		return panel;
     }
+
+	/**
+	 * Method that removes the existing "ChangeTabListener".
+	 */
+	private void removeChangeListener() {
+		// Check the current "ChangeListeners" and remove the non desired ones.
+		ChangeListener[] changeListeners = this.tabbedPane.getChangeListeners();
+		List<ChangeListener> changeListenerList = new LinkedList<ChangeListener>();
+		for (int i = 0; i < changeListeners.length; i++) {
+			ChangeListener changeListener = changeListeners[i];
+
+			if (changeListener instanceof ChangeTabListener) {
+				changeListenerList.add(changeListener);
+			}
+		}
+
+		if (changeListenerList != null) {
+			for (int i = 0; i < changeListenerList.size(); i++) {
+				this.tabbedPane.removeChangeListener(changeListenerList.get(i));
+			}
+		}
+	}
 
     public class NextInstitutionTabBtnAction extends UpdateEagObject {
         NextInstitutionTabBtnAction(Eag eag, JTabbedPane tabbedPane, ProfileListModel model) {
@@ -480,7 +504,7 @@ public class EagDescriptionPanel extends EagPanels {
                 super.updateJAXBObject(false);
             } catch (Eag2012FormException e) {
             }
-            
+
             if(eag.getArchguide().getDesc().getRepositories().getRepository().get(repositoryNb).getRepositorhist() == null) {
                 eag.getArchguide().getDesc().getRepositories().getRepository().get(repositoryNb).setRepositorhist(new Repositorhist());
                 eag.getArchguide().getDesc().getRepositories().getRepository().get(repositoryNb).getRepositorhist().setDescriptiveNote(new DescriptiveNote());
@@ -499,7 +523,7 @@ public class EagDescriptionPanel extends EagPanels {
 			reloadTabbedPanel(new EagDescriptionPanel(eag, tabbedPane, mainTabbedPane, eag2012Frame, model, labels, repositoryNb).buildEditorPanel(errors), 4);
         }
     }
-    
+
     public class AddRuleFoundationBtnAction extends UpdateEagObject {
         AddRuleFoundationBtnAction(Eag eag, JTabbedPane tabbedPane, ProfileListModel model) {
             super(eag, tabbedPane, model);
@@ -527,7 +551,7 @@ public class EagDescriptionPanel extends EagPanels {
             reloadTabbedPanel(new EagDescriptionPanel(eag, tabbedPane, mainTabbedPane, eag2012Frame, model, labels, repositoryNb).buildEditorPanel(errors), 4);
         }
     }
-    
+
     public class AddRuleSuppressionBtnAction extends UpdateEagObject {
         AddRuleSuppressionBtnAction(Eag eag, JTabbedPane tabbedPane, ProfileListModel model) {
             super(eag, tabbedPane, model);
@@ -633,7 +657,7 @@ public class EagDescriptionPanel extends EagPanels {
                 eag.getArchguide().getDesc().getRepositories().getRepository().get(repositoryNb).setHoldings(new Holdings());
                 eag.getArchguide().getDesc().getRepositories().getRepository().get(repositoryNb).getHoldings().setDescriptiveNote(new DescriptiveNote());
             }
-            
+
             boolean empty = false;
             int pos = archivalAndOthersTfs.size();
             for(int i=0; i<pos;i++){
@@ -642,7 +666,7 @@ public class EagDescriptionPanel extends EagPanels {
             }
 			if (empty)
 				JOptionPane.showMessageDialog(eag2012Frame, labels.getString("eag2012.errors.archivalAndOtherHoldings"));
- 
+
             eag.getArchguide().getDesc().getRepositories().getRepository().get(repositoryNb).getHoldings().getDescriptiveNote().getP().add(new P());
             reloadTabbedPanel(new EagDescriptionPanel(eag, tabbedPane, mainTabbedPane, eag2012Frame, model, labels, repositoryNb).buildEditorPanel(errors), 4);
         }
@@ -673,7 +697,6 @@ public class EagDescriptionPanel extends EagPanels {
 			if (empty)
 				JOptionPane.showMessageDialog(eag2012Frame, labels.getString("eag2012.errors.year"));
 
-
             if(TextChanger.isDateSetReady(holdingsYearsTfs, true, false)) {
                 if (eag.getArchguide().getDesc().getRepositories().getRepository().get(repositoryNb).getHoldings().getDateSet() == null) {
                     eag.getArchguide().getDesc().getRepositories().getRepository().get(repositoryNb).getHoldings().setDateSet(new DateSet());
@@ -689,8 +712,7 @@ public class EagDescriptionPanel extends EagPanels {
             } else {
                 eag.getArchguide().getDesc().getRepositories().getRepository().get(repositoryNb).getHoldings().setDate(new Date());
             }
-            
-            
+
             reloadTabbedPanel(new EagDescriptionPanel(eag, tabbedPane, mainTabbedPane, eag2012Frame, model, labels, repositoryNb).buildEditorPanel(errors), 4);
         }
     }
@@ -714,7 +736,7 @@ public class EagDescriptionPanel extends EagPanels {
             DateRange dateRange = new DateRange();
             dateRange.setFromDate(new FromDate());
             dateRange.setToDate(new ToDate());
-                       
+
             boolean empty = false;
             int pos = holdingsYearsTfs.size();
             for(int i=0; i<pos;i++){
@@ -723,7 +745,7 @@ public class EagDescriptionPanel extends EagPanels {
             }
 			if (empty)
 				JOptionPane.showMessageDialog(eag2012Frame, labels.getString("eag2012.errors.year"));
-          
+
             if(TextChanger.isDateSetReady(holdingsYearsTfs, false, true)) {
                 if (eag.getArchguide().getDesc().getRepositories().getRepository().get(repositoryNb).getHoldings().getDateSet() == null) {
                     eag.getArchguide().getDesc().getRepositories().getRepository().get(repositoryNb).getHoldings().setDateSet(new DateSet());
@@ -773,15 +795,12 @@ public class EagDescriptionPanel extends EagPanels {
         public void actionPerformed(ActionEvent actionEvent) {
             try {
                 super.updateJAXBObject(false);
+				removeChangeListener();
 
                 if (isNextTab) {
                     reloadTabbedPanel(new EagControlPanel(eag, tabbedPane, mainTabbedPane, eag2012Frame, model, labels, repositoryNb).buildEditorPanel(errors), 5);
-                    tabbedPane.setEnabledAt(5, true);
-                    tabbedPane.setEnabledAt(4, false);
                 } else {
                     reloadTabbedPanel(new EagAccessAndServicesPanel(eag, tabbedPane, mainTabbedPane, eag2012Frame, model, labels, repositoryNb).buildEditorPanel(errors), 3);
-                    tabbedPane.setEnabledAt(3, true);
-                    tabbedPane.setEnabledAt(4, false);
                 }
             } catch (Eag2012FormException e) {
                 reloadTabbedPanel(new EagDescriptionPanel(eag, tabbedPane, mainTabbedPane, eag2012Frame, model, labels, repositoryNb).buildEditorPanel(errors), 4);
@@ -1055,4 +1074,63 @@ public class EagDescriptionPanel extends EagPanels {
 			}
         }
     }
+
+	/**
+	 * Class to performs the actions when the user clicks in other tab.
+	 */
+	public class ChangeTabListener extends UpdateEagObject implements ChangeListener {
+		private int currentTab;
+		/**
+		 * Constructor.
+		 *
+		 * @param eaccpf
+		 * @param tabbedPane
+		 * @param model
+		 * @param indexTab
+		 */
+		public ChangeTabListener(Eag eag, JTabbedPane tabbedPane, ProfileListModel model, int indexTab) {
+			super (eag, tabbedPane, model);
+			this.currentTab = indexTab;
+		}
+
+		@Override
+		public void stateChanged(ChangeEvent e) {
+			int selectedIndex = this.tabbedPane.getSelectedIndex();
+			// Checks if clicks in different tab.
+			if (this.currentTab != selectedIndex) {
+				try {
+					super.updateJAXBObject(true);
+					removeChangeListener();
+					switch (selectedIndex) {
+						case 0:
+							reloadTabbedPanel(new EagInstitutionPanel(eag, tabbedPane, mainTabbedPane, eag2012Frame, model, false, labels, repositoryNb).buildEditorPanel(errors), 0);
+							break;
+						case 1:
+							reloadTabbedPanel(new EagIdentityPanel(eag, tabbedPane, mainTabbedPane, eag2012Frame, model, labels, repositoryNb).buildEditorPanel(errors), 1);
+							break;
+						case 2:
+							reloadTabbedPanel(new EagContactPanel(eag, tabbedPane, mainTabbedPane, eag2012Frame, model, false, labels, repositoryNb).buildEditorPanel(errors), 2);
+							break;
+						case 3:
+							reloadTabbedPanel(new EagAccessAndServicesPanel(eag, tabbedPane, mainTabbedPane, eag2012Frame, model, labels, repositoryNb).buildEditorPanel(errors), 3);
+							break;
+						case 5:
+							reloadTabbedPanel(new EagControlPanel(eag, tabbedPane, mainTabbedPane, eag2012Frame, model, labels, repositoryNb).buildEditorPanel(errors), 5);
+							break;
+						case 6:
+							reloadTabbedPanel(new EagRelationsPanel(eag, tabbedPane, mainTabbedPane, eag2012Frame, model, labels, repositoryNb).buildEditorPanel(errors), 6);
+							break;
+						default:
+							reloadTabbedPanel(new EagDescriptionPanel(eag, tabbedPane, mainTabbedPane, eag2012Frame, model, labels, repositoryNb).buildEditorPanel(errors), 4);
+					}
+				} catch (Eag2012FormException ex) {
+					reloadTabbedPanel(new EagDescriptionPanel(eag, tabbedPane, mainTabbedPane, eag2012Frame, model, labels, repositoryNb).buildEditorPanel(errors), 4);
+				}
+			}
+		}
+		@Override
+		public void actionPerformed(ActionEvent actionEvent) {
+			// Empty.
+		}
+	}
 }

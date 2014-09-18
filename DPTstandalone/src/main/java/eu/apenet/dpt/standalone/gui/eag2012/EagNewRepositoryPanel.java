@@ -95,14 +95,14 @@ public class EagNewRepositoryPanel extends EagPanels {
             tabbedPane.add(labels.getString("eag2012.tab.control"), null);
             tabbedPane.add(labels.getString("eag2012.tab.relations"), null);
             tabbedPane.setEnabledAt(0, true);
-            tabbedPane.setEnabledAt(1, false);
-            tabbedPane.setEnabledAt(2, false);
-            tabbedPane.setEnabledAt(3, false);
-            tabbedPane.setEnabledAt(4, false);
-            tabbedPane.setEnabledAt(5, false);
-            tabbedPane.setEnabledAt(6, false);
+            tabbedPane.setEnabledAt(1, true);
+            tabbedPane.setEnabledAt(2, true);
+            tabbedPane.setEnabledAt(3, true);
+            tabbedPane.setEnabledAt(4, true);
+            tabbedPane.setEnabledAt(5, true);
+            tabbedPane.setEnabledAt(6, true);
         } else {
-            scrollPane = new JScrollPane(new EagContactPanel(eag, tabbedPane, mainTabbedPane, eag2012Frame, model, false, labels, repositoryNb).buildEditorPanel(null));
+            scrollPane = new JScrollPane(new EagContactPanel(eag, tabbedPane, mainTabbedPane, eag2012Frame, model, false, labels, repositoryNb, true).buildEditorPanel(null));
             scrollPane.getVerticalScrollBar().setUnitIncrement(20);
             tabbedPane.add(labels.getString("eag2012.tab.yourInstitution"), null);
             tabbedPane.add(labels.getString("eag2012.tab.identity"), null);
@@ -114,8 +114,8 @@ public class EagNewRepositoryPanel extends EagPanels {
             tabbedPane.setEnabledAt(0, false);
             tabbedPane.setEnabledAt(1, false);
             tabbedPane.setEnabledAt(2, true);
-            tabbedPane.setEnabledAt(3, false);
-            tabbedPane.setEnabledAt(4, false);
+            tabbedPane.setEnabledAt(3, true);
+            tabbedPane.setEnabledAt(4, true);
             tabbedPane.setEnabledAt(5, false);
             tabbedPane.setEnabledAt(6, false);
             Eag2012Frame.firstTimeInTab = true;

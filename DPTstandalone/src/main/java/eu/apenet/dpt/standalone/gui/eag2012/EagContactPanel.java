@@ -24,6 +24,7 @@ import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.ResourceBundle;
 
@@ -35,6 +36,8 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextField;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 
 import org.apache.commons.lang.StringUtils;
 
@@ -82,6 +85,9 @@ public class EagContactPanel extends EagPanels {
     private List<JTextField> webpageTitleTfs;
     
     private boolean isNew;
+    // Variable to indicate if the request of build the panel is in the
+    // addition of a new repository. 
+    private boolean isRepoCreation;
 
     private JComboBox continentCombo = new JComboBox(continents);
 
@@ -92,6 +98,13 @@ public class EagContactPanel extends EagPanels {
     public EagContactPanel(Eag eag, JTabbedPane tabbedPane, JTabbedPane mainTabbedPane, JFrame eag2012Frame, ProfileListModel model, boolean isNew, ResourceBundle labels, int repositoryNb) {
         super(eag, tabbedPane, mainTabbedPane, eag2012Frame, model, labels, repositoryNb);
         this.isNew = isNew;
+        this.isRepoCreation = false; 
+    }
+
+    public EagContactPanel(Eag eag, JTabbedPane tabbedPane, JTabbedPane mainTabbedPane, JFrame eag2012Frame, ProfileListModel model, boolean isNew, ResourceBundle labels, int repositoryNb, boolean isRepoCreation) {
+    	super(eag, tabbedPane, mainTabbedPane, eag2012Frame, model, labels, repositoryNb);
+        this.isNew = isNew;
+        this.isRepoCreation = isRepoCreation;
     }
 
     @Override
@@ -168,8 +181,6 @@ public class EagContactPanel extends EagPanels {
 	            setNextRow();
 
                 String mandatoryStar = "*";
-                if(location != repository.getLocation().get(0))
-                    mandatoryStar = "";
                 if(location != repository.getLocation().get(0))
                     mandatoryStar = "";
 	
@@ -445,15 +456,41 @@ public class EagContactPanel extends EagPanels {
         JButton nextInstitutionTabBtn = new ButtonTab(labels.getString("eag2012.controls.nextInstitution"));
         nextInstitutionTabBtn.addActionListener(new NextInstitutionTabBtnAction(eag, tabbedPane, model));
         builder.add(nextInstitutionTabBtn, cc.xy(5, rowNb));
-        
+
+        // Define the change tab listener.
+        this.removeChangeListener();
+        this.tabbedPane.addChangeListener(new ChangeTabListener(this.eag, this.tabbedPane, this.model, 2, this.repositoryNb));
+
 		JPanel panel = builder.getPanel();
 		KeyboardFocusManager.getCurrentKeyboardFocusManager().addPropertyChangeListener(new FocusManagerListener(panel));
 		return panel;
     }
 
+	/**
+	 * Method that removes the existing "ChangeTabListener".
+	 */
+	private void removeChangeListener() {
+		// Check the current "ChangeListeners" and remove the non desired ones.
+		ChangeListener[] changeListeners = this.tabbedPane.getChangeListeners();
+		List<ChangeListener> changeListenerList = new LinkedList<ChangeListener>();
+		for (int i = 0; i < changeListeners.length; i++) {
+			ChangeListener changeListener = changeListeners[i];
+
+			if (changeListener instanceof ChangeTabListener) {
+				changeListenerList.add(changeListener);
+			}
+		}
+
+		if (changeListenerList != null) {
+			for (int i = 0; i < changeListenerList.size(); i++) {
+				this.tabbedPane.removeChangeListener(changeListenerList.get(i));
+			}
+		}
+	}
+
     public class NextInstitutionTabBtnAction extends UpdateEagObject {
         NextInstitutionTabBtnAction(Eag eag, JTabbedPane tabbedPane, ProfileListModel model) {
-            super(eag, tabbedPane, model);
+            super(eag, tabbedPane, model, repositoryNb);
         }
 
         @Override
@@ -476,7 +513,7 @@ public class EagContactPanel extends EagPanels {
 
     public class PreviousInstitutionTabBtnAction extends UpdateEagObject {
         PreviousInstitutionTabBtnAction(Eag eag, JTabbedPane tabbedPane, ProfileListModel model) {
-            super(eag, tabbedPane, model);
+            super(eag, tabbedPane, model, repositoryNb);
         }
 
         @Override
@@ -499,7 +536,7 @@ public class EagContactPanel extends EagPanels {
 
     public class SaveBtnAction extends UpdateEagObject {
         SaveBtnAction(Eag eag, JTabbedPane tabbedPane, ProfileListModel model) {
-            super(eag, tabbedPane, model);
+            super(eag, tabbedPane, model, repositoryNb);
         }
 
         @Override
@@ -517,7 +554,7 @@ public class EagContactPanel extends EagPanels {
     public class ChangeTabBtnAction extends UpdateEagObject {
         private boolean isNextTab;
         ChangeTabBtnAction(Eag eag, JTabbedPane tabbedPane, ProfileListModel model, boolean isNextTab) {
-            super(eag, tabbedPane, model);
+            super(eag, tabbedPane, model, repositoryNb);
             this.isNextTab = isNextTab;
         }
 
@@ -525,15 +562,12 @@ public class EagContactPanel extends EagPanels {
         public void actionPerformed(ActionEvent actionEvent) {
             try {
                 super.updateJAXBObject(false);
+            	removeChangeListener();
 
                 if(isNextTab) {
                     reloadTabbedPanel(new EagAccessAndServicesPanel(eag, tabbedPane, mainTabbedPane, eag2012Frame, model, labels, repositoryNb).buildEditorPanel(errors), 3);
-                    tabbedPane.setEnabledAt(3, true);
-                    tabbedPane.setEnabledAt(2, false);
                 } else {
                     reloadTabbedPanel(new EagIdentityPanel(eag, tabbedPane, mainTabbedPane, eag2012Frame, model, labels, repositoryNb).buildEditorPanel(errors), 1);
-                    tabbedPane.setEnabledAt(1, true);
-                    tabbedPane.setEnabledAt(2, false);
                 }
             } catch (Eag2012FormException e) {
                 reloadTabbedPanel(new EagContactPanel(eag, tabbedPane, mainTabbedPane, eag2012Frame, model, isNew, labels, repositoryNb).buildEditorPanel(errors), 2);
@@ -544,7 +578,7 @@ public class EagContactPanel extends EagPanels {
     public class AddAddressAction extends UpdateEagObject {
         private boolean isPostal;
         AddAddressAction(Eag eag, JTabbedPane tabbedPane, ProfileListModel model, boolean isPostal) {
-            super(eag, tabbedPane, model);
+            super(eag, tabbedPane, model, repositoryNb);
             this.isPostal = isPostal;
         }
 
@@ -663,7 +697,7 @@ public class EagContactPanel extends EagPanels {
      */
     public class AddTelephoneAction extends UpdateEagObject {
         AddTelephoneAction(Eag eag, JTabbedPane tabbedPane, ProfileListModel model) {
-            super(eag, tabbedPane, model);
+            super(eag, tabbedPane, model, repositoryNb);
         }
 
         @Override
@@ -691,7 +725,7 @@ public class EagContactPanel extends EagPanels {
 
     public class AddFaxAction extends UpdateEagObject {
         AddFaxAction(Eag eag, JTabbedPane tabbedPane, ProfileListModel model) {
-            super(eag, tabbedPane, model);
+            super(eag, tabbedPane, model, repositoryNb);
         }
 
         @Override
@@ -724,7 +758,7 @@ public class EagContactPanel extends EagPanels {
      */
     public class AddEmailAction extends UpdateEagObject {
         AddEmailAction(Eag eag, JTabbedPane tabbedPane, ProfileListModel model) {
-            super(eag, tabbedPane, model);
+            super(eag, tabbedPane, model, repositoryNb);
         }
 
         @Override
@@ -757,7 +791,7 @@ public class EagContactPanel extends EagPanels {
      */
     public class AddWebpageAction extends UpdateEagObject {
         AddWebpageAction(Eag eag, JTabbedPane tabbedPane, ProfileListModel model) {
-            super(eag, tabbedPane, model);
+            super(eag, tabbedPane, model, repositoryNb);
         }
 
         @Override
@@ -792,7 +826,7 @@ public class EagContactPanel extends EagPanels {
 
     public class AddRepositoryNameAction extends UpdateEagObject {
         AddRepositoryNameAction(Eag eag, JTabbedPane tabbedPane, ProfileListModel model) {
-            super(eag, tabbedPane, model);
+            super(eag, tabbedPane, model, repositoryNb);
         }
 
         @Override
@@ -811,18 +845,20 @@ public class EagContactPanel extends EagPanels {
     }
 
     public abstract class UpdateEagObject extends DefaultBtnAction {
+		private int currentRepositoryNb;
 
-        public UpdateEagObject(Eag eag, JTabbedPane tabbedPane, ProfileListModel model) {
+        public UpdateEagObject(Eag eag, JTabbedPane tabbedPane, ProfileListModel model, int repoNb) {
             super(eag, tabbedPane, model);
+            this.currentRepositoryNb = repoNb;
         }
 
         @Override
         protected void updateJAXBObject(boolean save) throws Eag2012FormException {
             errors = new ArrayList<String>();
 
-            Repository repository = eag.getArchguide().getDesc().getRepositories().getRepository().get(repositoryNb);
+            Repository repository = eag.getArchguide().getDesc().getRepositories().getRepository().get(this.currentRepositoryNb);
 
-            if(repositoryNb > 0) {
+            if(this.currentRepositoryNb > 0) {
                 boolean passedFirstName = false;
                 if(repositoryNameTfs.size() > 0) {
                     repository.getRepositoryName().clear();
@@ -830,7 +866,7 @@ public class EagContactPanel extends EagPanels {
                         if(StringUtils.isNotEmpty(textFieldWithLanguage.getTextValue())) {
                             if(!passedFirstName) {
                                 passedFirstName = true;
-                                mainTabbedPane.setTitleAt(repositoryNb, textFieldWithLanguage.getTextValue());
+                                mainTabbedPane.setTitleAt(this.currentRepositoryNb, textFieldWithLanguage.getTextValue());
                             }
                             RepositoryName repositoryName = new RepositoryName();
                             repositoryName.setContent(textFieldWithLanguage.getTextValue());
@@ -925,7 +961,7 @@ public class EagContactPanel extends EagPanels {
                 }
             }   
 
-            if(!errors.isEmpty()) {
+            if(!errors.isEmpty() && !isRepoCreation) {
 //            	String strOut ="";
 //            	
 //             	if (errors.contains("webpageTfs"))
@@ -936,7 +972,7 @@ public class EagContactPanel extends EagPanels {
             }
         }
     }
-    
+
 	/**
 	 * Class to performs the action when the user clicks in the exit button
 	 */
@@ -949,7 +985,7 @@ public class EagContactPanel extends EagPanels {
 		 * @param model
 		 */   
 		public ExitBtnAction(Eag eag, JTabbedPane tabbedPane, ProfileListModel model) {
-			super(eag, tabbedPane, model);
+			super(eag, tabbedPane, model, repositoryNb);
 		}
 		
 		@Override
@@ -970,4 +1006,90 @@ public class EagContactPanel extends EagPanels {
 			}
         }
     }
+
+	/**
+	 * Class to performs the actions when the user clicks in other tab.
+	 */
+	public class ChangeTabListener extends UpdateEagObject implements ChangeListener {
+		private int currentTab;
+		private int currentRepositoryNb;
+		/**
+		 * Constructor.
+		 *
+		 * @param eaccpf
+		 * @param tabbedPane
+		 * @param model
+		 * @param indexTab
+		 */
+		public ChangeTabListener(Eag eag, JTabbedPane tabbedPane, ProfileListModel model, int indexTab, int repoNb) {
+			super (eag, tabbedPane, model, repoNb);
+			this.currentTab = indexTab;
+			this.currentRepositoryNb = repoNb;
+		}
+
+		@Override
+		public void stateChanged(ChangeEvent e) {
+			int selectedIndex = this.tabbedPane.getSelectedIndex();
+			// Checks if clicks in different tab.
+			if (this.currentTab != selectedIndex) {
+				try {
+					super.updateJAXBObject(true);
+					removeChangeListener();
+
+					if (repositoryNb == 0) {
+						// Switch for main repository.
+						switch (selectedIndex) {
+							case 0:
+								reloadTabbedPanel(new EagInstitutionPanel(eag, tabbedPane, mainTabbedPane, eag2012Frame, model, false, labels, repositoryNb).buildEditorPanel(errors), 0);
+								break;
+							case 1:
+								reloadTabbedPanel(new EagIdentityPanel(eag, tabbedPane, mainTabbedPane, eag2012Frame, model, labels, repositoryNb).buildEditorPanel(errors), 1);
+								break;
+							case 3:
+								reloadTabbedPanel(new EagAccessAndServicesPanel(eag, tabbedPane, mainTabbedPane, eag2012Frame, model, labels, repositoryNb).buildEditorPanel(errors), 3);
+								break;
+							case 4:
+								reloadTabbedPanel(new EagDescriptionPanel(eag, tabbedPane, mainTabbedPane, eag2012Frame, model, labels, repositoryNb).buildEditorPanel(errors), 4);
+								break;
+							case 5:
+								reloadTabbedPanel(new EagControlPanel(eag, tabbedPane, mainTabbedPane, eag2012Frame, model, labels, repositoryNb).buildEditorPanel(errors), 5);
+								break;
+							case 6:
+								reloadTabbedPanel(new EagRelationsPanel(eag, tabbedPane, mainTabbedPane, eag2012Frame, model, labels, repositoryNb).buildEditorPanel(errors), 6);
+								break;
+							default:
+								reloadTabbedPanel(new EagContactPanel(eag, tabbedPane, mainTabbedPane, eag2012Frame, model, false, labels, repositoryNb).buildEditorPanel(errors), 2);
+						}
+					} else {
+						// Switch for other repositories.
+						switch (selectedIndex) {
+							case 3:
+								reloadTabbedPanel(new EagAccessAndServicesPanel(eag, tabbedPane, mainTabbedPane, eag2012Frame, model, labels, repositoryNb).buildEditorPanel(errors), 3);
+								break;
+							case 4:
+								reloadTabbedPanel(new EagDescriptionPanel(eag, tabbedPane, mainTabbedPane, eag2012Frame, model, labels, repositoryNb).buildEditorPanel(errors), 4);
+								break;
+							default:
+								// Set the correct index at creation.
+								if (!isRepoCreation) {
+									reloadTabbedPanel(new EagContactPanel(eag, tabbedPane, mainTabbedPane, eag2012Frame, model, false, labels, repositoryNb).buildEditorPanel(errors), 2);
+								} else {
+									reloadTabbedPanel(new EagContactPanel(eag, tabbedPane, mainTabbedPane, eag2012Frame, model, false, labels, repositoryNb).buildEditorPanel(errors), 0);
+								}
+						}
+					}
+				} catch (Eag2012FormException ex) {
+					if (this.currentRepositoryNb == repositoryNb) {
+						reloadTabbedPanel(new EagContactPanel(eag, tabbedPane, mainTabbedPane, eag2012Frame, model, false, labels, repositoryNb, isRepoCreation).buildEditorPanel(errors), 2);
+					} else {
+						reloadTabbedPanel(new EagContactPanel(eag, tabbedPane, mainTabbedPane, eag2012Frame, model, false, labels, this.currentRepositoryNb, isRepoCreation).buildEditorPanel(errors), 2);
+					}
+				}
+			}
+		}
+		@Override
+		public void actionPerformed(ActionEvent actionEvent) {
+			// Empty.
+		}
+	}
 }
