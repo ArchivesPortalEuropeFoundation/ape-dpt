@@ -9,9 +9,9 @@ package eu.apenet.dpt.standalone.gui.eaccpf;
  * Licensed under the EUPL, Version 1.1 or - as soon they will be approved by the European Commission - subsequent versions of the EUPL (the "Licence");
  * You may not use this work except in compliance with the Licence.
  * You may obtain a copy of the Licence at:
- * 
+ *
  * http://ec.europa.eu/idabc/eupl5
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software distributed under the Licence is distributed on an "AS IS" basis,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the Licence for the specific language governing permissions and limitations under the Licence.
@@ -91,14 +91,14 @@ public class EacCpfStartPanel extends EacCpfPanel{
             }
         }
         FormLayout layout = new FormLayout(
-                "right:max(50dlu;p), 4dlu, 100dlu, 7dlu, right:p, 4dlu, right:max(100dlu;p)",
+                "right:max(50dlu;p), 4dlu, 100dlu, 7dlu, right:p, 4dlu, max(100dlu;p)",
                 EDITOR_ROW_SPEC);
 
-        layout.setColumnGroups(new int[][] { { 1, 3, 5, 7 } });
+        layout.setColumnGroups(new int[][] { { 1, 5}, {3, 7 } });
         PanelBuilder builder = new PanelBuilder(layout);
         builder.setDefaultDialogBorder();
         CellConstraints cc = new CellConstraints();
-        
+
         LanguageDeclaration languageDeclaration = null;
         if(this.eaccpf.getControl().getLanguageDeclaration() == null) {
             languageDeclaration = new LanguageDeclaration();
@@ -109,7 +109,7 @@ public class EacCpfStartPanel extends EacCpfPanel{
         rowNb = 1;
         builder.addSeparator(labels.getString("eaccpf.start.title"), cc.xyw(1, rowNb, 7));
         this.setNextRow();
-        // the radio button Panel 
+        // the radio button Panel
         builder.addLabel(labels.getString("eaccpf.start.createInstance") + "*" + ":", cc.xy (1, rowNb));
         this.radioBtnPanel= new JPanel();
         builder.add(makeCheckboxesType(), cc.xyw(3, rowNb, 5));
@@ -141,7 +141,7 @@ public class EacCpfStartPanel extends EacCpfPanel{
 
         return scrollPane;
     }
-    
+
     /**
      * Make the different radio button in the Panel: a person, a family, a corporate body
      * @return radioBtnPanel
@@ -167,7 +167,7 @@ public class EacCpfStartPanel extends EacCpfPanel{
            this.radioBtnPanel.add(radioButton);
            this.radioBtnPanel.add(Box.createRigidArea(new Dimension(10, 0)));
         }
-        
+
         return this.radioBtnPanel;
     }
 
@@ -180,7 +180,7 @@ public class EacCpfStartPanel extends EacCpfPanel{
 		public void actionPerformed(ActionEvent e) {
 			try {
 				// Recover the selected type in the radio button.
-				XmlTypeEacCpf eacType = null; 
+				XmlTypeEacCpf eacType = null;
 				Component[] radioComponents = radioBtnPanel.getComponents();
 				if (radioComponents != null && radioComponents.length > 0) {
 					boolean found = false;
@@ -220,14 +220,14 @@ public class EacCpfStartPanel extends EacCpfPanel{
 				 JOptionPane.showMessageDialog(tabbedPane, "Error...");
 			}
 		}
-    	 
+
      }
-     
+
      /**
       * Class to implement the button Exit
       */
      protected class ExitBtnAction implements ActionListener {
-    	 
+
     	 @Override
     	 public void actionPerformed(ActionEvent actionEvent) {
              EacCpfFrame.inUse(false);
