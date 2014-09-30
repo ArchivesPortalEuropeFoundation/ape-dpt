@@ -17,7 +17,7 @@
 
     <xsl:param name="urlForIdentifiers" select="'https://www.swiss-archives.ch/detail.aspx?ID='"/>
     <xsl:param name="urlForDaosPre" select="'https://www.swiss-archives.ch/bild.aspx?VEID='"/>
-    <xsl:param name="urlForDaosPost" select="'&amp;DEID=9&amp;SQNZNR=1'"/>
+    <xsl:param name="urlForDaosPost" select="'&amp;DEID=10&amp;SQNZNR=1'"/>
     <xsl:param name="urlForDaosThumbPre" select="'https://www.swiss-archives.ch/getimage.aspx?VEID='"/>
     <xsl:param name="urlForDaosThumbPost" select="'&amp;DEID=9&amp;SQNZNR=1&amp;SIZE=100'"/>
 

@@ -57,6 +57,10 @@
             <outputDirectory>xsl</outputDirectory>
             <directory>../xsl/</directory>
             <filtered>false</filtered>
+            <includes>
+                <include>system/*.xsl</include>
+                <include>default-apeEAC-CPF.xsl</include>
+            </includes>
         </fileSet>
     </fileSets>
 </assembly>
