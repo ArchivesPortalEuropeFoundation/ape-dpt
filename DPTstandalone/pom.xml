@@ -108,7 +108,7 @@
                         <version>2.2.1</version>
                         <configuration>
                             <appendAssemblyId>false</appendAssemblyId>
-                            <finalName>APE_data_preparation_tool_${version}</finalName>
+                            <finalName>APE_data_preparation_tool_${project.version}</finalName>
                             <descriptors>
                                 <descriptor>src/assembly/assembly.xml</descriptor>
                             </descriptors>
