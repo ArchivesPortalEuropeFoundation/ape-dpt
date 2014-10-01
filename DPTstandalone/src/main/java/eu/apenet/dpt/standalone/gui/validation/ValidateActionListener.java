@@ -176,6 +176,10 @@ public class ValidateActionListener implements ActionListener {
                         writer.append(MessageFormat.format(labels.getString("dataquality.missing.dao"), "(dao@xlink:role)"));
                         writer.append(" ");
                         writer.append(Integer.toString(xmlQualityCheckerCall.getCounterDao()));
+                        writer.append("\r\n");
+                        writer.append(MessageFormat.format(labels.getString("dataquality.missing.href"), "(dao@xlink:href)"));
+                        writer.append(" ");
+                        writer.append(Integer.toString(xmlQualityCheckerCall.getCounterWrongHref()));
                         fileInstance.setValidationErrors(fileInstance.getValidationErrors() + writer.toString());
 
                         fileInstance.setXmlQualityErrors(createXmlQualityErrors(xmlQualityCheckerCall));
@@ -220,6 +224,7 @@ public class ValidateActionListener implements ActionListener {
             map.put("unittitle", xmlQualityCheckerCall.getIdsUnittitle());
             map.put("unitdate", xmlQualityCheckerCall.getIdsUnitdate());
             map.put("dao", xmlQualityCheckerCall.getIdsDao());
+            map.put("href", xmlQualityCheckerCall.getIdsHref());
             return map;
         }
     }

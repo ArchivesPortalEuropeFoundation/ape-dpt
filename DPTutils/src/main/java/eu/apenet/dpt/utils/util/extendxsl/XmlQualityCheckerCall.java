@@ -31,10 +31,12 @@ public class XmlQualityCheckerCall extends ExtensionFunctionCall {
     private int counterUnittitle = 0;
     private int counterUnitdate = 0;
     private int counterDao = 0;
+    private int counterWrongHref = 0;
 
     private Map<String, Boolean> idsUnittitle = new HashMap<String, Boolean>();
     private Map<String, Boolean> idsUnitdate = new HashMap<String, Boolean>();
     private Map<String, Boolean> idsDao = new HashMap<String, Boolean>();
+    private Map<String, Boolean> idsHref = new HashMap<String, Boolean>();
 
     public SequenceIterator call(SequenceIterator[] arguments, XPathContext context) throws XPathException {
         NodeInfo nodeInfo = (NodeInfo) arguments[0].next();
@@ -106,8 +108,9 @@ public class XmlQualityCheckerCall extends ExtensionFunctionCall {
         }
 
         nodes = nodeOverNodeInfo.getChildNodes();
-        hasError = true;
+        boolean hasErrorRole = true;
         wasInside = false;
+        boolean hasErrorHref = true;
         for(int i = 0; i < nodes.getLength(); i++) {
             Node node = nodes.item(i);
             if(node.getLocalName() != null && node.getLocalName().equals("dao")) {
@@ -116,18 +119,30 @@ public class XmlQualityCheckerCall extends ExtensionFunctionCall {
                 for(int j = 0; j < nodeMap.getLength(); j++) {
                     Node attributes = nodeMap.item(j);
                     if(attributes.getLocalName().equals("role")) {
-                        hasError = false;
+                        hasErrorRole = false;
+                    } else if(attributes.getLocalName().equals("href")) {
+                        if(attributes.getNodeValue().startsWith("http") || attributes.getNodeValue().startsWith("ftp")) {
+                            hasErrorHref = false;
+                        }
                     }
                 }
             }
         }
-        if(wasInside && hasError) {
+        if(wasInside && hasErrorRole) {
             counterDao++;
             if(StringUtils.isNotBlank(unitid))
                 idsDao.put(unitid, true);
             else
                 idsDao.put(id, false);
         }
+        if(wasInside && hasErrorHref) {
+            counterWrongHref++;
+            if(StringUtils.isNotBlank(unitid))
+                idsHref.put(unitid, true);
+            else
+                idsHref.put(id, false);
+        }
+
 
         return SingletonIterator.makeIterator(new StringValue(""));
     }
@@ -143,6 +158,9 @@ public class XmlQualityCheckerCall extends ExtensionFunctionCall {
     public int getCounterDao() {
         return counterDao;
     }
+    public int getCounterWrongHref() {
+        return counterWrongHref;
+    }
 
     public Map<String, Boolean> getIdsUnittitle() {
         return idsUnittitle;
@@ -154,5 +172,8 @@ public class XmlQualityCheckerCall extends ExtensionFunctionCall {
 
     public Map<String, Boolean> getIdsDao() {
         return idsDao;
+    }
+    public Map<String, Boolean> getIdsHref() {
+        return idsHref;
     }
 }

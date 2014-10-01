@@ -82,6 +82,10 @@ public class DownloadReportActionListener implements ActionListener {
         builder.append(MessageFormat.format(labels.getString("dataquality.missing.dao"), "(dao@xlink:role)"));
         builder.append(" ");
         builder.append(Integer.toString(map.get("dao").size()));
+        builder.append("\r\n");
+        builder.append(MessageFormat.format(labels.getString("dataquality.missing.href"), "(dao@xlink:href)"));
+        builder.append(" ");
+        builder.append(Integer.toString(map.get("href").size()));
 
         builder.append("\r\n");
         builder.append("\r\n");
@@ -94,6 +98,8 @@ public class DownloadReportActionListener implements ActionListener {
                     builder.append("--- ").append(MessageFormat.format(labels.getString("dataquality.report.unitdate"), "(unitdate@normal)")).append(" ---");
                 } else if(key.equals("dao")) {
                     builder.append("--- ").append(MessageFormat.format(labels.getString("dataquality.report.dao"), "(dao@xlink:role)")).append(" ---");
+                } else if(key.equals("href")) {
+                    builder.append("--- ").append(MessageFormat.format(labels.getString("dataquality.report.href"), "(dao@xlink:href)")).append(" ---");
                 }
                 builder.append("\r\n");
                 for(String id : map.get(key).keySet()) {
