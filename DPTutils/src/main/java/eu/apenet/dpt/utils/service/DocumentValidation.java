@@ -24,6 +24,7 @@ import javax.xml.validation.Schema;
 import javax.xml.validation.ValidatorHandler;
 import java.io.*;
 import java.net.URL;
+import java.util.Collections;
 import java.util.List;
 import java.util.ArrayList;
 
@@ -103,7 +104,7 @@ public class DocumentValidation {
             saxParser.parse(new InputSource(in));
 
             if (!errorHandler.exceptions.isEmpty()) {
-                return errorHandler.exceptions;
+                return fixOrder(errorHandler.exceptions);
             }
             return null;
         } catch (SAXException e) {
@@ -137,9 +138,16 @@ public class DocumentValidation {
         builder.setErrorHandler(errorHandler);
         builder.parse(filePath);
         if (!errorHandler.exceptions.isEmpty()) {
-            return errorHandler.exceptions;
+            return fixOrder(errorHandler.exceptions);
         }
         return null;
+    }
+
+    private static List<SAXParseException> fixOrder(List<SAXParseException> exceptions) {
+        for(int i = 0; i < exceptions.size(); i = i + 2) {
+            Collections.rotate(exceptions.subList(i, i + 2), 1);
+        }
+        return exceptions;
     }
 
     private static Schema getSchema(List<URL> schemaURLs, boolean isXsd11) throws SAXException {

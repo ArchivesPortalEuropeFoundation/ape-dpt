@@ -63,6 +63,7 @@ public class SAXErrorAPEnetParser {
 //        X("cvc-minLength-valid", ""),
 //        Y("cvc-minScale-valid", ""),
 //        Z("cvc-model-group", Pattern.compile(""), "")
+        AA("cvc-pattern-valid", Pattern.compile("([^:]+): Value \\'(.*)\\' is not facet-valid with respect to pattern (.*) for type (.*)"), "The value '$1' is not following the correct pattern for such element, which should be '$2'"),
         ;
 
         private String filePrefix;
