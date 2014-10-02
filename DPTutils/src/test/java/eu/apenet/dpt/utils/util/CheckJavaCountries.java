@@ -1,5 +1,6 @@
 package eu.apenet.dpt.utils.util;
 
+import com.neovisionaries.i18n.CountryCode;
 import org.junit.Test;
 import java.util.Locale;
 
@@ -17,6 +18,13 @@ public class CheckJavaCountries {
         for(int i=0; i < locales.length; i++){
             if(!locales[i].getDisplayCountry().equals(""))
                 System.out.println(locales[i].getDisplayCountry() + " - " + locales[i].getCountry());
+        }
+    }
+
+    @Test
+    public void testCheckNvi18Countries() {
+        for (CountryCode code : CountryCode.values()) {
+            System.out.format("[%s] %s\n", code, code.getName());
         }
     }
 
