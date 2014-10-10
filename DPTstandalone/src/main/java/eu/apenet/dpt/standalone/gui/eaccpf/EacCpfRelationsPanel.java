@@ -335,14 +335,14 @@ public class EacCpfRelationsPanel extends EacCpfPanel {
 			
 			// Add elements to the panel.
 			// Name and language.
-			builder.addLabel(this.labels.getString("eaccpf.relations.name"), cc.xy(1, this.rowNb));
+			builder.addLabel(this.labels.getString("eaccpf.relations.cpf.relation.name"), cc.xy(1, this.rowNb));
 			builder.add(setComponentNameTf.getTextField(), cc.xy(3, this.rowNb));
 			builder.addLabel(this.labels.getString("eaccpf.commons.select.language"), cc.xy(5, this.rowNb));
 			builder.add(setComponentNameTf.getLanguageBox(), cc.xy(7, this.rowNb));
 
 			// Identity.
 			this.setNextRow();
-			builder.addLabel(this.labels.getString("eaccpf.relations.cpf.identifier"), cc.xy(1, this.rowNb));
+			builder.addLabel(this.labels.getString("eaccpf.relations.cpf.relation.identifier"), cc.xy(1, this.rowNb));
 			builder.add(setComponentIdentifierTf, cc.xy(3, this.rowNb));
 
 			// Link and relation type.
@@ -355,7 +355,7 @@ public class EacCpfRelationsPanel extends EacCpfPanel {
 			// Agency part.
 			// Title.
 			this.setNextRow();
-			builder.addLabel(this.labels.getString("eaccpf.relations.organisation"), cc.xyw(1, this.rowNb, 7));
+			builder.addLabel(this.labels.getString("eaccpf.relations.cpf.relation.organisation"), cc.xyw(1, this.rowNb, 7));
 
 			for (int j = 0; j < setComponentOrganisationNameAndIdTfList.size(); j++) {
 				// Name and identifier.
@@ -622,14 +622,14 @@ public class EacCpfRelationsPanel extends EacCpfPanel {
 
 			// Add elements to the panel.
 			// Name and language.
-			builder.addLabel(this.labels.getString("eaccpf.relations.name"), cc.xy(1, this.rowNb));
+			builder.addLabel(this.labels.getString("eaccpf.relations.cpf.relation.name"), cc.xy(1, this.rowNb));
 			builder.add(cpfRelationNameTf.getTextField(), cc.xy(3, this.rowNb));
 			builder.addLabel(this.labels.getString("eaccpf.commons.select.language"), cc.xy(5, this.rowNb));
 			builder.add(cpfRelationNameTf.getLanguageBox(), cc.xy(7, this.rowNb));
 
 			// Identity.
 			this.setNextRow();
-			builder.addLabel(this.labels.getString("eaccpf.relations.cpf.identifier"), cc.xy(1, this.rowNb));
+			builder.addLabel(this.labels.getString("eaccpf.relations.cpf.relation.identifier"), cc.xy(1, this.rowNb));
 			builder.add(cpfRelationIdentifierTf, cc.xy(3, this.rowNb));
 
 			// Link and relation type.
@@ -642,7 +642,7 @@ public class EacCpfRelationsPanel extends EacCpfPanel {
 			// Agency part.
 			// Title.
 			this.setNextRow();
-			builder.addLabel(this.labels.getString("eaccpf.relations.organisation"), cc.xyw(1, this.rowNb, 7));
+			builder.addLabel(this.labels.getString("eaccpf.relations.cpf.relation.organisation"), cc.xyw(1, this.rowNb, 7));
 
 			for (int j = 0; j < size; j++) {
 				// Name and identifier.
@@ -848,14 +848,14 @@ public class EacCpfRelationsPanel extends EacCpfPanel {
 
 			// Add elements to the panel.
 			// Name and language.
-			builder.addLabel(this.labels.getString("eaccpf.relations.name"), cc.xy(1, this.rowNb));
+			builder.addLabel(this.labels.getString("eaccpf.relations.resource.relation.name"), cc.xy(1, this.rowNb));
 			builder.add(resourceRelationNameTf.getTextField(), cc.xy(3, this.rowNb));
 			builder.addLabel(this.labels.getString("eaccpf.commons.select.language"), cc.xy(5, this.rowNb));
 			builder.add(resourceRelationNameTf.getLanguageBox(), cc.xy(7, this.rowNb));
 
 			// Identity.
 			this.setNextRow();
-			builder.addLabel(this.labels.getString("eaccpf.relations.cpf.identifier"), cc.xy(1, this.rowNb));
+			builder.addLabel(this.labels.getString("eaccpf.relations.resource.relation.identifier"), cc.xy(1, this.rowNb));
 			builder.add(resourceRelationIdentifierTf, cc.xy(3, this.rowNb));
 
 			// Link and relation type.
@@ -868,7 +868,7 @@ public class EacCpfRelationsPanel extends EacCpfPanel {
 			// Agency part.
 			// Title.
 			this.setNextRow();
-			builder.addLabel(this.labels.getString("eaccpf.relations.organisation"), cc.xyw(1, this.rowNb, 7));
+			builder.addLabel(this.labels.getString("eaccpf.relations.resource.relation.organisation"), cc.xyw(1, this.rowNb, 7));
 
 			for (int j = 0; j < size; j++) {
 				// Name and identifier.
@@ -1081,14 +1081,14 @@ public class EacCpfRelationsPanel extends EacCpfPanel {
 
 			// Add elements to the panel.
 			// Name and language.
-			builder.addLabel(this.labels.getString("eaccpf.relations.name"), cc.xy(1, this.rowNb));
+			builder.addLabel(this.labels.getString("eaccpf.relations.function.relation.name"), cc.xy(1, this.rowNb));
 			builder.add(resourceRelationNameTf.getTextField(), cc.xy(3, this.rowNb));
 			builder.addLabel(this.labels.getString("eaccpf.commons.select.language"), cc.xy(5, this.rowNb));
 			builder.add(resourceRelationNameTf.getLanguageBox(), cc.xy(7, this.rowNb));
 
 			// Identity.
 			this.setNextRow();
-			builder.addLabel(this.labels.getString("eaccpf.relations.cpf.identifier"), cc.xy(1, this.rowNb));
+			builder.addLabel(this.labels.getString("eaccpf.relations.function.relation.identifier"), cc.xy(1, this.rowNb));
 			builder.add(resourceRelationIdentifierTf, cc.xy(3, this.rowNb));
 
 			// Link and relation type.
@@ -1101,7 +1101,7 @@ public class EacCpfRelationsPanel extends EacCpfPanel {
 			// Agency part.
 			// Title.
 			this.setNextRow();
-			builder.addLabel(this.labels.getString("eaccpf.relations.organisation"), cc.xyw(1, this.rowNb, 7));
+			builder.addLabel(this.labels.getString("eaccpf.relations.function.relation.organisation"), cc.xyw(1, this.rowNb, 7));
 
 			for (int j = 0; j < size; j++) {
 				// Name and identifier.
