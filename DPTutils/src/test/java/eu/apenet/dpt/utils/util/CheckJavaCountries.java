@@ -28,4 +28,11 @@ public class CheckJavaCountries {
         }
     }
 
+    @Test
+    public void testCountryCodeToLocale() {
+        CountryCode countryCode = CountryCode.getByCodeIgnoreCase("GE");
+        System.out.println(countryCode);
+        System.out.println(countryCode.toLocale().getDisplayCountry());
+    }
+
 }
