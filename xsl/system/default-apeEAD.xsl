@@ -1959,7 +1959,9 @@
 
     <xsl:template match="userestrict/note | accessrestrict/note"
                   mode="copy fonds intermediate lowest nested">
-        <xsl:apply-templates mode="#current"/>
+        <p>
+            <xsl:apply-templates mode="#current"/>
+        </p>
     </xsl:template>
 
     <xsl:template match="userestrict/address" mode="copy fonds intermediate lowest nested">
@@ -2550,56 +2552,38 @@
                         </xsl:if>
                     </xsl:when>
                     <xsl:otherwise>
-                        <xsl:choose>
-                            <xsl:when test="count(indexentry) > 0 and (count(indexentry) eq count(indexentry/ref))">
-                                <otherfindaid>
-                                    <xsl:for-each select="indexentry//ref">
-                                        <p>
-                                            <extref>
-                                                <xsl:if test="@href">
-                                                    <xsl:attribute name="xlink:href" select="@href"/>
-                                                </xsl:if>
-                                                <xsl:if test="@xlink:href">
-                                                    <xsl:attribute name="xlink:href" select="@xlink:href"/>
-                                                </xsl:if>
-                                                <xsl:if test="text()">
-                                                    <xsl:attribute name="xlink:title" select="text()"/>
-                                                </xsl:if>
-                                            </extref>
-                                        </p>
-                                    </xsl:for-each>
-                                </otherfindaid>
-                            </xsl:when>
-                            <xsl:otherwise>
-                                <controlaccess>                                                                                                                           <!--../index/indexentry//geogname | ../index/indexentry//subject | ../index/indexentry//famname | ../index/indexentry//persname | ../index/indexentry//corpname | ../index/indexentry//occupation | ../index/indexentry//genreform | ../index/indexentry//function | ../index/indexentry//title | ../index/indexentry//name-->
-                                    <xsl:for-each select="geogname | subject | famname | persname | corpname | occupation | genreform | function | title | p | head | name | indexentry//geogname | indexentry//subject | indexentry//famname | indexentry//persname | indexentry//corpname | indexentry//occupation | indexentry//genreform | indexentry//function | indexentry//title | indexentry//name">
-                                        <xsl:if test="not(local-name()='genreform' and @type='typir')">
-                                            <xsl:element name="{local-name()}" namespace="urn:isbn:1-931666-22-9">
-                                                <xsl:apply-templates select="node()" mode="#current"/>
-                                            </xsl:element>
+                        <controlaccess>                                                                                                                           <!--../index/indexentry//geogname | ../index/indexentry//subject | ../index/indexentry//famname | ../index/indexentry//persname | ../index/indexentry//corpname | ../index/indexentry//occupation | ../index/indexentry//genreform | ../index/indexentry//function | ../index/indexentry//title | ../index/indexentry//name-->
+                            <xsl:for-each select="geogname | subject | famname | persname | corpname | occupation | genreform | function | title | p | head | name | indexentry//geogname | indexentry//subject | indexentry//famname | indexentry//persname | indexentry//corpname | indexentry//occupation | indexentry//genreform | indexentry//function | indexentry//title | indexentry//name">
+                                <xsl:if test="not(local-name()='genreform' and @type='typir')">
+                                    <xsl:element name="{local-name()}" namespace="urn:isbn:1-931666-22-9">
+                                        <xsl:apply-templates select="node()" mode="#current"/>
+                                    </xsl:element>
+                                </xsl:if>
+                            </xsl:for-each>
+                            <xsl:for-each select="list/item">
+                                <p>
+                                    <xsl:apply-templates mode="#current" />
+                                </p>
+                            </xsl:for-each>
+                            <xsl:for-each select="indexentry//ref">
+                                <p>
+                                    <extref>
+                                        <xsl:if test="@href">
+                                            <xsl:attribute name="xlink:href" select="@href"/>
                                         </xsl:if>
-                                    </xsl:for-each>
-                                    <xsl:for-each select="indexentry//ref">
-                                        <p>
-                                            <extref>
-                                                <xsl:if test="@href">
-                                                    <xsl:attribute name="xlink:href" select="@href"/>
-                                                </xsl:if>
-                                                <xsl:if test="@xlink:href">
-                                                    <xsl:attribute name="xlink:href" select="@xlink:href"/>
-                                                </xsl:if>
-                                                <xsl:if test="text()">
-                                                    <xsl:attribute name="xlink:title" select="text()"/>
-                                                </xsl:if>
-                                            </extref>
-                                        </p>
-                                    </xsl:for-each>
-                                    <xsl:for-each select="controlaccess">
-                                        <xsl:call-template name="controlaccess"/>
-                                    </xsl:for-each>
-                                </controlaccess>
-                            </xsl:otherwise>
-                        </xsl:choose>
+                                        <xsl:if test="@xlink:href">
+                                            <xsl:attribute name="xlink:href" select="@xlink:href"/>
+                                        </xsl:if>
+                                        <xsl:if test="text()">
+                                            <xsl:attribute name="xlink:title" select="text()"/>
+                                        </xsl:if>
+                                    </extref>
+                                </p>
+                            </xsl:for-each>
+                            <xsl:for-each select="controlaccess">
+                                <xsl:call-template name="controlaccess"/>
+                            </xsl:for-each>
+                        </controlaccess>
                     </xsl:otherwise>
                 </xsl:choose>
             </xsl:when>
