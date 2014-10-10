@@ -129,7 +129,8 @@ public class Ead2EseInformation {
                 this.inDid = true;
             } else if (qName.equals("dao")) {
                 this.hasDao = true;
-                if (this.typeRetrieved == false) {
+                if (this.typeRetrieved == false
+            			&& atts.getValue("xlink:role") != null) {
                     roleType = atts.getValue("xlink:role");
                     this.typeRetrieved = true;
                 }
@@ -138,13 +139,16 @@ public class Ead2EseInformation {
                 this.inRepository = true;
             } else if (qName.equals("language")) {
             	// Check if the language is in element "<langusage>".
-            	if (this.inLangusage) {
+            	if (this.inLangusage
+            			&& atts.getValue("langcode") != null) {
             		languagesCodes.add(atts.getValue("langcode"));
-            	} else if (this.inArchdesc && this.inDid && !this.hasDao) {
+            	} else if (this.inArchdesc && this.inDid && !this.hasDao
+            			&& atts.getValue("langcode") != null) {
                 	// Check if the language is in element "<archdesc><langmaterial>".
             		languagesOnParent = true;
             		alternativeLanguages.add(atts.getValue("langcode"));
-            	} else if (this.inArchdesc && this.inDid && this.hasDao) {
+            	} else if (this.inArchdesc && this.inDid && this.hasDao
+            			&& atts.getValue("langcode") != null) {
                 	// Check if the language is in element "<c>".
 					if ("".equals(languageCode)) {
 						languageCode = atts.getValue("langcode");
