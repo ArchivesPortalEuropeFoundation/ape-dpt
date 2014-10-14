@@ -1882,7 +1882,9 @@ public class EacCpfDescriptionPanel extends EacCpfPanel {
 			// Adds empty P.
 			P emptyP = new P();
 			emptyP.setLang((firstLanguage!=null && !StringUtils.isEmpty(firstLanguage) && !firstLanguage.equals("---"))?firstLanguage:null);
-			lastBiography.getChronListOrPOrCitation().add(emptyP);
+			if(lastBiography!=null && lastBiography.getChronListOrPOrCitation()!=null){
+				lastBiography.getChronListOrPOrCitation().add(emptyP);
+			}
 		}
 	}
 	
@@ -1954,7 +1956,9 @@ public class EacCpfDescriptionPanel extends EacCpfPanel {
 			// Adds empty P.
 			P emptyP = new P();
 			emptyP.setLang((firstLanguage!=null && !StringUtils.isEmpty(firstLanguage) && !firstLanguage.equals("---"))?firstLanguage:null);
-			lastGenealogy.getMDiscursiveSet().add(emptyP);
+			if(lastGenealogy!=null && lastGenealogy.getMDiscursiveSet()!=null){
+				lastGenealogy.getMDiscursiveSet().add(emptyP);
+			}
 		}
 	}
 	
@@ -2001,7 +2005,7 @@ public class EacCpfDescriptionPanel extends EacCpfPanel {
 						found = true;
 					}
 				}
-				if(lastOccupations!=null && found){
+				if(lastOccupations!=null){
 					lastOccupations.getOccupation().add(occupation);
 				}
 			}
@@ -2051,7 +2055,7 @@ public class EacCpfDescriptionPanel extends EacCpfPanel {
 						found = true;
 					}
 				}
-				if(lastOccupations!=null && found){
+				if(lastOccupations!=null){
 					lastOccupations.getOccupation().get(this.index).getPlaceEntry().add(new PlaceEntry());
 				}
 			}
