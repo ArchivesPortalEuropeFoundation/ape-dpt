@@ -716,6 +716,8 @@ public class DataPreparationToolGUI extends JFrame {
                     //todo: do we really need this?
                     filename = filename.startsWith("temp_") ? filename.replace("temp_", "") : filename;
 
+                    filename = !filename.endsWith(".xml") ? filename + ".xml" : filename;
+
                     if (!fileInstance.isValid()) {
                         filePrefix = "NOT_" + filePrefix;
                     }
