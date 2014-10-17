@@ -34,6 +34,7 @@ public class EdmConfig implements Serializable {
     private String host;
     private String repositoryCode;
     private String xmlTypeName;
+    private String CLevelFileLoc;
     private Properties properties;
 
     public EdmConfig() {
@@ -256,6 +257,14 @@ public class EdmConfig implements Serializable {
         this.xmlTypeName = xmlTypeName;
     }
 
+    public String getCLevelFileLoc() {
+        return CLevelFileLoc;
+    }
+
+    public void setCLevelFileLoc(String CLevelFileLoc) {
+        this.CLevelFileLoc = CLevelFileLoc;
+    }
+
     public Properties getProperties() {
         if (properties == null) {
             properties = new Properties();
@@ -282,6 +291,7 @@ public class EdmConfig implements Serializable {
             String repCodeAfterReplacement = getString(getRepositoryCode()).replace('/', '_');
             properties.put("repository_code", getString(repCodeAfterReplacement));
             properties.put("xml_type_name", getString(getXmlTypeName()));
+            properties.put("cLevelFileLoc", getString(getCLevelFileLoc()));
         }
         return properties;
     }

@@ -14,7 +14,8 @@
                 xmlns:europeana="http://www.europeana.eu/schemas/ese/"
                 xmlns="http://www.europeana.eu/schemas/edm/" xpath-default-namespace="urn:isbn:1-931666-22-9"
                 xmlns:fn="http://www.w3.org/2005/xpath-functions" xmlns:xlink="http://www.w3.org/1999/xlink"
-                exclude-result-prefixes="xlink fo fn">
+                xmlns:apehelp="http://www.archivesportaleurope.net/functions/helper"
+                exclude-result-prefixes="xlink fo fn apehelp">
     <xsl:output method="xml" encoding="UTF-8" indent="yes"/>
 
     <!-- Params from Ead2Ese -->
@@ -40,9 +41,11 @@
     <xsl:param name="host"/>
     <xsl:param name="repository_code"/>
     <xsl:param name="xml_type_name"/>
+    <xsl:param name="cLevelFileLoc"/>
     <!-- Variables -->
     <xsl:variable name="id_base"
                   select="concat('http://', $host, '/web/guest/ead-display/-/ead/fp/' , $repository_code, '/type/', $xml_type_name, '/id/')"/>
+    <xsl:variable name="cLevelDoc" select="document($cLevelFileLoc)"/>
 
     <xsl:template match="/">
         <rdf:RDF
@@ -153,6 +156,12 @@
                             <xsl:when test="did/unitid[@type='call number']">
                                 <dcterms:hasPart>
                                     <xsl:value-of select="concat('providedCHO_', normalize-space(did/unitid[@type='call number']))"/>
+                                </dcterms:hasPart>
+                            </xsl:when>
+                            <xsl:when test="@id">
+                                <!--<xsl:sequence select="$cLevelDoc"/>-->
+                                <dcterms:hasPart>
+                                    <xsl:value-of select="concat('providedCHO_C', $cLevelDoc/cLevels/cLevel[1]/@id)"/>
                                 </dcterms:hasPart>
                             </xsl:when>
                             <xsl:otherwise>
