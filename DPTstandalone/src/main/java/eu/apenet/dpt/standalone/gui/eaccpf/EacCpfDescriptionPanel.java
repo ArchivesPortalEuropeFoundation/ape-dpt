@@ -680,11 +680,11 @@ public class EacCpfDescriptionPanel extends EacCpfPanel {
 	 */
 	private PanelBuilder buildOcupation(PanelBuilder builder,CellConstraints cc, Occupations ocupations, boolean isFirst) {
 		
-		builder.addSeparator(this.labels.getString("eaccpf.description.ocupation"), cc.xyw(1, this.rowNb, 7));
-		setNextRow();
-		
 		if(ocupations!=null && ocupations.getOccupation().size()>0){
 			for(int i=0;i<ocupations.getOccupation().size();i++){
+				builder.addSeparator(this.labels.getString("eaccpf.description.ocupation"), cc.xyw(1, this.rowNb, 7));
+				setNextRow();
+				
 				Occupation ocupation = ocupations.getOccupation().get(i);
 				builder = buildOcupationPlace(builder,cc,ocupation,i==0);
 				setNextRow();
@@ -698,6 +698,9 @@ public class EacCpfDescriptionPanel extends EacCpfPanel {
 				setNextRow();
 			}
 		} else {
+			builder.addSeparator(this.labels.getString("eaccpf.description.ocupation"), cc.xyw(1, this.rowNb, 7));
+			setNextRow();
+			
 			builder = buildOcupationPlace(builder,cc,null,isFirst);
 			setNextRow();
 			
@@ -722,10 +725,11 @@ public class EacCpfDescriptionPanel extends EacCpfPanel {
 	 * Also appends Add Further Places button.
 	 */
 	private PanelBuilder buildFunctions(PanelBuilder builder,CellConstraints cc, Functions functionObjects,boolean isFirst) {
-		builder.addSeparator(this.labels.getString("eaccpf.description.function"), cc.xyw(1, this.rowNb, 7));
-		setNextRow();
 		if(functionObjects!=null && functionObjects.getFunction() != null && !functionObjects.getFunction().isEmpty()) {
             for (int i=0;i<functionObjects.getFunction().size();i++) {
+	        	 builder.addSeparator(this.labels.getString("eaccpf.description.function"), cc.xyw(1, this.rowNb, 7));
+	    		 setNextRow();
+	    		 
             	 Function function = functionObjects.getFunction().get(i);
                  builder = buildPlaceFunction(builder,cc,function,i==0);
                  setNextRow();
@@ -742,6 +746,9 @@ public class EacCpfDescriptionPanel extends EacCpfPanel {
                  builder = buildAddDateDateRangeLabelAndJButtons(builder,cc,FUNCTIONS,i, true);
             }
 		}else{
+			builder.addSeparator(this.labels.getString("eaccpf.description.function"), cc.xyw(1, this.rowNb, 7));
+			setNextRow();
+			
             builder = buildPlaceFunction(builder,cc,null,isFirst);
             setNextRow();
             
@@ -766,8 +773,6 @@ public class EacCpfDescriptionPanel extends EacCpfPanel {
 	 * Method which builds places part
 	 */
 	private PanelBuilder buildPlaces(PanelBuilder builder, CellConstraints cc,Places places) {
-		builder.addSeparator(this.labels.getString("eaccpf.description.place"), cc.xyw(1, this.rowNb, 7));
-		setNextRow();
 		if(places!=null && places.getPlace()!=null && !places.getPlace().isEmpty()){
 			List<Place> placesList = places.getPlace();
 			for(int i=0;i<placesList.size();i++){
@@ -1149,6 +1154,8 @@ public class EacCpfDescriptionPanel extends EacCpfPanel {
 	 * Uses placeNumber to follow which part of place it is.
 	 */
 	private PanelBuilder buildPlace(PanelBuilder builder, CellConstraints cc,Place place, Integer placeNumber) {
+		builder.addSeparator(this.labels.getString("eaccpf.description.place"), cc.xyw(1, this.rowNb, 7));
+		setNextRow();
 		placeNumber = placeNumber!=null?placeNumber:0; //checks for null values, index must be controlled
 		boolean filled = false;
 		if(place!=null && place.getPlaceEntry()!=null){ //each one
@@ -1970,7 +1977,16 @@ public class EacCpfDescriptionPanel extends EacCpfPanel {
 
 		@Override
 		public void actionPerformed(ActionEvent actionEvent) {
+			int total = 0;
 			try {
+				if(this.eaccpf.getCpfDescription().getDescription().getPlacesOrLocalDescriptionsOrLegalStatuses()!=null){
+					for(int i=0;i<this.eaccpf.getCpfDescription().getDescription().getPlacesOrLocalDescriptionsOrLegalStatuses().size();i++){
+						Object object = this.eaccpf.getCpfDescription().getDescription().getPlacesOrLocalDescriptionsOrLegalStatuses().get(i);
+						if(object instanceof Occupations){
+							total = ((Occupations)object).getOccupation().size();
+						}
+					}
+				}
 				//first save current form
 				super.updateJAXBObject(false);
 				
@@ -1979,19 +1995,18 @@ public class EacCpfDescriptionPanel extends EacCpfPanel {
 			}
 			
 			//second put new node into eaccpf object
-			putEmptyOcupation();
+			putEmptyOcupation(total);
 			
 			//third refresh and save current form with empty field
 			reloadTabbedPanel(new EacCpfDescriptionPanel(eaccpf, tabbedPane, mainTabbedPane, eacCpfFrame, model, labels,entityType,firstLanguage,firstScript).buildEditorPanel(errors), 1);
 		}
 
-		private void putEmptyOcupation() {
+		private void putEmptyOcupation(int total) {
 			Occupation occupation = new Occupation();
 			PlaceEntry emptyPlaceEntry = new PlaceEntry();
 			emptyPlaceEntry.setLang((firstLanguage!=null && !StringUtils.isEmpty(firstLanguage) && !firstLanguage.equals("---"))?firstLanguage:null);
 			occupation.getPlaceEntry().add(emptyPlaceEntry);
 			
-			boolean thereAreSomeFieldsEmpty = false;
 			int counter = eaccpf.getCpfDescription().getDescription().getPlacesOrLocalDescriptionsOrLegalStatuses().size();
 			
 			Occupations lastOccupations = null;
@@ -2006,36 +2021,49 @@ public class EacCpfDescriptionPanel extends EacCpfPanel {
 					lastOccupations = (Occupations) eaccpf.getCpfDescription().getDescription().getPlacesOrLocalDescriptionsOrLegalStatuses().get(i);
 				}
 			}
+			boolean thereAreSomeFieldsEmpty = lastOccupations!=null && lastOccupations.getOccupation().size()<total;
+			boolean emptyNodeInside = false;
+			if(lastOccupations==null){
+				lastOccupations = new Occupations();
+				lastOccupations.getOccupation().add(new Occupation());
+				eaccpf.getCpfDescription().getDescription().getPlacesOrLocalDescriptionsOrLegalStatuses().add(lastOccupations);
+				emptyNodeInside = true;
+			}
 			if(lastOccupations!=null){
-				int foundIndexToBeMoved = -1;
-				for(int x=0;!thereAreSomeFieldsEmpty && x<lastOccupations.getOccupation().size();x++){
-					if(lastOccupations.getOccupation().get(x).getTerm()==null){
-						thereAreSomeFieldsEmpty = true;
-						foundIndexToBeMoved = x;
+				if(thereAreSomeFieldsEmpty){
+					JOptionPane.showMessageDialog(this.tabbedPane, labels.getString("eaccpf.commons.error.empty.occupation"));
+					if(!emptyNodeInside){
+						lastOccupations.getOccupation().add(new Occupation());
+					}
+				}else{
+					int foundIndexToBeMoved = -1;
+					thereAreSomeFieldsEmpty = total>lastOccupations.getOccupation().size();
+					for(int x=0;!thereAreSomeFieldsEmpty && x<lastOccupations.getOccupation().size();x++){
+						if(lastOccupations.getOccupation().get(x).getTerm()==null){
+							thereAreSomeFieldsEmpty = true;
+							foundIndexToBeMoved = x;
+						}
+					}
+					
+					if(thereAreSomeFieldsEmpty){ 
+						JOptionPane.showMessageDialog(this.tabbedPane, labels.getString("eaccpf.commons.error.empty.occupation"));//alert
+						if(total>lastOccupations.getOccupation().size()){
+							lastOccupations.getOccupation().add(occupation);
+						}
+					}
+					
+					if(!thereAreSomeFieldsEmpty){
+						lastOccupations.getOccupation().add(occupation); //put an empty one
+					}else if(foundIndexToBeMoved>-1){
+						Occupation targetOccupation = lastOccupations.getOccupation().get(foundIndexToBeMoved);
+						lastOccupations.getOccupation().add(targetOccupation);
+						lastOccupations.getOccupation().remove(foundIndexToBeMoved);
+					}
+					if(foundIndex>-1){
+						eaccpf.getCpfDescription().getDescription().getPlacesOrLocalDescriptionsOrLegalStatuses().set(foundIndex, lastOccupations);
 					}
 				}
-				
-				if(thereAreSomeFieldsEmpty){ 
-					JOptionPane.showMessageDialog(this.tabbedPane, labels.getString("eaccpf.commons.error.empty.function"));//alert
-				}
-				
-				if(!thereAreSomeFieldsEmpty){
-					lastOccupations.getOccupation().add(occupation); //put an empty one
-				}else if(foundIndexToBeMoved>-1){
-					Occupation targetOccupation = lastOccupations.getOccupation().get(foundIndexToBeMoved);
-					lastOccupations.getOccupation().add(targetOccupation);
-					lastOccupations.getOccupation().remove(foundIndexToBeMoved);
-				}
-				if(foundIndex>-1){
-					eaccpf.getCpfDescription().getDescription().getPlacesOrLocalDescriptionsOrLegalStatuses().set(foundIndex, lastOccupations);
-				}
-				
-			}else{
-				Functions newFunctions = new Functions();
-				newFunctions.getFunction().add(new Function());
-				eaccpf.getCpfDescription().getDescription().getPlacesOrLocalDescriptionsOrLegalStatuses().add(newFunctions);
 			}
-			
 		}
 	}
 	
@@ -2067,24 +2095,37 @@ public class EacCpfDescriptionPanel extends EacCpfPanel {
 
 		private void putEmptyPlaceOcupation() {
 			
-			String lastPlaceTargetFunctionDetails = ocupationPlacePlaceJTextFields.get(this.index).get(ocupationPlacePlaceJTextFields.get(this.index).size()-1).getText(); //get previews ocupation if exists
+//			String lastPlaceTargetFunctionDetails = ocupationPlacePlaceJTextFields.get(this.index).get(ocupationPlacePlaceJTextFields.get(this.index).size()-1).getText(); //get previews ocupation if exists
 			
-			if(lastPlaceTargetFunctionDetails.isEmpty()){
-				JOptionPane.showMessageDialog(this.tabbedPane, labels.getString("eaccpf.commons.error.empty.place"));
-			}else{
-				boolean found = false;
-				Occupations lastOccupations = null;
-				int counter = this.eaccpf.getCpfDescription().getDescription().getPlacesOrLocalDescriptionsOrLegalStatuses().size();
-				for (int i = 0;!(lastOccupations!=null && found) && i<counter;i++){
-					if(this.eaccpf.getCpfDescription().getDescription().getPlacesOrLocalDescriptionsOrLegalStatuses().get(i) instanceof Occupations){
-						lastOccupations = (Occupations) this.eaccpf.getCpfDescription().getDescription().getPlacesOrLocalDescriptionsOrLegalStatuses().get(i); 
-					}else{
-						found = true;
+			boolean found = false;
+			Occupations lastOccupations = null;
+			int counter = this.eaccpf.getCpfDescription().getDescription().getPlacesOrLocalDescriptionsOrLegalStatuses().size();
+			for (int i = 0;!(lastOccupations!=null && found) && i<counter;i++){
+				if(this.eaccpf.getCpfDescription().getDescription().getPlacesOrLocalDescriptionsOrLegalStatuses().get(i) instanceof Occupations){
+					lastOccupations = (Occupations) this.eaccpf.getCpfDescription().getDescription().getPlacesOrLocalDescriptionsOrLegalStatuses().get(i); 
+				}else{
+					found = true;
+				}
+			}
+			if(lastOccupations!=null){
+				List<PlaceEntry> placeEntries = lastOccupations.getOccupation().get(this.index).getPlaceEntry();
+				boolean isEmpty = false;
+				for(PlaceEntry placeEntry:placeEntries){
+					if(placeEntry!=null && placeEntry.getContent().isEmpty()){
+						isEmpty = true;
 					}
 				}
-				if(lastOccupations!=null){
+				if(!isEmpty){
+					isEmpty = ocupationPlacePlaceJTextFields.get(this.index).size()>lastOccupations.getOccupation().get(this.index).getPlaceEntry().size();
+					if(isEmpty){
+						JOptionPane.showMessageDialog(this.tabbedPane, labels.getString("eaccpf.commons.error.empty.place"));
+					}
 					lastOccupations.getOccupation().get(this.index).getPlaceEntry().add(new PlaceEntry());
+				}else{
+					JOptionPane.showMessageDialog(this.tabbedPane, labels.getString("eaccpf.commons.error.empty.place"));
 				}
+			}else{
+				JOptionPane.showMessageDialog(this.tabbedPane, labels.getString("eaccpf.commons.error.empty.place"));
 			}
 		}
 		
@@ -2097,7 +2138,16 @@ public class EacCpfDescriptionPanel extends EacCpfPanel {
 		}
 
 		public void actionPerformed(ActionEvent actionEvent) {
+			int total = 0;
 			try {
+				if(this.eaccpf.getCpfDescription().getDescription().getPlacesOrLocalDescriptionsOrLegalStatuses()!=null){
+					for(int i=0;i<this.eaccpf.getCpfDescription().getDescription().getPlacesOrLocalDescriptionsOrLegalStatuses().size();i++){
+						Object object = this.eaccpf.getCpfDescription().getDescription().getPlacesOrLocalDescriptionsOrLegalStatuses().get(i);
+						if(object instanceof Functions){
+							total = ((Functions)object).getFunction().size();
+						}
+					}
+				}
 				//first save current form
 				super.updateJAXBObject(false);
 				
@@ -2106,19 +2156,18 @@ public class EacCpfDescriptionPanel extends EacCpfPanel {
 			}
 			
 			//second put new node into eaccpf object
-			putEmptyFurtherFunctionIntoDescriptionNode();
+			putEmptyFurtherFunctionIntoDescriptionNode(total);
 			
 			//third refresh and save current form with empty field
 			reloadTabbedPanel(new EacCpfDescriptionPanel(eaccpf, tabbedPane, mainTabbedPane, eacCpfFrame, model, labels,entityType,firstLanguage,firstScript).buildEditorPanel(errors), 1);
 		}
 
-		private void putEmptyFurtherFunctionIntoDescriptionNode() {
+		private void putEmptyFurtherFunctionIntoDescriptionNode(int total) {
 			Function function = new Function();
 			PlaceEntry emptyPlaceEntry = new PlaceEntry();
 			emptyPlaceEntry.setLang((firstLanguage!=null && !StringUtils.isEmpty(firstLanguage) && !firstLanguage.equals("---"))?firstLanguage:null);
 			function.getPlaceEntry().add(emptyPlaceEntry);
 			if(placesFunctionJTextfield!=null){
-				boolean thereAreSomeFieldsEmpty = false;
 				int counter = eaccpf.getCpfDescription().getDescription().getPlacesOrLocalDescriptionsOrLegalStatuses().size();
 				
 				Functions lastFunctions = null;
@@ -2133,34 +2182,59 @@ public class EacCpfDescriptionPanel extends EacCpfPanel {
 						lastFunctions = (Functions) eaccpf.getCpfDescription().getDescription().getPlacesOrLocalDescriptionsOrLegalStatuses().get(i);
 					}
 				}
-				if(lastFunctions!=null){
-					int foundIndexToBeMoved = -1;
-					for(int x=0;!thereAreSomeFieldsEmpty && x<lastFunctions.getFunction().size();x++){
-						if(lastFunctions.getFunction().get(x).getTerm()==null){
-							thereAreSomeFieldsEmpty = true;
-							foundIndexToBeMoved = x;
+				boolean thereAreSomeFieldsEmpty = (total>0 && (lastFunctions==null || lastFunctions.getFunction().size()>total)); // there are at least one empty to be filled, so total is needed to flag user message
+				boolean emptyNodeInside = false;
+				if(lastFunctions==null){
+					lastFunctions = new Functions();
+					lastFunctions.getFunction().add(new Function());
+					//search occupation node, all sorted
+					int index = -1;
+					for(int i=0;i<eaccpf.getCpfDescription().getDescription().getPlacesOrLocalDescriptionsOrLegalStatuses().size();i++){
+						Object section = eaccpf.getCpfDescription().getDescription().getPlacesOrLocalDescriptionsOrLegalStatuses().get(i);
+						if(section instanceof Occupations){
+							index = i;
 						}
 					}
-					
-					if(thereAreSomeFieldsEmpty){ 
-						JOptionPane.showMessageDialog(this.tabbedPane, labels.getString("eaccpf.commons.error.empty.function"));//alert
+					if(index>-1){
+						eaccpf.getCpfDescription().getDescription().getPlacesOrLocalDescriptionsOrLegalStatuses().add(index,lastFunctions);
+					}else{
+						eaccpf.getCpfDescription().getDescription().getPlacesOrLocalDescriptionsOrLegalStatuses().add(lastFunctions);
 					}
-					
-					if(!thereAreSomeFieldsEmpty){
-						lastFunctions.getFunction().add(function); //put an empty one
-					}else if(foundIndexToBeMoved>-1){
-						Function targetFunction = lastFunctions.getFunction().get(foundIndexToBeMoved);
-						lastFunctions.getFunction().add(targetFunction);
-						lastFunctions.getFunction().remove(foundIndexToBeMoved);
+					emptyNodeInside = true;
+				}
+				if(lastFunctions!=null){
+					if(thereAreSomeFieldsEmpty){
+						JOptionPane.showMessageDialog(this.tabbedPane, labels.getString("eaccpf.commons.error.empty.function"));
+						if(!emptyNodeInside){
+							lastFunctions.getFunction().add(new Function());
+						}
+					}else{
+						int foundIndexToBeMoved = -1;
+						thereAreSomeFieldsEmpty = total>lastFunctions.getFunction().size(); //there was deleted some empty nodes
+						for(int x=0;!thereAreSomeFieldsEmpty && x<lastFunctions.getFunction().size();x++){
+							if(lastFunctions.getFunction().get(x).getTerm()==null){
+								thereAreSomeFieldsEmpty = true;
+								foundIndexToBeMoved = x;
+							}
+						}
+						
+						if(thereAreSomeFieldsEmpty){ 
+							JOptionPane.showMessageDialog(this.tabbedPane, labels.getString("eaccpf.commons.error.empty.function"));//alert
+							if(total>lastFunctions.getFunction().size()){
+								lastFunctions.getFunction().add(function); //restored empty node
+							}
+						}
+						if(!thereAreSomeFieldsEmpty){
+							lastFunctions.getFunction().add(function); //put an empty one
+						}else if(foundIndexToBeMoved>-1){
+							Function targetFunction = lastFunctions.getFunction().get(foundIndexToBeMoved);
+							lastFunctions.getFunction().add(targetFunction);
+							lastFunctions.getFunction().remove(foundIndexToBeMoved);
+						}
+						if(foundIndex>-1){
+							eaccpf.getCpfDescription().getDescription().getPlacesOrLocalDescriptionsOrLegalStatuses().set(foundIndex, lastFunctions);
+						}
 					}
-					if(foundIndex>-1){
-						eaccpf.getCpfDescription().getDescription().getPlacesOrLocalDescriptionsOrLegalStatuses().set(foundIndex, lastFunctions);
-					}
-					
-				}else{
-					Functions newFunctions = new Functions();
-					newFunctions.getFunction().add(new Function());
-					eaccpf.getCpfDescription().getDescription().getPlacesOrLocalDescriptionsOrLegalStatuses().add(newFunctions);
 				}
 			}
 		}
@@ -2194,26 +2268,43 @@ public class EacCpfDescriptionPanel extends EacCpfPanel {
 
 		private void putEmptyAddressComponentIntoFunction() {
 			if(placeFunctionPlaceJtextfields!=null && this.index<placeFunctionPlaceJtextfields.size()){
-				String lastPlaceTargetFunctionDetails = placeFunctionPlaceJtextfields.get(this.index).get(placeFunctionPlaceJtextfields.get(this.index).size()-1).getText();
 				
-				if(lastPlaceTargetFunctionDetails.isEmpty()){
-					JOptionPane.showMessageDialog(this.tabbedPane, labels.getString("eaccpf.commons.error.empty.place"));
-				}else{
-					int counter = eaccpf.getCpfDescription().getDescription().getPlacesOrLocalDescriptionsOrLegalStatuses().size();
-					int i = 0;
-					Functions lastFunctions = null;
-					boolean found = false;
-					for(;!(found && lastFunctions!=null) && i<counter;i++){
-						if(!(eaccpf.getCpfDescription().getDescription().getPlacesOrLocalDescriptionsOrLegalStatuses().get(i) instanceof Functions)){
-							found = true;
-						}else{
-							lastFunctions = (Functions) eaccpf.getCpfDescription().getDescription().getPlacesOrLocalDescriptionsOrLegalStatuses().get(i);
-						}
-					}
-					if(found && lastFunctions!=null){
-						lastFunctions.getFunction().get(index).getPlaceEntry().add(new PlaceEntry()); //update new one
+				int counter = eaccpf.getCpfDescription().getDescription().getPlacesOrLocalDescriptionsOrLegalStatuses().size();
+				int i = 0;
+				Functions lastFunctions = null;
+				boolean found = false;
+				for(;!(found && lastFunctions!=null) && i<counter;i++){
+					if(!(eaccpf.getCpfDescription().getDescription().getPlacesOrLocalDescriptionsOrLegalStatuses().get(i) instanceof Functions)){
+						found = true;
+					}else{
+						lastFunctions = (Functions) eaccpf.getCpfDescription().getDescription().getPlacesOrLocalDescriptionsOrLegalStatuses().get(i);
 					}
 				}
+				if(lastFunctions!=null){
+					boolean isEmpty = false;
+					List<PlaceEntry> placeEntries = lastFunctions.getFunction().get(index).getPlaceEntry();
+					if(placeEntries!=null){
+						for(PlaceEntry placeEntry:placeEntries){
+							if(placeEntry!=null && placeEntry.getContent().isEmpty()){
+								isEmpty = true;
+							}
+						}
+						if(!isEmpty){
+							isEmpty = placeFunctionPlaceJtextfields.get(this.index).size()>placeEntries.size();
+							if(isEmpty){
+								lastFunctions.getFunction().get(index).getPlaceEntry().add(new PlaceEntry());
+							}
+						}
+					}
+					if(isEmpty){
+						JOptionPane.showMessageDialog(this.tabbedPane, labels.getString("eaccpf.commons.error.empty.place"));
+					}else{
+						lastFunctions.getFunction().get(index).getPlaceEntry().add(new PlaceEntry());
+					}
+				}else{
+					JOptionPane.showMessageDialog(this.tabbedPane, labels.getString("eaccpf.commons.error.empty.place"));
+				}
+				
 			}
 		}
 		
@@ -2288,7 +2379,16 @@ public class EacCpfDescriptionPanel extends EacCpfPanel {
 		}
 		
 		public void actionPerformed(ActionEvent e) {
+			int total = 0;
 			try {
+				if(this.eaccpf.getCpfDescription().getDescription().getPlacesOrLocalDescriptionsOrLegalStatuses()!=null){
+					for(int i=0;i<this.eaccpf.getCpfDescription().getDescription().getPlacesOrLocalDescriptionsOrLegalStatuses().size();i++){
+						Object object = this.eaccpf.getCpfDescription().getDescription().getPlacesOrLocalDescriptionsOrLegalStatuses().get(i);
+						if(object instanceof Places){
+							total = ((Places)object).getPlace().size();
+						}
+					}
+				}
 				//first save current form
 				super.updateJAXBObject(false);
 				
@@ -2297,13 +2397,13 @@ public class EacCpfDescriptionPanel extends EacCpfPanel {
 			}
 			
 			//second put new node into eaccpf object
-			putEmptyFurtherAddressIntoDescriptionNode();
+			putEmptyFurtherAddressIntoDescriptionNode(total);
 			
 			//third refresh and save current form with empty field
 			reloadTabbedPanel(new EacCpfDescriptionPanel(eaccpf, tabbedPane, mainTabbedPane, eacCpfFrame, model, labels,entityType,firstLanguage,firstScript).buildEditorPanel(errors), 1);
 		}
 		
-		private void putEmptyFurtherAddressIntoDescriptionNode() {
+		private void putEmptyFurtherAddressIntoDescriptionNode(int total) {
 			Place emptyPlace = new Place();
 			emptyPlace.setAddress(new Address());
 			emptyPlace.setPlaceRole(new PlaceRole());
@@ -2322,26 +2422,30 @@ public class EacCpfDescriptionPanel extends EacCpfPanel {
 				}
 			}
 			if(lastPlaces!=null){
-				boolean lastNodeIsBlank = false; //check if the last element is empty
-				int j;
-				for(j=0;!lastNodeIsBlank && j<lastPlaces.getPlace().size();j++){
-					Place place = lastPlaces.getPlace().get(j);
-					if(place.getPlaceEntry()!=null && place.getPlaceEntry().size()>0){
-						lastNodeIsBlank = (place.getPlaceEntry().get(place.getPlaceEntry().size()-1).getContent()!=null && 
-							place.getPlaceEntry().get(place.getPlaceEntry().size()-1).getContent().isEmpty());
-					}else{
-						lastNodeIsBlank = true;
-					}
-					if(lastNodeIsBlank){
-						int placeIndex = lastPlaces.getPlace().indexOf(place);
-						lastPlaces.getPlace().add(place);
-						lastPlaces.getPlace().remove(placeIndex);
-					}
-				}
-				if(!lastNodeIsBlank){ //put into target position
+				boolean lastNodeIsBlank = lastPlaces.getPlace().size()<total; //check if the last element is empty
+				if(lastNodeIsBlank){ //put into target position
 					lastPlaces.getPlace().add(emptyPlace);
-				}else{
 					JOptionPane.showMessageDialog(this.tabbedPane, labels.getString("eaccpf.commons.error.empty.places"));
+				}else{
+					for(int j=0;!lastNodeIsBlank && j<lastPlaces.getPlace().size();j++){
+						Place place = lastPlaces.getPlace().get(j);
+						if(place.getPlaceEntry()!=null && place.getPlaceEntry().size()>0){
+							lastNodeIsBlank = (place.getPlaceEntry().get(place.getPlaceEntry().size()-1).getContent()!=null && 
+								place.getPlaceEntry().get(place.getPlaceEntry().size()-1).getContent().isEmpty());
+						}else{
+							lastNodeIsBlank = true;
+						}
+						if(lastNodeIsBlank){
+							int placeIndex = lastPlaces.getPlace().indexOf(place);
+							lastPlaces.getPlace().add(place);
+							lastPlaces.getPlace().remove(placeIndex);
+						}
+					}
+					if(!lastNodeIsBlank){ //put into target position
+						lastPlaces.getPlace().add(emptyPlace);
+					}else{
+						JOptionPane.showMessageDialog(this.tabbedPane, labels.getString("eaccpf.commons.error.empty.places"));
+					}
 				}
 			}else{
 				JOptionPane.showMessageDialog(this.tabbedPane, labels.getString("eaccpf.commons.error.empty.places"));
@@ -2476,12 +2580,10 @@ public class EacCpfDescriptionPanel extends EacCpfPanel {
 						lastIndexFound=i>0?i-1:0;
 					}
 				} else if(this.sectionType.equals(FUNCTIONS)){
-					for(i=0;!(functions!=null && !found) && i<this.eaccpf.getCpfDescription().getDescription().getPlacesOrLocalDescriptionsOrLegalStatuses().size();i++){
+					for(i=0;!(functions!=null) && i<this.eaccpf.getCpfDescription().getDescription().getPlacesOrLocalDescriptionsOrLegalStatuses().size();i++){
 						if(this.eaccpf.getCpfDescription().getDescription().getPlacesOrLocalDescriptionsOrLegalStatuses().get(i) instanceof Functions){
 							functions = (Functions)this.eaccpf.getCpfDescription().getDescription().getPlacesOrLocalDescriptionsOrLegalStatuses().get(i);
 							lastIndexFound = i;
-						}else{
-							found = true;
 						}
 					}
 					if(functions!=null && functions.getFunction().size()>figureElement){
@@ -2493,9 +2595,38 @@ public class EacCpfDescriptionPanel extends EacCpfPanel {
 								)								
 							);
 					}else{
-						functions = new Functions();
-						this.eaccpf.getCpfDescription().getDescription().getPlacesOrLocalDescriptionsOrLegalStatuses().add(functions);
-						lastIndexFound=i>0?i-1:0;
+						Functions foundObject = null;
+						if(this.eaccpf.getCpfDescription().getDescription().getPlacesOrLocalDescriptionsOrLegalStatuses()!=null && this.eaccpf.getCpfDescription().getDescription().getPlacesOrLocalDescriptionsOrLegalStatuses().size()>0){
+							for(Object object : this.eaccpf.getCpfDescription().getDescription().getPlacesOrLocalDescriptionsOrLegalStatuses()){
+								if(object instanceof Functions)
+								foundObject = (Functions)object;
+							}
+						}
+						if(foundObject!=null){
+							foundObject.getFunction().add(new Function());
+						}else{
+							functions = new Functions();
+							//try to reorder if necessary
+							if(this.eaccpf.getCpfDescription().getDescription().getPlacesOrLocalDescriptionsOrLegalStatuses().size()>0){
+								boolean exit = false;
+								for(int a=0;!exit && a<this.eaccpf.getCpfDescription().getDescription().getPlacesOrLocalDescriptionsOrLegalStatuses().size();a++){
+									Object section = this.eaccpf.getCpfDescription().getDescription().getPlacesOrLocalDescriptionsOrLegalStatuses().get(a);
+									if(section!=null){
+										if(section instanceof Occupation){
+											this.eaccpf.getCpfDescription().getDescription().getPlacesOrLocalDescriptionsOrLegalStatuses().add(a, functions);
+											exit = true;
+										}
+									}
+								}
+								if(!found){
+									this.eaccpf.getCpfDescription().getDescription().getPlacesOrLocalDescriptionsOrLegalStatuses().add(functions);
+									lastIndexFound=i>0?i-1:0;
+								}
+							}else{
+								this.eaccpf.getCpfDescription().getDescription().getPlacesOrLocalDescriptionsOrLegalStatuses().add(functions);
+								lastIndexFound=i>0?i-1:0;
+							}
+						}
 					}
 				} else if(this.sectionType.equals(OCCUPATIONS)){
 					size = this.eaccpf.getCpfDescription().getDescription().getPlacesOrLocalDescriptionsOrLegalStatuses().size();
@@ -2516,9 +2647,20 @@ public class EacCpfDescriptionPanel extends EacCpfPanel {
 								)								
 							);
 					}else{
-						occupations = new Occupations();
-						this.eaccpf.getCpfDescription().getDescription().getPlacesOrLocalDescriptionsOrLegalStatuses().add(occupations);
-						lastIndexFound=i>0?i-1:0;
+						Occupations foundObject = null;
+						if(this.eaccpf.getCpfDescription().getDescription().getPlacesOrLocalDescriptionsOrLegalStatuses()!=null && this.eaccpf.getCpfDescription().getDescription().getPlacesOrLocalDescriptionsOrLegalStatuses().size()>0){
+							for(Object object : this.eaccpf.getCpfDescription().getDescription().getPlacesOrLocalDescriptionsOrLegalStatuses()){
+								if(object instanceof Occupations)
+								foundObject = (Occupations)object;
+							}
+						}
+						if(foundObject!=null){
+							foundObject.getOccupation().add(new Occupation());
+						}else{
+							occupations = new Occupations();
+							this.eaccpf.getCpfDescription().getDescription().getPlacesOrLocalDescriptionsOrLegalStatuses().add(occupations);
+							lastIndexFound=i>0?i-1:0;
+						}
 					}
 				}
 				if(objectDates!=null){ //let's continue filling object dates
@@ -2952,7 +3094,7 @@ public class EacCpfDescriptionPanel extends EacCpfPanel {
 						}
 					}
 					
-					if(write || write2 || write3 || !save){ //put if there are any new information
+					if((write || write2 || write3 && !save) || (save && write)){ //put if there are any new information
 						places.getPlace().add(place);
 					}
 				}
@@ -3010,11 +3152,13 @@ public class EacCpfDescriptionPanel extends EacCpfPanel {
 					//place textfield 
 					if(placeFunctionPlaceJtextfields!=null && placeFunctionPlaceJtextfields.size()>i){
 						for(int j=0; j<placeFunctionPlaceJtextfields.get(i).size();j++){
+							boolean write3Temp = false;
 							JTextField placeFunctionJTextField = placeFunctionPlaceJtextfields.get(i).get(j); 
 							PlaceEntry placeEntry = new PlaceEntry();
 							String contentFunctionPlace = trimStringValue(placeFunctionJTextField.getText());
 							if(contentFunctionPlace!=null && StringUtils.isNotEmpty(contentFunctionPlace)){
 								write3 = true;
+								write3Temp = true;
 								placeEntry.setContent(contentFunctionPlace);
 							}
 							
@@ -3023,8 +3167,8 @@ public class EacCpfDescriptionPanel extends EacCpfPanel {
 									JComboBox countryCodeJComboBox = placeFunctionPlaceJComboBoxes.get(i).get(j);
 									String countryCode = countryCodeJComboBox.getSelectedItem().toString();
 									if(countryCode!=null && !countryCode.isEmpty() && !countryCode.equals(TextFieldWithComboBoxEacCpf.DEFAULT_VALUE)){
-//										write3 = true;
-
+										write3Temp = true;
+										write3 = true;
 										if(countryCode!=null && !countryCode.isEmpty() && countriesMap.containsKey(countryCode)){
 											countryCode = countriesMap.get(countryCode);
 										}
@@ -3038,8 +3182,9 @@ public class EacCpfDescriptionPanel extends EacCpfPanel {
 								placeEntry.setLang(LanguageIsoList.getIsoCode(placesFunctionJComboBoxes.get(i).getSelectedItem().toString())); //the only lang element available from this part of the form is the same that contains term
 //								write3 = true;
 							}
-							
-							function.getPlaceEntry().add(placeEntry);
+							if(write3Temp){
+								function.getPlaceEntry().add(placeEntry);
+							}
 						}
 					}
 					
@@ -3050,13 +3195,13 @@ public class EacCpfDescriptionPanel extends EacCpfPanel {
 						if(function.getDate()!=null || function.getDateRange()!=null || function.getDateSet()!=null){
 							write4 = true; //store place into places node for dates part
 							//check if there is an placeEntry to be placed
-							if(function.getTerm()==null){
+							if(function.getTerm() == null){
 								function.setTerm(term);
 							}
 						}
 					}
 					
-					if((!save || (write || write2 || write3 || write4)) || (save && write) ){
+					if((!save && (write || write2 || write3 || write4)) || (save && write) ){
 						functions.getFunction().add(function);
 					}
 				}
@@ -3117,10 +3262,11 @@ public class EacCpfDescriptionPanel extends EacCpfPanel {
 		                    occupation.setDescriptiveNote(descriptiveNote);
 	                    }
 					}
-					
 					boolean write3 = false;
 					if(ocupationPlaceCountryPlaceJComboBoxes!=null && ocupationPlaceCountryPlaceJComboBoxes.size()>i){
 						for(int x=0;x<ocupationPlaceCountryPlaceJComboBoxes.get(i).size();x++){
+							boolean write3Temp = false;
+							
 							PlaceEntry placeEntry = new PlaceEntry();
 							
 							String countryCode = ocupationPlaceCountryPlaceJComboBoxes.get(i).get(x).getSelectedItem().toString();
@@ -3141,10 +3287,11 @@ public class EacCpfDescriptionPanel extends EacCpfPanel {
 								String placeEntryContent = trimStringValue(ocupationPlacePlaceJTextFields.get(i).get(x).getText());
 								if(placeEntryContent!=null && !placeEntryContent.isEmpty()){
 									placeEntry.setContent(placeEntryContent);
+									write3Temp = true;
 									write3 = true;
 								}
 							}
-							if(write3){
+							if(write3Temp){
 								occupation.getPlaceEntry().add(placeEntry);
 							}
 						}
@@ -3162,7 +3309,7 @@ public class EacCpfDescriptionPanel extends EacCpfPanel {
 						}
 					}
 
-					if((!save || (write || write2 || write3 || write4)) || (save && write)){
+					if((!save && (write || write2 || write3 || write4)) || (save && write)){
 						occupations.getOccupation().add(occupation);
 					}
 				}
