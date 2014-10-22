@@ -2108,20 +2108,25 @@ public class EacCpfDescriptionPanel extends EacCpfPanel {
 				}
 			}
 			if(lastOccupations!=null){
-				List<PlaceEntry> placeEntries = lastOccupations.getOccupation().get(this.index).getPlaceEntry();
-				boolean isEmpty = false;
-				for(PlaceEntry placeEntry:placeEntries){
-					if(placeEntry!=null && placeEntry.getContent().isEmpty()){
-						isEmpty = true;
+				if(lastOccupations.getOccupation()!=null && lastOccupations.getOccupation().size()>this.index){
+					List<PlaceEntry> placeEntries = lastOccupations.getOccupation().get(this.index).getPlaceEntry();
+					boolean isEmpty = false;
+					for(PlaceEntry placeEntry:placeEntries){
+						if(placeEntry!=null && placeEntry.getContent().isEmpty()){
+							isEmpty = true;
+						}
 					}
-				}
-				if(!isEmpty){
-					isEmpty = ocupationPlacePlaceJTextFields.get(this.index).size()>lastOccupations.getOccupation().get(this.index).getPlaceEntry().size();
-					if(isEmpty){
+					if(!isEmpty){
+						isEmpty = ocupationPlacePlaceJTextFields.get(this.index).size()>lastOccupations.getOccupation().get(this.index).getPlaceEntry().size();
+						if(isEmpty){
+							JOptionPane.showMessageDialog(this.tabbedPane, labels.getString("eaccpf.commons.error.empty.place"));
+						}
+						lastOccupations.getOccupation().get(this.index).getPlaceEntry().add(new PlaceEntry());
+					}else{
 						JOptionPane.showMessageDialog(this.tabbedPane, labels.getString("eaccpf.commons.error.empty.place"));
 					}
-					lastOccupations.getOccupation().get(this.index).getPlaceEntry().add(new PlaceEntry());
 				}else{
+					lastOccupations.getOccupation().add(new Occupation());
 					JOptionPane.showMessageDialog(this.tabbedPane, labels.getString("eaccpf.commons.error.empty.place"));
 				}
 			}else{
@@ -2282,19 +2287,24 @@ public class EacCpfDescriptionPanel extends EacCpfPanel {
 				}
 				if(lastFunctions!=null){
 					boolean isEmpty = false;
-					List<PlaceEntry> placeEntries = lastFunctions.getFunction().get(index).getPlaceEntry();
-					if(placeEntries!=null){
-						for(PlaceEntry placeEntry:placeEntries){
-							if(placeEntry!=null && placeEntry.getContent().isEmpty()){
-								isEmpty = true;
+					if(lastFunctions.getFunction()!=null && lastFunctions.getFunction().size()>index){
+						List<PlaceEntry> placeEntries = lastFunctions.getFunction().get(index).getPlaceEntry();
+						if(placeEntries!=null){
+							for(PlaceEntry placeEntry:placeEntries){
+								if(placeEntry!=null && placeEntry.getContent().isEmpty()){
+									isEmpty = true;
+								}
+							}
+							if(!isEmpty){
+								isEmpty = placeFunctionPlaceJtextfields.get(this.index).size()>placeEntries.size();
+								if(isEmpty){
+									lastFunctions.getFunction().get(index).getPlaceEntry().add(new PlaceEntry());
+								}
 							}
 						}
-						if(!isEmpty){
-							isEmpty = placeFunctionPlaceJtextfields.get(this.index).size()>placeEntries.size();
-							if(isEmpty){
-								lastFunctions.getFunction().get(index).getPlaceEntry().add(new PlaceEntry());
-							}
-						}
+					}else{
+						isEmpty = true;
+						lastFunctions.getFunction().add(new Function());
 					}
 					if(isEmpty){
 						JOptionPane.showMessageDialog(this.tabbedPane, labels.getString("eaccpf.commons.error.empty.place"));
@@ -3030,16 +3040,16 @@ public class EacCpfDescriptionPanel extends EacCpfPanel {
 							placeEntry.setLocalType(trimStringValue(item));
 						}
 					}
-					
+					boolean write4 = false;
 					if(placeEntryPlaceVocabularies!=null && placeEntryPlaceVocabularies.size()>i){
 						if (StringUtils.isNotEmpty(placeEntryPlaceVocabularies.get(i).getText())
 								&& StringUtils.isNotEmpty(trimStringValue(placeEntryPlaceVocabularies.get(i).getText()))) {
-							write = true;
+							write4 = true;
 							placeEntry.setVocabularySource(trimStringValue(placeEntryPlaceVocabularies.get(i).getText().toString()));
 						}
 					}
 					
-					if(write){ //used to be sure if there should be a placeEntry node
+					if(write4){ //used to be sure if there should be a placeEntry node
 						place.getPlaceEntry().add(placeEntry);
 					}
 					
@@ -3094,7 +3104,7 @@ public class EacCpfDescriptionPanel extends EacCpfPanel {
 						}
 					}
 					
-					if((write || write2 || write3 && !save) || (save && write)){ //put if there are any new information
+					if((write || write2 || write3 || write4 && !save) || (save && write)){ //put if there are any new information
 						places.getPlace().add(place);
 					}
 				}
@@ -3119,14 +3129,15 @@ public class EacCpfDescriptionPanel extends EacCpfPanel {
 						term.setLang(LanguageIsoList.getIsoCode(trimStringValue(placesFunctionJComboBoxes.get(i).getSelectedItem().toString())));
 //						write = true;
 					}
+					boolean write5 = false;
 					if(placesVocabularyJTextFields!=null && placesVocabularyJTextFields.size()>i){
 						if (StringUtils.isNotEmpty(placesVocabularyJTextFields.get(i).getText())
 								&& StringUtils.isNotEmpty(trimStringValue(placesVocabularyJTextFields.get(i).getText()))) {
 							term.setVocabularySource(trimStringValue(placesVocabularyJTextFields.get(i).getText()));
-							write = true;
+							write5 = true;
 						}
 					}
-					if(write){
+					if(write || write5){
 						function.setTerm(term);
 					}
 					
@@ -3201,7 +3212,7 @@ public class EacCpfDescriptionPanel extends EacCpfPanel {
 						}
 					}
 					
-					if((!save && (write || write2 || write3 || write4)) || (save && write) ){
+					if((!save && (write || write2 || write3 || write4 || write5)) || (save && write) ){
 						functions.getFunction().add(function);
 					}
 				}
@@ -3232,15 +3243,15 @@ public class EacCpfDescriptionPanel extends EacCpfPanel {
 						term.setLang(LanguageIsoList.getIsoCode(ocupationPlaceOcupationLanguagesJComboboxes.get(i).getSelectedItem().toString()));
 //						write = true;
 					}
-
+					boolean write5 = false;
 					if(ocupationPlaceLinkToControlledVocabularyTextFields!=null && ocupationPlaceLinkToControlledVocabularyTextFields.size()>i){
 						if (StringUtils.isNotEmpty(ocupationPlaceLinkToControlledVocabularyTextFields.get(i).getText())
 								&& StringUtils.isNotEmpty(trimStringValue(ocupationPlaceLinkToControlledVocabularyTextFields.get(i).getText()))) {
 							term.setVocabularySource(trimStringValue(ocupationPlaceLinkToControlledVocabularyTextFields.get(i).getText()));
-							write = true;
+							write5 = true;
 						}
 					}
-					if(write){
+					if(write || write5){
 						occupation.setTerm(term);
 					}
 					
@@ -3309,7 +3320,7 @@ public class EacCpfDescriptionPanel extends EacCpfPanel {
 						}
 					}
 
-					if((!save && (write || write2 || write3 || write4)) || (save && write)){
+					if((!save && (write || write2 || write3 || write4 || write5)) || (save && write)){
 						occupations.getOccupation().add(occupation);
 					}
 				}
