@@ -17,7 +17,7 @@
             <xsl:when test="/*:ead/*:eadheader/*:eadid/text()">
                 <xsl:choose>
                     <xsl:when test="$addXMLNS = 'true'">
-                        <c level="item" xmlns="urn:isbn:1-931666-22-9" xmlns:xlink="http://www.w3.org/1999/xlink">
+                        <c xmlns="urn:isbn:1-931666-22-9" xmlns:xlink="http://www.w3.org/1999/xlink">
                             <did>
                             	<xsl:choose>
                             		<xsl:when test="/*:ead/*:archdesc/*:did/*:unitid[@type='call number']">
@@ -54,7 +54,7 @@
                         </c>
                     </xsl:when>
                     <xsl:otherwise>
-                        <c level="item">
+                        <c>
                             <did>
                             	<xsl:choose>
                             		<xsl:when test="/*:ead/*:archdesc/*:did/*:unitid[@type='call number']">

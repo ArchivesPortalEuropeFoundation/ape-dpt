@@ -37,7 +37,7 @@
     	</xsl:variable>
         <xsl:choose>
             <xsl:when test="/*:ead/*:eadheader/*:eadid/text()">
-                      <c level="item" xmlns="urn:isbn:1-931666-22-9" xmlns:xlink="http://www.w3.org/1999/xlink">
+                      <c xmlns="urn:isbn:1-931666-22-9" xmlns:xlink="http://www.w3.org/1999/xlink">
                             <did>
                            		<xsl:if test="$unitid">
 									<unitid encodinganalog="3.1.1" type="call number"><xsl:value-of select="$unitid"/></unitid>
