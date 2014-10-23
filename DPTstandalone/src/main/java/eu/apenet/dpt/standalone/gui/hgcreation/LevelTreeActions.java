@@ -167,7 +167,6 @@ public class LevelTreeActions {
             }
         } else {
             Element el = doc.createElement("c");
-            el.setAttribute("level", "series");
 
             Element did = doc.createElement("did");
             if(!obj.getId().equals("")){
