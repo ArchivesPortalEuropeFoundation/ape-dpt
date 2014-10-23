@@ -37,7 +37,7 @@
 
     <xsl:template name="create_subseries_level">
         <xsl:param name="pNode"/>
-        <c level="subseries">
+        <c>
             <did>
                 <unittitle encodinganalog="3.1.2">
                     <xsl:value-of select="normalize-space($pNode/text()[1])"/>
@@ -53,7 +53,7 @@
 
     <xsl:template name="create_file_level">
         <xsl:param name="extrefNode"/>
-        <c level="item">
+        <c>
             <did>
                 <unittitle encodinganalog="3.1.2">
                     <xsl:value-of select="normalize-space($extrefNode/text())"/>
