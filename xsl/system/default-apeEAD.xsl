@@ -1075,7 +1075,7 @@
 
     <!-- archdesc/did/abstract -->
     <!-- todo: Here modifications has to be done, we only accept @encodinganalog=('summary'|'preface') -->
-    <xsl:template match="archdesc/did/abstract" mode="copy">
+    <xsl:template match="archdesc/did/abstract[not(@encodinganalog='Kopfzeile') and not(@encodinganalog='Zusammenfassung')]" mode="copy">
         <scopecontent encodinganalog="summary">
             <xsl:if test="@type">
                 <head>
@@ -1099,14 +1099,15 @@
                     <xsl:apply-templates select="following-sibling::abstract[@encodinganalog='Zusammenfassung' and position()=1]/node()" mode="copy"/>
                 </p>
             </xsl:if>
+            <xsl:if test="preceding-sibling::abstract[@encodinganalog='Zusammenfassung' and position()=1]">
+                <p>
+                    <xsl:apply-templates select="preceding-sibling::abstract[@encodinganalog='Zusammenfassung' and position()=1]/node()" mode="copy"/>
+                </p>
+            </xsl:if>
         </scopecontent>
     </xsl:template>
 
-    <xsl:template match="archdesc/did/abstract[@encodinganalog='Zusammenfassung']" mode="copy">
-            <!--<p>
-                <xsl:apply-templates select="node()" mode="copy"/>
-            </p>-->
-    </xsl:template>
+    <xsl:template match="archdesc/did/abstract[@encodinganalog='Zusammenfassung']" mode="copy" />
 
     <!-- todo: We only accept @encoding=('pre'|'final'|'organisational unit') -->
     <xsl:template match="did/origination" mode="copy level">
@@ -3092,19 +3093,6 @@
     <xsl:template match="did/daogrp/daodesc" mode="level"/>
     <xsl:template match="did/daogrp/resource" mode="level"/>
     <xsl:template match="did/daogrp/arc" mode="level"/>
-
-    <xsl:template match="did/abstract" mode="level">
-        <scopecontent encodinganalog="summary">
-            <xsl:if test="@type">
-                <head>
-                    <xsl:value-of select="@type"/>
-                </head>
-            </xsl:if>
-            <p>
-                <xsl:apply-templates select="node()" mode="#current"/>
-            </p>
-        </scopecontent>
-    </xsl:template>
 
     <xsl:template match="did/abstract" mode="level">
         <scopecontent encodinganalog="summary">
