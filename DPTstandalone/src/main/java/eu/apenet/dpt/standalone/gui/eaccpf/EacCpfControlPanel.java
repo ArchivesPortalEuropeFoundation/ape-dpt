@@ -78,7 +78,6 @@ public class EacCpfControlPanel extends EacCpfPanel {
 	private JComboBox<String> scriptFirst;
 	private JComboBox languageFirst;
 	private LanguageWithScript languageWithScript;
-	private JTextField jTextFieldInstitutionForPersonResponsible;
 
 	/**
 	 * Constructor.
@@ -248,19 +247,15 @@ public class EacCpfControlPanel extends EacCpfPanel {
 		builder.add(jTextFieldIdentifierForPersonResponsible, cc.xy (3, rowNb));
 		this.idControl = jTextFieldIdentifierForPersonResponsible;
 		setNextRow();
-		//Field to Institution responsible for the description
-		JLabel jLabelInstitutionForPersonResponsible = new JLabel(this.labels.getString("eaccpf.control.institutionResponsibleForTheDescription"));
-		builder.add(jLabelInstitutionForPersonResponsible, cc.xy(1, this.rowNb));
-		String contentInstitution = this.eaccpf.getControl().getMaintenanceAgency().getAgencyName().getContent()!=null?this.eaccpf.getControl().getMaintenanceAgency().getAgencyName().getContent():"";
-		this.jTextFieldInstitutionForPersonResponsible = new JTextField(contentInstitution);
-		builder.add(this.jTextFieldInstitutionForPersonResponsible, cc.xy(3, this.rowNb));
-		setNextRow();
+		
 		if(StringUtils.isEmpty(content)){
 			builder.add(createErrorLabel(this.labels.getString("eaccpf.control.error.emptyidentifier")), cc.xyw(1, this.rowNb, 3));
 			setNextRow();
 		}
 		if (this.eaccpf.getControl().getOtherRecordId().isEmpty()) {
-			this.eaccpf.getControl().getOtherRecordId().add(new OtherRecordId());
+			OtherRecordId newOtherRecordId = new OtherRecordId();
+			newOtherRecordId.setLocalType(EacCpfPanel.LOCAL_TYPE_ORIGINAL);
+			this.eaccpf.getControl().getOtherRecordId().add(newOtherRecordId);
 		}
 
 		List<OtherRecordId> otherRecordIds = this.eaccpf.getControl().getOtherRecordId();
@@ -278,8 +273,6 @@ public class EacCpfControlPanel extends EacCpfPanel {
 			this.listIdentifierType.add(jTextFieldIdentifierType);
 			builder.addLabel(this.labels.getString("eaccpf.control.otherRecordIdentifier"), cc.xy(1, this.rowNb));
 			builder.add(jTextFieldLocalIdentifierPersonResponsible, cc.xy(3, this.rowNb));
-			builder.addLabel(this.labels.getString("eaccpf.commons.identifier.type"), cc.xy(5, this.rowNb));
-			builder.add(jTextFieldIdentifierType, cc.xy(7, this.rowNb));
 			this.setNextRow();
 		}
 		
@@ -491,7 +484,7 @@ public class EacCpfControlPanel extends EacCpfPanel {
 					OtherRecordId otherRecordId= new OtherRecordId();
 					if(!trimStringValue(identifier.getText()).isEmpty()){
 						otherRecordId.setContent(trimStringValue(identifier.getText()));
-//						otherRecordId.setLocalType(EacCpfPanel.LOCAL_TYPE_ORIGINAL);
+						otherRecordId.setLocalType(EacCpfPanel.LOCAL_TYPE_ORIGINAL);
 						updated = true;
 					}
 					if (!trimStringValue(identifierType.getText()).isEmpty()){
@@ -506,7 +499,7 @@ public class EacCpfControlPanel extends EacCpfPanel {
 			//idControl
 			this.eaccpf.getControl().getMaintenanceAgency().getAgencyCode().setValue(trimStringValue(idControl.getText()));
 			//agencyName
-			this.eaccpf.getControl().getMaintenanceAgency().getAgencyName().setContent(jTextFieldInstitutionForPersonResponsible.getText());
+			this.eaccpf.getControl().getMaintenanceAgency().getAgencyName().setContent(trimStringValue(responsible));
 			//comboBox updates
 			firstLanguage = LanguageIsoList.getIsoCode(trimStringValue(languageFirst.getSelectedItem().toString()));
 			firstScript = scriptFirst.getSelectedItem().toString();
