@@ -3049,7 +3049,7 @@ public class EacCpfDescriptionPanel extends EacCpfPanel {
 						}
 					}
 					
-					if(write4){ //used to be sure if there should be a placeEntry node
+					if(write || write4){ //used to be sure if there should be a placeEntry node
 						place.getPlaceEntry().add(placeEntry);
 					}
 					
