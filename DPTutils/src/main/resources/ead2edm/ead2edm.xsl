@@ -333,7 +333,8 @@
                                 select="$updatedInheritedControlaccesses"/>
             </xsl:apply-templates>
         </xsl:if>
-        <!-- CREATE LEVEL INFORMATION IF C IS FONDS OR (SUB)SERIES -->
+        <!-- CREATE LEVEL INFORMATION IF C HAS NO DAO -->
+        <xsl:if test="not(did/dao)">
             <ore:Aggregation>
                 <xsl:attribute name="rdf:about" select="concat('aggregation_', $identifier)"/>
                 <edm:aggregatedCHO>
@@ -516,7 +517,8 @@
                                    select="'http://creativecommons.org/publicdomain/zero/1.0/'"/>
                 </edm:rights>
             </edm:WebResource>
-
+        </xsl:if>
+        
         <!-- CREATE DATA FOR DAOs -->
         <xsl:if test="did/dao">
             <xsl:call-template name="addRecord">
