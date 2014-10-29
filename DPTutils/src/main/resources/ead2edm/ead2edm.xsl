@@ -372,8 +372,12 @@
                             <xsl:attribute name="rdf:resource" select="@url"/>
                         </xsl:when>
                         <xsl:otherwise>
-                            <xsl:attribute name="rdf:resource"
-                                select="concat($id_base, normalize-space(/ead//eadid), '/unitid/', replace($identifier, ' ', '+'))"/>
+                            <xsl:attribute name="rdf:resource">
+                                <xsl:call-template name="number">
+                                    <xsl:with-param name="prefix" select="concat($id_base, normalize-space(/ead//eadid), '/position/')"/>
+                                    <xsl:with-param name="node" select="."/>
+                                </xsl:call-template>
+                            </xsl:attribute>
                         </xsl:otherwise>
                     </xsl:choose>
                 </edm:isShownAt>
@@ -503,7 +507,10 @@
                             <xsl:value-of select="@url"/>
                         </xsl:when>
                         <xsl:otherwise>
-                            <xsl:value-of select="concat($id_base, normalize-space(/ead//eadid), '/unitid/', replace($identifier, ' ', '+'))"/>
+                                <xsl:call-template name="number">
+                                    <xsl:with-param name="prefix" select="concat($id_base, normalize-space(/ead//eadid), '/position/')"/>
+                                    <xsl:with-param name="node" select="."/>
+                                </xsl:call-template>
                         </xsl:otherwise>
                     </xsl:choose>
                 </xsl:attribute>
@@ -1381,7 +1388,7 @@
         <xsl:variable name="number">
             <xsl:number count="c" level="any" from="/ead/archdesc/dsc" select="$node[1]"/>
         </xsl:variable>
-        <xsl:value-of select="concat($prefix, $number)"/>
+        <xsl:value-of select="concat($prefix, 'c', $number)"/>
     </xsl:template>
 
     <xsl:template match="abbr|emph|expan|extref">
