@@ -23,6 +23,7 @@ public class EdmConfig implements Serializable {
     private String repositoryCode;
     private String xmlTypeName;
     private boolean minimalConversion;
+    private String idSource;
     private Properties properties;
 
     private boolean transferToFileOutput;
@@ -93,7 +94,21 @@ public class EdmConfig implements Serializable {
 		this.minimalConversion = minimalConversion;
 	}
 
-    public Properties getProperties() {
+    /**
+	 * @return the idSource
+	 */
+	public String getIdSource() {
+		return this.idSource;
+	}
+
+	/**
+	 * @param idSource the idSource to set
+	 */
+	public void setIdSource(String idSource) {
+		this.idSource = idSource;
+	}
+
+	public Properties getProperties() {
         if (properties == null) {
 			properties = new Properties();
 			properties.put("edm_identifier", getString(getEdmIdentifier()));
@@ -102,6 +117,7 @@ public class EdmConfig implements Serializable {
 			properties.put("repository_code", getString(repCodeAfterReplacement));
 			properties.put("xml_type_name", getString(getXmlTypeName()));
 			properties.put("minimalConversion", getString(new Boolean(isMinimalConversion()).toString()));
+			properties.put("idSource", getString(getIdSource()));
         }
         return properties;
     }

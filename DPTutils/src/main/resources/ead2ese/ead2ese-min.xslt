@@ -19,6 +19,7 @@
     <xsl:param name="useExistingRepository"></xsl:param>
     <xsl:param name="useExistingLanguage"></xsl:param>
     <xsl:param name="minimalConversion"></xsl:param>
+    <xsl:param name="idSource"></xsl:param>
 
     <xsl:template match="/">
         <metadata xsi:schemaLocation="http://www.europeana.eu/schemas/ese/ http://www.europeana.eu/schemas/ese/ESE-V3.4.xsd

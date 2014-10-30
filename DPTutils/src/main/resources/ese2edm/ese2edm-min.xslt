@@ -24,6 +24,7 @@
     <xsl:param name="repository_code"></xsl:param>
     <xsl:param name="xml_type_name"></xsl:param>
     <xsl:param name="minimalConversion"></xsl:param>
+    <xsl:param name="idSource"></xsl:param>
 
     <!--variable for identifying the eadid, stored at /metadata/record[1]/dc:identifier-->
     <xsl:variable name="eadid" select="/metadata/record[1]/dc:identifier[1]" />
