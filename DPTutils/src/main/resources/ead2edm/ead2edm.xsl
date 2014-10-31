@@ -35,6 +35,7 @@
     <xsl:param name="useExistingRepository"/>
     <xsl:param name="useExistingLanguage"/>
     <xsl:param name="minimalConversion"/>
+    <xsl:param name="idSource"/>
     <!-- Params from Ese2Edm -->
     <xsl:param name="edm_identifier"/>
     <xsl:param name="host"/>
