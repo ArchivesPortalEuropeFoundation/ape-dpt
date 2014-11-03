@@ -32,7 +32,6 @@ public class EseConfig implements Serializable {
     private boolean useExistingLanguage;
     private boolean useExistingRepository;
     private boolean minimalConversion;
-    private String idSource;
     private Properties properties;
 
     public EseConfig() {
@@ -240,21 +239,7 @@ public class EseConfig implements Serializable {
 		this.minimalConversion = minimalConversion;
 	}
 
-    /**
-	 * @return the idSource
-	 */
-	public String getIdSource() {
-		return this.idSource;
-	}
-
-	/**
-	 * @param idSource the idSource to set
-	 */
-	public void setIdSource(String idSource) {
-		this.idSource = idSource;
-	}
-
-	public Properties getProperties() {
+    public Properties getProperties() {
         if (properties == null) {
             properties = new Properties();
             properties.put("europeana_provider", getString(getProvider()));
@@ -276,7 +261,6 @@ public class EseConfig implements Serializable {
             properties.put("useExistingLanguage", getString(new Boolean(isUseExistingLanguage()).toString()));
             properties.put("useExistingRepository", getString(new Boolean(isUseExistingRepository()).toString()));
             properties.put("minimalConversion", getString(new Boolean(isMinimalConversion()).toString()));
-            properties.put("idSource", getString(getIdSource()));
         }
         return properties;
     }

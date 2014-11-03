@@ -35,7 +35,6 @@
     <xsl:param name="useExistingRepository"/>
     <xsl:param name="useExistingLanguage"/>
     <xsl:param name="minimalConversion"/>
-    <xsl:param name="idSource"/>
     <!-- Params from Ese2Edm -->
     <xsl:param name="edm_identifier"/>
     <xsl:param name="host"/>
@@ -150,21 +149,20 @@
             <xsl:if test="/ead/archdesc/dsc/c">
                 <xsl:for-each select="/ead/archdesc/dsc/c">
                     <xsl:if test="descendant::dao">
-                        <xsl:choose>
-                            <xsl:when test="did/unitid[@type='call number']">
+                        <xsl:if test="did/unitid[@type='call number']">
+<!--                        <xsl:choose>
+                            <xsl:when test="did/unitid[@type='call number']">-->
                                 <dcterms:hasPart>
                                     <xsl:value-of select="concat('providedCHO_', normalize-space(did/unitid[@type='call number']))"/>
                                 </dcterms:hasPart>
-                            </xsl:when>
+                        </xsl:if>
+<!--                            </xsl:when>
                             <xsl:otherwise>
                                 <dcterms:hasPart>
-                                    <xsl:call-template name="number">
-                                        <xsl:with-param name="prefix" select="'providedCHO_position_'"/>
-                                        <xsl:with-param name="node" select="."/>
-                                    </xsl:call-template>
+                                    <xsl:value-of select="concat('providedCHO_', 'replacementValueTest_', @id)"/>
                                 </dcterms:hasPart>
                             </xsl:otherwise>
-                        </xsl:choose>
+                        </xsl:choose>-->
                     </xsl:if>
                 </xsl:for-each>
             </xsl:if>
@@ -245,8 +243,6 @@
         <xsl:param name="inheritedCustodhists"/>
         <xsl:param name="inheritedAltformavails"/>
         <xsl:param name="inheritedControlaccesses"/>
-        <xsl:param name="positionChain"/>
-        
         <xsl:variable name="updatedInheritedOriginations">
             <xsl:choose>
                 <xsl:when test="$inheritOrigination = &quot;true&quot; and ./did/origination">
@@ -310,31 +306,30 @@
         <xsl:variable name="parentcnode" select="parent::node()"/>
         <xsl:variable name="parentdidnode" select="$parentcnode/did"/>
         <xsl:variable name="parentparentcnode" select="parent::node()/parent::node()"/>
-        <xsl:variable name="positionInDocument">
-            <xsl:call-template name="number">
-                <xsl:with-param name="node" select="node()"/>
-            </xsl:call-template>
-        </xsl:variable>
         <xsl:variable name="identifier">
             <xsl:choose>
                 <xsl:when test="did/unitid[@type='call number']">
                     <xsl:value-of select="normalize-space(did/unitid[@type='call number'])"/>
                 </xsl:when>
                 <xsl:otherwise>
-                    <xsl:choose>
-                        <xsl:when test="$positionChain">
-                            <xsl:value-of select="concat('position_', $positionChain, '-', $positionInDocument)"/>
-                        </xsl:when>
-                        <xsl:otherwise>
-                            <xsl:value-of select="concat('position_', $positionInDocument)"/>
-                        </xsl:otherwise>
-                    </xsl:choose>
+                    <xsl:value-of select="concat('replacementValue_', @id)"/>
                 </xsl:otherwise>
             </xsl:choose>
         </xsl:variable>
 
-        <!-- CREATE LEVEL INFORMATION IF C HAS NO DAO -->
-        <xsl:if test="not(did/dao) and descendant::did/dao">
+        <xsl:if test="count(child::c) > 0">
+            <xsl:apply-templates select="c">
+                <xsl:with-param name="inheritedOriginations" select="$updatedInheritedOriginations"/>
+                <xsl:with-param name="inheritedLanguages" select="$updatedInheritedLanguages"/>
+                <xsl:with-param name="inheritedCustodhists" select="$updatedInheritedCustodhists"/>
+                <xsl:with-param name="inheritedAltformavails"
+                                select="$updatedInheritedAltformavails"/>
+                <xsl:with-param name="inheritedControlaccesses"
+                                select="$updatedInheritedControlaccesses"/>
+            </xsl:apply-templates>
+        </xsl:if>
+        <!-- CREATE LEVEL INFORMATION IF C IS FONDS OR (SUB)SERIES -->
+        <xsl:if test="@level = ('fonds', 'series', 'subseries') and .//dao">
             <ore:Aggregation>
                 <xsl:attribute name="rdf:about" select="concat('aggregation_', $identifier)"/>
                 <edm:aggregatedCHO>
@@ -372,22 +367,8 @@
                             <xsl:attribute name="rdf:resource" select="@url"/>
                         </xsl:when>
                         <xsl:otherwise>
-                            <xsl:attribute name="rdf:resource">
-                                <xsl:choose>
-                                    <xsl:when test="$positionChain">
-                                        <xsl:call-template name="number">
-                                            <xsl:with-param name="prefix" select="concat($id_base, normalize-space(/ead//eadid), '/position/', $positionChain, '-')"/>
-                                            <xsl:with-param name="node" select="."/>
-                                        </xsl:call-template>
-                                    </xsl:when>
-                                    <xsl:otherwise>
-                                        <xsl:call-template name="number">
-                                            <xsl:with-param name="prefix" select="concat($id_base, normalize-space(/ead//eadid), '/position/')"/>
-                                            <xsl:with-param name="node" select="."/>
-                                        </xsl:call-template>                                        
-                                    </xsl:otherwise>
-                                </xsl:choose>
-                            </xsl:attribute>
+                            <xsl:attribute name="rdf:resource"
+                                select="concat($id_base, normalize-space(/ead//eadid), '/unitid/', replace($identifier, ' ', '+'))"/>
                         </xsl:otherwise>
                     </xsl:choose>
                 </edm:isShownAt>
@@ -430,7 +411,7 @@
                         <xsl:apply-templates select="@level"/>
                     </dc:type>
                 </xsl:if>
-                <xsl:if test="c">
+<!--                <xsl:if test="c">
                     <xsl:for-each select="c">
                         <xsl:if test="descendant::dao">
                             <xsl:choose>
@@ -441,19 +422,7 @@
                                 </xsl:when>
                                 <xsl:otherwise>
                                     <dcterms:hasPart>
-                                        <xsl:call-template name="number">
-                                            <xsl:with-param name="prefix">
-                                                <xsl:choose>
-                                                    <xsl:when test="$positionChain">
-                                                        <xsl:value-of select="concat('providedCHO_position_', $positionChain, '-', $positionInDocument, '-')"></xsl:value-of>
-                                                    </xsl:when>
-                                                    <xsl:otherwise>
-                                                        <xsl:value-of select="concat('providedCHO_position_', $positionInDocument, '-')"/>
-                                                    </xsl:otherwise>
-                                                </xsl:choose>
-                                            </xsl:with-param>
-                                            <xsl:with-param name="node" select="."/>
-                                        </xsl:call-template>
+                                        <xsl:value-of select="concat('providedCHO_', 'replacementValue_', @id)"/>
                                     </dcterms:hasPart>
                                 </xsl:otherwise>
                             </xsl:choose>
@@ -469,13 +438,13 @@
                         </xsl:when>
                         <xsl:otherwise>
                             <dcterms:isPartOf>
-                                <xsl:attribute name="rdf:resource" select="'archdesc'"/>
+                                <xsl:attribute name="rdf:resource" select="concat('providedCHO_', 'replacementValue_', $parentparentcnode/@id)"/>
                             </dcterms:isPartOf>
                         </xsl:otherwise>
                     </xsl:choose>
                 </xsl:if>
                 <xsl:if test="local-name($parentcnode) = 'c'">
-                   <xsl:choose>
+                    <xsl:choose>
                         <xsl:when test="$parentdidnode/unitid[@type='call number']">
                             <dcterms:isPartOf>
                                 <xsl:attribute name="rdf:resource" select="concat('providedCHO_', normalize-space($parentdidnode/unitid[@type='call number']))"/>
@@ -483,53 +452,31 @@
                         </xsl:when>
                         <xsl:otherwise>
                             <dcterms:isPartOf>
-                                <xsl:choose>
-                                    <xsl:when test="$positionChain">
-                                        <xsl:value-of select="concat('providedCHO_position_', $positionChain)"></xsl:value-of>
-                                    </xsl:when>
-                                    <xsl:otherwise>  
-                                        <xsl:call-template name="number">
-                                            <xsl:with-param name="prefix" select="'providedCHO_position_'"/>
-                                            <xsl:with-param name="node" select="$parentcnode"/>
-                                        </xsl:call-template>
-                                    </xsl:otherwise>
-                                </xsl:choose>
+                                <xsl:attribute name="rdf:resource" select="concat('providedCHO_', 'replacementValue_', $parentcnode/@id)"/>
                             </dcterms:isPartOf>
                         </xsl:otherwise>
                     </xsl:choose>
-                </xsl:if>
+                </xsl:if>-->
                 <xsl:if test="did/unitdate">
                     <dcterms:temporal>
                         <xsl:value-of select="did/unitdate"/>
                     </dcterms:temporal>
                 </xsl:if>
                 <xsl:if test="./preceding-sibling::c">
-                    <xsl:choose>
-                        <xsl:when test="./preceding-sibling::*[descendant::did/dao][1]/did/unitid[@type='call number']">
-                            <edm:isNextInSequence>
-                                <xsl:attribute name="rdf:resource" select="concat('providedCHO_', normalize-space(./preceding-sibling::*[descendant::did/dao][1]/did/unitid[@type='call number']))"/>
-                            </edm:isNextInSequence>
-                        </xsl:when>
-                        <xsl:when test="./preceding-sibling::*[descendant::did/dao][1]">
-                            <edm:isNextInSequence>
-                                <xsl:attribute name="rdf:resource">
-                                    <xsl:call-template name="number">
-                                        <xsl:with-param name="prefix">
-                                            <xsl:choose>
-                                                <xsl:when test="$positionChain">
-                                                    <xsl:value-of select="concat('providedCHO_position_', $positionChain, '-')"></xsl:value-of>
-                                                </xsl:when>
-                                                <xsl:otherwise>
-                                                    <xsl:value-of select="'providedCHO_position_'"/>
-                                                </xsl:otherwise>
-                                            </xsl:choose>
-                                        </xsl:with-param>
-                                        <xsl:with-param name="node" select="./preceding-sibling::*[descendant::did/dao][1]"/>
-                                    </xsl:call-template>
-                                </xsl:attribute>
-                            </edm:isNextInSequence>
-                        </xsl:when>
-                    </xsl:choose>
+                        <!--<xsl:choose>
+                            <xsl:when test="./preceding-sibling::*[descendant::did/dao][1]/did/unitid[@type='call number']">-->
+                    <xsl:if test="./preceding-sibling::*[descendant::did/dao][1]/did/unitid[@type='call number']">
+                                <edm:isNextInSequence>
+                                    <xsl:attribute name="rdf:resource" select="concat('providedCHO_', normalize-space(./preceding-sibling::*[descendant::did/dao][1]/did/unitid[@type='call number']))"/>
+                                </edm:isNextInSequence>
+                    </xsl:if>
+<!--                            </xsl:when>
+                            <xsl:when test="./preceding-sibling::*[descendant::did/dao][1]/@id">
+                                <edm:isNextInSequence>
+                                    <xsl:attribute name="rdf:resource" select="concat('providedCHO_', 'replacementValue_', normalize-space(./preceding-sibling::*[descendant::did/dao][1]/@id))"/>
+                                </edm:isNextInSequence>
+                            </xsl:when>
+                        </xsl:choose>-->
                 </xsl:if>
                 <edm:type>
                     <xsl:value-of select="'TEXT'"/>
@@ -542,20 +489,7 @@
                             <xsl:value-of select="@url"/>
                         </xsl:when>
                         <xsl:otherwise>
-                            <xsl:choose>
-                                <xsl:when test="$positionChain">
-                                    <xsl:call-template name="number">
-                                        <xsl:with-param name="prefix" select="concat($id_base, normalize-space(/ead//eadid), '/position/', $positionChain, '-')"/>
-                                        <xsl:with-param name="node" select="."/>
-                                    </xsl:call-template>
-                                </xsl:when>
-                                <xsl:otherwise>
-                                    <xsl:call-template name="number">
-                                        <xsl:with-param name="prefix" select="concat($id_base, normalize-space(/ead//eadid), '/position/')"/>
-                                        <xsl:with-param name="node" select="."/>
-                                    </xsl:call-template>                                        
-                                </xsl:otherwise>
-                            </xsl:choose>
+                            <xsl:value-of select="concat($id_base, normalize-space(/ead//eadid), '/unitid/', replace($identifier, ' ', '+'))"/>
                         </xsl:otherwise>
                     </xsl:choose>
                 </xsl:attribute>
@@ -570,7 +504,6 @@
                 </edm:rights>
             </edm:WebResource>
         </xsl:if>
-        
         <!-- CREATE DATA FOR DAOs -->
         <xsl:if test="did/dao">
             <xsl:call-template name="addRecord">
@@ -580,40 +513,7 @@
                 <xsl:with-param name="inheritedCustodhists" select="$updatedInheritedCustodhists"/>
                 <xsl:with-param name="inheritedAltformavails" select="$updatedInheritedAltformavails"/>
                 <xsl:with-param name="inheritedControlaccesses" select="$updatedInheritedControlaccesses"/>
-                <xsl:with-param name="positionChain">
-                    <xsl:choose>
-                        <xsl:when test="$positionChain">
-                            <xsl:value-of select="$positionChain"/>
-                        </xsl:when>
-                        <xsl:otherwise>
-                            <xsl:value-of select="$positionInDocument"/>
-                        </xsl:otherwise>
-                    </xsl:choose>
-                </xsl:with-param>
             </xsl:call-template>
-        </xsl:if>
-        
-        <!-- GO FURTHER DOWN THE LEVEL HIERARCHY -->
-        <xsl:if test="count(child::c) > 0">
-            <xsl:apply-templates select="c">
-                <xsl:with-param name="inheritedOriginations" select="$updatedInheritedOriginations"/>
-                <xsl:with-param name="inheritedLanguages" select="$updatedInheritedLanguages"/>
-                <xsl:with-param name="inheritedCustodhists" select="$updatedInheritedCustodhists"/>
-                <xsl:with-param name="inheritedAltformavails"
-                    select="$updatedInheritedAltformavails"/>
-                <xsl:with-param name="inheritedControlaccesses"
-                    select="$updatedInheritedControlaccesses"/>
-                <xsl:with-param name="positionChain">
-                    <xsl:choose>
-                        <xsl:when test="$positionChain">
-                            <xsl:value-of select="concat($positionChain, '-', $positionInDocument)"/>
-                        </xsl:when>
-                        <xsl:otherwise>
-                            <xsl:value-of select="$positionInDocument"/>
-                        </xsl:otherwise>
-                    </xsl:choose>
-                </xsl:with-param>
-            </xsl:apply-templates>
         </xsl:if>
     </xsl:template>
 
@@ -624,7 +524,6 @@
         <xsl:param name="inheritedCustodhists"/>
         <xsl:param name="inheritedAltformavails"/>
         <xsl:param name="inheritedControlaccesses"/>
-        <xsl:param name="positionChain"/>
 
         <!-- VARIABLES -->
         <xsl:variable name="linkPosition" select="position()"/>
@@ -642,11 +541,6 @@
         </xsl:variable>
         <xsl:variable name="parentdidnode" select="$parentcnode/did"/>
         <xsl:variable name="parentofparentcnode" select="$parentcnode/parent::node()"/>
-        <xsl:variable name="positionInDocument">
-            <xsl:call-template name="number">
-                <xsl:with-param name="node" select="$currentnode"/>
-            </xsl:call-template>
-        </xsl:variable>
 
         <!-- for each dao found, create a set of classes -->
         <!--<xsl:for-each select="did/dao[not(@xlink:title=&quot;thumbnail&quot;)]">-->
@@ -1003,7 +897,7 @@
                                 <xsl:value-of select="$currentnode/did/physdesc/genreform"/>
                             </dc:type>
                         </xsl:if>
-                        <xsl:if test="$currentnode/c">
+<!--                        <xsl:if test="$currentnode/c">
                             <xsl:for-each select="$currentnode/c">
                                 <xsl:if test="//dao">
                                     <xsl:choose>
@@ -1014,32 +908,20 @@
                                         </xsl:when>
                                         <xsl:otherwise>
                                             <dcterms:hasPart>
-                                                <xsl:call-template name="number">
-                                                    <xsl:with-param name="prefix">
-                                                        <xsl:choose>
-                                                            <xsl:when test="$positionChain">
-                                                                <xsl:value-of select="concat('providedCHO_position_', $positionChain, '-', $positionInDocument, '-')"></xsl:value-of>
-                                                            </xsl:when>
-                                                            <xsl:otherwise>
-                                                                <xsl:value-of select="concat('providedCHO_position_', $positionInDocument, '-')"/>
-                                                            </xsl:otherwise>
-                                                        </xsl:choose>
-                                                    </xsl:with-param>
-                                                    <xsl:with-param name="node" select="."/>
-                                                </xsl:call-template>
+                                                <xsl:value-of select="concat('providedCHO_', 'replacementValueTest_', @id)"/>
                                             </dcterms:hasPart>
                                         </xsl:otherwise>
                                     </xsl:choose>
                                 </xsl:if>
                             </xsl:for-each>
-<!--                            <xsl:for-each select="$currentnode/c/did/unitid[@type='call number']">
+                            <xsl:for-each select="$currentnode/c/did/unitid[@type='call number']">
                                 <xsl:if test="ancestor::node()[2]//dao">
                                     <dcterms:hasPart>
                                         <xsl:value-of select="concat('providedCHO_', normalize-space(.))"/>
                                     </dcterms:hasPart>
                                 </xsl:if>
-                            </xsl:for-each>-->
-                        </xsl:if>
+                            </xsl:for-each>
+                        </xsl:if>-->
                         <xsl:if test="$currentnode/did/physdesc/extent">
                             <dcterms:extent>
                                 <xsl:value-of select="$currentnode/did/physdesc/extent"/>
@@ -1227,7 +1109,7 @@
                         </xsl:choose>
                     </xsl:otherwise>
                 </xsl:choose>
-                <xsl:choose>
+<!--                <xsl:choose>
                     <xsl:when test="$parentdidnode/unitid[@type='call number']">
                         <dcterms:isPartOf>
                             <xsl:attribute name="rdf:resource" select="concat('providedCHO_', normalize-space($parentdidnode/unitid[@type='call number']))"/>
@@ -1235,20 +1117,10 @@
                     </xsl:when>
                     <xsl:otherwise>
                         <dcterms:isPartOf>
-                            <xsl:choose>
-                                <xsl:when test="$positionChain">
-                                    <xsl:value-of select="concat('providedCHO_position_', $positionChain)"></xsl:value-of>
-                                </xsl:when>
-                                <xsl:otherwise>  
-                                    <xsl:call-template name="number">
-                                        <xsl:with-param name="prefix" select="'providedCHO_position_'"/>
-                                        <xsl:with-param name="node" select="$parentcnode"/>
-                                    </xsl:call-template>
-                                </xsl:otherwise>
-                            </xsl:choose>
+                            <xsl:attribute name="rdf:resource" select="concat('providedCHO_', 'replacementValue_', $parentcnode/@id)"/>
                         </dcterms:isPartOf>
                     </xsl:otherwise>
-                </xsl:choose>
+                </xsl:choose>-->
                 <xsl:if test="/ead//archdesc/custodhist">
                     <dcterms:provenance>
                         <xsl:if test="/ead//archdesc/custodhist/head[1]">
@@ -1273,32 +1145,20 @@
                     </dcterms:provenance>
                 </xsl:if>
                 <xsl:if test="$currentnode/preceding-sibling::c">
-                    <xsl:choose>
-                        <xsl:when test="$currentnode/preceding-sibling::*[descendant::did/dao][1]/did/unitid[@type='call number']">
-                            <edm:isNextInSequence>
-                                <xsl:attribute name="rdf:resource" select="concat('providedCHO_', normalize-space($currentnode/preceding-sibling::*[did/dao][1]/did/unitid[@type='call number']))"/>
-                            </edm:isNextInSequence>
-                        </xsl:when>
-                        <xsl:when test="$currentnode/preceding-sibling::*[descendant::did/dao][1]">
-                            <edm:isNextInSequence>
-                                <xsl:attribute name="rdf:resource">
-                                    <xsl:call-template name="number">
-                                        <xsl:with-param name="prefix">
-                                            <xsl:choose>
-                                                <xsl:when test="$positionChain">
-                                                    <xsl:value-of select="concat('providedCHO_position_', $positionChain, '-')"></xsl:value-of>
-                                                </xsl:when>
-                                                <xsl:otherwise>
-                                                    <xsl:value-of select="'providedCHO_position_'"/>
-                                                </xsl:otherwise>
-                                            </xsl:choose>
-                                        </xsl:with-param>
-                                        <xsl:with-param name="node" select="$currentnode/preceding-sibling::*[descendant::did/dao][1]"/>
-                                    </xsl:call-template>
-                                </xsl:attribute>
-                            </edm:isNextInSequence>
-                        </xsl:when>
-                    </xsl:choose>
+                        <xsl:if test="$currentnode/preceding-sibling::*[descendant::did/dao][1]/did/unitid[@type='call number']">
+<!--                            <xsl:choose>
+                            <xsl:when test="$currentnode/preceding-sibling::*[descendant::did/dao][1]/did/unitid[@type='call number']">-->
+                                <edm:isNextInSequence>
+                                    <xsl:attribute name="rdf:resource" select="concat('providedCHO_', normalize-space($currentnode/preceding-sibling::*[did/dao][1]/did/unitid[@type='call number']))"/>
+                                </edm:isNextInSequence>
+                        </xsl:if>
+<!--                            </xsl:when>
+                            <xsl:when test="$currentnode/preceding-sibling::*[descendant::did/dao][1]/@id">
+                                <edm:isNextInSequence>
+                                    <xsl:attribute name="rdf:resource" select="concat('providedCHO_', 'replacementValue_', normalize-space($currentnode/preceding-sibling::*[did/dao][1]/@id))"/>
+                                </edm:isNextInSequence>
+                            </xsl:when>
+                        </xsl:choose>-->
                 </xsl:if>
                 <xsl:choose>
                     <xsl:when test="$useExistingDaoRole='true'">
@@ -1493,14 +1353,6 @@
                 </xsl:choose>
             </dc:language>
         </xsl:for-each>
-    </xsl:template>
-    <xsl:template name="number">
-        <xsl:param name="node"/>
-        <xsl:param name="prefix"/>
-        <xsl:variable name="number">
-            <xsl:number count="c" level="any" from="/ead/archdesc/dsc" select="$node[1]"/>
-        </xsl:variable>
-        <xsl:value-of select="concat($prefix, 'c', $number)"/>
     </xsl:template>
 
     <xsl:template match="abbr|emph|expan|extref">

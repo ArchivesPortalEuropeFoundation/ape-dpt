@@ -13,7 +13,6 @@ public class EdmConfig implements Serializable {
     private boolean removeInvalidLinks;
     private String provider;
     private String type;
-    private String idSource;
     private boolean generateHtml;
     private String sourceFilename;
     private String language;
@@ -64,21 +63,7 @@ public class EdmConfig implements Serializable {
         return generateHtml;
     }
 
-    /**
-	 * @return the idSource
-	 */
-	public String getIdSource() {
-		return idSource;
-	}
-
-	/**
-	 * @param idSource the idSource to set
-	 */
-	public void setIdSource(String idSource) {
-		this.idSource = idSource;
-	}
-
-	public void setGenerateHtml(boolean generateHtml) {
+    public void setGenerateHtml(boolean generateHtml) {
         this.generateHtml = generateHtml;
     }
 
@@ -279,7 +264,6 @@ public class EdmConfig implements Serializable {
             properties.put("europeana_rights", getString(getRights()));
             properties.put("dc_rights", getString(getRightsAdditionalInformation()));
             properties.put("europeana_type", getString(getType()));
-            properties.put("idSource", getString(getIdSource()));
             properties.put("useISODates", getString("false"));
             properties.put("language", getString(getLanguage()));
             properties.put("inheritElementsFromFileLevel",

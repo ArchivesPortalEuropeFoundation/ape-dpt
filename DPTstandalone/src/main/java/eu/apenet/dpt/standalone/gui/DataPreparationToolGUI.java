@@ -9,9 +9,9 @@ package eu.apenet.dpt.standalone.gui;
  * Licensed under the EUPL, Version 1.1 or - as soon they will be approved by the European Commission - subsequent versions of the EUPL (the "Licence");
  * You may not use this work except in compliance with the Licence.
  * You may obtain a copy of the Licence at:
- *
+ * 
  * http://ec.europa.eu/idabc/eupl5
- *
+ * 
  * Unless required by applicable law or agreed to in writing, software distributed under the Licence is distributed on an "AS IS" basis,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the Licence for the specific language governing permissions and limitations under the Licence.
@@ -130,7 +130,6 @@ public class DataPreparationToolGUI extends JFrame {
     private JMenu defaultXslSelectionSubmenu = new JMenu();
     private JMenu defaultXsdSelectionSubmenu = new JMenu();
     private JMenuItem listDateConversionRulesItem = new JMenuItem();
-    private JMenuItem edmGeneralOptionsItem = new JMenuItem();
     private JMenuItem databaseItem = new JMenuItem();
     private JMenuItem validateItem = new JMenuItem();
     private JMenuItem convertItem = new JMenuItem();
@@ -316,7 +315,6 @@ public class DataPreparationToolGUI extends JFrame {
         optionMenu.add(defaultXsdSelectionSubmenu);
         optionMenu.add(languageMenu);
         optionMenu.add(listDateConversionRulesItem);
-        optionMenu.add(edmGeneralOptionsItem);
         if (Utilities.isDev) {
             optionMenu.addSeparator();
             optionMenu.add(databaseItem);
@@ -404,7 +402,6 @@ public class DataPreparationToolGUI extends JFrame {
         defaultXsdSelectionSubmenu.setText(labels.getString("defaultXsdSelectionSubmenu"));
         languageMenu.setText(labels.getString("languageMenu"));
         listDateConversionRulesItem.setText(labels.getString("listDateConversionRules"));
-        edmGeneralOptionsItem.setText(labels.getString("edm.generalOptionsForm.menuItem"));
 
         validateItem.setText(labels.getString("validate"));
         convertItem.setText(labels.getString("convert"));
@@ -699,20 +696,6 @@ public class DataPreparationToolGUI extends JFrame {
                 dateConversionRulesDialog.pack();
                 dateConversionRulesDialog.setVisible(true);
 
-            }
-        });
-        edmGeneralOptionsItem.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                if (!EdmGeneralOptionsFrame.isInUse()) {
-                    JFrame edmGeneralOptionsFrame = new EdmGeneralOptionsFrame(labels, retrieveFromDb);
-
-                    edmGeneralOptionsFrame.setPreferredSize(new Dimension(getContentPane().getWidth() * 3 / 8, getContentPane().getHeight() * 3 / 8));
-                    edmGeneralOptionsFrame.setLocation(getContentPane().getWidth() / 8, getContentPane().getHeight() / 8);
-
-                    edmGeneralOptionsFrame.pack();
-                    edmGeneralOptionsFrame.setVisible(true);
-                }
             }
         });
         saveSelectedItem.addActionListener(new ActionListener() {
