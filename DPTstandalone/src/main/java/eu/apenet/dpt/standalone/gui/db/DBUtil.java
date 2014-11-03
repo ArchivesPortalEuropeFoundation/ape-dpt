@@ -9,9 +9,9 @@ package eu.apenet.dpt.standalone.gui.db;
  * Licensed under the EUPL, Version 1.1 or - as soon they will be approved by the European Commission - subsequent versions of the EUPL (the "Licence");
  * You may not use this work except in compliance with the Licence.
  * You may obtain a copy of the Licence at:
- * 
+ *
  * http://ec.europa.eu/idabc/eupl5
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software distributed under the Licence is distributed on an "AS IS" basis,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the Licence for the specific language governing permissions and limitations under the Licence.
@@ -69,7 +69,9 @@ public class DBUtil {
         OPTION_OPEN_LOCATION("openLocation"),
         OPTION_SAVE_FOLDER("savedFolder"),
         OPTION_DEFAULT_XSL("defaultXsl"),
-        OPTION_DEFAULT_XSD("defaultXsd");
+        OPTION_DEFAULT_XSD("defaultXsd"),
+        OPTION_C_IDENTIFIER_SOURCE("cIdentifierSource"),
+        OPTION_LANDING_PAGE_BASE("landingPageBase");
 
         private String name;
         OptionKeys(String name){
@@ -85,7 +87,7 @@ public class DBUtil {
         String dbPath = "jdbc:derby:apeoptions";
         try {
             Class.forName("org.apache.derby.jdbc.EmbeddedDriver").newInstance();
-            
+
             System.setProperty("derby.system.home", "xsl");
             dbConnection = DriverManager.getConnection(dbPath);
 //            dropTable(DBNames.TABLE_XSD.getName());
@@ -168,7 +170,7 @@ public class DBUtil {
 
         q = "INSERT INTO hg_titles (TITLE) VALUES (?)";
         doSqlQuery(q, Arrays.asList("HG from PL"));
-        
+
         q = "INSERT INTO hg_ids (IDENTIFIER) VALUES (?)";
         doSqlQuery(q, Arrays.asList("PL-35"));
     }

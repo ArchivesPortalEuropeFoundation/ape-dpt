@@ -92,6 +92,11 @@ public class EdmOptionsPanel extends JPanel {
     private static final Logger LOG = Logger.getLogger(EdmOptionsPanel.class);
     private static final String MINIMAL = "minimal";
     private static final String FULL = "full";
+    private static final String UNITID = "unitid";
+    private static final String CID = "cid";
+    private static final String APE = "ape";
+    private static final String OTHER = "other";
+    private static final String APE_BASE= "http://www.archivesportaleurope.net";
     private static final String TEXT = "TEXT";
     private static final String IMAGE = "IMAGE";
     private static final String VIDEO = "VIDEO";
@@ -114,6 +119,9 @@ public class EdmOptionsPanel extends JPanel {
     private JFrame parent;
     private APETabbedPane apeTabbedPane;
     private ButtonGroup conversionModeGroup;
+    private ButtonGroup cLevelIdSourceButtonGroup;
+    private ButtonGroup landingPageButtonGroup;
+    private JTextArea landingPageTextArea;
     private ButtonGroup typeGroup;
     private ButtonGroup inheritParentGroup;
     private ButtonGroup inheritOriginationGroup;
@@ -168,7 +176,7 @@ public class EdmOptionsPanel extends JPanel {
         JPanel europeanaRightsPanel = new EuropeanaRightsPanel();
         JPanel emptyPanel = new JPanel();
 
-        JPanel formPanel = new JPanel(new GridLayout(9, 1));
+        JPanel formPanel = new JPanel(new GridLayout(11, 1));
 
         JPanel extraLicenseCardLayoutPanel = new JPanel(new CardLayout());
         extraLicenseCardLayoutPanel.add(creativeCommonsPanel, CREATIVE_COMMONS);
@@ -194,7 +202,58 @@ public class EdmOptionsPanel extends JPanel {
         conversionModeGroup.add(radioButton);
         panel.add(radioButton);
 
-        panel.setBorder(BLACK_LINE);
+        formPanel.add(panel);
+
+        panel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        cLevelIdSourceButtonGroup = new ButtonGroup();
+
+        panel.add(new Label(this.labels.getString("edm.generalOptionsForm.identifierSource.header")));
+        radioButton = new JRadioButton(this.labels.getString("edm.generalOptionsForm.identifierSource.unitid"));
+        radioButton.setActionCommand(UNITID);
+        if (retrieveFromDb.retrieveCIdentifierSource().equals(radioButton.getActionCommand())) {
+            radioButton.setSelected(true);
+        }
+        cLevelIdSourceButtonGroup.add(radioButton);
+        panel.add(radioButton);
+        radioButton = new JRadioButton(this.labels.getString("edm.generalOptionsForm.identifierSource.cid"));
+        radioButton.setActionCommand(CID);
+        if (retrieveFromDb.retrieveCIdentifierSource().equals(radioButton.getActionCommand())) {
+            radioButton.setSelected(true);
+        }
+        cLevelIdSourceButtonGroup.add(radioButton);
+        panel.add(radioButton);
+
+        formPanel.add(panel);
+
+        panel = new JPanel(new GridLayout(2,2));
+        landingPageButtonGroup = new ButtonGroup();
+
+        panel.add(new Label(this.labels.getString("edm.generalOptionsForm.landingPages.header")));
+        radioButton = new JRadioButton(this.labels.getString("edm.generalOptionsForm.landingPages.ape"));
+        radioButton.setActionCommand(APE);
+        if (retrieveFromDb.retrieveLandingPageBase().equals(APE_BASE)) {
+            radioButton.setSelected(true);
+        }
+        landingPageButtonGroup.add(radioButton);
+        panel.add(radioButton);
+        panel.add(new Label());
+        JPanel otherPanel = new JPanel(new GridLayout(1,2));
+        radioButton = new JRadioButton(this.labels.getString("edm.generalOptionsForm.landingPages.other"));
+        radioButton.setActionCommand(OTHER);
+        landingPageButtonGroup.add(radioButton);
+        otherPanel.add(radioButton);
+        landingPageTextArea = new JTextArea();
+        landingPageTextArea.setLineWrap(true);
+        landingPageTextArea.setWrapStyleWord(true);
+        if (!retrieveFromDb.retrieveLandingPageBase().equals(APE_BASE)) {
+            radioButton.setSelected(true);
+            landingPageTextArea.setText(retrieveFromDb.retrieveLandingPageBase());
+        }
+        JScrollPane lptaScrollPane = new JScrollPane(landingPageTextArea);
+        lptaScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+        otherPanel.add(lptaScrollPane);
+        panel.add(otherPanel);
+
         formPanel.add(panel);
 
         panel = new JPanel(new GridLayout(1, 1));
@@ -728,6 +787,30 @@ public class EdmOptionsPanel extends JPanel {
     }
 
     private void checkIfAllFilled() throws Exception {
+        if (cLevelIdSourceButtonGroup == null) {
+            throw new Exception("cLevelIdSource is null");
+        } else {
+            if (!isRadioBtnChecked(cLevelIdSourceButtonGroup)) {
+                throw new Exception("cLevelIdSource is not checked");
+            }
+        }
+
+        if (landingPageButtonGroup == null) {
+            throw new Exception("landingPage is null");
+        } else {
+            if (!isRadioBtnChecked(landingPageButtonGroup)) {
+                throw new Exception("landingPage is not checked");
+            }
+        }
+        if (landingPageButtonGroup.getSelection().getActionCommand().equals(OTHER)){
+            if(landingPageTextArea.getText().isEmpty()){
+                throw new Exception("alternative landing page field is empty");
+            }
+            if(!landingPageTextArea.getText().startsWith("http://")){
+                throw new Exception("alternative landing page does not start with http://");
+            }
+        }
+
         if (typeGroup == null) {
             throw new Exception("typeGroup is null");
         } else {

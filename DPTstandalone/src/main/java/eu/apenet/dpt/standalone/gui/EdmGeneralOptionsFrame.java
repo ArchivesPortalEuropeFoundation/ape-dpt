@@ -3,7 +3,6 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package eu.apenet.dpt.standalone.gui;
 
 import eu.apenet.dpt.standalone.gui.db.RetrieveFromDb;
@@ -16,14 +15,12 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.text.MessageFormat;
 import java.util.ResourceBundle;
-import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
-import javax.swing.JCheckBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JTextField;
@@ -54,23 +51,19 @@ public class EdmGeneralOptionsFrame extends JFrame {
         final ButtonGroup landingPageButtonGroup = new ButtonGroup();
         final JTextField landingPageTf = new JTextField();
 
-        final String unitidOption = "UNITID";
-        final String cidOption = "CID";
-        final String apeOption = "APE";
-        final String otherOption = "OTHER";
+        final String unitidOption = "unitid";
+        final String cidOption = "cid";
+        final String apeOption = "ape";
+        final String otherOption = "other";
+        final String apeLink = "http://www.archivesportaleurope.net";
+
+        String defaultSource = retrieveFromDb.retrieveCIdentifierSource();
+        String defaultLandingPage = retrieveFromDb.retrieveLandingPageBase();
 
         sourceButtons[0] = new JRadioButton(labels.getString("edm.generalOptionsForm.identifierSource.unitid"));
         sourceButtons[0].setActionCommand(unitidOption);
         sourceButtons[1] = new JRadioButton(labels.getString("edm.generalOptionsForm.identifierSource.cid"));
         sourceButtons[1].setActionCommand(cidOption);
-
-        landingPageButtons[0] = new JRadioButton(labels.getString("edm.generalOptionsForm.landingPages.ape"));
-        landingPageButtons[0].setActionCommand(apeOption);
-        landingPageButtons[1] = new JRadioButton(labels.getString("edm.generalOptionsForm.landingPages.other"));
-        landingPageButtons[1].setActionCommand(otherOption);
-
-        String defaultSource = retrieveFromDb.retrieveCIdentifierSource();
-        String defaultLandingPage = retrieveFromDb.retrieveLandingPageBase();
 
         for (JRadioButton radioButton : sourceButtons) {
             sourceButtonGroup.add(radioButton);
@@ -82,27 +75,23 @@ public class EdmGeneralOptionsFrame extends JFrame {
             sourceButtons[0].setSelected(true);
         }
 
-        for (JRadioButton radioButton : landingPageButtons) {
-            landingPageButtonGroup.add(radioButton);
-            if (defaultLandingPage != null && defaultLandingPage.equals(radioButton.getActionCommand())) {
-                radioButton.setSelected(true);
-            }
+        landingPageButtons[0] = new JRadioButton(labels.getString("edm.generalOptionsForm.landingPages.ape"));
+        landingPageButtons[0].setActionCommand(apeOption);
+        landingPageButtonGroup.add(landingPageButtons[0]);
+        if (defaultLandingPage != null && defaultLandingPage.equals(apeLink)) {
+            landingPageButtons[0].setSelected(true);
+        }
+        landingPageButtons[1] = new JRadioButton(labels.getString("edm.generalOptionsForm.landingPages.other"));
+        landingPageButtons[1].setActionCommand(otherOption);
+        landingPageButtonGroup.add(landingPageButtons[1]);
+        if (defaultLandingPage != null && !defaultLandingPage.equals(apeLink)) {
+            landingPageTf.setText(defaultLandingPage);
+            landingPageButtons[1].setSelected(true);
         }
         if (defaultLandingPage == null) {
             landingPageButtons[0].setSelected(true);
+            defaultLandingPage = apeLink;
         }
-
-        landingPageButtons[1].addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                if (otherOption.equals(landingPageButtonGroup.getSelection().getActionCommand())) {
-                    landingPageTf.setEnabled(true);
-                } else {
-                    landingPageTf.setEnabled(false);
-                }
-
-            }
-        });
 
         JButton OkButton = new JButton(labels.getString("ok"));
         OkButton.addActionListener(new ActionListener() {
@@ -113,11 +102,18 @@ public class EdmGeneralOptionsFrame extends JFrame {
                 String landingPage = landingPageButtonGroup.getSelection().getActionCommand();
                 if (landingPage.equals(apeOption)) {
                     retrieveFromDb.saveLandingPageBase("http://www.archivesportaleurope.net");
+                    closeFrame();
                 }
                 if (landingPage.equals(otherOption) && !landingPageTf.getText().isEmpty()) {
-                    retrieveFromDb.saveLandingPageBase(landingPageTf.getText());
+                    if (landingPageTf.getText().startsWith("http://")) {
+                        retrieveFromDb.saveLandingPageBase(landingPageTf.getText());
+                        closeFrame();
+                    } else {
+                        JOptionPane.showMessageDialog(rootPane, "The given landing page does not start with http:// !", "Error", JOptionPane.ERROR_MESSAGE);
+                    }
+                } else {
+                    JOptionPane.showMessageDialog(rootPane, "The given landing page does not start with http:// !", "Error", JOptionPane.ERROR_MESSAGE);
                 }
-                closeFrame();
             }
         });
         JButton cancelButton = new JButton(labels.getString("cancelBtn"));

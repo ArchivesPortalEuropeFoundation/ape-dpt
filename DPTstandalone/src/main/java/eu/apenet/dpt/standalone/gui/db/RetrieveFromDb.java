@@ -160,20 +160,22 @@ public class RetrieveFromDb {
         }
     }
 
-    public void saveCIdentifierSource(String roleType) {
-
+    public void saveCIdentifierSource(String cIdentifierSource) {
+        String query = DBUtil.createUpdateQuery(DBUtil.DBNames.TABLE_OPTIONS.getName(), DBUtil.DBNames.COLUMN_VALUE.getName(), cIdentifierSource, DBUtil.OptionKeys.OPTION_C_IDENTIFIER_SOURCE.getName());
+        dbUtil.doSqlQuery(query, null);
     }
 
     public String retrieveCIdentifierSource() {
-        return null;
+        return retrieve(DBUtil.OptionKeys.OPTION_C_IDENTIFIER_SOURCE.getName(), "unitid");
     }
 
-    public void saveLandingPageBase(String roleType) {
-
+    public void saveLandingPageBase(String landingPageBase) {
+        String query = DBUtil.createUpdateQuery(DBUtil.DBNames.TABLE_OPTIONS.getName(), DBUtil.DBNames.COLUMN_VALUE.getName(), landingPageBase, DBUtil.OptionKeys.OPTION_LANDING_PAGE_BASE.getName());
+        dbUtil.doSqlQuery(query, null);
     }
 
     public String retrieveLandingPageBase() {
-        return null;
+        return retrieve(DBUtil.OptionKeys.OPTION_LANDING_PAGE_BASE.getName(), "http://www.archivesportaleurope.net");
     }
 
     private String retrieve(String optionKey, String defaultValue) {
