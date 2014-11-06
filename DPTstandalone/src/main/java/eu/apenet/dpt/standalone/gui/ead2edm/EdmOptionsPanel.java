@@ -623,6 +623,34 @@ public class EdmOptionsPanel extends JPanel {
     private EdmConfig fillEdmConfig() {
         EdmConfig config = new EdmConfig();
 
+        Enumeration<AbstractButton> enumeration = cLevelIdSourceButtonGroup.getElements();
+        boolean found = false;
+        while (!found && enumeration.hasMoreElements()) {
+            AbstractButton btn = enumeration.nextElement();
+            if (btn.isSelected()) {
+                if (EdmOptionsPanel.UNITID.equals(btn.getActionCommand())) {
+                    config.setIdSource(EdmOptionsPanel.UNITID);
+                } else if (EdmOptionsPanel.CID.equals(btn.getActionCommand())) {
+                    config.setIdSource(EdmOptionsPanel.CID);
+                }
+                found = true;
+            }
+        }
+        
+        enumeration = landingPageButtonGroup.getElements();
+        found = false;
+        while (!found && enumeration.hasMoreElements()) {
+            AbstractButton btn = enumeration.nextElement();
+            if (btn.isSelected()) {
+                if (EdmOptionsPanel.APE.equals(btn.getActionCommand())) {
+                    config.setLandingPage(EdmOptionsPanel.APE);
+                } else if (EdmOptionsPanel.OTHER.equals(btn.getActionCommand())) {
+                    config.setLandingPage(landingPageTextArea.getText());
+                }
+                found = true;
+            }
+        }
+        
         config.setUseExistingRepository(false);
         if (useExistingRepoCheckbox.isSelected()) {
             config.setUseExistingRepository(true);
@@ -631,8 +659,8 @@ public class EdmOptionsPanel extends JPanel {
         config.setDataProvider(dataProviderTextArea.getText());
         config.setProvider("Archives Portal Europe");
 
-        Enumeration<AbstractButton> enumeration = typeGroup.getElements();
-        boolean found = false;
+        enumeration = typeGroup.getElements();
+        found = false;
         while (!found && enumeration.hasMoreElements()) {
             AbstractButton btn = enumeration.nextElement();
             if (btn.isSelected()) {

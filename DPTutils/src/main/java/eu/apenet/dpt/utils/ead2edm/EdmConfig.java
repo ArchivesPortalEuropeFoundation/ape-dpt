@@ -35,6 +35,7 @@ public class EdmConfig implements Serializable {
     private String host;
     private String repositoryCode;
     private String xmlTypeName;
+    private String landingPage;
     private Properties properties;
 
     public EdmConfig() {
@@ -271,6 +272,17 @@ public class EdmConfig implements Serializable {
         this.xmlTypeName = xmlTypeName;
     }
 
+    public String getLandingPage() {
+        if(landingPage == null){
+            landingPage = "ape";
+        }
+        return landingPage;
+    }
+
+    public void setLandingPage(String landingPage) {
+        this.landingPage = landingPage;
+    }
+    
     public Properties getProperties() {
         if (properties == null) {
             properties = new Properties();
@@ -298,6 +310,7 @@ public class EdmConfig implements Serializable {
             String repCodeAfterReplacement = getString(getRepositoryCode()).replace('/', '_');
             properties.put("repository_code", getString(repCodeAfterReplacement));
             properties.put("xml_type_name", getString(getXmlTypeName()));
+            properties.put("landingPage", getString(getLandingPage()));
         }
         return properties;
     }

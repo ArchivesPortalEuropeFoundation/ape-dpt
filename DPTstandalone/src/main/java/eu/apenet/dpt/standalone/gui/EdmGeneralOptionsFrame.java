@@ -103,8 +103,7 @@ public class EdmGeneralOptionsFrame extends JFrame {
                 if (landingPage.equals(apeOption)) {
                     retrieveFromDb.saveLandingPageBase("http://www.archivesportaleurope.net");
                     closeFrame();
-                }
-                if (landingPage.equals(otherOption) && !landingPageTf.getText().isEmpty()) {
+                } else if (landingPage.equals(otherOption) && !landingPageTf.getText().isEmpty()) {
                     if (landingPageTf.getText().startsWith("http://")) {
                         retrieveFromDb.saveLandingPageBase(landingPageTf.getText());
                         closeFrame();
@@ -112,7 +111,7 @@ public class EdmGeneralOptionsFrame extends JFrame {
                         JOptionPane.showMessageDialog(rootPane, "The given landing page does not start with http:// !", "Error", JOptionPane.ERROR_MESSAGE);
                     }
                 } else {
-                    JOptionPane.showMessageDialog(rootPane, "The given landing page does not start with http:// !", "Error", JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(rootPane, "No landing page provided!", "Error", JOptionPane.ERROR_MESSAGE);
                 }
             }
         });
