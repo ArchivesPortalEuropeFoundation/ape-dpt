@@ -45,6 +45,8 @@
     <!-- Variables -->
     <xsl:variable name="id_base"
         select="concat('http://', $host, '/web/guest/ead-display/-/ead/fp/' , $repository_code, '/type/', $xml_type_name, '/id/')"/>
+    <!-- Key for detection of unitid duplicates -->
+    <xsl:key name="unitids" match="unitid" use="text()"></xsl:key>
 
     <xsl:template match="/">
         <rdf:RDF
@@ -159,9 +161,20 @@
             </xsl:if>
             <xsl:if test="/ead/archdesc/dsc/c">
                 <xsl:for-each select="/ead/archdesc/dsc/c">
+                    <xsl:variable name="currentCPosition">
+                        <xsl:call-template name="number">
+                            <xsl:with-param name="node" select="."></xsl:with-param>
+                        </xsl:call-template>
+                    </xsl:variable>
+                    <xsl:variable name="isFirstUnitid">
+                        <xsl:call-template name="detectFirstUnitid">
+                            <xsl:with-param name="positionInDocument" select="$currentCPosition"/>
+                            <xsl:with-param name="currentCNode" select="."/>
+                        </xsl:call-template>
+                    </xsl:variable>
                     <xsl:if test="descendant::dao">
                         <xsl:choose>
-                            <xsl:when test="$idSource = 'unitid' and did/unitid[@type='call number']">
+                            <xsl:when test="$idSource = 'unitid' and did/unitid[@type='call number'] and $isFirstUnitid = 'true'">
                                 <dcterms:hasPart>
                                     <xsl:value-of select="concat('providedCHO_', normalize-space(did/unitid[@type='call number']))"/>
                                 </dcterms:hasPart>
@@ -338,9 +351,15 @@
                 <xsl:with-param name="node" select="node()"/>
             </xsl:call-template>
         </xsl:variable>
+        <xsl:variable name="isFirstUnitid">
+            <xsl:call-template name="detectFirstUnitid">
+                <xsl:with-param name="positionInDocument" select="$positionInDocument"/>
+                <xsl:with-param name="currentCNode" select="."></xsl:with-param>
+            </xsl:call-template>
+        </xsl:variable>
         <xsl:variable name="identifier">
             <xsl:choose>
-                <xsl:when test="$idSource = 'unitid' and did/unitid[@type='call number']">
+                <xsl:when test="$idSource = 'unitid' and did/unitid[@type='call number'] and $isFirstUnitid = 'true'">
                     <xsl:value-of select="normalize-space(did/unitid[@type='call number'])"/>
                 </xsl:when>
                 <xsl:when test="$idSource = 'cid' and @id">
@@ -358,7 +377,7 @@
                 </xsl:otherwise>
             </xsl:choose>
         </xsl:variable>
-
+        
         <!-- CREATE LEVEL INFORMATION IF C HAS NO DAO -->
         <xsl:if test="not(did/dao) and descendant::did/dao">
             <ore:Aggregation>
@@ -477,9 +496,20 @@
                 </xsl:if>
                 <xsl:if test="c">
                     <xsl:for-each select="c">
+                        <xsl:variable name="currentCPosition">
+                            <xsl:call-template name="number">
+                                <xsl:with-param name="node" select="."></xsl:with-param>
+                            </xsl:call-template>
+                        </xsl:variable>
+                        <xsl:variable name="isFirstUnitid">
+                            <xsl:call-template name="detectFirstUnitid">
+                                <xsl:with-param name="positionInDocument" select="$currentCPosition"/>
+                                <xsl:with-param name="currentCNode" select="."/>
+                            </xsl:call-template>
+                        </xsl:variable>
                         <xsl:if test="descendant::dao">
                             <xsl:choose>
-                                <xsl:when test="$idSource = 'unitid' and did/unitid[@type='call number']">
+                                <xsl:when test="$idSource = 'unitid' and did/unitid[@type='call number'] and $isFirstUnitid = 'true'">
                                     <dcterms:hasPart>
                                         <xsl:value-of select="concat('providedCHO_', normalize-space(did/unitid[@type='call number']))"/>
                                     </dcterms:hasPart>
@@ -516,8 +546,19 @@
                     </dcterms:isPartOf>
                 </xsl:if>
                 <xsl:if test="local-name($parentcnode) = 'c'">
+                    <xsl:variable name="positionOfParentInDocument">
+                        <xsl:call-template name="number">
+                            <xsl:with-param name="node" select="$parentcnode"/>
+                        </xsl:call-template>
+                    </xsl:variable>
+                    <xsl:variable name="isParentFirstUnitid">
+                        <xsl:call-template name="detectFirstUnitid">
+                            <xsl:with-param name="positionInDocument" select="$positionOfParentInDocument"/>
+                            <xsl:with-param name="currentCNode" select="$parentcnode"/>
+                        </xsl:call-template>
+                    </xsl:variable>
                     <xsl:choose>
-                        <xsl:when test="$idSource = 'unitid' and $parentdidnode/unitid[@type='call number']">
+                        <xsl:when test="$idSource = 'unitid' and $parentdidnode/unitid[@type='call number'] and $isParentFirstUnitid = 'true'">
                             <dcterms:isPartOf>
                                 <xsl:attribute name="rdf:resource" select="concat('providedCHO_', normalize-space($parentdidnode/unitid[@type='call number']))"/>
                             </dcterms:isPartOf>
@@ -553,9 +594,20 @@
                     </dcterms:temporal>
                 </xsl:if>
                 <xsl:if test="./preceding-sibling::c">
+                    <xsl:variable name="positionOfSiblingInDocument">
+                        <xsl:call-template name="number">
+                            <xsl:with-param name="node" select="./preceding-sibling::c[1]"/>
+                        </xsl:call-template>
+                    </xsl:variable>
+                    <xsl:variable name="isSiblingFirstUnitid">
+                        <xsl:call-template name="detectFirstUnitid">
+                            <xsl:with-param name="positionInDocument" select="$positionOfSiblingInDocument"/>
+                            <xsl:with-param name="currentCNode" select="./preceding-sibling::c[1]"/>
+                        </xsl:call-template>
+                    </xsl:variable>
                     <xsl:choose>
                         <xsl:when
-                            test="$idSource = 'unitid' and ./preceding-sibling::*[descendant::did/dao][1]/did/unitid[@type='call number']">
+                            test="$idSource = 'unitid' and ./preceding-sibling::*[descendant::did/dao][1]/did/unitid[@type='call number'] and $isSiblingFirstUnitid = 'true'">
                             <edm:isNextInSequence>
                                 <xsl:attribute name="rdf:resource"
                                     select="concat('providedCHO_', normalize-space(./preceding-sibling::*[descendant::did/dao][1]/did/unitid[@type='call number']))"
@@ -570,7 +622,7 @@
                                 />
                             </edm:isNextInSequence>
                         </xsl:when>
-                        <xsl:when test="./preceding-sibling::*[descendant::did/dao][1]">
+                        <xsl:when test="./preceding-sibling::*[descendant::did/dao][1] and $isSiblingFirstUnitid = 'false'">
                             <edm:isNextInSequence>
                                 <xsl:attribute name="rdf:resource">
                                     <xsl:call-template name="number">
@@ -695,7 +747,7 @@
             </xsl:apply-templates>
         </xsl:if>
     </xsl:template>
-
+    
     <xsl:template name="addRecord">
         <xsl:param name="currentnode"/>
         <xsl:param name="inheritedOriginations"/>
@@ -710,31 +762,6 @@
         <xsl:variable name="parentcnode" select="$currentnode/parent::node()"/>
         <xsl:variable name="inheritFromParent"
             select="$currentnode[@level=&quot;item&quot;] and $parentcnode[@level=&quot;file&quot;] and $inheritElementsFromFileLevel=&quot;true&quot;"/>
-        <xsl:variable name="identifier">
-            <xsl:choose>
-                <xsl:when test="$idSource = 'unitid'">
-                    <xsl:choose>
-                        <xsl:when test="$currentnode/did/unitid[@type='call number']">
-                            <xsl:apply-templates
-                                select="$currentnode/did/unitid[@type='call number']"/>
-                        </xsl:when>
-                        <xsl:otherwise>
-                            <xsl:value-of select="/ead/eadheader/eadid"/>
-                        </xsl:otherwise>
-                    </xsl:choose>
-                </xsl:when>
-                <xsl:when test="$idSource = 'cid'">
-                    <xsl:choose>
-                        <xsl:when test="$currentnode/@id">
-                            <xsl:apply-templates select="$currentnode/@id"/>
-                        </xsl:when>
-                        <xsl:otherwise>
-                            <xsl:value-of select="/ead/eadheader/eadid"/>
-                        </xsl:otherwise>
-                    </xsl:choose>
-                </xsl:when>
-            </xsl:choose>
-        </xsl:variable>
         <xsl:variable name="parentdidnode" select="$parentcnode/did"/>
         <xsl:variable name="parentofparentcnode" select="$parentcnode/parent::node()"/>
         <xsl:variable name="positionInDocument">
@@ -742,7 +769,33 @@
                 <xsl:with-param name="node" select="$currentnode"/>
             </xsl:call-template>
         </xsl:variable>
-
+        <xsl:variable name="isFirstUnitid">
+            <xsl:call-template name="detectFirstUnitid">
+                <xsl:with-param name="positionInDocument" select="$positionInDocument"/>
+                <xsl:with-param name="currentCNode" select="$currentnode"></xsl:with-param>
+            </xsl:call-template>
+        </xsl:variable>
+        <xsl:variable name="identifier">
+            <xsl:choose>
+                <xsl:when test="$idSource = 'unitid' and did/unitid[@type='call number'] and $isFirstUnitid = 'true'">
+                    <xsl:value-of select="normalize-space(did/unitid[@type='call number'])"/>
+                </xsl:when>
+                <xsl:when test="$idSource = 'cid' and @id">
+                    <xsl:value-of select="normalize-space(@id)"/>
+                </xsl:when>
+                <xsl:otherwise>
+                    <xsl:choose>
+                        <xsl:when test="$positionChain">
+                            <xsl:value-of select="concat('position_', $positionChain, '-', $positionInDocument)"/>
+                        </xsl:when>
+                        <xsl:otherwise>
+                            <xsl:value-of select="concat('position_', $positionInDocument)"/>
+                        </xsl:otherwise>
+                    </xsl:choose>
+                </xsl:otherwise>
+            </xsl:choose>
+        </xsl:variable>
+        
         <!-- for each dao found, create a set of classes -->
         <!--<xsl:for-each select="did/dao[not(@xlink:title=&quot;thumbnail&quot;)]">-->
 
@@ -1109,9 +1162,20 @@
                     </xsl:if>
                     <xsl:if test="$currentnode/c">
                         <xsl:for-each select="$currentnode/c">
+                            <xsl:variable name="currentCPosition">
+                                <xsl:call-template name="number">
+                                    <xsl:with-param name="node" select="."></xsl:with-param>
+                                </xsl:call-template>
+                            </xsl:variable>
+                            <xsl:variable name="isFirstUnitid">
+                                <xsl:call-template name="detectFirstUnitid">
+                                    <xsl:with-param name="positionInDocument" select="$currentCPosition"/>
+                                    <xsl:with-param name="currentCNode" select="."/>
+                                </xsl:call-template>
+                            </xsl:variable>
                             <xsl:if test="did/dao">
                                 <xsl:choose>
-                                    <xsl:when test="$idSource = 'unitid' and did/unitid[@type='call number']">
+                                    <xsl:when test="$idSource = 'unitid' and did/unitid[@type='call number'] and $isFirstUnitid = 'true'">
                                         <dcterms:hasPart>
                                             <xsl:value-of select="concat('providedCHO_', normalize-space(did/unitid[@type='call number']))"/>
                                         </dcterms:hasPart>
@@ -1341,8 +1405,20 @@
                     </xsl:choose>
                 </xsl:otherwise>
             </xsl:choose>
+            
+            <xsl:variable name="positionOfParentInDocument">
+                <xsl:call-template name="number">
+                    <xsl:with-param name="node" select="$parentcnode"/>
+                </xsl:call-template>
+            </xsl:variable>
+            <xsl:variable name="isParentFirstUnitid">
+                <xsl:call-template name="detectFirstUnitid">
+                    <xsl:with-param name="positionInDocument" select="$positionOfParentInDocument"/>
+                    <xsl:with-param name="currentCNode" select="$parentcnode"/>
+                </xsl:call-template>
+            </xsl:variable>
             <xsl:choose>
-                <xsl:when test="$idSource = 'unitid' and $parentdidnode/unitid[@type='call number']">
+                <xsl:when test="$idSource = 'unitid' and $parentdidnode/unitid[@type='call number'] and $isParentFirstUnitid">
                     <dcterms:isPartOf>
                         <xsl:attribute name="rdf:resource" select="concat('providedCHO_', normalize-space($parentdidnode/unitid[@type='call number']))"/>
                     </dcterms:isPartOf>
@@ -1397,9 +1473,20 @@
                 </dcterms:provenance>
             </xsl:if>
             <xsl:if test="$currentnode/preceding-sibling::c">
+                <xsl:variable name="positionOfSiblingInDocument">
+                    <xsl:call-template name="number">
+                        <xsl:with-param name="node" select="$currentnode/preceding-sibling::c[1]"/>
+                    </xsl:call-template>
+                </xsl:variable>
+                <xsl:variable name="isSiblingFirstUnitid">
+                    <xsl:call-template name="detectFirstUnitid">
+                        <xsl:with-param name="positionInDocument" select="$positionOfSiblingInDocument"/>
+                        <xsl:with-param name="currentCNode" select="$currentnode/preceding-sibling::c[1]"/>
+                    </xsl:call-template>
+                </xsl:variable>
                 <xsl:choose>
                     <xsl:when
-                        test="$idSource = 'unitid' and $currentnode/preceding-sibling::*[descendant::did/dao][1]/did/unitid[@type='call number']">
+                        test="$idSource = 'unitid' and $currentnode/preceding-sibling::*[descendant::did/dao][1]/did/unitid[@type='call number'] and $isSiblingFirstUnitid = 'true'">
                         <edm:isNextInSequence>
                             <xsl:attribute name="rdf:resource"
                                 select="concat('providedCHO_', normalize-space($currentnode/preceding-sibling::*[did/dao][1]/did/unitid[@type='call number']))"
@@ -1414,7 +1501,7 @@
                             />
                         </edm:isNextInSequence>
                     </xsl:when>
-                    <xsl:when test="$currentnode/preceding-sibling::*[descendant::did/dao][1]">
+                    <xsl:when test="$currentnode/preceding-sibling::*[descendant::did/dao][1] and $isSiblingFirstUnitid = 'false'">
                         <edm:isNextInSequence>
                             <xsl:attribute name="rdf:resource">
                                 <xsl:call-template name="number">
@@ -1589,6 +1676,31 @@
                 <xsl:value-of select="fn:replace(normalize-space($content), '[\n\t\r]', '')"/>
             </dcterms:provenance>
         </xsl:for-each>
+    </xsl:template>
+    <xsl:template name="detectFirstUnitid">
+        <xsl:param name="positionInDocument"/>
+        <xsl:param name="currentCNode"/>
+        <xsl:choose>
+            <xsl:when test="key('unitids', $currentCNode/did/unitid[@type='call number'])[2]">
+                <xsl:variable name="firstElement">
+                    <xsl:call-template name="number">
+                        <xsl:with-param name="node"
+                            select="key('unitids', $currentCNode/did/unitid[@type='call number'])[1]/../.."/>
+                    </xsl:call-template>
+                </xsl:variable>
+                <xsl:choose>
+                    <xsl:when test="$positionInDocument = $firstElement">
+                        <xsl:value-of select="true()"/>
+                    </xsl:when>
+                    <xsl:otherwise>
+                        <xsl:value-of select="false()"/>
+                    </xsl:otherwise>
+                </xsl:choose>
+            </xsl:when>
+            <xsl:otherwise>
+                <xsl:value-of select="true()"/>
+            </xsl:otherwise>
+        </xsl:choose>
     </xsl:template>
     <xsl:template name="generateThumbnailLink">
         <xsl:param name="role"/>
