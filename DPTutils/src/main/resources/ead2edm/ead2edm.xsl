@@ -176,21 +176,22 @@
                         <xsl:choose>
                             <xsl:when test="$idSource = 'unitid' and did/unitid[@type='call number'] and $isFirstUnitid = 'true'">
                                 <dcterms:hasPart>
-                                    <xsl:value-of select="concat('providedCHO_', normalize-space(did/unitid[@type='call number']))"/>
+                                    <xsl:attribute name="rdf:resource" select="concat('providedCHO_', normalize-space(did/unitid[@type='call number']))"/>
                                 </dcterms:hasPart>
                             </xsl:when>
                             <xsl:when test="$idSource = 'cid' and @id">
                                 <dcterms:hasPart>
-                                    <xsl:value-of select="concat('providedCHO_', normalize-space(@id))"/>
+                                    <xsl:attribute name="rdf:resource" select="concat('providedCHO_', normalize-space(@id))"/>
                                 </dcterms:hasPart>
                             </xsl:when>
                             <xsl:otherwise>
                                 <dcterms:hasPart>
-                                    <xsl:call-template name="number">
-                                        <xsl:with-param name="prefix"
-                                            select="'providedCHO_position_'"/>
-                                        <xsl:with-param name="node" select="."/>
-                                    </xsl:call-template>
+                                    <xsl:attribute name="rdf:resource">
+                                        <xsl:call-template name="number">
+                                            <xsl:with-param name="prefix" select="'providedCHO_position_'"/>
+                                            <xsl:with-param name="node" select="."/>
+                                        </xsl:call-template>
+                                    </xsl:attribute>
                                 </dcterms:hasPart>
                             </xsl:otherwise>
                         </xsl:choose>
@@ -511,29 +512,31 @@
                             <xsl:choose>
                                 <xsl:when test="$idSource = 'unitid' and did/unitid[@type='call number'] and $isFirstUnitid = 'true'">
                                     <dcterms:hasPart>
-                                        <xsl:value-of select="concat('providedCHO_', normalize-space(did/unitid[@type='call number']))"/>
+                                        <xsl:attribute name="rdf:resource" select="concat('providedCHO_', normalize-space(did/unitid[@type='call number']))"/>
                                     </dcterms:hasPart>
                                 </xsl:when>
                                 <xsl:when test="$idSource = 'cid' and @id">
                                     <dcterms:hasPart>
-                                        <xsl:value-of select="concat('providedCHO_', normalize-space(@id))"/>
+                                        <xsl:attribute name="rdf:resource" select="concat('providedCHO_', normalize-space(@id))"/>
                                     </dcterms:hasPart>
                                 </xsl:when>
                                 <xsl:otherwise>
                                     <dcterms:hasPart>
-                                        <xsl:call-template name="number">
-                                            <xsl:with-param name="prefix">
-                                                <xsl:choose>
-                                                  <xsl:when test="$positionChain">
-                                                      <xsl:value-of select="concat('providedCHO_position_', $positionChain, '-', $positionInDocument, '-')"/>
-                                                  </xsl:when>
-                                                  <xsl:otherwise>
-                                                      <xsl:value-of select="concat('providedCHO_position_', $positionInDocument, '-')"/>
-                                                  </xsl:otherwise>
-                                                </xsl:choose>
-                                            </xsl:with-param>
-                                            <xsl:with-param name="node" select="."/>
-                                        </xsl:call-template>
+                                        <xsl:attribute name="rdf:resource">
+                                            <xsl:call-template name="number">
+                                                <xsl:with-param name="prefix">
+                                                    <xsl:choose>
+                                                        <xsl:when test="$positionChain">
+                                                            <xsl:value-of select="concat('providedCHO_position_', $positionChain, '-', $positionInDocument, '-')"/>
+                                                        </xsl:when>
+                                                        <xsl:otherwise>
+                                                            <xsl:value-of select="concat('providedCHO_position_', $positionInDocument, '-')"/>
+                                                        </xsl:otherwise>
+                                                    </xsl:choose>
+                                                </xsl:with-param>
+                                                <xsl:with-param name="node" select="."/>
+                                            </xsl:call-template>
+                                        </xsl:attribute>
                                     </dcterms:hasPart>
                                 </xsl:otherwise>
                             </xsl:choose>
@@ -1177,33 +1180,31 @@
                                 <xsl:choose>
                                     <xsl:when test="$idSource = 'unitid' and did/unitid[@type='call number'] and $isFirstUnitid = 'true'">
                                         <dcterms:hasPart>
-                                            <xsl:value-of select="concat('providedCHO_', normalize-space(did/unitid[@type='call number']))"/>
+                                            <xsl:attribute name="rdf:resource" select="concat('providedCHO_', normalize-space(did/unitid[@type='call number']))"/>
                                         </dcterms:hasPart>
                                     </xsl:when>
                                     <xsl:when test="$idSource = 'cid' and @id">
                                         <dcterms:hasPart>
-                                            <xsl:value-of select="concat('providedCHO_', normalize-space(@id))"/>
+                                            <xsl:attribute name="rdf:resource" select="concat('providedCHO_', normalize-space(@id))"/>
                                         </dcterms:hasPart>
                                     </xsl:when>
                                     <xsl:otherwise>
                                         <dcterms:hasPart>
-                                            <xsl:call-template name="number">
-                                                <xsl:with-param name="prefix">
-                                                  <xsl:choose>
-                                                  <xsl:when test="$positionChain">
-                                                  <xsl:value-of
-                                                  select="concat('providedCHO_position_', $positionChain, '-', $positionInDocument, '-')"
-                                                  />
-                                                  </xsl:when>
-                                                  <xsl:otherwise>
-                                                  <xsl:value-of
-                                                  select="concat('providedCHO_position_', $positionInDocument, '-')"
-                                                  />
-                                                  </xsl:otherwise>
-                                                  </xsl:choose>
-                                                </xsl:with-param>
-                                                <xsl:with-param name="node" select="."/>
-                                            </xsl:call-template>
+                                            <xsl:attribute name="rdf:resource">
+                                                <xsl:call-template name="number">
+                                                    <xsl:with-param name="prefix">
+                                                        <xsl:choose>
+                                                            <xsl:when test="$positionChain">
+                                                                <xsl:value-of select="concat('providedCHO_position_', $positionChain, '-', $positionInDocument, '-')"/>
+                                                            </xsl:when>
+                                                            <xsl:otherwise>
+                                                                <xsl:value-of select="concat('providedCHO_position_', $positionInDocument, '-')"/>
+                                                            </xsl:otherwise>
+                                                        </xsl:choose>
+                                                    </xsl:with-param>
+                                                    <xsl:with-param name="node" select="."/>
+                                                </xsl:call-template>
+                                            </xsl:attribute>
                                         </dcterms:hasPart>
                                     </xsl:otherwise>
                                 </xsl:choose>
