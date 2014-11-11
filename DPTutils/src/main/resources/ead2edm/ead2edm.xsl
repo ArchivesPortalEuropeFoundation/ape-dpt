@@ -573,20 +573,19 @@
                         </xsl:when>
                         <xsl:otherwise>
                             <dcterms:isPartOf>
-                                <xsl:choose>
-                                    <xsl:when test="$positionChain">
-                                        <xsl:value-of
-                                            select="concat('providedCHO_position_', $positionChain)"
-                                        />
-                                    </xsl:when>
-                                    <xsl:otherwise>
-                                        <xsl:call-template name="number">
-                                            <xsl:with-param name="prefix"
-                                                select="'providedCHO_position_'"/>
-                                            <xsl:with-param name="node" select="$parentcnode"/>
-                                        </xsl:call-template>
-                                    </xsl:otherwise>
-                                </xsl:choose>
+                                <xsl:attribute name="rdf:resource">
+                                    <xsl:choose>
+                                        <xsl:when test="$positionChain">
+                                            <xsl:value-of select="concat('providedCHO_position_', $positionChain)"/>
+                                        </xsl:when>
+                                        <xsl:otherwise>
+                                            <xsl:call-template name="number">
+                                                <xsl:with-param name="prefix" select="'providedCHO_position_'"/>
+                                                <xsl:with-param name="node" select="$parentcnode"/>
+                                            </xsl:call-template>
+                                        </xsl:otherwise>
+                                    </xsl:choose>
+                                </xsl:attribute>
                             </dcterms:isPartOf>
                         </xsl:otherwise>
                     </xsl:choose>
@@ -1431,18 +1430,19 @@
                 </xsl:when>
                 <xsl:otherwise>
                     <dcterms:isPartOf>
-                        <xsl:choose>
-                            <xsl:when test="$positionChain">
-                                <xsl:value-of
-                                    select="concat('providedCHO_position_', $positionChain)"/>
-                            </xsl:when>
-                            <xsl:otherwise>
-                                <xsl:call-template name="number">
-                                    <xsl:with-param name="prefix" select="'providedCHO_position_'"/>
-                                    <xsl:with-param name="node" select="$parentcnode"/>
-                                </xsl:call-template>
-                            </xsl:otherwise>
-                        </xsl:choose>
+                        <xsl:attribute name="rdf:resource">
+                            <xsl:choose>
+                                <xsl:when test="$positionChain">
+                                    <xsl:value-of select="concat('providedCHO_position_', $positionChain)"/>
+                                </xsl:when>
+                                <xsl:otherwise>
+                                    <xsl:call-template name="number">
+                                        <xsl:with-param name="prefix" select="'providedCHO_position_'"/>
+                                        <xsl:with-param name="node" select="$parentcnode"/>
+                                    </xsl:call-template>
+                                </xsl:otherwise>
+                            </xsl:choose>
+                        </xsl:attribute>
                     </dcterms:isPartOf>
                 </xsl:otherwise>
             </xsl:choose>
