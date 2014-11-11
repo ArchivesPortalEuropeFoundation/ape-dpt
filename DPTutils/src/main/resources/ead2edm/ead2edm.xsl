@@ -422,6 +422,9 @@
                                 <xsl:choose>
                                     <xsl:when test="$landingPage = 'ape'">
                                         <xsl:choose>
+                                            <xsl:when test="$idSource = 'unitid' and did/unitid[@type='call number'] and $isFirstUnitid = 'true'">
+                                                <xsl:value-of select="concat($id_base, normalize-space(/ead/eadheader/eadid), '/unitid/', normalize-space(did/unitid[@type='call number']))"/>
+                                            </xsl:when>
                                             <xsl:when test="$idSource = 'cid' and @id">
                                                 <xsl:value-of select="concat($id_base, normalize-space(/ead/eadheader/eadid), '/cid/', @id)"/>
                                             </xsl:when>
@@ -663,6 +666,9 @@
                             <xsl:choose>
                                 <xsl:when test="$landingPage = 'ape'">
                                     <xsl:choose>
+                                        <xsl:when test="$idSource = 'unitid' and did/unitid[@type='call number'] and $isFirstUnitid = 'true'">
+                                            <xsl:value-of select="concat($id_base, normalize-space(/ead/eadheader/eadid), '/unitid/', normalize-space(did/unitid[@type='call number']))"/>
+                                        </xsl:when>
                                         <xsl:when test="$idSource = 'cid' and @id">
                                             <xsl:value-of select="concat($id_base, normalize-space(/ead/eadheader/eadid), '/cid/', @id)"/>
                                         </xsl:when>
