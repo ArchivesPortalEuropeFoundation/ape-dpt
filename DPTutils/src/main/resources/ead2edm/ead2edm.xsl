@@ -44,7 +44,7 @@
     <xsl:param name="xml_type_name"/>
     <!-- Variables -->
     <xsl:variable name="id_base"
-        select="concat('http://', $host, '/web/guest/ead-display/-/ead/fp/' , $repository_code, '/type/', $xml_type_name, '/id/')"/>
+        select="concat('http://', $host, '/ead-display/-/ead/pl/aicode/' , $repository_code, '/type/', $xml_type_name, '/id/')"/>
     <!-- Key for detection of unitid duplicates -->
     <xsl:key name="unitids" match="unitid" use="text()"></xsl:key>
 
@@ -847,7 +847,48 @@
                     mode="additionalLinks"/>
             </xsl:if>
             <xsl:apply-templates select="did/dao[not(@xlink:title='thumbnail')][1]" mode="firstLink"/>
-            <xsl:apply-templates select="did/dao[@xlink:title='thumbnail'][1]" mode="thumbnail"/>
+            <xsl:choose>
+                <xsl:when test="$useExistingDaoRole='true'">
+                    <xsl:choose>
+                        <xsl:when test="did/dao[not(@xlink:title='thumbnail')][1]/@xlink:role">
+                            <edm:isShownBy>
+                                <xsl:call-template name="generateThumbnailLink">
+                                    <xsl:with-param name="role" select="did/dao[not(@xlink:title='thumbnail')][1]/@xlink:role"/>
+                                </xsl:call-template>
+                            </edm:isShownBy>
+                        </xsl:when>
+                        <xsl:otherwise>
+                            <xsl:if test="fn:string-length($europeana_type) > 0">
+                                <edm:isShownBy>
+                                    <xsl:call-template name="generateThumbnailLink">
+                                        <xsl:with-param name="role" select="$europeana_type"/>
+                                    </xsl:call-template>
+                                </edm:isShownBy>
+                            </xsl:if>
+                        </xsl:otherwise>
+                    </xsl:choose>
+                </xsl:when>
+                <xsl:otherwise>
+                    <xsl:choose>
+                        <xsl:when test="fn:string-length($europeana_type) > 0">
+                            <edm:isShownBy>
+                                <xsl:call-template name="generateThumbnailLink">
+                                    <xsl:with-param name="role" select="$europeana_type"/>
+                                </xsl:call-template>
+                            </edm:isShownBy>
+                        </xsl:when>
+                        <xsl:otherwise>
+                            <xsl:if test="did/dao[not(@xlink:title='thumbnail')][1]/@xlink:role">
+                                <edm:isShownBy>
+                                    <xsl:call-template name="generateThumbnailLink">
+                                        <xsl:with-param name="role" select="did/dao[not(@xlink:title='thumbnail')][1]/@xlink:role"/>
+                                    </xsl:call-template>
+                                </edm:isShownBy>
+                            </xsl:if>
+                        </xsl:otherwise>
+                    </xsl:choose>
+                </xsl:otherwise>
+            </xsl:choose>
             <edm:provider>
                 <xsl:value-of select="$europeana_provider"/>
             </edm:provider>
@@ -1633,19 +1674,19 @@
     <xsl:template name="convertToEdmType">
         <xsl:param name="role"/>
         <xsl:choose>
-            <xsl:when test=" &quot;TEXT&quot; eq fn:string($role)">
+            <xsl:when test="&quot;TEXT&quot; eq fn:string($role)">
                 <xsl:text>TEXT</xsl:text>
             </xsl:when>
-            <xsl:when test=" &quot;IMAGE&quot; eq fn:string($role)">
+            <xsl:when test="&quot;IMAGE&quot; eq fn:string($role)">
                 <xsl:text>IMAGE</xsl:text>
             </xsl:when>
-            <xsl:when test=" &quot;SOUND&quot; eq fn:string($role)">
+            <xsl:when test="&quot;SOUND&quot; eq fn:string($role)">
                 <xsl:text>SOUND</xsl:text>
             </xsl:when>
-            <xsl:when test=" &quot;VIDEO&quot; eq fn:string($role)">
+            <xsl:when test="&quot;VIDEO&quot; eq fn:string($role)">
                 <xsl:text>VIDEO</xsl:text>
             </xsl:when>
-            <xsl:when test=" &quot;3D&quot; eq fn:string($role)">
+            <xsl:when test="&quot;3D&quot; eq fn:string($role)">
                 <xsl:text>3D</xsl:text>
             </xsl:when>
             <xsl:otherwise>
@@ -1712,27 +1753,27 @@
     <xsl:template name="generateThumbnailLink">
         <xsl:param name="role"/>
         <xsl:choose>
-            <xsl:when test=" &quot;TEXT&quot; eq fn:string($role)">
+            <xsl:when test="&quot;TEXT&quot; eq fn:string($role)">
                 <xsl:value-of
                     select="concat('http://', $host, '/Portal-theme/images/ape/icons/dao_types/europeana/text.png')"
                 />
             </xsl:when>
-            <xsl:when test=" &quot;IMAGE&quot; eq fn:string($role)">
+            <xsl:when test="&quot;IMAGE&quot; eq fn:string($role)">
                 <xsl:value-of
                     select="concat('http://', $host, '/Portal-theme/images/ape/icons/dao_types/europeana/image.png')"
                 />
             </xsl:when>
-            <xsl:when test=" &quot;SOUND&quot; eq fn:string($role)">
+            <xsl:when test="&quot;SOUND&quot; eq fn:string($role)">
                 <xsl:value-of
                     select="concat('http://', $host, '/Portal-theme/images/ape/icons/dao_types/europeana/sound.png')"
                 />
             </xsl:when>
-            <xsl:when test=" &quot;VIDEO&quot; eq fn:string($role)">
+            <xsl:when test="&quot;VIDEO&quot; eq fn:string($role)">
                 <xsl:value-of
                     select="concat('http://', $host, '/Portal-theme/images/ape/icons/dao_types/europeana/video.png')"
                 />
             </xsl:when>
-            <xsl:when test=" &quot;3D&quot; eq fn:string($role)">
+            <xsl:when test="&quot;3D&quot; eq fn:string($role)">
                 <xsl:value-of
                     select="concat('http://', $host, '/Portal-theme/images/ape/icons/dao_types/europeana/3d.png')"
                 />
