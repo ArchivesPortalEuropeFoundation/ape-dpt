@@ -852,17 +852,21 @@
                     <xsl:choose>
                         <xsl:when test="did/dao[not(@xlink:title='thumbnail')][1]/@xlink:role">
                             <edm:isShownBy>
+                                <xsl:attribute name="rdf:resource">
                                 <xsl:call-template name="generateThumbnailLink">
                                     <xsl:with-param name="role" select="did/dao[not(@xlink:title='thumbnail')][1]/@xlink:role"/>
                                 </xsl:call-template>
+                                </xsl:attribute>
                             </edm:isShownBy>
                         </xsl:when>
                         <xsl:otherwise>
                             <xsl:if test="fn:string-length($europeana_type) > 0">
                                 <edm:isShownBy>
+                                    <xsl:attribute name="rdf:resource">
                                     <xsl:call-template name="generateThumbnailLink">
                                         <xsl:with-param name="role" select="$europeana_type"/>
                                     </xsl:call-template>
+                                    </xsl:attribute>
                                 </edm:isShownBy>
                             </xsl:if>
                         </xsl:otherwise>
@@ -872,17 +876,21 @@
                     <xsl:choose>
                         <xsl:when test="fn:string-length($europeana_type) > 0">
                             <edm:isShownBy>
+                                <xsl:attribute name="rdf:resource">
                                 <xsl:call-template name="generateThumbnailLink">
                                     <xsl:with-param name="role" select="$europeana_type"/>
                                 </xsl:call-template>
+                                </xsl:attribute>
                             </edm:isShownBy>
                         </xsl:when>
                         <xsl:otherwise>
                             <xsl:if test="did/dao[not(@xlink:title='thumbnail')][1]/@xlink:role">
                                 <edm:isShownBy>
+                                    <xsl:attribute name="rdf:resource">
                                     <xsl:call-template name="generateThumbnailLink">
                                         <xsl:with-param name="role" select="did/dao[not(@xlink:title='thumbnail')][1]/@xlink:role"/>
                                     </xsl:call-template>
+                                    </xsl:attribute>
                                 </edm:isShownBy>
                             </xsl:if>
                         </xsl:otherwise>
