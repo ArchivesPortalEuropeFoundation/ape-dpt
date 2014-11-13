@@ -598,21 +598,10 @@
                         <xsl:value-of select="did/unitdate"/>
                     </dcterms:temporal>
                 </xsl:if>
-                <xsl:if test="./preceding-sibling::c">
-                    <xsl:variable name="positionOfSiblingInDocument">
-                        <xsl:call-template name="number">
-                            <xsl:with-param name="node" select="./preceding-sibling::c[1]"/>
-                        </xsl:call-template>
-                    </xsl:variable>
-                    <xsl:variable name="isSiblingFirstUnitid">
-                        <xsl:call-template name="detectFirstUnitid">
-                            <xsl:with-param name="positionInDocument" select="$positionOfSiblingInDocument"/>
-                            <xsl:with-param name="currentCNode" select="./preceding-sibling::c[1]"/>
-                        </xsl:call-template>
-                    </xsl:variable>
+                <xsl:if test="preceding-sibling::c[descendant::did/dao][1]">
                     <xsl:choose>
                         <xsl:when
-                            test="$idSource = 'unitid' and ./preceding-sibling::*[descendant::did/dao][1]/did/unitid[@type='call number'] and $isSiblingFirstUnitid = 'true'">
+                            test="$idSource = 'unitid' and preceding-sibling::*[descendant::did/dao][1]/did/unitid[@type='call number'] and not(key('unitids', preceding-sibling::*[descendant::did/dao][1]/did/unitid[@type='call number'])[2])">
                             <edm:isNextInSequence>
                                 <xsl:attribute name="rdf:resource"
                                     select="concat('providedCHO_', normalize-space(./preceding-sibling::*[descendant::did/dao][1]/did/unitid[@type='call number']))"
@@ -620,14 +609,14 @@
                             </edm:isNextInSequence>
                         </xsl:when>
                         <xsl:when
-                            test="$idSource = 'cid' and ./preceding-sibling::*[descendant::did/dao][1]/@id">
+                            test="$idSource = 'cid' and preceding-sibling::*[descendant::did/dao][1]/@id">
                             <edm:isNextInSequence>
                                 <xsl:attribute name="rdf:resource"
                                     select="concat('providedCHO_', normalize-space(./preceding-sibling::*[descendant::did/dao][1]/@id))"
                                 />
                             </edm:isNextInSequence>
                         </xsl:when>
-                        <xsl:when test="./preceding-sibling::*[descendant::did/dao][1] and $isSiblingFirstUnitid = 'false'">
+                        <xsl:when test="preceding-sibling::*[descendant::did/dao][1]">
                             <edm:isNextInSequence>
                                 <xsl:attribute name="rdf:resource">
                                     <xsl:call-template name="number">
@@ -1746,10 +1735,10 @@
                 </xsl:variable>
                 <xsl:choose>
                     <xsl:when test="$positionInDocument = $firstElement">
-                        <xsl:value-of select="true()"/>
+                        <xsl:value-of select="concat($firstElement, ' ', true())"/>
                     </xsl:when>
                     <xsl:otherwise>
-                        <xsl:value-of select="false()"/>
+                        <xsl:value-of select="concat($firstElement, ' ', false())"/>
                     </xsl:otherwise>
                 </xsl:choose>
             </xsl:when>
@@ -1821,7 +1810,7 @@
         <xsl:variable name="number">
             <xsl:number count="c" level="any" from="/ead/archdesc/dsc" select="$node[1]"/>
         </xsl:variable>
-        <xsl:value-of select="concat($prefix, 'c', $number)"/>
+        <xsl:value-of select="concat($prefix, 'c', $number - 1)"/>
     </xsl:template>
 
     <xsl:template match="abbr|emph|expan|extref">
