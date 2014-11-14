@@ -1808,7 +1808,7 @@
         <xsl:param name="node"/>
         <xsl:param name="prefix"/>
         <xsl:variable name="number">
-            <xsl:number count="c" level="any" from="/ead/archdesc/dsc" select="$node[1]"/>
+            <xsl:number count="c" level="single" select="$node[1]"/>
         </xsl:variable>
         <xsl:value-of select="concat($prefix, 'c', $number - 1)"/>
     </xsl:template>
