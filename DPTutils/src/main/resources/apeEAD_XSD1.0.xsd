@@ -887,9 +887,22 @@
 		<xs:attribute name="type"/>
 		<xs:attribute name="encodinganalog"/>
 	</xs:complexType>
-	<xs:group name="m.desc.base.highlevels">
+	<xs:group name="m.desc.base.levels">
 		<xs:choice>
-            <xs:group ref="m.desc.base.lowlevels"/>
+            <xs:element maxOccurs="1" minOccurs="0" name="accessrestrict" type="accessrestrict"/>
+            <xs:element maxOccurs="1" minOccurs="0" name="accruals" type="accruals"/>
+            <xs:element maxOccurs="1" minOccurs="0" name="altformavail" type="altformavail"/>
+            <xs:element maxOccurs="1" minOccurs="0" name="appraisal" type="appraisal"/>
+            <xs:element maxOccurs="1" minOccurs="0" name="bioghist" type="bioghist"/>
+            <xs:element maxOccurs="1" minOccurs="0" name="controlaccess" type="controlaccess"/>
+            <xs:element maxOccurs="1" minOccurs="0" name="custodhist" type="custodhist"/>
+            <!--<xs:element name="index" type="index"/>-->
+            <xs:element maxOccurs="1" minOccurs="0" name="odd" type="odd"/>
+            <xs:element maxOccurs="1" minOccurs="0" name="otherfindaid" type="otherfindaid"/>
+            <xs:element maxOccurs="1" minOccurs="0" name="phystech" type="phystech"/>
+            <xs:element maxOccurs="1" minOccurs="0" name="processinfo" type="processinfo"/>
+            <xs:element maxOccurs="2" minOccurs="0" name="scopecontent" type="scopecontent"/>
+            <xs:element maxOccurs="1" minOccurs="0" name="userestrict" type="userestrict"/>
 			<xs:element maxOccurs="1" minOccurs="0" name="acqinfo" type="acqinfo"/>
 			<xs:element maxOccurs="1" minOccurs="0" name="arrangement" type="arrangement"/>
 			<xs:element maxOccurs="1" minOccurs="0" name="bibliography" type="bibliography"/>
@@ -898,24 +911,6 @@
 			<xs:element maxOccurs="1" minOccurs="0" name="prefercite" type="prefercite"/>
 			<xs:element maxOccurs="1" minOccurs="0" name="relatedmaterial" type="relatedmaterial"/>
 			<xs:element maxOccurs="1" minOccurs="0" name="separatedmaterial" type="separatedmaterial"/>
-		</xs:choice>
-	</xs:group>
-    <xs:group name="m.desc.base.lowlevels">
-		<xs:choice>
-			<xs:element maxOccurs="1" minOccurs="0" name="accessrestrict" type="accessrestrict"/>
-			<xs:element maxOccurs="1" minOccurs="0" name="accruals" type="accruals"/>
-			<xs:element maxOccurs="1" minOccurs="0" name="altformavail" type="altformavail"/>
-			<xs:element maxOccurs="1" minOccurs="0" name="appraisal" type="appraisal"/>
-			<xs:element maxOccurs="1" minOccurs="0" name="bioghist" type="bioghist"/>
-			<xs:element maxOccurs="1" minOccurs="0" name="controlaccess" type="controlaccess"/>
-			<xs:element maxOccurs="1" minOccurs="0" name="custodhist" type="custodhist"/>
-			<!--<xs:element name="index" type="index"/>-->
-			<xs:element maxOccurs="1" minOccurs="0" name="odd" type="odd"/>
-            <xs:element maxOccurs="1" minOccurs="0" name="otherfindaid" type="otherfindaid"/>
-			<xs:element maxOccurs="1" minOccurs="0" name="phystech" type="phystech"/>
-			<xs:element maxOccurs="1" minOccurs="0" name="processinfo" type="processinfo"/>
-			<xs:element maxOccurs="2" minOccurs="0" name="scopecontent" type="scopecontent"/>
-			<xs:element maxOccurs="1" minOccurs="0" name="userestrict" type="userestrict"/>
 		</xs:choice>
 	</xs:group>
 	<xs:attributeGroup name="am.dates.calendar">
@@ -939,15 +934,21 @@
 		<xs:attribute name="otherlevel" type="xs:NMTOKEN"/>
 		<xs:attribute name="encodinganalog"/>
 	</xs:attributeGroup>
-	<xs:attributeGroup name="a.desc.c.highlevel">
+	<xs:attributeGroup name="a.desc.c.level">
 		<xs:attributeGroup ref="a.common"/>
 		<xs:attribute name="level">
             <xs:simpleType>
 		        <xs:restriction base="xs:token">
-                    <xs:enumeration value="fonds"/>
+                    <xs:enumeration value="class"/>
+                    <xs:enumeration value="collection"/>
                     <xs:enumeration value="file"/>
+                    <xs:enumeration value="fonds"/>
                     <xs:enumeration value="item"/>
+                    <xs:enumeration value="otherlevel"/>
+                    <xs:enumeration value="recordgrp"/>
                     <xs:enumeration value="series"/>
+                    <xs:enumeration value="subfonds"/>
+                    <xs:enumeration value="subgrp"/>
                     <xs:enumeration value="subseries"/>
                 </xs:restriction>
             </xs:simpleType>
@@ -1052,7 +1053,7 @@
 	<xs:complexType name="archdesc">
 		<xs:sequence>
 			<xs:element name="did" type="did"/>
-			<xs:group maxOccurs="unbounded" minOccurs="0" ref="m.desc.base.highlevels"/>
+			<xs:group maxOccurs="unbounded" minOccurs="0" ref="m.desc.base.levels"/>
             <xs:element maxOccurs="unbounded" minOccurs="0" name="dsc" type="dsc"/>
 		</xs:sequence>
 		<xs:attribute name="level" use="required">
@@ -1462,13 +1463,7 @@
 				<xs:group maxOccurs="unbounded" minOccurs="0" ref="m.blocks"/>
 			</xs:sequence>
 			<xs:choice maxOccurs="unbounded">
-				<xs:element name="c" type="c.highlevel"><!--type="c"-->
-                    <!--xs:alternative test="@level eq 'fonds'" type="c.highlevel" />
-                    <xs:alternative test="@level eq 'series'" type="c.serieslevel" />
-                    <xs:alternative test="@level eq 'subseries'" type="c.subserieslevel" />
-                    <xs:alternative test="@level eq 'file'" type="c.filelevel" />
-                    <xs:alternative test="@level eq 'item'" type="c.itemlevel" /-->
-				</xs:element>
+				<xs:element name="c" type="c.level" />
 			</xs:choice>
 		</xs:sequence>
 		<xs:attribute name="type">
@@ -1479,69 +1474,17 @@
 			</xs:simpleType>
 		</xs:attribute>
 	</xs:complexType>
-	<xs:complexType name="c.highlevel">
+	<xs:complexType name="c.level">
 		<xs:sequence>
 			<xs:element name="did" type="did"/>
-			<xs:group maxOccurs="unbounded" minOccurs="0" ref="m.desc.base.highlevels"/>
+			<xs:group maxOccurs="unbounded" minOccurs="0" ref="m.desc.base.levels"/>
 			<xs:choice maxOccurs="unbounded" minOccurs="0">
-                <xs:element name="c" type="c.highlevel">
-                    <!--xs:alternative test="@level eq 'fonds'" type="c.highlevel"/>
-                    <xs:alternative test="@level eq 'series'" type="c.serieslevel"/>
-                    <xs:alternative test="@level eq 'subseries'" type="c.subserieslevel"/>
-                    <xs:alternative test="@level eq 'file'" type="c.filelevel"/>
-                    <xs:alternative test="@level eq 'item'" type="c.itemlevel"/-->
-                </xs:element>
+                <xs:element name="c" type="c.level" />
 			</xs:choice>
 		</xs:sequence>
-		<xs:attributeGroup ref="a.desc.c.highlevel"/>
+		<xs:attributeGroup ref="a.desc.c.level"/>
         <!--<xs:attributeGroup ref="a.desc.c"/>-->
 	</xs:complexType>
-    <!--<xs:complexType name="c.serieslevel">-->
-		<!--<xs:sequence>-->
-			<!--<xs:element name="did" type="did"/>-->
-			<!--<xs:group maxOccurs="unbounded" minOccurs="0" ref="m.desc.base.lowlevels"/>-->
-			<!--<xs:choice maxOccurs="unbounded" minOccurs="0">-->
-                <!--<xs:element name="c">-->
-				    <!--<xs:alternative test="@level eq 'series'" type="c.serieslevel"/>-->
-                    <!--<xs:alternative test="@level eq 'subseries'" type="c.subserieslevel"/>-->
-                    <!--<xs:alternative test="@level eq 'file'" type="c.filelevel"/>-->
-                    <!--<xs:alternative test="@level eq 'item'" type="c.itemlevel"/>-->
-                <!--</xs:element>-->
-			<!--</xs:choice>-->
-		<!--</xs:sequence>-->
-		<!--<xs:attributeGroup ref="a.desc.c.lowlevel"/>-->
-	<!--</xs:complexType>-->
-    <!--<xs:complexType name="c.subserieslevel">-->
-		<!--<xs:sequence>-->
-			<!--<xs:element name="did" type="did"/>-->
-			<!--<xs:group maxOccurs="unbounded" minOccurs="0" ref="m.desc.base.lowlevels"/>-->
-			<!--<xs:choice maxOccurs="unbounded" minOccurs="0">-->
-                <!--<xs:element name="c">-->
-    				<!--<xs:alternative test="@level eq 'subseries'" type="c.subserieslevel"/>-->
-                    <!--<xs:alternative test="@level eq 'file'" type="c.filelevel"/>-->
-                    <!--<xs:alternative test="@level eq 'item'" type="c.itemlevel"/>-->
-                <!--</xs:element>-->
-			<!--</xs:choice>-->
-		<!--</xs:sequence>-->
-		<!--<xs:attributeGroup ref="a.desc.c.lowlevel"/>-->
-	<!--</xs:complexType>-->
-    <!--<xs:complexType name="c.filelevel">-->
-		<!--<xs:sequence>-->
-			<!--<xs:element name="did" type="did"/>-->
-			<!--<xs:group maxOccurs="unbounded" minOccurs="0" ref="m.desc.base.lowlevels"/>-->
-			<!--<xs:choice maxOccurs="unbounded" minOccurs="0">-->
-				<!--<xs:element maxOccurs="unbounded" name="c" type="c.itemlevel"/>-->
-			<!--</xs:choice>-->
-		<!--</xs:sequence>-->
-		<!--<xs:attributeGroup ref="a.desc.c.lowlevel"/>-->
-	<!--</xs:complexType>-->
-    <!--<xs:complexType name="c.itemlevel">-->
-		<!--<xs:sequence>-->
-			<!--<xs:element name="did" type="did"/>-->
-			<!--<xs:group maxOccurs="unbounded" minOccurs="0" ref="m.desc.base.lowlevels"/>-->
-		<!--</xs:sequence>-->
-		<!--<xs:attributeGroup ref="a.desc.c.lowlevel"/>-->
-	<!--</xs:complexType>-->
 	<xs:complexType mixed="true" name="head" />
 	<xs:complexType mixed="true" name="p">
         <xs:choice maxOccurs="unbounded" minOccurs="0">
