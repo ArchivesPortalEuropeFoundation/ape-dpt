@@ -1899,7 +1899,7 @@
     </xsl:template>
 
     <xsl:template
-        match="processinfo/p/note | separatedmaterial/p/note | bioghist/p/note | arrangement/p/note | acqinfo/p/note | accruals/p/note | custodhist/p/note"
+        match="processinfo/p/note | separatedmaterial/p/note | bioghist/p/note | arrangement/p/note | acqinfo/p/note | accruals/p/note | custodhist/p/note | odd/p/note"
         mode="copy nested level">
         <xsl:text> (</xsl:text>
         <xsl:apply-templates select="p/text()" mode="#current"/>
