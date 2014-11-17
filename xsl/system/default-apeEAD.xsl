@@ -32,8 +32,17 @@
     <xsl:param name="versionnb" select="''"/>
     <xsl:param name="useXSD10" select="'false'"/>
     <xsl:param name="eadidmissing" select="''"/>
+    <!-- Parameters related to DAO type. -->
     <xsl:param name="defaultRoleType" select="'UNSPECIFIED'"/>
     <xsl:param name="useDefaultRoleType" select="'false'"/>
+    <!-- Parameters related to rights statement for digital objects. -->
+    <xsl:param name="defaultRightsDigitalObject" select="''"/>
+    <xsl:param name="defaultRightsDigitalObjectDescription" select="''"/>
+    <xsl:param name="defaultRightsDigitalObjectHolder" select="''"/>
+    <!-- Parameters related to rights statement for EAD data. -->
+    <xsl:param name="defaultRightsEadData" select="''"/>
+    <xsl:param name="defaultRightsEadDataDescription" select="''"/>
+    <xsl:param name="defaultRightsEadDataHolder" select="''"/>
 
     <xsl:param name="url" select="''"/>
     <xsl:param name="provider" select="''"/>
