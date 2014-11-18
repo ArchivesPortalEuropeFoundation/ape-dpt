@@ -837,6 +837,9 @@
             </xsl:if>
             <xsl:apply-templates select="did/dao[not(@xlink:title='thumbnail')][1]" mode="firstLink"/>
             <xsl:choose>
+                <xsl:when test="did/dao[@xlink:title='thumbnail']">
+                    <xsl:apply-templates select="did/dao[@xlink:title='thumbnail'][1]" mode="thumbnail"/>
+                </xsl:when>
                 <xsl:when test="$useExistingDaoRole='true'">
                     <xsl:choose>
                         <xsl:when test="did/dao[not(@xlink:title='thumbnail')][1]/@xlink:role">
@@ -1530,8 +1533,7 @@
                     </xsl:call-template>
                 </xsl:variable>
                 <xsl:choose>
-                    <xsl:when
-                        test="$idSource = 'unitid' and $currentnode/preceding-sibling::*[descendant::did/dao][1]/did/unitid[@type='call number'] and $isSiblingFirstUnitid = 'true'">
+                    <xsl:when test="$idSource = 'unitid' and $currentnode/preceding-sibling::*[descendant::did/dao][1]/did/unitid[@type='call number'] and not(key('unitids', $currentnode/preceding-sibling::*[descendant::did/dao][1]/did/unitid[@type='call number'])[2])">
                         <edm:isNextInSequence>
                             <xsl:attribute name="rdf:resource"
                                 select="concat('providedCHO_', normalize-space($currentnode/preceding-sibling::*[did/dao][1]/did/unitid[@type='call number']))"
@@ -1546,7 +1548,7 @@
                             />
                         </edm:isNextInSequence>
                     </xsl:when>
-                    <xsl:when test="$currentnode/preceding-sibling::*[descendant::did/dao][1] and $isSiblingFirstUnitid = 'false'">
+                    <xsl:when test="$currentnode/preceding-sibling::*[descendant::did/dao][1]">
                         <edm:isNextInSequence>
                             <xsl:attribute name="rdf:resource">
                                 <xsl:call-template name="number">
