@@ -329,4 +329,8 @@ public class EdmConfig implements Serializable {
             return string;
         }
     }
+     
+    public static File getQualityReportXSLTFile() {
+        return new File("/ead2edm/edmQuality.xsl");
+    }
 }

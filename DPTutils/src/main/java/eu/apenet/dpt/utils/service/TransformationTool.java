@@ -43,6 +43,8 @@ import eu.apenet.dpt.utils.util.DiscardDtdEntityResolver;
 import eu.apenet.dpt.utils.util.extendxsl.CounterCLevel;
 import eu.apenet.dpt.utils.util.extendxsl.CounterCLevelCall;
 import eu.apenet.dpt.utils.util.extendxsl.DateNormalization;
+import eu.apenet.dpt.utils.util.extendxsl.EdmQualityChecker;
+import eu.apenet.dpt.utils.util.extendxsl.EdmQualityCheckerCall;
 import eu.apenet.dpt.utils.util.extendxsl.FlagSet;
 import eu.apenet.dpt.utils.util.extendxsl.LinkFormatChecker;
 import eu.apenet.dpt.utils.util.extendxsl.Oai2EadNormalization;
@@ -166,6 +168,9 @@ public class TransformationTool {
             } else if(extensionFunctionCall instanceof XmlQualityCheckerCall) {
                 XmlQualityChecker xmlQualityChecker = new XmlQualityChecker((XmlQualityCheckerCall)extensionFunctionCall);
                 processor.registerExtensionFunction(xmlQualityChecker);
+            } else if(extensionFunctionCall instanceof EdmQualityCheckerCall) {
+                EdmQualityChecker edmQualityChecker = new EdmQualityChecker((EdmQualityCheckerCall)extensionFunctionCall);
+                processor.registerExtensionFunction(edmQualityChecker);
             }
 
             XsltCompiler compiler = processor.newXsltCompiler();
