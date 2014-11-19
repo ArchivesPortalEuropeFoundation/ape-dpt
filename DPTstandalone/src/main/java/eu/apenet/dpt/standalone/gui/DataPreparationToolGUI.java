@@ -1216,7 +1216,7 @@ public class DataPreparationToolGUI extends JFrame {
         List<XsdObject> xsdObjects = new ArrayList<XsdObject>();
         for (Xsd_enum xsdEnum : Xsd_enum.values()) {
             String filetype;
-            if (xsdEnum.getPath().equals("apeEAD.xsd") || xsdEnum.getPath().equals("apeEAD_XSD1.0.xsd") || xsdEnum.getPath().equals("ead_2002.xsd")) {
+            if (xsdEnum.getPath().equals("apeEAD.xsd") || xsdEnum.getPath().equals("ead_2002.xsd")) {
                 filetype = FileInstance.FileType.EAD.getFilePrefix();
             } else if (xsdEnum.getPath().equals("APE_EAG.xsd") || xsdEnum.getPath().equals("eag.xsd") || xsdEnum.getPath().equals("eag_2012.xsd")) {
                 filetype = FileInstance.FileType.EAG.getFilePrefix();
