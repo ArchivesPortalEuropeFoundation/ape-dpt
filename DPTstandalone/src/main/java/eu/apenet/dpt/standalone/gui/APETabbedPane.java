@@ -20,7 +20,6 @@ package eu.apenet.dpt.standalone.gui;
 
 import eu.apenet.dpt.standalone.gui.conversion.ConvertActionListener;
 import eu.apenet.dpt.standalone.gui.db.RetrieveFromDb;
-import eu.apenet.dpt.standalone.gui.ead2ese.ConvertEseActionListener;
 import eu.apenet.dpt.standalone.gui.edition.*;
 import eu.apenet.dpt.standalone.gui.ead2edm.ConvertEdmActionListener;
 import eu.apenet.dpt.standalone.gui.validation.DownloadReportActionListener;
@@ -32,7 +31,6 @@ import java.awt.*;
 import java.awt.event.*;
 import java.io.File;
 import java.util.*;
-import java.util.List;
 import javax.swing.*;
 import javax.swing.event.TreeExpansionEvent;
 import javax.swing.event.TreeExpansionListener;
@@ -40,7 +38,6 @@ import javax.swing.tree.TreeModel;
 import javax.swing.tree.TreePath;
 import org.apache.log4j.Logger;
 import org.jdesktop.swingx.JXTreeTable;
-import org.jdesktop.swingx.tree.TreeModelSupport;
 import org.w3c.dom.*;
 import org.xml.sax.InputSource;
 

@@ -27,7 +27,6 @@ import eu.apenet.dpt.standalone.gui.dateconversion.DateConversionRulesDialog;
 import eu.apenet.dpt.standalone.gui.db.RetrieveFromDb;
 import eu.apenet.dpt.standalone.gui.eaccpf.EacCpfFrame;
 import eu.apenet.dpt.standalone.gui.ead2edm.ConvertEdmActionListener;
-import eu.apenet.dpt.standalone.gui.ead2ese.ConvertEseActionListener;
 import eu.apenet.dpt.standalone.gui.eag2012.Eag2012Frame;
 import eu.apenet.dpt.standalone.gui.edition.CheckList;
 import eu.apenet.dpt.standalone.gui.edition.PopupMouseListener;
