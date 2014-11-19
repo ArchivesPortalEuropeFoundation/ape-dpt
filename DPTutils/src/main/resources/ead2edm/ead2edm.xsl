@@ -154,11 +154,16 @@
             <xsl:if test="/ead/archdesc/did/unittitle">
                 <xsl:apply-templates select="/ead/archdesc/did/unittitle"/>
             </xsl:if>
-            <xsl:if test="/ead/archdesc/@level">
-                <dc:type>
-                    <xsl:apply-templates select="/ead/archdesc/@level"/>
-                </dc:type>
-            </xsl:if>
+            <dc:type>
+                <xsl:choose>
+                    <xsl:when test="/ead/archdesc/did/physdesc/genreform">
+                        <xsl:value-of select="/ead/archdesc/did/physdesc/genreform"/>
+                    </xsl:when>
+                    <xsl:otherwise>
+                        <xsl:value-of select="'Archival material'"/>
+                    </xsl:otherwise>
+                </xsl:choose>
+            </dc:type>
             <xsl:if test="/ead/archdesc/dsc/c">
                 <xsl:for-each select="/ead/archdesc/dsc/c">
                     <xsl:variable name="currentCPosition">
@@ -225,11 +230,16 @@
                     </xsl:otherwise>
                 </xsl:choose>
             </xsl:attribute>
-            <xsl:if test="/ead/archdesc/@level">
-                <dc:description>
-                    <xsl:apply-templates select="/ead/archdesc/@level"/>
-                </dc:description>
-            </xsl:if>
+            <dc:description>
+                <xsl:choose>
+                    <xsl:when test="/ead/archdesc/did/unittitle">
+                        <xsl:apply-templates select="/ead/archdesc/did/unittitle" mode="dcDescription"/>
+                    </xsl:when>
+                    <xsl:otherwise>
+                        <xsl:value-of select="'Archival material'"/>
+                    </xsl:otherwise>
+                </xsl:choose>
+            </dc:description>
             <edm:rights>
                 <xsl:attribute name="rdf:resource"
                     select="'http://creativecommons.org/publicdomain/zero/1.0/'"/>
@@ -493,11 +503,16 @@
                         <xsl:value-of select="did/unittitle"/>
                     </dc:title>
                 </xsl:if>
-                <xsl:if test="@level">
-                    <dc:type>
-                        <xsl:apply-templates select="@level"/>
-                    </dc:type>
-                </xsl:if>
+                <dc:type>
+                    <xsl:choose>
+                        <xsl:when test="did/physdesc/genreform">
+                            <xsl:value-of select="did/physdesc/genreform"/>
+                        </xsl:when>
+                        <xsl:otherwise>
+                            <xsl:value-of select="'Archival material'"/>
+                        </xsl:otherwise>
+                    </xsl:choose>
+                </dc:type>
                 <xsl:if test="c">
                     <xsl:for-each select="c">
                         <xsl:variable name="currentCPosition">
@@ -548,7 +563,7 @@
                 </xsl:if>
                 <xsl:if test="local-name($parentparentcnode) = 'archdesc'">
                     <dcterms:isPartOf>
-                        <xsl:attribute name="rdf:resource" select="/ead/eadheader/eadid"/>
+                        <xsl:attribute name="rdf:resource" select="concat('providedCHO_', normalize-space(/ead/eadheader/eadid))"/>
                     </dcterms:isPartOf>
                 </xsl:if>
                 <xsl:if test="local-name($parentcnode) = 'c'">
@@ -684,11 +699,16 @@
                         </xsl:otherwise>
                     </xsl:choose>
                 </xsl:attribute>
-                <xsl:if test="@level">
-                    <dc:description>
-                        <xsl:apply-templates select="@level"/>
-                    </dc:description>
-                </xsl:if>
+                <dc:description>
+                    <xsl:choose>
+                        <xsl:when test="did/unittitle">
+                            <xsl:apply-templates select="did/unittitle" mode="dcDescription"/>
+                        </xsl:when>
+                        <xsl:otherwise>
+                            <xsl:value-of select="'Archival material'"/>
+                        </xsl:otherwise>
+                    </xsl:choose>
+                </dc:description>
                 <edm:rights>
                     <xsl:attribute name="rdf:resource"
                         select="'http://creativecommons.org/publicdomain/zero/1.0/'"/>
@@ -915,9 +935,6 @@
                     <xsl:value-of select="$currentnode/@id"/>
                 </dc:identifier>
             </xsl:if>
-            <dc:type>
-                <xsl:apply-templates select="$currentnode/@level"/>
-            </dc:type>
             <!--<xsl:choose>-->
             <!--<xsl:when test="$currentnode/controlaccess">-->
             <!--<xsl:call-template name="controlaccess">-->
@@ -1018,20 +1035,23 @@
                             <xsl:apply-templates select="$parentcnode/relatedmaterial"/>
                         </xsl:otherwise>
                     </xsl:choose>
-                    <xsl:choose>
-                        <xsl:when test="$currentnode/did/physdesc/genreform">
-                            <dc:type>
+                    <dc:type>
+                        <xsl:choose>
+                            <xsl:when test="$currentnode/did/physdesc/genreform">
                                 <xsl:value-of select="$currentnode/did/physdesc/genreform"/>
-                            </dc:type>
-                        </xsl:when>
-                        <xsl:otherwise>
-                            <xsl:if test="$parentdidnode/physdesc/genreform">
-                                <dc:type>
-                                    <xsl:value-of select="$parentdidnode/physdesc/genreform"/>
-                                </dc:type>
-                            </xsl:if>
-                        </xsl:otherwise>
-                    </xsl:choose>
+                            </xsl:when>
+                            <xsl:otherwise>
+                                <xsl:choose>
+                                    <xsl:when test="$parentdidnode/physdesc/genreform">
+                                        <xsl:value-of select="$parentdidnode/physdesc/genreform"/>
+                                    </xsl:when>
+                                    <xsl:otherwise>
+                                        <xsl:value-of select="'Archival material'"/>
+                                    </xsl:otherwise>
+                                </xsl:choose>
+                            </xsl:otherwise>
+                        </xsl:choose>
+                    </dc:type>
                     <xsl:choose>
                         <xsl:when test="$currentnode/did/physdesc/extent">
                             <dcterms:extent>
@@ -1204,11 +1224,16 @@
                             <xsl:apply-templates select="$parentcnode/relatedmaterial"/>
                         </xsl:otherwise>
                     </xsl:choose>
-                    <xsl:if test="$currentnode/did/physdesc/genreform">
-                        <dc:type>
-                            <xsl:value-of select="$currentnode/did/physdesc/genreform"/>
-                        </dc:type>
-                    </xsl:if>
+                    <dc:type>
+                        <xsl:choose>
+                            <xsl:when test="$currentnode/did/physdesc/genreform">
+                                <xsl:value-of select="$currentnode/did/physdesc/genreform"/>
+                            </xsl:when>
+                            <xsl:otherwise>
+                                <xsl:value-of select="'Archival material'"/>
+                            </xsl:otherwise>
+                        </xsl:choose>
+                    </dc:type>
                     <xsl:if test="$currentnode/c">
                         <xsl:for-each select="$currentnode/c">
                             <xsl:variable name="currentCPosition">
@@ -1871,16 +1896,19 @@
                     </xsl:when>
                 </xsl:choose>
             </xsl:attribute>
-            <xsl:if test="@title">
-                <dc:description>
-                    <xsl:value-of select="@title"/>
-                </dc:description>
-            </xsl:if>
-            <xsl:if test="@xlink:title">
-                <dc:description>
-                    <xsl:value-of select="@xlink:title"/>
-                </dc:description>
-            </xsl:if>
+            <dc:description>
+                <xsl:choose>
+                    <xsl:when test="@title">
+                        <xsl:value-of select="@title"/>
+                    </xsl:when>
+                    <xsl:when test="@xlink:title">
+                        <xsl:value-of select="@xlink:title"/>
+                    </xsl:when>
+                    <xsl:otherwise>
+                        <xsl:value-of select="'Archival material'"/>
+                    </xsl:otherwise>
+                </xsl:choose>
+            </dc:description>
             <edm:rights>
                 <xsl:attribute name="rdf:resource" select="$europeana_rights"/>
             </edm:rights>
@@ -2046,10 +2074,13 @@
             <xsl:value-of select="fn:replace(normalize-space($content), '[\n\t\r]', '')"/>
         </dc:title>
     </xsl:template>
-    <xsl:template match="@level">
-        <xsl:value-of select="concat(upper-case(substring(.,1,1)), substring(., 2))"/>
+    <xsl:template match="unittitle" mode="dcDescription">
+        <xsl:variable name="content">
+            <xsl:apply-templates/>
+        </xsl:variable>
+        <xsl:value-of select="fn:replace(normalize-space($content), '[\n\t\r]', '')"/>
     </xsl:template>
-
+    
     <xsl:template mode="all-but-address" match="address"/>
     <xsl:template mode="bibref-only-nodecontent" match="name|title|imprint"/>
 
