@@ -72,7 +72,7 @@ import eu.apenet.dpt.standalone.gui.progress.ApexActionListener;
 import eu.apenet.dpt.standalone.gui.progress.ProgressFrame;
 import eu.apenet.dpt.utils.ead2edm.XMLUtil;
 import eu.apenet.dpt.utils.ead2edm.EdmConfig;
-import eu.apenet.dpt.utils.util.Ead2EseInformation;
+import eu.apenet.dpt.utils.util.Ead2EdmInformation;
 import java.io.IOException;
 import javax.xml.parsers.ParserConfigurationException;
 import org.xml.sax.SAXException;
@@ -138,7 +138,7 @@ public class EdmOptionsPanel extends JPanel {
     private static final Border GREY_LINE = BorderFactory.createLineBorder(Color.GRAY);
     private DataPreparationToolGUI dataPreparationToolGUI;
     private boolean batch;
-    private Ead2EseInformation ead2EseInformation;
+    private Ead2EdmInformation ead2EdmInformation;
     private JCheckBox useExistingRepoCheckbox;
     private JCheckBox useExistingDaoRoleCheckbox;
     private JCheckBox useExistingLanguageCheckbox;
@@ -284,7 +284,7 @@ public class EdmOptionsPanel extends JPanel {
             panel.add(panel2);
         } else {
             determineDaoInformation();
-            String repository = ead2EseInformation.getRepository();
+            String repository = ead2EdmInformation.getRepository();
             if (repository != null && !repository.equals("")) {
                 dataProviderTextArea.setText(repository);
                 panel.add(panel2);
@@ -321,7 +321,7 @@ public class EdmOptionsPanel extends JPanel {
         if (batch) {
             currentRoleType = "";
         } else {
-            currentRoleType = ead2EseInformation.getRoleType();
+            currentRoleType = ead2EdmInformation.getRoleType();
         }
         radioButton = new JRadioButton(this.labels.getString("edm.panel.dao.role.text"));
         if (currentRoleType.equals(EdmOptionsPanel.TEXT)) {
@@ -554,16 +554,16 @@ public class EdmOptionsPanel extends JPanel {
         inheritOriginationPanel.setVisible(false);
         formPanel.add(inheritOriginationPanel);
 
-        JButton createEseBtn = new JButton(labels.getString("ese.createEseBtn"));
+        JButton createEdmBtn = new JButton(labels.getString("ese.createEseBtn"));
         JButton cancelBtn = new JButton(labels.getString("ese.cancelBtn"));
 
-        createEseBtn.addActionListener(new CreateEdmActionListener());
+        createEdmBtn.addActionListener(new CreateEdmActionListener());
         cancelBtn.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 for (Map.Entry<String, FileInstance> entry : fileInstances.entrySet()) {
                     FileInstance fileInstance = entry.getValue();
-                    fileInstance.setEse(false);
+                    fileInstance.setEdm(false);
                 }
                 if (batch) {
                     dataPreparationToolGUI.enableAllBatchBtns();
@@ -580,7 +580,7 @@ public class EdmOptionsPanel extends JPanel {
         buttonPanel.add(new JLabel(""));
         buttonPanel.add(cancelBtn);
         buttonPanel.add(new JLabel(""));
-        buttonPanel.add(createEseBtn);
+        buttonPanel.add(createEdmBtn);
         buttonPanel.add(new JLabel(""));
 
         add(formPanel, BorderLayout.CENTER);
@@ -875,11 +875,11 @@ public class EdmOptionsPanel extends JPanel {
                     throw new Exception("No provided language selected");
                 }
             } else if (this.inheritLanguageGroup.getSelection().getActionCommand().equalsIgnoreCase(EdmOptionsPanel.NO)) {
-                if (!this.ead2EseInformation.isLanguagesOnAllCLevels()) {
+                if (!this.ead2EdmInformation.isLanguagesOnAllCLevels()) {
                     throw new Exception("At least one DAO does not have an associated language. Please inherit the language or provide it manually");
                 }
             } else if (this.inheritLanguageGroup.getSelection().getActionCommand().equalsIgnoreCase(EdmOptionsPanel.YES)) {
-                if (!this.ead2EseInformation.isLanguagesOnParent()) {
+                if (!this.ead2EdmInformation.isLanguagesOnParent()) {
                     throw new Exception("The higher levels do not have an associated language");
                 }
             }
@@ -914,9 +914,9 @@ public class EdmOptionsPanel extends JPanel {
         FileInstance fileInstance = fileInstances.get(index.getName());
         try {
             if (batch) {
-                ead2EseInformation = new Ead2EseInformation();
+                ead2EdmInformation = new Ead2EdmInformation();
             } else {
-                ead2EseInformation = new Ead2EseInformation(new File(fileInstance.getCurrentLocation()), retrieveFromDb.retrieveRoleType(), archdescRepository);
+                ead2EdmInformation = new Ead2EdmInformation(new File(fileInstance.getCurrentLocation()), retrieveFromDb.retrieveRoleType(), archdescRepository);
             }
         } catch (IOException ex) {
             java.util.logging.Logger.getLogger(EdmOptionsPanel.class.getName()).log(Level.SEVERE, null, ex);
@@ -925,8 +925,8 @@ public class EdmOptionsPanel extends JPanel {
         } catch (SAXException ex) {
             java.util.logging.Logger.getLogger(EdmOptionsPanel.class.getName()).log(Level.SEVERE, null, ex);
         }
-        if (ead2EseInformation.getArchdescRepository() != null) {
-            archdescRepository = ead2EseInformation.getArchdescRepository();
+        if (ead2EdmInformation.getArchdescRepository() != null) {
+            archdescRepository = ead2EdmInformation.getArchdescRepository();
         }
     }
 
@@ -986,7 +986,7 @@ public class EdmOptionsPanel extends JPanel {
                         ProgressFrame.ApeProgressBar progressBar = progressFrame.getProgressBarBatch();
 
                         try {
-                            apeTabbedPane.setEseConversionErrorText(labels.getString("edm.conversionEdmStarted") + "\n");
+                            apeTabbedPane.setEdmConversionErrorText(labels.getString("edm.conversionEdmStarted") + "\n");
                             writer.append(labels.getString("edm.conversionEdmStarted") + "\n");
                             SummaryWorking summaryWorking = new SummaryWorking(dataPreparationToolGUI.getResultArea(), progressBar);
                             summaryWorking.setTotalNumberFiles(numberOfFiles);
@@ -1002,13 +1002,13 @@ public class EdmOptionsPanel extends JPanel {
                                         break;
                                     }
                                     SwingUtilities.invokeLater(new TransformEdm(edmConfig, selectedIndexFile));
-                                    apeTabbedPane.appendEseConversionErrorText(MessageFormat.format(labels.getString("edm.convertedAndSaved"), selectedIndexFile.getAbsolutePath(), retrieveFromDb.retrieveDefaultSaveFolder()) + "\n");
+                                    apeTabbedPane.appendEdmConversionErrorText(MessageFormat.format(labels.getString("edm.convertedAndSaved"), selectedIndexFile.getAbsolutePath(), retrieveFromDb.retrieveDefaultSaveFolder()) + "\n");
                                     writer.append(MessageFormat.format(labels.getString("edm.convertedAndSaved"), selectedIndexFile.getAbsolutePath(), retrieveFromDb.retrieveDefaultSaveFolder()) + "\n");
                                 }
-                                apeTabbedPane.checkFlashingTab(APETabbedPane.TAB_ESE, Utilities.FLASHING_GREEN_COLOR);
+                                apeTabbedPane.checkFlashingTab(APETabbedPane.TAB_EDM, Utilities.FLASHING_GREEN_COLOR);
                                 close();
                             } catch (Exception ex) {
-                                apeTabbedPane.checkFlashingTab(APETabbedPane.TAB_ESE, Utilities.FLASHING_RED_COLOR);
+                                apeTabbedPane.checkFlashingTab(APETabbedPane.TAB_EDM, Utilities.FLASHING_RED_COLOR);
                             } finally {
                                 summaryWorking.stop();
                                 threadRunner.interrupt();
@@ -1032,7 +1032,7 @@ public class EdmOptionsPanel extends JPanel {
                     } else {
                         dataPreparationToolGUI.setResultAreaText(labels.getString("aborted"));
                     }
-                    apeTabbedPane.setEseConversionErrorText(writer.toString());
+                    apeTabbedPane.setEdmConversionErrorText(writer.toString());
                     dataPreparationToolGUI.enableSaveBtn();
                     dataPreparationToolGUI.enableRadioButtons();
                 }
@@ -1066,15 +1066,18 @@ public class EdmOptionsPanel extends JPanel {
                 File outputFile = new File(xmlOutputFilename);
                 config.getTransformerXML2XML().transform(new File(loc), outputFile);
                 if (XMLUtil.analyzeESEXML(outputFile).getNumberOfProvidedCHO() <= 1) {
-                    apeTabbedPane.appendEseConversionErrorText(labels.getString("ese.fileEmpty"));
+                    apeTabbedPane.appendEdmConversionErrorText(labels.getString("ese.fileEmpty"));
                 } else {
-                    fileInstance.setEseLocation(outputFile.getAbsolutePath());
-                    if (StringUtils.isNotEmpty(fileInstance.getEseLocation())) {
+                    fileInstance.setEdm(true);
+                    fileInstance.setEdmLocation(outputFile.getAbsolutePath());
+                    if (StringUtils.isNotEmpty(fileInstance.getEdmLocation())) {
                         fileInstance.setMinimalConverted(config.isMinimalConversion());
                     }
+                    fileInstance.setEuropeanaConversionErrors(MessageFormat.format(labels.getString("edm.convertedAndSaved"), outputFile.getAbsolutePath(), retrieveFromDb.retrieveDefaultSaveFolder()) + "\n");
+                    fileInstance.setLastOperation(FileInstance.Operation.CONVERT_EDM);
                 }
             } catch (Exception e) {
-                LOG.error("Error when converting file into ESE", e);
+                LOG.error("Error when converting file into EDM", e);
             }
         }
 

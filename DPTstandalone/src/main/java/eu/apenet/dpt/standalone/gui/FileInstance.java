@@ -22,7 +22,6 @@ import eu.apenet.dpt.standalone.gui.xsdaddition.XsdObject;
 import eu.apenet.dpt.utils.util.XmlChecker;
 
 import java.io.File;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -36,13 +35,12 @@ public class FileInstance {
     private String originalPath;
     private boolean isValid;
     private boolean isConverted;
-    private boolean isEse;
     private boolean isEdm;
     private String validationErrors;
     private String conversionErrors;
     private String europeanaConversionErrors;
     private String currentLocation;
-    private String eseLocation;
+    private String edmLocation;
     private String conversionScriptName;
     private XsdObject validationSchema;
     private FileType fileType;
@@ -58,13 +56,12 @@ public class FileInstance {
         this.originalPath = file.getPath();
         this.isValid = false;
         this.isConverted = false;
-        this.isEse = false;
         this.isEdm = false;
         this.validationErrors = "";
         this.conversionErrors = "";
         this.europeanaConversionErrors = "";
         this.currentLocation = "";
-        this.eseLocation = "";
+        this.edmLocation = "";
         this.conversionScriptName = defaultXsl;
         this.validationSchema = Utilities.getXsdObjectFromName(defaultXsd);
         this.fileType = FileType.EAD;
@@ -74,7 +71,7 @@ public class FileInstance {
 
     @Override
     public String toString() {
-        return name + ":\noriginalPath=" + originalPath + "\nisValid=" + isValid + "\nisConverted=" + isConverted + "\nisEse=" + isEse + "\ncurrentLocation=" + currentLocation + "\nvalidationSchema=" + validationSchema.getName() + "\nconversionScript=" + conversionScriptName;
+        return name + ":\noriginalPath=" + originalPath + "\nisValid=" + isValid + "\nisConverted=" + isConverted + "\nisEdm=" + isEdm + "\ncurrentLocation=" + currentLocation + "\nvalidationSchema=" + validationSchema.getName() + "\nconversionScript=" + conversionScriptName;
     }
 
     public FileInstance(File file, String defaultXsl, String defaultXsd) {
@@ -103,14 +100,6 @@ public class FileInstance {
 
     public void setConverted() {
         isConverted = true;
-    }
-
-    public boolean isEse() {
-        return isEse;
-    }
-
-    public void setEse(boolean ese) {
-        isEse = ese;
     }
 
     public boolean isEdm() {
@@ -210,12 +199,12 @@ public class FileInstance {
         isXml = xml;
     }
 
-    public String getEseLocation() {
-        return eseLocation;
+    public String getEdmLocation() {
+        return edmLocation;
     }
 
-    public void setEseLocation(String eseLocation) {
-        this.eseLocation = eseLocation;
+    public void setEdmLocation(String edmLocation) {
+        this.edmLocation = edmLocation;
     }
 
     public Map<String, Map<String, Boolean>> getXmlQualityErrors() {
@@ -238,7 +227,6 @@ public class FileInstance {
         EAD("apeEAD"),
         EAG("EAG"),
         EAC_CPF("APE_CPF"),
-        ESE("apeESE"),
         OTHER("Other");
 
         private String filePrefix;
@@ -264,7 +252,6 @@ public class FileInstance {
         VALIDATE,
         EDIT_TREE,
         SAVE,
-        CONVERT_ESE,
         CONVERT_EDM
     }
 }

@@ -23,9 +23,9 @@ import org.xml.sax.helpers.DefaultHandler;
  *
  * @author Yoann Moranville
  */
-public class Ead2EseInformation {
+public class Ead2EdmInformation {
 
-    private static final Logger LOG = Logger.getLogger(Ead2EseInformation.class);
+    private static final Logger LOG = Logger.getLogger(Ead2EdmInformation.class);
     private String languageCode;
     private String repository;
     private String roleType;
@@ -68,7 +68,7 @@ public class Ead2EseInformation {
         return this.languagesOnAllCLevels;
     }
 
-    public Ead2EseInformation(File fileToRead, String databaseRoleType, String archdescRepository) throws IOException, SAXException, ParserConfigurationException {
+    public Ead2EdmInformation(File fileToRead, String databaseRoleType, String archdescRepository) throws IOException, SAXException, ParserConfigurationException {
         this();
         this.archdescRepository = archdescRepository;
         this.languagesCodes = new TreeSet<String>();
@@ -81,7 +81,7 @@ public class Ead2EseInformation {
         this.determineDaoInformation(fileToRead);
     }
 
-    public Ead2EseInformation() {
+    public Ead2EdmInformation() {
         this.languageCode = "";
         this.repository = "";
         this.roleType = "";

@@ -53,23 +53,22 @@ public class APETabbedPane extends JTabbedPane {
     public static final int TAB_SUMMARY = 0;
     public static final int TAB_VALIDATION = 1;
     public static final int TAB_CONVERSION = 2;
-    public static final int TAB_ESE = 3;
+    public static final int TAB_EDM = 3;
     public static final int TAB_EDITION = 4;
 
     private static final Dimension DEFAULT_BTN_DIMENSION = new Dimension(100, 40);
 
     private JTextArea validationErrors;
     private JTextArea conversionErrors;
-    private JTextArea eseConversionErrors;
+    private JTextArea edmConversionErrors;
 
     private JScrollPane validationPane;
     private JScrollPane conversionPane;
-    private JScrollPane eseConversionPane;
+    private JScrollPane edmConversionPane;
     private JScrollPane editionPane;
 
     private JButton convertBtn;
     private JButton validateBtn;
-//    private JButton convertEseBtn;
     private JButton convertEdmBtn;
     private JButton validationReportBtn;
     private JButton messageReportBtn;
@@ -103,7 +102,7 @@ public class APETabbedPane extends JTabbedPane {
         addTab(labels.getString("summary"), makeTextPanelSummary());
         addTab(labels.getString("validation"), makeTextPanel(TAB_VALIDATION));
         addTab(labels.getString("conversion"), makeTextPanel(TAB_CONVERSION));
-        addTab(labels.getString("eseConversion"), makeTextPanel(TAB_ESE));
+        addTab(labels.getString("eseConversion"), makeTextPanel(TAB_EDM));
         addTab(labels.getString("edition"), makeTextPanel(TAB_EDITION));
         addMouseListener(new APETabbedPaneMouseAdapter(this));
 
@@ -123,15 +122,14 @@ public class APETabbedPane extends JTabbedPane {
         validationPanel.add(buttonPanel, BorderLayout.NORTH);
         validationPanel.add(validationErrors, BorderLayout.CENTER);
         conversionErrors = new JTextArea();
-        eseConversionErrors = new JTextArea();
+        edmConversionErrors = new JTextArea();
         validationPane = new JScrollPane(validationPanel);
         conversionPane = new JScrollPane(conversionErrors);
-        eseConversionPane = new JScrollPane(eseConversionErrors);
+        edmConversionPane = new JScrollPane(edmConversionErrors);
         editionPane = new JScrollPane();
 
         convertBtn = new JButton();
         validateBtn = new JButton();
-        //convertEseBtn = new JButton();
         convertEdmBtn = new JButton();
         messageReportBtn = new JButton();
 
@@ -151,20 +149,15 @@ public class APETabbedPane extends JTabbedPane {
         conversionErrors.setEditable(false);
         conversionErrors.setLineWrap(true);
         conversionErrors.setWrapStyleWord(true);
-        eseConversionErrors.setEditable(false);
-        eseConversionErrors.setLineWrap(true);
-        eseConversionErrors.setWrapStyleWord(true);
+        edmConversionErrors.setEditable(false);
+        edmConversionErrors.setLineWrap(true);
+        edmConversionErrors.setWrapStyleWord(true);
 
         convertBtn.addActionListener(new ConvertActionListener(parent, dataPreparationToolGUI, apePanel));
         convertBtn.setPreferredSize(DEFAULT_BTN_DIMENSION);
         convertBtn.setEnabled(false);
 
-//        convertEseBtn.addActionListener(new ConvertEseActionListener(labels, dataPreparationToolGUI, apePanel));
-//        convertEseBtn.setPreferredSize(DEFAULT_BTN_DIMENSION);
-//        convertEseBtn.setEnabled(false);
-
         convertEdmBtn.addActionListener(new ConvertEdmActionListener(labels, dataPreparationToolGUI, apePanel));
-        //convertEdmBtn.addActionListener(new ConvertEseActionListener(labels, dataPreparationToolGUI, apePanel));
         convertEdmBtn.setPreferredSize(DEFAULT_BTN_DIMENSION);
         convertEdmBtn.setEnabled(false);
 
@@ -204,8 +197,8 @@ public class APETabbedPane extends JTabbedPane {
         return dataPreparationToolGUI;
     }
 
-    public void appendEseConversionErrorText(String text) {
-        eseConversionErrors.append(text);
+    public void appendEdmConversionErrorText(String text) {
+        edmConversionErrors.append(text);
     }
     public void setConversionErrorText(String text) {
         conversionErrors.setText(text);
@@ -213,8 +206,8 @@ public class APETabbedPane extends JTabbedPane {
     public void setValidationErrorText(String text) {
         validationErrors.setText(text);
     }
-    public void setEseConversionErrorText(String text) {
-        eseConversionErrors.setText(text);
+    public void setEdmConversionErrorText(String text) {
+        edmConversionErrors.setText(text);
     }
 
     public void enableConversionBtn() {
@@ -229,12 +222,6 @@ public class APETabbedPane extends JTabbedPane {
     public void disableValidationBtn() {
         validateBtn.setEnabled(false);
     }
-//    public void enableConversionEseBtn() {
-//        convertEseBtn.setEnabled(true);
-//    }
-//    public void disableConversionEseBtn() {
-//        convertEseBtn.setEnabled(false);
-//    }
     public void enableConversionEdmBtn() {
         convertEdmBtn.setEnabled(true);
     }
@@ -259,11 +246,10 @@ public class APETabbedPane extends JTabbedPane {
         setTitleAt(TAB_EDITION, labels.getString("edition"));
         setTitleAt(TAB_SUMMARY, labels.getString("summary"));
         setTitleAt(TAB_VALIDATION, labels.getString("validation"));
-        setTitleAt(TAB_ESE, labels.getString("eseConversion"));
+        setTitleAt(TAB_EDM, labels.getString("eseConversion"));
 
         convertBtn.setText(labels.getString("convert"));
         validateBtn.setText(labels.getString("validate"));
-//        convertEseBtn.setText(labels.getString("summary.convertEse.button"));
         convertEdmBtn.setText(labels.getString("summary.convertEdm.button"));
         messageReportBtn.setText(labels.getString("summary.messageReport.button"));
         validationReportBtn.setText(labels.getString("dataquality.report.download"));
@@ -283,8 +269,8 @@ public class APETabbedPane extends JTabbedPane {
             p.add(validationPane);
         } else if(tab == TAB_CONVERSION){
             p.add(conversionPane);
-        } else if(tab == TAB_ESE){
-            p.add(eseConversionPane);
+        } else if(tab == TAB_EDM){
+            p.add(edmConversionPane);
         } else if(tab == TAB_EDITION) {
             p.add(editionPane);
         }
@@ -313,8 +299,6 @@ public class APETabbedPane extends JTabbedPane {
         p.add(convertBtn);
         p.add(Box.createRigidArea(new Dimension(0, 10)));
         p.add(validateBtn);
-        p.add(Box.createRigidArea(new Dimension(0, 10)));
-//        p.add(convertEseBtn);
         p.add(Box.createRigidArea(new Dimension(0, 10)));
         p.add(convertEdmBtn);
         p.add(Box.createRigidArea(new Dimension(0, 10)));
@@ -460,8 +444,8 @@ public class APETabbedPane extends JTabbedPane {
                 changeBackgroundColor(TAB_VALIDATION, Utilities.TAB_COLOR);
             else if(apeTabbedPane.getSelectedIndex() == TAB_CONVERSION)
                 changeBackgroundColor(TAB_CONVERSION, Utilities.TAB_COLOR);
-            else if(apeTabbedPane.getSelectedIndex() == TAB_ESE)
-                changeBackgroundColor(TAB_ESE, Utilities.TAB_COLOR);
+            else if(apeTabbedPane.getSelectedIndex() == TAB_EDM)
+                changeBackgroundColor(TAB_EDM, Utilities.TAB_COLOR);
             else if(apeTabbedPane.getSelectedIndex() == TAB_EDITION){
                 if(dataPreparationToolGUI.getXmlEadList().getSelectedValue() != null){
                     createEditionTree((File)dataPreparationToolGUI.getXmlEadList().getSelectedValue());
@@ -481,10 +465,6 @@ public class APETabbedPane extends JTabbedPane {
     public JButton getValidateBtn() {
         return validateBtn;
     }
-
-//    public JButton getConvertEseBtn() {
-//        return convertEseBtn;
-//    }
 
     public JButton getMessageReportBtn() {
         return messageReportBtn;
