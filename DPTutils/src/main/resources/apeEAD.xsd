@@ -1025,11 +1025,11 @@
         </xs:choice>
     </xs:complexType>
     <xs:complexType mixed="true" name="descrules">
-        <xs:attributeGroup ref="a.common"/>
-        <xs:attribute name="encodinganalog"/>
         <xs:choice maxOccurs="unbounded" minOccurs="0">
             <xs:element name="extref" type="extref"/>
         </xs:choice>
+        <xs:attributeGroup ref="a.common"/>
+        <xs:attribute name="encodinganalog"/>
     </xs:complexType>
     <xs:complexType mixed="true" name="langusage">
         <xs:choice maxOccurs="unbounded" minOccurs="0">
