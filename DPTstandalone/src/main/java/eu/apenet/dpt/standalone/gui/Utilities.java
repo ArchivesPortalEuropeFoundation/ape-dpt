@@ -54,6 +54,7 @@ public final class Utilities {
     public final static String XSL_DEFAULT_APEEAD_NAME = "default-apeEAD.xsl";
     public final static String XSL_DEFAULT_APEEAC_NAME = "default-apeEAC-CPF.xsl";
     public final static String XSL_BEFORE_NAME = "before.xsl";
+    public final static String XSL_BEFORE_EACCPF_NAME = "before-eaccpf.xsl";
 
     public final static int XSLT_GROUP = 0;
     public final static int XSD_GROUP = 1;
@@ -61,7 +62,7 @@ public final class Utilities {
     public final static ImageIcon icon = new ImageIcon(Utilities.class.getResource("/ape_logo.png"), "APE Logo");
 
     public final static String[] SYSTEM_FILES = {XSL_BEFORE_NAME, XSL_DEFAULT_APEEAD_NAME, XML_LANGUAGES_NAME, "changeNS.xsl", "frontmatter.xsl", "import.xsl", "levels.xsl", "eag2eag2012.xsl"};
-    public final static String[] FILES_NOT_SHOWN = {XSL_BEFORE_NAME, "frontmatter.xsl", "import.xsl", "levels.xsl"};
+    public final static String[] FILES_NOT_SHOWN = {XSL_BEFORE_NAME, "frontmatter.xsl", "import.xsl", "levels.xsl", XSL_BEFORE_EACCPF_NAME, "changeNS.xsl", "changeIncludes.xsl"};
 
 //    public static final Color FLASHING_RED_COLOR = new Color(255, 30, 30);
     public static final Color FLASHING_RED_COLOR = new Color(200, 90, 90);

@@ -144,9 +144,9 @@ public class DocumentValidation {
     }
 
     private static List<SAXParseException> fixOrder(List<SAXParseException> exceptions) {
-        for(int i = 0; i < exceptions.size(); i = i + 2) {
-            Collections.rotate(exceptions.subList(i, i + 2), 1);
-        }
+//        for(int i = 0; i < exceptions.size(); i = i + 2) {
+//            Collections.rotate(exceptions.subList(i, i + 2), 1);
+//        }
         return exceptions;
     }
 

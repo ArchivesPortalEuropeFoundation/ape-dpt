@@ -2052,10 +2052,22 @@
         <xsl:if test="count(child::*) != 0 or normalize-space(text()) != ''">
             <xsl:if test="not(count(child::*) eq 1 and child::arrangement)">
                 <scopecontent encodinganalog="summary">
-                    <xsl:apply-templates
-                        select="node()[not(name()='arrangement' or name()='scopecontent')]"
-                        mode="#current"/>
-                    <xsl:apply-templates select="scopecontent" mode="nested"/>
+                    <xsl:choose>
+                        <xsl:when test="normalize-space(text()) != '' and not(child::p)">
+                            <p>
+                                <xsl:apply-templates
+                                    select="node()[not(name()='arrangement' or name()='scopecontent')]"
+                                    mode="#current"/>
+                            </p>
+                            <xsl:apply-templates select="scopecontent" mode="nested"/>
+                        </xsl:when>
+                        <xsl:otherwise>
+                            <xsl:apply-templates
+                                    select="node()[not(name()='arrangement' or name()='scopecontent')]"
+                                    mode="#current"/>
+                            <xsl:apply-templates select="scopecontent" mode="nested"/>
+                        </xsl:otherwise>
+                    </xsl:choose>
                 </scopecontent>
             </xsl:if>
             <xsl:apply-templates select="arrangement" mode="#current"/>
