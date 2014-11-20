@@ -36,13 +36,13 @@
     <xsl:param name="defaultRoleType" select="'UNSPECIFIED'"/>
     <xsl:param name="useDefaultRoleType" select="'false'"/>
     <!-- Parameters related to rights statement for digital objects. -->
-    <xsl:param name="defaultRightsDigitalObject" select="''"/>
-    <xsl:param name="defaultRightsDigitalObjectDescription" select="''"/>
-    <xsl:param name="defaultRightsDigitalObjectHolder" select="''"/>
+    <xsl:param name="defaultRightsDigitalObject" select="''"/> <!-- The rights URL: see comment 9 or 10 on issue #1699 to know the links -->
+    <xsl:param name="defaultRightsDigitalObjectDescription" select="''"/> <!-- Any text. -->
+    <xsl:param name="defaultRightsDigitalObjectHolder" select="''"/> <!-- Any text. -->
     <!-- Parameters related to rights statement for EAD data. -->
-    <xsl:param name="defaultRightsEadData" select="''"/>
-    <xsl:param name="defaultRightsEadDataDescription" select="''"/>
-    <xsl:param name="defaultRightsEadDataHolder" select="''"/>
+    <xsl:param name="defaultRightsEadData" select="''"/> <!-- The rights URL: see comment 9 or 10 on issue #1699 to know the links -->
+    <xsl:param name="defaultRightsEadDataDescription" select="''"/> <!-- Any text. -->
+    <xsl:param name="defaultRightsEadDataHolder" select="''"/> <!-- Any text. -->
 
     <xsl:param name="url" select="''"/>
     <xsl:param name="provider" select="''"/>
