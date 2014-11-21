@@ -1755,10 +1755,17 @@
         <xsl:choose>
             <xsl:when test="key('unitids', $currentCNode/did/unitid[@type='call number'])[2]">
                 <xsl:variable name="firstElement">
-                    <xsl:call-template name="number">
-                        <xsl:with-param name="node"
-                            select="key('unitids', $currentCNode/did/unitid[@type='call number'])[1]/../.."/>
-                    </xsl:call-template>
+                    <xsl:choose>
+                        <xsl:when test="local-name(key('unitids', $currentCNode/did/unitid[@type='call number'])[1]/../..) = 'archdesc'">
+                            <xsl:value-of select="'archdesc'"/>
+                        </xsl:when>
+                        <xsl:otherwise>
+                            <xsl:call-template name="number">
+                                <xsl:with-param name="node"
+                                    select="key('unitids', $currentCNode/did/unitid[@type='call number'])[1]/../.."/>
+                            </xsl:call-template>
+                        </xsl:otherwise>
+                    </xsl:choose>
                 </xsl:variable>
                 <xsl:choose>
                     <xsl:when test="$positionInDocument = $firstElement">
