@@ -74,7 +74,14 @@ import eu.apenet.dpt.utils.ead2edm.XMLUtil;
 import eu.apenet.dpt.utils.ead2edm.EdmConfig;
 import eu.apenet.dpt.utils.util.Ead2EdmInformation;
 import java.io.IOException;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.stream.XMLStreamException;
+import javax.xml.transform.TransformerException;
 import org.xml.sax.SAXException;
 
 /**
@@ -96,7 +103,7 @@ public class EdmOptionsPanel extends JPanel {
     private static final String CID = "cid";
     private static final String APE = "ape";
     private static final String OTHER = "other";
-    private static final String APE_BASE= "http://www.archivesportaleurope.net";
+    private static final String APE_BASE = "http://www.archivesportaleurope.net";
     private static final String TEXT = "TEXT";
     private static final String IMAGE = "IMAGE";
     private static final String VIDEO = "VIDEO";
@@ -225,7 +232,7 @@ public class EdmOptionsPanel extends JPanel {
 
         formPanel.add(panel);
 
-        panel = new JPanel(new GridLayout(2,2));
+        panel = new JPanel(new GridLayout(2, 2));
         landingPageButtonGroup = new ButtonGroup();
 
         panel.add(new Label(this.labels.getString("edm.generalOptionsForm.landingPages.header")));
@@ -237,7 +244,7 @@ public class EdmOptionsPanel extends JPanel {
         landingPageButtonGroup.add(radioButton);
         panel.add(radioButton);
         panel.add(new Label());
-        JPanel otherPanel = new JPanel(new GridLayout(1,2));
+        JPanel otherPanel = new JPanel(new GridLayout(1, 2));
         radioButton = new JRadioButton(this.labels.getString("edm.generalOptionsForm.landingPages.other"));
         radioButton.setActionCommand(OTHER);
         landingPageButtonGroup.add(radioButton);
@@ -636,7 +643,7 @@ public class EdmOptionsPanel extends JPanel {
                 found = true;
             }
         }
-        
+
         enumeration = landingPageButtonGroup.getElements();
         found = false;
         while (!found && enumeration.hasMoreElements()) {
@@ -650,7 +657,7 @@ public class EdmOptionsPanel extends JPanel {
                 found = true;
             }
         }
-        
+
         config.setUseExistingRepository(false);
         if (useExistingRepoCheckbox.isSelected()) {
             config.setUseExistingRepository(true);
@@ -830,11 +837,11 @@ public class EdmOptionsPanel extends JPanel {
                 throw new Exception("landingPage is not checked");
             }
         }
-        if (landingPageButtonGroup.getSelection().getActionCommand().equals(OTHER)){
-            if(landingPageTextArea.getText().isEmpty()){
+        if (landingPageButtonGroup.getSelection().getActionCommand().equals(OTHER)) {
+            if (landingPageTextArea.getText().isEmpty()) {
                 throw new Exception("alternative landing page field is empty");
             }
-            if(!landingPageTextArea.getText().startsWith("http://")){
+            if (!landingPageTextArea.getText().startsWith("http://")) {
                 throw new Exception("alternative landing page does not start with http://");
             }
         }
@@ -994,24 +1001,43 @@ public class EdmOptionsPanel extends JPanel {
                             Thread threadRunner = new Thread(summaryWorking);
                             threadRunner.setName(SummaryWorking.class.toString());
                             threadRunner.start();
+                            ExecutorService executor = Executors.newCachedThreadPool();
 
                             try {
                                 EdmConfig edmConfig = fillEdmConfig();
+                                boolean hasError = false;
                                 for (File selectedIndexFile : selectedIndices) {
                                     if (!continueLoop) {
                                         break;
                                     }
-                                    SwingUtilities.invokeLater(new TransformEdm(edmConfig, selectedIndexFile));
-                                    apeTabbedPane.appendEdmConversionErrorText(MessageFormat.format(labels.getString("edm.convertedAndSaved"), selectedIndexFile.getAbsolutePath(), retrieveFromDb.retrieveDefaultSaveFolder()) + "\n");
-                                    writer.append(MessageFormat.format(labels.getString("edm.convertedAndSaved"), selectedIndexFile.getAbsolutePath(), retrieveFromDb.retrieveDefaultSaveFolder()) + "\n");
+                                    FileInstance fileInstance = fileInstances.get(selectedIndexFile.getName());
+                                    Future<?> future = executor.submit(new TransformEdm(edmConfig, selectedIndexFile, fileInstance));
+                                    try {
+                                        future.get();
+                                        apeTabbedPane.appendEdmConversionErrorText(MessageFormat.format(labels.getString("edm.convertedAndSaved"), selectedIndexFile.getAbsolutePath(), retrieveFromDb.retrieveDefaultSaveFolder()) + "\n");
+                                        writer.append(MessageFormat.format(labels.getString("edm.convertedAndSaved"), selectedIndexFile.getAbsolutePath(), retrieveFromDb.retrieveDefaultSaveFolder()) + "\n");
+                                        fileInstance.setEuropeanaConversionErrors(MessageFormat.format(labels.getString("edm.convertedAndSaved"), selectedIndexFile.getAbsolutePath(), retrieveFromDb.retrieveDefaultSaveFolder()) + "\n");
+                                    } catch (ExecutionException e) {
+                                        Throwable yourException = e.getCause();
+                                        LOG.info(yourException.getMessage());
+                                        apeTabbedPane.appendEdmConversionErrorText(MessageFormat.format(labels.getString("edm.errorOccurred"), selectedIndexFile.getAbsolutePath()) + ": " + yourException.getMessage() + "\n");
+                                        writer.append(MessageFormat.format(labels.getString("edm.errorOccurred"), selectedIndexFile.getAbsolutePath()) + ": " + yourException.getMessage() + "\n");
+                                        fileInstance.setEuropeanaConversionErrors(MessageFormat.format(labels.getString("edm.errorOccurred"), selectedIndexFile.getAbsolutePath()) + ": " + yourException.getMessage() + "\n");
+                                        hasError = true;
+                                    }
                                 }
-                                apeTabbedPane.checkFlashingTab(APETabbedPane.TAB_EDM, Utilities.FLASHING_GREEN_COLOR);
+                                if (hasError) {
+                                    apeTabbedPane.checkFlashingTab(APETabbedPane.TAB_EDM, Utilities.FLASHING_RED_COLOR);
+                                } else {
+                                    apeTabbedPane.checkFlashingTab(APETabbedPane.TAB_EDM, Utilities.FLASHING_GREEN_COLOR);
+                                }
                                 close();
                             } catch (Exception ex) {
                                 apeTabbedPane.checkFlashingTab(APETabbedPane.TAB_EDM, Utilities.FLASHING_RED_COLOR);
                             } finally {
                                 summaryWorking.stop();
                                 threadRunner.interrupt();
+                                executor.shutdownNow();
                             }
                         } catch (Exception e) {
                             LOG.error(e);
@@ -1036,27 +1062,29 @@ public class EdmOptionsPanel extends JPanel {
                     dataPreparationToolGUI.enableSaveBtn();
                     dataPreparationToolGUI.enableRadioButtons();
                 }
-            }).start();
+            }
+            ).start();
         }
     }
 
-    private class TransformEdm implements Runnable {
+    private class TransformEdm implements Callable<Void> {
 
         private EdmConfig config;
         private File selectedIndex;
+        private FileInstance fileInstance;
 
-        TransformEdm(EdmConfig config, File selectedIndex) {
+        TransformEdm(EdmConfig config, File selectedIndex, FileInstance fileInstance) {
             this.config = config;
             this.selectedIndex = selectedIndex;
+            this.fileInstance = fileInstance;
         }
 
         @Override
-        public void run() {
+        public Void call() throws Exception {
             try {
                 RetrieveFromDb retrieveFromDb = new RetrieveFromDb();
                 int lastIndex = selectedIndex.getName().lastIndexOf('.');
                 String xmlOutputFilename = retrieveFromDb.retrieveDefaultSaveFolder() + selectedIndex.getName().substring(0, lastIndex) + "-edm" + selectedIndex.getName().substring(lastIndex);
-                FileInstance fileInstance = fileInstances.get(selectedIndex.getName());
                 String loc;
                 if (fileInstance.isConverted() || fileInstance.getLastOperation().equals(FileInstance.Operation.SAVE)) {
                     loc = fileInstance.getCurrentLocation();
@@ -1076,11 +1104,25 @@ public class EdmOptionsPanel extends JPanel {
                     fileInstance.setEuropeanaConversionErrors(MessageFormat.format(labels.getString("edm.convertedAndSaved"), outputFile.getAbsolutePath(), retrieveFromDb.retrieveDefaultSaveFolder()) + "\n");
                     fileInstance.setLastOperation(FileInstance.Operation.CONVERT_EDM);
                 }
-            } catch (Exception e) {
-                LOG.error("Error when converting file into EDM", e);
+            } catch (TransformerException e) {
+                LOG.error("TransformerException when converting file into EDM");
+                fileInstance.setEuropeanaConversionErrors(MessageFormat.format(labels.getString("edm.errorOccurred"), selectedIndex.getAbsolutePath()) + ": " + e.getMessage() + "\n");
+                throw e;
+            } catch (XMLStreamException e) {
+                LOG.error("XMLStreamException when converting file into EDM");
+                fileInstance.setEuropeanaConversionErrors(MessageFormat.format(labels.getString("edm.errorOccurred"), selectedIndex.getAbsolutePath()) + ": " + e.getMessage() + "\n");
+                return null;
+            } catch (SAXException e) {
+                LOG.error("SAXException when converting file into EDM");
+                fileInstance.setEuropeanaConversionErrors(MessageFormat.format(labels.getString("edm.errorOccurred"), selectedIndex.getAbsolutePath()) + ": " + e.getMessage() + "\n");
+                return null;
+            } catch (IOException e) {
+                LOG.error("IOException when converting file into EDM");
+                fileInstance.setEuropeanaConversionErrors(MessageFormat.format(labels.getString("edm.errorOccurred"), selectedIndex.getAbsolutePath()) + ": " + e.getMessage() + "\n");
+                return null;
             }
+            return null;
         }
-
     }
 
     private class CreativeCommonsPanel extends JPanel {
