@@ -1762,8 +1762,8 @@
         <xsl:apply-templates mode="#current"/>
     </xsl:template>
 
-    <xsl:template match="otherfindaid/p/archref | otherfindaid/p/ref/archref"
-                  mode="level">
+    <xsl:template match="otherfindaid/p/archref | otherfindaid/p/ref/archref | otherfindaid/p/ref"
+                  mode="copy level">
         <extref>
             <xsl:if test="@*:href">
                 <xsl:attribute name="xlink:href" select="ape:checkLink(@*:href)"/>
@@ -2508,31 +2508,31 @@
                     </xsl:when>
                     <xsl:otherwise>
                         <controlaccess>                                                                                                                           <!--../index/indexentry//geogname | ../index/indexentry//subject | ../index/indexentry//famname | ../index/indexentry//persname | ../index/indexentry//corpname | ../index/indexentry//occupation | ../index/indexentry//genreform | ../index/indexentry//function | ../index/indexentry//title | ../index/indexentry//name-->
-                            <xsl:for-each select="geogname | subject | famname | persname | corpname | occupation | genreform | function | title | p | head | name | indexentry//geogname | indexentry//subject | indexentry//famname | indexentry//persname | indexentry//corpname | indexentry//occupation | indexentry//genreform | indexentry//function | indexentry//title | indexentry//name">
-                                <xsl:if test="not(local-name()='genreform' and @type='typir')">
+                            <xsl:for-each select="geogname | subject | famname | persname | corpname | occupation | genreform | function | title | p | head | name | indexentry//geogname | indexentry//subject | indexentry//famname | indexentry//persname | indexentry//corpname | indexentry//occupation | indexentry//genreform | indexentry//function | indexentry//title | indexentry//name | indexentry//ref">
+                                <xsl:if test="not(local-name()='genreform' and @type='typir') and not(local-name()='ref')">
                                     <xsl:element name="{local-name()}" namespace="urn:isbn:1-931666-22-9">
                                         <xsl:apply-templates select="node()" mode="#current"/>
                                     </xsl:element>
+                                </xsl:if>
+                                <xsl:if test="local-name()='ref'">
+                                    <p>
+                                        <extref>
+                                            <xsl:if test="@href">
+                                                <xsl:attribute name="xlink:href" select="@href"/>
+                                            </xsl:if>
+                                            <xsl:if test="@xlink:href">
+                                                <xsl:attribute name="xlink:href" select="@xlink:href"/>
+                                            </xsl:if>
+                                            <xsl:if test="text()">
+                                                <xsl:attribute name="xlink:title" select="text()"/>
+                                            </xsl:if>
+                                        </extref>
+                                    </p>
                                 </xsl:if>
                             </xsl:for-each>
                             <xsl:for-each select="list/item">
                                 <p>
                                     <xsl:apply-templates mode="#current" />
-                                </p>
-                            </xsl:for-each>
-                            <xsl:for-each select="indexentry//ref">
-                                <p>
-                                    <extref>
-                                        <xsl:if test="@href">
-                                            <xsl:attribute name="xlink:href" select="@href"/>
-                                        </xsl:if>
-                                        <xsl:if test="@xlink:href">
-                                            <xsl:attribute name="xlink:href" select="@xlink:href"/>
-                                        </xsl:if>
-                                        <xsl:if test="text()">
-                                            <xsl:attribute name="xlink:title" select="text()"/>
-                                        </xsl:if>
-                                    </extref>
                                 </p>
                             </xsl:for-each>
                             <xsl:for-each select="controlaccess">
