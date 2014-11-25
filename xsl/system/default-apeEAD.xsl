@@ -677,6 +677,18 @@
         </xsl:if>
     </xsl:template>
 
+    <xsl:template match="descrules/extref" mode="copy">
+        <extref>
+            <xsl:if test="@href">
+                <xsl:attribute name="xlink:href" select="ape:checkLink(@href)"/>
+            </xsl:if>
+            <xsl:if test="@*:href">
+                <xsl:attribute name="xlink:href" select="ape:checkLink(@*:href)"/>
+            </xsl:if>
+            <xsl:apply-templates select="node()" mode="#current"/>
+        </extref>
+    </xsl:template>
+
     <xsl:template match="descrules//*" mode="copy">
         <xsl:apply-templates select="node()" mode="#current"/>
     </xsl:template>
