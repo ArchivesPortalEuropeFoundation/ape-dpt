@@ -689,7 +689,7 @@
         </extref>
     </xsl:template>
 
-    <xsl:template match="descrules//*" mode="copy">
+    <xsl:template match="descrules//*[not(local-name()='extref')]" mode="copy">
         <xsl:apply-templates select="node()" mode="#current"/>
     </xsl:template>
 
