@@ -104,8 +104,7 @@ public class DocumentValidation {
             saxParser.parse(new InputSource(in));
 
             if (!errorHandler.exceptions.isEmpty()) {
-                return errorHandler.exceptions;
-//                return fixOrder(errorHandler.exceptions);
+                return fixOrder(errorHandler.exceptions);
             }
             return null;
         } catch (SAXException e) {
@@ -139,18 +138,15 @@ public class DocumentValidation {
         builder.setErrorHandler(errorHandler);
         builder.parse(filePath);
         if (!errorHandler.exceptions.isEmpty()) {
-            return errorHandler.exceptions;
-//            return fixOrder(errorHandler.exceptions);
+            return fixOrder(errorHandler.exceptions);
         }
         return null;
     }
 
     private static List<SAXParseException> fixOrder(List<SAXParseException> exceptions) {
-        for(int i = 0; i < exceptions.size(); i = i + 2) {
-            if(exceptions.size() > i + 1)
-                if(exceptions.get(i+1) != null && exceptions.get(i).getColumnNumber() == exceptions.get(i+1).getColumnNumber() && exceptions.get(i).getLineNumber() == exceptions.get(i+1).getLineNumber())
-                    Collections.rotate(exceptions.subList(i, i + 2), 1);
-        }
+//        for(int i = 0; i < exceptions.size(); i = i + 2) {
+//            Collections.rotate(exceptions.subList(i, i + 2), 1);
+//        }
         return exceptions;
     }
 
