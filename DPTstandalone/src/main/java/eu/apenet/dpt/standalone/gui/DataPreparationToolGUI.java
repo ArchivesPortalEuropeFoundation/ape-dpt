@@ -31,6 +31,7 @@ import eu.apenet.dpt.standalone.gui.eag2012.Eag2012Frame;
 import eu.apenet.dpt.standalone.gui.edition.CheckList;
 import eu.apenet.dpt.standalone.gui.edition.PopupMouseListener;
 import eu.apenet.dpt.standalone.gui.hgcreation.*;
+import eu.apenet.dpt.standalone.gui.options.DigitalObjectAndRightsOptionFrame;
 import eu.apenet.dpt.standalone.gui.validation.ValidateActionListener;
 import eu.apenet.dpt.standalone.gui.validation.ValidateSelectionActionListener;
 import eu.apenet.dpt.standalone.gui.xsdaddition.XsdObject;
@@ -373,7 +374,7 @@ public class DataPreparationToolGUI extends JFrame {
         countryCodeItem.setText(labels.getString("countryCode"));
         repositoryCodeItem.setText(labels.getString("repositoryCode"));
         checksLoadingFilesItem.setText(labels.getString("checksLoadingFiles"));
-        digitalObjectTypeItem.setText(labels.getString("digitalObjectType"));
+        digitalObjectTypeItem.setText(labels.getString("digitalObjectTypeRights"));
         defaultSaveFolderItem.setText(labels.getString("defaultSaveFolder"));
         xsltItem.setText(labels.getString("ownXsl"));
         xsdItem.setText(labels.getString("ownXsd"));
@@ -639,14 +640,14 @@ public class DataPreparationToolGUI extends JFrame {
         });
         digitalObjectTypeItem.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                if (!RoleTypeFrame.isInUse()) {
-                    JFrame roleTypeFrame = new RoleTypeFrame(labels, retrieveFromDb);
+                if (!DigitalObjectAndRightsOptionFrame.isInUse()) {
+                    JFrame DigitalObjectAndRightsOptionFrame = new DigitalObjectAndRightsOptionFrame(labels, retrieveFromDb);
 
-                    roleTypeFrame.setPreferredSize(new Dimension(getContentPane().getWidth() * 3 / 8, getContentPane().getHeight() * 3 / 8));
-                    roleTypeFrame.setLocation(getContentPane().getWidth() / 8, getContentPane().getHeight() / 8);
+                    DigitalObjectAndRightsOptionFrame.setPreferredSize(new Dimension(getContentPane().getWidth() * 3 / 8, getContentPane().getHeight() / 2));
+                    DigitalObjectAndRightsOptionFrame.setLocation(getContentPane().getWidth() / 8, getContentPane().getHeight() / 8);
 
-                    roleTypeFrame.pack();
-                    roleTypeFrame.setVisible(true);
+                    DigitalObjectAndRightsOptionFrame.pack();
+                    DigitalObjectAndRightsOptionFrame.setVisible(true);
                 }
             }
         });
