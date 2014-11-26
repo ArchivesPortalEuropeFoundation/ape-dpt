@@ -1660,9 +1660,11 @@
         </xsl:if>
     </xsl:template>
 
-    <!-- userestrict -->
     <xsl:template match="userestrict" mode="copy level">
         <userestrict encodinganalog="3.4.5">
+            <xsl:if test="@type">
+                <xsl:attribute name="type" select="@type"/>
+            </xsl:if>
             <xsl:apply-templates select="node() except userestrict" mode="#current"/>
             <xsl:apply-templates select="userestrict/*" mode="nested"/>
         </userestrict>
