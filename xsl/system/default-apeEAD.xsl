@@ -669,7 +669,7 @@
         </xsl:choose>
     </xsl:template>
 
-    <xsl:template match="profiledesc/descrules" name="descrules_extref_rights" mode="copy">
+    <xsl:template match="profiledesc/descrules" mode="copy">
         <xsl:if test="not(@audience='internal')">
             <descrules>
                 <xsl:if test="@audience">
@@ -681,6 +681,14 @@
                 <xsl:apply-templates select="node()" mode="#current"/>
             </descrules>
         </xsl:if>
+    </xsl:template>
+
+    <xsl:template name="descrules_extref_rights">
+        <descrules>
+            <xsl:if test="normalize-space($defaultRightsDigitalObject) or normalize-space($defaultRightsEadData)">
+                <extref xlink:href="http://www.archivesportaleurope.net/Portal/profiles/apeMETSRights.xsd" xlink:title="rts:rightscategory in userestrict/encodinganalog"/>
+            </xsl:if>
+        </descrules>
     </xsl:template>
 
     <xsl:template match="descrules/extref" mode="copy">
