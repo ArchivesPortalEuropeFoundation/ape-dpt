@@ -575,6 +575,9 @@
             <xsl:if test="not(langusage)">
                 <xsl:call-template name="langusage"/>
             </xsl:if>
+            <xsl:if test="not(descrules) and (normalize-space($defaultRightsDigitalObject) or normalize-space($defaultRightsEadData))">
+                <xsl:call-template name="descrules_extref_rights"/>
+            </xsl:if>
         </profiledesc>
     </xsl:template>
 
@@ -666,7 +669,7 @@
         </xsl:choose>
     </xsl:template>
 
-    <xsl:template match="profiledesc/descrules" mode="copy">
+    <xsl:template match="profiledesc/descrules" name="descrules_extref_rights" mode="copy">
         <xsl:if test="not(@audience='internal')">
             <descrules>
                 <xsl:if test="@audience">
@@ -750,7 +753,7 @@
             <xsl:if test="normalize-space($defaultRightsEadData)">
                 <userestrict type="ead" encodinganalog="rts:rightscategory">
                     <p>
-                        <extref xlink:href="$defaultRightsEadData"/>
+                        <extref xlink:href="{$defaultRightsEadData}"/>
                     </p>
                     <xsl:if test="normalize-space($defaultRightsEadDataDescription)">
                         <p>
@@ -767,7 +770,7 @@
             <xsl:if test="normalize-space($defaultRightsDigitalObject)">
                 <userestrict type="dao" encodinganalog="rts:rightscategory">
                     <p>
-                        <extref xlink:href="$defaultRightsDigitalObject"/>
+                        <extref xlink:href="{$defaultRightsDigitalObject}"/>
                     </p>
                     <xsl:if test="normalize-space($defaultRightsDigitalObjectDescription)">
                         <p>
