@@ -672,6 +672,9 @@
                 <xsl:if test="@audience">
                     <xsl:attribute name="audience" select="@audience"/>
                 </xsl:if>
+                <xsl:if test="normalize-space($defaultRightsDigitalObject) or normalize-space($defaultRightsEadData)">
+                    <extref xlink:href="http://www.archivesportaleurope.net/Portal/profiles/apeMETSRights.xsd" xlink:title="rts:rightscategory in userestrict/encodinganalog"/>
+                </xsl:if>
                 <xsl:apply-templates select="node()" mode="#current"/>
             </descrules>
         </xsl:if>
@@ -744,6 +747,40 @@
                 </prefercite>
             </xsl:if>
             <xsl:apply-templates select="node() except (did|dsc)" mode="copy"/>
+            <xsl:if test="normalize-space($defaultRightsEadData)">
+                <userestrict type="ead" encodinganalog="rts:rightscategory">
+                    <p>
+                        <extref xlink:href="$defaultRightsEadData"/>
+                    </p>
+                    <xsl:if test="normalize-space($defaultRightsEadDataDescription)">
+                        <p>
+                            <xsl:value-of select="$defaultRightsEadDataDescription"/>
+                        </p>
+                    </xsl:if>
+                    <xsl:if test="normalize-space($defaultRightsEadDataHolder)">
+                        <p>
+                            <xsl:value-of select="$defaultRightsEadDataHolder"/>
+                        </p>
+                    </xsl:if>
+                </userestrict>
+            </xsl:if>
+            <xsl:if test="normalize-space($defaultRightsDigitalObject)">
+                <userestrict type="dao" encodinganalog="rts:rightscategory">
+                    <p>
+                        <extref xlink:href="$defaultRightsDigitalObject"/>
+                    </p>
+                    <xsl:if test="normalize-space($defaultRightsDigitalObjectDescription)">
+                        <p>
+                            <xsl:value-of select="$defaultRightsDigitalObjectDescription"/>
+                        </p>
+                    </xsl:if>
+                    <xsl:if test="normalize-space($defaultRightsDigitalObjectHolder)">
+                        <p>
+                            <xsl:value-of select="$defaultRightsDigitalObjectHolder"/>
+                        </p>
+                    </xsl:if>
+                </userestrict>
+            </xsl:if>
             <xsl:if
                 test="descendant::geogname[parent::item|parent::entry|parent::p|parent::unittitle] or descendant::subject[parent::item|parent::entry|parent::p|parent::unittitle] or descendant::famname[parent::item|parent::entry|parent::p|parent::unittitle] or descendant::persname[parent::item|parent::entry|parent::p|parent::unittitle] or descendant::corpname[parent::item|parent::entry|parent::p|parent::unittitle] or descendant::occupation[parent::item|parent::entry|parent::p|parent::unittitle] or descendant::genreform[parent::item|parent::entry|parent::p|parent::unittitle] or descendant::function[parent::item|parent::entry|parent::p|parent::unittitle] or descendant::title[parent::item|parent::entry|parent::p|parent::unittitle] or descendant::name[parent::item|parent::entry|parent::p|parent::unittitle]">
                 <xsl:call-template name="createControlaccess">

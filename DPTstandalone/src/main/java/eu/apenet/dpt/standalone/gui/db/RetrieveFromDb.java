@@ -129,6 +129,48 @@ public class RetrieveFromDb {
         return Boolean.parseBoolean(retrieve(DBUtil.OptionKeys.OPTION_USE_EXISTING_ROLETYPE.getName(), "true"));
     }
 
+    public String retrieveEadRights() {
+        return retrieve(DBUtil.OptionKeys.OPTION_EAD_RIGHTS.getName(), "");
+    }
+
+    public String retrieveEadRightsDesc(){
+        return retrieve(DBUtil.OptionKeys.OPTION_EAD_RIGHTS_DESC.getName(), "");
+    }
+
+    public String retrieveEadRightsHolder() {
+        return retrieve(DBUtil.OptionKeys.OPTION_EAD_RIGHTS_HOLDER.getName(), "");
+    }
+
+    public void saveEadRights(String url, String desc, String holder) {
+        String query = DBUtil.createUpdateQuery(DBUtil.DBNames.TABLE_OPTIONS.getName(), DBUtil.DBNames.COLUMN_VALUE.getName(), url, DBUtil.OptionKeys.OPTION_EAD_RIGHTS.getName());
+        dbUtil.doSqlQuery(query, null);
+        query = DBUtil.createUpdateQuery(DBUtil.DBNames.TABLE_OPTIONS.getName(), DBUtil.DBNames.COLUMN_VALUE.getName(), desc, DBUtil.OptionKeys.OPTION_EAD_RIGHTS_DESC.getName());
+        dbUtil.doSqlQuery(query, null);
+        query = DBUtil.createUpdateQuery(DBUtil.DBNames.TABLE_OPTIONS.getName(), DBUtil.DBNames.COLUMN_VALUE.getName(), holder, DBUtil.OptionKeys.OPTION_EAD_RIGHTS_HOLDER.getName());
+        dbUtil.doSqlQuery(query, null);
+    }
+
+    public String retrieveDaoRights(){
+        return retrieve(DBUtil.OptionKeys.OPTION_DAO_RIGHTS.getName(), "");
+    }
+
+    public String retrieveDaoRightsDesc() {
+        return retrieve(DBUtil.OptionKeys.OPTION_DAO_RIGHTS_DESC.getName(), "");
+    }
+
+    public String retrieveDaoRightsHolder(){
+        return retrieve(DBUtil.OptionKeys.OPTION_DAO_RIGHTS_HOLDER.getName(), "");
+    }
+
+    public void saveDaoRights(String url, String desc, String holder) {
+        String query = DBUtil.createUpdateQuery(DBUtil.DBNames.TABLE_OPTIONS.getName(), DBUtil.DBNames.COLUMN_VALUE.getName(), url, DBUtil.OptionKeys.OPTION_DAO_RIGHTS.getName());
+        dbUtil.doSqlQuery(query, null);
+        query = DBUtil.createUpdateQuery(DBUtil.DBNames.TABLE_OPTIONS.getName(), DBUtil.DBNames.COLUMN_VALUE.getName(), desc, DBUtil.OptionKeys.OPTION_DAO_RIGHTS_DESC.getName());
+        dbUtil.doSqlQuery(query, null);
+        query = DBUtil.createUpdateQuery(DBUtil.DBNames.TABLE_OPTIONS.getName(), DBUtil.DBNames.COLUMN_VALUE.getName(), holder, DBUtil.OptionKeys.OPTION_DAO_RIGHTS_HOLDER.getName());
+        dbUtil.doSqlQuery(query, null);
+    }
+
     public List<XsdObject> retrieveAdditionalXsds() {
         ResultSet set = selectAllFromTable(DBUtil.DBNames.TABLE_XSD.getName());
         if(set == null) {

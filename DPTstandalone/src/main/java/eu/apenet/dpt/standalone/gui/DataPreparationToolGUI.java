@@ -643,7 +643,7 @@ public class DataPreparationToolGUI extends JFrame {
                 if (!DigitalObjectAndRightsOptionFrame.isInUse()) {
                     JFrame DigitalObjectAndRightsOptionFrame = new DigitalObjectAndRightsOptionFrame(labels, retrieveFromDb);
 
-                    DigitalObjectAndRightsOptionFrame.setPreferredSize(new Dimension(getContentPane().getWidth() * 3 / 8, getContentPane().getHeight() / 2));
+                    DigitalObjectAndRightsOptionFrame.setPreferredSize(new Dimension(getContentPane().getWidth() * 3 / 8, getContentPane().getHeight() *3 / 4));
                     DigitalObjectAndRightsOptionFrame.setLocation(getContentPane().getWidth() / 8, getContentPane().getHeight() / 8);
 
                     DigitalObjectAndRightsOptionFrame.pack();
@@ -1389,6 +1389,12 @@ public class DataPreparationToolGUI extends JFrame {
 
         parameters.put("useDefaultRoleType", Boolean.toString(!(retrieveFromDb.retrieveUseExistingRoleType())));
         //todo: Need one for languages.xml file?
+        parameters.put("defaultRightsDigitalObject", retrieveFromDb.retrieveDaoRights());
+        parameters.put("defaultRightsDigitalObjectDescription", retrieveFromDb.retrieveDaoRightsDesc());
+        parameters.put("defaultRightsDigitalObjectHolder", retrieveFromDb.retrieveDaoRightsHolder());
+        parameters.put("defaultRightsEadData", retrieveFromDb.retrieveEadRights());
+        parameters.put("defaultRightsEadDataDescription", retrieveFromDb.retrieveEadRightsDesc());
+        parameters.put("defaultRightsEadDataHolder", retrieveFromDb.retrieveEadRightsHolder());
         return parameters;
     }
 
