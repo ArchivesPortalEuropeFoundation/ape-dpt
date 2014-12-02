@@ -37,10 +37,12 @@
     <xsl:param name="useDefaultRoleType" select="'false'"/>
     <!-- Parameters related to rights statement for digital objects. -->
     <xsl:param name="defaultRightsDigitalObject" select="''"/> <!-- The rights URL: see comment 9 or 10 on issue #1699 to know the links -->
+    <xsl:param name="defaultRightsDigitalObjectText" select="''"/> <!-- The rights URL text -->
     <xsl:param name="defaultRightsDigitalObjectDescription" select="''"/> <!-- Any text. -->
     <xsl:param name="defaultRightsDigitalObjectHolder" select="''"/> <!-- Any text. -->
     <!-- Parameters related to rights statement for EAD data. -->
     <xsl:param name="defaultRightsEadData" select="''"/> <!-- The rights URL: see comment 9 or 10 on issue #1699 to know the links -->
+    <xsl:param name="defaultRightsEadDataText" select="''"/> <!-- The rights URL text -->
     <xsl:param name="defaultRightsEadDataDescription" select="''"/> <!-- Any text. -->
     <xsl:param name="defaultRightsEadDataHolder" select="''"/> <!-- Any text. -->
 
@@ -242,6 +244,11 @@
             <xsl:apply-templates select="node()" mode="copy"/>
             <xsl:if test="not(revisiondesc) and normalize-space($versionnb)">
                 <xsl:call-template name="revisiondesc_ape"/>
+            </xsl:if>
+            <xsl:if test="not(profiledesc) and (normalize-space($defaultRightsDigitalObject) or normalize-space($defaultRightsEadData))">
+                <profiledesc>
+                    <xsl:call-template name="descrules_extref_rights" />
+                </profiledesc>
             </xsl:if>
         </eadheader>
     </xsl:template>
@@ -575,7 +582,7 @@
             <xsl:if test="not(langusage)">
                 <xsl:call-template name="langusage"/>
             </xsl:if>
-            <xsl:if test="not(descrules) and (normalize-space($defaultRightsDigitalObject) or normalize-space($defaultRightsEadData))">
+            <xsl:if test="(not(descrules) or descrules[@audience='internal']) and (normalize-space($defaultRightsDigitalObject) or normalize-space($defaultRightsEadData))">
                 <xsl:call-template name="descrules_extref_rights"/>
             </xsl:if>
         </profiledesc>
@@ -669,18 +676,16 @@
         </xsl:choose>
     </xsl:template>
 
-    <xsl:template match="profiledesc/descrules" mode="copy">
-        <xsl:if test="not(@audience='internal')">
-            <descrules>
-                <xsl:if test="@audience">
-                    <xsl:attribute name="audience" select="@audience"/>
-                </xsl:if>
-                <xsl:if test="normalize-space($defaultRightsDigitalObject) or normalize-space($defaultRightsEadData)">
-                    <extref xlink:href="http://www.archivesportaleurope.net/Portal/profiles/apeMETSRights.xsd" xlink:title="rts:rightscategory in userestrict/encodinganalog"/>
-                </xsl:if>
-                <xsl:apply-templates select="node()" mode="#current"/>
-            </descrules>
-        </xsl:if>
+    <xsl:template match="profiledesc/descrules[not(@audience='internal')]" mode="copy">
+        <descrules>
+            <xsl:if test="@audience">
+                <xsl:attribute name="audience" select="@audience"/>
+            </xsl:if>
+            <xsl:if test="normalize-space($defaultRightsDigitalObject) or normalize-space($defaultRightsEadData)">
+                <extref xlink:href="http://www.archivesportaleurope.net/Portal/profiles/apeMETSRights.xsd" xlink:title="rts:rightscategory in userestrict/encodinganalog"/>
+            </xsl:if>
+            <xsl:apply-templates select="node()" mode="#current"/>
+        </descrules>
     </xsl:template>
 
     <xsl:template name="descrules_extref_rights">
@@ -761,7 +766,7 @@
             <xsl:if test="normalize-space($defaultRightsEadData)">
                 <userestrict type="ead" encodinganalog="rts:rightscategory">
                     <p>
-                        <extref xlink:href="{$defaultRightsEadData}"/>
+                        <extref xlink:href="{$defaultRightsEadData}" xlink:title="{$defaultRightsEadDataText}" />
                     </p>
                     <xsl:if test="normalize-space($defaultRightsEadDataDescription)">
                         <p>
@@ -778,7 +783,7 @@
             <xsl:if test="normalize-space($defaultRightsDigitalObject)">
                 <userestrict type="dao" encodinganalog="rts:rightscategory">
                     <p>
-                        <extref xlink:href="{$defaultRightsDigitalObject}"/>
+                        <extref xlink:href="{$defaultRightsDigitalObject}" xlink:title="{$defaultRightsDigitalObjectText}" />
                     </p>
                     <xsl:if test="normalize-space($defaultRightsDigitalObjectDescription)">
                         <p>

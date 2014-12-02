@@ -1389,10 +1389,14 @@ public class DataPreparationToolGUI extends JFrame {
 
         parameters.put("useDefaultRoleType", Boolean.toString(!(retrieveFromDb.retrieveUseExistingRoleType())));
         //todo: Need one for languages.xml file?
-        parameters.put("defaultRightsDigitalObject", retrieveFromDb.retrieveDaoRights());
+        String daoRightsUrl = retrieveFromDb.retrieveDaoRights();
+        parameters.put("defaultRightsDigitalObject", daoRightsUrl);
+        parameters.put("defaultRightsDigitalObjectText", DigitalObjectAndRightsOptionFrame.RightsInformation.getRightsInformationFromUrl(daoRightsUrl).getName());
         parameters.put("defaultRightsDigitalObjectDescription", retrieveFromDb.retrieveDaoRightsDesc());
         parameters.put("defaultRightsDigitalObjectHolder", retrieveFromDb.retrieveDaoRightsHolder());
-        parameters.put("defaultRightsEadData", retrieveFromDb.retrieveEadRights());
+        String eadRightsUrl = retrieveFromDb.retrieveEadRights();
+        parameters.put("defaultRightsEadData", eadRightsUrl);
+        parameters.put("defaultRightsEadDataText", DigitalObjectAndRightsOptionFrame.RightsInformation.getRightsInformationFromUrl(eadRightsUrl).getName());
         parameters.put("defaultRightsEadDataDescription", retrieveFromDb.retrieveEadRightsDesc());
         parameters.put("defaultRightsEadDataHolder", retrieveFromDb.retrieveEadRightsHolder());
         return parameters;

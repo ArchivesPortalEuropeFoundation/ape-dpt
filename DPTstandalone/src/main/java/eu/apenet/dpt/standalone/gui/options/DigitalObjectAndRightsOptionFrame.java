@@ -73,6 +73,7 @@ public class DigitalObjectAndRightsOptionFrame extends JFrame {
         String name = RightsInformation.getRightsInformationFromUrl(retrieveFromDb.retrieveDaoRights()).getName();
         comboBoxRightsDao.setSelectedItem(name);
         final JTextArea descriptionRightsDao = new JTextArea();
+        JScrollPane descriptionRightsDaoScroll = new JScrollPane (descriptionRightsDao, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
         descriptionRightsDao.setText(retrieveFromDb.retrieveDaoRightsDesc());
         descriptionRightsDao.setRows(4);
         final JTextField rightsholderRightsDao = new JTextField();
@@ -86,6 +87,7 @@ public class DigitalObjectAndRightsOptionFrame extends JFrame {
         name = RightsInformation.getRightsInformationFromUrl(retrieveFromDb.retrieveEadRights()).getName();
         comboBoxRightsEad.setSelectedItem(name);
         final JTextArea descriptionRightsEad = new JTextArea();
+        JScrollPane descriptionRightsEadScroll = new JScrollPane (descriptionRightsEad, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
         descriptionRightsEad.setText(retrieveFromDb.retrieveEadRightsDesc());
         descriptionRightsEad.setRows(4);
         final JTextField rightsholderRightsEad = new JTextField();
@@ -104,7 +106,7 @@ public class DigitalObjectAndRightsOptionFrame extends JFrame {
                                 .addComponent(label2)
                                 .addComponent(comboBoxRightsDao)
                                 .addComponent(label3)
-                                .addComponent(descriptionRightsDao)
+                                .addComponent(descriptionRightsDaoScroll)
                                 .addComponent(label4)
                                 .addComponent(rightsholderRightsDao)
                                 .addComponent(separator2)
@@ -112,7 +114,7 @@ public class DigitalObjectAndRightsOptionFrame extends JFrame {
                                 .addComponent(label5)
                                 .addComponent(comboBoxRightsEad)
                                 .addComponent(label6)
-                                .addComponent(descriptionRightsEad)
+                                .addComponent(descriptionRightsEadScroll)
                                 .addComponent(label7)
                                 .addComponent(rightsholderRightsEad))
         );
@@ -134,7 +136,7 @@ public class DigitalObjectAndRightsOptionFrame extends JFrame {
                         .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
                                 .addComponent(label3))
                         .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-                                .addComponent(descriptionRightsDao))
+                                .addComponent(descriptionRightsDaoScroll))
                         .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
                                 .addComponent(label4))
                         .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
@@ -149,7 +151,7 @@ public class DigitalObjectAndRightsOptionFrame extends JFrame {
                         .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
                                 .addComponent(label6))
                         .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-                                .addComponent(descriptionRightsEad))
+                                .addComponent(descriptionRightsEadScroll))
                         .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
                                 .addComponent(label7))
                         .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
