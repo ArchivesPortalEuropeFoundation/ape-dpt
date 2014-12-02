@@ -17,7 +17,7 @@
     <!--Will be used in the next version to use specialized xsl templates for partners-->
     <!--<xsl:include href="xsl/import.xsl"/>-->
 
-    <xsl:param name="loclanguage" select="'xsl/system/languages.xml'"/>
+    <xsl:param name="loclanguage" select="'languages.xml'"/>
     <xsl:variable name="langfile" select="document($loclanguage)"/>
 
     <xsl:param name="langusage" select="''"/>

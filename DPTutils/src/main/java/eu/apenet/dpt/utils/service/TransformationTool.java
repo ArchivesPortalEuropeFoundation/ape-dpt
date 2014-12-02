@@ -129,18 +129,16 @@ public class TransformationTool {
             throw new RuntimeException(e);
         }
     }
-    public static StringWriter createTransformation(InputStream inputFileStream, File outputFile, InputStream xslFile, Map<String, String> parameters, boolean outputIsFile, boolean forWebApp, String provider, boolean isXsd11, ExtensionFunctionCall extensionFunctionCall, String... baseURI) throws SAXException {
-        Source xsltSource = new StreamSource(xslFile);
-        return createTransformation(inputFileStream, outputFile, xsltSource, parameters, outputIsFile, forWebApp, provider, isXsd11, extensionFunctionCall, baseURI);
-    }
+//    public static StringWriter createTransformation(InputStream inputFileStream, File outputFile, InputStream xslFile, Map<String, String> parameters, boolean outputIsFile, boolean forWebApp, String provider, boolean isXsd11, ExtensionFunctionCall extensionFunctionCall, String... baseURI) throws SAXException {
+//        Source xsltSource = new StreamSource(xslFile);
+//        return createTransformation(inputFileStream, outputFile, xsltSource, parameters, outputIsFile, forWebApp, provider, isXsd11, extensionFunctionCall, baseURI);
+//    }
 
-    public static StringWriter createTransformation(InputStream inputFileStream, File outputFile, File xslFile, Map<String, String> parameters, boolean outputIsFile, boolean forWebApp, String provider, boolean isXsd11, ExtensionFunctionCall extensionFunctionCall, String... baseURI) throws SAXException {
-        Source xsltSource = new StreamSource(xslFile);
-        return createTransformation(inputFileStream, outputFile, xsltSource, parameters, outputIsFile, forWebApp, provider, isXsd11, extensionFunctionCall, baseURI);
-    }
-
-    public static StringWriter createTransformation(InputStream inputFileStream, File outputFile, Source xsltSource, Map<String, String> parameters, boolean outputIsFile, boolean forWebApp, String provider, boolean isXsd11, ExtensionFunctionCall extensionFunctionCall, String... baseURI) throws SAXException {
+    public static StringWriter createTransformation(InputStream inputFileStream, File outputFile, File xsltFile, Map<String, String> parameters, boolean outputIsFile, boolean forWebApp, String provider, boolean isXsd11, ExtensionFunctionCall extensionFunctionCall, String... baseURI) throws SAXException {
         try {
+            Source xsltSource = new StreamSource(xsltFile);
+            String xsltSystemId = xsltFile.getAbsolutePath();
+            xsltSource.setSystemId(xsltSystemId);
             XMLReader saxParser =  XMLReaderFactory.createXMLReader();
             saxParser.setEntityResolver(new DiscardDtdEntityResolver());
 

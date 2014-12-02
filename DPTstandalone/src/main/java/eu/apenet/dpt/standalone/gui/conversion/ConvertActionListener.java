@@ -184,11 +184,11 @@ public class ConvertActionListener implements ActionListener {
                 outputFile.deleteOnExit();
                 if(fileInstance.getConversionScriptName().equals(Utilities.XSL_DEFAULT_APEEAD_NAME)){
                     File outputFile_temp = new File(Utilities.TEMP_DIR + ".temp_"+file.getName());
-                    TransformationTool.createTransformation(FileUtils.openInputStream(file), outputFile_temp, FileUtils.openInputStream(Utilities.BEFORE_XSL_FILE), paramMap, true, true, null, true, null);
-                    xslMessages = TransformationTool.createTransformation(FileUtils.openInputStream(outputFile_temp), outputFile, FileUtils.openInputStream(xslFile), paramMap, true, true, null, true, counterCLevelCall);
+                    TransformationTool.createTransformation(FileUtils.openInputStream(file), outputFile_temp, Utilities.BEFORE_XSL_FILE, paramMap, true, true, null, true, null);
+                    xslMessages = TransformationTool.createTransformation(FileUtils.openInputStream(outputFile_temp), outputFile, xslFile, paramMap, true, true, null, true, counterCLevelCall);
                     outputFile_temp.delete();
                 } else {
-                    xslMessages = TransformationTool.createTransformation(FileUtils.openInputStream(file), outputFile, FileUtils.openInputStream(xslFile), paramMap, true, true, null, true, null);
+                    xslMessages = TransformationTool.createTransformation(FileUtils.openInputStream(file), outputFile, xslFile, paramMap, true, true, null, true, null);
                 }
                 apePanel.getApeTabbedPane().setConversionErrorText(replaceGtAndLt(xslMessages.toString()));
                 fileInstance.setConversionErrors(xslMessages.toString());

@@ -43,6 +43,7 @@ import javax.xml.transform.stream.StreamResult;
 import java.io.File;
 import java.io.InputStream;
 import java.io.StringWriter;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -88,7 +89,7 @@ public class LevelTreeActions {
             fileUtil.writeToFile(fileUtil.readFileAsString_linebreak(Utilities.TEMP_DIR + ".hg_creation.xml"), Utilities.TEMP_DIR + outputFile.getName(), true);
             fileUtil.writeToFile(HoldingsGuideCreationUtils.endDeclaration(), Utilities.TEMP_DIR + outputFile.getName(), true);
 
-            TransformationTool.createTransformation(fileUtil.readFileAsInputStream(outputFile), finalFile, FileUtils.openInputStream(Utilities.BEFORE_XSL_FILE), null, true, true, null, true, null);
+            TransformationTool.createTransformation(fileUtil.readFileAsInputStream(outputFile), finalFile, Utilities.BEFORE_XSL_FILE, null, true, true, null, true, null);
             outputFile.delete();
 
             return finalFile;
@@ -148,8 +149,8 @@ public class LevelTreeActions {
             File file = obj.getFile();
             try {
                 File outputFileTmp = new File(Utilities.TEMP_DIR + ".temp_HG.xml");
-
-                StringWriter xslMessages = TransformationTool.createTransformation(fileUtil.readFileAsInputStream(file), outputFileTmp, TransformationTool.class.getResourceAsStream("/xsl/fa2hg.xsl"), paramMap, true, true, null, true, null);
+                URL url = TransformationTool.class.getResource("/xsl/fa2hg.xsl");
+                StringWriter xslMessages = TransformationTool.createTransformation(fileUtil.readFileAsInputStream(file), outputFileTmp, new File(url.getFile()), paramMap, true, true, null, true, null);
                 List<String> filesWithoutEadid = new ArrayList<String>();
                 if(xslMessages != null && xslMessages.toString().contains("NO_EADID_IN_FILE")){
                     filesWithoutEadid.add(file.getName());

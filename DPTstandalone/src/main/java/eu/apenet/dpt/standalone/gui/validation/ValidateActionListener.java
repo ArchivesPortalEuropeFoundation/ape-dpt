@@ -154,9 +154,9 @@ public class ValidateActionListener implements ActionListener {
                         dataPreparationToolGUI.enableEdmConversionBtn();
                         dataPreparationToolGUI.enableMessageReportBtns();
                         //Do a XML Quality check
-                        InputStream xslIs = ValidateActionListener.class.getResourceAsStream("/xmlQuality/xmlQuality.xsl");
+                        URL url = ValidateActionListener.class.getResource("/xmlQuality/xmlQuality.xsl");
                         XmlQualityCheckerCall xmlQualityCheckerCall = new XmlQualityCheckerCall();
-                        TransformationTool.createTransformation(is2, null, xslIs, null, true, true, null, false, xmlQualityCheckerCall);
+                        TransformationTool.createTransformation(is2, null, new File(url.getFile()), null, true, true, null, false, xmlQualityCheckerCall);
 
                         StringWriter writer = new StringWriter();
                         writer.append("\r\n");
