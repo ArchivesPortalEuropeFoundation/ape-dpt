@@ -75,6 +75,7 @@ import eu.apenet.dpt.utils.service.TransformationTool;
 import eu.apenet.dpt.utils.util.Ead2EdmInformation;
 import eu.apenet.dpt.utils.util.extendxsl.EdmQualityCheckerCall;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
@@ -1020,7 +1021,8 @@ public class EdmOptionsPanel extends JPanel {
 
                                         //Do a XML Quality check
                                         EdmQualityCheckerCall edmQualityCheckerCall = new EdmQualityCheckerCall();
-                                        TransformationTool.createTransformation(FileUtils.openInputStream(new File(fileInstance.getEdmLocation())), null, FileUtils.openInputStream(Utilities.EDM_QUALITY_FILE), null, true, true, null, false, edmQualityCheckerCall);
+                                        InputStream xslIs = this.getClass().getResourceAsStream("/xmlQuality/edmQuality.xsl");
+                                        TransformationTool.createTransformation(FileUtils.openInputStream(new File(fileInstance.getEdmLocation())), null, xslIs, null, true, true, null, false, edmQualityCheckerCall);
 
                                         int duplicateElements = 0;
                                         StringWriter duplicates = new StringWriter();
