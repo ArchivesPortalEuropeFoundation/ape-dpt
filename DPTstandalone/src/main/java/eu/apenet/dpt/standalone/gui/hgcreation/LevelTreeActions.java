@@ -200,8 +200,7 @@ public class LevelTreeActions {
     }
 
     private Node stringToNode(Document originalDoc, InputStream inputStream) throws Exception {
-        InputSource inputSource = new InputSource(inputStream);
-        Document doc = DOMUtil.createDocument(inputSource);
+        Document doc = DOMUtil.createDocument(inputStream);
         return originalDoc.adoptNode(doc.getFirstChild());
     }
 

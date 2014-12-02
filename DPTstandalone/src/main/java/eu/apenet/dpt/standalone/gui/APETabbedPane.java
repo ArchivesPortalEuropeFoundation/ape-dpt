@@ -27,15 +27,20 @@ import eu.apenet.dpt.standalone.gui.validation.ValidateActionListener;
 import eu.apenet.dpt.standalone.gui.xsdaddition.XsdObject;
 import eu.apenet.dpt.utils.util.DOMUtil;
 import eu.apenet.dpt.utils.util.Xsd_enum;
+
 import java.awt.*;
 import java.awt.event.*;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.InputStream;
 import java.util.*;
+
 import javax.swing.*;
 import javax.swing.event.TreeExpansionEvent;
 import javax.swing.event.TreeExpansionListener;
 import javax.swing.tree.TreeModel;
 import javax.swing.tree.TreePath;
+
 import org.apache.log4j.Logger;
 import org.jdesktop.swingx.JXTreeTable;
 import org.w3c.dom.*;
@@ -379,11 +384,11 @@ public class APETabbedPane extends JTabbedPane {
 
 //        fileInstance.setLastOperation(FileInstance.Operation.CREATE_TREE);
         try {
-            InputSource is;
+            InputStream is;
             if(fileInstance.getCurrentLocation() == null || fileInstance.getCurrentLocation().equals("")){
-                is = new InputSource(file.getAbsolutePath());
+                is = new FileInputStream(file.getAbsolutePath());
             } else {
-                is = new InputSource(fileInstance.getCurrentLocation());
+                is = new FileInputStream(fileInstance.getCurrentLocation());
             }
             Document doc = DOMUtil.createDocument(is);
             tree = new JXTreeTable();
