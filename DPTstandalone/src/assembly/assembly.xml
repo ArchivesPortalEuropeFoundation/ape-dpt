@@ -59,6 +59,7 @@
             <filtered>false</filtered>
             <includes>
                 <include>system/*.*</include>
+                <include>report/*.*</include>
                 <include>default-apeEAC-CPF.xsl</include>
             </includes>
         </fileSet>

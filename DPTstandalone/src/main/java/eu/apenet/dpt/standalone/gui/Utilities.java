@@ -74,6 +74,7 @@ public final class Utilities {
     public final static String LOG_DIR = LOG_DIR_SIMPLE + DIR_SEPARATOR;
     public final static String TEMP_DIR = TEMP_DIR_SIMPLE + DIR_SEPARATOR;
     public final static String SYSTEM_DIR = CONFIG_DIR + SYSTEM_DIR_SIMPLE + DIR_SEPARATOR;
+    public final static String REPORT_DIR = CONFIG_DIR + REPORT_DIR_SIMPLE + DIR_SEPARATOR;
 
     public final static String DEFAULT_APEEAD_XSL_FILE_PATH = SYSTEM_DIR + XSL_DEFAULT_APEEAD_NAME;
     public final static String DEFAULT_APEEAC_XSL_FILE_PATH = CONFIG_DIR + XSL_DEFAULT_APEEAC_NAME;
@@ -82,6 +83,7 @@ public final class Utilities {
     public final static String HG_TREE_SER_FILE_PATH = LOG_DIR + SER_HG_TREE_NAME;
 
     public final static File BEFORE_XSL_FILE = new File(BEFORE_XSL_FILE_PATH);
+    public final static File EDM_QUALITY_FILE = new File(REPORT_DIR + "edmQuality.xsl");
 
     private static List<XsdObject> xsdList;
 

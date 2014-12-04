@@ -75,7 +75,6 @@ import eu.apenet.dpt.utils.service.TransformationTool;
 import eu.apenet.dpt.utils.util.Ead2EdmInformation;
 import eu.apenet.dpt.utils.util.extendxsl.EdmQualityCheckerCall;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
@@ -1021,7 +1020,8 @@ public class EdmOptionsPanel extends JPanel {
 
                                         //Do a XML Quality check
                                         EdmQualityCheckerCall edmQualityCheckerCall = new EdmQualityCheckerCall();
-                                        TransformationTool.createTransformation(FileUtils.openInputStream(new File(fileInstance.getEdmLocation())), null, new File(EdmOptionsPanel.class.getResource("/xmlQuality/edmQuality.xsl").getFile()), null, true, true, null, false, edmQualityCheckerCall);
+                                        File xslFile = Utilities.EDM_QUALITY_FILE;
+                                        TransformationTool.createTransformation(FileUtils.openInputStream(new File(fileInstance.getEdmLocation())), null, xslFile, null, true, true, null, false, edmQualityCheckerCall);
 
                                         int duplicateElements = 0;
                                         StringWriter duplicates = new StringWriter();
@@ -1057,7 +1057,7 @@ public class EdmOptionsPanel extends JPanel {
                                         writer.append(": ");
                                         writer.append(duplicates.toString());
                                         writer.append("\r\n");
-                                        apeTabbedPane.appendEdmConversionErrorText(writer.toString());
+
                                         fileInstance.setEuropeanaConversionErrors(writer.toString());
                                         writer.getBuffer().setLength(0);
                                     } catch (ExecutionException e) {
