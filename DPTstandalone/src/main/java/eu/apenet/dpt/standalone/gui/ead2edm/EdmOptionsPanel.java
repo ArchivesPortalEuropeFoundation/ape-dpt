@@ -114,11 +114,11 @@ public class EdmOptionsPanel extends JPanel {
     private static final String YES = "yes";
     private static final String NO = "no";
     private static final String PROVIDE = "provide";
-    private static final String CREATIVE_COMMONS = "creative_commons";
-    private static final String CREATIVE_COMMONS_CC0 = "creative_commons_cc0";
-    private static final String CREATIVE_COMMONS_PUBLIC_DOMAIN_MARK = "creative_commons_public_domain_mark";
-    private static final String EUROPEANA_RIGHTS_STATEMENTS = "europeana_rights_statements";
-    private static final String OUT_OF_COPYRIGHT = "Out_of_copyright";
+    private static final String CREATIVE_COMMONS = "creativecommons";
+    private static final String CREATIVE_COMMONS_CC0 = "cc0";
+    private static final String CREATIVE_COMMONS_PUBLIC_DOMAIN_MARK = "cpdm";
+    private static final String EUROPEANA_RIGHTS_STATEMENTS = "europeana";
+    private static final String OUT_OF_COPYRIGHT = "outofcopyright";
     private static final String EMPTY_PANEL = "empty_panel";
     private String archdescRepository = null;
     private ResourceBundle labels;
@@ -151,6 +151,7 @@ public class EdmOptionsPanel extends JPanel {
     private JCheckBox useExistingRepoCheckbox;
     private JCheckBox useExistingDaoRoleCheckbox;
     private JCheckBox useExistingLanguageCheckbox;
+    private JCheckBox useExistingRightsInfoCheckbox;
     private JPanel languageBoxPanel = new LanguageBoxPanel();
     private String conversionMode = MINIMAL;
     private JPanel inheritParentPanel;
@@ -452,8 +453,18 @@ public class EdmOptionsPanel extends JPanel {
         }
 
         JPanel mainLicensePanel = new JPanel(new BorderLayout());
-        panel = new JPanel(new GridLayout(5, 2));
+        panel = new JPanel(new GridLayout(6, 2));
         panel.add(new Label(labels.getString("ese.specifyLicense") + ":" + "*"));
+        useExistingRightsInfoCheckbox = new JCheckBox(labels.getString("ese.takeFromFileLicense"));
+        useExistingRightsInfoCheckbox.setSelected(true);
+        useExistingRightsInfoCheckbox.addItemListener(new ItemListener() {
+            @Override
+            public void itemStateChanged(ItemEvent e) {
+                //empty method on purpose
+            }
+        });
+        panel.add(useExistingRightsInfoCheckbox);
+        panel.add(new JLabel(""));
         licenseGroup = new ButtonGroup();
         radioButton = new JRadioButton(this.labels.getString("edm.panel.label.cc"));
         radioButton.setActionCommand(CREATIVE_COMMONS);
@@ -750,6 +761,11 @@ public class EdmOptionsPanel extends JPanel {
             config.setUseExistingLanguage(true);
         }
 
+        if (useExistingRightsInfoCheckbox.isSelected()) {
+            config.setUseExistingRightsInfo(true);
+        } else {
+            config.setUseExistingRightsInfo(false);
+        }
         enumeration = licenseGroup.getElements();
         while (enumeration.hasMoreElements()) {
             AbstractButton btn = enumeration.nextElement();

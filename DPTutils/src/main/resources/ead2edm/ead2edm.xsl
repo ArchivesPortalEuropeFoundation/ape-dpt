@@ -34,6 +34,7 @@
     <xsl:param name="useExistingDaoRole"/>
     <xsl:param name="useExistingRepository"/>
     <xsl:param name="useExistingLanguage"/>
+    <xsl:param name="useExistingRightsInfo"/>
     <xsl:param name="minimalConversion"/>
     <xsl:param name="idSource"/>
     <xsl:param name="landingPage"/>
@@ -912,9 +913,11 @@
             <edm:provider>
                 <xsl:value-of select="$europeana_provider"/>
             </edm:provider>
-            <edm:rights>
-                <xsl:attribute name="rdf:resource" select="$europeana_rights"/>
-            </edm:rights>
+            <xsl:call-template name="createRights">
+                <xsl:with-param name="cLevelNode" select="node()"/>
+                <xsl:with-param name="useExistingRightsInfo" select="$useExistingRightsInfo"/>
+                <xsl:with-param name="europeana_rights" select="$europeana_rights"/>
+            </xsl:call-template>
         </ore:Aggregation>
         <edm:ProvidedCHO>
             <xsl:attribute name="rdf:about" select="concat('providedCHO_', $identifier)"/>
@@ -1720,6 +1723,39 @@
             </xsl:otherwise>
         </xsl:choose>
     </xsl:template>
+    <xsl:template name="createRights">
+        <xsl:param name="cLevelNode"/>
+        <xsl:param name="useExistingRightsInfo"/>
+        <xsl:param name="europeana_rights"/>
+        <edm:rights>
+            <xsl:attribute name="rdf:resource">
+                <xsl:choose>
+                    <xsl:when test="$useExistingRightsInfo = 'true'">
+                        <xsl:choose>
+                            <xsl:when test="$cLevelNode/userestrict[@type='dao']">
+                                <xsl:value-of
+                                    select="$cLevelNode/userestrict[@type='dao']/p[1]/extref/@xlink:href"/>
+                            </xsl:when>
+                            <xsl:otherwise>
+                                <xsl:choose>
+                                    <xsl:when test="$inheritElementsFromFileLevel = 'true' and /ead/archdesc/userestrict[@type='dao']">
+                                        <xsl:value-of
+                                            select="/ead/archdesc/userestrict[@type='dao']/p[1]/extref/@xlink:href"/>
+                                    </xsl:when>
+                                    <xsl:otherwise>
+                                        <xsl:value-of select="$europeana_rights"/>
+                                    </xsl:otherwise>
+                                </xsl:choose>
+                            </xsl:otherwise>
+                        </xsl:choose>
+                    </xsl:when>
+                    <xsl:otherwise>
+                        <xsl:value-of select="$europeana_rights"/>
+                    </xsl:otherwise>
+                </xsl:choose>
+            </xsl:attribute>
+        </edm:rights>
+    </xsl:template>
     <xsl:template name="creator">
         <xsl:param name="originations"/>
         <xsl:for-each select="$originations">
@@ -1916,9 +1952,11 @@
                     </xsl:otherwise>
                 </xsl:choose>
             </dc:description>
-            <edm:rights>
-                <xsl:attribute name="rdf:resource" select="$europeana_rights"/>
-            </edm:rights>
+            <xsl:call-template name="createRights">
+                <xsl:with-param name="cLevelNode" select="node()/../.."/>
+                <xsl:with-param name="useExistingRightsInfo" select="$useExistingRightsInfo"/>
+                <xsl:with-param name="europeana_rights" select="$europeana_rights"/>
+            </xsl:call-template>
         </edm:WebResource>
     </xsl:template>
     <xsl:template match="did/dao[@xlink:title='thumbnail']" mode="thumbnail">

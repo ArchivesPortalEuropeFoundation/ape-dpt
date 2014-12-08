@@ -30,6 +30,7 @@ public class EdmConfig implements Serializable {
     private boolean useExistingDaoRole;
     private boolean useExistingLanguage;
     private boolean useExistingRepository;
+    private boolean useExistingRightsInfo;
     private boolean minimalConversion;
     private String edmIdentifier;
     private String host;
@@ -219,6 +220,14 @@ public class EdmConfig implements Serializable {
         this.useExistingRepository = useExistingRepository;
     }
 
+    public boolean isUseExistingRightsInfo() {
+        return useExistingRightsInfo;
+    }
+
+    public void setUseExistingRightsInfo(boolean useExistingRightsInfo) {
+        this.useExistingRightsInfo = useExistingRightsInfo;
+    }
+
     public XMLTransformer getTransformerXML2XML() {
         if (transformerXML2XML == null) {
             transformerXML2XML = new XMLTransformer("/ead2edm/ead2edm.xsl", getProperties());
@@ -304,6 +313,7 @@ public class EdmConfig implements Serializable {
             properties.put("useExistingDaoRole", getString(new Boolean(isUseExistingDaoRole()).toString()));
             properties.put("useExistingLanguage", getString(new Boolean(isUseExistingLanguage()).toString()));
             properties.put("useExistingRepository", getString(new Boolean(isUseExistingRepository()).toString()));
+            properties.put("useExistingRightsInfo", getString(new Boolean(isUseExistingRightsInfo()).toString()));
             properties.put("minimalConversion", getString(new Boolean(isMinimalConversion()).toString()));
             properties.put("edm_identifier", getString(getEdmIdentifier()));
             properties.put("host", getString(getHost()));
