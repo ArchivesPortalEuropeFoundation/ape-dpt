@@ -94,6 +94,10 @@ public abstract class EacCpfPanel extends CommonsPropertiesPanels {
 	private static final String MAINTENANCE_EVENT_REVISED = "revised";
 	public static final String LOCAL_TYPE_ORIGINAL = "original";
 	
+	protected static final String ARCROLE_IMAGE = "image";
+	protected static final String SUBJECT_OF ="subjectOf";
+	protected static final String SIMPLE ="simple";
+	
 	//Constant to the value publicationStatus
 	private static final String PUBLICATIONSTATUS_VALUE = "approved";
 	
@@ -347,33 +351,43 @@ public abstract class EacCpfPanel extends CommonsPropertiesPanels {
     					List<ResourceRelation> resourceRelationsToBeDeleted = new ArrayList<ResourceRelation>();
     					for(ResourceRelation resourceRelation:eac.getCpfDescription().getRelations().getResourceRelation()){
     						boolean removeCpfRelation = false;
-        					if (StringUtils.isEmpty(resourceRelation.getResourceRelationType())
-        							|| StringUtils.isEmpty(trimStringValue(resourceRelation.getResourceRelationType()))) {
-        						removeCpfRelation = true;
-        					} else if (resourceRelation.getRelationEntry() == null || resourceRelation.getRelationEntry().isEmpty()) {
-        						removeCpfRelation = true;
-        					} else if(resourceRelation.getRelationEntry()!=null && resourceRelation.getRelationEntry().size()>0){
-        						if (StringUtils.isEmpty(resourceRelation.getRelationEntry().get(0).getLocalType())
-        								|| StringUtils.isEmpty(trimStringValue(resourceRelation.getRelationEntry().get(0).getLocalType()))
-        								|| !resourceRelation.getRelationEntry().get(0).getLocalType().equalsIgnoreCase(EacCpfPanel.TITLE)
-        								|| StringUtils.isEmpty(resourceRelation.getRelationEntry().get(0).getContent())) {
-        							removeCpfRelation = true;
-        						}else{
-        							/*List<RelationEntry> listToBeDeleted = new ArrayList<RelationEntry>();
-        							for(RelationEntry relationEntry : resourceRelation.getRelationEntry()){
-        								boolean delete = false;
-                						if(relationEntry.getLocalType().equals(EacCpfRelationsPanel.LOCALTYPE_AGENCYNAME) || relationEntry.getLocalType().equals(EacCpfRelationsPanel.LOCALTYPE_AGENCYCODE)){
-            								if(StringUtils.isEmpty(relationEntry.getContent())){
-            									delete = true;
-            								}
-            							}
-            							if(delete){
-            								listToBeDeleted.add(relationEntry);
-            							}
-                					}
-        							resourceRelation.getRelationEntry().removeAll(listToBeDeleted);*/
-        						}
-        					}
+        				
+    						if(resourceRelation.getArcrole()!=null && resourceRelation.getArcrole().equals(ARCROLE_IMAGE)){ 
+    							//resourceRelation in tab description, it'll be deleted if the link is empty
+    							if(StringUtils.isEmpty(resourceRelation.getHref()) || StringUtils.isEmpty(trimStringValue(resourceRelation.getHref()))){
+    								removeCpfRelation = true;
+    							}
+    							
+    						}else{
+    						
+	    						if (StringUtils.isEmpty(resourceRelation.getResourceRelationType())
+	        							|| StringUtils.isEmpty(trimStringValue(resourceRelation.getResourceRelationType()))) {
+	        						removeCpfRelation = true;
+	        					} else if (resourceRelation.getRelationEntry() == null || resourceRelation.getRelationEntry().isEmpty()) {
+	        						removeCpfRelation = true;
+	        					} else if(resourceRelation.getRelationEntry()!=null && resourceRelation.getRelationEntry().size()>0){
+	        						if (StringUtils.isEmpty(resourceRelation.getRelationEntry().get(0).getLocalType())
+	        								|| StringUtils.isEmpty(trimStringValue(resourceRelation.getRelationEntry().get(0).getLocalType()))
+	        								|| !resourceRelation.getRelationEntry().get(0).getLocalType().equalsIgnoreCase(EacCpfPanel.TITLE)
+	        								|| StringUtils.isEmpty(resourceRelation.getRelationEntry().get(0).getContent())) {
+	        							removeCpfRelation = true;
+	        						}else{
+	        							/*List<RelationEntry> listToBeDeleted = new ArrayList<RelationEntry>();
+	        							for(RelationEntry relationEntry : resourceRelation.getRelationEntry()){
+	        								boolean delete = false;
+	                						if(relationEntry.getLocalType().equals(EacCpfRelationsPanel.LOCALTYPE_AGENCYNAME) || relationEntry.getLocalType().equals(EacCpfRelationsPanel.LOCALTYPE_AGENCYCODE)){
+	            								if(StringUtils.isEmpty(relationEntry.getContent())){
+	            									delete = true;
+	            								}
+	            							}
+	            							if(delete){
+	            								listToBeDeleted.add(relationEntry);
+	            							}
+	                					}
+	        							resourceRelation.getRelationEntry().removeAll(listToBeDeleted);*/
+	        						}
+	        					}
+    						}	
 
     						if(removeCpfRelation){
     							resourceRelationsToBeDeleted.add(resourceRelation);
@@ -381,6 +395,7 @@ public abstract class EacCpfPanel extends CommonsPropertiesPanels {
     					}
     					eac.getCpfDescription().getRelations().getResourceRelation().removeAll(resourceRelationsToBeDeleted);
     				}
+    				
     				if(eac.getCpfDescription().getRelations().getFunctionRelation()!=null){
     					List<FunctionRelation> functionRelationsToBeDeleted = new ArrayList<FunctionRelation>();
     					for(FunctionRelation functionRelation:eac.getCpfDescription().getRelations().getFunctionRelation()){

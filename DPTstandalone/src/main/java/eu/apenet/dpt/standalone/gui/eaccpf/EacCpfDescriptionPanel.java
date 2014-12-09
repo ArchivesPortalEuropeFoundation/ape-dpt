@@ -62,12 +62,18 @@ import eu.apenet.dpt.standalone.gui.commons.swingstructures.ScrollPaneHolder;
 import eu.apenet.dpt.standalone.gui.commons.swingstructures.TextAreaScrollable;
 import eu.apenet.dpt.standalone.gui.commons.swingstructures.TextAreaWithLanguage;
 import eu.apenet.dpt.standalone.gui.commons.swingstructures.TextFieldWithLanguage;
+import eu.apenet.dpt.standalone.gui.eaccpf.EacCpfIdentityPanel.AddIsoText;
+import eu.apenet.dpt.standalone.gui.eaccpf.EacCpfIdentityPanel.CheckIsoText;
+import eu.apenet.dpt.standalone.gui.eaccpf.EacCpfPanel.AddUndefinedTexts;
+import eu.apenet.dpt.standalone.gui.eaccpf.EacCpfRelationsPanel.AddFurtherResource;
+import eu.apenet.dpt.standalone.gui.eaccpf.EacCpfRelationsPanel.UpdateEacCpfObject;
 import eu.apenet.dpt.standalone.gui.eaccpf.swingstructures.TextFieldWithComboBoxEacCpf;
 import eu.apenet.dpt.standalone.gui.eaccpf.swingstructures.TextFieldsWithRadioButtonForDates;
 import eu.apenet.dpt.standalone.gui.listener.FocusManagerListener;
 import eu.apenet.dpt.utils.eaccpf.Address;
 import eu.apenet.dpt.utils.eaccpf.AddressLine;
 import eu.apenet.dpt.utils.eaccpf.BiogHist;
+import eu.apenet.dpt.utils.eaccpf.CpfDescription;
 import eu.apenet.dpt.utils.eaccpf.Date;
 import eu.apenet.dpt.utils.eaccpf.DateRange;
 import eu.apenet.dpt.utils.eaccpf.DateSet;
@@ -85,6 +91,9 @@ import eu.apenet.dpt.utils.eaccpf.Place;
 import eu.apenet.dpt.utils.eaccpf.PlaceEntry;
 import eu.apenet.dpt.utils.eaccpf.PlaceRole;
 import eu.apenet.dpt.utils.eaccpf.Places;
+import eu.apenet.dpt.utils.eaccpf.RelationEntry;
+import eu.apenet.dpt.utils.eaccpf.Relations;
+import eu.apenet.dpt.utils.eaccpf.ResourceRelation;
 import eu.apenet.dpt.utils.eaccpf.StructureOrGenealogy;
 import eu.apenet.dpt.utils.eaccpf.Term;
 import eu.apenet.dpt.utils.eaccpf.ToDate;
@@ -126,6 +135,13 @@ public class EacCpfDescriptionPanel extends EacCpfPanel {
 	private List<JComboBox> genealogyLanguagesJComboBoxes;
 	private List<TextAreaWithLanguage> biographyHistoryJTextfields;
 	private List<JComboBox> biographyHistoryJComboBoxes;
+	
+	private List<TextFieldWithLanguage> resourcesRelationTitle;
+	private List<JTextField> resourcesRelationIdentifier;
+	private List<JTextField> resourcesRelationLink;
+	private List<JTextField> resourcesRelationAgencyName;
+	private List<TextFieldsWithRadioButtonForDates> resourcesRelationDate;
+	private List<List<TextAreaWithLanguage>> resourcesRelationDescriptive;
 	
 	//DATES, using the same structure made into EacCpfIdentityPanel
 	//Map<Integer - index of place/function/occupation in this tab, TextFieldsWithRadioButtonForDates - structured content
@@ -498,6 +514,7 @@ public class EacCpfDescriptionPanel extends EacCpfPanel {
 		builder = buildEntityTypeText(builder, cc);
 		builder = buildPlaceLocationDescriptionForm(builder,cc);
 		builder = buildBiographiesForm(builder,cc);
+		builder = buildImageEacCpfForm(builder,cc);
 		return builder;
 	}
 	/**
@@ -645,6 +662,356 @@ public class EacCpfDescriptionPanel extends EacCpfPanel {
 		}
 		return builder;
 	}
+	/**
+	 * Method which build the image for the Eac-Cpf
+	 * @param builder
+	 * @param cc
+	 * @return
+	 */
+	private PanelBuilder buildImageEacCpfForm(PanelBuilder builder,CellConstraints cc) {
+		if (this.eaccpf.getCpfDescription().getRelations()!=null && 
+				!this.eaccpf.getCpfDescription().getRelations().getResourceRelation().isEmpty()) {
+			
+			List<ResourceRelation> resourceRelations = this.eaccpf.getCpfDescription().getRelations().getResourceRelation();
+			boolean draw = false;
+			int counter = 0;
+			for (int i = 0; i < resourceRelations.size(); i++) {
+				
+				ResourceRelation resourceRelation = resourceRelations.get(i);
+				
+				if(resourceRelation != null && StringUtils.isNotEmpty(resourceRelation.getArcrole()) && resourceRelation.getArcrole().equals(ARCROLE_IMAGE)){
+					draw = true;
+						// Recovers the values of the relation entry elements.
+						String title = "";
+						String language = "";
+						String id = "";
+						String link ="";
+						String agencyName = "";
+						Date date = null;
+						List<String> descriptiveNote = new ArrayList<String>();
+						int index=counter;
+						for (RelationEntry relationEntry : resourceRelation.getRelationEntry()) {
+							// Title of the relation.
+							// /eacCpf/cpfDescription/relations/resourceRelation/relationEntry@localType='title' and @xml:lang='???'
+							if(StringUtils.isNotEmpty(relationEntry.getLocalType()) && relationEntry.getLocalType().equals(EacCpfRelationsPanel.LOCALTYPE_TITLE)) {
+								if(StringUtils.isNotEmpty(relationEntry.getContent())){
+									title = relationEntry.getContent();
+									
+								}
+							}
+							
+							// Id of the relation.
+				            // /eacCpf/cpfDescription/relations/resourceRelation/relationEntry@localType='id'
+							if(StringUtils.isNotEmpty(relationEntry.getLocalType()) && relationEntry.getLocalType().equals(EacCpfRelationsPanel.LOCALTYPE_ID)
+									&& StringUtils.isNotEmpty(relationEntry.getContent())) {
+								id = relationEntry.getContent();
+								
+							}
+							// Agency name of the relation.
+							// /eacCpf/cpfDescription/relations/resourceRelation/relationEntry@localType='agencyName'
+							if(StringUtils.isNotEmpty(relationEntry.getLocalType()) && relationEntry.getLocalType().equals(EacCpfRelationsPanel.LOCALTYPE_AGENCYNAME)) {
+								agencyName = relationEntry.getContent();
+								
+							}
+							// Language of the relation.
+							// /eacCpf/cpfDescription/relations/resourceRelation/relationEntry@lang
+							if(StringUtils.isEmpty(language) && StringUtils.isNotEmpty(relationEntry.getLang())) {
+								language = relationEntry.getLang();
+							}
+						}
+							
+						//Link the image /eacCpf/cpfDescription/relations/resourceRelation@xlink:href
+						if(StringUtils.isNotEmpty(resourceRelation.getHref())){
+							link = resourceRelation.getHref();
+						
+						}
+						
+						//date in resourceRelation
+						
+						if(resourceRelation.getDate() != null){
+							if (StringUtils.isNotEmpty(resourceRelation.getDate().getContent())){
+								date = resourceRelation.getDate();
+							
+							}
+						}
+						
+						//descriptiveNote in resourceRelation
+						
+						if(resourceRelation.getDescriptiveNote() != null && !resourceRelation.getDescriptiveNote().getP().isEmpty()
+				                /*&& StringUtils.isNotEmpty(resourceRelation.getDescriptiveNote().getP().get(0).getContent())*/){
+							for (P p: resourceRelation.getDescriptiveNote().getP()) {
+								descriptiveNote.add(p.getContent());
+							}
+							if (StringUtils.isEmpty(language)) {
+								language = resourceRelation.getDescriptiveNote().getP().get(0).getLang();
+							}	
+							
+						}
+							
+						if (StringUtils.isEmpty(language)
+								&& StringUtils.isNotEmpty(firstLanguage)
+								&& (resourceRelation!=null 
+									&& StringUtils.isEmpty(resourceRelation.getHref())
+									&& (resourceRelation.getDate() == null
+										|| (resourceRelation.getDate()!=null && StringUtils.isEmpty(resourceRelation.getDate().getContent())))
+									&& (resourceRelation.getDescriptiveNote() == null 
+										|| (resourceRelation.getDescriptiveNote() != null
+											&& resourceRelation.getDescriptiveNote().getP().isEmpty()))) 
+								|| resourceRelation == null) {
+							language = firstLanguage;
+						}
+					drawImageEacCpfForm(builder,cc,title,language, id, link, agencyName, date, descriptiveNote,index);
+					counter++;
+				}
+			} 
+			if(!draw){
+				drawImageEacCpfForm(builder,cc,null,(firstLanguage!=null && !firstLanguage.isEmpty())?firstLanguage:"",null,null,null, null, null,0);
+			}
+		}else{	
+			drawImageEacCpfForm(builder,cc,null,(firstLanguage!=null && !firstLanguage.isEmpty())?firstLanguage:"",null,null,null, null, null,0);
+		}
+		
+		setNextRow();
+		JButton jButtonAddFurtherImage= new ButtonTab(this.labels.getString("eaccpf.description.button.addfurtherImage"));
+		jButtonAddFurtherImage.addActionListener(new AddFurtherImageButton(this.eaccpf, this.tabbedPane, model));
+		builder.add(jButtonAddFurtherImage, cc.xy (1, rowNb));
+		setNextRow();
+		return builder;
+	}
+	/**
+	 * This method draw the different image's fields in the form
+	 */
+	private PanelBuilder drawImageEacCpfForm(PanelBuilder builder,CellConstraints cc,String title,String language, String id, String link, String agencyName, Date dateResource, List<String> descriptiveNote,int index){
+		// Create elements.
+		TextFieldWithLanguage resourceRelationTitle = null;
+		JTextField resourceRelationIdentifier = null;
+		JTextField resourceRelationLink = null;
+		JTextField resourceRelationAgencyName = null;
+		TextFieldsWithRadioButtonForDates resourceRelationDate = null;
+		List<TextAreaWithLanguage> resourceRelationDescriptiveList = new ArrayList<TextAreaWithLanguage>();
+		
+		resourceRelationTitle = new TextFieldWithLanguage(title!=null?title:"", language!=null?language:"");
+		resourceRelationIdentifier = new JTextField(id!=null?id:"");
+		resourceRelationLink = new JTextField(link!=null?link:"");
+		resourceRelationAgencyName = new JTextField(agencyName!=null?agencyName:"");
+		if (descriptiveNote != null && !descriptiveNote.isEmpty()) {
+			for (String content: descriptiveNote) {
+				resourceRelationDescriptiveList.add(new TextAreaWithLanguage(content,""));
+			}
+		} else {
+			resourceRelationDescriptiveList.add(new TextAreaWithLanguage("",""));
+		}
+		
+		//dates
+       if (dateResource==null){
+    	   dateResource = new Date();
+       }
+		
+		boolean isDateUndefined = this.isUndefinedDate(dateResource.getLocalType());
+        boolean isStillDate = (!isDateUndefined && dateResource.getLocalType()!=null && (dateResource.getLocalType().equals("open")));
+        resourceRelationDate = new TextFieldsWithRadioButtonForDates(this.labels.getString("eaccpf.commons.unknown.date"), this.labels.getString("eaccpf.commons.date.known"),
+                "",
+                		dateResource.getContent(),
+                isDateUndefined, isStillDate,isStillDate, dateResource.getStandardDate(),
+                "", false, "", "", false, "", false);
+	 
+        //instance elements if necessary
+		if(this.resourcesRelationTitle == null){
+			this.resourcesRelationTitle = new ArrayList<TextFieldWithLanguage>();
+		}
+		if(this.resourcesRelationIdentifier == null){
+			this.resourcesRelationIdentifier = new ArrayList<JTextField>();
+		}
+		if(this.resourcesRelationLink == null){
+			this.resourcesRelationLink = new ArrayList<JTextField>();
+		}
+		if(this.resourcesRelationAgencyName == null){
+			this.resourcesRelationAgencyName= new ArrayList<JTextField>();
+		}
+		if(this.resourcesRelationDate == null){
+			this.resourcesRelationDate = new ArrayList<TextFieldsWithRadioButtonForDates>();
+		}
+		if(this.resourcesRelationDescriptive == null){
+			this.resourcesRelationDescriptive = new ArrayList<List<TextAreaWithLanguage>>();
+		}
+		// Add elements to the list.
+		this.resourcesRelationTitle.add(resourceRelationTitle);
+		this.resourcesRelationIdentifier.add(resourceRelationIdentifier);
+		this.resourcesRelationLink.add(resourceRelationLink);
+		this.resourcesRelationAgencyName.add(resourceRelationAgencyName);
+		this.resourcesRelationDate.add(resourceRelationDate);
+	    this.resourcesRelationDescriptive.add(resourceRelationDescriptiveList);
+		
+		// Set title.
+		setNextRow();
+		builder.addSeparator(this.labels.getString("eaccpf.description.image"), cc.xyw(1, this.rowNb, 7));
+		setNextRow();
+		
+		// Add elements to the panel.
+		// Title and language.
+		builder.addLabel(this.labels.getString("eaccpf.description.image.title"), cc.xy(1, this.rowNb));
+		builder.add(resourceRelationTitle.getTextField(), cc.xy(3, this.rowNb));
+		builder.addLabel(this.labels.getString("eaccpf.commons.select.language"), cc.xy(5, this.rowNb));
+		builder.add(resourceRelationTitle.getLanguageBox(), cc.xy(7, this.rowNb));
+		setNextRow();
+		
+		//Add the element id to the panel.
+		builder.addLabel(this.labels.getString("eaccpf.description.image.identifier"), cc.xy(1, this.rowNb));
+		builder.add(resourceRelationIdentifier, cc.xy(3, this.rowNb));
+		setNextRow();
+	
+		//add link to the panel
+		builder.addLabel(this.labels.getString("eaccpf.description.image.link")+"*", cc.xy(1, this.rowNb));
+		builder.add(resourceRelationLink, cc.xy(3, this.rowNb));
+		setNextRow();
+		
+		//add agencyName to the panel
+		builder.addLabel(this.labels.getString("eaccpf.description.image.agencyName"), cc.xy(1, this.rowNb));
+		builder.add(resourceRelationAgencyName, cc.xy(3, this.rowNb));
+		setNextRow();
+		
+		//add date to the panel
+		
+		// First date row. Normal date text fields.
+        builder.addLabel(this.labels.getString("eaccpf.commons.date"), cc.xy(1, this.rowNb));
+        resourceRelationDate.getDateTextField().addFocusListener(new AddIsoText(resourceRelationDate, EacCpfIdentityPanel.UNKNOWN_DATE));
+        builder.add(resourceRelationDate.getDateTextField(), cc.xy(3, this.rowNb));
+
+        // Second date row. Unknown radiobuttons.
+        setNextRow();
+        resourceRelationDate.getDateDefinedRB().addActionListener(new AddUndefinedTexts(resourceRelationDate, EacCpfIdentityPanel.KNOWN_DATE));
+        builder.add(resourceRelationDate.getDateDefinedRB(), cc.xy(3, this.rowNb));
+
+        setNextRow();
+        resourceRelationDate.getDateUndefinedRB().addActionListener(new AddUndefinedTexts(resourceRelationDate, EacCpfIdentityPanel.UNKNOWN_DATE));
+        builder.add(resourceRelationDate.getDateUndefinedRB(), cc.xy(3, this.rowNb));
+        setNextRow();
+		
+     // Third date row. Standard dates.
+      
+        builder.addLabel(this.labels.getString("eaccpf.commons.iso.date"), cc.xy(1, this.rowNb));
+        resourceRelationDate.getStandardDateTextField().addFocusListener(new CheckIsoText(resourceRelationDate, EacCpfIdentityPanel.UNKNOWN_DATE));
+        builder.add(resourceRelationDate.getStandardDateTextField(), cc.xy(3, this.rowNb));
+		setNextRow();
+		
+		//descriptiveNote in resourceRelation
+		for (TextAreaWithLanguage resourceRelationDescriptive: resourceRelationDescriptiveList) {
+			builder.addLabel(this.labels.getString("eaccpf.description.description"), cc.xy(1, this.rowNb));
+			builder.add(resourceRelationDescriptive.getTextField(), cc.xyw(3, this.rowNb, 4));
+			setNextRow();
+		}
+		//button to add more descriptions
+		setNextRow();
+		JButton jButtonAddFurtherImage= new ButtonTab(this.labels.getString("eaccpf.description.button.addfurtherDescriptionImage"));
+		jButtonAddFurtherImage.addActionListener(new AddFurtherDescriptionImageButton(this.eaccpf, this.tabbedPane, model,index));
+		builder.add(jButtonAddFurtherImage, cc.xy (1, rowNb));
+		setNextRow();
+        
+        return builder;
+	}
+	
+	/**
+	 * Class to performs the addition of new relation with image in the description tab
+	 * section if the previous values are filled.
+	 */
+	public class AddFurtherImageButton extends UpdateEacCpfObject {
+
+		public AddFurtherImageButton(EacCpf eacCpf, JTabbedPane tabbedPane,ProfileListModel model) {
+			super(eacCpf, tabbedPane, model);
+		}
+
+		@Override
+		public void actionPerformed(ActionEvent actionEvent) {
+			try {
+				super.updateJAXBObject(false);
+			} catch (EacCpfFormException e) {
+				reloadTabbedPanel(new EacCpfDescriptionPanel(eaccpf, tabbedPane, mainTabbedPane, eacCpfFrame, model, labels, entityType, firstLanguage, firstScript).buildEditorPanel(errors), 1);
+			}
+
+			boolean empty = false;  
+			for(int i=0;i<resourcesRelationLink.size();i++){
+				if (StringUtils.isEmpty(resourcesRelationLink.get(i).getText())) {
+					JOptionPane.showMessageDialog(this.tabbedPane, labels.getString("eaccpf.description.error.empty.link"));
+					empty = true;
+				}
+			}
+			// Check the content and add the elements.
+			if (eaccpf.getCpfDescription() == null) {
+				eaccpf.setCpfDescription(new CpfDescription());
+			}
+			if (eaccpf.getCpfDescription().getRelations() == null) {
+				eaccpf.getCpfDescription().setRelations(new Relations());
+			}
+			if(!empty 
+					|| (empty && resourcesRelationLink.size() > eaccpf.getCpfDescription().getRelations().getResourceRelation().size())){
+				ResourceRelation resourceRelation = new ResourceRelation();
+				resourceRelation.setArcrole(ARCROLE_IMAGE);
+				eaccpf.getCpfDescription().getRelations().getResourceRelation().add(resourceRelation);
+			}
+			reloadTabbedPanel(new EacCpfDescriptionPanel(eaccpf, tabbedPane, mainTabbedPane, eacCpfFrame, model, labels, entityType, firstLanguage, firstScript).buildEditorPanel(errors), 1);
+		}
+	}
+	
+	/**
+	 * Class to performs the addition of a new image description if the previous values are filled
+	 */
+	public class AddFurtherDescriptionImageButton extends UpdateEacCpfObject {
+		private int index;
+		public AddFurtherDescriptionImageButton(EacCpf eacCpf, JTabbedPane tabbedPane,ProfileListModel model, Integer index) {
+			super(eacCpf, tabbedPane, model);
+			this.index = (index!=null)?index:0;
+		}
+
+		@Override
+		public void actionPerformed(ActionEvent actionEvent) {
+			try {
+				super.updateJAXBObject(false);
+			} catch (EacCpfFormException e) {
+				reloadTabbedPanel(new EacCpfDescriptionPanel(this.eaccpf, tabbedPane, mainTabbedPane, eacCpfFrame, model, labels, entityType, firstLanguage, firstScript).buildEditorPanel(errors), 1);
+			}
+
+			boolean empty = false;
+			List<TextAreaWithLanguage> resourceRelationDescriptiveList = resourcesRelationDescriptive.get(this.index); 
+				
+				for(int i=0;i<resourceRelationDescriptiveList.size() && !empty ;i++){
+					if(StringUtils.isEmpty(resourceRelationDescriptiveList.get(i).getTextValue())){
+						JOptionPane.showMessageDialog(this.tabbedPane, labels.getString("eaccpf.description.error.empty.description"));
+						empty = true;
+					}
+				}
+	
+			if (eaccpf.getCpfDescription() == null) {
+				eaccpf.setCpfDescription(new CpfDescription());
+			}
+			if (eaccpf.getCpfDescription().getRelations() == null) {
+				eaccpf.getCpfDescription().setRelations(new Relations());
+			}
+			if(eaccpf.getCpfDescription().getRelations().getResourceRelation() == null){
+				eaccpf.getCpfDescription().getRelations().getResourceRelation().add(new ResourceRelation());
+			}
+			List<ResourceRelation> resourceRelationsImage = new ArrayList<ResourceRelation>();
+			List<ResourceRelation> resourceRelations = eaccpf.getCpfDescription().getRelations().getResourceRelation();
+			for (ResourceRelation resourceRelation: resourceRelations) {
+				if (resourceRelation.getArcrole() != null
+						&& resourceRelation.getArcrole().equalsIgnoreCase(ARCROLE_IMAGE)) {
+					resourceRelationsImage.add(resourceRelation);
+				}
+			}
+
+			ResourceRelation resourceRelation = resourceRelationsImage.get(this.index);
+			
+			if(resourceRelation!=null && resourceRelation.getDescriptiveNote()!=null 
+					&& resourceRelation.getDescriptiveNote().getP()!=null){
+				
+				P p=new P();
+				resourceRelation.getDescriptiveNote().getP().add(p);
+			}	
+	
+			reloadTabbedPanel(new EacCpfDescriptionPanel(this.eaccpf, tabbedPane, mainTabbedPane, eacCpfFrame, model, labels, entityType, firstLanguage, firstScript).buildEditorPanel(errors), 1);
+		}
+	}
+	
+	/*************************************************************/
 	/**
 	 * Method which build Places and Places Location form part.
 	 * Builds for parts, places, functions ocupations and genealogy.
@@ -1807,7 +2174,7 @@ public class EacCpfDescriptionPanel extends EacCpfPanel {
 		@Override
 		public void actionPerformed(ActionEvent actionEvent) {
 			try {
-				super.updateJAXBObject(true);
+				super.updateJAXBObject(false);
 				if(areRightDates()){
 					removeChangeListener();
 					if (this.isNextTab) {
@@ -2949,9 +3316,161 @@ public class EacCpfDescriptionPanel extends EacCpfPanel {
 				if(bioghist!=null && bioghist.getChronListOrPOrCitation()!=null && !bioghist.getChronListOrPOrCitation().isEmpty()){
 					this.eaccpf.getCpfDescription().getDescription().getBiogHist().add(bioghist);
 				}
+				
+				// (7 get Relations node) /eacCpf/cpfDescription/relations
+				
+				// Clear the current resource relations list.
+				List<ResourceRelation> resourceRelationList=null;
+				List<ResourceRelation> resourceRelationsToBePreserved = new ArrayList<ResourceRelation>();
+				if(this.eaccpf.getCpfDescription().getRelations()!=null){
+					resourceRelationList = this.eaccpf.getCpfDescription().getRelations().getResourceRelation();
+				}
+				for(int i=0;resourceRelationList!=null && i < resourceRelationList.size();  i++){
+					if(resourceRelationList.get(i)!=null && (resourceRelationList.get(i).getArcrole()==null || !resourceRelationList.get(i).getArcrole().equals(ARCROLE_IMAGE))){
+						resourceRelationsToBePreserved.add(resourceRelationList.get(i));
+					}
+				}
+				if(this.eaccpf.getCpfDescription().getRelations()!=null && this.eaccpf.getCpfDescription().getRelations().getResourceRelation()!=null){
+					this.eaccpf.getCpfDescription().getRelations().getResourceRelation().clear();
+				}
+				
+				List<ResourceRelation> resourceRelations = getResourceRelation(save);
+				
+				if(this.eaccpf.getCpfDescription().getRelations()!=null && this.eaccpf.getCpfDescription().getRelations().getResourceRelation()!=null){
+					this.eaccpf.getCpfDescription().getRelations().getResourceRelation().addAll(resourceRelationsToBePreserved);
+				}
+				
+				if(resourceRelations!=null && !resourceRelations.isEmpty()){
+					if (this.eaccpf.getCpfDescription().getRelations() == null) {
+						this.eaccpf.getCpfDescription().setRelations(new Relations());
+					}
+					this.eaccpf.getCpfDescription().getRelations().getResourceRelation().addAll(resourceRelations);
+				}
+				
 			}
 		}
+		
+		private List<ResourceRelation> getResourceRelation(boolean save){
+			
+			List<ResourceRelation> resourceRelations = new ArrayList<ResourceRelation>();
+			
+ 			for (int i = 0; i < resourcesRelationTitle.size(); i++) {
+				ResourceRelation resourceRelation = new ResourceRelation();
+				String language = null;
+				resourceRelation.setArcrole(ARCROLE_IMAGE);
+				resourceRelation.setResourceRelationType(SUBJECT_OF);
+				resourceRelation.setType(SIMPLE);
+				boolean write = false;
+				boolean write2 = false;
+				boolean write3 = false;
+				boolean write4 = false;
+				boolean write5 = false;
+				boolean write6 = false;
+				
+				if(resourcesRelationTitle.get(i).getLanguage()!=null && 
+						!resourcesRelationTitle.get(i).getLanguage().equals(TextFieldWithComboBoxEacCpf.DEFAULT_VALUE)){
+					
+					language = resourcesRelationTitle.get(i).getLanguage();
+				}
+				
+				if(resourcesRelationTitle.get(i)!=null && StringUtils.isNotEmpty(resourcesRelationTitle.get(i).getTextValue())){
+					write = true;
+					//title
+					RelationEntry relationEntryTitle = new RelationEntry();
+					relationEntryTitle.setContent(trimStringValue(resourcesRelationTitle.get(i).getTextValue()));
+					relationEntryTitle.setLocalType(EacCpfRelationsPanel.LOCALTYPE_TITLE);
+					if (StringUtils.isNotEmpty(language)) {
+						relationEntryTitle.setLang(language);
+					}
+					resourceRelation.getRelationEntry().add(relationEntryTitle);
+				}
+				
+				//id
+				String id = trimStringValue(resourcesRelationIdentifier.get(i).getText());
+				if (StringUtils.isNotEmpty(id)) {
+					RelationEntry relationEntry = new RelationEntry();
+					relationEntry.setContent(id);
+					relationEntry.setLocalType(EacCpfRelationsPanel.LOCALTYPE_ID);
+					if (StringUtils.isNotEmpty(language)) {
+						relationEntry.setLang(language);
+					}
+					resourceRelation.getRelationEntry().add(relationEntry);
+					write2 = true;
+				}
+				
+				//link
+				String link = trimStringValue(resourcesRelationLink.get(i).getText());
+				if (StringUtils.isNotEmpty(link)) {
+					resourceRelation.setHref(link);
+					write3 = true;
+				}
+				
+				//agencyName
+				String agencyName = trimStringValue(resourcesRelationAgencyName.get(i).getText());
+				if (StringUtils.isNotEmpty(agencyName)){
+					RelationEntry relationEntry = new RelationEntry();
+					relationEntry.setContent(agencyName);
+					relationEntry.setLocalType(EacCpfRelationsPanel.LOCALTYPE_AGENCYNAME);
+					if(StringUtils.isNotEmpty(agencyName)){
+						relationEntry.setLang(language);
+					}
+					resourceRelation.getRelationEntry().add(relationEntry);
+					write4 = true;
+				}
+				 
+				//date
+				 Date date = null;
+		            if (StringUtils.isNotEmpty(trimStringValue(resourcesRelationDate.get(i).getDateValue()))) {
+		                date = new Date();
+		                date.setContent(trimStringValue(resourcesRelationDate.get(i).getDateValue()));
+		                if (StringUtils.isNotEmpty(parseStandardDate(trimStringValue(resourcesRelationDate.get(i).getStandardDateValue())))) {
+		                    date.setStandardDate(parseStandardDate(trimStringValue(resourcesRelationDate.get(i).getStandardDateValue())));
+		                }
+		            } else if (resourcesRelationDate.get(i).isSelectedDateUndefinedRB()) {
+		                date = new Date();
+		                date.setContent(EacCpfIdentityPanel.UNKNOWN);
+		            } else if (resourcesRelationDate.get(i).isSelectedDateStillRB()) {
+		                date = new Date();
+		                date.setContent("open");
+		            }
 
+		            if(date != null && resourcesRelationDate.get(i).isSelectedDateUndefinedRB()){
+		                date.setLocalType(EacCpfIdentityPanel.UNKNOWN);
+		            }else if(date != null && resourcesRelationDate.get(i).isSelectedDateStillRB()){
+		                date.setLocalType("open");
+		            }
+		            if(date!=null){
+		            	resourceRelation.setDate(date);
+		            	write5 = true;
+		            }
+				    
+				 // Try to recover the descriptive note of the relation.
+					// /eacCpf/cpfDescription/relations/resourceRelation/descriptiveNote
+		            DescriptiveNote descriptiveNote = new DescriptiveNote();
+		            for(TextAreaWithLanguage resourceRelationDescriptive: resourcesRelationDescriptive.get(i)) {
+						String description = trimStringValue(resourceRelationDescriptive.getTextValue());
+						if (StringUtils.isNotEmpty(description)) {
+							P p = new P();
+							p.setContent(description);
+							if (StringUtils.isNotEmpty(language)) {
+								p.setLang(language);
+							}
+							descriptiveNote.getP().add(p);
+							write6 = true;
+						}
+		            }
+		            if (write6) {
+						resourceRelation.setDescriptiveNote(descriptiveNote);
+		            }
+				    
+				if((save && write3) || (!save && (write || write2 || write3 || write4 || write5 || write6))){
+					resourceRelations.add(resourceRelation);
+				}	
+			}	
+			
+			return resourceRelations;
+		}
+		
 		private BiogHist getBiogHist(boolean save) {
 			BiogHist biogHist = new BiogHist();
 			
@@ -3566,7 +4085,7 @@ public class EacCpfDescriptionPanel extends EacCpfPanel {
 			// Checks if clicks in different tab.
 			if (this.currentTab != selectedIndex) {
 				try {
-					super.updateJAXBObject(true);
+					super.updateJAXBObject(false);
 					removeChangeListener();
 					if(areRightDates()){
 						switch (selectedIndex) {

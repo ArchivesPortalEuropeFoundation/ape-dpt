@@ -23,6 +23,7 @@ import java.awt.KeyboardFocusManager;
 import java.awt.event.ActionEvent;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -73,8 +74,8 @@ public class EacCpfRelationsPanel extends EacCpfPanel {
 	// Constants for localType.
 	protected static final String LOCALTYPE_AGENCYNAME = "agencyName";
 	protected static final String LOCALTYPE_AGENCYCODE = "agencyCode";
-	private static final String LOCALTYPE_ID = "id";
-	private static final String LOCALTYPE_TITLE = "title";
+	protected static final String LOCALTYPE_ID = "id";
+	protected static final String LOCALTYPE_TITLE = "title";
 
 	// Elements in the panel.
 	private List<TextFieldWithLanguage> cpfRelationNameTfs;
@@ -678,11 +679,6 @@ public class EacCpfRelationsPanel extends EacCpfPanel {
 	private PanelBuilder buildResourceRelationsSection(PanelBuilder builder, CellConstraints cc) {
 		// Set section title.
 		this.setNextRow();
-		/*builder.addSeparator("", cc.xyw(1, this.rowNb, 7));
-        this.setNextRow();
-		builder.addLabel(this.labels.getString("eaccpf.relations.resources.section"), cc.xyw(1, this.rowNb, 7));
-		this.setNextRow();*/
-
 		// Define values of the part.
 		if (this.eaccpf.getCpfDescription().getRelations().getResourceRelation().isEmpty()) {
 			this.eaccpf.getCpfDescription().getRelations().getResourceRelation().add(new ResourceRelation());
@@ -696,86 +692,110 @@ public class EacCpfRelationsPanel extends EacCpfPanel {
 		this.resourceRelationDescriptionTas = new ArrayList<TextAreaWithLanguage>(resourceRelations.size());
 		this.resourceRelationOrganisationNameAndIdTfs = new HashMap<Integer, List<TextFieldWithLanguage>>(resourceRelations.size());
 
+		boolean goodResourceRelation = false;
+		
 		for (int i = 0; i < resourceRelations.size(); i++) {
-			// Set title.
-			this.setNextRow();
-			builder.addSeparator(this.labels.getString("eaccpf.relations.resources.relation"), cc.xyw(1, this.rowNb, 7));
-			this.setNextRow();
-
+			
 			ResourceRelation resourceRelation = resourceRelations.get(i);
-
-			// Create elements.
-			TextFieldWithLanguage resourceRelationNameTf = null;
-			JTextField resourceRelationIdentifierTf = null;
-			TextFieldWithComboBoxEacCpf resourceRelationHrefAndTypeTf = null;
-			TextAreaWithLanguage resourceRelationDescriptionTa = null;
-			List<TextFieldWithLanguage> resourceRelationOrganisationNameAndIdTfsList = new ArrayList<TextFieldWithLanguage>();
-
-			// Recovers the values of the relation entry elements.
-			String title = "";
-			String other = "";
-			String language = "";
-			String id = "";
-			List<String> agencyNameList = new ArrayList<String>();
-			List<String> agencyCodeList = new ArrayList<String>();
-			if (!resourceRelation.getRelationEntry().isEmpty()) {
-				for (RelationEntry relationEntry : resourceRelation.getRelationEntry()) {
-					// Title of the relation.
-					// /eacCpf/cpfDescription/relations/resourceRelation/relationEntry@localType='title'
-					if(StringUtils.isNotEmpty(relationEntry.getLocalType()) && relationEntry.getLocalType().equals(EacCpfRelationsPanel.LOCALTYPE_TITLE)
-							&& StringUtils.isNotEmpty(relationEntry.getContent())) {
-						title = relationEntry.getContent();
-					}
-					// Id of the relation.
-		            // /eacCpf/cpfDescription/relations/resourceRelation/relationEntry@localType='id'
-					if(StringUtils.isNotEmpty(relationEntry.getLocalType()) && relationEntry.getLocalType().equals(EacCpfRelationsPanel.LOCALTYPE_ID)
-							&& StringUtils.isNotEmpty(relationEntry.getContent())) {
-						id = relationEntry.getContent();
-					}
-
-					// Agency name of the relation.
-					// /eacCpf/cpfDescription/relations/resourceRelation/relationEntry@localType='agencyName'
-					if(StringUtils.isNotEmpty(relationEntry.getLocalType()) && relationEntry.getLocalType().equals(EacCpfRelationsPanel.LOCALTYPE_AGENCYNAME)) {
-						agencyNameList.add(relationEntry.getContent());
-					}
-
-					// Agency code of the relation.
-					// /eacCpf/cpfDescription/relations/resourceRelation/relationEntry@localType='agencyCode'
-					if(StringUtils.isNotEmpty(relationEntry.getLocalType()) && relationEntry.getLocalType().equals(EacCpfRelationsPanel.LOCALTYPE_AGENCYCODE)) {
-						agencyCodeList.add(relationEntry.getContent());
-					}
-
-					// Texts of relation entries without @localType.
-					// This texts will be loaded in field "name"
-					if(StringUtils.isNotEmpty(relationEntry.getContent()) && StringUtils.isEmpty(relationEntry.getLocalType())) {
-						if (!other.isEmpty()) {
-							other = other + ". ";
-						}
-						other = other + relationEntry.getContent();
-					}
-					
-
-					// Language of the relation.
-					// /eacCpf/cpfDescription/relations/resourceRelation/relationEntry@lang
-					if(StringUtils.isEmpty(language) && StringUtils.isNotEmpty(relationEntry.getLang())) {
-						language = relationEntry.getLang();
-					}
-				}
-			} else if (StringUtils.isNotEmpty(firstLanguage)
-					&& StringUtils.isEmpty(resourceRelation.getHref())
-					&& StringUtils.isEmpty(resourceRelation.getResourceRelationType())
-					&& (resourceRelation.getDescriptiveNote() == null
-					 || (resourceRelation.getDescriptiveNote() != null
-							 && resourceRelation.getDescriptiveNote().getP().isEmpty()))) {
-				language = firstLanguage;
+			
+			if (/*!resourceRelation.getRelationEntry().isEmpty() && */(StringUtils.isEmpty(resourceRelation.getArcrole()) || !resourceRelation.getArcrole().equals(ARCROLE_IMAGE) )) {
+				builder = buildResourceRelationForm(builder,cc,resourceRelation,i);
+				goodResourceRelation = true;
 			}
 			
-			// Identifier of the relation.
-			resourceRelationIdentifierTf = new JTextField(id);
+		}
+		
+		if(!goodResourceRelation){
+			builder = buildResourceRelationForm(builder,cc,null,0);
+		}
+			
 
-			// Type and link of the relation.
-			String type = "";
-			String link = "";
+		// Button to add new resource relation.
+		this.setNextRow();
+		JButton addFurtherResourceBtn = new ButtonTab(this.labels.getString("eaccpf.relations.add.further.resource"));
+		addFurtherResourceBtn.addActionListener(new AddFurtherResource(this.eaccpf, this.tabbedPane, this.model));
+		builder.add(addFurtherResourceBtn, cc.xy(1, this.rowNb));
+
+		return builder;
+	}
+
+	private PanelBuilder buildResourceRelationForm(PanelBuilder builder, CellConstraints cc,ResourceRelation resourceRelation, int i) {
+		// Set title.
+		setNextRow();
+		builder.addSeparator(this.labels.getString("eaccpf.relations.resources.relation"), cc.xyw(1, this.rowNb, 7));
+		setNextRow();
+		
+		// Create elements.
+		TextFieldWithLanguage resourceRelationNameTf = null;
+		JTextField resourceRelationIdentifierTf = null;
+		TextFieldWithComboBoxEacCpf resourceRelationHrefAndTypeTf = null;
+		TextAreaWithLanguage resourceRelationDescriptionTa = null;
+		List<TextFieldWithLanguage> resourceRelationOrganisationNameAndIdTfsList = new ArrayList<TextFieldWithLanguage>();
+
+		// Recovers the values of the relation entry elements.
+		String title = "";
+		String other = "";
+		String language = "";
+		String id = "";
+		List<String> agencyNameList = new ArrayList<String>();
+		List<String> agencyCodeList = new ArrayList<String>();
+		
+		// Type and link of the relation.
+		String type = "";
+		String link = "";
+		
+		// Descriptive note.
+		// /eacCpf/cpfDescription/relations/resourceRelation/descriptiveNote
+		// Currently only recovers the content of the first value.
+		String descriptiveNote = "";
+		
+		// Agency code and name of the relation.
+		int size = 0;
+		
+		if(resourceRelation!=null){
+			for (RelationEntry relationEntry : resourceRelation.getRelationEntry()) {
+				// Title of the relation.
+				// /eacCpf/cpfDescription/relations/resourceRelation/relationEntry@localType='title'
+				if(StringUtils.isNotEmpty(relationEntry.getLocalType()) && relationEntry.getLocalType().equals(EacCpfRelationsPanel.LOCALTYPE_TITLE)
+						&& StringUtils.isNotEmpty(relationEntry.getContent())) {
+					title = relationEntry.getContent();
+				}
+				// Id of the relation.
+	            // /eacCpf/cpfDescription/relations/resourceRelation/relationEntry@localType='id'
+				if(StringUtils.isNotEmpty(relationEntry.getLocalType()) && relationEntry.getLocalType().equals(EacCpfRelationsPanel.LOCALTYPE_ID)
+						&& StringUtils.isNotEmpty(relationEntry.getContent())) {
+					id = relationEntry.getContent();
+				}
+
+				// Agency name of the relation.
+				// /eacCpf/cpfDescription/relations/resourceRelation/relationEntry@localType='agencyName'
+				if(StringUtils.isNotEmpty(relationEntry.getLocalType()) && relationEntry.getLocalType().equals(EacCpfRelationsPanel.LOCALTYPE_AGENCYNAME)) {
+					agencyNameList.add(relationEntry.getContent());
+				}
+
+				// Agency code of the relation.
+				// /eacCpf/cpfDescription/relations/resourceRelation/relationEntry@localType='agencyCode'
+				if(StringUtils.isNotEmpty(relationEntry.getLocalType()) && relationEntry.getLocalType().equals(EacCpfRelationsPanel.LOCALTYPE_AGENCYCODE)) {
+					agencyCodeList.add(relationEntry.getContent());
+				}
+
+				// Texts of relation entries without @localType.
+				// This texts will be loaded in field "name"
+				if(StringUtils.isNotEmpty(relationEntry.getContent()) && StringUtils.isEmpty(relationEntry.getLocalType())) {
+					if (!other.isEmpty()) {
+						other = other + ". ";
+					}
+					other = other + relationEntry.getContent();
+				}
+				
+
+				// Language of the relation.
+				// /eacCpf/cpfDescription/relations/resourceRelation/relationEntry@lang
+				if(StringUtils.isEmpty(language) && StringUtils.isNotEmpty(relationEntry.getLang())) {
+					language = relationEntry.getLang();
+				}
+			}
+			
 			// /eacCpf/cpfDescription/relations/resourceRelation@resourceRelationType
 			if (StringUtils.isNotEmpty(resourceRelation.getResourceRelationType())) {
 				type = resourceRelation.getResourceRelationType();
@@ -788,12 +808,7 @@ public class EacCpfRelationsPanel extends EacCpfPanel {
 			if (StringUtils.isNotEmpty(resourceRelation.getHref())) {
 				link = resourceRelation.getHref();
 			}
-			resourceRelationHrefAndTypeTf = new TextFieldWithComboBoxEacCpf(link, type, TextFieldWithComboBoxEacCpf.TYPE_RESOURCE_RELATION, this.entityType, this.labels);
-
-			// Descriptive note.
-			// /eacCpf/cpfDescription/relations/resourceRelation/descriptiveNote
-			// Currently only recovers the content of the first value.
-			String descriptiveNote = "";
+			
 			if(resourceRelation.getDescriptiveNote() != null && !resourceRelation.getDescriptiveNote().getP().isEmpty()
 	                && StringUtils.isNotEmpty(resourceRelation.getDescriptiveNote().getP().get(0).getContent())){
 				descriptiveNote = resourceRelation.getDescriptiveNote().getP().get(0).getContent();
@@ -802,15 +817,12 @@ public class EacCpfRelationsPanel extends EacCpfPanel {
 				}	
 				
 			}
-			resourceRelationDescriptionTa = new TextAreaWithLanguage(descriptiveNote, "", 1);
 			
 			// Name and language of the relation.
 			if (title.isEmpty()) {
 				title = other;
 			}
-			resourceRelationNameTf = new TextFieldWithLanguage(title, language);
-			// Agency code and name of the relation.
-			int size = 0;
+
 			if (agencyNameList.size() > agencyCodeList.size()) {
 				size = agencyNameList.size();
 			} else {
@@ -822,54 +834,79 @@ public class EacCpfRelationsPanel extends EacCpfPanel {
 				agencyCodeList.add("");
 				size = 1;
 			}
+		}
+			
+		if (StringUtils.isEmpty(language)
+				&& StringUtils.isNotEmpty(firstLanguage) && (resourceRelation!=null 
+				&& StringUtils.isEmpty(resourceRelation.getHref())
+				&& StringUtils.isEmpty(resourceRelation.getResourceRelationType())
+				&& (resourceRelation.getDescriptiveNote() == null
+				 || (resourceRelation.getDescriptiveNote() != null
+				 && resourceRelation.getDescriptiveNote().getP().isEmpty()))) 
+					 	|| resourceRelation == null) {
+			language = firstLanguage;
+		}
+		
+		resourceRelationNameTf = new TextFieldWithLanguage(title, language);
+		
+		// Identifier of the relation.
+		resourceRelationIdentifierTf = new JTextField(id);
+			
+		resourceRelationHrefAndTypeTf = new TextFieldWithComboBoxEacCpf(link, type, TextFieldWithComboBoxEacCpf.TYPE_RESOURCE_RELATION, this.entityType, this.labels);
+		
+		resourceRelationDescriptionTa = new TextAreaWithLanguage(descriptiveNote, "", 1);
+		
+		for (int j = 0; j < size; j++) {
+			String agencyName = "";
+			String agencyCode = "";
 
-			for (int j = 0; j < size; j++) {
-				String agencyName = "";
-				String agencyCode = "";
-
-				if (agencyNameList.size() > j) {
-					agencyName = agencyNameList.get(j);
-				}
-
-				if (agencyCodeList.size() > j) {
-					agencyCode = agencyCodeList.get(j);
-				}
-
-				TextFieldWithLanguage resourceRelationOrganisationNameAndIdTf = new TextFieldWithLanguage(agencyName, language, agencyCode);
-				resourceRelationOrganisationNameAndIdTfsList.add(resourceRelationOrganisationNameAndIdTf);
+			if (agencyNameList.size() > j) {
+				agencyName = agencyNameList.get(j);
 			}
 
-			// Add elements to the list.
-			this.resourceRelationNameTfs.add(resourceRelationNameTf);
-			this.resourceRelationIdentifierTfs.add(resourceRelationIdentifierTf);
-			this.resourceRelationHrefAndTypeTfs.add(resourceRelationHrefAndTypeTf);
-			this.resourceRelationDescriptionTas.add(resourceRelationDescriptionTa);
-			this.resourceRelationOrganisationNameAndIdTfs.put(Integer.valueOf(i), resourceRelationOrganisationNameAndIdTfsList);
+			if (agencyCodeList.size() > j) {
+				agencyCode = agencyCodeList.get(j);
+			}
 
-			// Add elements to the panel.
-			// Name and language.
-			builder.addLabel(this.labels.getString("eaccpf.relations.resource.relation.name"), cc.xy(1, this.rowNb));
-			builder.add(resourceRelationNameTf.getTextField(), cc.xy(3, this.rowNb));
-			builder.addLabel(this.labels.getString("eaccpf.commons.select.language"), cc.xy(5, this.rowNb));
-			builder.add(resourceRelationNameTf.getLanguageBox(), cc.xy(7, this.rowNb));
+			TextFieldWithLanguage resourceRelationOrganisationNameAndIdTf = new TextFieldWithLanguage(agencyName, language, agencyCode);
+			resourceRelationOrganisationNameAndIdTfsList.add(resourceRelationOrganisationNameAndIdTf);
+		}
 
-			// Identity.
-			this.setNextRow();
-			builder.addLabel(this.labels.getString("eaccpf.relations.resource.relation.identifier"), cc.xy(1, this.rowNb));
-			builder.add(resourceRelationIdentifierTf, cc.xy(3, this.rowNb));
+		if(size==0){
+			resourceRelationOrganisationNameAndIdTfsList.add(new TextFieldWithLanguage("", "", ""));
+		}
+		// Add elements to the list.
+		this.resourceRelationNameTfs.add(resourceRelationNameTf);
+		this.resourceRelationIdentifierTfs.add(resourceRelationIdentifierTf);
+		this.resourceRelationHrefAndTypeTfs.add(resourceRelationHrefAndTypeTf);
+		this.resourceRelationDescriptionTas.add(resourceRelationDescriptionTa);
+		this.resourceRelationOrganisationNameAndIdTfs.put(Integer.valueOf(i), resourceRelationOrganisationNameAndIdTfsList);
 
-			// Link and relation type.
-			this.setNextRow();
-			builder.addLabel(this.labels.getString("eaccpf.relations.link"), cc.xy(1, this.rowNb));
-			builder.add(resourceRelationHrefAndTypeTf.getTextField(), cc.xy(3, this.rowNb));
-			builder.addLabel(this.labels.getString("eaccpf.relations.relation.type")+"*", cc.xy(5, this.rowNb));
-			builder.add(resourceRelationHrefAndTypeTf.getComboBox(), cc.xy(7, this.rowNb));
+		// Add elements to the panel.
+		// Name and language.
+		builder.addLabel(this.labels.getString("eaccpf.relations.resource.relation.name"), cc.xy(1, this.rowNb));
+		builder.add(resourceRelationNameTf.getTextField(), cc.xy(3, this.rowNb));
+		builder.addLabel(this.labels.getString("eaccpf.commons.select.language"), cc.xy(5, this.rowNb));
+		builder.add(resourceRelationNameTf.getLanguageBox(), cc.xy(7, this.rowNb));
 
-			// Agency part.
-			// Title.
-			this.setNextRow();
-			builder.addLabel(this.labels.getString("eaccpf.relations.resource.relation.organisation"), cc.xyw(1, this.rowNb, 7));
+		// Identity.
+		this.setNextRow();
+		builder.addLabel(this.labels.getString("eaccpf.relations.resource.relation.identifier"), cc.xy(1, this.rowNb));
+		builder.add(resourceRelationIdentifierTf, cc.xy(3, this.rowNb));
 
+		// Link and relation type.
+		this.setNextRow();
+		builder.addLabel(this.labels.getString("eaccpf.relations.link"), cc.xy(1, this.rowNb));
+		builder.add(resourceRelationHrefAndTypeTf.getTextField(), cc.xy(3, this.rowNb));
+		builder.addLabel(this.labels.getString("eaccpf.relations.relation.type")+"*", cc.xy(5, this.rowNb));
+		builder.add(resourceRelationHrefAndTypeTf.getComboBox(), cc.xy(7, this.rowNb));
+
+		// Agency part.
+		// Title.
+		this.setNextRow();
+		builder.addLabel(this.labels.getString("eaccpf.relations.resource.relation.organisation"), cc.xyw(1, this.rowNb, 7));
+		
+		if(size>0){ //flag which control if has been counter a valid list or an empty list
 			for (int j = 0; j < size; j++) {
 				// Name and identifier.
 				this.setNextRow();
@@ -878,25 +915,25 @@ public class EacCpfRelationsPanel extends EacCpfPanel {
 				builder.addLabel(this.labels.getString("eaccpf.relations.identifier"), cc.xy(5, this.rowNb));
 				builder.add(resourceRelationOrganisationNameAndIdTfsList.get(j).getExtraField(), cc.xy(7, this.rowNb));
 			}
-			
-			// Description.
+		}else{
 			this.setNextRow();
-			builder.addLabel(this.labels.getString("eaccpf.relations.description"), cc.xy(1, this.rowNb));
-			builder.add(resourceRelationDescriptionTa.getTextField(), cc.xyw(3, this.rowNb, 5));
-
-			// Button to add new agency information.
-//			this.setNextRow();
-//			JButton addFurtherAgencyBtn = new ButtonTab(this.labels.getString("eaccpf.relations.add.further.organisation"));
-//			addFurtherAgencyBtn.addActionListener(new AddFurtherAgency(this.eaccpf, this.tabbedPane, this.model, AddFurtherAgency.RESOURCE, i));
-//			builder.add(addFurtherAgencyBtn, cc.xy(1, this.rowNb));
+			builder.addLabel(this.labels.getString("eaccpf.relations.name"), cc.xy(1, this.rowNb));
+			builder.add(resourceRelationOrganisationNameAndIdTfsList.get(0).getTextField(), cc.xy(3, this.rowNb));
+			builder.addLabel(this.labels.getString("eaccpf.relations.identifier"), cc.xy(5, this.rowNb));
+			builder.add(resourceRelationOrganisationNameAndIdTfsList.get(0).getExtraField(), cc.xy(7, this.rowNb));
 		}
-
-		// Button to add new resource relation.
+		
+		// Description.
 		this.setNextRow();
-		JButton addFurtherResourceBtn = new ButtonTab(this.labels.getString("eaccpf.relations.add.further.resource"));
-		addFurtherResourceBtn.addActionListener(new AddFurtherResource(this.eaccpf, this.tabbedPane, this.model));
-		builder.add(addFurtherResourceBtn, cc.xy(1, this.rowNb));
+		builder.addLabel(this.labels.getString("eaccpf.relations.description"), cc.xy(1, this.rowNb));
+		builder.add(resourceRelationDescriptionTa.getTextField(), cc.xyw(3, this.rowNb, 5));
 
+//		// Button to add new agency information.
+//		this.setNextRow();
+//		JButton addFurtherAgencyBtn = new ButtonTab(this.labels.getString("eaccpf.relations.add.further.organisation"));
+//		addFurtherAgencyBtn.addActionListener(new AddFurtherAgency(this.eaccpf, this.tabbedPane, this.model, AddFurtherAgency.RESOURCE, i));
+//		builder.add(addFurtherAgencyBtn, cc.xy(1, this.rowNb));
+		
 		return builder;
 	}
 
@@ -1726,6 +1763,17 @@ public class EacCpfRelationsPanel extends EacCpfPanel {
 		}
 
 		private void updateResourceRelations(Relations relations, boolean save) {
+			
+			List<ResourceRelation> savedImageRelations = new ArrayList<ResourceRelation>();
+			if(relations.getResourceRelation()!=null){ //issue #1526
+				Iterator<ResourceRelation> itResourceRelations = relations.getResourceRelation().iterator();
+				while(itResourceRelations.hasNext()){
+					ResourceRelation target = itResourceRelations.next();
+					if(!StringUtils.isEmpty(target.getArcrole()) && target.getArcrole().equals(ARCROLE_IMAGE) ){
+						savedImageRelations.add(target);
+					}
+				}
+			}
 			// Clear the current resource relations list.
 			relations.getResourceRelation().clear();
 			// Check the number of relations.
@@ -1842,10 +1890,14 @@ public class EacCpfRelationsPanel extends EacCpfPanel {
 						}
 					}
 				}
+				
 				if (hasChanged || (!saveResources && i+1 == resourceRelationNameTfs.size())  && !(resourceRelation.getRelationEntry().isEmpty())) {
 					relations.getResourceRelation().add(resourceRelation);
 				}
 			}
+
+			//issue #1526
+			relations.getResourceRelation().addAll(savedImageRelations);
 
 			// Add correct relations to the object.
 			setCorrectRelations(relations);
