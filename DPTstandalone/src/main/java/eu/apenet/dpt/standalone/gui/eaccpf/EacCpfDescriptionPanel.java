@@ -873,7 +873,7 @@ public class EacCpfDescriptionPanel extends EacCpfPanel {
 		//add date to the panel
 		
 		// First date row. Normal date text fields.
-        builder.addLabel(this.labels.getString("eaccpf.commons.date"), cc.xy(1, this.rowNb));
+        builder.addLabel(this.labels.getString("eaccpf.description.image.date"), cc.xy(1, this.rowNb));
         resourceRelationDate.getDateTextField().addFocusListener(new AddIsoText(resourceRelationDate, EacCpfIdentityPanel.UNKNOWN_DATE));
         builder.add(resourceRelationDate.getDateTextField(), cc.xy(3, this.rowNb));
 
@@ -896,7 +896,7 @@ public class EacCpfDescriptionPanel extends EacCpfPanel {
 		
 		//descriptiveNote in resourceRelation
 		for (TextAreaWithLanguage resourceRelationDescriptive: resourceRelationDescriptiveList) {
-			builder.addLabel(this.labels.getString("eaccpf.description.description"), cc.xy(1, this.rowNb));
+			builder.addLabel(this.labels.getString("eaccpf.description.image.description"), cc.xy(1, this.rowNb));
 			builder.add(resourceRelationDescriptive.getTextField(), cc.xyw(3, this.rowNb, 4));
 			setNextRow();
 		}
@@ -997,16 +997,16 @@ public class EacCpfDescriptionPanel extends EacCpfPanel {
 					resourceRelationsImage.add(resourceRelation);
 				}
 			}
-
-			ResourceRelation resourceRelation = resourceRelationsImage.get(this.index);
-			
-			if(resourceRelation!=null && resourceRelation.getDescriptiveNote()!=null 
-					&& resourceRelation.getDescriptiveNote().getP()!=null){
+			if (resourceRelationsImage!=null && !resourceRelationsImage.isEmpty() && resourceRelationsImage.size() > this.index){
+				ResourceRelation resourceRelation = resourceRelationsImage.get(this.index);
 				
-				P p=new P();
-				resourceRelation.getDescriptiveNote().getP().add(p);
+				if(resourceRelation!=null && resourceRelation.getDescriptiveNote()!=null 
+						&& resourceRelation.getDescriptiveNote().getP()!=null){
+					
+					P p=new P();
+					resourceRelation.getDescriptiveNote().getP().add(p);
+				}	
 			}	
-	
 			reloadTabbedPanel(new EacCpfDescriptionPanel(this.eaccpf, tabbedPane, mainTabbedPane, eacCpfFrame, model, labels, entityType, firstLanguage, firstScript).buildEditorPanel(errors), 1);
 		}
 	}
