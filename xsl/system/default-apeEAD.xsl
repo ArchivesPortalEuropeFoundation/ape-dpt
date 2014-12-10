@@ -2094,6 +2094,10 @@
         </entry>
     </xsl:template>
     <!--table/tgroup/tbody/row/entry-->
+    <xsl:template match="table/tgroup/tbody/row/entry/extref" mode="copy nested level">
+        <xsl:value-of select="concat(' ', normalize-space(text()), ' ')"/>
+    </xsl:template>
+    
     <xsl:template match="table/tgroup/tbody/row/entry/corpname | table/tgroup/tbody/row/entry/famname | table/tgroup/tbody/row/entry/function | table/tgroup/tbody/row/entry/genreform | table/tgroup/tbody/row/entry/geogname | table/tgroup/tbody/row/entry/name | table/tgroup/tbody/row/entry/occupation | table/tgroup/tbody/row/entry/persname | table/tgroup/tbody/row/entry/subject | table/tgroup/tbody/row/entry/title"
                   mode="copy nested level">
         <xsl:apply-templates select="node()" mode="#current"/>
