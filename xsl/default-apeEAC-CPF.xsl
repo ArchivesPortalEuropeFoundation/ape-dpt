@@ -1638,6 +1638,9 @@
                 <xsl:attribute name="xlink:title" select="@xlink:title"/>
             </xsl:if>
             <xsl:apply-templates select="relationEntry" mode="copy"/>
+            <xsl:call-template name="checkForAgencyName">
+                <xsl:with-param name="currentLanguage" select="$currentLanguage"/>
+            </xsl:call-template>
             <xsl:if test="count(date) > 0 or count(dateRange) > 0 or count(dateSet[child::*]) > 0">
                 <xsl:choose>
                     <xsl:when test="count(date) = 1 and count(dateRange) = 0">
@@ -1659,7 +1662,7 @@
             <xsl:apply-templates select="placeEntry | descriptiveNote" mode="copy"/>
         </cpfRelation>
     </xsl:template>
-
+    
     <!-- functionRelation -->
     <xsl:template match="functionRelation" mode="copy">
         <functionRelation>
@@ -1686,6 +1689,9 @@
                 <xsl:attribute name="xlink:title" select="@xlink:title"/>
             </xsl:if>
             <xsl:apply-templates select="relationEntry" mode="copy"/>
+            <xsl:call-template name="checkForAgencyName">
+                <xsl:with-param name="currentLanguage" select="$currentLanguage"/>
+            </xsl:call-template>
             <xsl:if test="count(date) > 0 or count(dateRange) > 0 or count(dateSet[child::*]) > 0">
                 <xsl:choose>
                     <xsl:when test="count(date) = 1 and count(dateRange) = 0">
@@ -1734,6 +1740,9 @@
                 <xsl:attribute name="xlink:title" select="@xlink:title"/>
             </xsl:if>
             <xsl:apply-templates select="relationEntry" mode="copy"/>
+            <xsl:call-template name="checkForAgencyName">
+                <xsl:with-param name="currentLanguage" select="$currentLanguage"/>
+            </xsl:call-template>
             <xsl:if test="count(date) > 0 or count(dateRange) > 0 or count(dateSet[child::*]) > 0">
                 <xsl:choose>
                     <xsl:when test="count(date) = 1 and count(dateRange) = 0">
@@ -1908,6 +1917,31 @@
             <xsl:if test="name(.)='c'">@<xsl:value-of select="@level"/></xsl:if>
         </xsl:variable>
         <xsl:message select="normalize-space($excludedElement)"/>
+    </xsl:template>
+    
+    <!--
+      check if agency name available in database
+      takes as input: an agency code from the file, available in relationEntry[@localType = "agencyCode"]
+      outputs: relationEntry[@localType = "agencyName"] with name of agency if available, warning message if not available
+    -->
+    <xsl:template name="checkForAgencyName">
+        <xsl:param name="currentLanguage"/>
+        <xsl:if
+            test="relationEntry[@localType = 'agencyCode'] and not(relationEntry[@localType = 'agencyName'])">
+<!--            <xsl:variable name="retrievedName"
+                select="ape:retrieveAgencyName(relationEntry[@localType = 'agencyCode'][1])"/>
+            <xsl:choose>
+                <xsl:when test="$retrievedName = 'no name found'">-->
+            <xsl:message select="concat(name(.), ' &quot;', relationEntry[@localType = 'title'][1], '&quot;: ', ape:resource('eaccpf.message.relation.missingAgencyName', $currentLanguage))"/>
+<!--                </xsl:when>
+                <xsl:otherwise>
+                    <relationEntry>
+                        <xsl:attribute name="localType" select="'agencyName'"/>
+                        <xsl:value-of select="$retrievedName"/>
+                    </relationEntry>
+                </xsl:otherwise>
+            </xsl:choose>-->
+        </xsl:if>
     </xsl:template>
     
     <!--
