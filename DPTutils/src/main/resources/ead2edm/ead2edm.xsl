@@ -29,7 +29,7 @@
     <xsl:param name="inheritOrigination"/>
     <xsl:param name="inheritLanguage"/>
     <xsl:param name="inheritCustodhist"/>
-    <xsl:param name="inheritAltformavail"/>
+    <!--<xsl:param name="inheritAltformavail"/>-->
     <xsl:param name="inheritControlaccess"/>
     <xsl:param name="useExistingDaoRole"/>
     <xsl:param name="useExistingRepository"/>
@@ -291,7 +291,7 @@
         <xsl:param name="inheritedOriginations"/>
         <xsl:param name="inheritedLanguages"/>
         <xsl:param name="inheritedCustodhists"/>
-        <xsl:param name="inheritedAltformavails"/>
+        <!--<xsl:param name="inheritedAltformavails"/>-->
         <xsl:param name="inheritedControlaccesses"/>
         <xsl:param name="positionChain"/>
 
@@ -724,8 +724,8 @@
                 <xsl:with-param name="inheritedOriginations" select="$updatedInheritedOriginations"/>
                 <xsl:with-param name="inheritedLanguages" select="$updatedInheritedLanguages"/>
                 <xsl:with-param name="inheritedCustodhists" select="$updatedInheritedCustodhists"/>
-                <xsl:with-param name="inheritedAltformavails"
-                    select="$updatedInheritedAltformavails"/>
+                <!--<xsl:with-param name="inheritedAltformavails"
+                    select="$updatedInheritedAltformavails"/>-->
                 <xsl:with-param name="inheritedControlaccesses"
                     select="$updatedInheritedControlaccesses"/>
                 <xsl:with-param name="positionChain">
@@ -747,8 +747,8 @@
                 <xsl:with-param name="inheritedOriginations" select="$updatedInheritedOriginations"/>
                 <xsl:with-param name="inheritedLanguages" select="$updatedInheritedLanguages"/>
                 <xsl:with-param name="inheritedCustodhists" select="$updatedInheritedCustodhists"/>
-                <xsl:with-param name="inheritedAltformavails"
-                    select="$updatedInheritedAltformavails"/>
+                <!--<xsl:with-param name="inheritedAltformavails"
+                    select="$updatedInheritedAltformavails"/>-->
                 <xsl:with-param name="inheritedControlaccesses"
                     select="$updatedInheritedControlaccesses"/>
                 <xsl:with-param name="positionChain">
