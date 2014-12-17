@@ -331,7 +331,7 @@
                 </xsl:otherwise>
             </xsl:choose>
         </xsl:variable>
-        <xsl:variable name="updatedInheritedAltformavails">
+        <!--<xsl:variable name="updatedInheritedAltformavails">
             <xsl:choose>
                 <xsl:when test="$inheritAltformavail = &quot;true&quot; and ./altformavail">
                     <xsl:call-template name="altformavail">
@@ -342,7 +342,7 @@
                     <xsl:copy-of select="$inheritedAltformavails"/>
                 </xsl:otherwise>
             </xsl:choose>
-        </xsl:variable>
+        </xsl:variable>-->
         <xsl:variable name="updatedInheritedControlaccesses">
             <xsl:choose>
                 <xsl:when test="$inheritControlaccess = &quot;true&quot; and ./controlaccess">
@@ -1127,7 +1127,7 @@
                             </xsl:choose>
                         </xsl:otherwise>
                     </xsl:choose>
-                    <xsl:choose>
+                    <!--<xsl:choose>
                         <xsl:when test="$currentnode/altformavail">
                             <xsl:call-template name="altformavail">
                                 <xsl:with-param name="altformavails"
@@ -1150,7 +1150,7 @@
                                 </xsl:otherwise>
                             </xsl:choose>
                         </xsl:otherwise>
-                    </xsl:choose>
+                    </xsl:choose>-->
                     <xsl:choose>
                         <xsl:when test="$currentnode/controlaccess">
                             <xsl:call-template name="controlaccess">
@@ -1336,7 +1336,7 @@
                             </xsl:if>
                         </xsl:otherwise>
                     </xsl:choose>
-                    <xsl:choose>
+                    <!--<xsl:choose>
                         <xsl:when test="$currentnode/altformavail">
                             <xsl:call-template name="altformavail">
                                 <xsl:with-param name="altformavails"
@@ -1349,7 +1349,7 @@
                                 <xsl:copy-of select="$inheritedAltformavails"/>
                             </xsl:if>
                         </xsl:otherwise>
-                    </xsl:choose>
+                    </xsl:choose>-->
                     <xsl:choose>
                         <xsl:when test="$currentnode/controlaccess">
                             <xsl:call-template name="controlaccess">
@@ -1653,7 +1653,7 @@
         <!--</xsl:for-each>-->
     </xsl:template>
 
-    <xsl:template name="altformavail">
+    <!--<xsl:template name="altformavail">
         <xsl:param name="altformavails"/>
         <xsl:for-each select="$altformavails">
             <xsl:variable name="content">
@@ -1663,7 +1663,7 @@
                 <xsl:value-of select="fn:replace(normalize-space($content), '[\n\t\r]', '')"/>
             </dcterms:hasFormat>
         </xsl:for-each>
-    </xsl:template>
+    </xsl:template>-->
     <xsl:template name="controlaccess">
         <xsl:param name="controlaccesses"/>
         <xsl:for-each select="$controlaccesses/persname">
