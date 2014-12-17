@@ -30,6 +30,7 @@ import java.util.ResourceBundle;
 import java.util.regex.Pattern;
 
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.JTabbedPane;
 
 import org.apache.commons.lang.StringUtils;
@@ -114,7 +115,7 @@ public abstract class EacCpfPanel extends CommonsPropertiesPanels {
     protected static String firstLanguage;
     protected static String firstScript;
     protected static String responsible;
-
+    protected static Boolean globalIsActivated;
   
     public EacCpfPanel(EacCpf eaccpf, JTabbedPane tabbedPane, JTabbedPane mainTabbedPane, JFrame eacCpfFrame, ProfileListModel model, ResourceBundle labels, XmlTypeEacCpf entityType, String firstLanguage, String firstScript) {
         this.eacCpfFrame = eacCpfFrame;
@@ -126,6 +127,7 @@ public abstract class EacCpfPanel extends CommonsPropertiesPanels {
         this.entityType = entityType;
         EacCpfPanel.firstLanguage = firstLanguage;
         EacCpfPanel.firstScript = firstScript;
+        globalIsActivated = (globalIsActivated != null)?globalIsActivated:false;
     }
     
     protected void closeFrame() {
@@ -1009,6 +1011,59 @@ public abstract class EacCpfPanel extends CommonsPropertiesPanels {
 		}
 	}
 	
+	protected boolean isStandardDate(List<TextFieldsWithRadioButtonForDates> useDatesTfsWCbList){
+		boolean error = false;
+		if(useDatesTfsWCbList!=null){
+			Iterator<TextFieldsWithRadioButtonForDates> itUseDates = useDatesTfsWCbList.iterator();
+			while(!error && itUseDates.hasNext()){
+				TextFieldsWithRadioButtonForDates useDates = itUseDates.next();
+				if(!useDates.isDateRange() && useDates.isSelectedDateFromDefinedRB()){
+					if(StringUtils.isNotEmpty(useDates.getStandardDateValue())){
+						error = parseStandardDate(useDates.getStandardDateValue()).isEmpty();
+					}
+				}else{
+					if(useDates.isSelectedDateToDefinedRB()){
+						if(StringUtils.isNotEmpty(useDates.getStandardDateToValue())){
+							error = parseStandardDate(useDates.getStandardDateToValue()).isEmpty();
+						}
+					}
+					if(useDates.isSelectedDateFromDefinedRB()){
+						if(StringUtils.isNotEmpty(useDates.getStandardDateFromValue())){
+							error = parseStandardDate(useDates.getStandardDateFromValue()).isEmpty();
+						}
+					}
+				} 
+			}
+		}
+		
+		return !error;
+	}
+	
+	
+    protected boolean isEmptyDate(List<TextFieldsWithRadioButtonForDates> useDatesTfsWCbList) {
+		boolean error = false;
+		if(useDatesTfsWCbList!=null){
+			Iterator<TextFieldsWithRadioButtonForDates> itUseDates = useDatesTfsWCbList.iterator();
+			while(!error && itUseDates.hasNext()){
+				TextFieldsWithRadioButtonForDates useDates = itUseDates.next();
+				if (!useDates.isDateRange() && useDates.isSelectedDateDefinedRB()) {
+	                if (useDates.getStandardDateValue().isEmpty()) {
+	                	error = true;
+	                }
+	            } else if (useDates.isDateRange() && useDates.isSelectedDateFromDefinedRB()) {
+	                if (useDates.getStandardDateFromValue().isEmpty()) {
+	                	error = true;
+	                }
+	            } else if (useDates.isDateRange() && useDates.isSelectedDateToDefinedRB()) {
+	                if (useDates.getStandardDateToValue().isEmpty()) {
+	                	error = true;
+	                }
+	            }
+			}
+		}
+		return error;
+	}
+	
 	/**
 	 * Check dates for events.
 	 */
@@ -1018,22 +1073,28 @@ public abstract class EacCpfPanel extends CommonsPropertiesPanels {
 			Iterator<TextFieldsWithRadioButtonForDates> itUseDates = useDatesTfsWCbList.iterator();
 			while(!error && itUseDates.hasNext()){
 				TextFieldsWithRadioButtonForDates useDates = itUseDates.next();
-				if(useDates.isSelectedDateDefinedRB()){
-					if(StringUtils.isNotEmpty(useDates.getDateValue())){
-						error = StringUtils.isEmpty(parseStandardDate(useDates.getDateValue()));
-						error = (error && matchWithDatePatterns(useDates.getDateValue()));
-					}
-				}else if(useDates.isSelectedDateFromDefinedRB()){
-					if(StringUtils.isNotEmpty(useDates.getDateFromValue())){
-						error = StringUtils.isEmpty(parseStandardDate(useDates.getStandardDateFromValue()));
-						error = (error && matchWithDatePatterns(useDates.getStandardDateFromValue()));
-					}
-				}else if(useDates.isSelectedDateToDefinedRB()){
-					if(StringUtils.isNotEmpty(useDates.getDateToValue())){
-						error = StringUtils.isEmpty(parseStandardDate(useDates.getStandardDateToValue()));
-						error = (error && matchWithDatePatterns(useDates.getStandardDateToValue()));
-					}
-				}
+				if (!useDates.isDateRange() && useDates.isSelectedDateDefinedRB()) {
+	                if (!useDates.getStandardDateValue().isEmpty()) {
+	                    if (parseStandardDate(useDates.getStandardDateValue()).isEmpty()) {
+		                	return false;
+	                    }
+	                }
+	            } else if (useDates.isDateRange() && (useDates.isSelectedDateFromDefinedRB() || useDates.isSelectedDateToDefinedRB())) {
+	                if (!useDates.getStandardDateFromValue().isEmpty()) {
+	                    if (parseStandardDate(useDates.getStandardDateFromValue()).isEmpty()) {
+		                	return false;
+	                    }
+	                }
+	                if (!useDates.getStandardDateToValue().isEmpty()) {
+	                    if (parseStandardDate(useDates.getStandardDateToValue()).isEmpty()) {
+		                	return false;
+	                    }
+	                }
+
+	                if(!error && !checkDates(useDates.getStandardDateFromValue(), useDates.getStandardDateToValue())){
+	                	error = false;
+	                }
+	            } 
 			}
 		}
 		return !error;
