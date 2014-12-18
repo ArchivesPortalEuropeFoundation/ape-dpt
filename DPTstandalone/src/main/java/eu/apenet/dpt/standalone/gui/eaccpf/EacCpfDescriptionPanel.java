@@ -4171,6 +4171,10 @@ public class EacCpfDescriptionPanel extends EacCpfPanel {
 				emptyDate = isEmptyDate(useDatesTfsWCbList);
 			}
 		}
+		if(!error && (resourcesRelationDate!=null && !resourcesRelationDate.isEmpty())){
+			error = !isRightDate(resourcesRelationDate);
+			emptyDate = isEmptyDate(resourcesRelationDate);
+		}
 		if(error && emptyDate){
 			checkEmpty(error,true);
 		}else{
