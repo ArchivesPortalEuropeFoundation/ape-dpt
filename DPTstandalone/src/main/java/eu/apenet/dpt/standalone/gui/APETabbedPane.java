@@ -18,12 +18,11 @@ package eu.apenet.dpt.standalone.gui;
  * #L%
  */
 
-import eu.apenet.dpt.standalone.gui.conversion.ConvertActionListener;
+import eu.apenet.dpt.standalone.gui.batch.ConvertAndValidateActionListener;
 import eu.apenet.dpt.standalone.gui.db.RetrieveFromDb;
 import eu.apenet.dpt.standalone.gui.edition.*;
 import eu.apenet.dpt.standalone.gui.ead2edm.ConvertEdmActionListener;
 import eu.apenet.dpt.standalone.gui.validation.DownloadReportActionListener;
-import eu.apenet.dpt.standalone.gui.validation.ValidateActionListener;
 import eu.apenet.dpt.standalone.gui.xsdaddition.XsdObject;
 import eu.apenet.dpt.utils.util.DOMUtil;
 import eu.apenet.dpt.utils.util.Xsd_enum;
@@ -74,6 +73,7 @@ public class APETabbedPane extends JTabbedPane {
 
     private JButton convertBtn;
     private JButton validateBtn;
+    private JButton convertAndValidateBtn;
     private JButton convertEdmBtn;
     private JButton validationReportBtn;
     private JButton messageReportBtn;
@@ -135,6 +135,7 @@ public class APETabbedPane extends JTabbedPane {
 
         convertBtn = new JButton();
         validateBtn = new JButton();
+        convertAndValidateBtn = new JButton();
         convertEdmBtn = new JButton();
         messageReportBtn = new JButton();
 
@@ -158,7 +159,7 @@ public class APETabbedPane extends JTabbedPane {
         edmConversionErrors.setLineWrap(true);
         edmConversionErrors.setWrapStyleWord(true);
 
-        convertBtn.addActionListener(new ConvertActionListener(parent, dataPreparationToolGUI, apePanel));
+        convertBtn.addActionListener(new ConvertAndValidateActionListener(dataPreparationToolGUI, apePanel, ConvertAndValidateActionListener.CONVERT));
         convertBtn.setPreferredSize(DEFAULT_BTN_DIMENSION);
         convertBtn.setEnabled(false);
 
@@ -170,9 +171,13 @@ public class APETabbedPane extends JTabbedPane {
         messageReportBtn.setPreferredSize(DEFAULT_BTN_DIMENSION);
         messageReportBtn.setEnabled(false);
 
-        validateBtn.addActionListener(new ValidateActionListener(dataPreparationToolGUI, this));
+        validateBtn.addActionListener(new ConvertAndValidateActionListener(dataPreparationToolGUI, this, ConvertAndValidateActionListener.VALIDATE));
         validateBtn.setPreferredSize(DEFAULT_BTN_DIMENSION);
         validateBtn.setEnabled(false);
+
+        convertAndValidateBtn.addActionListener(new ConvertAndValidateActionListener(dataPreparationToolGUI, this, ConvertAndValidateActionListener.CONVERT_AND_VALIDATE));
+        convertAndValidateBtn.setPreferredSize(DEFAULT_BTN_DIMENSION);
+        convertAndValidateBtn.setEnabled(false);
 
         validationReportBtn.addActionListener(new DownloadReportActionListener(dataPreparationToolGUI));
         validationReportBtn.setPreferredSize(DEFAULT_BTN_DIMENSION);
@@ -227,6 +232,12 @@ public class APETabbedPane extends JTabbedPane {
     public void disableValidationBtn() {
         validateBtn.setEnabled(false);
     }
+    public void enableConvertAndValidateBtn() {
+        convertAndValidateBtn.setEnabled(true);
+    }
+    public void disableConvertAndValidateBtn() {
+        convertAndValidateBtn.setEnabled(false);
+    }
     public void enableConversionEdmBtn() {
         convertEdmBtn.setEnabled(true);
     }
@@ -255,6 +266,7 @@ public class APETabbedPane extends JTabbedPane {
 
         convertBtn.setText(labels.getString("convert"));
         validateBtn.setText(labels.getString("validate"));
+        convertAndValidateBtn.setText(labels.getString("convertAndValidate"));
         convertEdmBtn.setText(labels.getString("summary.convertEdm.button"));
         messageReportBtn.setText(labels.getString("summary.messageReport.button"));
         validationReportBtn.setText(labels.getString("dataquality.report.download"));
@@ -304,6 +316,8 @@ public class APETabbedPane extends JTabbedPane {
         p.add(convertBtn);
         p.add(Box.createRigidArea(new Dimension(0, 10)));
         p.add(validateBtn);
+        p.add(Box.createRigidArea(new Dimension(0, 10)));
+        p.add(convertAndValidateBtn);
         p.add(Box.createRigidArea(new Dimension(0, 10)));
         p.add(convertEdmBtn);
         p.add(Box.createRigidArea(new Dimension(0, 10)));
@@ -461,17 +475,5 @@ public class APETabbedPane extends JTabbedPane {
                 }
             }
         }
-    }
-
-    public JButton getConvertBtn() {
-        return convertBtn;
-    }
-
-    public JButton getValidateBtn() {
-        return validateBtn;
-    }
-
-    public JButton getMessageReportBtn() {
-        return messageReportBtn;
     }
 }

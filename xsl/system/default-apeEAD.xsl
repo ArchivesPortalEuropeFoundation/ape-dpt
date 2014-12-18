@@ -165,9 +165,9 @@
     <!-- emph is only copied if it is of type render bold or italic - if not it just take the data inside the field and prints it -->
     <xsl:template match="emph" mode="#all">
         <xsl:choose>
-            <xsl:when test="parent::bibref or parent::extref"/>
+            <xsl:when test="parent::extref"/>
             <xsl:when
-                test="parent::corpname or parent::origination or parent::physfacet or parent::persname or parent::head or parent::titleproper or parent::unitdate or parent::archref or parent::emph or parent::unittitle or parent::physdesc or parent::entry or parent::unitid or parent::ref or parent::title">
+                test="parent::bibref or parent::corpname or parent::origination or parent::physfacet or parent::persname or parent::head or parent::titleproper or parent::unitdate or parent::archref or parent::emph or parent::unittitle or parent::physdesc or parent::entry or parent::unitid or parent::ref or parent::title">
                 <!--unittitle here is a hack - better fix it in the display xsl of portal/dashboard-->
                 <xsl:value-of select="normalize-space(.)"/>
                 <xsl:text> </xsl:text>
@@ -2558,6 +2558,7 @@
             <xsl:when test="not(child::*)"/>
             <xsl:when test="not(ancestor::controlaccess)">
                 <xsl:choose>
+                    <xsl:when test="child::chronlist and count(child::*) eq 1"/>
                     <xsl:when test="child::genreform[@type='typir'] and count(child::*) &gt; 1">
                         <xsl:if test="not(child::head and count(child::*) = 2)">
                             <controlaccess>

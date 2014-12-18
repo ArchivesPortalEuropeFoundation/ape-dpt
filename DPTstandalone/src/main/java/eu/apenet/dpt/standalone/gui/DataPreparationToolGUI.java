@@ -21,26 +21,18 @@ package eu.apenet.dpt.standalone.gui;
 import eu.apenet.dpt.standalone.gui.adhoc.DirectoryPermission;
 import eu.apenet.dpt.standalone.gui.adhoc.FileNameComparator;
 import eu.apenet.dpt.standalone.gui.batch.ConvertAndValidateActionListener;
-import eu.apenet.dpt.standalone.gui.conversion.ConvertActionListener;
 import eu.apenet.dpt.standalone.gui.databasechecker.DatabaseCheckerActionListener;
 import eu.apenet.dpt.standalone.gui.dateconversion.DateConversionRulesDialog;
 import eu.apenet.dpt.standalone.gui.db.RetrieveFromDb;
 import eu.apenet.dpt.standalone.gui.eaccpf.EacCpfFrame;
-import eu.apenet.dpt.standalone.gui.ead2edm.ConvertEdmActionListener;
 import eu.apenet.dpt.standalone.gui.eag2012.Eag2012Frame;
 import eu.apenet.dpt.standalone.gui.edition.CheckList;
 import eu.apenet.dpt.standalone.gui.edition.PopupMouseListener;
 import eu.apenet.dpt.standalone.gui.hgcreation.*;
 import eu.apenet.dpt.standalone.gui.options.DigitalObjectAndRightsOptionFrame;
-import eu.apenet.dpt.standalone.gui.validation.ValidateActionListener;
-import eu.apenet.dpt.standalone.gui.validation.ValidateSelectionActionListener;
 import eu.apenet.dpt.standalone.gui.xsdaddition.XsdObject;
-//import eu.apenet.dpt.utils.service.MultiResourceBundle;
 import eu.apenet.dpt.utils.service.ResourceBundlesWrapper;
-import eu.apenet.dpt.utils.util.LoggerJAXB;
-import eu.apenet.dpt.utils.util.ReadXml;
-import eu.apenet.dpt.utils.util.XmlChecker;
-import eu.apenet.dpt.utils.util.Xsd_enum;
+import eu.apenet.dpt.utils.util.*;
 import eu.apenet.dpt.utils.util.extendxsl.DateNormalization;
 import java.awt.*;
 import java.awt.dnd.DropTarget;
@@ -92,9 +84,9 @@ public class DataPreparationToolGUI extends JFrame {
     /**
      * Button and titles to be used in the GUI
      */
-    private JButton convertAndValidateBtn = new JButton();
-    private JButton validateSelectionBtn = new JButton();
-    private JButton convertEdmSelectionBtn = new JButton();
+//    private JButton convertAndValidateBtn = new JButton();
+//    private JButton validateSelectionBtn = new JButton();
+//    private JButton convertEdmSelectionBtn = new JButton();
     private JButton createHGBtn = new JButton();
 
     private Cursor WAIT_CURSOR = Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR);
@@ -113,6 +105,7 @@ public class DataPreparationToolGUI extends JFrame {
     private JMenu helpMenu = new JMenu();
     private JMenuItem fileItem = new JMenuItem();
     private JMenu createEag2012Item = new JMenu();
+    private JMenuItem closeSelectedItem = new JMenuItem();
     private JMenuItem saveSelectedItem = new JMenuItem();
     private JMenuItem saveMessageReportItem = new JMenuItem();
     private JMenuItem sendFilesWebDAV = new JMenuItem();
@@ -232,7 +225,9 @@ public class DataPreparationToolGUI extends JFrame {
         }
         tempDir.mkdir();
         tempDir.deleteOnExit();
-
+//        ListControlaccessTerms listControlaccessTerms = new ListControlaccessTerms("/Users/yoannmoranville/Documents/Work/APE/data/AD78/");
+//        listControlaccessTerms.countTerms();
+//        listControlaccessTerms.displayLogsResults();
 //        CountCLevels countCLevels = new CountCLevels("/Users/yoannmoranville/Work/APEnet/Projects/data/Ready_APEnet/READY/Finland/HeNAF/FA_EAD/");
 //        CountCLevels countCLevels = new CountCLevels("/Users/yoannmoranville/Work/APEnet/Projects/data/BORA/ALL/");
 //        countCLevels.setCopyInAppropriateDirs(true);
@@ -274,6 +269,11 @@ public class DataPreparationToolGUI extends JFrame {
         createEag2012Item.add(createEag2012FromScratch);
 
         fileMenu.add(createEag2012Item);
+
+        closeSelectedItem.setEnabled(false);
+//        closeSelectedItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_BACK_SPACE, Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()));
+        closeSelectedItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_D, Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()));
+        fileMenu.add(closeSelectedItem);
         saveSelectedItem.setEnabled(false);
         saveSelectedItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S, Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()));
         fileMenu.add(saveSelectedItem);
@@ -340,15 +340,15 @@ public class DataPreparationToolGUI extends JFrame {
         createHGBtn.addActionListener(createHgListener);
         createHGBtn.setEnabled(false);
 
-        validateItem.addActionListener(new ValidateActionListener(this, apePanel.getApeTabbedPane()));
-        convertItem.addActionListener(new ConvertActionListener(getContentPane(), this, apePanel));
+        validateItem.addActionListener(new ConvertAndValidateActionListener(this, apePanel.getApeTabbedPane(), ConvertAndValidateActionListener.VALIDATE));
+        convertItem.addActionListener(new ConvertAndValidateActionListener(this, apePanel.getApeTabbedPane(), ConvertAndValidateActionListener.CONVERT));
 
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         getContentPane().add(createWest(), BorderLayout.WEST);
 
-        convertAndValidateBtn.addActionListener(new ConvertAndValidateActionListener(this, getContentPane()));
-        validateSelectionBtn.addActionListener(new ValidateSelectionActionListener(this, getContentPane()));
-        convertEdmSelectionBtn.addActionListener(new ConvertEdmActionListener(labels, this, apePanel));
+//        convertAndValidateBtn.addActionListener(new ConvertAndValidateActionListener(this, getContentPane()));
+//        validateSelectionBtn.addActionListener(new ValidateSelectionActionListener(this, getContentPane()));
+//        convertEdmSelectionBtn.addActionListener(new ConvertEdmActionListener(labels, this, apePanel));
 
         nameComponents();
         wireUp();
@@ -366,6 +366,7 @@ public class DataPreparationToolGUI extends JFrame {
         createEag2012FromExistingEag02.setText(labels.getString("menu.createEag2012FromEag02"));
         createEag2012FromExistingEag2012.setText(labels.getString("menu.createEag2012FromEag2012"));
         createEag2012FromScratch.setText(labels.getString("menu.createEag2012FromScratch"));
+        closeSelectedItem.setText(labels.getString("menu.closeSelectedFile"));
         saveSelectedItem.setText(labels.getString("saveSelectedFile"));
         saveMessageReportItem.setText(labels.getString("saveReport"));
         sendFilesWebDAV.setText(labels.getString("sendFilesWebDAV"));
@@ -388,7 +389,7 @@ public class DataPreparationToolGUI extends JFrame {
         validateItem.setText(labels.getString("validate"));
         convertItem.setText(labels.getString("convert"));
 
-        convertAndValidateBtn.setText(labels.getString("convertAndValidate"));
+//        convertAndValidateBtn.setText(labels.getString("convertAndValidate"));
         createHGBtn.setText(labels.getString("createHG"));
         progressLabel.setText(labels.getString("chooseFile"));
         deleteFileItem.setText(labels.getString("removeFile"));
@@ -403,8 +404,8 @@ public class DataPreparationToolGUI extends JFrame {
         helpMenu.setText(labels.getString("about"));
         internetApexItem.setText(labels.getString("projectWebsite"));
 
-        validateSelectionBtn.setText(labels.getString("validateSelected"));
-        convertEdmSelectionBtn.setText(labels.getString("convertEseSelectionBtn"));
+//        validateSelectionBtn.setText(labels.getString("validateSelected"));
+//        convertEdmSelectionBtn.setText(labels.getString("convertEseSelectionBtn"));
 
         xmlEadListLabel.setText(labels.getString("xmlEadFiles"));
 
@@ -693,6 +694,11 @@ public class DataPreparationToolGUI extends JFrame {
                 }
             }
         });
+        closeSelectedItem.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                xmlEadListModel.removeFiles(xmlEadList.getSelectedValues());
+            }
+        });
         saveSelectedItem.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 String defaultOutputDirectory = retrieveFromDb.retrieveDefaultSaveFolder();
@@ -791,20 +797,20 @@ public class DataPreparationToolGUI extends JFrame {
                 if (!e.getValueIsAdjusting()) {
                     if (xmlEadList.getSelectedValues() != null && xmlEadList.getSelectedValues().length != 0) {
                         if (xmlEadList.getSelectedValues().length > 1) {
-                            convertAndValidateBtn.setEnabled(true);
-                            validateSelectionBtn.setEnabled(true);
-                            if (isValidated(xmlEadList)) {
-                                convertEdmSelectionBtn.setEnabled(true);
-                            } else {
-                                convertEdmSelectionBtn.setEnabled(false);
-                            }
-                            disableAllBtnAndItems();
+//                            convertAndValidateBtn.setEnabled(true);
+//                            validateSelectionBtn.setEnabled(true);
+//                            if (isValidated(xmlEadList)) {
+//                                convertEdmSelectionBtn.setEnabled(true);
+//                            } else {
+//                                convertEdmSelectionBtn.setEnabled(false);
+//                            }
+//                            disableAllBtnAndItems();
                             saveMessageReportItem.setEnabled(true);
                             changeInfoInGUI("");
                         } else {
-                            convertAndValidateBtn.setEnabled(false);
-                            validateSelectionBtn.setEnabled(false);
-                            convertEdmSelectionBtn.setEnabled(false);
+//                            convertAndValidateBtn.setEnabled(false);
+//                            validateSelectionBtn.setEnabled(false);
+//                            convertEdmSelectionBtn.setEnabled(false);
                             changeInfoInGUI(((File) xmlEadList.getSelectedValue()).getName());
                             if (apePanel.getApeTabbedPane().getSelectedIndex() == APETabbedPane.TAB_EDITION) {
                                 apePanel.getApeTabbedPane().createEditionTree(((File) xmlEadList.getSelectedValue()));
@@ -817,9 +823,9 @@ public class DataPreparationToolGUI extends JFrame {
                         }
                         checkHoldingsGuideButton();
                     } else {
-                        convertAndValidateBtn.setEnabled(false);
-                        validateSelectionBtn.setEnabled(false);
-                        convertEdmSelectionBtn.setEnabled(false);
+//                        convertAndValidateBtn.setEnabled(false);
+//                        validateSelectionBtn.setEnabled(false);
+//                        convertEdmSelectionBtn.setEnabled(false);
                         createHGBtn.setEnabled(false);
                         changeInfoInGUI("");
                     }
@@ -964,15 +970,15 @@ public class DataPreparationToolGUI extends JFrame {
     private JPanel createSouthWest() {
         JPanel p = new JPanel(new GridLayout(0, 1));
         p.add(progressLabel);
-        convertAndValidateBtn.setPreferredSize(new Dimension(-1, 40)); //width max
-        convertAndValidateBtn.setEnabled(false);
-        p.add(convertAndValidateBtn);
-        validateSelectionBtn.setPreferredSize(new Dimension(-1, 40));
-        validateSelectionBtn.setEnabled(false);
-        p.add(validateSelectionBtn);
-        convertEdmSelectionBtn.setPreferredSize(new Dimension(-1, 40));
-        convertEdmSelectionBtn.setEnabled(false);
-        p.add(convertEdmSelectionBtn);
+//        convertAndValidateBtn.setPreferredSize(new Dimension(-1, 40)); //width max
+//        convertAndValidateBtn.setEnabled(false);
+//        p.add(convertAndValidateBtn);
+//        validateSelectionBtn.setPreferredSize(new Dimension(-1, 40));
+//        validateSelectionBtn.setEnabled(false);
+//        p.add(validateSelectionBtn);
+//        convertEdmSelectionBtn.setPreferredSize(new Dimension(-1, 40));
+//        convertEdmSelectionBtn.setEnabled(false);
+//        p.add(convertEdmSelectionBtn);
         createHGBtn.setPreferredSize(new Dimension(-1, 40));
         createHGBtn.setEnabled(false);
         p.add(createHGBtn);
@@ -981,7 +987,9 @@ public class DataPreparationToolGUI extends JFrame {
 
     private boolean isCorrect(File file) {
         if (fileInstances.containsKey(file.getName())) {
-            createErrorOrWarningPanel(new Exception(labels.getString("error.file.exists")), false, labels.getString("error.file.exists"), this);
+            if(JOptionPane.showConfirmDialog(getContentPane(), labels.getString("error.file.exists") + " - Do you want to overwrite the file?", labels.getString("options.howLoadNewFiles"), JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE) == JOptionPane.YES_OPTION) {
+                ((ProfileListModel)getXmlEadList().getModel()).removeFile(file);
+            }
         }
         if (checkLoadingFiles() && XmlChecker.isXmlParseable(file) != null) {
             createErrorOrWarningPanel(new Exception(labels.getString("error.file.notXml")), false, labels.getString("error.file.notXml"), this);
@@ -1018,9 +1026,9 @@ public class DataPreparationToolGUI extends JFrame {
     }
     private Runnable finalAct = new Runnable() {
         public void run() {
-            convertAndValidateBtn.setEnabled(false);
-            validateSelectionBtn.setEnabled(false);
-            convertEdmSelectionBtn.setEnabled(false);
+//            convertAndValidateBtn.setEnabled(false);
+//            validateSelectionBtn.setEnabled(false);
+//            convertEdmSelectionBtn.setEnabled(false);
             createHGBtn.setEnabled(false);
             xmlEadList.setEnabled(true);
         }
@@ -1231,6 +1239,7 @@ public class DataPreparationToolGUI extends JFrame {
                 apeTabbedPane.disableValidationBtn();
                 apeTabbedPane.disableConversionBtn();
                 apeTabbedPane.disableConversionEdmBtn();
+                closeSelectedItem.setEnabled(true);
                 saveSelectedItem.setEnabled(true);
                 saveMessageReportItem.setEnabled(true);
                 apeTabbedPane.enableMessageReportBtn();
@@ -1240,7 +1249,9 @@ public class DataPreparationToolGUI extends JFrame {
             } else {
                 validateItem.setEnabled(true);
                 apeTabbedPane.enableValidationBtn();
+                apeTabbedPane.enableConvertAndValidateBtn();
                 apeTabbedPane.disableConversionEdmBtn();
+                closeSelectedItem.setEnabled(true);
                 saveSelectedItem.setEnabled(true);
                 saveMessageReportItem.setEnabled(true);
                 apeTabbedPane.enableMessageReportBtn();
@@ -1250,6 +1261,7 @@ public class DataPreparationToolGUI extends JFrame {
                 validateItem.setEnabled(false);
                 apeTabbedPane.disableConversionBtn();
                 apeTabbedPane.disableValidationBtn();
+                closeSelectedItem.setEnabled(true);
                 saveSelectedItem.setEnabled(true);
                 saveMessageReportItem.setEnabled(true);
                 apeTabbedPane.enableMessageReportBtn();
@@ -1446,21 +1458,22 @@ public class DataPreparationToolGUI extends JFrame {
     }
 
     public void disableAllBatchBtns() {
-        convertAndValidateBtn.setEnabled(false);
+//        convertAndValidateBtn.setEnabled(false);
         createHGBtn.setEnabled(false);
-        validateSelectionBtn.setEnabled(false);
-        convertEdmSelectionBtn.setEnabled(false);
+//        validateSelectionBtn.setEnabled(false);
+//        convertEdmSelectionBtn.setEnabled(false);
     }
 
     public void enableAllBatchBtns() {
-        convertAndValidateBtn.setEnabled(true);
+//        convertAndValidateBtn.setEnabled(true);
         createHGBtn.setEnabled(true);
-        validateSelectionBtn.setEnabled(true);
-        convertEdmSelectionBtn.setEnabled(true);
+//        validateSelectionBtn.setEnabled(true);
+//        convertEdmSelectionBtn.setEnabled(true);
     }
 
     public void enableValidationBtns() {
         apePanel.getApeTabbedPane().enableValidationBtn();
+        apePanel.getApeTabbedPane().enableConvertAndValidateBtn();
         validateItem.setEnabled(true);
     }
 
@@ -1474,9 +1487,9 @@ public class DataPreparationToolGUI extends JFrame {
         saveMessageReportItem.setEnabled(true);
     }
 
-    public void disableEdmConversionBtn() {
-        convertEdmSelectionBtn.setEnabled(false);
-    }
+//    public void disableEdmConversionBtn() {
+//        convertEdmSelectionBtn.setEnabled(false);
+//    }
 
     public void enableEdmConversionBtn() {
         apePanel.getApeTabbedPane().enableConversionEdmBtn();

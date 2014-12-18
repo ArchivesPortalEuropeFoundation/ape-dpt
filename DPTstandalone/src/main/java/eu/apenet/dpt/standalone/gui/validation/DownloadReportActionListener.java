@@ -42,7 +42,7 @@ import java.util.ResourceBundle;
  * @author Yoann Moranville
  */
 public class DownloadReportActionListener implements ActionListener {
-    private static final Logger LOG = Logger.getLogger(ValidateActionListener.class);
+    private static final Logger LOG = Logger.getLogger(DownloadReportActionListener.class);
 
     private DataPreparationToolGUI dataPreparationToolGUI;
 

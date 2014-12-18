@@ -60,7 +60,7 @@ public class FileInstance {
         this.validationErrors = "";
         this.conversionErrors = "";
         this.europeanaConversionErrors = "";
-        this.currentLocation = "";
+        this.currentLocation = file.getPath();
         this.edmLocation = "";
         this.conversionScriptName = defaultXsl;
         this.validationSchema = Utilities.getXsdObjectFromName(defaultXsd);
