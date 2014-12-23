@@ -111,7 +111,7 @@
             </edm:isShownAt>
             <edm:isShownBy>
                 <xsl:attribute name="rdf:resource"
-                    select="concat('http://', $host, '/Portal-theme/images/ape/icons/dao_types/europeana/text.jpg')"
+                    select="concat('http://', $host, '/Portal-theme/images/ape/icons/dao_types/europeana/text.png')"
                 />
             </edm:isShownBy>
             <edm:provider>
@@ -465,7 +465,7 @@
                 </edm:isShownAt>
                 <edm:isShownBy>
                     <xsl:attribute name="rdf:resource"
-                        select="concat('http://', $host, '/Portal-theme/images/ape/icons/dao_types/europeana/text.jpg')"
+                        select="concat('http://', $host, '/Portal-theme/images/ape/icons/dao_types/europeana/text.png')"
                     />
                 </edm:isShownBy>
                 <edm:provider>
@@ -1822,27 +1822,27 @@
         <xsl:choose>
             <xsl:when test="&quot;TEXT&quot; eq fn:string($role)">
                 <xsl:value-of
-                    select="concat('http://', $host, '/Portal-theme/images/ape/icons/dao_types/europeana/text.jpg')"
+                    select="concat('http://', $host, '/Portal-theme/images/ape/icons/dao_types/europeana/text.png')"
                 />
             </xsl:when>
             <xsl:when test="&quot;IMAGE&quot; eq fn:string($role)">
                 <xsl:value-of
-                    select="concat('http://', $host, '/Portal-theme/images/ape/icons/dao_types/europeana/image.jpg')"
+                    select="concat('http://', $host, '/Portal-theme/images/ape/icons/dao_types/europeana/image.png')"
                 />
             </xsl:when>
             <xsl:when test="&quot;SOUND&quot; eq fn:string($role)">
                 <xsl:value-of
-                    select="concat('http://', $host, '/Portal-theme/images/ape/icons/dao_types/europeana/sound.jpg')"
+                    select="concat('http://', $host, '/Portal-theme/images/ape/icons/dao_types/europeana/sound.png')"
                 />
             </xsl:when>
             <xsl:when test="&quot;VIDEO&quot; eq fn:string($role)">
                 <xsl:value-of
-                    select="concat('http://', $host, '/Portal-theme/images/ape/icons/dao_types/europeana/video.jpg')"
+                    select="concat('http://', $host, '/Portal-theme/images/ape/icons/dao_types/europeana/video.png')"
                 />
             </xsl:when>
             <xsl:when test="&quot;3D&quot; eq fn:string($role)">
                 <xsl:value-of
-                    select="concat('http://', $host, '/Portal-theme/images/ape/icons/dao_types/europeana/3d.jpg')"
+                    select="concat('http://', $host, '/Portal-theme/images/ape/icons/dao_types/europeana/3d.png')"
                 />
             </xsl:when>
             <xsl:otherwise>
