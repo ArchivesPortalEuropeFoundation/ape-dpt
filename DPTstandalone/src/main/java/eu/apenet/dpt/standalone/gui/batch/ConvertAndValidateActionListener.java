@@ -185,6 +185,7 @@ public class ConvertAndValidateActionListener extends ApexActionListener {
                                         HashMap<String, String> parameters = dataPreparationToolGUI.getParams();
                                         parameters.put("eadidmissing", eadid);
                                         CheckIsEadFile checkIsEadFile = new CheckIsEadFile(file);
+                                        checkIsEadFile.run();
                                         if(checkIsEadFile.isEadRoot()) {
                                             File outputFile_temp = new File(Utilities.TEMP_DIR + ".temp_" + file.getName());
                                             TransformationTool.createTransformation(FileUtils.openInputStream(file), outputFile_temp, Utilities.BEFORE_XSL_FILE, null, true, true, null, true, null);
