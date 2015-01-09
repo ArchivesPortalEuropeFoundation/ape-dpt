@@ -842,13 +842,6 @@
             <xs:element name="p" type="p"/>
         </xs:choice>
     </xs:group>
-    <xs:group name="m.blocks.big.p">
-        <xs:choice>
-            <xs:element name="list" type="list"/>
-            <xs:element name="table" type="table"/>
-            <xs:element name="p" type="big.p"/>
-        </xs:choice>
-    </xs:group>
     <!--xs:complexType mixed="true" name="abstract">
             <xs:group maxOccurs="unbounded" minOccurs="0" ref="m.phrase.basic.norefs"/>
             <xs:attribute name="encodinganalog"/>
@@ -1085,7 +1078,10 @@
         <xs:attribute name="encodinganalog"/>
     </xs:complexType>
     <xs:complexType name="did">
-        <xs:group maxOccurs="unbounded" ref="m.did"/>
+        <xs:sequence>
+            <xs:element minOccurs="0" name="head" type="head"/>
+            <xs:group maxOccurs="unbounded" ref="m.did"/>
+        </xs:sequence>
     </xs:complexType>
     <xs:group name="m.did">
         <xs:choice>
@@ -1416,7 +1412,7 @@
         <xs:sequence>
             <xs:element minOccurs="0" name="head" type="head"/>
             <xs:choice maxOccurs="unbounded">
-                <xs:group ref="m.blocks.big.p"/>
+                <xs:group ref="m.blocks"/>
             </xs:choice>
         </xs:sequence>
     </xs:complexType>
@@ -1494,13 +1490,7 @@
         <xs:choice maxOccurs="unbounded" minOccurs="0">
             <xs:group maxOccurs="unbounded" minOccurs="0" ref="m.phrase.basic.norefs"/>
             <xs:element maxOccurs="unbounded" minOccurs="0" name="extref" type="extref"/>
-        </xs:choice>
-    </xs:complexType>
-    <xs:complexType mixed="true" name="big.p">
-        <xs:choice maxOccurs="unbounded" minOccurs="0">
-            <xs:group maxOccurs="unbounded" minOccurs="0" ref="m.phrase.basic.norefs"/>
-            <xs:element maxOccurs="unbounded" minOccurs="0" name="extref" type="extref"/>
-            <!--<xs:element maxOccurs="unbounded" minOccurs="0" name="archref" type="archref"/>-->
+            <xs:element maxOccurs="unbounded" minOccurs="0" name="note" type="note"/>
         </xs:choice>
     </xs:complexType>
     <xs:complexType mixed="true" name="container">
@@ -1635,6 +1625,7 @@
         <xs:choice>
             <xs:element maxOccurs="unbounded" name="p" type="p"/>
         </xs:choice>
+        <xs:attribute name="type"/>
         <xs:attribute name="label"/>
         <xs:attribute name="encodinganalog"/>
     </xs:complexType>
