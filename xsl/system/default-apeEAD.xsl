@@ -1851,7 +1851,7 @@
     <!--LIST-->
     <!-- #all -->
     <xsl:template
-        match="processinfo/list | relatedmaterial/list | relatedmaterial/p/list | bioghist/list | bioghist/p/list | appraisal/list | accruals/list | odd/list | odd/p/list | accessrestrict[not(ancestor::accessrestrict)]/list | userestrict/list | altformavail/list | otherfindaid/list | custodhist/list | bibliography/list | phystech/list | phystech/p/list"
+        match="processinfo/list | relatedmaterial/list | relatedmaterial/p/list | bioghist/list | bioghist/p/list | appraisal/list | accruals/list | odd/list | odd/p/list | accessrestrict[not(ancestor::accessrestrict)]/list | userestrict/list | altformavail/list | otherfindaid/list | custodhist/list | phystech/list | phystech/p/list"
         mode="copy nested level" name="p_list">
         <xsl:choose>
             <xsl:when test="@type='deflist' or (not(@type) and ./child::*[name()='defitem'])">
@@ -1907,7 +1907,7 @@
     <!--HEAD-->
     <!-- #all -->
     <xsl:template
-        match="processinfo/list/head | relatedmaterial/list/head | relatedmaterial/p/list/head | bioghist/list/head | bioghist/p/list/head | appraisal/list/head | accruals/list/head | odd/list/head | odd/p/list/head | accessrestrict[not(ancestor::accessrestrict)]/list/head | userestrict/list/head | altformavail/list/head | otherfindaid/list/head | custodhist/list/head | bibliography/list/head"
+        match="processinfo/list/head | relatedmaterial/list/head | relatedmaterial/p/list/head | bioghist/list/head | bioghist/p/list/head | appraisal/list/head | accruals/list/head | odd/list/head | odd/p/list/head | accessrestrict[not(ancestor::accessrestrict)]/list/head | userestrict/list/head | altformavail/list/head | otherfindaid/list/head | custodhist/list/head"
         mode="copy nested level">
         <head>
             <xsl:apply-templates select="node()" mode="#current"/>
@@ -1924,7 +1924,7 @@
     <!--ITEM-->
     <!-- #all -->
     <xsl:template
-        match="processinfo/list/item | relatedmaterial/list/item | relatedmaterial/p/list/item | bioghist/list/item | bioghist/p/list/item | odd/p/list/item | appraisal/list/item | accruals/list/item | odd/list/item | accessrestrict[not(ancestor::accessrestrict)]/list/item | userestrict/list/item | altformavail/list/item | otherfindaid/list/item | custodhist/list/item | bibliography/list/item"
+        match="processinfo/list/item | relatedmaterial/list/item | relatedmaterial/p/list/item | bioghist/list/item | bioghist/p/list/item | odd/p/list/item | appraisal/list/item | accruals/list/item | odd/list/item | accessrestrict[not(ancestor::accessrestrict)]/list/item | userestrict/list/item | altformavail/list/item | otherfindaid/list/item | custodhist/list/item"
         mode="copy nested level">
         <item>
             <xsl:value-of select="node()"/>
@@ -1944,7 +1944,7 @@
     <!--ITEM//*-->
     <!-- #all -->
     <xsl:template
-        match="processinfo/list/item//* | relatedmaterial/list/item//* | relatedmaterial/p/list/item//* | bioghist/list/item//* | appraisal/list/item//* | accruals/list/item//* | odd/list/item//* | odd/p/list/item//*[not(local-name='extref')] | accessrestrict[not(ancestor::accessrestrict)]/list/item//* | userestrict/list/item//* | altformavail/list/item//* | otherfindaid/list/item//* | custodhist/list/item//* | bibliography/list/item//*"
+        match="processinfo/list/item//* | relatedmaterial/list/item//* | relatedmaterial/p/list/item//* | bioghist/list/item//* | appraisal/list/item//* | accruals/list/item//* | odd/list/item//* | odd/p/list/item//*[not(local-name='extref')] | accessrestrict[not(ancestor::accessrestrict)]/list/item//* | userestrict/list/item//* | altformavail/list/item//* | otherfindaid/list/item//* | custodhist/list/item//*"
         mode="copy nested level">
         <xsl:value-of select="text()"/>
     </xsl:template>
