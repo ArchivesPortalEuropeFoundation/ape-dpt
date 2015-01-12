@@ -1971,6 +1971,7 @@
             <xsl:if test="@*:title">
                 <xsl:attribute name="xlink:title" select="@*:title"/>
             </xsl:if>
+            <xsl:value-of select="."/>
         </extref>
     </xsl:template>
 
