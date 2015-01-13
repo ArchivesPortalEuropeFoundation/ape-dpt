@@ -59,23 +59,10 @@ public class Eag2012Frame extends JFrame {
     private String mainagencycode;
     public static boolean firstTimeInTab = true;
 
-    public Eag2012Frame(File eagFile, boolean isEag2012, Dimension dimension, ProfileListModel model, ResourceBundle labels) throws Exception {
+    public Eag2012Frame(File eagFile, Dimension dimension, ProfileListModel model, ResourceBundle labels) throws Exception {
         String namespace = ReadXml.getXmlNamespace(eagFile);
-        if(isEag2012 && !namespace.equals(EagNamespaceMapper.EAG_URI)) {
+        if(!namespace.equals(EagNamespaceMapper.EAG_URI)) {
             throw new Exception("eag2012.error.fileNotInEag2012Namespace");
-        } else if(!isEag2012 && namespace.equals(EagNamespaceMapper.EAG_URI)) {
-            throw new Exception("eag2012.error.fileInEag2012Namespace");
-        }
-        if(!isEag2012) {
-            try {
-                InputStream is = FileUtils.openInputStream(eagFile);
-                File tempEagFile = new File(Utilities.TEMP_DIR + "tmp_" + eagFile.getName());
-                File xslFile = new File(Utilities.SYSTEM_DIR + "eag2eag2012.xsl");
-                TransformationTool.createTransformation(is, tempEagFile, xslFile, null, true, true, "", true, null);
-                eagFile = tempEagFile;
-            } catch (Exception e) {
-                LOG.error("Something went wrong...", e);
-            }
         }
         this.dimension = dimension;
         this.model = model;

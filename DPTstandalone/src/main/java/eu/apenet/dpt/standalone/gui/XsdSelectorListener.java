@@ -44,7 +44,7 @@ public class XsdSelectorListener implements ActionListener {
             for (Object object : fileInstances) {
                 FileInstance fileInstance = dataPreparationToolGUI.getFileInstances().get(((File)object).getName());
                 fileInstance.setValidationSchema(e.getActionCommand());
-                if (fileInstance.getValidationSchema().equals(Utilities.getXsdObjectFromPath(Xsd_enum.XSD_EAG_SCHEMA.getPath())) || fileInstance.getValidationSchema().equals(Utilities.getXsdObjectFromPath(Xsd_enum.XSD_EAG_2012_SCHEMA.getPath()))) {
+                if (fileInstance.getValidationSchema().equals(Utilities.getXsdObjectFromPath(Xsd_enum.XSD_EAG_2012_SCHEMA.getPath()))) {
                     fileInstance.setFileType(FileInstance.FileType.EAG);
                 } else if (fileInstance.getValidationSchema().equals(Utilities.getXsdObjectFromPath(Xsd_enum.XSD_EAC_SCHEMA.getPath())) || fileInstance.getValidationSchema().equals(Utilities.getXsdObjectFromPath(Xsd_enum.XSD_APE_EAC_SCHEMA.getPath()))) {
                     fileInstance.setFileType(FileInstance.FileType.EAC_CPF);
