@@ -1978,9 +1978,9 @@
     <xsl:template
         match="processinfo/p/note | separatedmaterial/p/note | bioghist/p/note | arrangement/p/note | acqinfo/p/note | accruals/p/note | custodhist/p/note | odd/p/note"
         mode="copy nested level">
-        <xsl:text> (</xsl:text>
+        <xsl:text> [NOTE </xsl:text>
         <xsl:apply-templates select="p/text()" mode="#current"/>
-        <xsl:text>) </xsl:text>
+        <xsl:text>] </xsl:text>
     </xsl:template>
 
     <xsl:template match="bioghist/note" mode="copy nested level">
@@ -2200,9 +2200,9 @@
     </xsl:template>
 
     <xsl:template match="scopecontent/p/note" mode="copy nested level">
-        <xsl:text> (</xsl:text>
+        <xsl:text> [NOTE </xsl:text>
         <xsl:apply-templates select="p/text()" mode="#current"/>
-        <xsl:text>) </xsl:text>
+        <xsl:text>] </xsl:text>
     </xsl:template>
 
     <xsl:template match="scopecontent/note | odd/note" mode="copy nested level">
@@ -3211,6 +3211,12 @@
             </xsl:if>
             <xsl:apply-templates select="node()" mode="#current"/>
         </container>
+    </xsl:template>
+
+    <xsl:template match="did/head" mode="copy level">
+        <head>
+            <xsl:apply-templates mode="#current" />
+        </head>
     </xsl:template>
 
     <!-- copy: custodhist -->
