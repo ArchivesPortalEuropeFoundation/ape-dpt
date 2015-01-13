@@ -258,10 +258,9 @@ public class ConvertAndValidateActionListener extends ApexActionListener {
                                         fileInstance.setValid(true);
                                         fileInstance.setValidationErrors(labels.getString("validationSuccess"));
                                         if(xsdObject.getFileType().equals(FileInstance.FileType.EAD) && xsdObject.getName().equals("apeEAD")) {
-                                            URL url = ConvertAndValidateActionListener.class.getResource("/xmlQuality/xmlQuality.xsl");
                                             XmlQualityCheckerCall xmlQualityCheckerCall = new XmlQualityCheckerCall();
                                             InputStream is2 = FileUtils.openInputStream(new File(fileInstance.getCurrentLocation()));
-                                            TransformationTool.createTransformation(is2, null, new File(url.getFile()), null, true, true, null, false, xmlQualityCheckerCall);
+                                            TransformationTool.createTransformation(is2, null, Utilities.XML_QUALITY_FILE, null, true, true, null, false, xmlQualityCheckerCall);
                                             String xmlQualityStr = createXmlQualityString(xmlQualityCheckerCall);
                                             fileInstance.setValidationErrors(fileInstance.getValidationErrors() + xmlQualityStr);
                                             fileInstance.setXmlQualityErrors(createXmlQualityErrors(xmlQualityCheckerCall));
