@@ -300,7 +300,11 @@ public class ConvertAndValidateActionListener extends ApexActionListener {
                 }
                 Toolkit.getDefaultToolkit().beep();
                 if (progressFrame != null) {
-                    progressFrame.stop();
+                    try {
+                        progressFrame.stop();
+                    } catch (Exception e) {
+                        LOG.error("Error when stopping the progress bar", e);
+                    }
                 }
                 dataPreparationToolGUI.getFinalAct().run();
                 if(numberOfFiles > 1) {
