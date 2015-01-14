@@ -319,6 +319,7 @@ public class ConvertAndValidateActionListener extends ApexActionListener {
                         if(uniqueFileInstance.isValid()) {
                             dataPreparationToolGUI.getAPEPanel().getApeTabbedPane().checkFlashingTab(APETabbedPane.TAB_VALIDATION, Utilities.FLASHING_GREEN_COLOR);
                             dataPreparationToolGUI.getAPEPanel().getApeTabbedPane().enableConversionEdmBtn();
+                            dataPreparationToolGUI.getAPEPanel().getApeTabbedPane().enableValidationReportBtn();
                         } else {
                             dataPreparationToolGUI.getAPEPanel().getApeTabbedPane().checkFlashingTab(APETabbedPane.TAB_VALIDATION, Utilities.FLASHING_RED_COLOR);
                         }

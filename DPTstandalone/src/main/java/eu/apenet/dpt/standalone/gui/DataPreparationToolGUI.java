@@ -1173,12 +1173,10 @@ public class DataPreparationToolGUI extends JFrame {
                 apeTabbedPane.setValidationErrorText(fileInstance.getValidationErrors());
                 apeTabbedPane.enableValidationReportBtn();
                 saveMessageReportItem.setEnabled(true);
-                apeTabbedPane.enableMessageReportBtn();
             } else {
                 apeTabbedPane.setValidationErrorText(fileInstance.getValidationErrors());
                 apeTabbedPane.disableValidationReportBtn();
                 saveMessageReportItem.setEnabled(false);
-                apeTabbedPane.disableMessageReportBtn();
             }
             apeTabbedPane.setConversionErrorText(fileInstance.getConversionErrors());
             if (fileInstance.isConverted()) {
@@ -1186,12 +1184,10 @@ public class DataPreparationToolGUI extends JFrame {
                 apeTabbedPane.disableConversionBtn();
                 apeTabbedPane.disableConvertAndValidateBtn();
                 saveMessageReportItem.setEnabled(true);
-                apeTabbedPane.enableMessageReportBtn();
             } else {
                 convertItem.setEnabled(true);
                 apeTabbedPane.enableConversionBtn();
                 saveMessageReportItem.setEnabled(false);
-                apeTabbedPane.disableMessageReportBtn();
             }
             if (fileInstance.isValid()) {
                 validateItem.setEnabled(false);
@@ -1203,7 +1199,6 @@ public class DataPreparationToolGUI extends JFrame {
                 closeSelectedItem.setEnabled(true);
                 saveSelectedItem.setEnabled(true);
                 saveMessageReportItem.setEnabled(true);
-                apeTabbedPane.enableMessageReportBtn();
                 if (fileInstance.getValidationSchema().getFileType().equals(FileInstance.FileType.EAD)) {
                     apeTabbedPane.enableConversionEdmBtn();
                 }
@@ -1214,7 +1209,6 @@ public class DataPreparationToolGUI extends JFrame {
                 closeSelectedItem.setEnabled(true);
                 saveSelectedItem.setEnabled(true);
                 saveMessageReportItem.setEnabled(true);
-                apeTabbedPane.enableMessageReportBtn();
             }
             if (fileInstance.isEdm()) {
                 apeTabbedPane.setEdmConversionErrorText(fileInstance.getEuropeanaConversionErrors());
@@ -1224,7 +1218,6 @@ public class DataPreparationToolGUI extends JFrame {
                 closeSelectedItem.setEnabled(true);
                 saveSelectedItem.setEnabled(true);
                 saveMessageReportItem.setEnabled(true);
-                apeTabbedPane.enableMessageReportBtn();
                 if (fileInstance.getValidationSchema().getFileType().equals(FileInstance.FileType.EAD)) {
                     apeTabbedPane.enableConversionEdmBtn();
                 }
@@ -1405,7 +1398,6 @@ public class DataPreparationToolGUI extends JFrame {
         apePanel.getApeTabbedPane().disableConversionEdmBtn();
         apePanel.getApeTabbedPane().disableConversionBtn();
         apePanel.getApeTabbedPane().disableConvertAndValidateBtn();
-        apePanel.getApeTabbedPane().disableMessageReportBtn();
         apePanel.getApeTabbedPane().disableValidationBtn();
 
         convertItem.setEnabled(false);
@@ -1446,7 +1438,6 @@ public class DataPreparationToolGUI extends JFrame {
     }
 
     public void enableMessageReportBtns() {
-        apePanel.getApeTabbedPane().enableMessageReportBtn();
         saveMessageReportItem.setEnabled(true);
     }
 
