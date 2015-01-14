@@ -1184,6 +1184,7 @@ public class DataPreparationToolGUI extends JFrame {
             if (fileInstance.isConverted()) {
                 convertItem.setEnabled(false);
                 apeTabbedPane.disableConversionBtn();
+                apeTabbedPane.disableConvertAndValidateBtn();
                 saveMessageReportItem.setEnabled(true);
                 apeTabbedPane.enableMessageReportBtn();
             } else {
@@ -1197,6 +1198,7 @@ public class DataPreparationToolGUI extends JFrame {
                 convertItem.setEnabled(false);
                 apeTabbedPane.disableValidationBtn();
                 apeTabbedPane.disableConversionBtn();
+                apeTabbedPane.disableConvertAndValidateBtn();
                 apeTabbedPane.disableConversionEdmBtn();
                 closeSelectedItem.setEnabled(true);
                 saveSelectedItem.setEnabled(true);
@@ -1208,7 +1210,6 @@ public class DataPreparationToolGUI extends JFrame {
             } else {
                 validateItem.setEnabled(true);
                 apeTabbedPane.enableValidationBtn();
-                apeTabbedPane.enableConvertAndValidateBtn();
                 apeTabbedPane.disableConversionEdmBtn();
                 closeSelectedItem.setEnabled(true);
                 saveSelectedItem.setEnabled(true);
@@ -1227,6 +1228,9 @@ public class DataPreparationToolGUI extends JFrame {
                 if (fileInstance.getValidationSchema().getFileType().equals(FileInstance.FileType.EAD)) {
                     apeTabbedPane.enableConversionEdmBtn();
                 }
+            }
+            if(!fileInstance.isValid() && !fileInstance.isConverted()) {
+                apeTabbedPane.enableConvertAndValidateBtn();
             }
             refreshButtons(fileInstance, Utilities.XSLT_GROUP);
             refreshButtons(fileInstance, Utilities.XSD_GROUP);
@@ -1400,6 +1404,7 @@ public class DataPreparationToolGUI extends JFrame {
     public void disableAllBtnAndItems() {
         apePanel.getApeTabbedPane().disableConversionEdmBtn();
         apePanel.getApeTabbedPane().disableConversionBtn();
+        apePanel.getApeTabbedPane().disableConvertAndValidateBtn();
         apePanel.getApeTabbedPane().disableMessageReportBtn();
         apePanel.getApeTabbedPane().disableValidationBtn();
 
@@ -1432,7 +1437,6 @@ public class DataPreparationToolGUI extends JFrame {
 
     public void enableValidationBtns() {
         apePanel.getApeTabbedPane().enableValidationBtn();
-        apePanel.getApeTabbedPane().enableConvertAndValidateBtn();
         validateItem.setEnabled(true);
     }
 

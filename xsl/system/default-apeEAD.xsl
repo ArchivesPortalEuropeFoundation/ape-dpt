@@ -1129,13 +1129,6 @@
         </xsl:choose>
     </xsl:template>
 
-    <!-- archdesc/did/head -->
-    <xsl:template match="archdesc/did/head" mode="copy">
-        <!--<xsl:if test="$provider != 'NL'">-->
-        <xsl:call-template name="excludeElement"/>
-        <!--</xsl:if>-->
-    </xsl:template>
-
     <!-- archdesc/did/unitdate -->
     <xsl:template match="archdesc/did/unitdate" mode="copy">
         <unitdate>
