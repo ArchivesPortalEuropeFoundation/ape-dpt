@@ -19,6 +19,10 @@
     xsi:schemaLocation="http://www.w3.org/1999/02/22-rdf-syntax-ns# http://www.europeana.eu/schemas/edm/EDM.xsd"
     exclude-result-prefixes="xlink fo fn">
     <xsl:output method="xml" encoding="UTF-8" indent="yes"/>
+    
+    <xsl:variable name="nameEntries">
+        <xsl:apply-templates select="/eac-cpf/cpfDescription/identity"></xsl:apply-templates>
+    </xsl:variable>
 
     <xsl:template match="/">
         <rdf:RDF>
@@ -26,15 +30,70 @@
                 <xsl:attribute name="rdf:about">
                     <xsl:value-of select="concat('creator_', /eac-cpf/control/recordId)"/>
                 </xsl:attribute>
+                <xsl:sequence select="$nameEntries/skos:prefLabel"/>
+                <xsl:sequence select="$nameEntries/skos:altLabel"/>
                 <xsl:apply-templates select="node()" mode="skos"/>
                 <xsl:apply-templates select="node()" mode="dc"/>
-                <xsl:apply-templates select="node()" mode="dcterms"/>
                 <xsl:apply-templates select="node()" mode="edm"/>
                 <xsl:apply-templates select="node()" mode="foaf"/>
                 <xsl:apply-templates select="node()" mode="rdaGr2"/>
                 <xsl:apply-templates select="node()" mode="owl"/>
+<!--                <xsl:apply-templates select="node()" mode="dcterms"/>-->
             </edm:Agent>
         </rdf:RDF>
+    </xsl:template>
+    
+    <xsl:template match="identity">
+        <xsl:variable name="allNameEntries" select="nameEntry | nameEntryParallel"/>
+        <xsl:for-each-group select="$allNameEntries" group-by="part/@xml:lang or @xml:lang">
+            <xsl:choose>
+                <xsl:when test="current-grouping-key() = false()">
+                    <xsl:for-each select="current-group()">
+                        <xsl:choose>
+                            <xsl:when test="position() = 1">
+                                <xsl:element name="skos:prefLabel">
+                                    <xsl:call-template name="createConcatenatedNameEntry">
+                                        <xsl:with-param name="listName" select="."/>
+                                    </xsl:call-template>
+                                </xsl:element>
+                            </xsl:when>
+                            <xsl:otherwise>
+                                <xsl:element name="skos:altLabel">
+                                    <xsl:call-template name="createConcatenatedNameEntry">
+                                        <xsl:with-param name="listName" select="."/>
+                                    </xsl:call-template>
+                                </xsl:element>
+                            </xsl:otherwise>
+                        </xsl:choose>
+                    </xsl:for-each>
+                </xsl:when>
+                <xsl:otherwise>
+                    <xsl:for-each-group select="current-group()" group-by="descendant-or-self::node()/@xml:lang[1]" >
+                        <xsl:variable name="language" select="current-grouping-key()"/>
+                        <xsl:for-each select="current-group()">
+                            <xsl:choose>
+                                <xsl:when test="position() = 1">
+                                    <xsl:element name="skos:prefLabel">
+                                        <xsl:attribute name="xml:lang" select="$language"/>
+                                        <xsl:call-template name="createConcatenatedNameEntry">
+                                            <xsl:with-param name="listName" select="."/>
+                                        </xsl:call-template>
+                                    </xsl:element>
+                                </xsl:when>
+                                <xsl:otherwise>
+                                    <xsl:element name="skos:altLabel">
+                                        <xsl:attribute name="xml:lang" select="$language"/>
+                                        <xsl:call-template name="createConcatenatedNameEntry">
+                                            <xsl:with-param name="listName" select="."/>
+                                        </xsl:call-template>
+                                    </xsl:element>
+                                </xsl:otherwise>
+                            </xsl:choose>
+                        </xsl:for-each>
+                    </xsl:for-each-group>
+                </xsl:otherwise>
+            </xsl:choose>
+        </xsl:for-each-group>
     </xsl:template>
     
     <xsl:template match="biogHist/abstract" mode="skos">
@@ -46,114 +105,6 @@
         </skos:note>
     </xsl:template>
 
-    <xsl:template match="nameEntry[@localType = 'preferred']" name="preferredEntry" mode="skos">
-        <xsl:variable name="content">
-            <xsl:call-template name="createConcatenatedNameEntry"/>
-        </xsl:variable>
-        <xsl:choose>
-            <xsl:when test="preceding-sibling::nameEntry[@localType = 'preferred']">
-                <skos:altLabel>
-                    <xsl:if test="@xml:lang">
-                        <xsl:attribute name="xml:lang" select="@xml:lang"/>
-                    </xsl:if>
-                    <xsl:value-of select="$content"/>
-                </skos:altLabel>
-            </xsl:when>
-            <xsl:otherwise>
-                <skos:prefLabel>
-                    <xsl:if test="@xml:lang">
-                        <xsl:attribute name="xml:lang" select="@xml:lang"/>
-                    </xsl:if>
-                    <xsl:value-of select="$content"/>
-                </skos:prefLabel>
-            </xsl:otherwise>
-        </xsl:choose>
-    </xsl:template>
-    
-    <xsl:template match="nameEntry[@localType = 'authorized']" name="authorizedEntry" mode="skos">
-        <xsl:variable name="content">
-            <xsl:call-template name="createConcatenatedNameEntry"/>
-        </xsl:variable>
-        <xsl:choose>
-            <xsl:when test="./position() = 1">
-                <skos:prefLabel>
-                    <xsl:if test="@xml:lang">
-                        <xsl:attribute name="xml:lang" select="@xml:lang"/>
-                    </xsl:if>
-                    <xsl:value-of select="$content"/>
-                </skos:prefLabel>
-            </xsl:when>
-            <xsl:otherwise>
-                <skos:altLabel>
-                    <xsl:if test="@xml:lang">
-                        <xsl:attribute name="xml:lang" select="@xml:lang"/>
-                    </xsl:if>
-                    <xsl:value-of select="$content"/>
-                </skos:altLabel>
-            </xsl:otherwise>
-        </xsl:choose>
-    </xsl:template>
-    
-    <xsl:template match="nameEntry[not(@localType)]" name="untypedEntry" mode="skos">
-        <xsl:variable name="content">
-            <xsl:call-template name="createConcatenatedNameEntry"/>
-        </xsl:variable>
-        <xsl:choose>
-            <xsl:when test="./position() = 1">
-                <skos:prefLabel>
-                    <xsl:if test="@xml:lang">
-                        <xsl:attribute name="xml:lang" select="@xml:lang"/>
-                    </xsl:if>
-                    <xsl:value-of select="$content"/>
-                </skos:prefLabel>
-            </xsl:when>
-            <xsl:otherwise>
-                <skos:altLabel>
-                    <xsl:if test="@xml:lang">
-                        <xsl:attribute name="xml:lang" select="@xml:lang"/>
-                    </xsl:if>
-                    <xsl:value-of select="$content"/>
-                </skos:altLabel>
-            </xsl:otherwise>
-        </xsl:choose>
-    </xsl:template>
-    
-    <xsl:template match="nameEntry[@localType = 'alternative'] | nameEntry[@localType = 'other'] | nameEntry[@localType = 'abbreviation']" name="otherEntries" mode="skos">
-        <xsl:variable name="content">
-            <xsl:call-template name="createConcatenatedNameEntry"/>
-        </xsl:variable>
-        <skos:altLabel>
-            <xsl:if test="@xml:lang">
-                <xsl:attribute name="xml:lang" select="@xml:lang"/>
-            </xsl:if>
-            <xsl:value-of select="$content"/>
-        </skos:altLabel>
-    </xsl:template>
-    
-    <xsl:template match="nameEntryParallel[@localType = 'preferred']" mode="skos">
-        <xsl:for-each select="nameEntry">
-            <xsl:call-template name="preferredEntry"/>
-        </xsl:for-each>
-    </xsl:template>
-    
-    <xsl:template match="nameEntryParallel[@localType = 'authorized']" mode="skos">
-        <xsl:for-each select="nameEntry">
-            <xsl:call-template name="authorizedEntry"/>
-        </xsl:for-each>
-    </xsl:template>
-    
-    <xsl:template match="nameEntryParallel[not(@localType)]" mode="skos">
-        <xsl:for-each select="nameEntry">
-            <xsl:call-template name="untypedEntry"/>
-        </xsl:for-each>
-    </xsl:template>
-    
-    <xsl:template match="nameEntryParallel[@localType = 'alternative'] | nameEntryParallel[@localType = 'other'] | nameEntryParallel[@localType = 'abbreviation']" mode="skos">
-        <xsl:for-each select="nameEntry">
-            <xsl:call-template name="otherEntries"/>
-        </xsl:for-each>
-    </xsl:template>
-    
     <xsl:template match="entityId" mode="dc">
         <dc:identifier>
             <xsl:value-of select="node()"/>
@@ -284,15 +235,26 @@
         </xsl:choose>
     </xsl:template>
     
-    <xsl:template match="occupation/term" mode="rdaGr2">
+    <xsl:template match="occupations" mode="rdaGr2">
         <rdaGr2:professionOrOccupation>
-            <xsl:if test="@vocabularySource">
-                <xsl:attribute name="rdf:resource" select="@vocabularySource"/>
+            <xsl:if test="occupation/term/@vocabularySource">
+                <xsl:attribute name="rdf:resource" select="occupation/term/@vocabularySource[1]"/>
             </xsl:if>
-            <xsl:value-of select="normalize-space(node())"/>
+            <xsl:apply-templates mode="rdaGr2"/>
         </rdaGr2:professionOrOccupation>
     </xsl:template>
     
+    <xsl:template match="occupation" mode="rdaGr2">
+        <xsl:apply-templates mode="rdaGr2"/>
+        <xsl:if test="following-sibling::occupation/term">
+            <xsl:text>, </xsl:text>
+        </xsl:if>
+    </xsl:template>
+    
+    <xsl:template match="occupation/term" mode="rdaGr2">
+        <xsl:value-of select="normalize-space(node())"/>
+    </xsl:template>
+    <!--    
     <xsl:template match="place/placeEntry[@localType = 'birth'][1]" mode="rdaGr2">
         <rdaGr2:placeOfBirth>
             <xsl:if test="@vocabularySource">
@@ -310,7 +272,7 @@
             <xsl:value-of select="node()"/>
         </rdaGr2:placeOfDeath>
     </xsl:template>
-    
+-->    
     <xsl:template match="alternativeSet/setComponent/@xlink:href" mode="owl">
         <owl:sameAs>
             <xsl:attribute name="rdf:resource" select="."/>
@@ -318,61 +280,146 @@
     </xsl:template>
     
     <xsl:template name="createConcatenatedNameEntry">
-        <xsl:choose>
-            <xsl:when test="part">
-                <xsl:apply-templates select="part"/>
-                <xsl:text>.</xsl:text>
-            </xsl:when>
-            <xsl:otherwise>
-                <xsl:value-of select="normalize-space(node())"/>
-            </xsl:otherwise>
-        </xsl:choose>
-    </xsl:template>
-    <xsl:template match="part">
-        <xsl:choose>
-            <xsl:when test="@localType = 'corpname'">
-                <xsl:value-of select="normalize-space(node())"/>
-            </xsl:when>
-            <xsl:when test="@localType = 'legalform'">
-                <xsl:value-of select="concat(', ', normalize-space(node()))"/>
-            </xsl:when>
-            <xsl:when test="@localType = 'famname'">
-                <xsl:value-of select="normalize-space(node())"/>
-            </xsl:when>
-            <xsl:when test="@localType = 'persname'">
-                <xsl:value-of select="normalize-space(node())"/>
-            </xsl:when>
-            <xsl:when test="@localType = 'surname'">
-                <xsl:value-of select="normalize-space(node())"/>
-            </xsl:when>
-            <xsl:when test="@localType = 'birthname'">
-                <xsl:value-of select="concat(' (', normalize-space(node()), ')')"/>
-            </xsl:when>
-            <xsl:when test="@localType = 'prefix'">
-                <xsl:value-of select="concat(', ', normalize-space(node()))"/>
-            </xsl:when>
-            <xsl:when test="@localType = 'firstname'">
-                <xsl:value-of select="concat(', ', normalize-space(node()))"/>
-            </xsl:when>
-            <xsl:when test="@localType = 'patronymic'">
-                <xsl:value-of select="concat(' ', normalize-space(node()))"/>
-            </xsl:when>
-            <xsl:when test="@localType = 'alias'">
-                <xsl:value-of select="concat(', (alias: ', normalize-space(node()), ')')"/>
-            </xsl:when>
-            <xsl:when test="@localType = 'suffix'">
-                <xsl:value-of select="concat(', ', normalize-space(node()))"/>
-            </xsl:when>
-            <xsl:when test="@localType = 'title'">
-                <xsl:value-of select="concat(', ', normalize-space(node()))"/>
-            </xsl:when>
-            <xsl:otherwise>
-                <xsl:value-of select="concat(', ', normalize-space(node()))"/>
-            </xsl:otherwise>
-        </xsl:choose>
+        <xsl:param name="listName"/>
+        <xsl:call-template name="nameEntryCreator">
+            <xsl:with-param name="listName" select="$listName"/>
+        </xsl:call-template>
     </xsl:template>
     
-    <xsl:template match="cpfDescription | description | eac-cpf | identity | occupations | places | relations" mode="#all">
+    <xsl:template match="part">
+        <xsl:value-of select="normalize-space(node())"/>
+    </xsl:template>
+    
+    <!-- template nameEntryCreator -->
+    <xsl:template name="nameEntryCreator">
+        <xsl:param name="listName"/>
+        <xsl:variable name="firstName" select="$listName//part[@localType='firstname']"/>
+        <xsl:variable name="surName" select="$listName//part[@localType='surname']"/>
+        <xsl:variable name="patronymic" select="$listName//part[@localType='patronymic']"/>
+        <xsl:variable name="prefix" select="$listName//part[@localType='prefix']"/>
+        <xsl:variable name="suffix" select="$listName//part[@localType='suffix']"/>
+        <xsl:variable name="alias" select="$listName//part[@localType='alias']"/>
+        <xsl:variable name="title" select="$listName//part[@localType='title']"/>
+        <xsl:variable name="birthname" select="$listName//part[@localType='birthname']"/>
+        <xsl:variable name="legalform" select="$listName//part[@localType='legalform']"/>
+        <xsl:variable name="corpname" select="$listName//part[@localType='corpname']"/>
+        <xsl:variable name="famname" select="$listName//part[@localType='famname']"/>
+        <xsl:variable name="persname" select="$listName//part[@localType='persname']"/>
+        <xsl:choose>
+            <xsl:when test="not($corpname) and not($famname) and not($persname) and not($legalform) and not($listName//part[not(@localType) or @localType=''])"> 
+                <xsl:if test="$surName">
+                    <xsl:for-each select="$surName">
+                        <xsl:apply-templates select="."/>
+                        <xsl:if test="position()!=last()">
+                            <xsl:text> </xsl:text>
+                        </xsl:if>
+                    </xsl:for-each>	
+                    <xsl:if test="$birthname">
+                        <xsl:text> </xsl:text>
+                    </xsl:if>
+                </xsl:if>
+                <xsl:if test="$birthname">
+                    <xsl:text>(</xsl:text>
+                    <xsl:for-each select="$birthname"> 	
+                        <xsl:apply-templates select="."/>
+                        <xsl:if test="position()!=last()">
+                            <xsl:text> </xsl:text>
+                        </xsl:if>
+                    </xsl:for-each>	  
+                    <xsl:text>)</xsl:text>
+                </xsl:if>
+                <xsl:if test="$prefix">
+                    <xsl:if test="$surName or $birthname">
+                        <xsl:text>, </xsl:text>
+                    </xsl:if>
+                    <xsl:for-each select="$prefix"> 	
+                        <xsl:apply-templates select="."/>
+                        <xsl:if test="position()!=last()">
+                            <xsl:text> </xsl:text>
+                        </xsl:if>
+                    </xsl:for-each>	  
+                </xsl:if>
+                <xsl:if test="$firstName">
+                    <xsl:if test="$surName or $birthname or $prefix">
+                        <xsl:text>, </xsl:text>
+                    </xsl:if>
+                    <xsl:for-each select="$firstName"> 	
+                        <xsl:apply-templates select="."/>
+                        <xsl:if test="position()!=last()">
+                            <xsl:text> </xsl:text>
+                        </xsl:if>
+                    </xsl:for-each>	
+                </xsl:if>
+                <xsl:if test="$patronymic">
+                    <xsl:choose>
+                        <xsl:when test="$firstName">
+                            <xsl:text> </xsl:text>
+                        </xsl:when>
+                        <xsl:otherwise>
+                            <xsl:if test="$surName or $birthname or $prefix">
+                                <xsl:text>, </xsl:text>
+                            </xsl:if>
+                        </xsl:otherwise>
+                    </xsl:choose>
+                    <xsl:for-each select="$patronymic"> 	
+                        <xsl:apply-templates select="."/>
+                        <xsl:if test="position()!=last()">
+                            <xsl:text> </xsl:text>
+                        </xsl:if>
+                    </xsl:for-each>	
+                </xsl:if>
+                <xsl:if test="$suffix">
+                    <xsl:if test="$surName or $birthname or $prefix or $firstName or $patronymic">
+                        <xsl:text>, </xsl:text>
+                    </xsl:if>
+                    <xsl:for-each select="$suffix"> 	
+                        <xsl:apply-templates select="."/>
+                        <xsl:if test="position()!=last()">
+                            <xsl:text> </xsl:text>
+                        </xsl:if>
+                    </xsl:for-each>	
+                </xsl:if>
+                <xsl:if test="$title">
+                    <xsl:if test="$surName or $birthname or $prefix or $firstName or $patronymic or $suffix">
+                        <xsl:text>, </xsl:text>
+                    </xsl:if>
+                    <xsl:for-each select="$title"> 	
+                        <xsl:apply-templates select="."/>
+                        <xsl:if test="position()!=last()">
+                            <xsl:text> </xsl:text>
+                        </xsl:if>
+                    </xsl:for-each>	
+                </xsl:if>
+            </xsl:when>
+            <xsl:otherwise>
+                <xsl:choose>
+                    <xsl:when test="$corpname and $legalform">
+                        <xsl:apply-templates select="$corpname"/>
+                        <xsl:text> </xsl:text>
+                        <xsl:apply-templates select="$legalform"/>
+                    </xsl:when>
+                    <xsl:otherwise>
+                        <xsl:apply-templates select="$listName//part[1]"/>
+                    </xsl:otherwise>
+                </xsl:choose>
+            </xsl:otherwise>
+        </xsl:choose>
+        <xsl:if test="$alias">
+            <xsl:if test="$surName or $birthname or $prefix or $firstName or $patronymic or $suffix or $title or $corpname or $famname or $persname">
+                <xsl:text> </xsl:text> 
+            </xsl:if>
+            <xsl:text>(alias: </xsl:text>
+            <xsl:for-each select="$alias"> 	
+                <xsl:apply-templates select="."/>
+                <xsl:if test="position()!=last()">
+                    <xsl:text> </xsl:text>
+                </xsl:if>
+            </xsl:for-each>	
+            <xsl:text>)</xsl:text>
+        </xsl:if>
+    </xsl:template>
+    
+    <xsl:template match="cpfDescription | description | eac-cpf | places | relations" mode="#all">
         <xsl:apply-templates select="node()" mode="#current"/>
     </xsl:template>
     
