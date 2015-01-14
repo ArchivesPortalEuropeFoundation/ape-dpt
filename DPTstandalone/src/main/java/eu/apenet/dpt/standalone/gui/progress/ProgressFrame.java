@@ -92,11 +92,12 @@ public class ProgressFrame extends JFrame {
         return apeProgressBars;
     }
 
-    public void stop() {
+    public void stop() throws Exception {
         for(JProgressBar progressBar : getApeProgressBars()) {
             progressBar.setVisible(false);
         }
-        setVisible(false);
+        if(isVisible())
+            setVisible(false);
         dispose();
     }
 
