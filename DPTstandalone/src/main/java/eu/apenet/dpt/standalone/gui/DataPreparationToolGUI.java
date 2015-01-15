@@ -21,6 +21,7 @@ package eu.apenet.dpt.standalone.gui;
 import eu.apenet.dpt.standalone.gui.adhoc.DirectoryPermission;
 import eu.apenet.dpt.standalone.gui.adhoc.FileNameComparator;
 import eu.apenet.dpt.standalone.gui.batch.ConvertAndValidateActionListener;
+import eu.apenet.dpt.standalone.gui.controlaccessanalyzer.AnalyzeControlaccessListener;
 import eu.apenet.dpt.standalone.gui.databasechecker.DatabaseCheckerActionListener;
 import eu.apenet.dpt.standalone.gui.dateconversion.DateConversionRulesDialog;
 import eu.apenet.dpt.standalone.gui.db.RetrieveFromDb;
@@ -88,6 +89,7 @@ public class DataPreparationToolGUI extends JFrame {
 //    private JButton validateSelectionBtn = new JButton();
 //    private JButton convertEdmSelectionBtn = new JButton();
     private JButton createHGBtn = new JButton();
+    private JButton analyzeControlaccessBtn = new JButton();
 
     private Cursor WAIT_CURSOR = Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR);
     private Cursor DEFAULT_CURSOR = Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR);
@@ -174,6 +176,7 @@ public class DataPreparationToolGUI extends JFrame {
      * ActionListeners
      */
     private CreateHGListener createHgListener;
+    private AnalyzeControlaccessListener analyzeControlaccessListener;
 
     /**
      * For edition
@@ -338,6 +341,10 @@ public class DataPreparationToolGUI extends JFrame {
         createHGBtn.addActionListener(createHgListener);
         createHGBtn.setEnabled(false);
 
+        analyzeControlaccessListener = new AnalyzeControlaccessListener(labels, getContentPane(), fileInstances, this);
+        analyzeControlaccessBtn.addActionListener(analyzeControlaccessListener);
+        analyzeControlaccessBtn.setEnabled(false);
+
         validateItem.addActionListener(new ConvertAndValidateActionListener(this, apePanel.getApeTabbedPane(), ConvertAndValidateActionListener.VALIDATE));
         convertItem.addActionListener(new ConvertAndValidateActionListener(this, apePanel.getApeTabbedPane(), ConvertAndValidateActionListener.CONVERT));
 
@@ -351,6 +358,7 @@ public class DataPreparationToolGUI extends JFrame {
         nameComponents();
         wireUp();
         setSize(Toolkit.getDefaultToolkit().getScreenSize());
+        setMinimumSize(Toolkit.getDefaultToolkit().getScreenSize());
         setExtendedState(JFrame.MAXIMIZED_BOTH);
     }
 
@@ -388,6 +396,7 @@ public class DataPreparationToolGUI extends JFrame {
 
 //        convertAndValidateBtn.setText(labels.getString("convertAndValidate"));
         createHGBtn.setText(labels.getString("createHG"));
+        analyzeControlaccessBtn.setText(labels.getString("analyzeControlaccessBtn"));
         progressLabel.setText(labels.getString("chooseFile"));
         deleteFileItem.setText(labels.getString("removeFile"));
 
@@ -415,6 +424,7 @@ public class DataPreparationToolGUI extends JFrame {
         nameComponents();
 
         createHgListener.changeLanguage(labels);
+        analyzeControlaccessListener.changeLanguage(labels);
         apePanel.changeLanguage(labels);
 
         DataPreparationToolGUI.super.setTitle(labels.getString("title"));
@@ -786,6 +796,7 @@ public class DataPreparationToolGUI extends JFrame {
 //                        validateSelectionBtn.setEnabled(false);
 //                        convertEdmSelectionBtn.setEnabled(false);
                         createHGBtn.setEnabled(false);
+                        analyzeControlaccessBtn.setEnabled(false);
                         changeInfoInGUI("");
                     }
                 }
@@ -881,10 +892,14 @@ public class DataPreparationToolGUI extends JFrame {
                 break;
             }
         }
-        if (xmlEadList.getSelectedValues().length > 0 && isOnlyValidFiles) {
-            createHGBtn.setEnabled(true);
+        if (!xmlEadList.getSelectedValuesList().isEmpty()) {
+            if(isOnlyValidFiles) {
+                createHGBtn.setEnabled(true);
+            }
+            analyzeControlaccessBtn.setEnabled(true);
         } else {
             createHGBtn.setEnabled(false);
+            analyzeControlaccessBtn.setEnabled(false);
         }
     }
 
@@ -941,6 +956,9 @@ public class DataPreparationToolGUI extends JFrame {
         createHGBtn.setPreferredSize(new Dimension(-1, 40));
         createHGBtn.setEnabled(false);
         p.add(createHGBtn);
+        analyzeControlaccessBtn.setPreferredSize(new Dimension(-1, 40));
+        analyzeControlaccessBtn.setEnabled(false);
+        p.add(analyzeControlaccessBtn);
         return p;
     }
 
@@ -989,6 +1007,7 @@ public class DataPreparationToolGUI extends JFrame {
 //            validateSelectionBtn.setEnabled(false);
 //            convertEdmSelectionBtn.setEnabled(false);
             createHGBtn.setEnabled(false);
+            analyzeControlaccessBtn.setEnabled(false);
             xmlEadList.setEnabled(true);
         }
     };
@@ -1416,6 +1435,7 @@ public class DataPreparationToolGUI extends JFrame {
     public void disableAllBatchBtns() {
 //        convertAndValidateBtn.setEnabled(false);
         createHGBtn.setEnabled(false);
+        analyzeControlaccessBtn.setEnabled(false);
 //        validateSelectionBtn.setEnabled(false);
 //        convertEdmSelectionBtn.setEnabled(false);
     }
@@ -1423,6 +1443,7 @@ public class DataPreparationToolGUI extends JFrame {
     public void enableAllBatchBtns() {
 //        convertAndValidateBtn.setEnabled(true);
         createHGBtn.setEnabled(true);
+        analyzeControlaccessBtn.setEnabled(true);
 //        validateSelectionBtn.setEnabled(true);
 //        convertEdmSelectionBtn.setEnabled(true);
     }

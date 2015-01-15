@@ -223,6 +223,10 @@ public class FileInstance {
         this.isMinimalConverted = isMinimalConverted;
     }
 
+    public File getFile() {
+        return new File(currentLocation);
+    }
+
     public enum FileType{
         EAD("apeEAD"),
         EAG("EAG"),
