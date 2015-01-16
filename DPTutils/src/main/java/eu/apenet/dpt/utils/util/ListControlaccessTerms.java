@@ -98,16 +98,16 @@ public class ListControlaccessTerms {
         }
     }
 
-    public String retrieveResults() {
+    public String retrieveResults(ResourceBundle labels) {
         StringBuilder builder = new StringBuilder();
-        builder.append("We found ").append(subjects.size()).append(" subject terms in those files\n");
-        builder.append("We found ").append(persnames.size()).append(" persname terms in those files\n");
-        builder.append("We found ").append(famnames.size()).append(" famname terms in those files\n");
-        builder.append("We found ").append(corpnames.size()).append(" corpname terms in those files\n");
+        builder.append(labels.getString("list.controlaccess.wefound")).append(" ").append(subjects.size()).append(" ").append("subject").append(" ").append(labels.getString("list.controlaccess.termsinfiles")).append("\n");
+        builder.append(labels.getString("list.controlaccess.wefound")).append(" ").append(persnames.size()).append(" ").append("persname").append(" ").append(labels.getString("list.controlaccess.termsinfiles")).append("\n");
+        builder.append(labels.getString("list.controlaccess.wefound")).append(" ").append(famnames.size()).append(" ").append("famname").append(" ").append(labels.getString("list.controlaccess.termsinfiles")).append("\n");
+        builder.append(labels.getString("list.controlaccess.wefound")).append(" ").append(corpnames.size()).append(" ").append("corpname").append(" ").append(labels.getString("list.controlaccess.termsinfiles")).append("\n");
         builder.append("================ Subject ================\n");
         sorted_maps.putAll(subjects);
         for(String term : sorted_maps.keySet()) {
-            builder.append("Term: '").append(term).append("', size: ").append(subjects.get(term)).append("\n");
+            builder.append("Subject: '").append(term).append("', ").append(labels.getString("list.controlaccess.size")).append(" ").append(subjects.get(term)).append("\n");
         }
 
         builder.append("================ Persname ================\n");
@@ -115,7 +115,7 @@ public class ListControlaccessTerms {
         sorted_maps = new TreeMap<String, Integer>(bvc);
         sorted_maps.putAll(persnames);
         for(String term : sorted_maps.keySet()) {
-            builder.append("Persname: '").append(term).append("', size: ").append(persnames.get(term)).append("\n");
+            builder.append("Persname: '").append(term).append("', ").append(labels.getString("list.controlaccess.size")).append(" ").append(persnames.get(term)).append("\n");
         }
 
         builder.append("================ Famname ================\n");
@@ -123,7 +123,7 @@ public class ListControlaccessTerms {
         sorted_maps = new TreeMap<String, Integer>(bvc);
         sorted_maps.putAll(famnames);
         for(String term : sorted_maps.keySet()) {
-            builder.append("Famname: '").append(term).append("', size: ").append(famnames.get(term)).append("\n");
+            builder.append("Famname: '").append(term).append("', ").append(labels.getString("list.controlaccess.size")).append(" ").append(famnames.get(term)).append("\n");
         }
 
         builder.append("================ Corpname ================\n");
@@ -131,7 +131,7 @@ public class ListControlaccessTerms {
         sorted_maps = new TreeMap<String, Integer>(bvc);
         sorted_maps.putAll(corpnames);
         for(String term : sorted_maps.keySet()) {
-            builder.append("Corpname: '").append(term).append("', size: ").append(corpnames.get(term)).append("\n");
+            builder.append("Corpname: '").append(term).append("', ").append(labels.getString("list.controlaccess.size")).append(" ").append(corpnames.get(term)).append("\n");
         }
 
         return builder.toString();

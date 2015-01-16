@@ -64,7 +64,7 @@ public class AnalyzeControlaccessListener implements ActionListener {
             }
             listControlaccessTerms = new ListControlaccessTerms(files);
             listControlaccessTerms.countTerms();
-            publish(listControlaccessTerms.retrieveResults());
+            publish(listControlaccessTerms.retrieveResults(labels));
             return null;
         }
 
