@@ -23,13 +23,13 @@ public class AnalyzeControlaccessListener implements ActionListener {
     private ResourceBundle labels;
     private Map<String, FileInstance> fileInstances;
     private Component parent;
-    private DataPreparationToolGUI dataPreparationToolGUI;
+    private JTextArea textArea;
+    private ListControlaccessTerms listControlaccessTerms;
 
-    public AnalyzeControlaccessListener(ResourceBundle labels, Component parent, Map<String, FileInstance> fileInstances, DataPreparationToolGUI dataPreparationToolGUI) {
+    public AnalyzeControlaccessListener(ResourceBundle labels, Component parent, Map<String, FileInstance> fileInstances) {
         this.labels = labels;
         this.parent = parent;
         this.fileInstances = fileInstances;
-        this.dataPreparationToolGUI = dataPreparationToolGUI;
     }
 
     public void changeLanguage(ResourceBundle labels) {
@@ -38,28 +38,39 @@ public class AnalyzeControlaccessListener implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        JFrame frame = new JFrame("title");
+        JFrame frame = new JFrame(labels.getString("listControlaccess"));
         frame.setPreferredSize(new Dimension(parent.getWidth(), parent.getHeight()));
         frame.setMinimumSize(new Dimension(parent.getWidth(), parent.getHeight()));
         JPanel panel = new JPanel();
         panel.setLayout(new BoxLayout(panel, BoxLayout.PAGE_AXIS));
-        JTextArea textArea = new JTextArea();
+        textArea = new JTextArea();
         JScrollPane scrollPane = new JScrollPane(textArea);
         panel.add(scrollPane);
         frame.add(panel);
-        textArea.setText("Analyzing...");
         frame.setVisible(true);
 
-        List<File> files = new ArrayList<File>();
-        for(String key : fileInstances.keySet()) {
-            FileInstance fileInstance = fileInstances.get(key);
-            files.add(fileInstance.getFile());
-        }
-        ListControlaccessTerms listControlaccessTerms = new ListControlaccessTerms(files);
-        listControlaccessTerms.countTerms();
-        String results = listControlaccessTerms.retrieveResults();
+        new Worker().execute();
+    }
 
-        textArea.setText(results);
-        textArea.setCaretPosition(0);
+    public class Worker extends SwingWorker<String, String>{
+
+        @Override
+        protected String doInBackground() throws Exception {
+            publish(labels.getString("analyzing"));
+            List<File> files = new ArrayList<File>();
+            for(String key : fileInstances.keySet()) {
+                FileInstance fileInstance = fileInstances.get(key);
+                files.add(fileInstance.getFile());
+            }
+            listControlaccessTerms = new ListControlaccessTerms(files);
+            listControlaccessTerms.countTerms();
+            publish(listControlaccessTerms.retrieveResults());
+            return null;
+        }
+
+        protected void process(List<String> item) {
+            textArea.setText(item.get(0));
+            textArea.setCaretPosition(0);
+        }
     }
 }

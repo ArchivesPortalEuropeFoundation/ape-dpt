@@ -341,7 +341,7 @@ public class DataPreparationToolGUI extends JFrame {
         createHGBtn.addActionListener(createHgListener);
         createHGBtn.setEnabled(false);
 
-        analyzeControlaccessListener = new AnalyzeControlaccessListener(labels, getContentPane(), fileInstances, this);
+        analyzeControlaccessListener = new AnalyzeControlaccessListener(labels, getContentPane(), fileInstances);
         analyzeControlaccessBtn.addActionListener(analyzeControlaccessListener);
         analyzeControlaccessBtn.setEnabled(false);
 
