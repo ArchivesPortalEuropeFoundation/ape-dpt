@@ -140,7 +140,7 @@ public class DataPreparationToolGUI extends JFrame {
     /**
      * EAC-CPF
      */
-    private JMenu EacCpfItem = new JMenu();
+    private JMenu eacCpfItem = new JMenu();
     private JMenuItem editEacCpfFile = new JMenuItem();
     private JMenuItem createEacCpf = new JMenuItem();
 
@@ -261,16 +261,6 @@ public class DataPreparationToolGUI extends JFrame {
         fileItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_O, Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()));
         fileMenu.add(fileItem);
 
-        // TODO: Uncomment when edit will be available.
-//        this.EacCpfItem.add(this.editEacCpfFile);     //add the different EAC-CPF options menu
-        this.EacCpfItem.add(this.createEacCpf);
-        this.fileMenu.add(this.EacCpfItem);
-
-        createEag2012Item.add(createEag2012FromExistingEag2012);
-        createEag2012Item.add(createEag2012FromScratch);
-
-        fileMenu.add(createEag2012Item);
-
         closeSelectedItem.setEnabled(false);
 //        closeSelectedItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_BACK_SPACE, Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()));
         closeSelectedItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_D, Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()));
@@ -309,6 +299,17 @@ public class DataPreparationToolGUI extends JFrame {
         convertItem.setEnabled(false);
         convertItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_M, Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()));
         actionMenu.add(convertItem);
+
+        // TODO: Uncomment when edit will be available.
+//        eacCpfItem.add(this.editEacCpfFile);     //add the different EAC-CPF options menu
+        eacCpfItem.add(createEacCpf);
+        actionMenu.add(eacCpfItem);
+
+        createEag2012Item.add(createEag2012FromExistingEag2012);
+        createEag2012Item.add(createEag2012FromScratch);
+        actionMenu.add(createEag2012Item);
+
+
         summaryWindowItem.setEnabled(true);
         summaryWindowItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_1, Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()));
         windowMenu.add(summaryWindowItem);
@@ -415,7 +416,7 @@ public class DataPreparationToolGUI extends JFrame {
 
         xmlEadListLabel.setText(labels.getString("xmlEadFiles"));
 
-        this.EacCpfItem.setText(labels.getString("eaccpf.eacCpfItem"));      //labels related to EAC-CPF in the menu
+        this.eacCpfItem.setText(labels.getString("eaccpf.eacCpfItem"));      //labels related to EAC-CPF in the menu
         this.editEacCpfFile.setText(labels.getString("eaccpf.menu.editEacCpfFile"));
         this.createEacCpf.setText(labels.getString("eaccpf.menu.createEacCpf"));
     }
