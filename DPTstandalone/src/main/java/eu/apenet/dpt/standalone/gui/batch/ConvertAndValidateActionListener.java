@@ -85,7 +85,7 @@ public class ConvertAndValidateActionListener extends ApexActionListener {
         new Thread(new Runnable() {
             public void run() {
                 FileInstance uniqueFileInstance = null;
-                String uniqueXslMessage = null;
+                String uniqueXslMessage = "";
                 int numberOfFiles = objects.length;
                 int currentFileNumberBatch = 0;
                 ProgressFrame progressFrame = new ProgressFrame(labels, parent, true, false, apexActionListener);
@@ -93,6 +93,7 @@ public class ConvertAndValidateActionListener extends ApexActionListener {
 
                 dataPreparationToolGUI.getAPEPanel().getApeTabbedPane().disableConversionBtn();
                 dataPreparationToolGUI.getAPEPanel().getApeTabbedPane().disableValidationBtn();
+                dataPreparationToolGUI.getAPEPanel().getApeTabbedPane().disableConvertAndValidateBtn();
                 dataPreparationToolGUI.getXmlEadList().setEnabled(false);
 
                 for (Object oneFile : objects) {
@@ -109,7 +110,11 @@ public class ConvertAndValidateActionListener extends ApexActionListener {
                     if (!fileInstance.isXml()) {
                         fileInstance.setXml(XmlChecker.isXmlParseable(file) == null);
                         if (!fileInstance.isXml()) {
-                            fileInstance.setConversionErrors(labels.getString("conversion.error.fileNotXml"));
+                            if(type == CONVERT || type == CONVERT_AND_VALIDATE) {
+                                fileInstance.setConversionErrors(labels.getString("conversion.error.fileNotXml"));
+                            } else if(type == VALIDATE || type == CONVERT_AND_VALIDATE) {
+                                fileInstance.setValidationErrors(labels.getString("validation.error.fileNotXml"));
+                            }
                             dataPreparationToolGUI.enableSaveBtn();
                             dataPreparationToolGUI.enableRadioButtons();
                             dataPreparationToolGUI.enableEditionTab();
@@ -295,7 +300,11 @@ public class ConvertAndValidateActionListener extends ApexActionListener {
                 }
                 Toolkit.getDefaultToolkit().beep();
                 if (progressFrame != null) {
-                    progressFrame.stop();
+                    try {
+                        progressFrame.stop();
+                    } catch (Exception e) {
+                        LOG.error("Error when stopping the progress bar", e);
+                    }
                 }
                 dataPreparationToolGUI.getFinalAct().run();
                 if(numberOfFiles > 1) {
@@ -314,6 +323,7 @@ public class ConvertAndValidateActionListener extends ApexActionListener {
                         if(uniqueFileInstance.isValid()) {
                             dataPreparationToolGUI.getAPEPanel().getApeTabbedPane().checkFlashingTab(APETabbedPane.TAB_VALIDATION, Utilities.FLASHING_GREEN_COLOR);
                             dataPreparationToolGUI.getAPEPanel().getApeTabbedPane().enableConversionEdmBtn();
+                            dataPreparationToolGUI.getAPEPanel().getApeTabbedPane().enableValidationReportBtn();
                         } else {
                             dataPreparationToolGUI.getAPEPanel().getApeTabbedPane().checkFlashingTab(APETabbedPane.TAB_VALIDATION, Utilities.FLASHING_RED_COLOR);
                         }
@@ -325,7 +335,9 @@ public class ConvertAndValidateActionListener extends ApexActionListener {
                     dataPreparationToolGUI.setResultAreaText(labels.getString("aborted"));
                 }
                 dataPreparationToolGUI.enableSaveBtn();
-                dataPreparationToolGUI.enableValidationBtns();
+                if(type == CONVERT) {
+                    dataPreparationToolGUI.enableValidationBtns();
+                }
                 dataPreparationToolGUI.enableRadioButtons();
                 dataPreparationToolGUI.enableEditionTab();
             }

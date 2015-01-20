@@ -21,6 +21,7 @@ package eu.apenet.dpt.standalone.gui;
 import eu.apenet.dpt.standalone.gui.adhoc.DirectoryPermission;
 import eu.apenet.dpt.standalone.gui.adhoc.FileNameComparator;
 import eu.apenet.dpt.standalone.gui.batch.ConvertAndValidateActionListener;
+import eu.apenet.dpt.standalone.gui.controlaccessanalyzer.AnalyzeControlaccessListener;
 import eu.apenet.dpt.standalone.gui.databasechecker.DatabaseCheckerActionListener;
 import eu.apenet.dpt.standalone.gui.dateconversion.DateConversionRulesDialog;
 import eu.apenet.dpt.standalone.gui.db.RetrieveFromDb;
@@ -88,6 +89,7 @@ public class DataPreparationToolGUI extends JFrame {
 //    private JButton validateSelectionBtn = new JButton();
 //    private JButton convertEdmSelectionBtn = new JButton();
     private JButton createHGBtn = new JButton();
+    private JButton analyzeControlaccessBtn = new JButton();
 
     private Cursor WAIT_CURSOR = Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR);
     private Cursor DEFAULT_CURSOR = Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR);
@@ -138,7 +140,7 @@ public class DataPreparationToolGUI extends JFrame {
     /**
      * EAC-CPF
      */
-    private JMenu EacCpfItem = new JMenu();
+    private JMenu eacCpfItem = new JMenu();
     private JMenuItem editEacCpfFile = new JMenuItem();
     private JMenuItem createEacCpf = new JMenuItem();
 
@@ -174,6 +176,7 @@ public class DataPreparationToolGUI extends JFrame {
      * ActionListeners
      */
     private CreateHGListener createHgListener;
+    private AnalyzeControlaccessListener analyzeControlaccessListener;
 
     /**
      * For edition
@@ -258,16 +261,6 @@ public class DataPreparationToolGUI extends JFrame {
         fileItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_O, Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()));
         fileMenu.add(fileItem);
 
-        // TODO: Uncomment when edit will be available.
-//        this.EacCpfItem.add(this.editEacCpfFile);     //add the different EAC-CPF options menu
-        this.EacCpfItem.add(this.createEacCpf);
-        this.fileMenu.add(this.EacCpfItem);
-
-        createEag2012Item.add(createEag2012FromExistingEag2012);
-        createEag2012Item.add(createEag2012FromScratch);
-
-        fileMenu.add(createEag2012Item);
-
         closeSelectedItem.setEnabled(false);
 //        closeSelectedItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_BACK_SPACE, Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()));
         closeSelectedItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_D, Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()));
@@ -285,16 +278,18 @@ public class DataPreparationToolGUI extends JFrame {
 
         optionMenu.add(countryCodeItem);
         optionMenu.add(repositoryCodeItem);
-        optionMenu.add(checksLoadingFilesItem);
         optionMenu.add(digitalObjectTypeItem);
-        optionMenu.add(defaultSaveFolderItem);
+        optionMenu.add(edmGeneralOptionsItem);
+        optionMenu.add(listDateConversionRulesItem);
+        optionMenu.addSeparator();
         optionMenu.add(xsltItem);
         optionMenu.add(xsdItem);
         optionMenu.add(defaultXslSelectionSubmenu);
         optionMenu.add(defaultXsdSelectionSubmenu);
+        optionMenu.addSeparator();
+        optionMenu.add(checksLoadingFilesItem);
+        optionMenu.add(defaultSaveFolderItem);
         optionMenu.add(languageMenu);
-        optionMenu.add(listDateConversionRulesItem);
-        optionMenu.add(edmGeneralOptionsItem);
         if (Utilities.isDev) {
             optionMenu.addSeparator();
             optionMenu.add(databaseItem);
@@ -306,6 +301,19 @@ public class DataPreparationToolGUI extends JFrame {
         convertItem.setEnabled(false);
         convertItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_M, Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()));
         actionMenu.add(convertItem);
+
+        actionMenu.addSeparator();
+
+        // TODO: Uncomment when edit will be available.
+//        eacCpfItem.add(this.editEacCpfFile);     //add the different EAC-CPF options menu
+        eacCpfItem.add(createEacCpf);
+        actionMenu.add(eacCpfItem);
+
+        createEag2012Item.add(createEag2012FromExistingEag2012);
+        createEag2012Item.add(createEag2012FromScratch);
+        actionMenu.add(createEag2012Item);
+
+
         summaryWindowItem.setEnabled(true);
         summaryWindowItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_1, Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()));
         windowMenu.add(summaryWindowItem);
@@ -338,6 +346,10 @@ public class DataPreparationToolGUI extends JFrame {
         createHGBtn.addActionListener(createHgListener);
         createHGBtn.setEnabled(false);
 
+        analyzeControlaccessListener = new AnalyzeControlaccessListener(labels, getContentPane(), fileInstances);
+        analyzeControlaccessBtn.addActionListener(analyzeControlaccessListener);
+        analyzeControlaccessBtn.setEnabled(false);
+
         validateItem.addActionListener(new ConvertAndValidateActionListener(this, apePanel.getApeTabbedPane(), ConvertAndValidateActionListener.VALIDATE));
         convertItem.addActionListener(new ConvertAndValidateActionListener(this, apePanel.getApeTabbedPane(), ConvertAndValidateActionListener.CONVERT));
 
@@ -351,6 +363,7 @@ public class DataPreparationToolGUI extends JFrame {
         nameComponents();
         wireUp();
         setSize(Toolkit.getDefaultToolkit().getScreenSize());
+        setMinimumSize(Toolkit.getDefaultToolkit().getScreenSize());
         setExtendedState(JFrame.MAXIMIZED_BOTH);
     }
 
@@ -388,6 +401,7 @@ public class DataPreparationToolGUI extends JFrame {
 
 //        convertAndValidateBtn.setText(labels.getString("convertAndValidate"));
         createHGBtn.setText(labels.getString("createHG"));
+        analyzeControlaccessBtn.setText(labels.getString("analyzeControlaccessBtn"));
         progressLabel.setText(labels.getString("chooseFile"));
         deleteFileItem.setText(labels.getString("removeFile"));
 
@@ -406,7 +420,7 @@ public class DataPreparationToolGUI extends JFrame {
 
         xmlEadListLabel.setText(labels.getString("xmlEadFiles"));
 
-        this.EacCpfItem.setText(labels.getString("eaccpf.eacCpfItem"));      //labels related to EAC-CPF in the menu
+        this.eacCpfItem.setText(labels.getString("eaccpf.eacCpfItem"));      //labels related to EAC-CPF in the menu
         this.editEacCpfFile.setText(labels.getString("eaccpf.menu.editEacCpfFile"));
         this.createEacCpf.setText(labels.getString("eaccpf.menu.createEacCpf"));
     }
@@ -415,6 +429,7 @@ public class DataPreparationToolGUI extends JFrame {
         nameComponents();
 
         createHgListener.changeLanguage(labels);
+        analyzeControlaccessListener.changeLanguage(labels);
         apePanel.changeLanguage(labels);
 
         DataPreparationToolGUI.super.setTitle(labels.getString("title"));
@@ -786,6 +801,7 @@ public class DataPreparationToolGUI extends JFrame {
 //                        validateSelectionBtn.setEnabled(false);
 //                        convertEdmSelectionBtn.setEnabled(false);
                         createHGBtn.setEnabled(false);
+                        analyzeControlaccessBtn.setEnabled(false);
                         changeInfoInGUI("");
                     }
                 }
@@ -881,10 +897,14 @@ public class DataPreparationToolGUI extends JFrame {
                 break;
             }
         }
-        if (xmlEadList.getSelectedValues().length > 0 && isOnlyValidFiles) {
-            createHGBtn.setEnabled(true);
+        if (!xmlEadList.getSelectedValuesList().isEmpty()) {
+            if(isOnlyValidFiles) {
+                createHGBtn.setEnabled(true);
+            }
+            analyzeControlaccessBtn.setEnabled(true);
         } else {
             createHGBtn.setEnabled(false);
+            analyzeControlaccessBtn.setEnabled(false);
         }
     }
 
@@ -941,6 +961,9 @@ public class DataPreparationToolGUI extends JFrame {
         createHGBtn.setPreferredSize(new Dimension(-1, 40));
         createHGBtn.setEnabled(false);
         p.add(createHGBtn);
+        analyzeControlaccessBtn.setPreferredSize(new Dimension(-1, 40));
+        analyzeControlaccessBtn.setEnabled(false);
+        p.add(analyzeControlaccessBtn);
         return p;
     }
 
@@ -989,6 +1012,7 @@ public class DataPreparationToolGUI extends JFrame {
 //            validateSelectionBtn.setEnabled(false);
 //            convertEdmSelectionBtn.setEnabled(false);
             createHGBtn.setEnabled(false);
+            analyzeControlaccessBtn.setEnabled(false);
             xmlEadList.setEnabled(true);
         }
     };
@@ -1173,47 +1197,42 @@ public class DataPreparationToolGUI extends JFrame {
                 apeTabbedPane.setValidationErrorText(fileInstance.getValidationErrors());
                 apeTabbedPane.enableValidationReportBtn();
                 saveMessageReportItem.setEnabled(true);
-                apeTabbedPane.enableMessageReportBtn();
             } else {
                 apeTabbedPane.setValidationErrorText(fileInstance.getValidationErrors());
                 apeTabbedPane.disableValidationReportBtn();
                 saveMessageReportItem.setEnabled(false);
-                apeTabbedPane.disableMessageReportBtn();
             }
             apeTabbedPane.setConversionErrorText(fileInstance.getConversionErrors());
             if (fileInstance.isConverted()) {
                 convertItem.setEnabled(false);
                 apeTabbedPane.disableConversionBtn();
+                apeTabbedPane.disableConvertAndValidateBtn();
                 saveMessageReportItem.setEnabled(true);
-                apeTabbedPane.enableMessageReportBtn();
             } else {
                 convertItem.setEnabled(true);
                 apeTabbedPane.enableConversionBtn();
                 saveMessageReportItem.setEnabled(false);
-                apeTabbedPane.disableMessageReportBtn();
             }
             if (fileInstance.isValid()) {
                 validateItem.setEnabled(false);
                 convertItem.setEnabled(false);
                 apeTabbedPane.disableValidationBtn();
                 apeTabbedPane.disableConversionBtn();
+                apeTabbedPane.disableConvertAndValidateBtn();
                 apeTabbedPane.disableConversionEdmBtn();
                 closeSelectedItem.setEnabled(true);
                 saveSelectedItem.setEnabled(true);
                 saveMessageReportItem.setEnabled(true);
-                apeTabbedPane.enableMessageReportBtn();
                 if (fileInstance.getValidationSchema().getFileType().equals(FileInstance.FileType.EAD)) {
                     apeTabbedPane.enableConversionEdmBtn();
                 }
             } else {
                 validateItem.setEnabled(true);
                 apeTabbedPane.enableValidationBtn();
-                apeTabbedPane.enableConvertAndValidateBtn();
                 apeTabbedPane.disableConversionEdmBtn();
                 closeSelectedItem.setEnabled(true);
                 saveSelectedItem.setEnabled(true);
                 saveMessageReportItem.setEnabled(true);
-                apeTabbedPane.enableMessageReportBtn();
             }
             if (fileInstance.isEdm()) {
                 apeTabbedPane.setEdmConversionErrorText(fileInstance.getEuropeanaConversionErrors());
@@ -1223,10 +1242,12 @@ public class DataPreparationToolGUI extends JFrame {
                 closeSelectedItem.setEnabled(true);
                 saveSelectedItem.setEnabled(true);
                 saveMessageReportItem.setEnabled(true);
-                apeTabbedPane.enableMessageReportBtn();
                 if (fileInstance.getValidationSchema().getFileType().equals(FileInstance.FileType.EAD)) {
                     apeTabbedPane.enableConversionEdmBtn();
                 }
+            }
+            if(!fileInstance.isValid() && !fileInstance.isConverted()) {
+                apeTabbedPane.enableConvertAndValidateBtn();
             }
             refreshButtons(fileInstance, Utilities.XSLT_GROUP);
             refreshButtons(fileInstance, Utilities.XSD_GROUP);
@@ -1400,7 +1421,7 @@ public class DataPreparationToolGUI extends JFrame {
     public void disableAllBtnAndItems() {
         apePanel.getApeTabbedPane().disableConversionEdmBtn();
         apePanel.getApeTabbedPane().disableConversionBtn();
-        apePanel.getApeTabbedPane().disableMessageReportBtn();
+        apePanel.getApeTabbedPane().disableConvertAndValidateBtn();
         apePanel.getApeTabbedPane().disableValidationBtn();
 
         convertItem.setEnabled(false);
@@ -1419,6 +1440,7 @@ public class DataPreparationToolGUI extends JFrame {
     public void disableAllBatchBtns() {
 //        convertAndValidateBtn.setEnabled(false);
         createHGBtn.setEnabled(false);
+        analyzeControlaccessBtn.setEnabled(false);
 //        validateSelectionBtn.setEnabled(false);
 //        convertEdmSelectionBtn.setEnabled(false);
     }
@@ -1426,13 +1448,13 @@ public class DataPreparationToolGUI extends JFrame {
     public void enableAllBatchBtns() {
 //        convertAndValidateBtn.setEnabled(true);
         createHGBtn.setEnabled(true);
+        analyzeControlaccessBtn.setEnabled(true);
 //        validateSelectionBtn.setEnabled(true);
 //        convertEdmSelectionBtn.setEnabled(true);
     }
 
     public void enableValidationBtns() {
         apePanel.getApeTabbedPane().enableValidationBtn();
-        apePanel.getApeTabbedPane().enableConvertAndValidateBtn();
         validateItem.setEnabled(true);
     }
 
@@ -1442,7 +1464,6 @@ public class DataPreparationToolGUI extends JFrame {
     }
 
     public void enableMessageReportBtns() {
-        apePanel.getApeTabbedPane().enableMessageReportBtn();
         saveMessageReportItem.setEnabled(true);
     }
 

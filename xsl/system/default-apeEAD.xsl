@@ -1129,13 +1129,6 @@
         </xsl:choose>
     </xsl:template>
 
-    <!-- archdesc/did/head -->
-    <xsl:template match="archdesc/did/head" mode="copy">
-        <!--<xsl:if test="$provider != 'NL'">-->
-        <xsl:call-template name="excludeElement"/>
-        <!--</xsl:if>-->
-    </xsl:template>
-
     <!-- archdesc/did/unitdate -->
     <xsl:template match="archdesc/did/unitdate" mode="copy">
         <unitdate>
@@ -2978,9 +2971,16 @@
                     <xsl:if test="@href!=''">
                         <xsl:attribute name="xlink:href" select="ape:checkLink(@href)"/>
                     </xsl:if>
-                    <xsl:if test="@*:href!=''">
-                        <xsl:attribute name="xlink:href" select="ape:checkLink(@*:href)"/>
-                    </xsl:if>
+                    <xsl:choose>
+                        <xsl:when test="@xlink:href!=''">
+                            <xsl:attribute name="xlink:href" select="ape:checkLink(@xlink:href)"/>
+                        </xsl:when>
+                        <xsl:otherwise>
+                            <xsl:if test="@*:href!=''">
+                                <xsl:attribute name="xlink:href" select="ape:checkLink(@*:href)"/>
+                            </xsl:if>
+                        </xsl:otherwise>
+                    </xsl:choose>
                     <xsl:if test="@title!=''">
                         <xsl:attribute name="xlink:title" select="@title"/>
                     </xsl:if>

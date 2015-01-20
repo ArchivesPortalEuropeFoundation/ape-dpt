@@ -64,32 +64,77 @@ public class ListControlaccessTerms {
 
     public void displayLogsResults() {
         LOG.info("We found " + subjects.size() + " subject terms in those files");
+        LOG.info("We found " + persnames.size() + " persname terms in those files");
+        LOG.info("We found " + famnames.size() + " famname terms in those files");
+        LOG.info("We found " + corpnames.size() + " corpname terms in those files");
+        LOG.info("================ Subject ================");
         sorted_maps.putAll(subjects);
         for(String term : sorted_maps.keySet()) {
             LOG.info("Term: '" + term + "', size: " + subjects.get(term));
         }
 
-        LOG.info("We found " + persnames.size() + " persname terms in those files");
+        LOG.info("================ Persname ================");
         bvc =  new ValueComparator(persnames);
         sorted_maps = new TreeMap<String, Integer>(bvc);
         sorted_maps.putAll(persnames);
         for(String term : sorted_maps.keySet()) {
             LOG.info("Persname: '" + term + "', size: " + persnames.get(term));
         }
-        LOG.info("We found " + famnames.size() + " famname terms in those files");
+
+        LOG.info("================ Famname ================");
         bvc =  new ValueComparator(famnames);
         sorted_maps = new TreeMap<String, Integer>(bvc);
         sorted_maps.putAll(famnames);
         for(String term : sorted_maps.keySet()) {
             LOG.info("Famname: '" + term + "', size: " + famnames.get(term));
         }
-        LOG.info("We found " + corpnames.size() + " corpname terms in those files");
+
+        LOG.info("================ Corpname ================");
         bvc =  new ValueComparator(corpnames);
         sorted_maps = new TreeMap<String, Integer>(bvc);
         sorted_maps.putAll(corpnames);
         for(String term : sorted_maps.keySet()) {
             LOG.info("Corpname: '" + term + "', size: " + corpnames.get(term));
         }
+    }
+
+    public String retrieveResults(ResourceBundle labels) {
+        StringBuilder builder = new StringBuilder();
+        builder.append(labels.getString("list.controlaccess.wefound")).append(" ").append(subjects.size()).append(" ").append("subject").append(" ").append(labels.getString("list.controlaccess.termsinfiles")).append("\n");
+        builder.append(labels.getString("list.controlaccess.wefound")).append(" ").append(persnames.size()).append(" ").append("persname").append(" ").append(labels.getString("list.controlaccess.termsinfiles")).append("\n");
+        builder.append(labels.getString("list.controlaccess.wefound")).append(" ").append(famnames.size()).append(" ").append("famname").append(" ").append(labels.getString("list.controlaccess.termsinfiles")).append("\n");
+        builder.append(labels.getString("list.controlaccess.wefound")).append(" ").append(corpnames.size()).append(" ").append("corpname").append(" ").append(labels.getString("list.controlaccess.termsinfiles")).append("\n");
+        builder.append("================ Subject ================\n");
+        sorted_maps.putAll(subjects);
+        for(String term : sorted_maps.keySet()) {
+            builder.append("Subject: '").append(term).append("', ").append(labels.getString("list.controlaccess.size")).append(" ").append(subjects.get(term)).append("\n");
+        }
+
+        builder.append("================ Persname ================\n");
+        bvc =  new ValueComparator(persnames);
+        sorted_maps = new TreeMap<String, Integer>(bvc);
+        sorted_maps.putAll(persnames);
+        for(String term : sorted_maps.keySet()) {
+            builder.append("Persname: '").append(term).append("', ").append(labels.getString("list.controlaccess.size")).append(" ").append(persnames.get(term)).append("\n");
+        }
+
+        builder.append("================ Famname ================\n");
+        bvc =  new ValueComparator(famnames);
+        sorted_maps = new TreeMap<String, Integer>(bvc);
+        sorted_maps.putAll(famnames);
+        for(String term : sorted_maps.keySet()) {
+            builder.append("Famname: '").append(term).append("', ").append(labels.getString("list.controlaccess.size")).append(" ").append(famnames.get(term)).append("\n");
+        }
+
+        builder.append("================ Corpname ================\n");
+        bvc =  new ValueComparator(corpnames);
+        sorted_maps = new TreeMap<String, Integer>(bvc);
+        sorted_maps.putAll(corpnames);
+        for(String term : sorted_maps.keySet()) {
+            builder.append("Corpname: '").append(term).append("', ").append(labels.getString("list.controlaccess.size")).append(" ").append(corpnames.get(term)).append("\n");
+        }
+
+        return builder.toString();
     }
 
     private int analyzeFile(File file){
