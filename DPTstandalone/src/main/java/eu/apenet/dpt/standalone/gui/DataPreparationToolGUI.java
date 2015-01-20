@@ -278,16 +278,18 @@ public class DataPreparationToolGUI extends JFrame {
 
         optionMenu.add(countryCodeItem);
         optionMenu.add(repositoryCodeItem);
-        optionMenu.add(checksLoadingFilesItem);
         optionMenu.add(digitalObjectTypeItem);
-        optionMenu.add(defaultSaveFolderItem);
+        optionMenu.add(edmGeneralOptionsItem);
+        optionMenu.add(listDateConversionRulesItem);
+        optionMenu.addSeparator();
         optionMenu.add(xsltItem);
         optionMenu.add(xsdItem);
         optionMenu.add(defaultXslSelectionSubmenu);
         optionMenu.add(defaultXsdSelectionSubmenu);
+        optionMenu.addSeparator();
+        optionMenu.add(checksLoadingFilesItem);
+        optionMenu.add(defaultSaveFolderItem);
         optionMenu.add(languageMenu);
-        optionMenu.add(listDateConversionRulesItem);
-        optionMenu.add(edmGeneralOptionsItem);
         if (Utilities.isDev) {
             optionMenu.addSeparator();
             optionMenu.add(databaseItem);
@@ -299,6 +301,8 @@ public class DataPreparationToolGUI extends JFrame {
         convertItem.setEnabled(false);
         convertItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_M, Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()));
         actionMenu.add(convertItem);
+
+        actionMenu.addSeparator();
 
         // TODO: Uncomment when edit will be available.
 //        eacCpfItem.add(this.editEacCpfFile);     //add the different EAC-CPF options menu
