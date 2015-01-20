@@ -914,7 +914,7 @@
                 <xsl:value-of select="$europeana_provider"/>
             </edm:provider>
             <xsl:call-template name="createRights">
-                <xsl:with-param name="cLevelNode" select="node()"/>
+                <xsl:with-param name="cLevelNode" select="$currentnode"/>
                 <xsl:with-param name="useExistingRightsInfo" select="$useExistingRightsInfo"/>
                 <xsl:with-param name="europeana_rights" select="$europeana_rights"/>
             </xsl:call-template>
@@ -1738,7 +1738,7 @@
                             </xsl:when>
                             <xsl:otherwise>
                                 <xsl:choose>
-                                    <xsl:when test="$inheritElementsFromFileLevel = 'true' and /ead/archdesc/userestrict[@type='dao']">
+                                    <xsl:when test="/ead/archdesc/userestrict[@type='dao']">
                                         <xsl:value-of
                                             select="/ead/archdesc/userestrict[@type='dao']/p[1]/extref/@xlink:href"/>
                                     </xsl:when>
@@ -1953,7 +1953,7 @@
                 </xsl:choose>
             </dc:description>
             <xsl:call-template name="createRights">
-                <xsl:with-param name="cLevelNode" select="node()/../.."/>
+                <xsl:with-param name="cLevelNode" select="current()/../.."/>
                 <xsl:with-param name="useExistingRightsInfo" select="$useExistingRightsInfo"/>
                 <xsl:with-param name="europeana_rights" select="$europeana_rights"/>
             </xsl:call-template>

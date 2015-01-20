@@ -816,8 +816,10 @@ public class EdmOptionsPanel extends JPanel {
                 return "http://www.europeana.eu/rights/rr-f/";
             } else if (europeanaRights.equals(this.labels.getString("edm.panel.license.europeana.paid"))) {
                 return "http://www.europeana.eu/rights/rr-p/";
-            } else {
+            } else if (europeanaRights.equals(this.labels.getString("edm.panel.license.europeana.free"))) {
                 return "http://www.europeana.eu/rights/orphan-work-eu/";
+            } else {
+                return "http://www.europeana.eu/rights/unknown/";
             }
         } else if (type.equalsIgnoreCase(EdmOptionsPanel.OUT_OF_COPYRIGHT)) {
             return "http://www.europeana.eu/rights/out-of-copyright-non-commercial/";
@@ -1211,7 +1213,7 @@ public class EdmOptionsPanel extends JPanel {
 
         EuropeanaRightsPanel() {
             super(new GridLayout(1, 1));
-            String[] rights = {labels.getString("edm.panel.license.europeana.free"), labels.getString("edm.panel.license.europeana.orphan"), labels.getString("edm.panel.license.europeana.paid")};
+            String[] rights = {labels.getString("edm.panel.license.europeana.free"), labels.getString("edm.panel.license.europeana.orphan"), labels.getString("edm.panel.license.europeana.paid"), labels.getString("edm.panel.license.europeana.unknown")};
             europeanaRightsComboBox = new JComboBox(rights);
             add(europeanaRightsComboBox);
         }
