@@ -84,6 +84,7 @@ public final class Utilities {
 
     public final static File BEFORE_XSL_FILE = new File(BEFORE_XSL_FILE_PATH);
     public final static File EDM_QUALITY_FILE = new File(REPORT_DIR + "edmQuality.xsl");
+    public final static File XML_QUALITY_FILE = new File(REPORT_DIR + "xmlQuality.xsl");
 
     private static List<XsdObject> xsdList;
 

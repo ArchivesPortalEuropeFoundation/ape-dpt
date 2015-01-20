@@ -110,7 +110,6 @@ public class DataPreparationToolGUI extends JFrame {
     private JMenuItem saveMessageReportItem = new JMenuItem();
     private JMenuItem sendFilesWebDAV = new JMenuItem();
     private JMenuItem quitItem = new JMenuItem();
-    private JMenuItem createEag2012FromExistingEag02 = new JMenuItem();
     private JMenuItem createEag2012FromExistingEag2012 = new JMenuItem();
     private JMenuItem createEag2012FromScratch = new JMenuItem();
     private JMenuItem repositoryCodeItem = new JMenuItem();
@@ -264,7 +263,6 @@ public class DataPreparationToolGUI extends JFrame {
         this.EacCpfItem.add(this.createEacCpf);
         this.fileMenu.add(this.EacCpfItem);
 
-        createEag2012Item.add(createEag2012FromExistingEag02);
         createEag2012Item.add(createEag2012FromExistingEag2012);
         createEag2012Item.add(createEag2012FromScratch);
 
@@ -363,7 +361,6 @@ public class DataPreparationToolGUI extends JFrame {
 
         fileItem.setText(labels.getString("selectFile"));
         createEag2012Item.setText(labels.getString("createEag2012"));
-        createEag2012FromExistingEag02.setText(labels.getString("menu.createEag2012FromEag02"));
         createEag2012FromExistingEag2012.setText(labels.getString("menu.createEag2012FromEag2012"));
         createEag2012FromScratch.setText(labels.getString("menu.createEag2012FromScratch"));
         closeSelectedItem.setText(labels.getString("menu.closeSelectedFile"));
@@ -556,44 +553,6 @@ public class DataPreparationToolGUI extends JFrame {
                 createOptionPaneForChecksLoadingFiles();
             }
         });
-        createEag2012FromExistingEag02.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                JFileChooser eagFileChooser = new JFileChooser();
-                eagFileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
-                eagFileChooser.setMultiSelectionEnabled(false);
-                eagFileChooser.setCurrentDirectory(new File(retrieveFromDb.retrieveOpenLocation()));
-                if (eagFileChooser.showOpenDialog(getParent()) == JFileChooser.APPROVE_OPTION) {
-                    currentLocation = eagFileChooser.getCurrentDirectory();
-                    retrieveFromDb.saveOpenLocation(currentLocation.getAbsolutePath());
-
-                    File eagFile = eagFileChooser.getSelectedFile();
-                    if (!Eag2012Frame.isUsed()) {
-                        try {
-                            if (ReadXml.isXmlFile(eagFile, "eag")) {
-                                new Eag2012Frame(eagFile, false, getContentPane().getSize(), (ProfileListModel) getXmlEadList().getModel(), labels);
-                            } else {
-                                JOptionPane.showMessageDialog(rootPane, labels.getString("eag2012.errors.notAnEagFile"));
-                            }
-                        } catch (SAXException ex) {
-                            if (ex instanceof SAXParseException) {
-                                JOptionPane.showMessageDialog(rootPane, labels.getString("eag2012.errors.notAnEagFile"));
-                            }
-                            java.util.logging.Logger.getLogger(DataPreparationToolGUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-                        } catch (IOException ex) {
-                            java.util.logging.Logger.getLogger(DataPreparationToolGUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-                        } catch (ParserConfigurationException ex) {
-                            java.util.logging.Logger.getLogger(DataPreparationToolGUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-                        } catch (Exception ex) {
-                            try {
-                                JOptionPane.showMessageDialog(rootPane, labels.getString(ex.getMessage()));
-                            } catch (Exception ex1) {
-                                JOptionPane.showMessageDialog(rootPane, "Error...");
-                            }
-                        }
-                    }
-                }
-            }
-        });
         createEag2012FromExistingEag2012.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 JFileChooser eagFileChooser = new JFileChooser();
@@ -608,7 +567,7 @@ public class DataPreparationToolGUI extends JFrame {
                     if (!Eag2012Frame.isUsed()) {
                         try {
                             if (ReadXml.isXmlFile(eagFile, "eag")) {
-                                new Eag2012Frame(eagFile, true, getContentPane().getSize(), (ProfileListModel) getXmlEadList().getModel(), labels);
+                                new Eag2012Frame(eagFile, getContentPane().getSize(), (ProfileListModel) getXmlEadList().getModel(), labels);
                             } else {
                                 JOptionPane.showMessageDialog(rootPane, labels.getString("eag2012.errors.notAnEagFile"));
                             }
@@ -1085,7 +1044,7 @@ public class DataPreparationToolGUI extends JFrame {
                 FileInstance fileInstance = fileInstances.get(key);
                 fileInstance.setValidationSchema(e.getActionCommand());
 
-                if (fileInstance.getValidationSchema().equals(Utilities.getXsdObjectFromPath(Xsd_enum.XSD_EAG_SCHEMA.getPath())) || fileInstance.getValidationSchema().equals(Utilities.getXsdObjectFromPath(Xsd_enum.XSD_EAG_2012_SCHEMA.getPath()))) {
+                if (fileInstance.getValidationSchema().equals(Utilities.getXsdObjectFromPath(Xsd_enum.XSD_EAG_2012_SCHEMA.getPath()))) {
                     fileInstance.setFileType(FileInstance.FileType.EAG);
                 } else if (fileInstance.getValidationSchema().equals(Utilities.getXsdObjectFromPath(Xsd_enum.XSD_EAC_SCHEMA.getPath())) || fileInstance.getValidationSchema().equals(Utilities.getXsdObjectFromPath(Xsd_enum.XSD_APE_EAC_SCHEMA.getPath()))) {
                     fileInstance.setFileType(FileInstance.FileType.EAC_CPF);
@@ -1128,7 +1087,7 @@ public class DataPreparationToolGUI extends JFrame {
             String filetype;
             if (xsdEnum.getPath().equals("apeEAD.xsd") || xsdEnum.getPath().equals("ead_2002.xsd")) {
                 filetype = FileInstance.FileType.EAD.getFilePrefix();
-            } else if (xsdEnum.getPath().equals("APE_EAG.xsd") || xsdEnum.getPath().equals("eag.xsd") || xsdEnum.getPath().equals("eag_2012.xsd")) {
+            } else if (xsdEnum.getPath().equals("eag_2012.xsd")) {
                 filetype = FileInstance.FileType.EAG.getFilePrefix();
             } else if (xsdEnum.getPath().equals("cpf.xsd")) {
                 filetype = FileInstance.FileType.EAC_CPF.getFilePrefix();

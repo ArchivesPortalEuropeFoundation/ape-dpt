@@ -1135,7 +1135,7 @@
 
     <xs:complexType name="resourceRelation">
         <xs:sequence>
-            <xs:element name="relationEntry" type="relationEntry"/>
+            <xs:element name="relationEntry" type="relationEntry" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element name="descriptiveNote" type="descriptiveNote" minOccurs="0"/>
             <xs:group ref="m.dates" minOccurs="0"/>
             <xs:element name="objectBinWrap" type="objectBinWrap" minOccurs="0"/>

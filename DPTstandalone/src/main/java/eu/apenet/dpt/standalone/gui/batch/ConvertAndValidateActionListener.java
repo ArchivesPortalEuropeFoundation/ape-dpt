@@ -25,6 +25,7 @@ import eu.apenet.dpt.standalone.gui.progress.ApexActionListener;
 import eu.apenet.dpt.standalone.gui.progress.ProgressFrame;
 import eu.apenet.dpt.utils.service.DocumentValidation;
 import eu.apenet.dpt.utils.service.TransformationTool;
+import eu.apenet.dpt.utils.service.stax.CheckIsEadFile;
 import eu.apenet.dpt.utils.service.stax.StaxTransformationTool;
 import eu.apenet.dpt.utils.util.CountCLevels;
 import eu.apenet.dpt.utils.util.XmlChecker;
@@ -183,16 +184,16 @@ public class ConvertAndValidateActionListener extends ApexActionListener {
                                         StringWriter xslMessages;
                                         HashMap<String, String> parameters = dataPreparationToolGUI.getParams();
                                         parameters.put("eadidmissing", eadid);
-
-//                                        if (fileInstance.getConversionScriptName().equals(Utilities.XSL_DEFAULT_APEEAD_NAME)) {
+                                        CheckIsEadFile checkIsEadFile = new CheckIsEadFile(file);
+                                        checkIsEadFile.run();
+                                        if(checkIsEadFile.isEadRoot()) {
                                             File outputFile_temp = new File(Utilities.TEMP_DIR + ".temp_" + file.getName());
                                             TransformationTool.createTransformation(FileUtils.openInputStream(file), outputFile_temp, Utilities.BEFORE_XSL_FILE, null, true, true, null, true, null);
-
                                             xslMessages = TransformationTool.createTransformation(FileUtils.openInputStream(outputFile_temp), outputFile, xslFile, parameters, true, true, null, true, counterCLevelCall);
                                             outputFile_temp.delete();
-//                                        } else {
-//                                            xslMessages = TransformationTool.createTransformation(FileUtils.openInputStream(file), outputFile, xslFile, parameters, true, true, null, true, null);
-//                                        }
+                                        } else {
+                                            xslMessages = TransformationTool.createTransformation(FileUtils.openInputStream(file), outputFile, xslFile, parameters, true, true, null, true, null);
+                                        }
                                         fileInstance.setConversionErrors(xslMessages.toString());
                                         fileInstance.setCurrentLocation(Utilities.TEMP_DIR + "temp_" + file.getName());
                                         fileInstance.setConverted();
@@ -257,10 +258,9 @@ public class ConvertAndValidateActionListener extends ApexActionListener {
                                         fileInstance.setValid(true);
                                         fileInstance.setValidationErrors(labels.getString("validationSuccess"));
                                         if(xsdObject.getFileType().equals(FileInstance.FileType.EAD) && xsdObject.getName().equals("apeEAD")) {
-                                            URL url = ConvertAndValidateActionListener.class.getResource("/xmlQuality/xmlQuality.xsl");
                                             XmlQualityCheckerCall xmlQualityCheckerCall = new XmlQualityCheckerCall();
                                             InputStream is2 = FileUtils.openInputStream(new File(fileInstance.getCurrentLocation()));
-                                            TransformationTool.createTransformation(is2, null, new File(url.getFile()), null, true, true, null, false, xmlQualityCheckerCall);
+                                            TransformationTool.createTransformation(is2, null, Utilities.XML_QUALITY_FILE, null, true, true, null, false, xmlQualityCheckerCall);
                                             String xmlQualityStr = createXmlQualityString(xmlQualityCheckerCall);
                                             fileInstance.setValidationErrors(fileInstance.getValidationErrors() + xmlQualityStr);
                                             fileInstance.setXmlQualityErrors(createXmlQualityErrors(xmlQualityCheckerCall));

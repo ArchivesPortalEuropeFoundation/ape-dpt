@@ -13,7 +13,6 @@ public enum Xsd_enum {
     XSD_APE_SCHEMA("apeEAD", "apeEAD.xsd"),
     XSD_APE_EAC_SCHEMA("apeEAC-CPF", "apeEAC-CPF.xsd"),
     XSD_EAC_SCHEMA("EAC-CPF", "cpf.xsd"),
-    XSD_EAG_SCHEMA("EAG 0.2", "eag.xsd"),
     XSD_EAG_2012_SCHEMA("EAG 2012", "eag_2012.xsd"),
     XSD_METS_SCHEMA("apeMETS", "apeMETS.xsd"),
     XSD_METS_RIGHTS_SCHEMA("apeMETS Rights", "apeMETSRights.xsd"),
