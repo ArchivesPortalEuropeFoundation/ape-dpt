@@ -1724,7 +1724,14 @@
                                     select="$cLevelNode/userestrict[@type='dao']/p[1]/extref/@xlink:href"/>
                             </xsl:when>
                             <xsl:otherwise>
- 									<xsl:value-of select="$europeana_rights"/>
+ 								<xsl:choose>
+                                    <xsl:when test="/ead/archdesc/userestrict[@type='dao']/p[1]/extref/@xlink:href">
+                                        <xsl:value-of select="/ead/archdesc/userestrict[@type='dao']/p[1]/extref/@xlink:href"/>
+                                    </xsl:when>
+                                    <xsl:otherwise>
+                                        <xsl:value-of select="$europeana_rights"/>
+                                    </xsl:otherwise>
+                                </xsl:choose>
                             </xsl:otherwise>
                         </xsl:choose>
                     </xsl:when>
