@@ -241,10 +241,7 @@
                     </xsl:otherwise>
                 </xsl:choose>
             </dc:description>
-            <edm:rights>
-                <xsl:attribute name="rdf:resource"
-                    select="'http://creativecommons.org/publicdomain/zero/1.0/'"/>
-            </edm:rights>
+            <edm:rights rdf:resource="http://creativecommons.org/publicdomain/zero/1.0/"/>
         </edm:WebResource>
     </xsl:template>
 
@@ -471,10 +468,7 @@
                 <edm:provider>
                     <xsl:value-of select="$europeana_provider"/>
                 </edm:provider>
-                <edm:rights>
-                    <xsl:attribute name="rdf:resource"
-                        select="'http://creativecommons.org/publicdomain/zero/1.0/'"/>
-                </edm:rights>
+ 				<edm:rights rdf:resource="http://creativecommons.org/publicdomain/zero/1.0/"/>
             </ore:Aggregation>
             <edm:ProvidedCHO>
                 <xsl:attribute name="rdf:about" select="concat('providedCHO_', $identifier)"/>
@@ -710,10 +704,7 @@
                         </xsl:otherwise>
                     </xsl:choose>
                 </dc:description>
-                <edm:rights>
-                    <xsl:attribute name="rdf:resource"
-                        select="'http://creativecommons.org/publicdomain/zero/1.0/'"/>
-                </edm:rights>
+ 				<edm:rights rdf:resource="http://creativecommons.org/publicdomain/zero/1.0/"/>
             </edm:WebResource>
         </xsl:if>
 
@@ -915,8 +906,6 @@
             </edm:provider>
             <xsl:call-template name="createRights">
                 <xsl:with-param name="cLevelNode" select="$currentnode"/>
-                <xsl:with-param name="useExistingRightsInfo" select="$useExistingRightsInfo"/>
-                <xsl:with-param name="europeana_rights" select="$europeana_rights"/>
             </xsl:call-template>
         </ore:Aggregation>
         <edm:ProvidedCHO>
@@ -1725,27 +1714,17 @@
     </xsl:template>
     <xsl:template name="createRights">
         <xsl:param name="cLevelNode"/>
-        <xsl:param name="useExistingRightsInfo"/>
-        <xsl:param name="europeana_rights"/>
         <edm:rights>
             <xsl:attribute name="rdf:resource">
                 <xsl:choose>
                     <xsl:when test="$useExistingRightsInfo = 'true'">
                         <xsl:choose>
-                            <xsl:when test="$cLevelNode/userestrict[@type='dao']">
+                            <xsl:when test="$cLevelNode/userestrict[@type='dao']/p[1]/extref/@xlink:href">
                                 <xsl:value-of
                                     select="$cLevelNode/userestrict[@type='dao']/p[1]/extref/@xlink:href"/>
                             </xsl:when>
                             <xsl:otherwise>
-                                <xsl:choose>
-                                    <xsl:when test="/ead/archdesc/userestrict[@type='dao']">
-                                        <xsl:value-of
-                                            select="/ead/archdesc/userestrict[@type='dao']/p[1]/extref/@xlink:href"/>
-                                    </xsl:when>
-                                    <xsl:otherwise>
-                                        <xsl:value-of select="$europeana_rights"/>
-                                    </xsl:otherwise>
-                                </xsl:choose>
+ 									<xsl:value-of select="$europeana_rights"/>
                             </xsl:otherwise>
                         </xsl:choose>
                     </xsl:when>
@@ -1954,8 +1933,6 @@
             </dc:description>
             <xsl:call-template name="createRights">
                 <xsl:with-param name="cLevelNode" select="current()/../.."/>
-                <xsl:with-param name="useExistingRightsInfo" select="$useExistingRightsInfo"/>
-                <xsl:with-param name="europeana_rights" select="$europeana_rights"/>
             </xsl:call-template>
         </edm:WebResource>
     </xsl:template>
