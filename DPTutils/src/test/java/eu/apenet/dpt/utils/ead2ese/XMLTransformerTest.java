@@ -1,5 +1,6 @@
 package eu.apenet.dpt.utils.ead2ese;
 
+import eu.apenet.dpt.utils.ead2edm.XMLTransformer;
 import java.io.File;
 import java.util.Map;
 import java.util.Properties;
