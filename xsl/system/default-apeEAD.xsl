@@ -1099,7 +1099,7 @@
             <xsl:if test="@type">
                 <xsl:attribute name="type" select="@type"/>
             </xsl:if>
-            <xsl:value-of select="."/>
+            <xsl:apply-templates mode="#current"/>
         </unittitle>
     </xsl:template>
 
@@ -2699,6 +2699,24 @@
     <xsl:template match="unittitle/corpname | unittitle/famname | unittitle/function | unittitle/genreform | unittitle/geogname | unittitle/name | unittitle/occupation | unittitle/persname | unittitle/subject | unittitle/title"
                   mode="level">
         <xsl:apply-templates select="node()" mode="#current"/>
+    </xsl:template>
+    
+    <xsl:template match="unittitle/imprint" mode="copy level">
+        <xsl:for-each select="*">
+            <xsl:if test="position() eq 1">
+                <xsl:text> (</xsl:text>
+            </xsl:if>
+            <xsl:if test="not(position() eq 1) and not(position() eq last())">
+                <xsl:text> - </xsl:text>
+            </xsl:if>
+            <xsl:value-of select="normalize-space(.)"/>
+            <xsl:if test="not(position() eq 1) and not(position() eq last())">
+                <xsl:text> - </xsl:text>
+            </xsl:if>
+            <xsl:if test="position() eq last()">
+                <xsl:text>)</xsl:text>
+            </xsl:if>
+        </xsl:for-each>
     </xsl:template>
 
     <!-- class: unitid -->
