@@ -816,7 +816,7 @@ public class EdmOptionsPanel extends JPanel {
                 return "http://www.europeana.eu/rights/rr-f/";
             } else if (europeanaRights.equals(this.labels.getString("edm.panel.license.europeana.paid"))) {
                 return "http://www.europeana.eu/rights/rr-p/";
-            } else if (europeanaRights.equals(this.labels.getString("edm.panel.license.europeana.free"))) {
+            } else if (europeanaRights.equals(this.labels.getString("edm.panel.license.europeana.orphan"))) {
                 return "http://www.europeana.eu/rights/orphan-work-eu/";
             } else {
                 return "http://www.europeana.eu/rights/unknown/";
