@@ -114,6 +114,10 @@ public class TransformationTool {
                 parameters = new HashMap<String, String>();
             transformer = insertParameters(transformer, parameters);
             StringWriter xslMessages = new StringWriter();
+            Controller controller = transformer.getUnderlyingController();
+            Receiver receiver = new MessageEmitter();
+            ((Emitter)receiver).setWriter(xslMessages);
+            controller.setMessageEmitter(receiver);
             long start = System.currentTimeMillis();
             transformer.transform();
             long end = System.currentTimeMillis();

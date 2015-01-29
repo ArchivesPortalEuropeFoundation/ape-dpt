@@ -36,11 +36,14 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreeModel;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.transform.Source;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
+import javax.xml.transform.stream.StreamSource;
 import java.io.File;
+import java.io.FileWriter;
 import java.io.InputStream;
 import java.io.StringWriter;
 import java.net.URL;
@@ -149,8 +152,13 @@ public class LevelTreeActions {
             File file = obj.getFile();
             try {
                 File outputFileTmp = new File(Utilities.TEMP_DIR + ".temp_HG.xml");
-                URL url = TransformationTool.class.getResource("/xsl/fa2hg.xsl");
-                StringWriter xslMessages = TransformationTool.createTransformation(fileUtil.readFileAsInputStream(file), outputFileTmp, new File(url.getFile()), paramMap, true, true, null, true, null);
+                FileWriter fileWriter = new FileWriter(outputFileTmp);
+                InputStream xslIs = TransformationTool.class.getResourceAsStream("/xsl/fa2hg.xsl");
+                Source xsltSource = new StreamSource(xslIs);
+                StringWriter stringWriter = new StringWriter();
+                StringWriter xslMessages = TransformationTool.createTransformation(fileUtil.readFileAsInputStream(file), stringWriter, xsltSource, paramMap);
+                fileWriter.write(stringWriter.toString());
+                fileWriter.close();
                 List<String> filesWithoutEadid = new ArrayList<String>();
                 if(xslMessages != null && xslMessages.toString().contains("NO_EADID_IN_FILE")){
                     filesWithoutEadid.add(file.getName());
