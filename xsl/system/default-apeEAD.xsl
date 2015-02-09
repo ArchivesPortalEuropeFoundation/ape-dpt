@@ -1822,7 +1822,7 @@
         <xsl:apply-templates mode="#current"/>
     </xsl:template>
 
-    <xsl:template match="otherfindaid/p/archref | otherfindaid/p/ref/archref | otherfindaid/p/ref"
+    <xsl:template match="otherfindaid/p/archref | otherfindaid/p/ref/archref | otherfindaid/p/ref[@*:href]"
                   mode="copy level">
         <extref>
             <xsl:if test="@*:href">
