@@ -11,6 +11,7 @@ import java.util.regex.Pattern;
 import net.sf.saxon.expr.XPathContext;
 import net.sf.saxon.lib.ExtensionFunctionCall;
 import net.sf.saxon.lib.ExtensionFunctionDefinition;
+import net.sf.saxon.om.Sequence;
 import net.sf.saxon.om.SequenceIterator;
 import net.sf.saxon.om.StructuredQName;
 import net.sf.saxon.trans.XPathException;
@@ -52,9 +53,9 @@ public class LinkFormatChecker extends ExtensionFunctionDefinition {
 
     public class LinkFormatCheckerCall extends ExtensionFunctionCall {
         @Override
-        public SequenceIterator call(SequenceIterator[] arguments, XPathContext context) throws XPathException {
-            String out = normalizeLink(arguments[0].next().getStringValue());
-            return SingletonIterator.makeIterator(new StringValue(out));
+        public Sequence call(XPathContext xPathContext, Sequence[] sequences) throws XPathException {
+            String out = normalizeLink(sequences[0].toString());
+            return StringValue.makeStringValue(out);
         }
     }
 
