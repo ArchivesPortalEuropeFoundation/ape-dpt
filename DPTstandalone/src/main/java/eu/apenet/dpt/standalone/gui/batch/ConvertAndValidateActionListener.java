@@ -254,15 +254,16 @@ public class ConvertAndValidateActionListener extends ApexActionListener {
 
                             try {
                                 try {
-                                    InputStream is = FileUtils.openInputStream(new File(fileInstance.getCurrentLocation()));
+                                    File fileToValidate = new File(fileInstance.getCurrentLocation());
+                                    InputStream is = FileUtils.openInputStream(fileToValidate);
                                     dataPreparationToolGUI.setResultAreaText(labels.getString("validating") + " " + file.getName() + " (" + currentFileNumberBatch + "/" + numberOfFiles + ")");
                                     XsdObject xsdObject = fileInstance.getValidationSchema();
 
                                     List<SAXParseException> exceptions;
                                     if(xsdObject.getName().equals(Xsd_enum.DTD_EAD_2002.getReadableName())) {
-                                        exceptions = DocumentValidation.xmlValidationAgainstDtd(file.getAbsolutePath(), Utilities.getUrlPathXsd(xsdObject));
+                                        exceptions = DocumentValidation.xmlValidationAgainstDtd(fileToValidate.getAbsolutePath(), Utilities.getUrlPathXsd(xsdObject));
                                     } else {
-                                        exceptions = DocumentValidation.xmlValidation(FileUtils.openInputStream(file), Utilities.getUrlPathXsd(xsdObject), xsdObject.isXsd11());
+                                        exceptions = DocumentValidation.xmlValidation(is, Utilities.getUrlPathXsd(xsdObject), xsdObject.isXsd11());
                                     }
                                     if (exceptions == null || exceptions.isEmpty()) {
                                         fileInstance.setValid(true);
