@@ -3,7 +3,6 @@ package eu.apenet.dpt.utils.util.extendxsl;
 import net.sf.saxon.expr.XPathContext;
 import net.sf.saxon.lib.ExtensionFunctionCall;
 import net.sf.saxon.lib.ExtensionFunctionDefinition;
-import net.sf.saxon.om.Sequence;
 import net.sf.saxon.om.SequenceIterator;
 import net.sf.saxon.om.StructuredQName;
 import net.sf.saxon.trans.XPathException;
@@ -58,10 +57,9 @@ public class Oai2EadNormalization extends ExtensionFunctionDefinition {
 
 
     public class DateNormalizationCall extends ExtensionFunctionCall {
-        @Override
-        public Sequence call(XPathContext xPathContext, Sequence[] sequences) throws XPathException {
-            String out = normalizeId(sequences[0].toString());
-            return StringValue.makeStringValue(out);
+        public SequenceIterator call(SequenceIterator[] arguments, XPathContext context) throws XPathException {
+            String out = normalizeId(arguments[0].next().getStringValue());
+            return SingletonIterator.makeIterator(new StringValue(out));
         }
     }
 

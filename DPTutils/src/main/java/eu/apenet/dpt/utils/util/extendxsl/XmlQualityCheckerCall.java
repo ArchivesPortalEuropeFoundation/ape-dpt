@@ -4,7 +4,6 @@ import net.sf.saxon.dom.NodeOverNodeInfo;
 import net.sf.saxon.expr.XPathContext;
 import net.sf.saxon.lib.ExtensionFunctionCall;
 import net.sf.saxon.om.NodeInfo;
-import net.sf.saxon.om.Sequence;
 import net.sf.saxon.om.SequenceIterator;
 import net.sf.saxon.trans.XPathException;
 import net.sf.saxon.tree.iter.SingletonIterator;
@@ -39,39 +38,8 @@ public class XmlQualityCheckerCall extends ExtensionFunctionCall {
     private Map<String, Boolean> idsDao = new HashMap<String, Boolean>();
     private Map<String, Boolean> idsHref = new HashMap<String, Boolean>();
 
-    public int getCounterUnittitle() {
-        return counterUnittitle;
-    }
-
-    public int getCounterUnitdate() {
-        return counterUnitdate;
-    }
-
-    public int getCounterDao() {
-        return counterDao;
-    }
-    public int getCounterWrongHref() {
-        return counterWrongHref;
-    }
-
-    public Map<String, Boolean> getIdsUnittitle() {
-        return idsUnittitle;
-    }
-
-    public Map<String, Boolean> getIdsUnitdate() {
-        return idsUnitdate;
-    }
-
-    public Map<String, Boolean> getIdsDao() {
-        return idsDao;
-    }
-    public Map<String, Boolean> getIdsHref() {
-        return idsHref;
-    }
-
-    @Override
-    public Sequence call(XPathContext xPathContext, Sequence[] sequences) throws XPathException {
-        NodeInfo nodeInfo = (NodeInfo) sequences[0].head();
+    public SequenceIterator call(SequenceIterator[] arguments, XPathContext context) throws XPathException {
+        NodeInfo nodeInfo = (NodeInfo) arguments[0].next();
         NodeOverNodeInfo nodeOverNodeInfo = NodeOverNodeInfo.wrap(nodeInfo);
         boolean hasError;
         boolean wasInside;
@@ -176,6 +144,36 @@ public class XmlQualityCheckerCall extends ExtensionFunctionCall {
         }
 
 
-        return StringValue.makeStringValue("");
+        return SingletonIterator.makeIterator(new StringValue(""));
+    }
+
+    public int getCounterUnittitle() {
+        return counterUnittitle;
+    }
+
+    public int getCounterUnitdate() {
+        return counterUnitdate;
+    }
+
+    public int getCounterDao() {
+        return counterDao;
+    }
+    public int getCounterWrongHref() {
+        return counterWrongHref;
+    }
+
+    public Map<String, Boolean> getIdsUnittitle() {
+        return idsUnittitle;
+    }
+
+    public Map<String, Boolean> getIdsUnitdate() {
+        return idsUnitdate;
+    }
+
+    public Map<String, Boolean> getIdsDao() {
+        return idsDao;
+    }
+    public Map<String, Boolean> getIdsHref() {
+        return idsHref;
     }
 }

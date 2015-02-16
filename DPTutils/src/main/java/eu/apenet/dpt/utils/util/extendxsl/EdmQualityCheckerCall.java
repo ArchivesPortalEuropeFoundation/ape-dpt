@@ -11,7 +11,6 @@ import net.sf.saxon.dom.NodeOverNodeInfo;
 import net.sf.saxon.expr.XPathContext;
 import net.sf.saxon.lib.ExtensionFunctionCall;
 import net.sf.saxon.om.NodeInfo;
-import net.sf.saxon.om.Sequence;
 import net.sf.saxon.om.SequenceIterator;
 import net.sf.saxon.trans.XPathException;
 import net.sf.saxon.tree.iter.SingletonIterator;
@@ -31,17 +30,9 @@ public class EdmQualityCheckerCall extends ExtensionFunctionCall {
     private int counterNoUnitid = 0;
     private final Map<String, Integer> identifiers = new HashMap<String, Integer>();
 
-    public int getCounterNoUnitid() {
-        return counterNoUnitid;
-    }
-
-    public Map<String, Integer> getIdentifiers() {
-        return identifiers;
-    }
-
     @Override
-    public Sequence call(XPathContext xPathContext, Sequence[] sequences) throws XPathException {
-        NodeInfo nodeInfo = (NodeInfo) sequences[0].head();
+    public SequenceIterator call(SequenceIterator[] arguments, XPathContext context) throws XPathException {
+        NodeInfo nodeInfo = (NodeInfo) arguments[0].next();
         NodeOverNodeInfo nodeOverNodeInfo = NodeOverNodeInfo.wrap(nodeInfo);
         boolean hasNoIdentifier;
 
@@ -61,7 +52,7 @@ public class EdmQualityCheckerCall extends ExtensionFunctionCall {
         if (hasNoIdentifier) {
             counterNoUnitid++;
         }
-
+        
         //collect all dc:identifier values in Map for detection of duplicates
         if (StringUtils.isNotBlank(identifier)) {
             Integer numOccurrence = identifiers.get(identifier);
@@ -73,6 +64,14 @@ public class EdmQualityCheckerCall extends ExtensionFunctionCall {
             }
         }
 
-        return StringValue.makeStringValue("");
+        return SingletonIterator.makeIterator(new StringValue(""));
+    }
+
+    public int getCounterNoUnitid() {
+        return counterNoUnitid;
+    }
+
+    public Map<String, Integer> getIdentifiers() {
+        return identifiers;
     }
 }

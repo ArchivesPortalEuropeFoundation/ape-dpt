@@ -4,7 +4,6 @@ import eu.apenet.dpt.utils.util.DateConversionXMLFilehandler;
 import net.sf.saxon.expr.XPathContext;
 import net.sf.saxon.lib.ExtensionFunctionCall;
 import net.sf.saxon.lib.ExtensionFunctionDefinition;
-import net.sf.saxon.om.Sequence;
 import net.sf.saxon.om.SequenceIterator;
 import net.sf.saxon.om.StructuredQName;
 import net.sf.saxon.trans.XPathException;
@@ -113,25 +112,24 @@ public class DateNormalization extends ExtensionFunctionDefinition {
             this.baseURI = baseURI;
         }
 
+        public SequenceIterator call(SequenceIterator[] arguments, XPathContext context) throws XPathException {
+            if (arguments.length == 2) {
+                if (!arguments[1].next().getStringValue().equals("pl_unitid")) {
+                    String out = checkForMainagencycode(arguments[0].next().getStringValue());
+                    return SingletonIterator.makeIterator(new StringValue(out));
+                } else {
+                    String out = changePLunitid(arguments[0].next().getStringValue());
+                    return SingletonIterator.makeIterator(new StringValue(out));
+                }
+            } else {
+                String out = printNumberTest(arguments[0].next().getStringValue());
+                return SingletonIterator.makeIterator(new StringValue(out));
+            }
+        }
+
         public String printNumberTest(String input) {
             input = normalizeDate(input, baseURI);
             return input;
-        }
-
-        @Override
-        public Sequence call(XPathContext xPathContext, Sequence[] sequences) throws XPathException {
-            if (sequences.length == 2) {
-                if (!sequences[1].toString().equals("pl_unitid")) {
-                    String out = checkForMainagencycode(sequences[0].toString());
-                    return StringValue.makeStringValue(out);
-                } else {
-                    String out = changePLunitid(sequences[0].toString());
-                    return StringValue.makeStringValue(out);
-                }
-            } else {
-                String out = printNumberTest(sequences[0].toString());
-                return StringValue.makeStringValue(out);
-            }
         }
     }
 
