@@ -26,7 +26,7 @@ public class DTDReplacer implements EntityResolver {
     }
 
     public InputSource resolveEntity(String publicId, String systemId) throws SAXException, IOException {
-        if(this.systemId.equals(systemId) || (systemId != null && systemId.endsWith(this.systemId + ".dtd")) || this.publicId.equals(publicId)) {
+        if(this.systemId.equals(systemId) || (systemId != null && (systemId.endsWith(this.systemId + ".dtd") || systemId.endsWith("pog.dtd"))) || this.publicId.equals(publicId)) {
             return new InputSource(substitute.openStream());
         }
         return null;
