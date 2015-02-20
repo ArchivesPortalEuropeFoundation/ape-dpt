@@ -16,6 +16,7 @@ public class LoggerJAXB {
     private static Logger logger = Logger.getLogger(LoggerJAXB.class);
 
     public static void outputJaxpImplementationInfo() {
+        logger.info("Java version: " + System.getProperty("java.version"));
         logger.info(getImplementationInfo("DocumentBuilderFactory", DocumentBuilderFactory.newInstance().getClass()));
         logger.info(getImplementationInfo("XPathFactory", XPathFactory.newInstance().getClass()));
         logger.info(getImplementationInfo("TransformerFactory", TransformerFactory.newInstance().getClass()));
