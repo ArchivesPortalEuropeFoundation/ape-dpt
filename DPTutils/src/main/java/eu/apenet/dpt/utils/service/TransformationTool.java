@@ -17,6 +17,7 @@ import javax.xml.transform.TransformerException;
 import javax.xml.transform.sax.SAXSource;
 import javax.xml.transform.stream.StreamSource;
 
+import eu.apenet.dpt.utils.util.extendxsl.*;
 import net.sf.saxon.Controller;
 import net.sf.saxon.event.Receiver;
 import net.sf.saxon.lib.ExtensionFunctionCall;
@@ -40,17 +41,6 @@ import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.XMLReaderFactory;
 
 import eu.apenet.dpt.utils.util.DiscardDtdEntityResolver;
-import eu.apenet.dpt.utils.util.extendxsl.CounterCLevel;
-import eu.apenet.dpt.utils.util.extendxsl.CounterCLevelCall;
-import eu.apenet.dpt.utils.util.extendxsl.DateNormalization;
-import eu.apenet.dpt.utils.util.extendxsl.EdmQualityChecker;
-import eu.apenet.dpt.utils.util.extendxsl.EdmQualityCheckerCall;
-import eu.apenet.dpt.utils.util.extendxsl.FlagSet;
-import eu.apenet.dpt.utils.util.extendxsl.LinkFormatChecker;
-import eu.apenet.dpt.utils.util.extendxsl.Oai2EadNormalization;
-import eu.apenet.dpt.utils.util.extendxsl.ResourcebundleExtension;
-import eu.apenet.dpt.utils.util.extendxsl.XmlQualityChecker;
-import eu.apenet.dpt.utils.util.extendxsl.XmlQualityCheckerCall;
 
 /**
  * User: yoann.moranville
@@ -82,6 +72,7 @@ public class TransformationTool {
             processor.registerExtensionFunction(flagSet);
             processor.registerExtensionFunction(linkFormatChecker);
             processor.registerExtensionFunction(resourcebundleExtension);
+            processor.registerExtensionFunction(new Base64Encoder());
 
             XsltCompiler compiler = processor.newXsltCompiler();
 
@@ -161,6 +152,7 @@ public class TransformationTool {
             processor.registerExtensionFunction(flagSet);
             processor.registerExtensionFunction(linkFormatChecker);
             processor.registerExtensionFunction(resourcebundleExtension);
+            processor.registerExtensionFunction(new Base64Encoder());
 
             if(extensionFunctionCall == null || extensionFunctionCall instanceof CounterCLevelCall) {
                 if(extensionFunctionCall == null)
