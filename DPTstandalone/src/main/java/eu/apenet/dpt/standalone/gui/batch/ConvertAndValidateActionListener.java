@@ -135,9 +135,10 @@ public class ConvertAndValidateActionListener extends ApexActionListener {
                     CounterCLevelCall counterCLevelCall = null;
 
                     if (fileInstance.isXml()) {
+                        currentFileNumberBatch = currentFileNumberBatch + 1;
                         if(type == CONVERT || type == CONVERT_AND_VALIDATE) {
 
-                            dataPreparationToolGUI.setResultAreaText(labels.getString("converting") + " " + file.getName() + " (" + (++currentFileNumberBatch) + "/" + numberOfFiles + ")");
+                            dataPreparationToolGUI.setResultAreaText(labels.getString("converting") + " " + file.getName() + " (" + (currentFileNumberBatch) + "/" + numberOfFiles + ")");
 
                             String eadid = "";
                             boolean doTransformation = true;
