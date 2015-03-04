@@ -136,7 +136,7 @@ public class DocumentValidation {
         builder.setEntityResolver(dtdReplacer);
         ErrorHandler errorHandler = new ErrorHandler();
         builder.setErrorHandler(errorHandler);
-        builder.parse(filePath);
+        builder.parse(new File(filePath));
         if (!errorHandler.exceptions.isEmpty()) {
             return fixOrder(errorHandler.exceptions);
         }
