@@ -241,12 +241,13 @@
             <xsl:if test="not(eadid)">
                 <xsl:call-template name="addEadid"/>
             </xsl:if>
-            <xsl:apply-templates select="node()" mode="copy"/>
+            <xsl:apply-templates select="node() except revisiondesc" mode="copy"/>
             <xsl:if test="not(profiledesc) and (normalize-space($defaultRightsDigitalObject) or normalize-space($defaultRightsEadData))">
                 <profiledesc>
                     <xsl:call-template name="descrules_extref_rights" />
                 </profiledesc>
             </xsl:if>
+            <xsl:apply-templates select="revisiondesc" mode="copy"/>
             <xsl:if test="not(revisiondesc) and normalize-space($versionnb)">
                 <xsl:call-template name="revisiondesc_ape"/>
             </xsl:if>
@@ -1822,7 +1823,7 @@
         <xsl:apply-templates mode="#current"/>
     </xsl:template>
 
-    <xsl:template match="otherfindaid/p/archref | otherfindaid/p/ref/archref | otherfindaid/p/ref"
+    <xsl:template match="otherfindaid/p/archref | otherfindaid/p/ref/archref | otherfindaid/p/ref[@*:href]"
                   mode="copy level">
         <extref>
             <xsl:if test="@*:href">

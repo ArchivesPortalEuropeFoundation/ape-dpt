@@ -135,9 +135,10 @@ public class ConvertAndValidateActionListener extends ApexActionListener {
                     CounterCLevelCall counterCLevelCall = null;
 
                     if (fileInstance.isXml()) {
+                        currentFileNumberBatch = currentFileNumberBatch + 1;
                         if(type == CONVERT || type == CONVERT_AND_VALIDATE) {
 
-                            dataPreparationToolGUI.setResultAreaText(labels.getString("converting") + " " + file.getName() + " (" + (++currentFileNumberBatch) + "/" + numberOfFiles + ")");
+                            dataPreparationToolGUI.setResultAreaText(labels.getString("converting") + " " + file.getName() + " (" + (currentFileNumberBatch) + "/" + numberOfFiles + ")");
 
                             String eadid = "";
                             boolean doTransformation = true;
@@ -254,11 +255,17 @@ public class ConvertAndValidateActionListener extends ApexActionListener {
 
                             try {
                                 try {
-                                    InputStream is = FileUtils.openInputStream(new File(fileInstance.getCurrentLocation()));
+                                    File fileToValidate = new File(fileInstance.getCurrentLocation());
+                                    InputStream is = FileUtils.openInputStream(fileToValidate);
                                     dataPreparationToolGUI.setResultAreaText(labels.getString("validating") + " " + file.getName() + " (" + currentFileNumberBatch + "/" + numberOfFiles + ")");
                                     XsdObject xsdObject = fileInstance.getValidationSchema();
 
-                                    List<SAXParseException> exceptions = DocumentValidation.xmlValidation(is, Utilities.getUrlPathXsd(xsdObject), xsdObject.isXsd11());
+                                    List<SAXParseException> exceptions;
+                                    if(xsdObject.getName().equals(Xsd_enum.DTD_EAD_2002.getReadableName())) {
+                                        exceptions = DocumentValidation.xmlValidationAgainstDtd(fileToValidate.getAbsolutePath(), Utilities.getUrlPathXsd(xsdObject));
+                                    } else {
+                                        exceptions = DocumentValidation.xmlValidation(is, Utilities.getUrlPathXsd(xsdObject), xsdObject.isXsd11());
+                                    }
                                     if (exceptions == null || exceptions.isEmpty()) {
                                         fileInstance.setValid(true);
                                         fileInstance.setValidationErrors(labels.getString("validationSuccess"));
