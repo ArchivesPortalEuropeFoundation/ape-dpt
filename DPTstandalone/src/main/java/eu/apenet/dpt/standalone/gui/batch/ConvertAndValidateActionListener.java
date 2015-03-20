@@ -328,6 +328,7 @@ public class ConvertAndValidateActionListener extends ApexActionListener {
                             dataPreparationToolGUI.getAPEPanel().getApeTabbedPane().checkFlashingTab(APETabbedPane.TAB_VALIDATION, Utilities.FLASHING_RED_COLOR);
                         }
                     }
+                    dataPreparationToolGUI.enableMessageReportBtns();
                 }
                 if (continueLoop) {
                     dataPreparationToolGUI.setResultAreaText(labels.getString("finished"));

@@ -41,7 +41,7 @@ public class XsltSelectorListener implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         JList list = dataPreparationToolGUI.getXmlEadList();
         if(list.getSelectedValue() != null){
-            for(Object object : list.getSelectedValuesList()){
+            for(Object object : list.getSelectedValues()){
                 FileInstance fileInstance = dataPreparationToolGUI.getFileInstances().get(((File)object).getName());
                 fileInstance.setConversionScriptName(e.getActionCommand());
                 if(e.getActionCommand().equals("eac2eaccpf.xsl")){
