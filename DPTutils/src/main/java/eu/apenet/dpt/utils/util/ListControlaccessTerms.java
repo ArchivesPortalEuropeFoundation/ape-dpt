@@ -25,6 +25,8 @@ public class ListControlaccessTerms {
     private Map<String, Integer> persnames;
     private Map<String, Integer> famnames;
     private Map<String, Integer> corpnames;
+    private Map<String, Integer> genreforms;
+    private Map<String, Integer> functions;
     private ValueComparator bvc;
     private TreeMap<String, Integer> sorted_maps;
 
@@ -33,6 +35,8 @@ public class ListControlaccessTerms {
         persnames = new HashMap<String, Integer>();
         famnames = new HashMap<String, Integer>();
         corpnames = new HashMap<String, Integer>();
+        genreforms = new HashMap<String, Integer>();
+        functions = new HashMap<String, Integer>();
         bvc =  new ValueComparator(subjects);
         sorted_maps = new TreeMap<String, Integer>(bvc);
         this.path = path;
@@ -43,6 +47,8 @@ public class ListControlaccessTerms {
         persnames = new HashMap<String, Integer>();
         famnames = new HashMap<String, Integer>();
         corpnames = new HashMap<String, Integer>();
+        genreforms = new HashMap<String, Integer>();
+        functions = new HashMap<String, Integer>();
         bvc =  new ValueComparator(subjects);
         sorted_maps = new TreeMap<String, Integer>(bvc);
         this.files = files;
@@ -67,6 +73,8 @@ public class ListControlaccessTerms {
         LOG.info("We found " + persnames.size() + " persname terms in those files");
         LOG.info("We found " + famnames.size() + " famname terms in those files");
         LOG.info("We found " + corpnames.size() + " corpname terms in those files");
+        LOG.info("We found " + genreforms.size() + " genreform terms in those files");
+        LOG.info("We found " + functions.size() + " function terms in those files");
         LOG.info("================ Subject ================");
         sorted_maps.putAll(subjects);
         for(String term : sorted_maps.keySet()) {
@@ -96,6 +104,22 @@ public class ListControlaccessTerms {
         for(String term : sorted_maps.keySet()) {
             LOG.info("Corpname: '" + term + "', size: " + corpnames.get(term));
         }
+
+        LOG.info("================ Genreform ================");
+        bvc =  new ValueComparator(genreforms);
+        sorted_maps = new TreeMap<String, Integer>(bvc);
+        sorted_maps.putAll(genreforms);
+        for(String term : sorted_maps.keySet()) {
+            LOG.info("Genreform: '" + term + "', size: " + genreforms.get(term));
+        }
+
+        LOG.info("================ Function ================");
+        bvc =  new ValueComparator(functions);
+        sorted_maps = new TreeMap<String, Integer>(bvc);
+        sorted_maps.putAll(functions);
+        for(String term : sorted_maps.keySet()) {
+            LOG.info("Function: '" + term + "', size: " + functions.get(term));
+        }
     }
 
     public String retrieveResults(ResourceBundle labels) {
@@ -104,6 +128,8 @@ public class ListControlaccessTerms {
         builder.append(labels.getString("list.controlaccess.wefound")).append(" ").append(persnames.size()).append(" ").append("persname").append(" ").append(labels.getString("list.controlaccess.termsinfiles")).append("\n");
         builder.append(labels.getString("list.controlaccess.wefound")).append(" ").append(famnames.size()).append(" ").append("famname").append(" ").append(labels.getString("list.controlaccess.termsinfiles")).append("\n");
         builder.append(labels.getString("list.controlaccess.wefound")).append(" ").append(corpnames.size()).append(" ").append("corpname").append(" ").append(labels.getString("list.controlaccess.termsinfiles")).append("\n");
+        builder.append(labels.getString("list.controlaccess.wefound")).append(" ").append(genreforms.size()).append(" ").append("genreform").append(" ").append(labels.getString("list.controlaccess.termsinfiles")).append("\n");
+        builder.append(labels.getString("list.controlaccess.wefound")).append(" ").append(functions.size()).append(" ").append("function").append(" ").append(labels.getString("list.controlaccess.termsinfiles")).append("\n");
         builder.append("================ Subject ================\n");
         sorted_maps.putAll(subjects);
         for(String term : sorted_maps.keySet()) {
@@ -134,6 +160,22 @@ public class ListControlaccessTerms {
             builder.append("Corpname: '").append(term).append("', ").append(labels.getString("list.controlaccess.size")).append(" ").append(corpnames.get(term)).append("\n");
         }
 
+        builder.append("================ Genreform ================\n");
+        bvc =  new ValueComparator(genreforms);
+        sorted_maps = new TreeMap<String, Integer>(bvc);
+        sorted_maps.putAll(genreforms);
+        for(String term : sorted_maps.keySet()) {
+            builder.append("Genreform: '").append(term).append("', ").append(labels.getString("list.controlaccess.size")).append(" ").append(genreforms.get(term)).append("\n");
+        }
+
+        builder.append("================ Function ================\n");
+        bvc =  new ValueComparator(functions);
+        sorted_maps = new TreeMap<String, Integer>(bvc);
+        sorted_maps.putAll(functions);
+        for(String term : sorted_maps.keySet()) {
+            builder.append("Function: '").append(term).append("', ").append(labels.getString("list.controlaccess.size")).append(" ").append(functions.get(term)).append("\n");
+        }
+
         return builder.toString();
     }
 
@@ -162,6 +204,8 @@ public class ListControlaccessTerms {
         boolean isPersname = false;
         boolean isFamname = false;
         boolean isCorpname = false;
+        boolean isGenreform = false;
+        boolean isFunction = false;
         String term = "";
         while (true) {
             switch (input.getEventType()) {
@@ -176,11 +220,15 @@ public class ListControlaccessTerms {
                         isFamname = true;
                     } else if(input.getLocalName().equals("corpname")){
                         isCorpname = true;
+                    } else if(input.getLocalName().equals("genreform")){
+                        isGenreform = true;
+                    } else if(input.getLocalName().equals("function")){
+                        isFunction = true;
                     }
                     break;
                 case XMLEvent.CHARACTERS:
                 case XMLEvent.CDATA:
-                    if(isSubject || isPersname || isFamname || isCorpname){
+                    if(isSubject || isPersname || isFamname || isCorpname || isGenreform || isFunction){
                         term = input.getText().trim();
                         if(!term.equals("")) {
                             if(isSubject) {
@@ -207,12 +255,26 @@ public class ListControlaccessTerms {
                                 } else {
                                     corpnames.put(term, corpnames.get(term) + 1);
                                 }
+                            } else if(isGenreform) {
+                                if (genreforms.get(term) == null) {
+                                    genreforms.put(term, 1);
+                                } else {
+                                    genreforms.put(term, genreforms.get(term) + 1);
+                                }
+                            } else if(isFunction) {
+                                if (functions.get(term) == null) {
+                                    functions.put(term, 1);
+                                } else {
+                                    functions.put(term, functions.get(term) + 1);
+                                }
                             }
                         }
                         isSubject = false;
                         isPersname = false;
                         isFamname = false;
                         isCorpname = false;
+                        isGenreform = false;
+                        isFunction = false;
                     }
                     break;
                 case XMLEvent.END_ELEMENT:
