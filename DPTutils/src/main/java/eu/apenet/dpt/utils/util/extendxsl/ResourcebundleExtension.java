@@ -6,6 +6,7 @@ import java.util.ResourceBundle;
 import net.sf.saxon.expr.XPathContext;
 import net.sf.saxon.lib.ExtensionFunctionCall;
 import net.sf.saxon.lib.ExtensionFunctionDefinition;
+import net.sf.saxon.om.Sequence;
 import net.sf.saxon.om.SequenceIterator;
 import net.sf.saxon.om.StructuredQName;
 import net.sf.saxon.trans.XPathException;
@@ -59,18 +60,18 @@ public class ResourcebundleExtension extends ExtensionFunctionDefinition {
         private final String[] basenames = {"i18n/eac-cpf/eac-cpf"};
 
         @Override
-        public SequenceIterator call(SequenceIterator[] arguments, XPathContext context) {
-            if (arguments.length == 2) {
+        public Sequence call(XPathContext xPathContext, Sequence[] sequences) throws XPathException {
+            if (sequences.length == 2) {
                 try {
-                    ResourceBundle resourceBundle = new ResourceBundlesWrapper(basenames, new Locale(arguments[1].next().getStringValue()));
-                    String value = arguments[0].next().getStringValue();
+                    ResourceBundle resourceBundle = new ResourceBundlesWrapper(basenames, new Locale(sequences[1].head().getStringValue()));
+                    String value = sequences[0].head().getStringValue();
                     value = resourceBundle.getString(value);
-                    return SingletonIterator.makeIterator(new StringValue(value));
+                    return StringValue.makeStringValue(value);
                 } catch (XPathException ex) {
                     throw new RuntimeException(ex);
                 }
             } else {
-                return SingletonIterator.makeIterator(new StringValue("ERROR"));
+                return StringValue.makeStringValue("ERROR");
             }
         }
     }

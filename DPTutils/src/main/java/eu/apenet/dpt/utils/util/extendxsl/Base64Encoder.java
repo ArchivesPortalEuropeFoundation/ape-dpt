@@ -3,6 +3,7 @@ package eu.apenet.dpt.utils.util.extendxsl;
 import net.sf.saxon.expr.XPathContext;
 import net.sf.saxon.lib.ExtensionFunctionCall;
 import net.sf.saxon.lib.ExtensionFunctionDefinition;
+import net.sf.saxon.om.Sequence;
 import net.sf.saxon.om.SequenceIterator;
 import net.sf.saxon.om.StructuredQName;
 import net.sf.saxon.trans.XPathException;
@@ -42,17 +43,17 @@ public class Base64Encoder extends ExtensionFunctionDefinition {
     public class Base64EncoderCall extends ExtensionFunctionCall {
 
         @Override
-        public SequenceIterator call(SequenceIterator[] arguments, XPathContext xPathContext) throws XPathException {
+        public Sequence call(XPathContext xPathContext, Sequence[] sequences) throws XPathException {
             String result = "";
-            if (arguments.length == 1) {
+            if (sequences.length == 1) {
                 try {
-                    String arg = arguments[0].next().getStringValue();
+                    String arg = sequences[0].head().getStringValue();
                     result = DatatypeConverter.printBase64Binary(arg.getBytes("UTF-8"));
                 } catch (Exception e) {
                     System.out.println("ERROR: " + e.getMessage());
                 }
             }
-            return SingletonIterator.makeIterator(new StringValue(result));
+            return StringValue.makeStringValue(result);
         }
     }
 }

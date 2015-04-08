@@ -4,6 +4,7 @@ import net.sf.saxon.expr.XPathContext;
 import net.sf.saxon.lib.ExtensionFunctionCall;
 import net.sf.saxon.lib.ExtensionFunctionDefinition;
 import net.sf.saxon.om.Item;
+import net.sf.saxon.om.Sequence;
 import net.sf.saxon.om.SequenceIterator;
 import net.sf.saxon.om.StructuredQName;
 import net.sf.saxon.trans.XPathException;
@@ -57,11 +58,11 @@ public class FlagSet extends ExtensionFunctionDefinition {
 
 
     public class FlagSetCall extends ExtensionFunctionCall {
-        public SequenceIterator call(SequenceIterator[] arguments, XPathContext context) throws XPathException {
+        public Sequence call(XPathContext xPathContext, Sequence[] sequences) throws XPathException {
             Item item = new StringValue(i==0?"true":"false");
             if(i == 0)
                 i = 1;
-            return SingletonIterator.makeIterator(item);
+            return item;
         }
     }
 }

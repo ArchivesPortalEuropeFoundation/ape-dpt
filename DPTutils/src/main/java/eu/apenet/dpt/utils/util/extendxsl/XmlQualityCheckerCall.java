@@ -4,6 +4,7 @@ import net.sf.saxon.dom.NodeOverNodeInfo;
 import net.sf.saxon.expr.XPathContext;
 import net.sf.saxon.lib.ExtensionFunctionCall;
 import net.sf.saxon.om.NodeInfo;
+import net.sf.saxon.om.Sequence;
 import net.sf.saxon.om.SequenceIterator;
 import net.sf.saxon.trans.XPathException;
 import net.sf.saxon.tree.iter.SingletonIterator;
@@ -38,8 +39,8 @@ public class XmlQualityCheckerCall extends ExtensionFunctionCall {
     private Map<String, Boolean> idsDao = new HashMap<String, Boolean>();
     private Map<String, Boolean> idsHref = new HashMap<String, Boolean>();
 
-    public SequenceIterator call(SequenceIterator[] arguments, XPathContext context) throws XPathException {
-        NodeInfo nodeInfo = (NodeInfo) arguments[0].next();
+    public Sequence call(XPathContext xPathContext, Sequence[] sequences) throws XPathException {
+        NodeInfo nodeInfo = (NodeInfo) sequences[0].head();
         NodeOverNodeInfo nodeOverNodeInfo = NodeOverNodeInfo.wrap(nodeInfo);
         boolean hasError;
         boolean wasInside;
@@ -144,7 +145,7 @@ public class XmlQualityCheckerCall extends ExtensionFunctionCall {
         }
 
 
-        return SingletonIterator.makeIterator(new StringValue(""));
+        return StringValue.makeStringValue("");
     }
 
     public int getCounterUnittitle() {

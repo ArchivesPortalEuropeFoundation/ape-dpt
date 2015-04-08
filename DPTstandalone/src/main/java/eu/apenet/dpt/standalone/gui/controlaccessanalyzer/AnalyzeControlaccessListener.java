@@ -44,6 +44,7 @@ public class AnalyzeControlaccessListener implements ActionListener {
         JPanel panel = new JPanel();
         panel.setLayout(new BoxLayout(panel, BoxLayout.PAGE_AXIS));
         textArea = new JTextArea();
+        textArea.setEditable(false);
         JScrollPane scrollPane = new JScrollPane(textArea);
         panel.add(scrollPane);
         frame.add(panel);
