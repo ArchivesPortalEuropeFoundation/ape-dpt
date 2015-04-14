@@ -969,7 +969,7 @@ public class DataPreparationToolGUI extends JFrame {
 
     private boolean isCorrect(File file) {
         if (fileInstances.containsKey(file.getName())) {
-            if(JOptionPane.showConfirmDialog(getContentPane(), labels.getString("error.file.exists") + " - Do you want to overwrite the file?", labels.getString("options.howLoadNewFiles"), JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE) == JOptionPane.YES_OPTION) {
+            if(JOptionPane.showConfirmDialog(getContentPane(), labels.getString("error.file.exists") + " - " + labels.getString("error.file.exists.overwrite"), labels.getString("options.howLoadNewFiles"), JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE) == JOptionPane.YES_OPTION) {
                 ((ProfileListModel)getXmlEadList().getModel()).removeFile(file);
             }
         }
