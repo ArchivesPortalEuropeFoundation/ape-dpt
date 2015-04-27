@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-    apeEAD Schema (XSD 1.1)
-    Version: 1.2.3
-    Date: 20121106
+    apeEAD Schema
+    Version: 1.2.4
+    Date: 20150101
     Editor: APEnet project
 
     This version of the apeEAD schema has been written from the official 2002 schema to accommodate the needs of the APEnet project.
-    However, we now use the XSD 1.1 (http://www.w3.org/TR/xmlschema11-1/)
 -->
 <xs:schema elementFormDefault="qualified" targetNamespace="urn:isbn:1-931666-22-9"
            xmlns="urn:isbn:1-931666-22-9" xmlns:xlink="http://www.w3.org/1999/xlink"
