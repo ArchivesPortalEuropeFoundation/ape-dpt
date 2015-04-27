@@ -131,15 +131,8 @@
                     </dc:creator>
                 </xsl:for-each>
             </xsl:if>
-            <xsl:if test="/ead/archdesc/scopecontent">
-                <xsl:for-each select="/ead/archdesc/scopecontent">
-                    <dc:description>
-                        <xsl:if test="head">
-                            <xsl:value-of select="concat(head/text(), ' - ')"/>
-                        </xsl:if>
-                        <xsl:value-of select="p/text()"/>
-                    </dc:description>
-                </xsl:for-each>
+            <xsl:if test="/ead/archdesc/scopecontent[@encodinganalog=&quot;summary&quot;]">
+                <xsl:apply-templates select="/ead/archdesc/scopecontent[@encodinganalog=&quot;summary&quot;]" />
             </xsl:if>
             <xsl:if test="/ead/archdesc/did/unitid">
                 <dc:identifier>
@@ -154,6 +147,14 @@
             </dc:subject>
             <xsl:if test="/ead/archdesc/did/unittitle">
                 <xsl:apply-templates select="/ead/archdesc/did/unittitle"/>
+            </xsl:if>
+            <xsl:if test="/ead/archdesc/relatedmaterial">
+                <xsl:apply-templates select="/ead/archdesc/relatedmaterial"/>
+            </xsl:if>
+            <xsl:if test="/ead/archdesc/custodhist">
+                <xsl:call-template name="custodhist">
+                    <xsl:with-param name="custodhists" select="/ead/archdesc/custodhist" />
+                </xsl:call-template>
             </xsl:if>
             <dc:type>
                 <xsl:choose>
