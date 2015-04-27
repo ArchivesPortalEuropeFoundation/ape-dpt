@@ -37,6 +37,7 @@ public class Ead2EdmInformation {
     private boolean languagesOnParent;	// Check the existence of languages in "<archdesc>" element.
     private boolean languagesOnAllCLevels;	// Check the existence of languages in all "<c>" element.
     private String userestrictDaoLicenceType;
+    private String userestrictDaoLicenceLink;
     private TreeSet<String> userestrictDaoLicenceText;
 
     public String getLanguageCode() {
@@ -74,6 +75,10 @@ public class Ead2EdmInformation {
     public String getUserestrictDaoLicenceType() {
         return userestrictDaoLicenceType;
     }
+    
+    public String getUserestrictDaoLicenceLink() {
+        return userestrictDaoLicenceLink;
+    }
 
     public TreeSet<String> getUserestrictDaoLicenceText() {
         return this.userestrictDaoLicenceText;
@@ -90,6 +95,7 @@ public class Ead2EdmInformation {
         this.repository = "";
         this.roleType = databaseRoleType;
         this.userestrictDaoLicenceType = "";
+        this.userestrictDaoLicenceLink = "";
         this.userestrictDaoLicenceText = new TreeSet<String>();
         this.determineDaoInformation(fileToRead);
     }
@@ -104,6 +110,7 @@ public class Ead2EdmInformation {
         this.languagesOnParent = false;
         this.languagesOnAllCLevels = true;
         this.userestrictDaoLicenceType = "";
+        this.userestrictDaoLicenceLink = "";
         this.userestrictDaoLicenceText = new TreeSet<String>();
     }
 
@@ -135,6 +142,7 @@ public class Ead2EdmInformation {
 
         private boolean inLangusage = false;
         private boolean inArchdesc = false;
+        private boolean inC = false;
         private boolean inDid = false;
         private boolean inRepository = false;
         private boolean inUserestrictDao = false;
@@ -155,6 +163,8 @@ public class Ead2EdmInformation {
                 this.inLangusage = true;
             } else if (qName.equals("archdesc")) {
                 this.inArchdesc = true;
+            } else if (qName.equals("c")) {
+                this.inC = true;
             } else if (qName.equals("did")) {
                 this.inDid = true;
             } else if (qName.equals("dao")) {
@@ -196,6 +206,7 @@ public class Ead2EdmInformation {
             } else if (qName.equals("extref")) {
                 this.inExtref = true;
                 if (this.metsLicenceRetrieved == false && this.inUserestrictDao) {
+                    userestrictDaoLicenceLink = atts.getValue("xlink:href");
                     String title = atts.getValue("xlink:title");
                     if (CREATIVECOMMONS_TEXT.equals(title)) {
                         userestrictDaoLicenceType = CREATIVECOMMONS;
@@ -221,6 +232,8 @@ public class Ead2EdmInformation {
                 this.inLangusage = false;
             } else if (qName.equals("archdesc")) {
                 this.inArchdesc = false;
+            } else if (qName.equals("c")) {
+                this.inC = false;
             } else if (qName.equals("did")) {
                 this.inDid = false;
 
@@ -262,13 +275,15 @@ public class Ead2EdmInformation {
                         break;
                     }
                 }
-                if (this.hasDao) {
-                    if (this.daoRetrieved == false) {
-                        repository = textBetween.substring(0, index);
-                        this.daoRetrieved = true;
+                if (this.inC) {
+                    if (repository == null || repository.equals("")) {
+                        if (this.daoRetrieved == false) {
+                            repository = textBetween.substring(0, index);
+                            this.daoRetrieved = true;
+                        }
                     }
                 }
-                if (this.inArchdesc) {
+                if (this.inArchdesc && !this.inC) {
                     //if (archdescRepository == null || archdescRepository.equals("")) {
                     //    archdescRepository = textBetween.substring(0, index);
                     //}

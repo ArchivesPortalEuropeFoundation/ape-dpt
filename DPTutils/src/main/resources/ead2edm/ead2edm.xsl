@@ -10,10 +10,13 @@
     xmlns:ore="http://www.openarchives.org/ore/terms/"
     xmlns:oai="http://www.openarchives.org/OAI/2.0"
     xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
-    xmlns:dcterms="http://purl.org/dc/terms/" xmlns:dc="http://purl.org/dc/elements/1.1/"
+    xmlns:dcterms="http://purl.org/dc/terms/"
+    xmlns:dc="http://purl.org/dc/elements/1.1/"
     xmlns:europeana="http://www.europeana.eu/schemas/ese/"
-    xmlns="http://www.europeana.eu/schemas/edm/" xpath-default-namespace="urn:isbn:1-931666-22-9"
-    xmlns:fn="http://www.w3.org/2005/xpath-functions" xmlns:xlink="http://www.w3.org/1999/xlink"
+    xmlns="http://www.europeana.eu/schemas/edm/"
+    xmlns:fn="http://www.w3.org/2005/xpath-functions"
+    xmlns:xlink="http://www.w3.org/1999/xlink"
+    xpath-default-namespace="urn:isbn:1-931666-22-9"
     exclude-result-prefixes="xlink fo fn">
     <xsl:output method="xml" encoding="UTF-8" indent="yes"/>
 
@@ -28,6 +31,7 @@
     <xsl:param name="inheritElementsFromFileLevel"/>
     <xsl:param name="inheritOrigination"/>
     <xsl:param name="inheritLanguage"/>
+    <xsl:param name="inheritRightsInfo"/>
     <xsl:param name="inheritCustodhist"/>
     <!--<xsl:param name="inheritAltformavail"/>-->
     <xsl:param name="inheritControlaccess"/>
@@ -51,7 +55,7 @@
 
     <xsl:template match="/">
         <rdf:RDF
-            xsi:schemaLocation="http://www.w3.org/1999/02/22-rdf-syntax-ns# http://www.europeana.eu/schemas/edm/EDM.xsd">
+            xsi:schemaLocation="http://www.europeana.eu/schemas/edm/ http://www.europeana.eu/schemas/edm/EDM.xsd">
             <xsl:apply-templates/>
         </rdf:RDF>
     </xsl:template>
@@ -80,16 +84,9 @@
                     </xsl:choose>
                 </xsl:when>
                 <xsl:otherwise>
-                    <xsl:choose>
-                        <xsl:when test="$europeana_dataprovider">
-                            <edm:dataProvider>
-                                <xsl:value-of select="$europeana_dataprovider"/>
-                            </edm:dataProvider>
-                        </xsl:when>
-                        <xsl:otherwise>
-                            <xsl:apply-templates select="/ead/archdesc/did/repository[1]"/>
-                        </xsl:otherwise>
-                    </xsl:choose>
+                    <edm:dataProvider>
+                        <xsl:value-of select="$europeana_dataprovider"/>
+                    </edm:dataProvider>
                 </xsl:otherwise>
             </xsl:choose>
             <edm:isShownAt>
@@ -271,6 +268,20 @@
                     </xsl:call-template>
                 </xsl:if>
             </xsl:with-param>
+            <xsl:with-param name="inheritedRepository">
+                <xsl:if test="./did/repository">
+                    <xsl:call-template name="repository">
+                        <xsl:with-param name="repository" select="./did/repository"/>
+                    </xsl:call-template>
+                </xsl:if>
+            </xsl:with-param>
+            <xsl:with-param name="inheritedRightsInfo">
+                <xsl:if test="./userestrict">
+                    <xsl:call-template name="createRights">
+                        <xsl:with-param name="rights" select="./userestrict"/>
+                    </xsl:call-template>
+                </xsl:if>
+            </xsl:with-param>
         </xsl:apply-templates>
     </xsl:template>
 
@@ -278,10 +289,14 @@
         <xsl:param name="inheritedOriginations"/>
         <xsl:param name="inheritedLanguages"/>
         <xsl:param name="inheritedControlaccesses"/>
+        <xsl:param name="inheritedRepository"/>
+        <xsl:param name="inheritedRightsInfo"/>
         <xsl:apply-templates select="c">
             <xsl:with-param name="inheritedOriginations" select="$inheritedOriginations"/>
             <xsl:with-param name="inheritedLanguages" select="$inheritedLanguages"/>
             <xsl:with-param name="inheritedControlaccesses" select="$inheritedControlaccesses"/>
+            <xsl:with-param name="inheritedRepository" select="$inheritedRepository"/>
+            <xsl:with-param name="inheritedRightsInfo" select="$inheritedRightsInfo"/>
         </xsl:apply-templates>
     </xsl:template>
 
@@ -291,6 +306,8 @@
         <xsl:param name="inheritedCustodhists"/>
         <!--<xsl:param name="inheritedAltformavails"/>-->
         <xsl:param name="inheritedControlaccesses"/>
+        <xsl:param name="inheritedRepository"/>
+        <xsl:param name="inheritedRightsInfo"/>
         <xsl:param name="positionChain"/>
 
         <xsl:variable name="updatedInheritedOriginations">
@@ -353,6 +370,30 @@
                 </xsl:otherwise>
             </xsl:choose>
         </xsl:variable>
+        <xsl:variable name="updatedInheritedRepository">
+            <xsl:choose>
+                <xsl:when test="./did/repository">
+                    <xsl:call-template name="repository">
+                        <xsl:with-param name="repository" select="./did/repository"/>
+                    </xsl:call-template>
+                </xsl:when>
+                <xsl:otherwise>
+                    <xsl:copy-of select="$inheritedRepository"/>
+                </xsl:otherwise>
+            </xsl:choose>
+        </xsl:variable>
+        <xsl:variable name="updatedInheritedRightsInfo">
+            <xsl:choose>
+                <xsl:when test="$inheritRightsInfo = &quot;true&quot; and ./userestrict[@type='dao']">
+                    <xsl:call-template name="createRights">
+                        <xsl:with-param name="rights" select="./userestrict[@type='dao']"/>
+                    </xsl:call-template>
+                </xsl:when>
+                <xsl:otherwise>
+                    <xsl:copy-of select="$inheritedRightsInfo"/>
+                </xsl:otherwise>
+            </xsl:choose>
+        </xsl:variable>
         <xsl:variable name="parentcnode" select="parent::node()"/>
         <xsl:variable name="parentdidnode" select="$parentcnode/did"/>
         <xsl:variable name="parentparentcnode" select="parent::node()/parent::node()"/>
@@ -401,6 +442,11 @@
                             <xsl:when test="did/repository[1]">
                                 <xsl:apply-templates select="did/repository[1]"/>
                             </xsl:when>
+                            <xsl:when test="$updatedInheritedRepository">
+                                <xsl:call-template name="repository">
+                                    <xsl:with-param name="repository" select="$updatedInheritedRepository"/>
+                                </xsl:call-template>
+                            </xsl:when>
                             <xsl:otherwise>
                                 <edm:dataProvider>
                                     <xsl:value-of select="$europeana_dataprovider"/>
@@ -409,16 +455,9 @@
                         </xsl:choose>
                     </xsl:when>
                     <xsl:otherwise>
-                        <xsl:choose>
-                            <xsl:when test="$europeana_dataprovider">
-                                <edm:dataProvider>
-                                    <xsl:value-of select="$europeana_dataprovider"/>
-                                </edm:dataProvider>
-                            </xsl:when>
-                            <xsl:otherwise>
-                                <xsl:apply-templates select="did/repository[1]"/>
-                            </xsl:otherwise>
-                        </xsl:choose>
+                        <edm:dataProvider>
+                            <xsl:value-of select="$europeana_dataprovider"/>
+                        </edm:dataProvider>
                     </xsl:otherwise>
                 </xsl:choose>
                 <edm:isShownAt>
@@ -718,8 +757,9 @@
                 <xsl:with-param name="inheritedCustodhists" select="$updatedInheritedCustodhists"/>
                 <!--<xsl:with-param name="inheritedAltformavails"
                     select="$updatedInheritedAltformavails"/>-->
-                <xsl:with-param name="inheritedControlaccesses"
-                    select="$updatedInheritedControlaccesses"/>
+                <xsl:with-param name="inheritedControlaccesses" select="$updatedInheritedControlaccesses"/>
+                <xsl:with-param name="inheritedRepository" select="$updatedInheritedRepository"/>
+                <xsl:with-param name="inheritedRightsInfo" select="$updatedInheritedRightsInfo"/>
                 <xsl:with-param name="positionChain">
                     <xsl:choose>
                         <xsl:when test="$positionChain">
@@ -743,6 +783,8 @@
                     select="$updatedInheritedAltformavails"/>-->
                 <xsl:with-param name="inheritedControlaccesses"
                     select="$updatedInheritedControlaccesses"/>
+                <xsl:with-param name="inheritedRepository" select="$updatedInheritedRepository"/>
+                <xsl:with-param name="inheritedRightsInfo" select="$updatedInheritedRightsInfo"/>
                 <xsl:with-param name="positionChain">
                     <xsl:choose>
                         <xsl:when test="$positionChain">
@@ -765,6 +807,8 @@
         <xsl:param name="inheritedCustodhists"/>
         <xsl:param name="inheritedAltformavails"/>
         <xsl:param name="inheritedControlaccesses"/>
+        <xsl:param name="inheritedRepository"/>
+        <xsl:param name="inheritedRightsInfo"/>
         <xsl:param name="positionChain"/>
 
         <!-- VARIABLES -->
@@ -821,8 +865,10 @@
                         <xsl:when test="$currentnode/did/repository[1]">
                             <xsl:apply-templates select="$currentnode/did/repository[1]"/>
                         </xsl:when>
-                        <xsl:when test="/ead/archdesc/did/repository[1]">
-                            <xsl:apply-templates select="/ead/archdesc/did/repository[1]"/>
+                        <xsl:when test="$inheritedRepository">
+                            <xsl:call-template name="repository">
+                                <xsl:with-param name="repository" select="$inheritedRepository"/>
+                            </xsl:call-template>
                         </xsl:when>
                         <xsl:otherwise>
                             <edm:dataProvider>
@@ -832,16 +878,7 @@
                     </xsl:choose>
                 </xsl:when>
                 <xsl:otherwise>
-                    <xsl:choose>
-                        <xsl:when test="$europeana_dataprovider">
-                            <edm:dataProvider>
-                                <xsl:value-of select="$europeana_dataprovider"/>
-                            </edm:dataProvider>
-                        </xsl:when>
-                        <xsl:otherwise>
-                            <xsl:apply-templates select="/ead/archdesc/did/repository[1]"/>
-                        </xsl:otherwise>
-                    </xsl:choose>
+                    <xsl:apply-templates select="/ead/archdesc/did/repository[1]"/>
                 </xsl:otherwise>
             </xsl:choose>
             <xsl:if test="count(did/dao[not(@xlink:title='thumbnail')]) > 1">
@@ -905,9 +942,45 @@
             <edm:provider>
                 <xsl:value-of select="$europeana_provider"/>
             </edm:provider>
-            <xsl:call-template name="createRights">
-                <xsl:with-param name="cLevelNode" select="$currentnode"/>
-            </xsl:call-template>
+            <xsl:choose>
+                <xsl:when test="$useExistingRightsInfo='true'">
+                    <xsl:choose>
+                        <xsl:when test="$currentnode/userestrict[@type='dao']">
+                            <xsl:call-template name="createRights">
+                                <xsl:with-param name="rights" select="$currentnode/userestrict[@type='dao']"/>
+                            </xsl:call-template> 
+                        </xsl:when>
+                        <xsl:when test="$inheritRightsInfo=&quot;true&quot; and $inheritedRightsInfo">
+                            <xsl:call-template name="createRights">
+                                <xsl:with-param name="rights" select="$inheritedRightsInfo"/>
+                            </xsl:call-template>
+                        </xsl:when>
+                        <xsl:otherwise>
+                            <edm:rights>
+                                <xsl:attribute name="rdf:resource">
+                                    <xsl:value-of select="$europeana_rights"/>
+                                </xsl:attribute>
+                            </edm:rights>
+                        </xsl:otherwise>
+                    </xsl:choose>
+                </xsl:when>
+                <xsl:otherwise>
+                    <xsl:choose>
+                        <xsl:when test="$inheritRightsInfo=&quot;true&quot; and $inheritedRightsInfo">
+                            <xsl:call-template name="createRights">
+                                <xsl:with-param name="rights" select="$inheritedRightsInfo"/>
+                            </xsl:call-template>
+                        </xsl:when>
+                        <xsl:otherwise>
+                            <edm:rights>
+                                <xsl:attribute name="rdf:resource">
+                                    <xsl:value-of select="$europeana_rights"/>
+                                </xsl:attribute>
+                            </edm:rights>
+                        </xsl:otherwise>
+                    </xsl:choose>
+                </xsl:otherwise>
+            </xsl:choose>
         </ore:Aggregation>
         <edm:ProvidedCHO>
             <xsl:attribute name="rdf:about" select="concat('providedCHO_', $identifier)"/>
@@ -1639,7 +1712,9 @@
                 </xsl:otherwise>
             </xsl:choose>
         </edm:ProvidedCHO>
-        <xsl:apply-templates select="did/dao" mode="webResource"/>
+        <xsl:apply-templates select="did/dao" mode="webResource">
+            <xsl:with-param name="inheritedRightsInfo" select="$inheritedRightsInfo"/>
+        </xsl:apply-templates>
         <!--</xsl:for-each>-->
     </xsl:template>
 
@@ -1714,25 +1789,17 @@
         </xsl:choose>
     </xsl:template>
     <xsl:template name="createRights">
-        <xsl:param name="cLevelNode"/>
+        <xsl:param name="rights"/>
         <edm:rights>
             <xsl:attribute name="rdf:resource">
                 <xsl:choose>
-                    <xsl:when test="$useExistingRightsInfo = 'true'">
+                    <xsl:when test="$useExistingRightsInfo">
                         <xsl:choose>
-                            <xsl:when test="$cLevelNode/userestrict[@type='dao']/p[1]/extref/@xlink:href">
-                                <xsl:value-of
-                                    select="$cLevelNode/userestrict[@type='dao']/p[1]/extref/@xlink:href"/>
+                            <xsl:when test="$rights[1]/p[1]/extref/@xlink:href">
+                                <xsl:value-of select="$rights[1]/p[1]/extref/@xlink:href"/>
                             </xsl:when>
                             <xsl:otherwise>
- 								<xsl:choose>
-                                    <xsl:when test="/ead/archdesc/userestrict[@type='dao']/p[1]/extref/@xlink:href">
-                                        <xsl:value-of select="/ead/archdesc/userestrict[@type='dao']/p[1]/extref/@xlink:href"/>
-                                    </xsl:when>
-                                    <xsl:otherwise>
-                                        <xsl:value-of select="$europeana_rights"/>
-                                    </xsl:otherwise>
-                                </xsl:choose>
+                                <xsl:value-of select="$europeana_rights"/>
                             </xsl:otherwise>
                         </xsl:choose>
                     </xsl:when>
@@ -1869,6 +1936,15 @@
         </xsl:variable>
         <xsl:value-of select="concat($prefix, 'c', $number - 1)"/>
     </xsl:template>
+    <xsl:template name="repository">
+        <xsl:param name="repository"/>
+        <edm:dataProvider>
+            <xsl:variable name="content">
+                <xsl:apply-templates select="$repository[1]" mode="all-but-address"/>
+            </xsl:variable>
+            <xsl:value-of select="fn:replace(normalize-space($content), '[\n\t\r]', '')"/>
+        </edm:dataProvider>
+    </xsl:template>
 
     <xsl:template match="abbr|emph|expan|extref">
         <xsl:text> </xsl:text>
@@ -1915,6 +1991,7 @@
         </xsl:choose>
     </xsl:template>
     <xsl:template match="did/dao[not(@xlink:title='thumbnail')]" mode="webResource">
+        <xsl:param name="inheritedRightsInfo"/>
         <edm:WebResource>
             <xsl:attribute name="rdf:about">
                 <xsl:choose>
@@ -1939,9 +2016,99 @@
                     </xsl:otherwise>
                 </xsl:choose>
             </dc:description>
-            <xsl:call-template name="createRights">
-                <xsl:with-param name="cLevelNode" select="current()/../.."/>
-            </xsl:call-template>
+            <xsl:choose>
+                <xsl:when test="$inheritRightsInfo=&quot;true&quot;">
+                    <xsl:choose>
+                        <xsl:when test="$useExistingRightsInfo=&quot;true&quot;">
+                            <xsl:choose>
+                                <xsl:when test="current()/../../userestrict[@type='dao']">
+                                    <xsl:call-template name="createRights">
+                                        <xsl:with-param name="rights" select="current()/../../userestrict[@type='dao']"/>
+                                    </xsl:call-template> 
+                                </xsl:when>
+                                <xsl:when test="$inheritedRightsInfo">
+                                    <xsl:copy-of select="$inheritedRightsInfo"/>
+                                </xsl:when>
+                                <xsl:otherwise>
+                                    <edm:rights>
+                                        <xsl:attribute name="rdf:resource">
+                                            <xsl:value-of select="$europeana_rights"/>
+                                        </xsl:attribute>
+                                    </edm:rights>
+                                </xsl:otherwise>
+                            </xsl:choose>
+                        </xsl:when>
+                        <xsl:otherwise>
+                            <xsl:choose>
+                                <xsl:when test="$inheritedRightsInfo">
+                                    <xsl:copy-of select="$inheritedRightsInfo"/>
+                                </xsl:when>
+                                <xsl:otherwise>
+                                    <edm:rights>
+                                        <xsl:attribute name="rdf:resource">
+                                            <xsl:value-of select="$europeana_rights"/>
+                                        </xsl:attribute>
+                                    </edm:rights>
+                                </xsl:otherwise>
+                            </xsl:choose>
+                        </xsl:otherwise>
+                    </xsl:choose>
+                </xsl:when>
+                <xsl:when test="$inheritRightsInfo">
+                    <xsl:choose>
+                        <xsl:when test="$useExistingRightsInfo=&quot;true&quot;">
+                            <xsl:choose>
+                                <xsl:when test="current()/../../userestrict[@type='dao']">
+                                    <xsl:call-template name="createRights">
+                                        <xsl:with-param name="rights" select="current()/../../userestrict[@type='dao']"/>
+                                    </xsl:call-template> 
+                                </xsl:when>
+                                <xsl:otherwise>
+                                    <edm:rights>
+                                        <xsl:attribute name="rdf:resource">
+                                            <xsl:value-of select="$europeana_rights"/>
+                                        </xsl:attribute>
+                                    </edm:rights>
+                                </xsl:otherwise>
+                            </xsl:choose>
+                        </xsl:when>
+                        <xsl:otherwise>
+                            <edm:rights>
+                                <xsl:attribute name="rdf:resource">
+                                    <xsl:value-of select="$europeana_rights"/>
+                                </xsl:attribute>
+                            </edm:rights>
+                        </xsl:otherwise>
+                    </xsl:choose>
+                </xsl:when>
+                <xsl:when test="$inheritRightsInfo=&quot;false&quot;">
+                    <xsl:choose>
+                        <xsl:when test="$useExistingRightsInfo=&quot;true&quot;">
+                            <xsl:choose>
+                                <xsl:when test="current()/../../userestrict[@type='dao']">
+                                    <xsl:call-template name="createRights">
+                                        <xsl:with-param name="rights" select="current()/../../userestrict[@type='dao']"/>
+                                    </xsl:call-template> 
+                                </xsl:when>
+                                <xsl:otherwise>
+                                    <edm:rights>
+                                        <xsl:attribute name="rdf:resource">
+                                            <xsl:value-of select="$europeana_rights"/>
+                                        </xsl:attribute>
+                                    </edm:rights>
+                                </xsl:otherwise>
+                            </xsl:choose>
+                        </xsl:when>
+                        <xsl:otherwise>
+                            <edm:rights>
+                                <xsl:attribute name="rdf:resource">
+                                    <xsl:value-of select="$europeana_rights"/>
+                                </xsl:attribute>
+                            </edm:rights>
+                        </xsl:otherwise>
+                    </xsl:choose>
+                </xsl:when>
+            </xsl:choose>
         </edm:WebResource>
     </xsl:template>
     <xsl:template match="did/dao[@xlink:title='thumbnail']" mode="thumbnail">

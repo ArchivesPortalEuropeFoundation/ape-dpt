@@ -24,6 +24,7 @@ public class EdmConfig implements Serializable {
     private boolean inheritCustodhist;
     private boolean inheritAltformavail;
     private boolean inheritControlaccess;
+    private boolean inheritRightsInfo;
     private String rights;
     private String rightsAdditionalInformation;
     private String dataProvider;
@@ -134,6 +135,14 @@ public class EdmConfig implements Serializable {
 
     public void setInheritControlaccess(boolean inheritControlaccess) {
         this.inheritControlaccess = inheritControlaccess;
+    }
+
+    public boolean isInheritRightsInfo() {
+        return inheritRightsInfo;
+    }
+
+    public void setInheritRightsInfo(boolean inheritRightsInfo) {
+        this.inheritRightsInfo = inheritRightsInfo;
     }
 
     public String getLanguage() {
@@ -307,6 +316,7 @@ public class EdmConfig implements Serializable {
                     getString(new Boolean(isInheritElementsFromFileLevel()).toString()));
             properties.put("inheritOrigination", getString(new Boolean(isInheritOrigination()).toString()));
             properties.put("inheritLanguage", getString(new Boolean(isInheritLanguage()).toString()));
+            properties.put("inheritRightsInfo", getString(new Boolean(isInheritRightsInfo()).toString()));
             properties.put("inheritCustodhist", getString(new Boolean(isInheritCustodhist()).toString()));
             properties.put("inheritAltformavailHead", getString(new Boolean(isInheritAltformavail()).toString()));
             properties.put("inheritControlaccess", getString(new Boolean(isInheritControlaccess()).toString()));
