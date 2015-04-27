@@ -135,6 +135,7 @@ public class EdmOptionsPanel extends JPanel {
     private ButtonGroup inheritParentGroup;
     private ButtonGroup inheritOriginationGroup;
     private ButtonGroup inheritLanguageGroup;
+    private ButtonGroup inheritLicenseGroup;
     private ButtonGroup licenseGroup;
     private ButtonGroup creativeCommonsBtnGrp;
     private JComboBox creativeCommonsComboBox;
@@ -166,6 +167,9 @@ public class EdmOptionsPanel extends JPanel {
     private JRadioButton inhLanYesRadioButton;
     private JRadioButton inhLanNoRadioButton;
     private JRadioButton inhLanProvideRadioButton;
+    private JRadioButton inhLicYesRadioButton;
+    private JRadioButton inhLicNoRadioButton;
+    private JRadioButton inhLicProvideRadioButton;
 
     public EdmOptionsPanel(ResourceBundle labels, DataPreparationToolGUI dataPreparationToolGUI, JFrame parent, APETabbedPane apeTabbedPane, boolean batch) {
         super(new BorderLayout());
@@ -186,7 +190,7 @@ public class EdmOptionsPanel extends JPanel {
         JPanel europeanaRightsPanel = new EuropeanaRightsPanel();
         JPanel emptyPanel = new JPanel();
 
-        JPanel formPanel = new JPanel(new GridLayout(11, 1));
+        JPanel formPanel = new JPanel(new GridLayout(12, 1));
 
         JPanel extraLicenseCardLayoutPanel = new JPanel(new CardLayout());
         extraLicenseCardLayoutPanel.add(creativeCommonsPanel, CREATIVE_COMMONS);
@@ -452,43 +456,96 @@ public class EdmOptionsPanel extends JPanel {
             formPanel.add(inheritLanguagePanel);
         }
 
+        if (this.batch) {
+            panel = new JPanel(new GridLayout(1, 3));
+            panel.add(new JLabel(labels.getString("edm.panel.license.inheritLicense") + ":" + "*"));
+            useExistingRightsInfoCheckbox = new JCheckBox(labels.getString("ese.takeFromFileLicense"));
+            useExistingRightsInfoCheckbox.setSelected(true);
+            useExistingRightsInfoCheckbox.addItemListener(new ItemListener() {
+                @Override
+                public void itemStateChanged(ItemEvent e) {
+                    //empty method on purpose
+                }
+            });
+            panel.add(useExistingRightsInfoCheckbox);
+            panel.add(new JLabel());
+            panel.setBorder(BLACK_LINE);
+            panel.setVisible(true);
+            formPanel.add(panel);
+        } else {
+            panel = new JPanel(new GridLayout(3, 3));
+            inheritLicenseGroup = new ButtonGroup();
+
+            panel.add(new Label(labels.getString("edm.panel.license.inheritLicense") + ":" + "*"));
+            inhLicYesRadioButton = new JRadioButton(labels.getString("ese.yes"));
+            inhLicYesRadioButton.setActionCommand(YES);
+//        inhLicYesRadioButton.addActionListener(new ChangePanelActionListener(languageBoxPanel));
+            inheritLicenseGroup.add(inhLicYesRadioButton);
+            panel.add(inhLicYesRadioButton);
+            panel.add(new JLabel());
+
+            panel.add(new JLabel());
+            inhLicNoRadioButton = new JRadioButton(labels.getString("ese.no"), true);
+            inhLicNoRadioButton.setActionCommand(NO);
+//        inhLicNoRadioButton.addActionListener(new ChangePanelActionListener(languageBoxPanel));
+            inheritLicenseGroup.add(inhLicNoRadioButton);
+            panel.add(inhLicNoRadioButton);
+            useExistingRightsInfoCheckbox = new JCheckBox(labels.getString("ese.takeFromFileLicense"));
+            useExistingRightsInfoCheckbox.setSelected(true);
+            useExistingRightsInfoCheckbox.addItemListener(new ItemListener() {
+                @Override
+                public void itemStateChanged(ItemEvent e) {
+                    //empty method on purpose
+                }
+            });
+
+            panel.add(useExistingRightsInfoCheckbox);
+
+            panel.add(new JLabel());
+            inhLicProvideRadioButton = new JRadioButton(labels.getString("ese.provide"));
+            inhLicProvideRadioButton.setActionCommand(PROVIDE);
+//        inhLicProvideRadioButton.addActionListener(new ChangePanelActionListener(languageBoxPanel));
+            inheritLicenseGroup.add(inhLicProvideRadioButton);
+            panel.add(inhLicProvideRadioButton);
+            panel.add(new JLabel());
+
+            panel.setBorder(BLACK_LINE);
+            panel.setVisible(true);
+            formPanel.add(panel);
+        }
+
         JPanel mainLicensePanel = new JPanel(new BorderLayout());
-        panel = new JPanel(new GridLayout(6, 2));
-        panel.add(new Label(labels.getString("ese.specifyLicense") + ":" + "*"));
-        useExistingRightsInfoCheckbox = new JCheckBox(labels.getString("ese.takeFromFileLicense"));
-        useExistingRightsInfoCheckbox.setSelected(true);
-        useExistingRightsInfoCheckbox.addItemListener(new ItemListener() {
-            @Override
-            public void itemStateChanged(ItemEvent e) {
-                //empty method on purpose
-            }
-        });
-        panel.add(useExistingRightsInfoCheckbox);
-        panel.add(new JLabel(""));
+        panel = new JPanel(new GridLayout(5, 2));
         licenseGroup = new ButtonGroup();
+
+        panel.add(new Label(labels.getString("ese.specifyLicense") + ":" + "*"));
         radioButton = new JRadioButton(this.labels.getString("edm.panel.label.cc"));
         radioButton.setActionCommand(CREATIVE_COMMONS);
         radioButton.addActionListener(new ChangePanelActionListener(extraLicenseCardLayoutPanel));
         licenseGroup.add(radioButton);
         panel.add(radioButton);
+
         panel.add(new JLabel(""));
         radioButton = new JRadioButton(this.labels.getString("edm.panel.label.cc.zero"));
         radioButton.setActionCommand(CREATIVE_COMMONS_CC0);
         radioButton.addActionListener(new ChangePanelActionListener(extraLicenseCardLayoutPanel));
         licenseGroup.add(radioButton);
         panel.add(radioButton);
+
         panel.add(new JLabel(""));
         radioButton = new JRadioButton(this.labels.getString("edm.panel.label.cc.public"));
         radioButton.setActionCommand(CREATIVE_COMMONS_PUBLIC_DOMAIN_MARK);
         radioButton.addActionListener(new ChangePanelActionListener(extraLicenseCardLayoutPanel));
         licenseGroup.add(radioButton);
         panel.add(radioButton);
+
         panel.add(new JLabel(""));
         radioButton = new JRadioButton(this.labels.getString("edm.panel.label.europeana.rights"));
         radioButton.setActionCommand(EUROPEANA_RIGHTS_STATEMENTS);
         radioButton.addActionListener(new ChangePanelActionListener(extraLicenseCardLayoutPanel));
         licenseGroup.add(radioButton);
         panel.add(radioButton);
+
         panel.add(new JLabel(""));
         radioButton = new JRadioButton(this.labels.getString("edm.panel.label.out.copyright"));
         radioButton.setActionCommand(EdmOptionsPanel.OUT_OF_COPYRIGHT);
@@ -761,17 +818,38 @@ public class EdmOptionsPanel extends JPanel {
             config.setUseExistingLanguage(true);
         }
 
+        config.setInheritRightsInfo(false);
+        if (this.batch) {
+            Enumeration<AbstractButton> licenseEnumeration = licenseGroup.getElements();
+            while (licenseEnumeration.hasMoreElements()) {
+                AbstractButton btn = licenseEnumeration.nextElement();
+                if (btn.isSelected()) {
+                    config.setRights(getCorrectRights(btn.getActionCommand()));
+                }
+            }
+        } else {
+            enumeration = inheritLicenseGroup.getElements();
+            while (enumeration.hasMoreElements()) {
+                AbstractButton btn = enumeration.nextElement();
+                if (/*inheritLanguageCheckbox.isSelected() &&*/btn.isSelected()) {
+                    if (btn.getActionCommand().equals(YES)) {
+                        config.setInheritRightsInfo(true);
+                    } else {
+                        Enumeration<AbstractButton> licenseEnumeration = licenseGroup.getElements();
+                        while (licenseEnumeration.hasMoreElements()) {
+                            AbstractButton licenseBtn = licenseEnumeration.nextElement();
+                            if (licenseBtn.isSelected()) {
+                                config.setRights(getCorrectRights(licenseBtn.getActionCommand()));
+                            }
+                        }
+                    }
+                }
+            }
+        }
         if (useExistingRightsInfoCheckbox.isSelected()) {
             config.setUseExistingRightsInfo(true);
         } else {
             config.setUseExistingRightsInfo(false);
-        }
-        enumeration = licenseGroup.getElements();
-        while (enumeration.hasMoreElements()) {
-            AbstractButton btn = enumeration.nextElement();
-            if (btn.isSelected()) {
-                config.setRights(getCorrectRights(btn.getActionCommand()));
-            }
         }
 
         if (additionalRightsTextArea != null && StringUtils.isNotEmpty(additionalRightsTextArea.getText())) {
