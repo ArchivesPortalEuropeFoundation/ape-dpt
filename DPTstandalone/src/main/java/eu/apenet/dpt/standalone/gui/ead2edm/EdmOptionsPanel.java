@@ -195,7 +195,7 @@ public class EdmOptionsPanel extends JPanel {
         JPanel europeanaRightsPanel = new EuropeanaRightsPanel();
         JPanel emptyPanel = new JPanel();
 
-        JPanel formPanel = new JPanel(new GridLayout(12, 1));
+        JPanel formPanel = new JPanel(new GridLayout(13, 1));
 
         JPanel extraLicenseCardLayoutPanel = new JPanel(new CardLayout());
         extraLicenseCardLayoutPanel.add(creativeCommonsPanel, CREATIVE_COMMONS);
@@ -658,10 +658,10 @@ public class EdmOptionsPanel extends JPanel {
         inhTitleYesRadioButton.setActionCommand(YES);
         inheritUnittitleGroup.add(inhTitleYesRadioButton);
         inheritUnittitlePanel.add(inhTitleYesRadioButton);
-        inheritUntittlePanel.add(new JLabel(""));
+        inheritUnittitlePanel.add(new JLabel(""));
         inhTitleNoRadioButton = new JRadioButton(labels.getString("ese.no"), true);
         inhTitleNoRadioButton.setActionCommand(NO);
-        inheritUnttitleGroup.add(inhTitleNoRadioButton);
+        inheritUnittitleGroup.add(inhTitleNoRadioButton);
         inheritUnittitlePanel.add(inhTitleNoRadioButton);
         inheritUnittitlePanel.setBorder(BLACK_LINE);
         inheritUnittitlePanel.setVisible(false);
