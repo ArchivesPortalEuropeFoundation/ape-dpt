@@ -134,6 +134,7 @@ public class EdmOptionsPanel extends JPanel {
     private ButtonGroup typeGroup;
     private ButtonGroup inheritParentGroup;
     private ButtonGroup inheritOriginationGroup;
+    private ButtonGroup inheritUnittitleGroup;
     private ButtonGroup inheritLanguageGroup;
     private ButtonGroup inheritLicenseGroup;
     private ButtonGroup licenseGroup;
@@ -157,13 +158,17 @@ public class EdmOptionsPanel extends JPanel {
     private String conversionMode = MINIMAL;
     private JPanel inheritParentPanel;
     private JPanel inheritOriginationPanel;
+    private JPanel inheritUnittitlePanel;
     private JPanel inheritLanguagePanel;
     private JCheckBox inheritParentCheckbox;
     private JCheckBox inheritOriginationCheckbox;
+    private JCheckBox inheritUnittitleCheckbox;
     private JRadioButton inhParYesRadioButton;
     private JRadioButton inhParNoRadioButton;
     private JRadioButton inhOriYesRadioButton;
     private JRadioButton inhOriNoRadioButton;
+    private JRadioButton inhTitleYesRadioButton;
+    private JRadioButton inhTitleNoRadioButton;
     private JRadioButton inhLanYesRadioButton;
     private JRadioButton inhLanNoRadioButton;
     private JRadioButton inhLanProvideRadioButton;
@@ -631,6 +636,37 @@ public class EdmOptionsPanel extends JPanel {
         inheritOriginationPanel.setVisible(false);
         formPanel.add(inheritOriginationPanel);
 
+        inheritUnittitlePanel = new JPanel(new GridLayout(2, 3));
+        inheritUnittitleCheckbox = new JCheckBox(labels.getString("ese.inheritUnittitle") + ":" + "*");
+        inheritUnittitleCheckbox.setSelected(true);
+        inheritUnittitleCheckbox.addItemListener(new ItemListener() {
+            @Override
+            public void itemStateChanged(ItemEvent e) {
+                if (e.getStateChange() == ItemEvent.SELECTED) {
+                    inhTitleYesRadioButton.setEnabled(true);
+                    inhTitleNoRadioButton.setEnabled(true);
+                }
+                if (e.getStateChange() == ItemEvent.DESELECTED) {
+                    inhTitleYesRadioButton.setEnabled(false);
+                    inhTitleNoRadioButton.setEnabled(false);
+                }
+            }
+        });
+        inheritUnittitlePanel.add(inheritUnittitleCheckbox);
+        inheritUnittitleGroup = new ButtonGroup();
+        inhTitleYesRadioButton = new JRadioButton(labels.getString("ese.yes"));
+        inhTitleYesRadioButton.setActionCommand(YES);
+        inheritUnittitleGroup.add(inhTitleYesRadioButton);
+        inheritUnittitlePanel.add(inhTitleYesRadioButton);
+        inheritUntittlePanel.add(new JLabel(""));
+        inhTitleNoRadioButton = new JRadioButton(labels.getString("ese.no"), true);
+        inhTitleNoRadioButton.setActionCommand(NO);
+        inheritUnttitleGroup.add(inhTitleNoRadioButton);
+        inheritUnittitlePanel.add(inhTitleNoRadioButton);
+        inheritUnittitlePanel.setBorder(BLACK_LINE);
+        inheritUnittitlePanel.setVisible(false);
+        formPanel.add(inheritUnittitlePanel);
+
         JButton createEdmBtn = new JButton(labels.getString("ese.createEseBtn"));
         JButton cancelBtn = new JButton(labels.getString("ese.cancelBtn"));
 
@@ -776,9 +812,6 @@ public class EdmOptionsPanel extends JPanel {
             AbstractButton btn = enumeration.nextElement();
             if (FULL.equals(conversionMode) && inheritOriginationCheckbox.isSelected() && btn.isSelected() && btn.getActionCommand().equals(YES)) {
                 config.setInheritOrigination(true);
-                config.setInheritCustodhist(true);
-                config.setInheritAltformavail(true);
-                config.setInheritControlaccess(true);
             }
         }
 
@@ -1488,11 +1521,13 @@ public class EdmOptionsPanel extends JPanel {
                 conversionMode = MINIMAL;
                 inheritOriginationPanel.setVisible(false);
                 inheritParentPanel.setVisible(false);
+                inheritUnittitlePanel.setVisible(false);
             }
             if (FULL.equals(e.getActionCommand())) {
                 conversionMode = FULL;
                 inheritOriginationPanel.setVisible(true);
                 inheritParentPanel.setVisible(true);
+                inheritUnittitlePanel.setVisible(true);
             }
         }
     }

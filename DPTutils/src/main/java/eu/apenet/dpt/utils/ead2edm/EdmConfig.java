@@ -20,10 +20,8 @@ public class EdmConfig implements Serializable {
     private File htmlSourcesDir;
     private boolean inheritElementsFromFileLevel;
     private boolean inheritOrigination;
+    private boolean inheritUnittitle;
     private boolean inheritLanguage;
-    private boolean inheritCustodhist;
-    private boolean inheritAltformavail;
-    private boolean inheritControlaccess;
     private boolean inheritRightsInfo;
     private String rights;
     private String rightsAdditionalInformation;
@@ -113,28 +111,12 @@ public class EdmConfig implements Serializable {
         this.inheritLanguage = inheritLanguage;
     }
 
-    public boolean isInheritCustodhist() {
-        return inheritCustodhist;
+    public boolean isInheritUnittitle() {
+        return inheritUnittitle;
     }
 
-    public void setInheritCustodhist(boolean inheritCustodhist) {
-        this.inheritCustodhist = inheritCustodhist;
-    }
-
-    public boolean isInheritAltformavail() {
-        return inheritAltformavail;
-    }
-
-    public void setInheritAltformavail(boolean inheritAltformavail) {
-        this.inheritAltformavail = inheritAltformavail;
-    }
-
-    public boolean isInheritControlaccess() {
-        return inheritControlaccess;
-    }
-
-    public void setInheritControlaccess(boolean inheritControlaccess) {
-        this.inheritControlaccess = inheritControlaccess;
+    public void setInheritUnittitle(boolean inheritUnittitle) {
+        this.inheritUnittitle = inheritUnittitle;
     }
 
     public boolean isInheritRightsInfo() {
@@ -315,11 +297,9 @@ public class EdmConfig implements Serializable {
             properties.put("inheritElementsFromFileLevel",
                     getString(new Boolean(isInheritElementsFromFileLevel()).toString()));
             properties.put("inheritOrigination", getString(new Boolean(isInheritOrigination()).toString()));
+            properties.put("inheritUnittitle", getString(new Boolean(isInheritUnittitle()).toString()));
             properties.put("inheritLanguage", getString(new Boolean(isInheritLanguage()).toString()));
             properties.put("inheritRightsInfo", getString(new Boolean(isInheritRightsInfo()).toString()));
-            properties.put("inheritCustodhist", getString(new Boolean(isInheritCustodhist()).toString()));
-            properties.put("inheritAltformavailHead", getString(new Boolean(isInheritAltformavail()).toString()));
-            properties.put("inheritControlaccess", getString(new Boolean(isInheritControlaccess()).toString()));
             properties.put("useExistingDaoRole", getString(new Boolean(isUseExistingDaoRole()).toString()));
             properties.put("useExistingLanguage", getString(new Boolean(isUseExistingLanguage()).toString()));
             properties.put("useExistingRepository", getString(new Boolean(isUseExistingRepository()).toString()));
