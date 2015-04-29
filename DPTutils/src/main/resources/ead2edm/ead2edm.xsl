@@ -596,9 +596,7 @@
                                     </xsl:call-template>
                                 </xsl:when>
                                 <xsl:when test="$inheritRightsInfo='true' and $inheritedRightsInfo">
-                                    <xsl:call-template name="createRights">
-                                        <xsl:with-param name="rights" select="$inheritedRightsInfo"/>
-                                    </xsl:call-template>
+                                    <xsl:copy-of select="$inheritedRightsInfo"/>
                                 </xsl:when>
                                 <xsl:otherwise>
                                     <edm:rights>
@@ -612,9 +610,7 @@
                         <xsl:otherwise>
                             <xsl:choose>
                                 <xsl:when test="$inheritRightsInfo=&quot;true&quot; and $inheritedRightsInfo">
-                                    <xsl:call-template name="createRights">
-                                        <xsl:with-param name="rights" select="$inheritedRightsInfo"/>
-                                    </xsl:call-template>
+                                    <xsl:copy-of select="$inheritedRightsInfo"/>
                                 </xsl:when>
                                 <xsl:otherwise>
                                     <edm:rights>
