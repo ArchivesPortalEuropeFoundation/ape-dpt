@@ -1319,7 +1319,7 @@
                             <xsl:with-param name="currentCNode" select="."/>
                         </xsl:call-template>
                     </xsl:variable>
-                    <xsl:if test="did/dao">
+                    <xsl:if test="descendant::dao">
                         <xsl:choose>
                             <xsl:when test="$idSource = 'unitid' and did/unitid[@type='call number'] and $isFirstUnitid = 'true'">
                                 <dcterms:hasPart>
