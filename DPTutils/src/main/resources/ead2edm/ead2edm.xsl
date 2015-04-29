@@ -1295,16 +1295,16 @@
             </xsl:choose>
 
             <xsl:choose>
-                <xsl:when test="$inheritFromParent">
+                <xsl:when test="$inheritFromParent and $currentnode/did/unittitle and $parentcnode/did/unittitle and $hasDao">
                     <dc:title>
                         <xsl:value-of select="$parentcnode/did/unittitle[1]"/> >> <xsl:value-of select="$currentnode/did/unittitle"/>
                     </dc:title>
                 </xsl:when>
-                <xsl:otherwise>
+                <xsl:when test="$currentnode/did/unittitle">
                     <dc:title>
                         <xsl:value-of select="$currentnode/did/unittitle"/>
                     </dc:title>
-                </xsl:otherwise>
+                </xsl:when>
             </xsl:choose>
             <xsl:if test="$currentnode/c">
                 <xsl:for-each select="$currentnode/c">
