@@ -134,9 +134,54 @@
                     <xsl:value-of select="/ead/archdesc/did/unitid"/>
                 </dc:identifier>
             </xsl:if>
-            <dc:language>
-                <xsl:value-of select="$language"/>
-            </dc:language>
+            <xsl:choose>
+                <xsl:when test="$useExistingLanguage='true'">
+                    <xsl:choose>
+                        <xsl:when test="/ead/archdesc/did/langmaterial">
+                            <xsl:call-template name="language">
+                                <xsl:with-param name="langmaterials"
+                                    select="ead/archdesc/did/langmaterial"/>
+                            </xsl:call-template>
+                        </xsl:when>
+                        <xsl:otherwise>
+                            <xsl:choose>
+                                <xsl:when test="fn:string-length($language) > 0">
+                                    <xsl:for-each select="tokenize($language,' ')">
+                                        <dc:language>
+                                            <xsl:value-of select="."/>
+                                        </dc:language>
+                                    </xsl:for-each>
+                                </xsl:when>
+                                <xsl:otherwise>
+                                    <xsl:for-each select="tokenize($language,' ')">
+                                        <dc:language>
+                                            <xsl:value-of select="."/>
+                                        </dc:language>
+                                    </xsl:for-each>
+                                </xsl:otherwise>
+                            </xsl:choose>
+                        </xsl:otherwise>
+                    </xsl:choose>
+                </xsl:when>
+                <xsl:otherwise>
+                    <xsl:choose>
+                        <xsl:when test="fn:string-length($language) > 0">
+                            <xsl:for-each select="tokenize($language,' ')">
+                                <dc:language>
+                                    <xsl:value-of select="."/>
+                                </dc:language>
+                            </xsl:for-each>
+                        </xsl:when>
+                        <xsl:otherwise>
+                            <xsl:for-each select="tokenize($language,' ')">
+                                <dc:language>
+                                    <xsl:value-of select="."/>
+                                </dc:language>
+                            </xsl:for-each>
+                        </xsl:otherwise>
+                    </xsl:choose>
+                </xsl:otherwise>
+            </xsl:choose>
             <dc:subject>
                 <xsl:apply-templates select="/ead/archdesc/@level"/>
             </dc:subject>
