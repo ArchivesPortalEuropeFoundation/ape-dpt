@@ -186,7 +186,9 @@
                 <xsl:apply-templates select="/ead/archdesc/@level"/>
             </dc:subject>
             <xsl:if test="/ead/archdesc/did/unittitle">
-                <xsl:apply-templates select="/ead/archdesc/did/unittitle"/>
+                <dc:title>
+                    <xsl:value-of select="/ead/archdesc/did/unittitle"/>
+                </dc:title>
             </xsl:if>
             <xsl:if test="/ead/archdesc/relatedmaterial">
                 <xsl:apply-templates select="/ead/archdesc/relatedmaterial"/>
