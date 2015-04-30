@@ -1022,7 +1022,7 @@
             </xsl:choose>
 
             <xsl:choose>
-                <xsl:when test="$inheritFromParent and $currentnode/did/unittitle and $parentcnode/did/unittitle and $hasDao">
+                <xsl:when test="$inheritUnittitle and $currentnode/did/unittitle and $parentcnode/did/unittitle and not($currentnode/c) and $hasDao">
                     <dc:title>
                         <xsl:value-of select="$parentcnode/did/unittitle[1]"/> >> <xsl:value-of select="$currentnode/did/unittitle"/>
                     </dc:title>
