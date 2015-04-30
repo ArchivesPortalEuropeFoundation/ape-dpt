@@ -905,7 +905,9 @@
                         <xsl:value-of select="$currentnode/did/physdesc/genreform"/>
                     </xsl:when>
                     <xsl:otherwise>
-                        <xsl:value-of select="'Archival material'"/>
+                        <xsl:if test="not($currentnode/did/physdesc/genreform and $currentnode/controlaccess and ($inheritElementsFromFileLevel and fn:string-length($inheritedControlaccesses) > 0))">
+                            <xsl:value-of select="'Archival material'"/>
+                        </xsl:if>
                     </xsl:otherwise>
                 </xsl:choose>
             </dc:type>
