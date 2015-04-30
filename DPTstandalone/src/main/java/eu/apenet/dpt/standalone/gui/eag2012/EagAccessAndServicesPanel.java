@@ -2932,11 +2932,15 @@ public class EagAccessAndServicesPanel extends EagPanels {
                 for(TextFieldWithLanguage textFieldWithLanguage : readersticketSearchroomTfs) {
                     if(StringUtils.isNotEmpty(textFieldWithLanguage.getTextValue().trim()) || StringUtils.isNotEmpty(textFieldWithLanguage.getExtraValue().trim())) {
                         ReadersTicket readersTicket = new ReadersTicket();
-                        readersTicket.setLang(textFieldWithLanguage.getLanguage());
-                        readersTicket.setContent(textFieldWithLanguage.getTextValue().trim());
-                        readersTicket.setHref(textFieldWithLanguage.getExtraValue());
-                        if(!StringUtils.startsWithAny(textFieldWithLanguage.getExtraValue(), webPrefixes))
+                        if(StringUtils.isNotEmpty(textFieldWithLanguage.getTextValue().trim())) {
+                            readersTicket.setLang(textFieldWithLanguage.getLanguage());
+                            readersTicket.setContent(textFieldWithLanguage.getTextValue().trim());
+                        }
+                        if(StringUtils.isNotEmpty(textFieldWithLanguage.getExtraValue().trim())) {
+                            readersTicket.setHref(textFieldWithLanguage.getExtraValue());
+                            if (!StringUtils.startsWithAny(textFieldWithLanguage.getExtraValue(), webPrefixes))
                                 errors.add("readersticketSearchroomTfs");
+                        }
                         searchroom.getReadersTicket().add(readersTicket);
                         hasSearchRoomInfo = true;
                     }
