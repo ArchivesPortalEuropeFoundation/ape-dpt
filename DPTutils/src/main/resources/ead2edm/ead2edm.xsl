@@ -828,14 +828,9 @@
                     <xsl:copy-of select="$inheritedOriginations"/>
                 </xsl:when>
             </xsl:choose>
-            <xsl:choose>
-                <xsl:when test="$currentnode/did/unitdate">
-                    <xsl:apply-templates select="$currentnode/did/unitdate"/>
-                </xsl:when>
-                <xsl:when test="$inheritFromParent">
-                    <xsl:apply-templates select="$parentdidnode/unitdate"/>
-                </xsl:when>
-            </xsl:choose>
+            <xsl:if test="$currentnode/did/unitdate">
+                <xsl:apply-templates select="$currentnode/did/unitdate"/>
+            </xsl:if>
             <xsl:choose>
                 <xsl:when test="$currentnode/scopecontent[@encodinganalog='summary']">
                     <xsl:apply-templates select="$currentnode/scopecontent[@encodinganalog='summary']" />
