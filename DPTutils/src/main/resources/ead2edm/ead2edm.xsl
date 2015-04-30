@@ -199,9 +199,18 @@
                 </xsl:call-template>
             </xsl:if>
             <xsl:if test="/ead/archdesc/bibliography/bibref">
-                <xsl:call-template name="bibref">
-                    <xsl:with-param name="bibrefs" select="/ead/archdesc/bibliography/bibref" />
-                </xsl:call-template>
+                <xsl:for-each select="/ead/archdesc/bibliography/bibref">
+                    <xsl:call-template name="bibref">
+                        <xsl:with-param name="bibrefs" select="." />
+                    </xsl:call-template>
+                </xsl:for-each>
+            </xsl:if>
+            <xsl:if test="/ead/archdesc/bibliography/p">
+                <xsl:for-each select="/ead/archdesc/bibliography/p">
+                    <xsl:call-template name="bibref">
+                        <xsl:with-param name="bibrefs" select="." />
+                    </xsl:call-template>
+                </xsl:for-each>
             </xsl:if>
             <xsl:if test="/ead/archdesc/controlaccess">
                 <xsl:call-template name="controlaccess">
@@ -378,9 +387,20 @@
             </xsl:with-param>
             <xsl:with-param name="inheritedBibref">
                 <xsl:if test="./bibliography/bibref">
-                    <xsl:call-template name="bibref">
-                        <xsl:with-param name="bibrefs" select="./bibliography/bibref"/>
-                    </xsl:call-template>
+                    <xsl:for-each select="./bibliography/bibref">
+                        <xsl:call-template name="bibref">
+                            <xsl:with-param name="bibrefs" select="."/>
+                        </xsl:call-template>
+                    </xsl:for-each>
+                </xsl:if>
+            </xsl:with-param>
+            <xsl:with-param name="inheritedBibliographyP">
+                <xsl:if test="./bibliography/p">
+                    <xsl:for-each select="./bibliography/p">
+                        <xsl:call-template name="bibref">
+                            <xsl:with-param name="bibrefs" select="."/>
+                        </xsl:call-template>
+                    </xsl:for-each>
                 </xsl:if>
             </xsl:with-param>
             <xsl:with-param name="inheritedRelatedmaterial">
@@ -400,6 +420,7 @@
         <xsl:param name="inheritedRepository"/>
         <xsl:param name="inheritedRightsInfo"/>
         <xsl:param name="inheritedBibref"/>
+        <xsl:param name="inheritedBibliographyP"/>
         <xsl:param name="inheritedRelatedmaterial"/>
         <xsl:param name="inheritedScopecontent"/>
         <xsl:param name="positionChain"/>
@@ -491,12 +512,28 @@
         <xsl:variable name="updatedInheritedBibref">
             <xsl:choose>
                 <xsl:when test="./bibliography/bibref">
-                    <xsl:call-template name="bibref">
-                        <xsl:with-param name="bibrefs" select="./bibliography/bibref"/>
-                    </xsl:call-template>
+                    <xsl:for-each select="./bibliography/bibref">
+                        <xsl:call-template name="bibref">
+                            <xsl:with-param name="bibrefs" select="."/>
+                        </xsl:call-template>
+                    </xsl:for-each>
                 </xsl:when>
                 <xsl:otherwise>
                     <xsl:copy-of select="$inheritedBibref"/>
+                </xsl:otherwise>
+            </xsl:choose>
+        </xsl:variable>
+        <xsl:variable name="updatedInheritedBibliographyP">
+            <xsl:choose>
+                <xsl:when test="./bibliography/p">
+                    <xsl:for-each select="./bibliography/p">
+                        <xsl:call-template name="bibref">
+                            <xsl:with-param name="bibrefs" select="."/>
+                        </xsl:call-template>
+                    </xsl:for-each>
+                </xsl:when>
+                <xsl:otherwise>
+                    <xsl:copy-of select="$inheritedBibliographyP"/>
                 </xsl:otherwise>
             </xsl:choose>
         </xsl:variable>
@@ -540,6 +577,7 @@
                 <xsl:with-param name="inheritedRepository" select="$updatedInheritedRepository"/>
                 <xsl:with-param name="inheritedRightsInfo" select="$updatedInheritedRightsInfo"/>
                 <xsl:with-param name="inheritedBibref" select="$updatedInheritedBibref"/>
+                <xsl:with-param name="inheritedBibliographyP" select="$updatedInheritedBibliographyP"/>
                 <xsl:with-param name="inheritedRelatedmaterial" select="$updatedInheritedRelatedmaterial"/>
                 <xsl:with-param name="inheritedScopecontent" select="$updatedInheritedScopecontent"/>
                 <xsl:with-param name="positionChain" select="$positionChain"/>
@@ -567,6 +605,7 @@
                 <xsl:with-param name="inheritedRepository" select="$updatedInheritedRepository"/>
                 <xsl:with-param name="inheritedRightsInfo" select="$updatedInheritedRightsInfo"/>
                 <xsl:with-param name="inheritedBibref" select="$updatedInheritedBibref"/>
+                <xsl:with-param name="inheritedBibliographyP" select="$updatedInheritedBibliographyP"/>
                 <xsl:with-param name="inheritedRelatedmaterial" select="$updatedInheritedRelatedmaterial"/>
                 <xsl:with-param name="inheritedScopecontent" select="$updatedInheritedScopecontent"/>
                 <xsl:with-param name="positionChain">
@@ -594,6 +633,7 @@
         <xsl:param name="inheritedRepository"/>
         <xsl:param name="inheritedRightsInfo"/>
         <xsl:param name="inheritedBibref"/>
+        <xsl:param name="inheritedBibliographyP"/>
         <xsl:param name="inheritedRelatedmaterial"/>
         <xsl:param name="inheritedScopecontent"/>
         <xsl:param name="mainIdentifier"/>
@@ -889,12 +929,26 @@
             </xsl:choose>
             <xsl:choose>
                 <xsl:when test="$currentnode/bibliography/bibref">
-                    <xsl:call-template name="bibref">
-                        <xsl:with-param name="bibrefs" select="$currentnode/bibliography/bibref" />
-                    </xsl:call-template>
+                    <xsl:for-each select="$currentnode/bibliography/bibref">
+                        <xsl:call-template name="bibref">
+                            <xsl:with-param name="bibrefs" select="." />
+                        </xsl:call-template>
+                    </xsl:for-each>
                 </xsl:when>
                 <xsl:when test="$inheritFromParent and fn:string-length($inheritedBibref) > 0">
                     <xsl:copy-of select="$inheritedBibref"/>
+                </xsl:when>
+            </xsl:choose>
+            <xsl:choose>
+                <xsl:when test="$currentnode/bibliography/p">
+                    <xsl:for-each select="$currentnode/bibliography/p">
+                        <xsl:call-template name="bibref">
+                            <xsl:with-param name="bibrefs" select="." />
+                        </xsl:call-template>
+                    </xsl:for-each>
+                </xsl:when>
+                <xsl:when test="$inheritFromParent and fn:string-length($inheritedBibliographyP) > 0">
+                    <xsl:copy-of select="$inheritedBibliographyP"/>
                 </xsl:when>
             </xsl:choose>
 
@@ -1628,6 +1682,9 @@
         <dcterms:isReferencedBy>
             <xsl:if test="$bibrefs/@xlink:href">
                 <xsl:attribute name="rdf:resource" select="$bibrefs/@xlink:href"/>
+            </xsl:if>
+            <xsl:if test="$bibrefs/extref/@xlink:href">
+                <xsl:attribute name="rdf:resource" select="$bibrefs/extref/@xlink:href"/>
             </xsl:if>
             <xsl:value-of select="fn:replace(normalize-space($bibrefContent), '[\n\t\r]', '')"/>
         </dcterms:isReferencedBy>
