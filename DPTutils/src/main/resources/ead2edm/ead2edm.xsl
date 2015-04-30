@@ -1453,7 +1453,11 @@
         <xsl:param name="custodhists"/>
         <xsl:for-each select="$custodhists">
             <xsl:variable name="content">
-                <xsl:apply-templates/>
+                <xsl:apply-templates select="*[not(local-name()='p')]"/>
+                <xsl:for-each select="p">
+                    <xsl:apply-templates />
+                    <xsl:if test="position() != last()"><xsl:text> </xsl:text></xsl:if>
+                </xsl:for-each>
             </xsl:variable>
             <dcterms:provenance>
                 <xsl:value-of select="fn:replace(normalize-space($content), '[\n\t\r]', ' ')"/>
