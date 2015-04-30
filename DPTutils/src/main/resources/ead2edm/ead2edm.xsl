@@ -190,7 +190,7 @@
                     <xsl:value-of select="/ead/archdesc/did/unittitle"/>
                 </dc:title>
             </xsl:if>
-            <xsl:if test="not(/ead/archdesc/did/unittitle and /ead/archdesc/did/dao[not(@xlink:title='thumbnail')]/@xlink:title and /ead/archdesc/did/dao[not(@xlink:title='thumbnail')]/@title and /ead/archdesc/scopecontent)">
+            <xsl:if test="not(/ead/archdesc/did/unittitle) and not(/ead/archdesc/did/dao[not(@xlink:title='thumbnail')]/@xlink:title and /ead/archdesc/did/dao[not(@xlink:title='thumbnail')]/@title and /ead/archdesc/scopecontent)">
                 <dc:title>
                     <xsl:text>No title</xsl:text>
                 </dc:title>
