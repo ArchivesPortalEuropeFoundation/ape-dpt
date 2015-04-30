@@ -151,6 +151,11 @@
                     <xsl:with-param name="custodhists" select="/ead/archdesc/custodhist" />
                 </xsl:call-template>
             </xsl:if>
+            <xsl:if test="/ead/archdesc/bibliography/bibref">
+                <xsl:call-template name="bibref">
+                    <xsl:with-param name="bibrefs" select="/ead/archdesc/bibliography/bibref" />
+                </xsl:call-template>
+            </xsl:if>
             <dc:type>
                 <xsl:choose>
                     <xsl:when test="/ead/archdesc/did/physdesc/genreform">
@@ -294,6 +299,13 @@
                     </xsl:call-template>
                 </xsl:if>
             </xsl:with-param>
+            <xsl:with-param name="inheritedBibref">
+                <xsl:if test="./bibliography/bibref">
+                    <xsl:call-template name="bibref">
+                        <xsl:with-param name="bibrefs" select="./bibliography/bibref"/>
+                    </xsl:call-template>
+                </xsl:if>
+            </xsl:with-param>
         </xsl:apply-templates>
     </xsl:template>
 
@@ -305,6 +317,7 @@
         <xsl:param name="inheritedControlaccesses"/>
         <xsl:param name="inheritedRepository"/>
         <xsl:param name="inheritedRightsInfo"/>
+        <xsl:param name="inheritedBibref"/>
         <xsl:param name="positionChain"/>
 
         <xsl:variable name="updatedInheritedOriginations">
@@ -391,6 +404,18 @@
                 </xsl:otherwise>
             </xsl:choose>
         </xsl:variable>
+        <xsl:variable name="updatedInheritedBibref">
+            <xsl:choose>
+                <xsl:when test="./bibliography/bibref">
+                    <xsl:call-template name="bibref">
+                        <xsl:with-param name="bibrefs" select="./bibliography/bibref"/>
+                    </xsl:call-template>
+                </xsl:when>
+                <xsl:otherwise>
+                    <xsl:copy-of select="$inheritedBibref"/>
+                </xsl:otherwise>
+            </xsl:choose>
+        </xsl:variable>
         <!--<xsl:variable name="parentcnode" select="parent::node()"/>-->
         <!--<xsl:variable name="parentdidnode" select="$parentcnode/did"/>-->
         <xsl:variable name="positionInDocument">
@@ -410,6 +435,7 @@
                 <xsl:with-param name="inheritedControlaccesses" select="$updatedInheritedControlaccesses"/>
                 <xsl:with-param name="inheritedRepository" select="$updatedInheritedRepository"/>
                 <xsl:with-param name="inheritedRightsInfo" select="$updatedInheritedRightsInfo"/>
+                <xsl:with-param name="inheritedBibref" select="$updatedInheritedBibref"/>
                 <xsl:with-param name="positionChain" select="$positionChain"/>
                 <xsl:with-param name="mainIdentifier">
                     <xsl:choose>
@@ -434,6 +460,7 @@
                 <xsl:with-param name="inheritedControlaccesses" select="$updatedInheritedControlaccesses"/>
                 <xsl:with-param name="inheritedRepository" select="$updatedInheritedRepository"/>
                 <xsl:with-param name="inheritedRightsInfo" select="$updatedInheritedRightsInfo"/>
+                <xsl:with-param name="inheritedBibref" select="$updatedInheritedBibref"/>
                 <xsl:with-param name="positionChain">
                     <xsl:choose>
                         <xsl:when test="$positionChain">
@@ -458,6 +485,7 @@
         <xsl:param name="inheritedControlaccesses"/>
         <xsl:param name="inheritedRepository"/>
         <xsl:param name="inheritedRightsInfo"/>
+        <xsl:param name="inheritedBibref"/>
         <xsl:param name="mainIdentifier"/>
         <xsl:param name="positionChain"/>
 
@@ -672,13 +700,6 @@
         </ore:Aggregation>
         <edm:ProvidedCHO>
             <xsl:attribute name="rdf:about" select="concat('providedCHO_', $identifier)"/>
-            <!--<xsl:if test="/ead/archdesc/did/origination/persname">
-                    <xsl:for-each select="/ead/archdesc/did/origination/persname">
-                        <dc:creator>
-                            <xsl:value-of select="normalize-space(.)"/>
-                        </dc:creator>
-                    </xsl:for-each>
-                </xsl:if>-->
             <xsl:if test="$idSource = 'unitid' and $currentnode/did/unitid[@type='call number']">
                 <dc:identifier>
                     <xsl:apply-templates select="$currentnode/did/unitid[@type='call number']"/>
@@ -708,20 +729,9 @@
                         <xsl:with-param name="originations" select="$currentnode/did/origination"/>
                     </xsl:call-template>
                 </xsl:when>
-                <xsl:otherwise>
-                    <xsl:choose>
-                        <xsl:when test="$parentdidnode/origination">
-                            <xsl:call-template name="creator">
-                                <xsl:with-param name="originations" select="$parentdidnode/origination"/>
-                            </xsl:call-template>
-                        </xsl:when>
-                        <xsl:otherwise>
-                            <xsl:if test="$inheritOrigination = 'true' and fn:string-length($inheritedOriginations) > 0">
-                                <xsl:copy-of select="$inheritedOriginations"/>
-                            </xsl:if>
-                        </xsl:otherwise>
-                    </xsl:choose>
-                </xsl:otherwise>
+                <xsl:when test="$inheritOrigination = 'true' and fn:string-length($inheritedOriginations) > 0">
+                    <xsl:copy-of select="$inheritedOriginations"/>
+                </xsl:when>
             </xsl:choose>
             <xsl:choose>
                 <xsl:when test="$currentnode/did/unitdate">
@@ -819,10 +829,12 @@
             </xsl:choose>
             <xsl:choose>
                 <xsl:when test="$currentnode/bibliography/bibref">
-                    <xsl:apply-templates select="$currentnode/bibliography/bibref"/>
+                    <xsl:call-template name="bibref">
+                        <xsl:with-param name="bibrefs" select="$currentnode/bibliography/bibref" />
+                    </xsl:call-template>
                 </xsl:when>
-                <xsl:when test="$inheritFromParent and $parentcnode/bibliography/bibref">
-                    <xsl:apply-templates select="$parentcnode/bibliography/bibref"/>
+                <xsl:when test="$inheritFromParent and fn:string-length($inheritedBibref) > 0">
+                    <xsl:copy-of select="$inheritedBibref"/>
                 </xsl:when>
             </xsl:choose>
 
@@ -1593,13 +1605,14 @@
         <xsl:value-of select="node()"/>
         <xsl:text> </xsl:text>
     </xsl:template>
-    <xsl:template match="bibref">
+    <xsl:template name="bibref">
+        <xsl:param name="bibrefs"/>
         <xsl:variable name="bibrefContent">
-            <xsl:apply-templates mode="bibref-only-nodecontent"/>
+            <xsl:apply-templates select="$bibrefs/text() | $bibrefs/name | $bibrefs/title" />
         </xsl:variable>
         <dcterms:isReferencedBy>
-            <xsl:if test="p/extref/@xlink:href">
-                <xsl:attribute name="rdf:resource" select="p/extref/@xlink:href"/>
+            <xsl:if test="$bibrefs/@xlink:href">
+                <xsl:attribute name="rdf:resource" select="$bibrefs/@xlink:href"/>
             </xsl:if>
             <xsl:value-of select="fn:replace(normalize-space($bibrefContent), '[\n\t\r]', '')"/>
         </dcterms:isReferencedBy>
@@ -1921,6 +1934,21 @@
     </xsl:template>
     
     <xsl:template mode="all-but-address" match="address"/>
-    <xsl:template mode="bibref-only-nodecontent" match="name|title|imprint"/>
+    <xsl:template match="bibref/imprint" />
+    <xsl:template match="bibref/name | bibref/title">
+        <xsl:if test="local-name() = 'title' and local-name(preceding-sibling::*[1]) = 'name'">
+            <xsl:text>: </xsl:text>
+        </xsl:if>
+        <xsl:if test="local-name() = 'name' and local-name(preceding-sibling::*[1]) = 'title'">
+            <xsl:text>: </xsl:text>
+        </xsl:if>
+        <xsl:if test="local-name() = 'name' and local-name(preceding-sibling::*[1]) = 'name'">
+            <xsl:text>, </xsl:text>
+        </xsl:if>
+        <xsl:if test="local-name() = 'title' and local-name(preceding-sibling::*[1]) = 'title'">
+            <xsl:text>, </xsl:text>
+        </xsl:if>
+        <xsl:apply-templates />
+    </xsl:template>
 
 </xsl:stylesheet>
