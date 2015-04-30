@@ -166,6 +166,11 @@
                     <xsl:value-of select="/ead/archdesc/did/materialspec"/>
                 </dc:format>
             </xsl:if>
+            <xsl:if test="/ead/archdesc/altformavail">
+                <xsl:call-template name="altformavail">
+                    <xsl:with-param name="altformavails" select="/ead/archdesc/altformavail"/>
+                </xsl:call-template>
+            </xsl:if>
             <dc:type>
                 <xsl:choose>
                     <xsl:when test="/ead/archdesc/did/physdesc/genreform">
@@ -374,7 +379,7 @@
         </xsl:variable>
         <xsl:variable name="updatedInheritedAltformavails">
             <xsl:choose>
-                <xsl:when test="$inheritElementsFromFileLevel = 'true' and ./altformavail">
+                <xsl:when test="$inheritElementsFromFileLevel and ./altformavail">
                     <xsl:call-template name="altformavail">
                         <xsl:with-param name="altformavails" select="./altformavail"/>
                     </xsl:call-template>
@@ -898,44 +903,16 @@
                 </xsl:when>
             </xsl:choose>
 
-            <!--<xsl:choose>
-                    <xsl:when test="$currentnode/did/origination">
-                        <xsl:call-template name="creator">
-                            <xsl:with-param name="originations"
-                                            select="$currentnode/did/origination"/>
-                        </xsl:call-template>
-                    </xsl:when>
-                    <xsl:otherwise>
-                        <xsl:if
-                            test="$inheritOrigination = 'true' and fn:string-length($inheritedOriginations) > 0">
-                            <xsl:copy-of select="$inheritedOriginations"/>
-                        </xsl:if>
-                    </xsl:otherwise>
-                </xsl:choose>-->
-            <!--<xsl:choose>
+            <xsl:choose>
                 <xsl:when test="$currentnode/altformavail">
-                            <xsl:call-template name="altformavail">
-                                <xsl:with-param name="altformavails"
-                                    select="$currentnode/altformavail"/>
-                            </xsl:call-template>
-                        </xsl:when>
-                        <xsl:otherwise>
-                            <xsl:choose>
-                                <xsl:when test="$parentcnode/altformavail">
-                                    <xsl:call-template name="altformavail">
-                                        <xsl:with-param name="altformavails"
-                                            select="$parentcnode/altformavail"/>
-                                    </xsl:call-template>
-                                </xsl:when>
-                                <xsl:otherwise>
-                                    <xsl:if
-                                        test="$inheritElementsFromFileLevel = 'true' and fn:string-length($inheritedAltformavails) > 0">
-                                        <xsl:copy-of select="$inheritedAltformavails"/>
-                                    </xsl:if>
-                                </xsl:otherwise>
-                            </xsl:choose>
-                        </xsl:otherwise>
-            </xsl:choose>-->
+                    <xsl:call-template name="altformavail">
+                        <xsl:with-param name="altformavails" select="$currentnode/altformavail"/>
+                    </xsl:call-template>
+                </xsl:when>
+                <xsl:when test="$inheritElementsFromFileLevel and fn:string-length($inheritedAltformavails) > 0">
+                    <xsl:copy-of select="$inheritedAltformavails"/>
+                </xsl:when>
+            </xsl:choose>
 
             <xsl:choose>
                 <xsl:when test="$currentnode/controlaccess">
