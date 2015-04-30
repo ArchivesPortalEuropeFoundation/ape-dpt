@@ -190,6 +190,11 @@
                     <xsl:value-of select="/ead/archdesc/did/unittitle"/>
                 </dc:title>
             </xsl:if>
+            <xsl:if test="not(/ead/archdesc/did/unittitle and /ead/archdesc/did/dao[not(@xlink:title='thumbnail')]/@xlink:title and /ead/archdesc/did/dao[not(@xlink:title='thumbnail')]/@title and /ead/archdesc/scopecontent)">
+                <dc:title>
+                    <xsl:text>No title</xsl:text>
+                </dc:title>
+            </xsl:if>
             <xsl:if test="/ead/archdesc/relatedmaterial">
                 <xsl:apply-templates select="/ead/archdesc/relatedmaterial"/>
             </xsl:if>
@@ -1025,6 +1030,13 @@
                         <xsl:value-of select="$currentnode/did/unittitle"/>
                     </dc:title>
                 </xsl:when>
+                <xsl:otherwise>
+                    <xsl:if test="not(did/dao[not(@xlink:title='thumbnail')]/@xlink:title and did/dao[not(@xlink:title='thumbnail')]/@title and scopecontent)">
+                        <dc:title>
+                            <xsl:text>No title</xsl:text>
+                        </dc:title>
+                    </xsl:if>
+                </xsl:otherwise>
             </xsl:choose>
             <xsl:if test="$currentnode/c">
                 <xsl:for-each select="$currentnode/c">
