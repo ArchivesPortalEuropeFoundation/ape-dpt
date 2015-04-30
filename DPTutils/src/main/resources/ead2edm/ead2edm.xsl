@@ -156,6 +156,11 @@
                     <xsl:with-param name="bibrefs" select="/ead/archdesc/bibliography/bibref" />
                 </xsl:call-template>
             </xsl:if>
+            <xsl:if test="/ead/archdesc/controlaccess">
+                <xsl:call-template name="controlaccess">
+                    <xsl:with-param name="controlaccesses" select="/ead/archdesc/controlaccess"/>
+                </xsl:call-template>
+            </xsl:if>
             <dc:type>
                 <xsl:choose>
                     <xsl:when test="/ead/archdesc/did/physdesc/genreform">
@@ -370,7 +375,7 @@
         </xsl:variable>
         <xsl:variable name="updatedInheritedControlaccesses">
             <xsl:choose>
-                <xsl:when test="$inheritElementsFromFileLevel = 'true' and ./controlaccess">
+                <xsl:when test="$inheritElementsFromFileLevel and ./controlaccess">
                     <xsl:call-template name="controlaccess">
                         <xsl:with-param name="controlaccesses" select="./controlaccess"/>
                     </xsl:call-template>
@@ -921,13 +926,8 @@
                         <xsl:with-param name="controlaccesses" select="$currentnode/controlaccess"/>
                     </xsl:call-template>
                 </xsl:when>
-                <xsl:when test="$inheritFromParent and $parentcnode/controlaccess">
-                    <xsl:call-template name="controlaccess">
-                        <xsl:with-param name="controlaccesses" select="$parentcnode/controlaccess"/>
-                    </xsl:call-template>
-                </xsl:when>
                 <xsl:otherwise>
-                    <xsl:if test="$inheritElementsFromFileLevel = 'true' and fn:string-length($inheritedControlaccesses) > 0">
+                    <xsl:if test="$inheritElementsFromFileLevel and fn:string-length($inheritedControlaccesses) > 0">
                         <xsl:copy-of select="$inheritedControlaccesses"/>
                     </xsl:if>
                 </xsl:otherwise>
@@ -1374,22 +1374,7 @@
     </xsl:template>
     <xsl:template name="controlaccess">
         <xsl:param name="controlaccesses"/>
-        <xsl:for-each select="$controlaccesses/persname">
-            <dc:coverage>
-                <xsl:value-of select="."/>
-            </dc:coverage>
-        </xsl:for-each>
-        <xsl:for-each select="$controlaccesses/corpname">
-            <dc:coverage>
-                <xsl:value-of select="."/>
-            </dc:coverage>
-        </xsl:for-each>
-        <xsl:for-each select="$controlaccesses/famname">
-            <dc:coverage>
-                <xsl:value-of select="."/>
-            </dc:coverage>
-        </xsl:for-each>
-        <xsl:for-each select="$controlaccesses/name">
+        <xsl:for-each select="$controlaccesses/corpname | $controlaccesses/persname | $controlaccesses/famname | $controlaccesses/name">
             <dc:coverage>
                 <xsl:value-of select="."/>
             </dc:coverage>
@@ -1399,8 +1384,7 @@
                 <xsl:value-of select="."/>
             </dcterms:spatial>
         </xsl:for-each>
-        <xsl:for-each
-            select="$controlaccesses/function|$controlaccesses/occupation|$controlaccesses/subject">
+        <xsl:for-each select="$controlaccesses/function | $controlaccesses/occupation | $controlaccesses/subject">
             <dc:subject>
                 <xsl:value-of select="."/>
             </dc:subject>
