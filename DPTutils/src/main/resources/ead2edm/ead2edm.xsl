@@ -126,8 +126,8 @@
                     </dc:creator>
                 </xsl:for-each>
             </xsl:if>
-            <xsl:if test="/ead/archdesc/scopecontent[@encodinganalog=&quot;summary&quot;]">
-                <xsl:apply-templates select="/ead/archdesc/scopecontent[@encodinganalog=&quot;summary&quot;]" />
+            <xsl:if test="/ead/archdesc/scopecontent[@encodinganalog='summary']">
+                <xsl:apply-templates select="/ead/archdesc/scopecontent[@encodinganalog='summary']" />
             </xsl:if>
             <xsl:if test="/ead/archdesc/did/unitid">
                 <dc:identifier>
@@ -384,6 +384,7 @@
         <xsl:param name="inheritedRightsInfo"/>
         <xsl:param name="inheritedBibref"/>
         <xsl:param name="inheritedRelatedmaterial"/>
+        <xsl:param name="inheritedScopecontent"/>
         <xsl:param name="positionChain"/>
 
         <xsl:variable name="updatedInheritedOriginations">
@@ -492,6 +493,16 @@
                 </xsl:otherwise>
             </xsl:choose>
         </xsl:variable>
+        <xsl:variable name="updatedInheritedScopecontent">
+            <xsl:choose>
+                <xsl:when test="./scopecontent[@encodinganalog='summary']">
+                    <xsl:apply-templates select="./scopecontent[@encodinganalog='summary']" />
+                </xsl:when>
+                <xsl:otherwise>
+                    <xsl:copy-of select="$inheritedScopecontent"/>
+                </xsl:otherwise>
+            </xsl:choose>
+        </xsl:variable>
         <!--<xsl:variable name="parentcnode" select="parent::node()"/>-->
         <!--<xsl:variable name="parentdidnode" select="$parentcnode/did"/>-->
         <xsl:variable name="positionInDocument">
@@ -513,6 +524,7 @@
                 <xsl:with-param name="inheritedRightsInfo" select="$updatedInheritedRightsInfo"/>
                 <xsl:with-param name="inheritedBibref" select="$updatedInheritedBibref"/>
                 <xsl:with-param name="inheritedRelatedmaterial" select="$updatedInheritedRelatedmaterial"/>
+                <xsl:with-param name="inheritedScopecontent" select="$updatedInheritedScopecontent"/>
                 <xsl:with-param name="positionChain" select="$positionChain"/>
                 <xsl:with-param name="mainIdentifier">
                     <xsl:choose>
@@ -539,6 +551,7 @@
                 <xsl:with-param name="inheritedRightsInfo" select="$updatedInheritedRightsInfo"/>
                 <xsl:with-param name="inheritedBibref" select="$updatedInheritedBibref"/>
                 <xsl:with-param name="inheritedRelatedmaterial" select="$updatedInheritedRelatedmaterial"/>
+                <xsl:with-param name="inheritedScopecontent" select="$updatedInheritedScopecontent"/>
                 <xsl:with-param name="positionChain">
                     <xsl:choose>
                         <xsl:when test="$positionChain">
@@ -565,6 +578,7 @@
         <xsl:param name="inheritedRightsInfo"/>
         <xsl:param name="inheritedBibref"/>
         <xsl:param name="inheritedRelatedmaterial"/>
+        <xsl:param name="inheritedScopecontent"/>
         <xsl:param name="mainIdentifier"/>
         <xsl:param name="positionChain"/>
 
@@ -789,19 +803,6 @@
                     <xsl:value-of select="$currentnode/@id"/>
                 </dc:identifier>
             </xsl:if>
-            <!--<xsl:choose>-->
-            <!--<xsl:when test="$currentnode/controlaccess">-->
-            <!--<xsl:call-template name="controlaccess">-->
-            <!--<xsl:with-param name="controlaccesses" select="$currentnode/controlaccess"/>-->
-            <!--</xsl:call-template>-->
-            <!--</xsl:when>-->
-            <!--<xsl:otherwise>-->
-            <!--<xsl:if-->
-            <!--test="$inheritElementsFromFileLevel = 'true' and fn:string-length($inheritedControlaccesses) > 0">-->
-            <!--<xsl:copy-of select="$inheritedControlaccesses"/>-->
-            <!--</xsl:if>-->
-            <!--</xsl:otherwise>-->
-            <!--</xsl:choose>-->
             <xsl:choose>
                 <xsl:when test="$currentnode/did/origination">
                     <xsl:call-template name="creator">
@@ -824,9 +825,9 @@
                 <xsl:when test="$currentnode/scopecontent[@encodinganalog='summary']">
                     <xsl:apply-templates select="$currentnode/scopecontent[@encodinganalog='summary']" />
                 </xsl:when>
-                <xsl:otherwise>
-                    <xsl:apply-templates select="$parentcnode/scopecontent[@encodinganalog='summary']" />
-                </xsl:otherwise>
+                <xsl:when test="$inheritFromParent and fn:string-length($inheritedScopecontent) > 0">
+                    <xsl:copy-of select="$inheritedScopecontent" />
+                </xsl:when>
             </xsl:choose>
             <xsl:choose>
                 <xsl:when test="$currentnode/did/physdesc/physfacet">
@@ -851,7 +852,7 @@
                     <xsl:apply-templates select="$currentnode/relatedmaterial"/>
                 </xsl:when>
                 <xsl:when test="$inheritFromParent and fn:string-length($inheritedRelatedmaterial) > 0">
-                    <xsl:apply-templates select="$inheritedRelatedmaterial"/>
+                    <xsl:copy-of select="$inheritedRelatedmaterial"/>
                 </xsl:when>
             </xsl:choose>
             <dc:type>
