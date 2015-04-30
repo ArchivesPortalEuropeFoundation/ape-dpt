@@ -226,6 +226,21 @@
                     </xsl:otherwise>
                 </xsl:choose>
             </dc:type>
+            <xsl:if test="/ead/archdesc/did/physdesc/physfacet">
+                <dc:format>
+                    <xsl:value-of select="/ead/archdesc/did/physdesc/physfacet"/>
+                </dc:format>
+            </xsl:if>
+            <xsl:if test="/ead/archdesc/did/physdesc/extent">
+                <dcterms:extent>
+                    <xsl:value-of select="/ead/archdesc/did/physdesc/extent"/>
+                </dcterms:extent>
+            </xsl:if>
+            <xsl:if test="/ead/archdesc/did/physdesc/dimensions">
+                <dcterms:extent>
+                    <xsl:value-of select="/ead/archdesc/did/physdesc/dimensions"/>
+                </dcterms:extent>
+            </xsl:if>
             <xsl:if test="/ead/archdesc/dsc/c">
                 <xsl:for-each select="/ead/archdesc/dsc/c">
                     <xsl:variable name="currentCPosition">
@@ -829,19 +844,6 @@
                     <xsl:copy-of select="$inheritedScopecontent" />
                 </xsl:when>
             </xsl:choose>
-            <xsl:choose>
-                <xsl:when test="$currentnode/did/physdesc/physfacet">
-                    <dc:format>
-                        <xsl:value-of select="$currentnode/did/physdesc/physfacet"/>
-                    </dc:format>
-                </xsl:when>
-                <xsl:when test="$inheritFromParent and $parentdidnode/physdesc/physfacet">
-                    <dc:format>
-                        <xsl:value-of select="$parentdidnode/physdesc/physfacet"/>
-                    </dc:format>
-                </xsl:when>
-            </xsl:choose>
-
             <xsl:if test="$currentnode/did/materialspec">
                 <dc:format>
                     <xsl:value-of select="$currentnode/did/materialspec"/>
@@ -860,38 +862,26 @@
                     <xsl:when test="$currentnode/did/physdesc/genreform">
                         <xsl:value-of select="$currentnode/did/physdesc/genreform"/>
                     </xsl:when>
-                    <xsl:when test="$inheritFromParent and $parentdidnode/physdesc/genreform">
-                        <xsl:value-of select="$parentdidnode/physdesc/genreform"/>
-                    </xsl:when>
                     <xsl:otherwise>
                         <xsl:value-of select="'Archival material'"/>
                     </xsl:otherwise>
                 </xsl:choose>
             </dc:type>
-            <xsl:choose>
-                <xsl:when test="$currentnode/did/physdesc/extent">
-                    <dcterms:extent>
-                        <xsl:value-of select="$currentnode/did/physdesc/extent"/>
-                    </dcterms:extent>
-                </xsl:when>
-                <xsl:when test="$inheritFromParent and $parentdidnode/physdesc/extent">
-                    <dcterms:extent>
-                        <xsl:value-of select="$parentdidnode/physdesc/extent"/>
-                    </dcterms:extent>
-                </xsl:when>
-            </xsl:choose>
-            <xsl:choose>
-                <xsl:when test="$currentnode/did/physdesc/dimensions">
-                    <dcterms:extent>
-                        <xsl:value-of select="$currentnode/did/physdesc/dimensions"/>
-                    </dcterms:extent>
-                </xsl:when>
-                <xsl:when test="$inheritFromParent and $parentdidnode/physdesc/dimensions">
-                    <dcterms:extent>
-                        <xsl:value-of select="$parentdidnode/physdesc/dimensions"/>
-                    </dcterms:extent>
-                </xsl:when>
-            </xsl:choose>
+            <xsl:if test="$currentnode/did/physdesc/physfacet">
+                <dc:format>
+                    <xsl:value-of select="$currentnode/did/physdesc/physfacet"/>
+                </dc:format>
+            </xsl:if>
+            <xsl:if test="$currentnode/did/physdesc/extent">
+                <dcterms:extent>
+                    <xsl:value-of select="$currentnode/did/physdesc/extent"/>
+                </dcterms:extent>
+            </xsl:if>
+            <xsl:if test="$currentnode/did/physdesc/dimensions">
+                <dcterms:extent>
+                    <xsl:value-of select="$currentnode/did/physdesc/dimensions"/>
+                </dcterms:extent>
+            </xsl:if>
             <xsl:choose>
                 <xsl:when test="$currentnode/otherfindaid">
                     <xsl:apply-templates select="$currentnode/otherfindaid"/>
