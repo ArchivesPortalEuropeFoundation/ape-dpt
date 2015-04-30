@@ -161,6 +161,11 @@
                     <xsl:with-param name="controlaccesses" select="/ead/archdesc/controlaccess"/>
                 </xsl:call-template>
             </xsl:if>
+            <xsl:if test="/ead/archdesc/did/materialspec">
+                <dc:format>
+                    <xsl:value-of select="/ead/archdesc/did/materialspec"/>
+                </dc:format>
+            </xsl:if>
             <dc:type>
                 <xsl:choose>
                     <xsl:when test="/ead/archdesc/did/physdesc/genreform">
@@ -311,6 +316,11 @@
                     </xsl:call-template>
                 </xsl:if>
             </xsl:with-param>
+            <xsl:with-param name="inheritedRelatedmaterial">
+                <xsl:if test="./relatedmaterial">
+                    <xsl:apply-templates select="./relatedmaterial"/>
+                </xsl:if>
+            </xsl:with-param>
         </xsl:apply-templates>
     </xsl:template>
 
@@ -323,6 +333,7 @@
         <xsl:param name="inheritedRepository"/>
         <xsl:param name="inheritedRightsInfo"/>
         <xsl:param name="inheritedBibref"/>
+        <xsl:param name="inheritedRelatedmaterial"/>
         <xsl:param name="positionChain"/>
 
         <xsl:variable name="updatedInheritedOriginations">
@@ -421,6 +432,16 @@
                 </xsl:otherwise>
             </xsl:choose>
         </xsl:variable>
+        <xsl:variable name="updatedInheritedRelatedmaterial">
+            <xsl:choose>
+                <xsl:when test="./relatedmaterial">
+                    <xsl:apply-templates select="./relatedmaterial" />
+                </xsl:when>
+                <xsl:otherwise>
+                    <xsl:copy-of select="$inheritedRelatedmaterial"/>
+                </xsl:otherwise>
+            </xsl:choose>
+        </xsl:variable>
         <!--<xsl:variable name="parentcnode" select="parent::node()"/>-->
         <!--<xsl:variable name="parentdidnode" select="$parentcnode/did"/>-->
         <xsl:variable name="positionInDocument">
@@ -441,6 +462,7 @@
                 <xsl:with-param name="inheritedRepository" select="$updatedInheritedRepository"/>
                 <xsl:with-param name="inheritedRightsInfo" select="$updatedInheritedRightsInfo"/>
                 <xsl:with-param name="inheritedBibref" select="$updatedInheritedBibref"/>
+                <xsl:with-param name="inheritedRelatedmaterial" select="$updatedInheritedRelatedmaterial"/>
                 <xsl:with-param name="positionChain" select="$positionChain"/>
                 <xsl:with-param name="mainIdentifier">
                     <xsl:choose>
@@ -466,6 +488,7 @@
                 <xsl:with-param name="inheritedRepository" select="$updatedInheritedRepository"/>
                 <xsl:with-param name="inheritedRightsInfo" select="$updatedInheritedRightsInfo"/>
                 <xsl:with-param name="inheritedBibref" select="$updatedInheritedBibref"/>
+                <xsl:with-param name="inheritedRelatedmaterial" select="$updatedInheritedRelatedmaterial"/>
                 <xsl:with-param name="positionChain">
                     <xsl:choose>
                         <xsl:when test="$positionChain">
@@ -491,6 +514,7 @@
         <xsl:param name="inheritedRepository"/>
         <xsl:param name="inheritedRightsInfo"/>
         <xsl:param name="inheritedBibref"/>
+        <xsl:param name="inheritedRelatedmaterial"/>
         <xsl:param name="mainIdentifier"/>
         <xsl:param name="positionChain"/>
 
@@ -767,24 +791,17 @@
                 </xsl:when>
             </xsl:choose>
 
-            <xsl:choose>
-                <xsl:when test="$currentnode/did/materialspec">
-                    <dc:format>
-                        <xsl:value-of select="$currentnode/did/materialspec"/>
-                    </dc:format>
-                </xsl:when>
-                <xsl:when test="$inheritFromParent and $parentdidnode/materialspec">
-                    <dc:format>
-                        <xsl:value-of select="$parentdidnode/materialspec"/>
-                    </dc:format>
-                </xsl:when>
-            </xsl:choose>
+            <xsl:if test="$currentnode/did/materialspec">
+                <dc:format>
+                    <xsl:value-of select="$currentnode/did/materialspec"/>
+                </dc:format>
+            </xsl:if>
             <xsl:choose>
                 <xsl:when test="$currentnode/relatedmaterial">
                     <xsl:apply-templates select="$currentnode/relatedmaterial"/>
                 </xsl:when>
-                <xsl:when test="$inheritFromParent">
-                    <xsl:apply-templates select="$parentcnode/relatedmaterial"/>
+                <xsl:when test="$inheritFromParent and fn:string-length($inheritedRelatedmaterial) > 0">
+                    <xsl:apply-templates select="$inheritedRelatedmaterial"/>
                 </xsl:when>
             </xsl:choose>
             <dc:type>
