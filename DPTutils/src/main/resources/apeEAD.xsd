@@ -881,25 +881,25 @@
     </xs:complexType>
     <xs:group name="m.desc.base">
         <xs:choice>
-            <xs:element maxOccurs="1" minOccurs="0" name="acqinfo" type="acqinfo"/>
-            <xs:element maxOccurs="1" minOccurs="0" name="arrangement" type="arrangement"/>
-            <xs:element maxOccurs="1" minOccurs="0" name="fileplan" type="fileplan"/>
-            <xs:element maxOccurs="1" minOccurs="0" name="originalsloc" type="originalsloc"/>
-            <xs:element maxOccurs="1" minOccurs="0" name="prefercite" type="prefercite"/>
-            <xs:element maxOccurs="1" minOccurs="0" name="separatedmaterial" type="separatedmaterial"/>
-            <xs:element maxOccurs="1" minOccurs="0" name="accessrestrict" type="accessrestrict"/>
-            <xs:element maxOccurs="1" minOccurs="0" name="accruals" type="accruals"/>
-            <xs:element maxOccurs="1" minOccurs="0" name="altformavail" type="altformavail"/>
-            <xs:element maxOccurs="1" minOccurs="0" name="appraisal" type="appraisal"/>
-            <xs:element maxOccurs="1" minOccurs="0" name="bibliography" type="bibliography"/>
-            <xs:element maxOccurs="1" minOccurs="0" name="bioghist" type="bioghist"/>
-            <xs:element maxOccurs="1" minOccurs="0" name="controlaccess" type="controlaccess"/>
-            <xs:element maxOccurs="1" minOccurs="0" name="custodhist" type="custodhist"/>
-            <xs:element maxOccurs="1" minOccurs="0" name="odd" type="odd"/>
-            <xs:element maxOccurs="1" minOccurs="0" name="otherfindaid" type="otherfindaid"/>
-            <xs:element maxOccurs="1" minOccurs="0" name="phystech" type="phystech"/>
-            <xs:element maxOccurs="1" minOccurs="0" name="processinfo" type="processinfo"/>
-            <xs:element maxOccurs="1" minOccurs="0" name="relatedmaterial" type="relatedmaterial"/>
+            <xs:element maxOccurs="unbounded" minOccurs="0" name="acqinfo" type="acqinfo"/>
+            <xs:element maxOccurs="unbounded" minOccurs="0" name="arrangement" type="arrangement"/>
+            <xs:element maxOccurs="unbounded" minOccurs="0" name="fileplan" type="fileplan"/>
+            <xs:element maxOccurs="unbounded" minOccurs="0" name="originalsloc" type="originalsloc"/>
+            <xs:element maxOccurs="unbounded" minOccurs="0" name="prefercite" type="prefercite"/>
+            <xs:element maxOccurs="unbounded" minOccurs="0" name="separatedmaterial" type="separatedmaterial"/>
+            <xs:element maxOccurs="unbounded" minOccurs="0" name="accessrestrict" type="accessrestrict"/>
+            <xs:element maxOccurs="unbounded" minOccurs="0" name="accruals" type="accruals"/>
+            <xs:element maxOccurs="unbounded" minOccurs="0" name="altformavail" type="altformavail"/>
+            <xs:element maxOccurs="unbounded" minOccurs="0" name="appraisal" type="appraisal"/>
+            <xs:element maxOccurs="unbounded" minOccurs="0" name="bibliography" type="bibliography"/>
+            <xs:element maxOccurs="unbounded" minOccurs="0" name="bioghist" type="bioghist"/>
+            <xs:element maxOccurs="unbounded" minOccurs="0" name="controlaccess" type="controlaccess"/>
+            <xs:element maxOccurs="unbounded" minOccurs="0" name="custodhist" type="custodhist"/>
+            <xs:element maxOccurs="unbounded" minOccurs="0" name="odd" type="odd"/>
+            <xs:element maxOccurs="unbounded" minOccurs="0" name="otherfindaid" type="otherfindaid"/>
+            <xs:element maxOccurs="unbounded" minOccurs="0" name="phystech" type="phystech"/>
+            <xs:element maxOccurs="unbounded" minOccurs="0" name="processinfo" type="processinfo"/>
+            <xs:element maxOccurs="unbounded" minOccurs="0" name="relatedmaterial" type="relatedmaterial"/>
             <xs:element maxOccurs="unbounded" minOccurs="0" name="scopecontent" type="scopecontent"/>
             <xs:element maxOccurs="unbounded" minOccurs="0" name="userestrict" type="userestrict"/>
         </xs:choice>
@@ -1580,12 +1580,20 @@
         </xs:attribute>
     </xs:complexType>
     <xs:complexType mixed="true" name="item">
+        <xs:group maxOccurs="unbounded" minOccurs="0" ref="group.item"/>
+    </xs:complexType>
+    <xs:group name="group.item">
         <xs:choice>
             <xs:group maxOccurs="unbounded" minOccurs="0" ref="m.render"/>
+            <xs:group maxOccurs="unbounded" minOccurs="0" ref="group.item.intern"/>
+        </xs:choice>
+    </xs:group>
+    <xs:group name="group.item.intern">
+        <xs:choice>
             <xs:element minOccurs="0" maxOccurs="unbounded" name="list"/>
             <xs:element minOccurs="0" maxOccurs="unbounded" name="extref" type="extref"/>
         </xs:choice>
-    </xs:complexType>
+    </xs:group>
     <xs:complexType name="table">
         <xs:sequence>
             <xs:element minOccurs="0" name="head" type="head"/>
