@@ -40,6 +40,7 @@
     <xsl:param name="minimalConversion"/>
     <xsl:param name="idSource"/>
     <xsl:param name="landingPage"/>
+    <xsl:param name="useArchUnittitle"/>
     <!-- Params from Ese2Edm -->
     <xsl:param name="edm_identifier"/>
     <xsl:param name="host"/>
@@ -185,16 +186,41 @@
             <dc:subject>
                 <xsl:apply-templates select="/ead/archdesc/@level"/>
             </dc:subject>
-            <xsl:if test="/ead/archdesc/did/unittitle">
-                <dc:title>
-                    <xsl:value-of select="/ead/archdesc/did/unittitle"/>
-                </dc:title>
-            </xsl:if>
-            <xsl:if test="not(/ead/archdesc/did/unittitle) and not(/ead/archdesc/did/dao[not(@xlink:title='thumbnail')]/@xlink:title and /ead/archdesc/did/dao[not(@xlink:title='thumbnail')]/@title and /ead/archdesc/scopecontent)">
+            <dc:title>
+                <xsl:choose>
+                    <xsl:when test="$useArchUnittitle = &quot;true&quot;">
+                        <xsl:choose>
+                            <xsl:when test="/ead/archdesc/did/unittitle">
+                                <xsl:value-of select="/ead/archdesc/did/unittitle"/>
+                            </xsl:when>
+                            <xsl:when test="/ead/eadheader/filedesc/titlestmt/titleproper">
+                                <xsl:value-of select="/ead/eadheader/filedesc/titlestmt/titleproper"/>
+                            </xsl:when>
+                            <xsl:otherwise>
+                                <xsl:text>No title</xsl:text>
+                            </xsl:otherwise>
+                        </xsl:choose>
+                    </xsl:when>
+                    <xsl:otherwise>
+                        <xsl:choose>
+                            <xsl:when test="/ead/eadheader/filedesc/titlestmt/titleproper">
+                                <xsl:value-of select="/ead/eadheader/filedesc/titlestmt/titleproper"/>
+                            </xsl:when>
+                            <xsl:when test="/ead/archdesc/did/unittitle">
+                                <xsl:value-of select="/ead/archdesc/did/unittitle"/>
+                            </xsl:when>
+                            <xsl:otherwise>
+                                <xsl:text>No title</xsl:text>
+                            </xsl:otherwise>
+                        </xsl:choose>
+                    </xsl:otherwise>
+                </xsl:choose>
+            </dc:title>
+            <!--<xsl:if test="not(/ead/archdesc/did/unittitle) and not(/ead/archdesc/did/dao[not(@xlink:title='thumbnail')]/@xlink:title and /ead/archdesc/did/dao[not(@xlink:title='thumbnail')]/@title and /ead/archdesc/scopecontent)">
                 <dc:title>
                     <xsl:text>No title</xsl:text>
                 </dc:title>
-            </xsl:if>
+            </xsl:if>-->
             <xsl:if test="/ead/archdesc/relatedmaterial">
                 <xsl:apply-templates select="/ead/archdesc/relatedmaterial"/>
             </xsl:if>

@@ -36,6 +36,7 @@ public class EdmConfig implements Serializable {
     private String repositoryCode;
     private String xmlTypeName;
     private String landingPage;
+    private boolean useArchUnittitle;
     private Properties properties;
 
     public EdmConfig() {
@@ -282,6 +283,14 @@ public class EdmConfig implements Serializable {
     public void setLandingPage(String landingPage) {
         this.landingPage = landingPage;
     }
+
+    public boolean isUseArchUnittitle() {
+        return useArchUnittitle;
+    }
+
+    public void setUseArchUnittitle(boolean fondsTitleSource) {
+        this.useArchUnittitle = fondsTitleSource;
+    }
     
     public Properties getProperties() {
         if (properties == null) {
@@ -311,6 +320,7 @@ public class EdmConfig implements Serializable {
             properties.put("repository_code", getString(repCodeAfterReplacement));
             properties.put("xml_type_name", getString(getXmlTypeName()));
             properties.put("landingPage", getString(getLandingPage()));
+            properties.put("useArchUnittitle", getString(new Boolean(isUseArchUnittitle()).toString()));
         }
         return properties;
     }

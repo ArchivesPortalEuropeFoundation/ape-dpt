@@ -39,6 +39,8 @@ public class Ead2EdmInformation {
     private String userestrictDaoLicenceType;
     private String userestrictDaoLicenceLink;
     private TreeSet<String> userestrictDaoLicenceText;
+    private String archdescUnittitle;
+    private String titlestmtTitleproper;
 
     public String getLanguageCode() {
         return this.languageCode;
@@ -84,6 +86,14 @@ public class Ead2EdmInformation {
         return this.userestrictDaoLicenceText;
     }
 
+    public String getArchdescUnittitle() {
+        return archdescUnittitle;
+    }
+
+    public String getTitlestmtTitleproper() {
+        return titlestmtTitleproper;
+    }
+
     public Ead2EdmInformation(File fileToRead, String databaseRoleType, String archdescRepository) throws IOException, SAXException, ParserConfigurationException {
         this();
         this.archdescRepository = archdescRepository;
@@ -97,6 +107,8 @@ public class Ead2EdmInformation {
         this.userestrictDaoLicenceType = "";
         this.userestrictDaoLicenceLink = "";
         this.userestrictDaoLicenceText = new TreeSet<String>();
+        this.archdescUnittitle = "";
+        this.titlestmtTitleproper = "";
         this.determineDaoInformation(fileToRead);
     }
 
@@ -112,6 +124,8 @@ public class Ead2EdmInformation {
         this.userestrictDaoLicenceType = "";
         this.userestrictDaoLicenceLink = "";
         this.userestrictDaoLicenceText = new TreeSet<String>();
+        this.archdescUnittitle = "";
+        this.titlestmtTitleproper = "";
     }
 
     private void determineDaoInformation(File fileToRead) throws IOException, SAXException, ParserConfigurationException {
@@ -149,6 +163,11 @@ public class Ead2EdmInformation {
         private boolean inP = false;
         private boolean inExtref = false;
         private boolean hasDao = false;
+        private boolean inUnittitle = false;
+        private boolean inFiledesc = false;
+        private boolean inTitlestmt = false;
+        private boolean inTitleproper = false;
+        
         //flags for first occuring type and DAO in XML
         private boolean typeRetrieved = false;
         private boolean daoRetrieved = false;
@@ -222,7 +241,15 @@ public class Ead2EdmInformation {
                         userestrictDaoLicenceType = "";
                     }
                 }
-            }
+            } else if (qName.equals("unittitle")) {
+                this.inUnittitle = true;
+            } else if (qName.equals("filedesc")) {
+                this.inFiledesc = true;
+            } else if (qName.equals("titlestmt")) {
+                this.inTitlestmt = true;
+            } else if (qName.equals("titleproper")) {
+                this.inTitleproper = true;
+            } 
         }
 
         @Override
@@ -260,6 +287,14 @@ public class Ead2EdmInformation {
                 this.inP = false;
             } else if (qName.equals("extref")) {
                 this.inExtref = false;
+            } else if (qName.equals("unittitle")) {
+                this.inUnittitle = false;
+            } else if (qName.equals("filedesc")) {
+                this.inFiledesc = false;
+            } else if (qName.equals("titlestmt")) {
+                this.inTitlestmt = false;
+            } else if (qName.equals("titleproper")) {
+                this.inTitleproper = false;
             }
         }
 
@@ -298,6 +333,12 @@ public class Ead2EdmInformation {
                         userestrictDaoLicenceText.add(textBetween);
                     }
                 }
+            }
+            if (this.inArchdesc && !this.inC && this.inDid && this.inUnittitle){
+                archdescUnittitle = new String(ch, start, length);
+            }
+            if (this.inTitlestmt && this.inTitleproper){
+                titlestmtTitleproper = new String(ch, start, length);
             }
         }
     }
