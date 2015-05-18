@@ -103,6 +103,8 @@ public class EdmOptionsPanel extends JPanel {
     private static final String FULL = "full";
     private static final String UNITID = "unitid";
     private static final String CID = "cid";
+    private static final String ARCHDESC_UNITTITLE = "archdescUnittitle";
+    private static final String TITLESTMT_TITLEPROPER = "titlestmtTitleproper";
     private static final String APE = "ape";
     private static final String OTHER = "other";
     private static final String APE_BASE = "http://www.archivesportaleurope.net";
@@ -121,6 +123,8 @@ public class EdmOptionsPanel extends JPanel {
     private static final String OUT_OF_COPYRIGHT = "outofcopyright";
     private static final String EMPTY_PANEL = "empty_panel";
     private String archdescRepository = null;
+    private String archdescUnittitle = null;
+    private String titlestmtTitleproper = null;
     private ResourceBundle labels;
     private RetrieveFromDb retrieveFromDb;
     private Map<String, FileInstance> fileInstances;
@@ -129,6 +133,7 @@ public class EdmOptionsPanel extends JPanel {
     private APETabbedPane apeTabbedPane;
     private ButtonGroup conversionModeGroup;
     private ButtonGroup cLevelIdSourceButtonGroup;
+    private ButtonGroup sourceOfFondsTitleGroup;
     private ButtonGroup landingPageButtonGroup;
     private JTextArea landingPageTextArea;
     private ButtonGroup typeGroup;
@@ -156,6 +161,7 @@ public class EdmOptionsPanel extends JPanel {
     private JCheckBox useExistingRightsInfoCheckbox;
     private JPanel languageBoxPanel = new LanguageBoxPanel();
     private String conversionMode = MINIMAL;
+    private String sourceOfFondsTitle = ARCHDESC_UNITTITLE;
     private JPanel inheritParentPanel;
     private JPanel inheritOriginationPanel;
     private JPanel inheritUnittitlePanel;
@@ -195,7 +201,7 @@ public class EdmOptionsPanel extends JPanel {
         JPanel europeanaRightsPanel = new EuropeanaRightsPanel();
         JPanel emptyPanel = new JPanel();
 
-        JPanel formPanel = new JPanel(new GridLayout(13, 1));
+        JPanel formPanel = new JPanel(new GridLayout(14, 1));
 
         JPanel extraLicenseCardLayoutPanel = new JPanel(new CardLayout());
         extraLicenseCardLayoutPanel.add(creativeCommonsPanel, CREATIVE_COMMONS);
@@ -242,6 +248,28 @@ public class EdmOptionsPanel extends JPanel {
         cLevelIdSourceButtonGroup.add(radioButton);
         panel.add(radioButton);
 
+        formPanel.add(panel);
+
+        panel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        sourceOfFondsTitleGroup = new ButtonGroup();
+
+        determineDaoInformation();
+        panel.add(new Label(this.labels.getString("edm.generalOptionsForm.sourceOfFondsTitle")));
+        if (!this.batch && StringUtils.isBlank(ead2EdmInformation.getArchdescUnittitle()) && StringUtils.isBlank(ead2EdmInformation.getTitlestmtTitleproper())) {
+            panel.add(new Label(this.labels.getString("edm.generalOptionsForm.sourceOfFondsTitle.noSourceAvailable")));
+        } else {
+            radioButton = new JRadioButton(this.labels.getString("edm.generalOptionsForm.sourceOfFondsTitle.archdescUnittitle"));
+            radioButton.setActionCommand(ARCHDESC_UNITTITLE);
+            radioButton.setSelected(true);
+            radioButton.addActionListener(new ConversionModeListener());
+            sourceOfFondsTitleGroup.add(radioButton);
+            panel.add(radioButton);
+            radioButton = new JRadioButton(this.labels.getString("edm.generalOptionsForm.sourceOfFondsTitle.titlestmtTitleproper"));
+            radioButton.setActionCommand(TITLESTMT_TITLEPROPER);
+            radioButton.addActionListener(new ConversionModeListener());
+            sourceOfFondsTitleGroup.add(radioButton);
+            panel.add(radioButton);
+        }
         formPanel.add(panel);
 
         panel = new JPanel(new GridLayout(2, 2));
@@ -302,7 +330,6 @@ public class EdmOptionsPanel extends JPanel {
         if (batch) {
             panel.add(panel2);
         } else {
-            determineDaoInformation();
             String repository = ead2EdmInformation.getRepository();
             if (repository != null && !repository.equals("")) {
                 dataProviderTextArea.setText(repository);
@@ -895,6 +922,12 @@ public class EdmOptionsPanel extends JPanel {
             config.setMinimalConversion(false);
         }
 
+        if (ARCHDESC_UNITTITLE.equals(sourceOfFondsTitle)) {
+            config.setUseArchUnittitle(true);
+        } else {
+            config.setUseArchUnittitle(false);
+        }
+
         //EDM identifier used for OAI-PMH; not needed for DPT purposes, so set to empty string
         config.setEdmIdentifier("");
 
@@ -960,6 +993,27 @@ public class EdmOptionsPanel extends JPanel {
                 throw new Exception("cLevelIdSource is not checked");
             }
         }
+
+//        if (sourceOfFondsTitleGroup == null) {
+//            throw new Exception("useArchdescUnittitle is null");
+//        } else {
+//            if (!this.batch) {
+//                if (sourceOfFondsTitleGroup.getSelection().getActionCommand().equals(ARCHDESC_UNITTITLE)) {
+//                    if (StringUtils.isBlank(ead2EdmInformation.getArchdescUnittitle())) {
+//                        if (StringUtils.isNotBlank(ead2EdmInformation.getTitlestmtTitleproper())) {
+//                            throw new Exception("no content available from archdesc/did/unittile");
+//                        }
+//                    }
+//                }
+//                if (sourceOfFondsTitleGroup.getSelection().getActionCommand().equals(TITLESTMT_TITLEPROPER)) {
+//                    if (StringUtils.isBlank(ead2EdmInformation.getTitlestmtTitleproper())) {
+//                        if (StringUtils.isNotBlank(ead2EdmInformation.getArchdescUnittitle())) {
+//                            throw new Exception("no content available from titlestmt/titleproper");
+//                        }
+//                    }
+//                }
+//            }
+//        }
 
         if (landingPageButtonGroup == null) {
             throw new Exception("landingPage is null");
@@ -1065,6 +1119,12 @@ public class EdmOptionsPanel extends JPanel {
         }
         if (ead2EdmInformation.getArchdescRepository() != null) {
             archdescRepository = ead2EdmInformation.getArchdescRepository();
+        }
+        if (ead2EdmInformation.getArchdescUnittitle() != null) {
+            archdescUnittitle = ead2EdmInformation.getArchdescUnittitle();
+        }
+        if (ead2EdmInformation.getTitlestmtTitleproper() != null) {
+            titlestmtTitleproper = ead2EdmInformation.getTitlestmtTitleproper();
         }
     }
 

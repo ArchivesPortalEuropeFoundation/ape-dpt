@@ -193,7 +193,7 @@
                             <xsl:when test="/ead/archdesc/did/unittitle">
                                 <xsl:value-of select="/ead/archdesc/did/unittitle"/>
                             </xsl:when>
-                            <xsl:when test="/ead/eadheader/filedesc/titlestmt/titleproper">
+                            <xsl:when test="/ead/eadheader/filedesc/titlestmt/titleproper != ''">
                                 <xsl:value-of select="/ead/eadheader/filedesc/titlestmt/titleproper"/>
                             </xsl:when>
                             <xsl:otherwise>
@@ -203,7 +203,7 @@
                     </xsl:when>
                     <xsl:otherwise>
                         <xsl:choose>
-                            <xsl:when test="/ead/eadheader/filedesc/titlestmt/titleproper">
+                            <xsl:when test="/ead/eadheader/filedesc/titlestmt/titleproper != ''">
                                 <xsl:value-of select="/ead/eadheader/filedesc/titlestmt/titleproper"/>
                             </xsl:when>
                             <xsl:when test="/ead/archdesc/did/unittitle">
