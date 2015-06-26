@@ -1010,7 +1010,6 @@
                                             </xsl:otherwise>
                                         </xsl:choose>
                                     </xsl:attribute>
-                                    <xsl:text>Read more</xsl:text>
                                 </dcterms:provenance>
                             </xsl:if>
                         </xsl:when>
