@@ -352,7 +352,12 @@
             <dc:description>
                 <xsl:choose>
                     <xsl:when test="/ead/archdesc/did/unittitle">
-                        <xsl:apply-templates select="/ead/archdesc/did/unittitle" mode="dcDescription"/>
+                        <xsl:for-each select="/ead/archdesc/did/unittitle">
+                            <xsl:apply-templates select="." mode="dcDescription"/>
+                            <xsl:if test="position() &lt; last()">
+                                <xsl:text> </xsl:text>
+                            </xsl:if>
+                        </xsl:for-each>
                     </xsl:when>
                     <xsl:otherwise>
                         <xsl:value-of select="'Archival material'"/>
