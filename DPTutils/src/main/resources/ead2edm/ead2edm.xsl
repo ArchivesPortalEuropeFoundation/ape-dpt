@@ -125,11 +125,11 @@
                     </xsl:otherwise>
                 </xsl:choose>
             </edm:isShownAt>
-            <edm:isShownBy>
+            <edm:object>
                 <xsl:attribute name="rdf:resource"
                     select="concat('http://', $host, '/Portal-theme/images/ape/icons/dao_types/europeana/text.png')"
                 />
-            </edm:isShownBy>
+            </edm:object>
             <edm:provider>
                 <xsl:value-of select="$europeana_provider"/>
             </edm:provider>
@@ -775,23 +775,23 @@
                         <xsl:when test="$useExistingDaoRole='true'">
                             <xsl:choose>
                                 <xsl:when test="did/dao[not(@xlink:title='thumbnail')][1]/@xlink:role">
-                                    <edm:isShownBy>
+                                    <edm:object>
                                         <xsl:attribute name="rdf:resource">
                                             <xsl:call-template name="generateThumbnailLink">
                                                 <xsl:with-param name="role" select="did/dao[not(@xlink:title='thumbnail')][1]/@xlink:role"/>
                                             </xsl:call-template>
                                         </xsl:attribute>
-                                    </edm:isShownBy>
+                                    </edm:object>
                                 </xsl:when>
                                 <xsl:otherwise>
                                     <xsl:if test="fn:string-length($europeana_type) > 0">
-                                        <edm:isShownBy>
+                                        <edm:object>
                                             <xsl:attribute name="rdf:resource">
                                                 <xsl:call-template name="generateThumbnailLink">
                                                     <xsl:with-param name="role" select="$europeana_type"/>
                                                 </xsl:call-template>
                                             </xsl:attribute>
-                                        </edm:isShownBy>
+                                        </edm:object>
                                     </xsl:if>
                                 </xsl:otherwise>
                             </xsl:choose>
@@ -799,23 +799,23 @@
                         <xsl:otherwise>
                             <xsl:choose>
                                 <xsl:when test="fn:string-length($europeana_type) > 0">
-                                    <edm:isShownBy>
+                                    <edm:object>
                                         <xsl:attribute name="rdf:resource">
                                             <xsl:call-template name="generateThumbnailLink">
                                                 <xsl:with-param name="role" select="$europeana_type"/>
                                             </xsl:call-template>
                                         </xsl:attribute>
-                                    </edm:isShownBy>
+                                    </edm:object>
                                 </xsl:when>
                                 <xsl:otherwise>
                                     <xsl:if test="did/dao[not(@xlink:title='thumbnail')][1]/@xlink:role">
-                                        <edm:isShownBy>
+                                        <edm:object>
                                             <xsl:attribute name="rdf:resource">
                                                 <xsl:call-template name="generateThumbnailLink">
                                                     <xsl:with-param name="role" select="did/dao[not(@xlink:title='thumbnail')][1]/@xlink:role"/>
                                                 </xsl:call-template>
                                             </xsl:attribute>
-                                        </edm:isShownBy>
+                                        </edm:object>
                                     </xsl:if>
                                 </xsl:otherwise>
                             </xsl:choose>
@@ -902,9 +902,9 @@
                             </xsl:otherwise>
                         </xsl:choose>
                     </edm:isShownAt>
-                    <edm:isShownBy>
+                    <edm:object>
                         <xsl:attribute name="rdf:resource" select="concat('http://', $host, '/Portal-theme/images/ape/icons/dao_types/europeana/text.png')" />
-                    </edm:isShownBy>
+                    </edm:object>
                     <edm:rights rdf:resource="http://creativecommons.org/publicdomain/zero/1.0/"/>
                 </xsl:otherwise>
             </xsl:choose>
