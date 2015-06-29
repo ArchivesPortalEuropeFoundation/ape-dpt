@@ -1697,7 +1697,7 @@
                 />
             </xsl:when>
             <xsl:otherwise>
-                <xsl:call-template name="convertToEdmType">
+                <xsl:call-template name="generateThumbnailLink">
                     <xsl:with-param name="role" select="$europeana_type"/>
                 </xsl:call-template>
             </xsl:otherwise>
@@ -1744,7 +1744,14 @@
     </xsl:template>
     <xsl:template name="simpleReplace">
         <xsl:param name="input"/>
-        <xsl:value-of select="replace(replace(replace(replace(replace(replace($input, ' ', '+'), '/', '_SLASH_'), ':', '_COLON_'), '*', '_ASTERISK_'), '&amp;', '_AMP_'), ',', '_COMMA_')"/>
+        <xsl:choose>
+            <xsl:when test="contains($input, ' ') or contains($input, '/') or contains($input, ':') or contains($input, '*') or contains($input, '&amp;') or contains($input, ',')">
+                <xsl:value-of select="replace(replace(replace(replace(replace(replace($input, ' ', '+'), '/', '_SLASH_'), ':', '_COLON_'), '*', '_ASTERISK_'), '&amp;', '_AMP_'), ',', '_COMMA_')"/>
+            </xsl:when>
+            <xsl:otherwise>
+                <xsl:value-of select="$input"/>
+            </xsl:otherwise>
+        </xsl:choose>
     </xsl:template>
     
     <xsl:template match="abbr|emph|expan|extref">
