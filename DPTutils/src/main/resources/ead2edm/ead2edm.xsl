@@ -15,9 +15,10 @@
     xmlns:europeana="http://www.europeana.eu/schemas/ese/"
     xmlns="http://www.europeana.eu/schemas/edm/"
     xmlns:fn="http://www.w3.org/2005/xpath-functions"
+    xmlns:func="http://www.archivesportaleurope.net/functions"
     xmlns:xlink="http://www.w3.org/1999/xlink"
     xpath-default-namespace="urn:isbn:1-931666-22-9"
-    exclude-result-prefixes="xlink fo fn">
+    exclude-result-prefixes="xlink fo fn func">
     <xsl:output method="xml" encoding="UTF-8" indent="yes"/>
 
     <!-- Params from Ead2Ese -->
@@ -46,9 +47,28 @@
     <xsl:param name="host"/>
     <xsl:param name="repository_code"/>
     <xsl:param name="xml_type_name"/>
+    
+    <!-- Params for special character replacement -->
+    <func:params xml:space="preserve">
+        <pattern>
+            <old> </old>
+            <new>+</new>
+        </pattern>
+        <pattern>
+            <old>/</old>
+            <new>_SLASH_</new>
+        </pattern>
+    </func:params>
+    
     <!-- Variables -->
     <xsl:variable name="id_base"
         select="concat('http://', $host, '/ead-display/-/ead/pl/aicode/' , $repository_code, '/type/', $xml_type_name, '/id/')"/>
+    <xsl:variable name="vReps" select="document('')/*/func:params/*"/>
+    <xsl:variable name="eadidEncoded">
+        <xsl:call-template name="simpleReplace">
+            <xsl:with-param name="input" select="normalize-space(/ead/eadheader/eadid)"/>
+        </xsl:call-template>
+    </xsl:variable>
     <!-- Key for detection of unitid duplicates -->
     <xsl:key name="unitids" match="unitid" use="text()"></xsl:key>
 
@@ -96,7 +116,7 @@
                     <xsl:otherwise>
                         <xsl:choose>
                             <xsl:when test="$landingPage = 'ape'">
-                                <xsl:attribute name="rdf:resource" select="concat($id_base, normalize-space(.))"/>
+                                <xsl:attribute name="rdf:resource" select="concat($id_base, $eadidEncoded)"/>
                             </xsl:when>
                             <xsl:otherwise>
                                 <xsl:attribute name="rdf:resource" select="normalize-space($landingPage)"/>
@@ -340,7 +360,7 @@
                     <xsl:otherwise>
                         <xsl:choose>
                             <xsl:when test="$landingPage = 'ape'">
-                                <xsl:attribute name="rdf:resource" select="concat($id_base, normalize-space(.))"/>
+                                <xsl:attribute name="rdf:resource" select="concat($id_base, $eadidEncoded)"/>
                             </xsl:when>
                             <xsl:otherwise>
                                 <xsl:attribute name="rdf:resource" select="normalize-space($landingPage)"/>
@@ -849,13 +869,18 @@
                                         <xsl:when test="$landingPage = 'ape'">
                                             <xsl:choose>
                                                 <xsl:when test="$idSource = 'unitid' and did/unitid and $isFirstUnitid = 'true'">
-                                                    <xsl:value-of select="concat($id_base, normalize-space(/ead/eadheader/eadid), '/unitid/', normalize-space(did/unitid))"/>
+                                                    <xsl:variable name="unitidEncoded">
+                                                        <xsl:call-template name="simpleReplace">
+                                                            <xsl:with-param name="input" select="normalize-space(did/unitid)"></xsl:with-param>
+                                                        </xsl:call-template>
+                                                    </xsl:variable>
+                                                    <xsl:value-of select="concat($id_base, $eadidEncoded, '/unitid/', $unitidEncoded)"/>
                                                 </xsl:when>
                                                 <xsl:when test="$idSource = 'cid' and @id">
-                                                    <xsl:value-of select="concat($id_base, normalize-space(/ead/eadheader/eadid), '/cid/', @id)"/>
+                                                    <xsl:value-of select="concat($id_base, $eadidEncoded, '/cid/', @id)"/>
                                                 </xsl:when>
                                                 <xsl:when test="$mainIdentifier">
-                                                    <xsl:value-of select="concat($id_base, normalize-space(/ead/eadheader/eadid), '/position/', $mainIdentifier)"/>
+                                                    <xsl:value-of select="concat($id_base, $eadidEncoded, '/position/', $mainIdentifier)"/>
                                                     <!--<xsl:call-template name="number">-->
                                                         <!--<xsl:with-param name="prefix" select="concat($id_base, normalize-space(/ead/eadheader/eadid), '/position/', $mainIdentifier, '-')"/>-->
                                                         <!--<xsl:with-param name="node" select="."/>-->
@@ -1442,13 +1467,18 @@
                                     <xsl:when test="$landingPage = 'ape'">
                                         <xsl:choose>
                                             <xsl:when test="$idSource = 'unitid' and did/unitid and $isFirstUnitid = 'true'">
-                                                <xsl:value-of select="concat($id_base, normalize-space(/ead/eadheader/eadid), '/unitid/', normalize-space(did/unitid))"/>
+                                                <xsl:variable name="unitidEncoded">
+                                                    <xsl:call-template name="simpleReplace">
+                                                        <xsl:with-param name="input" select="normalize-space(did/unitid)"></xsl:with-param>
+                                                    </xsl:call-template>
+                                                </xsl:variable>
+                                                <xsl:value-of select="concat($id_base, $eadidEncoded, '/unitid/', $unitidEncoded)"/>
                                             </xsl:when>
                                             <xsl:when test="$idSource = 'cid' and @id">
-                                                <xsl:value-of select="concat($id_base, normalize-space(/ead/eadheader/eadid), '/cid/', @id)"/>
+                                                <xsl:value-of select="concat($id_base, $eadidEncoded, '/cid/', @id)"/>
                                             </xsl:when>
                                             <xsl:when test="$mainIdentifier">
-                                                <xsl:value-of select="concat($id_base, normalize-space(/ead/eadheader/eadid), '/position/', $mainIdentifier)"/>
+                                                <xsl:value-of select="concat($id_base, $eadidEncoded, '/position/', $mainIdentifier)"/>
                                                 <!--<xsl:call-template name="number">-->
                                                     <!--<xsl:with-param name="prefix" select="concat($id_base, normalize-space(/ead/eadheader/eadid), '/position/', $positionChain, '-')"/>-->
                                                     <!--<xsl:with-param name="node" select="."/>-->
@@ -1712,7 +1742,11 @@
             <xsl:value-of select="fn:replace(normalize-space($content), '[\n\t\r]', '')"/>
         </edm:dataProvider>
     </xsl:template>
-
+    <xsl:template name="simpleReplace">
+        <xsl:param name="input"/>
+        <xsl:value-of select="replace(replace(replace(replace(replace(replace($input, ' ', '+'), '/', '_SLASH_'), ':', '_COLON_'), '*', '_ASTERISK_'), '&amp;', '_AMP_'), ',', '_COMMA_')"/>
+    </xsl:template>
+    
     <xsl:template match="abbr|emph|expan|extref">
         <xsl:text> </xsl:text>
         <xsl:value-of select="node()"/>
