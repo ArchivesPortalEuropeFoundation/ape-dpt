@@ -188,6 +188,8 @@ public class TransformationTool {
 
             XsltExecutable executable = compiler.compile(xsltSource);
             XsltTransformer transformer = executable.load();
+//            XsltTransformer transformer_second = executable.load();
+//            transformer.setDestination(transformer_second); //todo: To use for pipeline (See email on Saxon from 30/06/2015)
 
             transformer.setSource(xmlSource);
 

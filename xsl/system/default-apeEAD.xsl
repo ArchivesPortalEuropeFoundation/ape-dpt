@@ -189,12 +189,20 @@
 
     <!-- abbr -->
     <xsl:template match="abbr" mode="#all">
-        <abbr>
-            <xsl:if test="@expan != ''">
-                <xsl:attribute name="expan" select="@expan"/>
-            </xsl:if>
-            <xsl:value-of select="normalize-space(.)"/>
-        </abbr>
+        <xsl:choose>
+            <xsl:when test="parent::unitdate">
+                <xsl:text> </xsl:text><xsl:value-of select="text()"/><xsl:text> </xsl:text>
+                <xsl:if test="@expan != ''"><xsl:value-of select="concat(' (', concat(@expan, ') '))"/></xsl:if>
+            </xsl:when>
+            <xsl:otherwise>
+                <abbr>
+                    <xsl:if test="@expan != ''">
+                        <xsl:attribute name="expan" select="@expan"/>
+                    </xsl:if>
+                    <xsl:value-of select="normalize-space(.)"/>
+                </abbr>
+            </xsl:otherwise>
+        </xsl:choose>
     </xsl:template>
 
     <!-- expan -->
@@ -395,11 +403,17 @@
                     </xsl:otherwise>
                 </xsl:choose>
             </xsl:if>
-            <xsl:if test="not(@url) and normalize-space($url)">
-                <xsl:attribute name="url" select="ape:checkLink($url)"/>
+            <xsl:if test="not(@url) and normalize-space($url)"><!-- todo -->
+                <xsl:variable name="daolink" select="ape:checkLink($url)"/>
+                <xsl:if test="normalize-space($daolink) != ''">
+                    <xsl:attribute name="url" select="$daolink"/>
+                </xsl:if>
             </xsl:if>
             <xsl:if test="@url">
-                <xsl:attribute name="url" select="ape:checkLink(@url)"/>
+                <xsl:variable name="daolink" select="ape:checkLink(@url)"/><!-- todo -->
+                <xsl:if test="normalize-space($daolink) != ''">
+                    <xsl:attribute name="url" select="$daolink"/>
+                </xsl:if>
             </xsl:if>
             <xsl:choose>
                 <xsl:when test="not(text())">
@@ -411,6 +425,25 @@
             </xsl:choose>
         </eadid>
     </xsl:template>
+
+    <xsl:function name="none:addDaolink"><!-- todo -->
+        <xsl:param name="valueToCheck" as="xs:anyAtomicType*"/>
+        <xsl:param name="title" as="xs:anyAtomicType*"/>
+        <xsl:param name="context" as="xs:anyAtomicType*"/>
+        <xsl:variable name="daolink" select="ape:checkLink($valueToCheck)"/>
+        <xsl:if test="normalize-space($daolink) != ''">
+            <dao>
+                <xsl:attribute name="xlink:href" select="$daolink"/>
+                <xsl:if test="normalize-space($title) != ''">
+                    <xsl:attribute name="xlink:title" select="$title"/>
+                </xsl:if>
+                <xsl:call-template name="daoRoleType"/>
+                <xsl:if test="none:isNotThumbnail($context)">
+                    <xsl:call-template name="daoDigitalType"/>
+                </xsl:if>
+            </dao>
+        </xsl:if>
+    </xsl:function>
 
     <!-- filedesc -->
     <xsl:template match="filedesc" mode="copy">
@@ -2131,7 +2164,7 @@
     <xsl:template match="scopecontent[not(@encodinganalog='preface' or @encodinganalog='Vorwort')]"
                   mode="copy level">
         <xsl:if test="count(child::*) != 0 or normalize-space(text()) != ''">
-            <xsl:if test="not(count(child::*) eq 1 and child::arrangement)">
+            <xsl:if test="not(count(child::*) eq 1 and (child::arrangement or child::daogrp)) and not(count(child::*) eq 2 and (child::head and child::daogrp))">
                 <scopecontent encodinganalog="summary">
                     <xsl:choose>
                         <xsl:when test="normalize-space(text()) != '' and not(child::p)">
@@ -2703,7 +2736,7 @@
             </xsl:for-each>
         </xsl:if>
     </xsl:template>
-    <xsl:template match="unittitle/corpname | unittitle/famname | unittitle/function | unittitle/genreform | unittitle/geogname | unittitle/name | unittitle/occupation | unittitle/persname | unittitle/subject | unittitle/title"
+    <xsl:template match="unittitle/corpname | unittitle/famname | unittitle/function | unittitle/genreform | unittitle/geogname | unittitle/name | unittitle/occupation | unittitle/persname | unittitle/subject | unittitle/title | unittitle/date"
                   mode="level">
         <xsl:apply-templates select="node()" mode="#current"/>
     </xsl:template>
