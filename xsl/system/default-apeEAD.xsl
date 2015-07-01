@@ -189,12 +189,20 @@
 
     <!-- abbr -->
     <xsl:template match="abbr" mode="#all">
-        <abbr>
-            <xsl:if test="@expan != ''">
-                <xsl:attribute name="expan" select="@expan"/>
-            </xsl:if>
-            <xsl:value-of select="normalize-space(.)"/>
-        </abbr>
+        <xsl:choose>
+            <xsl:when test="parent::unitdate">
+                <xsl:text> </xsl:text><xsl:value-of select="text()"/><xsl:text> </xsl:text>
+                <xsl:if test="@expan != ''"><xsl:value-of select="concat(' (', concat(@expan, ') '))"/></xsl:if>
+            </xsl:when>
+            <xsl:otherwise>
+                <abbr>
+                    <xsl:if test="@expan != ''">
+                        <xsl:attribute name="expan" select="@expan"/>
+                    </xsl:if>
+                    <xsl:value-of select="normalize-space(.)"/>
+                </abbr>
+            </xsl:otherwise>
+        </xsl:choose>
     </xsl:template>
 
     <!-- expan -->
