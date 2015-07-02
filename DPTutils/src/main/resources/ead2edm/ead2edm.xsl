@@ -337,19 +337,19 @@
                         <xsl:choose>
                             <xsl:when test="$idSource = 'unitid' and did/unitid and $isFirstUnitid = 'true'">
                                 <dcterms:hasPart>
-                                    <xsl:attribute name="rdf:resource" select="concat('providedCHO_', normalize-space(did/unitid))"/>
+                                    <xsl:attribute name="rdf:resource" select="concat('providedCHO_', normalize-space(/ead/eadheader/eadid), '_', normalize-space(did/unitid))"/>
                                 </dcterms:hasPart>
                             </xsl:when>
                             <xsl:when test="$idSource = 'cid' and @id">
                                 <dcterms:hasPart>
-                                    <xsl:attribute name="rdf:resource" select="concat('providedCHO_', normalize-space(@id))"/>
+                                    <xsl:attribute name="rdf:resource" select="concat('providedCHO_', normalize-space(/ead/eadheader/eadid), '_', normalize-space(@id))"/>
                                 </dcterms:hasPart>
                             </xsl:when>
                             <xsl:otherwise>
                                 <dcterms:hasPart>
                                     <xsl:attribute name="rdf:resource">
                                         <xsl:call-template name="number">
-                                            <xsl:with-param name="prefix" select="'providedCHO_position_'"/>
+                                            <xsl:with-param name="prefix" select="concat('providedCHO_position_', normalize-space(/ead/eadheader/eadid), '_')"/>
                                             <xsl:with-param name="node" select="."/>
                                         </xsl:call-template>
                                     </xsl:attribute>
@@ -749,9 +749,9 @@
 
         <!-- ACTUAL CONVERSION BEGINS HERE -->
         <ore:Aggregation>
-            <xsl:attribute name="rdf:about" select="concat('aggregation_',$identifier)"/>
+            <xsl:attribute name="rdf:about" select="concat('aggregation_', normalize-space(/ead/eadheader/eadid), '_', $identifier)"/>
             <edm:aggregatedCHO>
-                <xsl:attribute name="rdf:resource" select="concat('providedCHO_',$identifier)"/>
+                <xsl:attribute name="rdf:resource" select="concat('providedCHO_', normalize-space(/ead/eadheader/eadid), '_', $identifier)"/>
             </edm:aggregatedCHO>
             <xsl:choose>
                 <xsl:when test="$useExistingRepository='true'">
@@ -927,7 +927,7 @@
             </xsl:choose>
         </ore:Aggregation>
         <edm:ProvidedCHO>
-            <xsl:attribute name="rdf:about" select="concat('providedCHO_', $identifier)"/>
+            <xsl:attribute name="rdf:about" select="concat('providedCHO_', normalize-space(/ead/eadheader/eadid), '_', $identifier)"/>
             <xsl:if test="$idSource = 'unitid' and $currentnode/did/unitid">
                 <dc:identifier>
                     <xsl:apply-templates select="$currentnode/did/unitid"/>
@@ -1129,12 +1129,12 @@
                         <xsl:choose>
                             <xsl:when test="$idSource = 'unitid' and did/unitid and $isFirstUnitid = 'true'">
                                 <dcterms:hasPart>
-                                    <xsl:attribute name="rdf:resource" select="concat('providedCHO_', normalize-space(did/unitid))"/>
+                                    <xsl:attribute name="rdf:resource" select="concat('providedCHO_', normalize-space(/ead/eadheader/eadid), '_', normalize-space(did/unitid))"/>
                                 </dcterms:hasPart>
                             </xsl:when>
                             <xsl:when test="$idSource = 'cid' and @id">
                                 <dcterms:hasPart>
-                                    <xsl:attribute name="rdf:resource" select="concat('providedCHO_', normalize-space(@id))"/>
+                                    <xsl:attribute name="rdf:resource" select="concat('providedCHO_', normalize-space(/ead/eadheader/eadid), '_', normalize-space(@id))"/>
                                 </dcterms:hasPart>
                             </xsl:when>
                             <xsl:otherwise>
@@ -1144,10 +1144,10 @@
                                             <xsl:with-param name="prefix">
                                                 <xsl:choose>
                                                     <xsl:when test="$mainIdentifier">
-                                                        <xsl:value-of select="concat('providedCHO_position_', $mainIdentifier, '-')"/>
+                                                        <xsl:value-of select="concat('providedCHO_position_', normalize-space(/ead/eadheader/eadid), '_', $mainIdentifier, '-')"/>
                                                     </xsl:when>
                                                     <xsl:otherwise>
-                                                        <xsl:value-of select="concat('providedCHO_position_', $positionInDocument, '-')"/>
+                                                        <xsl:value-of select="concat('providedCHO_position_', normalize-space(/ead/eadheader/eadid), '_', $positionInDocument, '-')"/>
                                                     </xsl:otherwise>
                                                 </xsl:choose>
                                             </xsl:with-param>
@@ -1304,12 +1304,12 @@
                 </xsl:when>
                 <xsl:when test="$idSource = 'unitid' and $parentdidnode/unitid and $isParentFirstUnitid">
                     <dcterms:isPartOf>
-                        <xsl:attribute name="rdf:resource" select="concat('providedCHO_', normalize-space($parentdidnode/unitid))"/>
+                        <xsl:attribute name="rdf:resource" select="concat('providedCHO_', normalize-space(/ead/eadheader/eadid), '_', normalize-space($parentdidnode/unitid))"/>
                     </dcterms:isPartOf>
                 </xsl:when>
                 <xsl:when test="$idSource = 'cid' and $parentcnode/@id">
                     <dcterms:isPartOf>
-                        <xsl:attribute name="rdf:resource" select="concat('providedCHO_', normalize-space($parentcnode/@id))"/>
+                        <xsl:attribute name="rdf:resource" select="concat('providedCHO_', normalize-space(/ead/eadheader/eadid), '_', normalize-space($parentcnode/@id))"/>
                     </dcterms:isPartOf>
                 </xsl:when>
                 <xsl:otherwise>
@@ -1317,11 +1317,11 @@
                         <xsl:attribute name="rdf:resource">
                             <xsl:choose>
                                 <xsl:when test="$positionChain">
-                                    <xsl:value-of select="concat('providedCHO_position_', $positionChain)"/>
+                                    <xsl:value-of select="concat('providedCHO_position_', normalize-space(/ead/eadheader/eadid), '_', $positionChain)"/>
                                 </xsl:when>
                                 <xsl:otherwise>
                                     <xsl:call-template name="number">
-                                        <xsl:with-param name="prefix" select="'providedCHO_position_'"/>
+                                        <xsl:with-param name="prefix" select="concat('providedCHO_position_', normalize-space(/ead/eadheader/eadid), '_')"/>
                                         <xsl:with-param name="node" select="$parentcnode"/>
                                     </xsl:call-template>
                                 </xsl:otherwise>
@@ -1372,7 +1372,7 @@
                     <xsl:when test="$idSource = 'unitid' and $currentnode/preceding-sibling::*[descendant::did/dao][1]/did/unitid and not(key('unitids', $currentnode/preceding-sibling::*[descendant::did/dao][1]/did/unitid)[2])">
                         <edm:isNextInSequence>
                             <xsl:attribute name="rdf:resource"
-                                select="concat('providedCHO_', normalize-space($currentnode/preceding-sibling::*[did/dao][1]/did/unitid))"
+                                select="concat('providedCHO_', normalize-space(/ead/eadheader/eadid), '_', normalize-space($currentnode/preceding-sibling::*[did/dao][1]/did/unitid))"
                             />
                         </edm:isNextInSequence>
                     </xsl:when>
@@ -1380,7 +1380,7 @@
                         test="$idSource = 'cid' and $currentnode/preceding-sibling::*[descendant::did/dao][1]/@id">
                         <edm:isNextInSequence>
                             <xsl:attribute name="rdf:resource"
-                                select="concat('providedCHO_', normalize-space($currentnode/preceding-sibling::*[did/dao][1]/@id))"
+                                select="concat('providedCHO_', normalize-space(/ead/eadheader/eadid), '_', normalize-space($currentnode/preceding-sibling::*[did/dao][1]/@id))"
                             />
                         </edm:isNextInSequence>
                     </xsl:when>
@@ -1392,11 +1392,11 @@
                                         <xsl:choose>
                                             <xsl:when test="$positionChain">
                                                 <xsl:value-of
-                                                  select="concat('providedCHO_position_', $positionChain, '-')"
+                                                    select="concat('providedCHO_position_', normalize-space(/ead/eadheader/eadid), '_', $positionChain, '-')"
                                                 />
                                             </xsl:when>
                                             <xsl:otherwise>
-                                                <xsl:value-of select="'providedCHO_position_'"/>
+                                                <xsl:value-of select="concat('providedCHO_position_', normalize-space(/ead/eadheader/eadid), '_')"/>
                                             </xsl:otherwise>
                                         </xsl:choose>
                                     </xsl:with-param>
@@ -1763,7 +1763,7 @@
         <xsl:param name="input"/>
         <xsl:choose>
             <xsl:when test="contains($input, ' ') or contains($input, '/') or contains($input, ':') or contains($input, '*') or contains($input, '&amp;') or contains($input, ',')">
-                <xsl:value-of select="replace(replace(replace(replace(replace(replace($input, ' ', '+'), '/', '_SLASH_'), ':', '_COLON_'), '*', '_ASTERISK_'), '&amp;', '_AMP_'), ',', '_COMMA_')"/>
+                <xsl:value-of select="replace(replace(replace(replace(replace(replace($input, ' ', '+'), '&#47;', '_SLASH_'), ':', '_COLON_'), '\*', '_ASTERISK_'), '&amp;', '_AMP_'), ',', '_COMMA_')"/>
             </xsl:when>
             <xsl:otherwise>
                 <xsl:value-of select="$input"/>
