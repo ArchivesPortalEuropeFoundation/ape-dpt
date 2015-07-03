@@ -2030,7 +2030,7 @@
                 <xsl:choose>
                     <xsl:when test="./@era=&quot;ce&quot; and ./@normal">
                         <xsl:analyze-string select="./@normal"
-                            regex="(\d\d\d\d(-\d\d(-\d\d)?)?)(/(\d\d\d\d(-\d\d(-\d\d)?)?))?">
+                            regex="(\d\d\d\d(-?\d\d(-?\d\d)?)?)(/(\d\d\d\d(-?\d\d(-?\d\d)?)?))?">
                             <xsl:matching-substring>
                                 <xsl:variable name="startdate">
                                     <xsl:value-of select="regex-group(1)"/>
@@ -2052,11 +2052,9 @@
                                 </dc:date>
                             </xsl:matching-substring>
                         </xsl:analyze-string>
-                        <xsl:if test="./@normal">
-                            <dcterms:created>
-                                <xsl:value-of select="./@normal"/>
-                            </dcterms:created>
-                        </xsl:if>
+                        <dcterms:created>
+                            <xsl:apply-templates select="./@normal"/>
+                        </dcterms:created>
                     </xsl:when>
                     <xsl:otherwise>
                         <xsl:if test="fn:string-length(normalize-space(.)) > 0">
@@ -2079,9 +2077,7 @@
                         <xsl:value-of select="normalize-space(.)"/>
                     </dc:date>
                     <xsl:if test="./@normal">
-                        <dcterms:created>
-                            <xsl:value-of select="./@normal"/>
-                        </dcterms:created>
+                        <xsl:apply-templates select="./@normal"/>
                     </xsl:if>
                 </xsl:if>
             </xsl:otherwise>
@@ -2103,6 +2099,44 @@
             <xsl:apply-templates/>
         </xsl:variable>
         <xsl:value-of select="fn:replace(normalize-space($content), '[\n\t\r]', '')"/>
+    </xsl:template>
+    <xsl:template match="@normal">
+        <xsl:analyze-string select="."
+            regex="(\d\d\d\d)((-?\d\d)(-?\d\d))?(/(\d\d\d\d)((-?\d\d)(-?\d\d))?)?">
+            <xsl:matching-substring>
+                <dcterms:created>
+                    <xsl:value-of select="regex-group(1)"/>
+                    <xsl:if test="regex-group(2) != ''">
+                        <xsl:choose>
+                            <xsl:when test="contains(regex-group(2), '-')">
+                                <xsl:value-of select="regex-group(3)"/>
+                                <xsl:value-of select="regex-group(4)"/>
+                            </xsl:when>
+                            <xsl:otherwise>
+                                <xsl:value-of select="concat('-', regex-group(3))"/>
+                                <xsl:value-of select="concat('-', regex-group(4))"/>
+                            </xsl:otherwise>
+                        </xsl:choose>
+                    </xsl:if>
+                    <xsl:if test="regex-group(5) != ''">
+                        <xsl:text>/</xsl:text>
+                        <xsl:value-of select="regex-group(6)"/>
+                        <xsl:if test="regex-group(7) != ''">
+                            <xsl:choose>
+                                <xsl:when test="contains(regex-group(7), '-')">
+                                    <xsl:value-of select="regex-group(8)"/>
+                                    <xsl:value-of select="regex-group(9)"/>
+                                </xsl:when>
+                                <xsl:otherwise>
+                                    <xsl:value-of select="concat('-', regex-group(8))"/>
+                                    <xsl:value-of select="concat('-', regex-group(9))"/>
+                                </xsl:otherwise>
+                            </xsl:choose>
+                        </xsl:if>
+                    </xsl:if>
+                </dcterms:created>
+            </xsl:matching-substring>
+        </xsl:analyze-string>
     </xsl:template>
     
     <xsl:template mode="all-but-address" match="address"/>
