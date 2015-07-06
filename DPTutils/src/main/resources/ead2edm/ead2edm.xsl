@@ -157,7 +157,7 @@
         </ore:Aggregation>
         <edm:ProvidedCHO>
             <xsl:attribute name="rdf:about" select="concat('providedCHO_', .)"/>
-            <xsl:if test="/ead/archdesc/did/origination">
+            <xsl:if test="$minimalConversion = 'false' and /ead/archdesc/did/origination">
                 <xsl:for-each select="/ead/archdesc/did/origination">
                     <dc:creator>
                         <xsl:value-of select="normalize-space(.)"/>
@@ -258,7 +258,7 @@
                     <xsl:text>No title</xsl:text>
                 </dc:title>
             </xsl:if>-->
-            <xsl:if test="/ead/archdesc/relatedmaterial">
+            <xsl:if test="$minimalConversion = 'false' and /ead/archdesc/relatedmaterial">
                 <xsl:apply-templates select="/ead/archdesc/relatedmaterial"/>
             </xsl:if>
             <xsl:if test="/ead/archdesc/custodhist">
@@ -266,14 +266,14 @@
                     <xsl:with-param name="custodhists" select="/ead/archdesc/custodhist" />
                 </xsl:call-template>
             </xsl:if>
-            <xsl:if test="/ead/archdesc/bibliography/bibref">
+            <xsl:if test="$minimalConversion = 'false' and /ead/archdesc/bibliography/bibref">
                 <xsl:for-each select="/ead/archdesc/bibliography/bibref">
                     <xsl:call-template name="bibref">
                         <xsl:with-param name="bibrefs" select="." />
                     </xsl:call-template>
                 </xsl:for-each>
             </xsl:if>
-            <xsl:if test="/ead/archdesc/bibliography/p">
+            <xsl:if test="$minimalConversion = 'false' and /ead/archdesc/bibliography/p">
                 <xsl:for-each select="/ead/archdesc/bibliography/p">
                     <xsl:call-template name="bibref">
                         <xsl:with-param name="bibrefs" select="." />
@@ -285,12 +285,12 @@
                     <xsl:with-param name="controlaccesses" select="/ead/archdesc/controlaccess"/>
                 </xsl:call-template>
             </xsl:if>
-            <xsl:if test="/ead/archdesc/did/materialspec">
+            <xsl:if test="$minimalConversion = 'false' and /ead/archdesc/did/materialspec">
                 <dc:format>
                     <xsl:value-of select="/ead/archdesc/did/materialspec"/>
                 </dc:format>
             </xsl:if>
-            <xsl:if test="/ead/archdesc/altformavail">
+            <xsl:if test="$minimalConversion = 'false' and /ead/archdesc/altformavail">
                 <xsl:call-template name="altformavail">
                     <xsl:with-param name="altformavails" select="/ead/archdesc/altformavail"/>
                 </xsl:call-template>
@@ -305,17 +305,17 @@
                     </xsl:otherwise>
                 </xsl:choose>
             </dc:type>
-            <xsl:if test="/ead/archdesc/did/physdesc/physfacet">
+            <xsl:if test="$minimalConversion = 'false' and /ead/archdesc/did/physdesc/physfacet">
                 <dc:format>
                     <xsl:value-of select="/ead/archdesc/did/physdesc/physfacet"/>
                 </dc:format>
             </xsl:if>
-            <xsl:if test="/ead/archdesc/did/physdesc/extent">
+            <xsl:if test="$minimalConversion = 'false' and /ead/archdesc/did/physdesc/extent">
                 <dcterms:extent>
                     <xsl:value-of select="/ead/archdesc/did/physdesc/extent"/>
                 </dcterms:extent>
             </xsl:if>
-            <xsl:if test="/ead/archdesc/did/physdesc/dimensions">
+            <xsl:if test="$minimalConversion = 'false' and /ead/archdesc/did/physdesc/dimensions">
                 <dcterms:extent>
                     <xsl:value-of select="/ead/archdesc/did/physdesc/dimensions"/>
                 </dcterms:extent>
@@ -410,7 +410,7 @@
     <xsl:template match="ead/archdesc">
         <xsl:apply-templates select="dsc/c">
             <xsl:with-param name="inheritedOriginations">
-                <xsl:if test="./did/origination">
+                <xsl:if test="$minimalConversion = 'false' and ./did/origination">
                     <xsl:call-template name="creator">
                         <xsl:with-param name="originations" select="./did/origination"/>
                     </xsl:call-template>
@@ -431,7 +431,7 @@
                 </xsl:if>
             </xsl:with-param>
             <xsl:with-param name="inheritedAltformavails">
-                <xsl:if test="./altformavail">
+                <xsl:if test="$minimalConversion = 'false' and ./altformavail">
                     <xsl:call-template name="altformavail">
                         <xsl:with-param name="altformavails" select="./altformavail"/>
                     </xsl:call-template>
@@ -459,7 +459,7 @@
                 </xsl:if>
             </xsl:with-param>
             <xsl:with-param name="inheritedBibref">
-                <xsl:if test="./bibliography/bibref">
+                <xsl:if test="$minimalConversion = 'false' and ./bibliography/bibref">
                     <xsl:for-each select="./bibliography/bibref">
                         <xsl:call-template name="bibref">
                             <xsl:with-param name="bibrefs" select="."/>
@@ -468,7 +468,7 @@
                 </xsl:if>
             </xsl:with-param>
             <xsl:with-param name="inheritedBibliographyP">
-                <xsl:if test="./bibliography/p">
+                <xsl:if test="$minimalConversion = 'false' and ./bibliography/p">
                     <xsl:for-each select="./bibliography/p">
                         <xsl:call-template name="bibref">
                             <xsl:with-param name="bibrefs" select="."/>
@@ -477,7 +477,7 @@
                 </xsl:if>
             </xsl:with-param>
             <xsl:with-param name="inheritedRelatedmaterial">
-                <xsl:if test="./relatedmaterial">
+                <xsl:if test="$minimalConversion = 'false' and ./relatedmaterial">
                     <xsl:apply-templates select="./relatedmaterial"/>
                 </xsl:if>
             </xsl:with-param>
@@ -500,7 +500,7 @@
 
         <xsl:variable name="updatedInheritedOriginations">
             <xsl:choose>
-                <xsl:when test="$inheritOrigination = 'true' and ./did/origination">
+                <xsl:when test="$minimalConversion = 'false' and $inheritOrigination = 'true' and ./did/origination">
                     <xsl:call-template name="creator">
                         <xsl:with-param name="originations" select="./did/origination"/>
                     </xsl:call-template>
@@ -536,7 +536,7 @@
         </xsl:variable>
         <xsl:variable name="updatedInheritedAltformavails">
             <xsl:choose>
-                <xsl:when test="$inheritElementsFromFileLevel and ./altformavail">
+                <xsl:when test="$minimalConversion = 'false' and $inheritElementsFromFileLevel and ./altformavail">
                     <xsl:call-template name="altformavail">
                         <xsl:with-param name="altformavails" select="./altformavail"/>
                     </xsl:call-template>
@@ -584,7 +584,7 @@
         </xsl:variable>
         <xsl:variable name="updatedInheritedBibref">
             <xsl:choose>
-                <xsl:when test="./bibliography/bibref">
+                <xsl:when test="$minimalConversion = 'false' and ./bibliography/bibref">
                     <xsl:for-each select="./bibliography/bibref">
                         <xsl:call-template name="bibref">
                             <xsl:with-param name="bibrefs" select="."/>
@@ -598,7 +598,7 @@
         </xsl:variable>
         <xsl:variable name="updatedInheritedBibliographyP">
             <xsl:choose>
-                <xsl:when test="./bibliography/p">
+                <xsl:when test="$minimalConversion = 'false' and ./bibliography/p">
                     <xsl:for-each select="./bibliography/p">
                         <xsl:call-template name="bibref">
                             <xsl:with-param name="bibrefs" select="."/>
@@ -612,7 +612,7 @@
         </xsl:variable>
         <xsl:variable name="updatedInheritedRelatedmaterial">
             <xsl:choose>
-                <xsl:when test="./relatedmaterial">
+                <xsl:when test="$minimalConversion = 'false' and ./relatedmaterial">
                     <xsl:apply-templates select="./relatedmaterial" />
                 </xsl:when>
                 <xsl:otherwise>
@@ -942,7 +942,7 @@
                 </dc:identifier>
             </xsl:if>
             <xsl:choose>
-                <xsl:when test="$currentnode/did/origination">
+                <xsl:when test="$minimalConversion = 'false' and $currentnode/did/origination">
                     <xsl:call-template name="creator">
                         <xsl:with-param name="originations" select="$currentnode/did/origination"/>
                     </xsl:call-template>
@@ -951,7 +951,7 @@
                     <xsl:copy-of select="$inheritedOriginations"/>
                 </xsl:when>
             </xsl:choose>
-            <xsl:if test="$currentnode/did/unitdate">
+            <xsl:if test="$minimalConversion = 'false' and $currentnode/did/unitdate">
                 <xsl:apply-templates select="$currentnode/did/unitdate"/>
             </xsl:if>
             <xsl:choose>
@@ -962,16 +962,16 @@
                     <xsl:copy-of select="$inheritedScopecontent" />
                 </xsl:when>
             </xsl:choose>
-            <xsl:if test="$currentnode/did/materialspec">
+            <xsl:if test="$minimalConversion = 'false' and $currentnode/did/materialspec">
                 <dc:format>
                     <xsl:value-of select="$currentnode/did/materialspec"/>
                 </dc:format>
             </xsl:if>
             <xsl:choose>
-                <xsl:when test="$currentnode/relatedmaterial">
+                <xsl:when test="$minimalConversion = 'false' and $currentnode/relatedmaterial">
                     <xsl:apply-templates select="$currentnode/relatedmaterial"/>
                 </xsl:when>
-                <xsl:when test="$inheritFromParent and fn:string-length($inheritedRelatedmaterial) > 0">
+                <xsl:when test="$minimalConversion = 'false' and $inheritFromParent = true() and fn:string-length($inheritedRelatedmaterial) > 0">
                     <xsl:copy-of select="$inheritedRelatedmaterial"/>
                 </xsl:when>
             </xsl:choose>
@@ -987,68 +987,68 @@
                     </xsl:otherwise>
                 </xsl:choose>
             </dc:type>
-            <xsl:if test="$currentnode/did/physdesc/physfacet">
+            <xsl:if test="$minimalConversion = 'false' and $currentnode/did/physdesc/physfacet">
                 <dc:format>
                     <xsl:value-of select="$currentnode/did/physdesc/physfacet"/>
                 </dc:format>
             </xsl:if>
-            <xsl:if test="$currentnode/did/physdesc/extent">
+            <xsl:if test="$minimalConversion = 'false' and $currentnode/did/physdesc/extent">
                 <dcterms:extent>
                     <xsl:value-of select="$currentnode/did/physdesc/extent"/>
                 </dcterms:extent>
             </xsl:if>
-            <xsl:if test="$currentnode/did/physdesc/dimensions">
+            <xsl:if test="$minimalConversion = 'false' and $currentnode/did/physdesc/dimensions">
                 <dcterms:extent>
                     <xsl:value-of select="$currentnode/did/physdesc/dimensions"/>
                 </dcterms:extent>
             </xsl:if>
             <xsl:choose>
-                <xsl:when test="$currentnode/otherfindaid">
+                <xsl:when test="$minimalConversion = 'false' and $currentnode/otherfindaid">
                     <xsl:apply-templates select="$currentnode/otherfindaid"/>
                 </xsl:when>
-                <xsl:when test="$inheritFromParent and $parentcnode/otherfindaid">
+                <xsl:when test="$minimalConversion = 'false' and $inheritFromParent and $parentcnode/otherfindaid">
                     <xsl:apply-templates select="$parentcnode/otherfindaid"/>
                 </xsl:when>
             </xsl:choose>
             <xsl:choose>
-                <xsl:when test="$currentnode/bibliography/bibref">
+                <xsl:when test="$minimalConversion = 'false' and $currentnode/bibliography/bibref">
                     <xsl:for-each select="$currentnode/bibliography/bibref">
                         <xsl:call-template name="bibref">
                             <xsl:with-param name="bibrefs" select="." />
                         </xsl:call-template>
                     </xsl:for-each>
                 </xsl:when>
-                <xsl:when test="$inheritFromParent and fn:string-length($inheritedBibref) > 0">
+                <xsl:when test="$minimalConversion = 'false' and $inheritFromParent and fn:string-length($inheritedBibref) > 0">
                     <xsl:copy-of select="$inheritedBibref"/>
                 </xsl:when>
             </xsl:choose>
             <xsl:choose>
-                <xsl:when test="$currentnode/bibliography/p">
+                <xsl:when test="$minimalConversion = 'false' and $currentnode/bibliography/p">
                     <xsl:for-each select="$currentnode/bibliography/p">
                         <xsl:call-template name="bibref">
                             <xsl:with-param name="bibrefs" select="." />
                         </xsl:call-template>
                     </xsl:for-each>
                 </xsl:when>
-                <xsl:when test="$inheritFromParent and fn:string-length($inheritedBibliographyP) > 0">
+                <xsl:when test="$minimalConversion = 'false' and $inheritFromParent and fn:string-length($inheritedBibliographyP) > 0">
                     <xsl:copy-of select="$inheritedBibliographyP"/>
                 </xsl:when>
             </xsl:choose>
 
             <!-- custodhist -->
             <xsl:choose>
-                <xsl:when test="$currentnode/custodhist">
+                <xsl:when test="$minimalConversion = 'false' and $currentnode/custodhist">
                     <xsl:call-template name="custodhist">
                         <xsl:with-param name="custodhists" select="$currentnode/custodhist" />
                     </xsl:call-template>
                 </xsl:when>
                 <xsl:when test="$inheritFromParent">
                     <xsl:choose>
-                        <xsl:when test="$parentcnode/custodhist">
+                        <xsl:when test="$minimalConversion = 'false' and $parentcnode/custodhist">
                             <xsl:call-template name="custodhistOnlyOne">
                                 <xsl:with-param name="custodhists" select="$parentcnode/custodhist"/>
                             </xsl:call-template>
-                            <xsl:if test="(count($parentcnode/custodhist/head) > 1) or (count($parentcnode/custodhist/p) > 1) and $inheritElementsFromFileLevel = 'true'">
+                            <xsl:if test="$minimalConversion = 'false' and (count($parentcnode/custodhist/head) > 1) or (count($parentcnode/custodhist/p) > 1) and $inheritElementsFromFileLevel = 'true'">
                                 <dcterms:provenance>
                                     <xsl:attribute name="rdf:resource">
                                         <xsl:choose>
@@ -1073,12 +1073,12 @@
             </xsl:choose>
 
             <xsl:choose>
-                <xsl:when test="$currentnode/altformavail">
+                <xsl:when test="$minimalConversion = 'false' and $currentnode/altformavail">
                     <xsl:call-template name="altformavail">
                         <xsl:with-param name="altformavails" select="$currentnode/altformavail"/>
                     </xsl:call-template>
                 </xsl:when>
-                <xsl:when test="$inheritElementsFromFileLevel and fn:string-length($inheritedAltformavails) > 0">
+                <xsl:when test="$minimalConversion = 'false' and $inheritElementsFromFileLevel and fn:string-length($inheritedAltformavails) > 0">
                     <xsl:copy-of select="$inheritedAltformavails"/>
                 </xsl:when>
             </xsl:choose>
