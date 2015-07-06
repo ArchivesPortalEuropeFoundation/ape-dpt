@@ -775,9 +775,6 @@
                     <xsl:apply-templates select="/ead/archdesc/did/repository[1]"/>
                 </xsl:otherwise>
             </xsl:choose>
-            <edm:provider>
-                <xsl:value-of select="$europeana_provider"/>
-            </edm:provider>
             <xsl:choose>
                 <xsl:when test="$hasDao">
                     <xsl:if test="count(did/dao[not(@xlink:title='thumbnail')]) > 1">
@@ -838,6 +835,9 @@
                             </xsl:choose>
                         </xsl:otherwise>
                     </xsl:choose>
+                    <edm:provider>
+                        <xsl:value-of select="$europeana_provider"/>
+                    </edm:provider>
                     <xsl:choose>
                         <xsl:when test="$useExistingRightsInfo='true'">
                             <xsl:choose>
@@ -922,6 +922,9 @@
                     <edm:object>
                         <xsl:attribute name="rdf:resource" select="concat('http://', $host, '/Portal-theme/images/ape/icons/dao_types/europeana/text.png')" />
                     </edm:object>
+                    <edm:provider>
+                        <xsl:value-of select="$europeana_provider"/>
+                    </edm:provider>
                     <edm:rights rdf:resource="http://creativecommons.org/publicdomain/zero/1.0/"/>
                 </xsl:otherwise>
             </xsl:choose>
