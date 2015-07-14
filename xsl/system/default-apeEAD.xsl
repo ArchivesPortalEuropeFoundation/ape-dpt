@@ -1993,11 +1993,17 @@
         </p>
     </xsl:template>
 
-    <xsl:template match="userestrict/note | accessrestrict/note"
-                  mode="copy nested level">
-        <p>
-            <xsl:apply-templates mode="#current"/>
-        </p>
+    <xsl:template match="userestrict/note | accessrestrict/note" mode="copy nested level">
+        <xsl:choose>
+            <xsl:when test="child::*[local-name()='p']">
+                <xsl:apply-templates mode="#current"/>
+            </xsl:when>
+            <xsl:otherwise>
+                <p>
+                    <xsl:apply-templates mode="#current"/>
+                </p>
+            </xsl:otherwise>
+        </xsl:choose>
     </xsl:template>
 
     <xsl:template match="userestrict/address" mode="copy nested level">
