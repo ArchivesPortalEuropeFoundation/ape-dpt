@@ -65,18 +65,6 @@
     <xsl:param name="repository_code"/>
     <xsl:param name="xml_type_name"/>
     
-    <!-- Params for special character replacement -->
-    <func:params xml:space="preserve">
-        <pattern>
-            <old> </old>
-            <new>+</new>
-        </pattern>
-        <pattern>
-            <old>/</old>
-            <new>_SLASH_</new>
-        </pattern>
-    </func:params>
-    
     <!-- Variables -->
     <xsl:variable name="id_base"
         select="concat('http://', $host, '/ead-display/-/ead/pl/aicode/' , $repository_code, '/type/', $xml_type_name, '/id/')"/>
@@ -638,8 +626,8 @@
             </xsl:call-template>
         </xsl:variable>
 
-        <!-- CREATE LEVEL INFORMATION IF C OR DESCENDANT OF C HAS DAO -->
-        <xsl:if test="descendant::did/dao">
+        <!-- CREATE LEVEL INFORMATION IF C OR DESCENDANT OF C HAS DAO WITH NON-EMPTY LINK-->
+        <xsl:if test="descendant::did/dao[normalize-space(@xlink:href) != '']">
             <xsl:call-template name="addRecord">
                 <xsl:with-param name="currentnode" select="."/>
                 <xsl:with-param name="inheritedOriginations" select="$updatedInheritedOriginations"/>
@@ -742,7 +730,7 @@
                 </xsl:otherwise>
             </xsl:choose>
         </xsl:variable>
-        <xsl:variable name="hasDao" select="if(did/dao) then true() else false()" />
+        <xsl:variable name="hasDao" select="if(did/dao[normalize-space(@xlink:href) != '']) then true() else false()" />
         
         <!-- for each dao found, create a set of classes -->
         <!--<xsl:for-each select="did/dao[not(@xlink:title=&quot;thumbnail&quot;)]">-->
@@ -772,7 +760,9 @@
                     </xsl:choose>
                 </xsl:when>
                 <xsl:otherwise>
-                    <xsl:apply-templates select="/ead/archdesc/did/repository[1]"/>
+                    <edm:dataProvider>
+                        <xsl:value-of select="$europeana_dataprovider"/>
+                    </edm:dataProvider>
                 </xsl:otherwise>
             </xsl:choose>
             <xsl:choose>
@@ -1464,7 +1454,7 @@
         </edm:ProvidedCHO>
         <xsl:choose>
             <xsl:when test="$hasDao">
-                <xsl:apply-templates select="did/dao" mode="webResource">
+                <xsl:apply-templates select="did/dao[normalize-space(@xlink:href) != '']" mode="webResource">
                     <xsl:with-param name="inheritedRightsInfo" select="$inheritedRightsInfo"/>
                 </xsl:apply-templates>
             </xsl:when>
