@@ -329,10 +329,25 @@ public class ConvertAndValidateActionListener extends ApexActionListener {
                         dataPreparationToolGUI.getAPEPanel().getApeTabbedPane().setValidationErrorText(uniqueFileInstance.getValidationErrors());
                         if(uniqueFileInstance.isValid()) {
                             dataPreparationToolGUI.getAPEPanel().getApeTabbedPane().checkFlashingTab(APETabbedPane.TAB_VALIDATION, Utilities.FLASHING_GREEN_COLOR);
-                            dataPreparationToolGUI.getAPEPanel().getApeTabbedPane().enableConversionEdmBtn();
-                            dataPreparationToolGUI.getAPEPanel().getApeTabbedPane().enableValidationReportBtn();
+                            if(uniqueFileInstance.getValidationSchema().equals(Utilities.getXsdObjectFromPath(Xsd_enum.XSD_APE_SCHEMA.getPath()))){
+                                dataPreparationToolGUI.getAPEPanel().getApeTabbedPane().enableConversionEdmBtn();
+                                dataPreparationToolGUI.getAPEPanel().getApeTabbedPane().enableValidationReportBtn();
+                            } else if(uniqueFileInstance.getValidationSchema().equals(Utilities.getXsdObjectFromPath(Xsd_enum.XSD_EAD_SCHEMA.getPath())) ||
+                                    uniqueFileInstance.getValidationSchema().equals(Utilities.getXsdObjectFromPath(Xsd_enum.DTD_EAD_2002.getPath())) ||
+                                    uniqueFileInstance.getValidationSchema().equals(Utilities.getXsdObjectFromPath(Xsd_enum.XSD_EAC_SCHEMA.getPath()))){
+                                dataPreparationToolGUI.getAPEPanel().getApeTabbedPane().enableConversionBtn();
+                                // dataPreparationToolGUI.getAPEPanel().getApeTabbedPane().enableValidationReportBtn();
+                            }
                         } else {
                             dataPreparationToolGUI.getAPEPanel().getApeTabbedPane().checkFlashingTab(APETabbedPane.TAB_VALIDATION, Utilities.FLASHING_RED_COLOR);
+                            if(uniqueFileInstance.getValidationSchema().equals(Utilities.getXsdObjectFromPath(Xsd_enum.XSD_APE_SCHEMA.getPath())) ||
+                                    uniqueFileInstance.getValidationSchema().equals(Utilities.getXsdObjectFromPath(Xsd_enum.XSD_EAD_SCHEMA.getPath())) ||
+                                    uniqueFileInstance.getValidationSchema().equals(Utilities.getXsdObjectFromPath(Xsd_enum.DTD_EAD_2002.getPath())) ||
+                                    uniqueFileInstance.getValidationSchema().equals(Utilities.getXsdObjectFromPath(Xsd_enum.XSD_APE_EAC_SCHEMA.getPath())) ||
+                                    uniqueFileInstance.getValidationSchema().equals(Utilities.getXsdObjectFromPath(Xsd_enum.XSD_EAC_SCHEMA.getPath()))){
+                                dataPreparationToolGUI.enableConversionBtns();
+                                dataPreparationToolGUI.getAPEPanel().getApeTabbedPane().enableConvertAndValidateBtn();
+                            }
                         }
                     }
                     dataPreparationToolGUI.enableMessageReportBtns();

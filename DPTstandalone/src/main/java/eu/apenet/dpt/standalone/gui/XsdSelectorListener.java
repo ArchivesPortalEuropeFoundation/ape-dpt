@@ -49,10 +49,13 @@ public class XsdSelectorListener implements ActionListener {
                 } else if (fileInstance.getValidationSchema().equals(Utilities.getXsdObjectFromPath(Xsd_enum.XSD_EAC_SCHEMA.getPath())) || fileInstance.getValidationSchema().equals(Utilities.getXsdObjectFromPath(Xsd_enum.XSD_APE_EAC_SCHEMA.getPath()))) {
                     fileInstance.setFileType(FileInstance.FileType.EAC_CPF);
                 }
-                if (!fileInstance.isValid()){
-                    dataPreparationToolGUI.enableValidationBtns();
-                }
+//                if (!fileInstance.isValid()){
+//                    dataPreparationToolGUI.enableValidationBtns();
+//                }
             }
+            dataPreparationToolGUI.enableConversionBtns();
+            dataPreparationToolGUI.enableValidationBtns();
+            dataPreparationToolGUI.getAPEPanel().getApeTabbedPane().enableConvertAndValidateBtn();
         }
     }
 }

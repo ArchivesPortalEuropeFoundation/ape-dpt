@@ -59,6 +59,8 @@ public class XsltSelectorListener implements ActionListener {
                         fileInstance.setValidationSchema(Utilities.getXsdObjectFromPath(Xsd_enum.XSD_APE_EAC_SCHEMA.getPath()));
                 }
                 dataPreparationToolGUI.refreshButtons(fileInstance, Utilities.XSD_GROUP);
+                dataPreparationToolGUI.enableConversionBtns();
+                dataPreparationToolGUI.getAPEPanel().getApeTabbedPane().enableConvertAndValidateBtn();
             }
         }
     }
