@@ -1765,17 +1765,25 @@
     <xsl:template name="bibref">
         <xsl:param name="bibrefs"/>
         <xsl:variable name="bibrefContent">
-            <xsl:apply-templates select="$bibrefs/text() | $bibrefs/name | $bibrefs/title" />
+            <xsl:apply-templates select="$bibrefs/text() | $bibrefs/name | $bibrefs/title | $bibrefs/extref" />
         </xsl:variable>
         <dcterms:isReferencedBy>
-            <xsl:if test="$bibrefs/@xlink:href">
-                <xsl:attribute name="rdf:resource" select="$bibrefs/@xlink:href"/>
-            </xsl:if>
-            <xsl:if test="$bibrefs/extref/@xlink:href">
-                <xsl:attribute name="rdf:resource" select="$bibrefs/extref/@xlink:href"/>
-            </xsl:if>
             <xsl:value-of select="fn:replace(normalize-space($bibrefContent), '[\n\t\r]', '')"/>
         </dcterms:isReferencedBy>
+        <xsl:if test="$bibrefs/@xlink:href">
+            <xsl:for-each select="$bibrefs">
+                <dcterms:isReferencedBy>
+                    <xsl:attribute name="rdf:resource" select="./@xlink:href"/>
+                </dcterms:isReferencedBy>
+            </xsl:for-each>
+        </xsl:if>
+        <xsl:if test="$bibrefs/extref/@xlink:href">
+            <xsl:for-each select="$bibrefs/extref">
+                <dcterms:isReferencedBy>
+                    <xsl:attribute name="rdf:resource" select="./@xlink:href"/>
+                </dcterms:isReferencedBy>
+            </xsl:for-each>
+        </xsl:if>
     </xsl:template>
     <xsl:template match="did/dao[not(@xlink:title='thumbnail')]" mode="firstLink">
         <xsl:choose>
