@@ -73,6 +73,7 @@ public class TransformationTool {
             processor.registerExtensionFunction(linkFormatChecker);
             processor.registerExtensionFunction(resourcebundleExtension);
             processor.registerExtensionFunction(new Base64Encoder());
+            processor.registerExtensionFunction(new DePortalIdCalculator());
 
             XsltCompiler compiler = processor.newXsltCompiler();
 
@@ -153,6 +154,7 @@ public class TransformationTool {
             processor.registerExtensionFunction(linkFormatChecker);
             processor.registerExtensionFunction(resourcebundleExtension);
             processor.registerExtensionFunction(new Base64Encoder());
+            processor.registerExtensionFunction(new DePortalIdCalculator());
 
             if(extensionFunctionCall == null || extensionFunctionCall instanceof CounterCLevelCall) {
                 if(extensionFunctionCall == null)
