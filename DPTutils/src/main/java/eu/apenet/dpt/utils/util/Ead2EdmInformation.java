@@ -310,18 +310,7 @@ public class Ead2EdmInformation {
                         break;
                     }
                 }
-                if (this.inC) {
-                    if (repository == null || repository.equals("")) {
-                        if (this.daoRetrieved == false) {
-                            repository = textBetween.substring(0, index);
-                            this.daoRetrieved = true;
-                        }
-                    }
-                }
                 if (this.inArchdesc && !this.inC) {
-                    //if (archdescRepository == null || archdescRepository.equals("")) {
-                    //    archdescRepository = textBetween.substring(0, index);
-                    //}
                     archdescValue.append(textBetween.substring(0, index));
                     archdescRepository = archdescValue.toString();
                 }

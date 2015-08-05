@@ -95,7 +95,7 @@
                 <xsl:attribute name="rdf:resource" select="concat('providedCHO_', .)"/>
             </edm:aggregatedCHO>
             <xsl:choose>
-                <xsl:when test="$useExistingRepository='true'">
+                <xsl:when test="$useExistingRepository=&quot;true&quot;">
                     <xsl:choose>
                         <xsl:when test="/ead/archdesc/did/repository[1]">
                             <xsl:apply-templates select="/ead/archdesc/did/repository[1]"/>
@@ -166,7 +166,7 @@
                         <xsl:when test="/ead/archdesc/did/langmaterial">
                             <xsl:call-template name="language">
                                 <xsl:with-param name="langmaterials"
-                                    select="ead/archdesc/did/langmaterial"/>
+                                    select="/ead/archdesc/did/langmaterial"/>
                             </xsl:call-template>
                         </xsl:when>
                         <xsl:otherwise>
@@ -742,12 +742,12 @@
                 <xsl:attribute name="rdf:resource" select="concat('providedCHO_', normalize-space(/ead/eadheader/eadid), '_', $identifier)"/>
             </edm:aggregatedCHO>
             <xsl:choose>
-                <xsl:when test="$useExistingRepository='true'">
+                <xsl:when test="$useExistingRepository=&quot;true&quot;">
                     <xsl:choose>
                         <xsl:when test="$currentnode/did/repository[1]">
                             <xsl:apply-templates select="$currentnode/did/repository[1]"/>
                         </xsl:when>
-                        <xsl:when test="$inheritedRepository">
+                        <xsl:when test="$inheritedRepository != ''">
                             <xsl:call-template name="repository">
                                 <xsl:with-param name="repository" select="$inheritedRepository"/>
                             </xsl:call-template>
@@ -1155,7 +1155,7 @@
             </xsl:if>
 
             <xsl:choose>
-                <xsl:when test="$useExistingLanguage='true'">
+                <xsl:when test="$useExistingLanguage=&quot;true&quot;">
                     <xsl:choose>
                         <xsl:when test="$currentnode/did/langmaterial">
                             <xsl:call-template name="language">
@@ -1163,7 +1163,7 @@
                                     select="$currentnode/did/langmaterial"/>
                             </xsl:call-template>
                         </xsl:when>
-                        <xsl:when test="$inheritLanguage = 'true'">
+                        <xsl:when test="$inheritLanguage = &quot;true&quot;">
                             <xsl:choose>
                                 <xsl:when test="fn:string-length($inheritedLanguages) > 0">
                                     <xsl:copy-of select="$inheritedLanguages"/>
@@ -1216,7 +1216,7 @@
                 </xsl:when>
                 <xsl:otherwise>
                     <xsl:choose>
-                        <xsl:when test="$inheritLanguage = 'true'">
+                        <!--<xsl:when test="$inheritLanguage = 'true'">
                             <xsl:choose>
                                 <xsl:when test="fn:string-length($inheritedLanguages) > 0">
                                     <xsl:copy-of select="$inheritedLanguages"/>
@@ -1229,7 +1229,7 @@
                                     </xsl:for-each>
                                 </xsl:otherwise>
                             </xsl:choose>
-                        </xsl:when>
+                        </xsl:when>-->
                         <xsl:when test="$inheritFromParent">
                             <xsl:choose>
                                 <xsl:when test="$parentcnode/did/langmaterial">
@@ -1248,7 +1248,7 @@
                             </xsl:choose>
                         </xsl:when>
                         <xsl:otherwise>
-                            <xsl:choose>
+                            <!--<xsl:choose>
                                 <xsl:when test="fn:string-length($language) > 0">
                                     <xsl:for-each select="tokenize($language,' ')">
                                         <dc:language>
@@ -1256,15 +1256,15 @@
                                         </dc:language>
                                     </xsl:for-each>
                                 </xsl:when>
-                                <xsl:otherwise>
+                                <xsl:otherwise>-->
                                     <xsl:for-each select="tokenize($language,' ')">
                                         <dc:language>
                                             <xsl:value-of select="."/>
                                         </dc:language>
                                     </xsl:for-each>
                                 </xsl:otherwise>
-                            </xsl:choose>
-                        </xsl:otherwise>
+                            <!--</xsl:choose>
+                        </xsl:otherwise>-->
                     </xsl:choose>
                 </xsl:otherwise>
             </xsl:choose>

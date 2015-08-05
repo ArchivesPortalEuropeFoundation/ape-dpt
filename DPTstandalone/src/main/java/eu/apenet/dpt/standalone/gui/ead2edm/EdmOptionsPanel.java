@@ -844,6 +844,7 @@ public class EdmOptionsPanel extends JPanel {
 
         config.setInheritLanguage(false);
         if (this.batch) {
+            config.setInheritLanguage(true);
             StringBuilder result = new StringBuilder();
             Object[] languageValues = languageList.getSelectedValues();
             for (int i = 0; i < languageValues.length; i++) {
