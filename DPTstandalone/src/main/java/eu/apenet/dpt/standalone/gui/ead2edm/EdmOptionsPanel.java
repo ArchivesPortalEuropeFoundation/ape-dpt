@@ -549,9 +549,18 @@ public class EdmOptionsPanel extends JPanel {
         JPanel mainLicensePanel = new JPanel(new BorderLayout());
         panel = new JPanel(new GridLayout(5, 2));
         licenseGroup = new ButtonGroup();
+        String currentRightsInformation;
+        if (batch) {
+            currentRightsInformation = "";
+        } else {
+            currentRightsInformation = ead2EdmInformation.getArchdescLicenceType();
+        }
 
         panel.add(new Label(labels.getString("ese.specifyLicense") + ":" + "*"));
         radioButton = new JRadioButton(this.labels.getString("edm.panel.label.cc"));
+        if (currentRightsInformation.equals(EdmOptionsPanel.CREATIVE_COMMONS)) {
+            radioButton.setSelected(true);
+        }
         radioButton.setActionCommand(CREATIVE_COMMONS);
         radioButton.addActionListener(new ChangePanelActionListener(extraLicenseCardLayoutPanel));
         licenseGroup.add(radioButton);
@@ -559,6 +568,9 @@ public class EdmOptionsPanel extends JPanel {
 
         panel.add(new JLabel(""));
         radioButton = new JRadioButton(this.labels.getString("edm.panel.label.cc.zero"));
+        if (currentRightsInformation.equals(EdmOptionsPanel.CREATIVE_COMMONS_CC0)) {
+            radioButton.setSelected(true);
+        }
         radioButton.setActionCommand(CREATIVE_COMMONS_CC0);
         radioButton.addActionListener(new ChangePanelActionListener(extraLicenseCardLayoutPanel));
         licenseGroup.add(radioButton);
@@ -566,6 +578,9 @@ public class EdmOptionsPanel extends JPanel {
 
         panel.add(new JLabel(""));
         radioButton = new JRadioButton(this.labels.getString("edm.panel.label.cc.public"));
+        if (currentRightsInformation.equals(EdmOptionsPanel.CREATIVE_COMMONS_PUBLIC_DOMAIN_MARK)) {
+            radioButton.setSelected(true);
+        }
         radioButton.setActionCommand(CREATIVE_COMMONS_PUBLIC_DOMAIN_MARK);
         radioButton.addActionListener(new ChangePanelActionListener(extraLicenseCardLayoutPanel));
         licenseGroup.add(radioButton);
@@ -573,6 +588,9 @@ public class EdmOptionsPanel extends JPanel {
 
         panel.add(new JLabel(""));
         radioButton = new JRadioButton(this.labels.getString("edm.panel.label.europeana.rights"));
+        if (currentRightsInformation.equals(EdmOptionsPanel.EUROPEANA_RIGHTS_STATEMENTS)) {
+            radioButton.setSelected(true);
+        }
         radioButton.setActionCommand(EUROPEANA_RIGHTS_STATEMENTS);
         radioButton.addActionListener(new ChangePanelActionListener(extraLicenseCardLayoutPanel));
         licenseGroup.add(radioButton);
@@ -580,6 +598,9 @@ public class EdmOptionsPanel extends JPanel {
 
         panel.add(new JLabel(""));
         radioButton = new JRadioButton(this.labels.getString("edm.panel.label.out.copyright"));
+        if (currentRightsInformation.equals(EdmOptionsPanel.OUT_OF_COPYRIGHT)) {
+            radioButton.setSelected(true);
+        }
         radioButton.setActionCommand(EdmOptionsPanel.OUT_OF_COPYRIGHT);
         radioButton.addActionListener(new ChangePanelActionListener(extraLicenseCardLayoutPanel));
         licenseGroup.add(radioButton);
@@ -587,6 +608,22 @@ public class EdmOptionsPanel extends JPanel {
         mainLicensePanel.add(panel, BorderLayout.WEST);
 
         mainLicensePanel.add(extraLicenseCardLayoutPanel, BorderLayout.EAST);
+        if (currentRightsInformation.equals(EdmOptionsPanel.EUROPEANA_RIGHTS_STATEMENTS) || currentRightsInformation.equals(EdmOptionsPanel.CREATIVE_COMMONS)) {
+            cardLayout.show(extraLicenseCardLayoutPanel, currentRightsInformation);
+            if (currentRightsInformation.equals(EdmOptionsPanel.EUROPEANA_RIGHTS_STATEMENTS)) {
+                if (ead2EdmInformation.getArchdescLicenceLink().endsWith("rr-f/")) {
+                    europeanaRightsComboBox.setSelectedIndex(0);
+                } else if (ead2EdmInformation.getArchdescLicenceLink().endsWith("orphan-work-eu/")) {
+                    europeanaRightsComboBox.setSelectedIndex(1);
+                } else if (ead2EdmInformation.getArchdescLicenceLink().endsWith("rr-p/")) {
+                    europeanaRightsComboBox.setSelectedIndex(2);
+                } else {
+                    europeanaRightsComboBox.setSelectedIndex(3);
+                }
+            } else if (currentRightsInformation.equals(EdmOptionsPanel.CREATIVE_COMMONS)) {
+                // get respective items from EAD2EDMInfo and set panel items appropriately
+            }
+        }
         mainLicensePanel.setBorder(BLACK_LINE);
         formPanel.add(mainLicensePanel);
 
@@ -705,10 +742,9 @@ public class EdmOptionsPanel extends JPanel {
                     FileInstance fileInstance = entry.getValue();
                     fileInstance.setEdm(false);
                 }
+                dataPreparationToolGUI.enableEdmConversionBtn();
                 if (batch) {
                     dataPreparationToolGUI.enableAllBatchBtns();
-                } else {
-                    dataPreparationToolGUI.enableEdmConversionBtn();
                 }
                 dataPreparationToolGUI.enableRadioButtons();
                 close();
@@ -881,6 +917,7 @@ public class EdmOptionsPanel extends JPanel {
 
         config.setInheritRightsInfo(false);
         if (this.batch) {
+            config.setInheritRightsInfo(true);
             Enumeration<AbstractButton> licenseEnumeration = licenseGroup.getElements();
             while (licenseEnumeration.hasMoreElements()) {
                 AbstractButton btn = licenseEnumeration.nextElement();
@@ -1015,7 +1052,6 @@ public class EdmOptionsPanel extends JPanel {
 //                }
 //            }
 //        }
-
         if (landingPageButtonGroup == null) {
             throw new Exception("landingPage is null");
         } else {
@@ -1099,6 +1135,24 @@ public class EdmOptionsPanel extends JPanel {
             throw new Exception("licenseGroup is null");
         } else if (!isRadioBtnChecked(licenseGroup)) {
             throw new Exception("licenseGroup is not checked");
+        }
+
+        if (!this.batch) {
+            if (this.inheritLicenseGroup.getSelection().getActionCommand().equalsIgnoreCase(EdmOptionsPanel.PROVIDE)) {
+                if (this == null) {
+                    throw new Exception("Provided language is null");
+                } else if (!((LanguageBoxPanel) this.languageBoxPanel).hasSelections()) {
+                    throw new Exception("No provided language selected");
+                }
+            } else if (this.inheritLicenseGroup.getSelection().getActionCommand().equalsIgnoreCase(EdmOptionsPanel.NO)) {
+                if (!this.ead2EdmInformation.isLicensesOnAllCLevels()) {
+                    throw new Exception("At least one DAO does not have an associated licence. Please inherit the licence or provide it manually");
+                }
+            } else if (this.inheritLicenseGroup.getSelection().getActionCommand().equalsIgnoreCase(EdmOptionsPanel.YES)) {
+                if (!this.ead2EdmInformation.isLicensesOnParent()) {
+                    throw new Exception("At least one higher level does not have an associated licence");
+                }
+            }
         }
     }
 
@@ -1282,7 +1336,9 @@ public class EdmOptionsPanel extends JPanel {
                         progressFrame.stop();
                     } catch (Exception ex1) {
                         if (ex1.getMessage().equals("At least one DAO does not have an associated language. Please inherit the language or provide it manually")) {
-                            JOptionPane.showMessageDialog(parent, "At least one DAO does not have an associated language. Please inherit the language or provide it manually.", "Error", JOptionPane.WARNING_MESSAGE);
+                            JOptionPane.showMessageDialog(parent, ex1.getMessage(), "Error", JOptionPane.WARNING_MESSAGE);
+                        } else if (ex1.getMessage().equals("At least one DAO does not have an associated licence. Please inherit the licence or provide it manually")){
+                            JOptionPane.showMessageDialog(parent, ex1.getMessage(), "Error", JOptionPane.WARNING_MESSAGE);
                         } else {
                             DataPreparationToolGUI.createErrorOrWarningPanel(ex1, false, labels.getString("ese.formNotFilledError"), parent);
                         }

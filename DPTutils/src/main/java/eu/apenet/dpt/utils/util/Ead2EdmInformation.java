@@ -35,10 +35,14 @@ public class Ead2EdmInformation {
     private TreeSet<String> languagesCodes;	// List of languages exist inside "<langusage>" element.
     private TreeSet<String> alternativeLanguages;	// List of languages exist inside "<archdesc><langmaterial>" element.
     private boolean languagesOnParent;	// Check the existence of languages in "<archdesc>" element.
-    private boolean languagesOnAllCLevels;	// Check the existence of languages in all "<c>" element.
+    private boolean languagesOnAllCLevels;	// Check the existence of languages in all "<c>" elements.
     private String userestrictDaoLicenceType;
     private String userestrictDaoLicenceLink;
     private TreeSet<String> userestrictDaoLicenceText;
+    private boolean licensesOnParent;	// Check the existence of licenses in "<archdesc>" element.
+    private boolean licensesOnAllCLevels;	// Check the existence of licenses in all "<c>" elements.
+    private String archdescLicenceLink;
+    private String archdescLicenceType;
     private String archdescUnittitle;
     private String titlestmtTitleproper;
 
@@ -77,13 +81,29 @@ public class Ead2EdmInformation {
     public String getUserestrictDaoLicenceType() {
         return userestrictDaoLicenceType;
     }
-    
+
     public String getUserestrictDaoLicenceLink() {
         return userestrictDaoLicenceLink;
     }
 
     public TreeSet<String> getUserestrictDaoLicenceText() {
         return this.userestrictDaoLicenceText;
+    }
+
+    public boolean isLicensesOnParent() {
+        return licensesOnParent;
+    }
+
+    public boolean isLicensesOnAllCLevels() {
+        return licensesOnAllCLevels;
+    }
+
+    public String getArchdescLicenceLink() {
+        return archdescLicenceLink;
+    }
+
+    public String getArchdescLicenceType() {
+        return archdescLicenceType;
     }
 
     public String getArchdescUnittitle() {
@@ -107,6 +127,10 @@ public class Ead2EdmInformation {
         this.userestrictDaoLicenceType = "";
         this.userestrictDaoLicenceLink = "";
         this.userestrictDaoLicenceText = new TreeSet<String>();
+        this.licensesOnParent = false;
+        this.licensesOnAllCLevels = true;
+        this.archdescLicenceLink = "";
+        this.archdescLicenceType = "";
         this.archdescUnittitle = "";
         this.titlestmtTitleproper = "";
         this.determineDaoInformation(fileToRead);
@@ -124,6 +148,10 @@ public class Ead2EdmInformation {
         this.userestrictDaoLicenceType = "";
         this.userestrictDaoLicenceLink = "";
         this.userestrictDaoLicenceText = new TreeSet<String>();
+        this.licensesOnParent = false;
+        this.licensesOnAllCLevels = true;
+        this.archdescLicenceLink = "";
+        this.archdescLicenceType = "";
         this.archdescUnittitle = "";
         this.titlestmtTitleproper = "";
     }
@@ -148,11 +176,11 @@ public class Ead2EdmInformation {
         private static final String CREATIVECOMMONS = "creativecommons";
         private static final String EUROPEANA = "europeana";
         private static final String OUT_OF_COPYRIGHT = "outofcopyright";
-        private static final String CREATIVECOMMONS_CPDM_TEXT = "Creative Commons Public Domain Mark";
-        private static final String CREATIVECOMMONS_CC0_TEXT = "Creative Commons CC0";
-        private static final String CREATIVECOMMONS_TEXT = "Creative Commons";
-        private static final String EUROPEANA_TEXT = "Europeana rights statements";
-        private static final String OUT_OF_COPYRIGHT_TEXT = "Out of copyright - non commercial re-use";
+        private static final String CREATIVECOMMONS_CPDM_LINK = "http://creativecommons.org/publicdomain/mark/";
+        private static final String CREATIVECOMMONS_CC0_LINK = "http://creativecommons.org/publicdomain/zero/";
+        private static final String CREATIVECOMMONS_LINK = "http://creativecommons.org/licenses/";
+        private static final String EUROPEANA_LINK = "http://www.europeana.eu/rights/";
+        private static final String OUT_OF_COPYRIGHT_LINK = "http://www.europeana.eu/portal/rights/out-of-copyright";
 
         private boolean inLangusage = false;
         private boolean inArchdesc = false;
@@ -167,11 +195,11 @@ public class Ead2EdmInformation {
         private boolean inFiledesc = false;
         private boolean inTitlestmt = false;
         private boolean inTitleproper = false;
-        
+
         //flags for first occuring type and DAO in XML
         private boolean typeRetrieved = false;
         private boolean daoRetrieved = false;
-        private boolean metsLicenceRetrieved = false;
+        private boolean metsLicenceRetrieved;
         private boolean languageOnCLevel;
 
         @Override
@@ -184,6 +212,7 @@ public class Ead2EdmInformation {
                 this.inArchdesc = true;
             } else if (qName.equals("c")) {
                 this.inC = true;
+                this.metsLicenceRetrieved = false;
             } else if (qName.equals("did")) {
                 this.inDid = true;
             } else if (qName.equals("dao")) {
@@ -226,19 +255,23 @@ public class Ead2EdmInformation {
                 this.inExtref = true;
                 if (this.metsLicenceRetrieved == false && this.inUserestrictDao) {
                     userestrictDaoLicenceLink = atts.getValue("xlink:href");
-                    String title = atts.getValue("xlink:title");
-                    if (CREATIVECOMMONS_TEXT.equals(title)) {
+                    if (userestrictDaoLicenceLink.startsWith(CREATIVECOMMONS_LINK)) {
                         userestrictDaoLicenceType = CREATIVECOMMONS;
-                    } else if (CREATIVECOMMONS_CC0_TEXT.equals(title)) {
+                    } else if (userestrictDaoLicenceLink.startsWith(CREATIVECOMMONS_CC0_LINK)) {
                         userestrictDaoLicenceType = CREATIVECOMMONS_CC0;
-                    } else if (CREATIVECOMMONS_CPDM_TEXT.equals(title)) {
+                    } else if (userestrictDaoLicenceLink.startsWith(CREATIVECOMMONS_CPDM_LINK)) {
                         userestrictDaoLicenceType = CREATIVECOMMONS_CPDM;
-                    } else if (EUROPEANA_TEXT.equals(title)) {
+                    } else if (userestrictDaoLicenceLink.startsWith(EUROPEANA_LINK)) {
                         userestrictDaoLicenceType = EUROPEANA;
-                    } else if (OUT_OF_COPYRIGHT_TEXT.equals(title)) {
+                    } else if (userestrictDaoLicenceLink.startsWith(OUT_OF_COPYRIGHT_LINK)) {
                         userestrictDaoLicenceType = OUT_OF_COPYRIGHT;
                     } else {
                         userestrictDaoLicenceType = "";
+                    }
+                    if (this.inArchdesc && !this.inC && userestrictDaoLicenceType != "") {
+                        archdescLicenceLink = userestrictDaoLicenceLink;
+                        archdescLicenceType = userestrictDaoLicenceType;
+                        licensesOnParent = true;
                     }
                 }
             } else if (qName.equals("unittitle")) {
@@ -249,7 +282,7 @@ public class Ead2EdmInformation {
                 this.inTitlestmt = true;
             } else if (qName.equals("titleproper")) {
                 this.inTitleproper = true;
-            } 
+            }
         }
 
         @Override
@@ -261,6 +294,10 @@ public class Ead2EdmInformation {
                 this.inArchdesc = false;
             } else if (qName.equals("c")) {
                 this.inC = false;
+                if (!this.metsLicenceRetrieved){
+                    licensesOnAllCLevels = false;
+                    LOG.debug("No license present in c level.");
+                }
             } else if (qName.equals("did")) {
                 this.inDid = false;
 
@@ -323,10 +360,10 @@ public class Ead2EdmInformation {
                     }
                 }
             }
-            if (this.inArchdesc && !this.inC && this.inDid && this.inUnittitle){
+            if (this.inArchdesc && !this.inC && this.inDid && this.inUnittitle) {
                 archdescUnittitle = new String(ch, start, length);
             }
-            if (this.inTitlestmt && this.inTitleproper){
+            if (this.inTitlestmt && this.inTitleproper) {
                 titlestmtTitleproper = new String(ch, start, length);
             }
         }
