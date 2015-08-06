@@ -233,36 +233,40 @@
                     </xsl:choose>
                 </xsl:otherwise>
             </xsl:choose>
-            <dc:title>
+            
                 <xsl:choose>
                     <xsl:when test="$useArchUnittitle = &quot;true&quot;">
                         <xsl:choose>
                             <xsl:when test="/ead/archdesc/did/unittitle">
-                                <xsl:value-of select="/ead/archdesc/did/unittitle"/>
+                                <dc:title><xsl:value-of select="/ead/archdesc/did/unittitle"/></dc:title>
                             </xsl:when>
                             <xsl:when test="/ead/eadheader/filedesc/titlestmt/titleproper != ''">
-                                <xsl:value-of select="/ead/eadheader/filedesc/titlestmt/titleproper"/>
+                                <dc:title><xsl:value-of select="/ead/eadheader/filedesc/titlestmt/titleproper"/></dc:title>
                             </xsl:when>
                             <xsl:otherwise>
-                                <xsl:text>No title</xsl:text>
+                                <xsl:if test="not(/ead/archdesc/scopecontent[@encodinganalog='summary'])">
+                                    <dc:title><xsl:text>No title</xsl:text></dc:title>
+                                </xsl:if>
                             </xsl:otherwise>
                         </xsl:choose>
                     </xsl:when>
                     <xsl:otherwise>
                         <xsl:choose>
                             <xsl:when test="/ead/eadheader/filedesc/titlestmt/titleproper != ''">
-                                <xsl:value-of select="/ead/eadheader/filedesc/titlestmt/titleproper"/>
+                                <dc:title><xsl:value-of select="/ead/eadheader/filedesc/titlestmt/titleproper"/></dc:title>
                             </xsl:when>
                             <xsl:when test="/ead/archdesc/did/unittitle">
-                                <xsl:value-of select="/ead/archdesc/did/unittitle"/>
+                                <dc:title><xsl:value-of select="/ead/archdesc/did/unittitle"/></dc:title>
                             </xsl:when>
                             <xsl:otherwise>
-                                <xsl:text>No title</xsl:text>
+                                <xsl:if test="not(/ead/archdesc/scopecontent[@encodinganalog='summary'])">
+                                    <dc:title><xsl:text>No title</xsl:text></dc:title>
+                                </xsl:if>
                             </xsl:otherwise>
                         </xsl:choose>
                     </xsl:otherwise>
                 </xsl:choose>
-            </dc:title>
+            
             <!--<xsl:if test="not(/ead/archdesc/did/unittitle) and not(/ead/archdesc/did/dao[not(@xlink:title='thumbnail')]/@xlink:title and /ead/archdesc/did/dao[not(@xlink:title='thumbnail')]/@title and /ead/archdesc/scopecontent)">
                 <dc:title>
                     <xsl:text>No title</xsl:text>
@@ -1127,7 +1131,7 @@
                     </dc:title>
                 </xsl:when>
                 <xsl:otherwise>
-                    <xsl:if test="not(did/dao[not(@xlink:title='thumbnail')]/@xlink:title and did/dao[not(@xlink:title='thumbnail')]/@title and scopecontent)">
+                    <xsl:if test="not($currentnode/did/dao[not(@xlink:title='thumbnail')]/@xlink:title and $currentnode/did/dao[not(@xlink:title='thumbnail')]/@title and $currentnode/scopecontent[@encodinganalog='summary'])">
                         <dc:title>
                             <xsl:text>No title</xsl:text>
                         </dc:title>
