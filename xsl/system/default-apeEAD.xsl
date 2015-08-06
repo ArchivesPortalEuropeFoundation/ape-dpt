@@ -403,14 +403,14 @@
                     </xsl:otherwise>
                 </xsl:choose>
             </xsl:if>
-            <xsl:if test="not(@url) and normalize-space($url)"><!-- todo -->
+            <xsl:if test="not(@url) and normalize-space($url)">
                 <xsl:variable name="daolink" select="ape:checkLink($url)"/>
                 <xsl:if test="normalize-space($daolink) != ''">
                     <xsl:attribute name="url" select="$daolink"/>
                 </xsl:if>
             </xsl:if>
             <xsl:if test="@url">
-                <xsl:variable name="daolink" select="ape:checkLink(@url)"/><!-- todo -->
+                <xsl:variable name="daolink" select="ape:checkLink(@url)"/>
                 <xsl:if test="normalize-space($daolink) != ''">
                     <xsl:attribute name="url" select="$daolink"/>
                 </xsl:if>
@@ -426,10 +426,10 @@
         </eadid>
     </xsl:template>
 
-    <xsl:function name="none:addDaolink"><!-- todo -->
+    <xsl:template name="none:addDaolink">
         <xsl:param name="valueToCheck" as="xs:anyAtomicType*"/>
         <xsl:param name="title" as="xs:anyAtomicType*"/>
-        <xsl:param name="context" as="xs:anyAtomicType*"/>
+        <xsl:param name="context" />
         <xsl:variable name="daolink" select="ape:checkLink($valueToCheck)"/>
         <xsl:if test="normalize-space($daolink) != ''">
             <dao>
@@ -443,7 +443,7 @@
                 </xsl:if>
             </dao>
         </xsl:if>
-    </xsl:function>
+    </xsl:template>
 
     <!-- filedesc -->
     <xsl:template match="filedesc" mode="copy">
@@ -1419,14 +1419,11 @@
 
     <!-- copy archdesc/did/dao -->
     <xsl:template match="archdesc/did/dao" mode="copy">
-        <dao>
-            <xsl:if test="@*:href!=''">
-                <xsl:attribute name="xlink:href" select="ape:checkLink(@*:href)"/>
-            </xsl:if>
-            <xsl:if test="@*:title!=''">
-                <xsl:attribute name="xlink:title" select="@*:title"/>
-            </xsl:if>
-        </dao>
+        <xsl:call-template name="none:addDaolink">
+            <xsl:with-param name="context" select="."/>
+            <xsl:with-param name="valueToCheck" select="@*:href"/>
+            <xsl:with-param name="title" select="@*:title"/>
+        </xsl:call-template>
     </xsl:template>
 
     <xsl:template match="physdesc" mode="copy level">
@@ -1680,14 +1677,11 @@
 
     <!--bioghist/dao ONLY on archdesc level!-->
     <xsl:template match="bioghist[not(ancestor::dsc)]/dao" mode="copy nested">
-        <dao>
-            <xsl:if test="@*:href!=''">
-                <xsl:attribute name="xlink:href" select="ape:checkLink(@*:href)"/>
-            </xsl:if>
-            <xsl:if test="@*:title!=''">
-                <xsl:attribute name="xlink:title" select="@*:title"/>
-            </xsl:if>
-        </dao>
+        <xsl:call-template name="none:addDaolink">
+            <xsl:with-param name="context" select="."/>
+            <xsl:with-param name="valueToCheck" select="@*:href"/>
+            <xsl:with-param name="title" select="@*:title"/>
+        </xsl:call-template>
     </xsl:template>
 
     <!-- appraisal -->
@@ -2289,14 +2283,11 @@
     </xsl:template>
 
     <xsl:template match="scopecontent/dao" mode="copy nested level">
-        <dao>
-            <xsl:if test="@*:href!=''">
-                <xsl:attribute name="xlink:href" select="ape:checkLink(@*:href)"/>
-            </xsl:if>
-            <xsl:if test="@*:title!=''">
-                <xsl:attribute name="xlink:title" select="@*:title"/>
-            </xsl:if>
-        </dao>
+        <xsl:call-template name="none:addDaolink">
+            <xsl:with-param name="context" select="."/>
+            <xsl:with-param name="valueToCheck" select="@*:href"/>
+            <xsl:with-param name="title" select="@*:title"/>
+        </xsl:call-template>
     </xsl:template>
 
     <xsl:template match="scopecontent/address" mode="copy nested level">
@@ -3021,42 +3012,14 @@
             </xsl:if>
             <xsl:apply-templates select="node()[not(local-name() = 'abstract') and not(local-name() = 'scopecontent') and not(local-name() = 'bioghist')]" mode="#current"/>
             <xsl:for-each select="following-sibling::dao">
-                <!--<dao xlink:href="{@href}"/>-->
                 <xsl:call-template name="dao"/>
             </xsl:for-each>
             <xsl:for-each select="../daogrp/daoloc | ../odd/daogrp/daoloc | ../daogrp/dao">
-                <dao>
-                    <xsl:if test="@href!=''">
-                        <xsl:attribute name="xlink:href" select="ape:checkLink(@href)"/>
-                    </xsl:if>
-                    <xsl:choose>
-                        <xsl:when test="@xlink:href!=''">
-                            <xsl:attribute name="xlink:href" select="ape:checkLink(@xlink:href)"/>
-                        </xsl:when>
-                        <xsl:otherwise>
-                            <xsl:if test="@*:href!=''">
-                                <xsl:attribute name="xlink:href" select="ape:checkLink(@*:href)"/>
-                            </xsl:if>
-                        </xsl:otherwise>
-                    </xsl:choose>
-                    <xsl:if test="@title!=''">
-                        <xsl:attribute name="xlink:title" select="@title"/>
-                    </xsl:if>
-                    <xsl:if test="@*:title!=''">
-                        <xsl:attribute name="xlink:title" select="@*:title"/>
-                    </xsl:if>
-                    <xsl:if
-                        test="not(@title) and not(@*:title) and ../daodesc[@label='reference']/p/text()">
-                        <xsl:attribute name="xlink:title"
-                                       select="../daodesc[@label='reference']/p/text()"/>
-                    </xsl:if>
-                    <xsl:if
-                        test="not(@title) and not(@*:title) and .[@label='reference']/daodesc/p/text()">
-                        <xsl:attribute name="xlink:title"
-                                       select=".[@label='reference']/daodesc/p/text()"/>
-                    </xsl:if>
-                    <xsl:call-template name="daoRoleType"/>
-                </dao>
+                <xsl:call-template name="none:addDaolink">
+                    <xsl:with-param name="context" select="."/>
+                    <xsl:with-param name="valueToCheck" select="@*:href"/>
+                    <xsl:with-param name="title" select="@*:title | ../daodesc[@label='reference']/p/text() | .[@label='reference']/daodesc/p/text()"/>
+                </xsl:call-template>
             </xsl:for-each>
             <xsl:for-each select="following-sibling::note">
                 <xsl:call-template name="note"/>
@@ -3141,33 +3104,11 @@
         mode="level"/>
 
     <xsl:template match="did/dao" name="dao" mode="level">
-        <dao>
-            <xsl:choose>
-                <xsl:when test="(@xlink:href != '') and (@href != '')">
-                    <xsl:attribute name="xlink:href" select="ape:checkLink(@xlink:href)"/>
-                </xsl:when>
-                <xsl:when test="@*:href != ''">
-                    <xsl:attribute name="xlink:href" select="ape:checkLink(@*:href)"/>
-                </xsl:when>
-                <xsl:otherwise>
-                    <xsl:if test="@href != ''">
-                        <xsl:attribute name="xlink:href" select="ape:checkLink(@href)"/>
-                    </xsl:if>
-                </xsl:otherwise>
-            </xsl:choose>
-            <xsl:if test="@title!=''">
-                <xsl:attribute name="xlink:title" select="@title"/>
-            </xsl:if>
-            <xsl:if test="@*:title!=''">
-                <xsl:attribute name="xlink:title" select="@*:title"/>
-            </xsl:if>
-            <xsl:if test="not(@title) and not(@*:title) and daodesc/p/text()">
-                <xsl:attribute name="xlink:title" select="daodesc/p/text()"/>
-            </xsl:if>
-            <xsl:if test="none:isNotThumbnail(.)">
-                <xsl:call-template name="daoDigitalType"/>
-            </xsl:if>
-        </dao>
+        <xsl:call-template name="none:addDaolink">
+            <xsl:with-param name="context" select="."/>
+            <xsl:with-param name="valueToCheck" select="@*:href"/>
+            <xsl:with-param name="title" select="@*:title"/>
+        </xsl:call-template>
     </xsl:template>
 
     <xsl:function name="none:isNotThumbnail" as="xs:boolean">
@@ -3209,20 +3150,18 @@
     <xsl:template match="did/daogrp/daoloc | did/daoloc" mode="level">
         <xsl:choose>
             <xsl:when test="@actuate='user'">
-                <dao>
-                    <xsl:attribute name="xlink:href" select="./text()"/>
-                </dao>
+                <xsl:call-template name="none:addDaolink">
+                    <xsl:with-param name="context" select="."/>
+                    <xsl:with-param name="valueToCheck" select="./text()"/>
+                    <xsl:with-param name="title" select="''"/>
+                </xsl:call-template>
             </xsl:when>
             <xsl:when test="@label='reference' or @label='thumb' or @linktype='locator'">
-                <dao>
-                    <xsl:if test="@href!=''">
-                        <xsl:attribute name="xlink:href" select="ape:checkLink(@href)"/>
-                    </xsl:if>
-                    <xsl:if test="@*:href!=''">
-                        <xsl:attribute name="xlink:href" select="ape:checkLink(@*:href)"/>
-                    </xsl:if>
-                    <xsl:call-template name="daoRoleType"/>
-                </dao>
+                <xsl:call-template name="none:addDaolink">
+                    <xsl:with-param name="context" select="."/>
+                    <xsl:with-param name="valueToCheck" select="@*:href"/>
+                    <xsl:with-param name="title" select="''"/>
+                </xsl:call-template>
             </xsl:when>
             <xsl:when test="@xlink:href">
                 <xsl:choose>
@@ -3231,24 +3170,13 @@
                         <xsl:call-template name="excludeElement"/>
                     </xsl:when>
                     <xsl:otherwise>
-                        <dao>
-                            <xsl:attribute name="xlink:href" select="ape:checkLink(@xlink:href)"/>
-                            <xsl:if test="@xlink:title">
-                                <xsl:attribute name="xlink:title" select="@xlink:title"/>
-                            </xsl:if>
-                            <xsl:call-template name="daoRoleType"/>
-                        </dao>
+                        <xsl:call-template name="none:addDaolink">
+                            <xsl:with-param name="context" select="."/>
+                            <xsl:with-param name="valueToCheck" select="@*:href"/>
+                            <xsl:with-param name="title" select="@*:title"/>
+                        </xsl:call-template>
                     </xsl:otherwise>
                 </xsl:choose>
-            </xsl:when>
-            <xsl:when test="@href">
-                <dao>
-                    <xsl:attribute name="xlink:href" select="ape:checkLink(@href)"/>
-                    <xsl:if test="@title">
-                        <xsl:attribute name="xlink:title" select="@title"/>
-                    </xsl:if>
-                    <xsl:call-template name="daoRoleType"/>
-                </dao>
             </xsl:when>
             <xsl:otherwise>
                 <xsl:call-template name="excludeElement"/>
