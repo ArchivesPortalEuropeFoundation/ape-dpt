@@ -546,7 +546,7 @@
         </xsl:variable>
         <xsl:variable name="updatedInheritedAltformavails">
             <xsl:choose>
-                <xsl:when test="$minimalConversion = 'false' and $inheritElementsFromFileLevel and ./altformavail">
+                <xsl:when test="$minimalConversion = 'false' and $inheritElementsFromFileLevel = 'true' and ./altformavail">
                     <xsl:call-template name="altformavail">
                         <xsl:with-param name="altformavails" select="./altformavail"/>
                     </xsl:call-template>
@@ -558,7 +558,7 @@
         </xsl:variable>
         <xsl:variable name="updatedInheritedControlaccesses">
             <xsl:choose>
-                <xsl:when test="$inheritElementsFromFileLevel and ./controlaccess">
+                <xsl:when test="$inheritElementsFromFileLevel = 'true' and ./controlaccess">
                     <xsl:call-template name="controlaccess">
                         <xsl:with-param name="controlaccesses" select="./controlaccess"/>
                     </xsl:call-template>
@@ -582,7 +582,7 @@
         </xsl:variable>
         <xsl:variable name="updatedInheritedRightsInfo">
             <xsl:choose>
-                <xsl:when test="$inheritRightsInfo = &quot;true&quot; and ./userestrict[@type='dao']">
+                <xsl:when test="$inheritRightsInfo = 'true' and ./userestrict[@type='dao']">
                     <xsl:call-template name="createRights">
                         <xsl:with-param name="rights" select="./userestrict[@type='dao']"/>
                     </xsl:call-template>
@@ -993,7 +993,7 @@
                         <xsl:value-of select="$currentnode/did/physdesc/genreform"/>
                     </xsl:when>
                     <xsl:otherwise>
-                        <xsl:if test="not($currentnode/did/physdesc/genreform and $currentnode/controlaccess and ($inheritElementsFromFileLevel and fn:string-length($inheritedControlaccesses) > 0))">
+                        <xsl:if test="not($currentnode/did/physdesc/genreform and $currentnode/controlaccess and ($inheritElementsFromFileLevel = 'true' and fn:string-length($inheritedControlaccesses) > 0))">
                             <xsl:value-of select="'Archival material'"/>
                         </xsl:if>
                     </xsl:otherwise>
@@ -1090,7 +1090,7 @@
                         <xsl:with-param name="altformavails" select="$currentnode/altformavail"/>
                     </xsl:call-template>
                 </xsl:when>
-                <xsl:when test="$minimalConversion = 'false' and $inheritElementsFromFileLevel and fn:string-length($inheritedAltformavails) > 0">
+                <xsl:when test="$minimalConversion = 'false' and $inheritElementsFromFileLevel = 'true' and fn:string-length($inheritedAltformavails) > 0">
                     <xsl:copy-of select="$inheritedAltformavails"/>
                 </xsl:when>
             </xsl:choose>
@@ -1102,14 +1102,14 @@
                     </xsl:call-template>
                 </xsl:when>
                 <xsl:otherwise>
-                    <xsl:if test="$inheritElementsFromFileLevel and fn:string-length($inheritedControlaccesses) > 0">
+                    <xsl:if test="$inheritElementsFromFileLevel = 'true' and fn:string-length($inheritedControlaccesses) > 0">
                         <xsl:copy-of select="$inheritedControlaccesses"/>
                     </xsl:if>
                 </xsl:otherwise>
             </xsl:choose>
 
             <xsl:choose>
-                <xsl:when test="$inheritUnittitle and $currentnode/did/unittitle and $parentcnode/did/unittitle and not($currentnode/c) and $hasDao">
+                <xsl:when test="$inheritUnittitle = &quot;true&quot; and $currentnode/did/unittitle and $parentcnode/did/unittitle and not($currentnode/c) and $hasDao">
                     <dc:title>
                         <xsl:value-of select="$parentcnode/did/unittitle[1]"/> >> <xsl:value-of select="$currentnode/did/unittitle"/>
                     </dc:title>
