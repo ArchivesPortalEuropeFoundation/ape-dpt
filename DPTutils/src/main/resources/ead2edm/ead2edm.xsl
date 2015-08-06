@@ -233,9 +233,6 @@
                     </xsl:choose>
                 </xsl:otherwise>
             </xsl:choose>
-            <dc:subject>
-                <xsl:apply-templates select="/ead/archdesc/@level"/>
-            </dc:subject>
             <dc:title>
                 <xsl:choose>
                     <xsl:when test="$useArchUnittitle = &quot;true&quot;">
