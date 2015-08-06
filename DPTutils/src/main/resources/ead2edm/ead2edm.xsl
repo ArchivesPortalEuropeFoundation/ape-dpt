@@ -305,16 +305,20 @@
                     <xsl:with-param name="altformavails" select="/ead/archdesc/altformavail"/>
                 </xsl:call-template>
             </xsl:if>
-            <dc:type>
                 <xsl:choose>
                     <xsl:when test="/ead/archdesc/did/physdesc/genreform">
-                        <xsl:value-of select="/ead/archdesc/did/physdesc/genreform"/>
+                        <dc:type>
+                            <xsl:value-of select="/ead/archdesc/did/physdesc/genreform"/>
+                        </dc:type>
                     </xsl:when>
                     <xsl:otherwise>
-                        <xsl:value-of select="'Archival material'"/>
+                        <xsl:if test="not(/ead/archdesc/controlaccess[not(genreform|head|p|title)])">
+                            <dc:type>
+                                <xsl:value-of select="'Archival material'"/>
+                            </dc:type>
+                        </xsl:if>
                     </xsl:otherwise>
                 </xsl:choose>
-            </dc:type>
             <xsl:if test="$minimalConversion = 'false' and /ead/archdesc/did/physdesc/physfacet">
                 <dc:format>
                     <xsl:value-of select="/ead/archdesc/did/physdesc/physfacet"/>
@@ -987,18 +991,21 @@
                     <xsl:copy-of select="$inheritedRelatedmaterial"/>
                 </xsl:when>
             </xsl:choose>
-            <dc:type>
-                <xsl:choose>
-                    <xsl:when test="$currentnode/did/physdesc/genreform">
+            <xsl:choose>
+                <xsl:when test="$currentnode/did/physdesc/genreform">
+                    <dc:type>
                         <xsl:value-of select="$currentnode/did/physdesc/genreform"/>
-                    </xsl:when>
-                    <xsl:otherwise>
-                        <xsl:if test="not($currentnode/did/physdesc/genreform and $currentnode/controlaccess and ($inheritElementsFromFileLevel = 'true' and fn:string-length($inheritedControlaccesses) > 0))">
+                    </dc:type>
+                </xsl:when>
+                <xsl:otherwise>
+                    <xsl:if test="not($currentnode/controlaccess[not(genreform|head|p|title)] and ($inheritElementsFromFileLevel = 'true' and fn:string-length($inheritedControlaccesses) > 0))">
+                        <dc:type>
                             <xsl:value-of select="'Archival material'"/>
-                        </xsl:if>
-                    </xsl:otherwise>
-                </xsl:choose>
-            </dc:type>
+                        </dc:type>
+                    </xsl:if>
+                </xsl:otherwise>
+            </xsl:choose>
+            
             <xsl:if test="$minimalConversion = 'false' and $currentnode/did/physdesc/physfacet">
                 <dc:format>
                     <xsl:value-of select="$currentnode/did/physdesc/physfacet"/>
