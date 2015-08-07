@@ -905,10 +905,10 @@
                                     <xsl:choose>
                                         <xsl:when test="$landingPage = 'ape'">
                                             <xsl:choose>
-                                                <xsl:when test="$idSource = 'unitid' and did/unitid and $isFirstUnitid = 'true'">
+                                                <xsl:when test="$idSource = 'unitid' and $currentnode/did/unitid[@type='call number'][1] and $isFirstUnitid = 'true'">
                                                     <xsl:variable name="unitidEncoded">
                                                         <xsl:call-template name="simpleReplace">
-                                                            <xsl:with-param name="input" select="normalize-space(did/unitid)"></xsl:with-param>
+                                                            <xsl:with-param name="input" select="normalize-space($currentnode/did/unitid[@type='call number'][1])"></xsl:with-param>
                                                         </xsl:call-template>
                                                     </xsl:variable>
                                                     <xsl:value-of select="concat($id_base, $eadidEncoded, '/unitid/', $unitidEncoded)"/>
@@ -1502,10 +1502,10 @@
                                 <xsl:choose>
                                     <xsl:when test="$landingPage = 'ape'">
                                         <xsl:choose>
-                                            <xsl:when test="$idSource = 'unitid' and did/unitid and $isFirstUnitid = 'true'">
+                                            <xsl:when test="$idSource = 'unitid' and did/unitid[@type='call number'][1] and $isFirstUnitid = 'true'">
                                                 <xsl:variable name="unitidEncoded">
                                                     <xsl:call-template name="simpleReplace">
-                                                        <xsl:with-param name="input" select="normalize-space(did/unitid)"></xsl:with-param>
+                                                        <xsl:with-param name="input" select="normalize-space(did/unitid[@type='call number'][1])"></xsl:with-param>
                                                     </xsl:call-template>
                                                 </xsl:variable>
                                                 <xsl:value-of select="concat($id_base, $eadidEncoded, '/unitid/', $unitidEncoded)"/>
