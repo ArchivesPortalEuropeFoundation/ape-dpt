@@ -12,19 +12,18 @@ import net.sf.saxon.expr.XPathContext;
 import net.sf.saxon.lib.ExtensionFunctionCall;
 import net.sf.saxon.lib.ExtensionFunctionDefinition;
 import net.sf.saxon.om.Sequence;
-import net.sf.saxon.om.SequenceIterator;
 import net.sf.saxon.om.StructuredQName;
 import net.sf.saxon.trans.XPathException;
-import net.sf.saxon.tree.iter.SingletonIterator;
 import net.sf.saxon.value.SequenceType;
 import net.sf.saxon.value.StringValue;
+import org.apache.log4j.Logger;
 
 /**
  *
  * @author papp
  */
 public class LinkFormatChecker extends ExtensionFunctionDefinition {
-
+    private static final Logger LOG = Logger.getLogger(LinkFormatChecker.class);
     private static final StructuredQName FUNCTION_NAME = new StructuredQName("ape", "http://www.archivesportaleurope.net/functions", "checkLink");
     private static final Pattern URL_PATTERN = Pattern.compile("^(http|https|ftp)\\://[a-zA-Z0-9\\-\\.]+\\.[a-zA-Z]{2,3}(:[a-zA-Z0-9]*)?/?([a-zA-Z0-9\\-\\._\\?\\,\\'/\\\\\\+&amp;%\\$\\:#\\=~\\[\\]\\(\\)@;!])*$");
 
@@ -54,6 +53,8 @@ public class LinkFormatChecker extends ExtensionFunctionDefinition {
     public class LinkFormatCheckerCall extends ExtensionFunctionCall {
         @Override
         public Sequence call(XPathContext xPathContext, Sequence[] sequences) throws XPathException {
+            if(sequences[0].head() == null)
+                return StringValue.EMPTY_STRING;
             String out = normalizeLink(sequences[0].head().getStringValue());
             return StringValue.makeStringValue(out);
         }
