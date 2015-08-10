@@ -275,7 +275,7 @@
             <xsl:if test="$minimalConversion = 'false' and /ead/archdesc/relatedmaterial">
                 <xsl:apply-templates select="/ead/archdesc/relatedmaterial"/>
             </xsl:if>
-            <xsl:if test="/ead/archdesc/custodhist">
+            <xsl:if test="$minimalConversion = 'false' and /ead/archdesc/custodhist">
                 <xsl:call-template name="custodhist">
                     <xsl:with-param name="custodhists" select="/ead/archdesc/custodhist" />
                 </xsl:call-template>
@@ -377,7 +377,7 @@
                     </xsl:if>
                 </xsl:for-each>
             </xsl:if>
-            <xsl:if test="/ead/archdesc/did/unitdate">
+            <xsl:if test="$minimalConversion = 'false' and /ead/archdesc/did/unitdate">
                 <dcterms:temporal>
                     <xsl:value-of select="/ead/archdesc/did/unitdate"/>
                 </dcterms:temporal>
