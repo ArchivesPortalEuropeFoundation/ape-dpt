@@ -267,11 +267,6 @@
                     </xsl:otherwise>
                 </xsl:choose>
             
-            <!--<xsl:if test="not(/ead/archdesc/did/unittitle) and not(/ead/archdesc/did/dao[not(@xlink:title='thumbnail')]/@xlink:title and /ead/archdesc/did/dao[not(@xlink:title='thumbnail')]/@title and /ead/archdesc/scopecontent)">
-                <dc:title>
-                    <xsl:text>No title</xsl:text>
-                </dc:title>
-            </xsl:if>-->
             <xsl:if test="$minimalConversion = 'false' and /ead/archdesc/relatedmaterial">
                 <xsl:apply-templates select="/ead/archdesc/relatedmaterial"/>
             </xsl:if>
@@ -1131,7 +1126,7 @@
                     </dc:title>
                 </xsl:when>
                 <xsl:otherwise>
-                    <xsl:if test="not($currentnode/did/dao[not(@xlink:title='thumbnail')]/@xlink:title and $currentnode/did/dao[not(@xlink:title='thumbnail')]/@title and $currentnode/scopecontent[@encodinganalog='summary'])">
+                    <xsl:if test="not($currentnode/scopecontent) and $inheritedScopecontent = ''">
                         <dc:title>
                             <xsl:text>No title</xsl:text>
                         </dc:title>
