@@ -304,20 +304,17 @@
                     <xsl:with-param name="altformavails" select="/ead/archdesc/altformavail"/>
                 </xsl:call-template>
             </xsl:if>
-                <xsl:choose>
-                    <xsl:when test="/ead/archdesc/did/physdesc/genreform">
-                        <dc:type>
-                            <xsl:value-of select="/ead/archdesc/did/physdesc/genreform"/>
-                        </dc:type>
-                    </xsl:when>
-                    <xsl:otherwise>
-                        <xsl:if test="not(/ead/archdesc/controlaccess[not(genreform|head|p|title)])">
-                            <dc:type>
-                                <xsl:value-of select="'Archival material'"/>
-                            </dc:type>
-                        </xsl:if>
-                    </xsl:otherwise>
-                </xsl:choose>
+            <xsl:choose>
+                <xsl:when test="/ead/archdesc/did/physdesc/genreform">
+                    <dc:type><xsl:value-of select="/ead/archdesc/did/physdesc/genreform"/></dc:type>
+                </xsl:when>
+                <xsl:otherwise>
+                    <!--<xsl:if test="not(/ead/archdesc/controlaccess) or not(/ead/archdesc/controlaccess/*/text())">-->
+                    <xsl:if test="not(/ead/archdesc/controlaccess/*/text())">
+                        <dc:type><xsl:value-of select="'Archival material'"/></dc:type>
+                    </xsl:if>
+                </xsl:otherwise>
+            </xsl:choose>
             <xsl:if test="$minimalConversion = 'false' and /ead/archdesc/did/physdesc/physfacet">
                 <dc:format>
                     <xsl:value-of select="/ead/archdesc/did/physdesc/physfacet"/>
@@ -997,11 +994,22 @@
                     </dc:type>
                 </xsl:when>
                 <xsl:otherwise>
-                    <xsl:if test="not($currentnode/controlaccess[not(genreform|head|p|title)] and ($inheritElementsFromFileLevel = 'true' and fn:string-length($inheritedControlaccesses) > 0))">
-                        <dc:type>
-                            <xsl:value-of select="'Archival material'"/>
-                        </dc:type>
-                    </xsl:if>
+                    <xsl:choose>
+                        <xsl:when test="$inheritElementsFromFileLevel='true'">
+                            <xsl:if test="not($currentnode/controlaccess/*/text()) and not($inheritedControlaccesses/*/text())">
+                                <dc:type>
+                                    <xsl:value-of select="'Archival material'"/>
+                                </dc:type>
+                            </xsl:if>
+                        </xsl:when>
+                        <xsl:otherwise>
+                            <xsl:if test="not($currentnode/controlaccess/*/text())">
+                                <dc:type>
+                                    <xsl:value-of select="'Archival material'"/>
+                                </dc:type>
+                            </xsl:if>
+                        </xsl:otherwise>
+                    </xsl:choose>
                 </xsl:otherwise>
             </xsl:choose>
             
@@ -1561,19 +1569,25 @@
     <xsl:template name="controlaccess">
         <xsl:param name="controlaccesses"/>
         <xsl:for-each select="$controlaccesses/corpname | $controlaccesses/persname | $controlaccesses/famname | $controlaccesses/name">
-            <dc:coverage>
-                <xsl:value-of select="."/>
-            </dc:coverage>
+            <xsl:if test="text() != ''">
+                <dc:coverage>
+                    <xsl:value-of select="."/>
+                </dc:coverage>
+            </xsl:if>
         </xsl:for-each>
         <xsl:for-each select="$controlaccesses/geogname">
-            <dcterms:spatial>
-                <xsl:value-of select="."/>
-            </dcterms:spatial>
+            <xsl:if test="text() != ''">
+                <dcterms:spatial>
+                    <xsl:value-of select="."/>
+                </dcterms:spatial>
+            </xsl:if>
         </xsl:for-each>
         <xsl:for-each select="$controlaccesses/function | $controlaccesses/occupation | $controlaccesses/subject">
-            <dc:subject>
-                <xsl:value-of select="."/>
-            </dc:subject>
+            <xsl:if test="text() != ''">
+                <dc:subject>
+                    <xsl:value-of select="."/>
+                </dc:subject>
+            </xsl:if>
         </xsl:for-each>
     </xsl:template>
     <xsl:template name="convertToEdmType">
