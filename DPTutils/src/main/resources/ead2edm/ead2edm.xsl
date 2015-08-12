@@ -343,7 +343,7 @@
                             <xsl:with-param name="currentCNode" select="."/>
                         </xsl:call-template>
                     </xsl:variable>
-                    <xsl:if test="descendant::dao">
+                    <xsl:if test="descendant::dao[normalize-space(@xlink:href) != '']">
                         <xsl:choose>
                             <xsl:when test="$idSource = 'unitid' and did/unitid[@type='call number'] and $isFirstUnitid = 'true'">
                                 <dcterms:hasPart>
@@ -1154,7 +1154,7 @@
                             <xsl:with-param name="currentCNode" select="."/>
                         </xsl:call-template>
                     </xsl:variable>
-                    <xsl:if test="descendant::dao">
+                    <xsl:if test="descendant::dao[normalize-space(@xlink:href) != '']">
                         <xsl:choose>
                             <xsl:when test="$idSource = 'unitid' and did/unitid[@type='call number'] and $isFirstUnitid = 'true'">
                                 <dcterms:hasPart>
@@ -1391,22 +1391,22 @@
                     </xsl:call-template>
                 </xsl:variable>
                 <xsl:choose>
-                    <xsl:when test="$idSource = 'unitid' and $currentnode/preceding-sibling::*[descendant::did/dao][1]/did/unitid[@type='call number'] and not(key('unitids', $currentnode/preceding-sibling::*[descendant::did/dao][1]/did/unitid[@type='call number'])[2])">
+                    <xsl:when test="$idSource = 'unitid' and $currentnode/preceding-sibling::*[descendant::did/dao[normalize-space(@xlink:href) != '']][1]/did/unitid[@type='call number'] and not(key('unitids', $currentnode/preceding-sibling::*[descendant::did/dao[normalize-space(@xlink:href) != '']][1]/did/unitid[@type='call number'])[2])">
                         <edm:isNextInSequence>
                             <xsl:attribute name="rdf:resource"
-                                select="concat('providedCHO_', normalize-space(/ead/eadheader/eadid), '_', normalize-space($currentnode/preceding-sibling::*[did/dao][1]/did/unitid[@type='call number'][1]))"
+                                select="concat('providedCHO_', normalize-space(/ead/eadheader/eadid), '_', normalize-space($currentnode/preceding-sibling::*[did/dao[normalize-space(@xlink:href) != '']][1]/did/unitid[@type='call number'][1]))"
                             />
                         </edm:isNextInSequence>
                     </xsl:when>
                     <xsl:when
-                        test="$idSource = 'cid' and $currentnode/preceding-sibling::*[descendant::did/dao][1]/@id">
+                        test="$idSource = 'cid' and $currentnode/preceding-sibling::*[descendant::did/dao[normalize-space(@xlink:href) != '']][1]/@id">
                         <edm:isNextInSequence>
                             <xsl:attribute name="rdf:resource"
-                                select="concat('providedCHO_', normalize-space(/ead/eadheader/eadid), '_', normalize-space($currentnode/preceding-sibling::*[did/dao][1]/@id))"
+                                select="concat('providedCHO_', normalize-space(/ead/eadheader/eadid), '_', normalize-space($currentnode/preceding-sibling::*[did/dao[normalize-space(@xlink:href) != '']][1]/@id))"
                             />
                         </edm:isNextInSequence>
                     </xsl:when>
-                    <xsl:when test="$currentnode/preceding-sibling::*[descendant::did/dao][1]">
+                    <xsl:when test="$currentnode/preceding-sibling::*[descendant::did/dao[normalize-space(@xlink:href) != '']][1]">
                         <edm:isNextInSequence>
                             <xsl:attribute name="rdf:resource">
                                 <xsl:call-template name="number">
@@ -1423,7 +1423,7 @@
                                         </xsl:choose>
                                     </xsl:with-param>
                                     <xsl:with-param name="node"
-                                        select="$currentnode/preceding-sibling::*[descendant::did/dao][1]"
+                                        select="$currentnode/preceding-sibling::*[descendant::did/dao[normalize-space(@xlink:href) != '']][1]"
                                     />
                                 </xsl:call-template>
                             </xsl:attribute>
