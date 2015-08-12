@@ -6,6 +6,8 @@ package eu.apenet.dpt.utils.util.extendxsl;
 
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Arrays;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import net.sf.saxon.expr.XPathContext;
@@ -26,6 +28,23 @@ public class LinkFormatChecker extends ExtensionFunctionDefinition {
     private static final Logger LOG = Logger.getLogger(LinkFormatChecker.class);
     private static final StructuredQName FUNCTION_NAME = new StructuredQName("ape", "http://www.archivesportaleurope.net/functions", "checkLink");
     private static final Pattern URL_PATTERN = Pattern.compile("^(http|https|ftp)\\://[a-zA-Z0-9\\-\\.]+\\.[a-zA-Z]{2,3}(:[a-zA-Z0-9]*)?/?([a-zA-Z0-9\\-\\._\\?\\,\\'/\\\\\\+&amp;%\\$\\:#\\=~\\[\\]\\(\\)@;!])*$");
+    private static final String[] FORBIDDEN_EXTENSIONS = {"bmp", "gif", "jpg", "png", "psd", "pspimage",
+            "tif", "tiff", "dds", "indd", "pct", "pict", "tga", "yuv", "ai", "eps", "ps", "svg", "3dm",
+            "3ds", "max", "obj", "doc", "docx", "log", "msg", "odt", "pages", "pdf", "rtf", "txt", "wpd",
+            "wps", "tex", "csv", "dat", "ged", "key", "pps", "ppt", "pptx", "vcf", "xlr", "xls", "xlsx",
+            "xml", "3g2", "3gp", "aif", "avi", "flv", "iff", "m3u", "m4a", "mid", "mov", "mp3", "mp4", "mpa",
+            "mpg", "ra", "rm", "swf", "wav", "wma", "wmv", "asf", "asx", "m4v", "srt", "7z", "cbr", "deb",
+            "gz", "pkg", "rar", "rpm", "tar", "zip", "zipx", "accdb", "db", "dbf", "mdb", "pdb", "sdf", "sql",
+            "asp", "aspx", "css", "htm", "html", "js", "jsp", "php", "rss", "xhtm", "xhtml", "apk", "app",
+            "bat", "exe", "jar", "bak", "tmp", "dot", "dotm", "dotx", "pot", "potm", "potx", "ots", "ott", "stc",
+            "stw", "xlt", "c", "class", "cpp", "cs", "dtd", "fla", "h", "java", "m", "p", "py", "rng", "sh",
+            "xsd", "xsl", "cur", "dll", "drv", "icns", "ico", "sys", ".cfg", "ini", "prf", "cgi", "gpx", "kml",
+            "kmz", "crx", "plugin", "fnt", "fon", "otf", "ttf"};
+    private static List<String> FORBIDDEN_EXTENSIONS_LIST;
+
+    static {
+        FORBIDDEN_EXTENSIONS_LIST = Arrays.asList(FORBIDDEN_EXTENSIONS);
+    }
 
     public LinkFormatChecker() {
     }
@@ -65,6 +84,16 @@ public class LinkFormatChecker extends ExtensionFunctionDefinition {
             URL currentUrl = new URL(link);
             link = currentUrl.toString();
         } catch (MalformedURLException ex) {
+            String part = link;
+            if(!part.contains("://")) {
+                if(part.contains("/"))
+                    part = part.substring(0, part.indexOf("/"));
+                if(part.contains("."))
+                    part = part.substring(part.lastIndexOf(".") + 1, part.length());
+                if(FORBIDDEN_EXTENSIONS_LIST.contains(part))
+                    return null;
+            }
+
             if (ex.getMessage().startsWith("no protocol") || ex.getMessage().startsWith("unknown protocol")) {
                 link = "http://" + link;
             }
