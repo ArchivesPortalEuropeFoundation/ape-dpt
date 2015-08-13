@@ -1394,7 +1394,7 @@
                     <xsl:when test="$idSource = 'unitid' and $currentnode/preceding-sibling::*[descendant::did/dao[normalize-space(@xlink:href) != '']][1]/did/unitid[@type='call number'] and not(key('unitids', $currentnode/preceding-sibling::*[descendant::did/dao[normalize-space(@xlink:href) != '']][1]/did/unitid[@type='call number'])[2])">
                         <edm:isNextInSequence>
                             <xsl:attribute name="rdf:resource"
-                                select="concat('providedCHO_', normalize-space(/ead/eadheader/eadid), '_', normalize-space($currentnode/preceding-sibling::*[did/dao[normalize-space(@xlink:href) != '']][1]/did/unitid[@type='call number'][1]))"
+                                select="concat('providedCHO_', normalize-space(/ead/eadheader/eadid), '_', normalize-space($currentnode/preceding-sibling::*[descendant::did/dao[normalize-space(@xlink:href) != '']][1]/did/unitid[@type='call number'][1]))"
                             />
                         </edm:isNextInSequence>
                     </xsl:when>
@@ -1402,7 +1402,7 @@
                         test="$idSource = 'cid' and $currentnode/preceding-sibling::*[descendant::did/dao[normalize-space(@xlink:href) != '']][1]/@id">
                         <edm:isNextInSequence>
                             <xsl:attribute name="rdf:resource"
-                                select="concat('providedCHO_', normalize-space(/ead/eadheader/eadid), '_', normalize-space($currentnode/preceding-sibling::*[did/dao[normalize-space(@xlink:href) != '']][1]/@id))"
+                                select="concat('providedCHO_', normalize-space(/ead/eadheader/eadid), '_', normalize-space($currentnode/preceding-sibling::*[descendant::did/dao[normalize-space(@xlink:href) != '']][1]/@id))"
                             />
                         </edm:isNextInSequence>
                     </xsl:when>
@@ -1418,7 +1418,7 @@
                                                 />
                                             </xsl:when>
                                             <xsl:otherwise>
-                                                <xsl:value-of select="concat('providedCHO_position_', normalize-space(/ead/eadheader/eadid), '_')"/>
+                                                <xsl:value-of select="concat('providedCHO_position_', normalize-space(/ead/eadheader/eadid), '_ERROR')"/>
                                             </xsl:otherwise>
                                         </xsl:choose>
                                     </xsl:with-param>
