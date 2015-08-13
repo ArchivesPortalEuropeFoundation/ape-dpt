@@ -32,10 +32,9 @@
     xmlns:europeana="http://www.europeana.eu/schemas/ese/"
     xmlns="http://www.europeana.eu/schemas/edm/"
     xmlns:fn="http://www.w3.org/2005/xpath-functions"
-    xmlns:func="http://www.archivesportaleurope.net/functions"
     xmlns:xlink="http://www.w3.org/1999/xlink"
     xpath-default-namespace="urn:isbn:1-931666-22-9"
-    exclude-result-prefixes="xlink fo fn func">
+    exclude-result-prefixes="xlink fo fn">
     <xsl:output method="xml" encoding="UTF-8" indent="yes"/>
 
     <!-- Params from Ead2Ese -->
@@ -68,7 +67,6 @@
     <!-- Variables -->
     <xsl:variable name="id_base"
         select="concat('http://', $host, '/ead-display/-/ead/pl/aicode/' , $repository_code, '/type/', $xml_type_name, '/id/')"/>
-    <xsl:variable name="vReps" select="document('')/*/func:params/*"/>
     <xsl:variable name="eadidEncoded">
         <xsl:call-template name="simpleReplace">
             <xsl:with-param name="input" select="normalize-space(/ead/eadheader/eadid)"/>
@@ -1623,7 +1621,17 @@
                     <xsl:when test="$useExistingRightsInfo">
                         <xsl:choose>
                             <xsl:when test="$rights[1]/p[1]/extref/@xlink:href">
-                                <xsl:value-of select="$rights[1]/p[1]/extref/@xlink:href"/>
+                                <xsl:variable name="currentRightsInfo">
+                                    <xsl:choose>
+                                        <xsl:when test="not(ends-with($rights[1]/p[1]/extref/@xlink:href, '/'))">
+                                            <xsl:value-of select="concat($rights[1]/p[1]/extref/@xlink:href, '/')"/>
+                                        </xsl:when>
+                                        <xsl:otherwise>
+                                            <xsl:value-of select="$rights[1]/p[1]/extref/@xlink:href"/>
+                                        </xsl:otherwise>
+                                    </xsl:choose>
+                                </xsl:variable>
+                                <xsl:value-of select="$currentRightsInfo"/>
                             </xsl:when>
                             <xsl:otherwise>
                                 <xsl:value-of select="$europeana_rights"/>
