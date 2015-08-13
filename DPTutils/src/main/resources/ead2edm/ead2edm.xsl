@@ -1799,10 +1799,13 @@
         <xsl:param name="input"/>
         <xsl:choose>
             <xsl:when test="contains($input, ' ') or contains($input, '/') or contains($input, ':') or contains($input, '*') or contains($input, '&amp;') or contains($input, ',')">
-                <xsl:value-of select="replace(replace(replace(replace(replace(replace($input, ' ', '+'), '&#47;', '_SLASH_'), ':', '_COLON_'), '\*', '_ASTERISK_'), '&amp;', '_AMP_'), ',', '_COMMA_')"/>
+                <xsl:variable name="replaceResult1" select="replace(replace(replace(replace(replace(replace(replace(replace($input, ' ', '+'), '&#47;', '_SLASH_'), ':', '_COLON_'), '\*', '_ASTERISK_'), '&amp;', '_AMP_'), ',', '_COMMA_'), '&lt;', '_LT_'), '&gt;', '_RT_')"/>
+                <xsl:variable name="replaceResult2" select="replace(replace(replace(replace(replace(replace(replace(replace($replaceResult1, '~', '_TILDE_'), '\[', '_LSQBRKT_'), '\]', '_RSQBRKT_'), '\+', '_PLUS_'), '%', '_PERCENT_'), '@', '_ATCHAR_'), '&quot;', '_QUOTE_'), '\$', '_DOLLAR_')"/>
+                <xsl:variable name="replaceResult3" select="replace(replace(replace(replace(replace(replace(replace(replace($replaceResult2, '=', '_COMP_'), '#', '_HASH_'), '\^', '_CFLEX_'), '\(', '_LRDBRKT_'), '\)', '_RRDBRKT_'), '!', '_EXCLMARK_'), ';', '_SEMICOLON_'), '\\', '_BSLASH_')"/>
+                <xsl:value-of select="$replaceResult3"/>
             </xsl:when>
             <xsl:otherwise>
-                <xsl:value-of select="$input"/>
+                <xsl:value-of select="input"/>
             </xsl:otherwise>
         </xsl:choose>
     </xsl:template>
