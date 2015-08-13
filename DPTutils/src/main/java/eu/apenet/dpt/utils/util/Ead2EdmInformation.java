@@ -43,6 +43,7 @@ public class Ead2EdmInformation {
     private boolean licensesOnAllCLevels;	// Check the existence of licenses in all "<c>" elements.
     private String archdescLicenceLink;
     private String archdescLicenceType;
+    private TreeSet<String> archdescLicenceText;
     private String archdescUnittitle;
     private String titlestmtTitleproper;
 
@@ -106,6 +107,10 @@ public class Ead2EdmInformation {
         return archdescLicenceType;
     }
 
+    public TreeSet<String> getArchdescLicenceText() {
+        return archdescLicenceText;
+    }
+
     public String getArchdescUnittitle() {
         return archdescUnittitle;
     }
@@ -131,6 +136,7 @@ public class Ead2EdmInformation {
         this.licensesOnAllCLevels = true;
         this.archdescLicenceLink = "";
         this.archdescLicenceType = "";
+        this.archdescLicenceText = new TreeSet<String>();
         this.archdescUnittitle = "";
         this.titlestmtTitleproper = "";
         this.determineDaoInformation(fileToRead);
@@ -152,6 +158,7 @@ public class Ead2EdmInformation {
         this.licensesOnAllCLevels = true;
         this.archdescLicenceLink = "";
         this.archdescLicenceType = "";
+        this.archdescLicenceText = new TreeSet<String>();
         this.archdescUnittitle = "";
         this.titlestmtTitleproper = "";
     }
@@ -357,6 +364,9 @@ public class Ead2EdmInformation {
                     String textBetween = new String(ch, start, length);
                     if (StringUtils.isNotEmpty(textBetween.trim())) {
                         userestrictDaoLicenceText.add(textBetween);
+                        if (this.inArchdesc && !this.inC) {
+                            archdescLicenceText.add(textBetween);
+                        }
                     }
                 }
             }
