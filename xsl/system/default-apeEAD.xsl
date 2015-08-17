@@ -431,18 +431,23 @@
         <xsl:param name="title" as="xs:anyAtomicType*"/>
         <xsl:param name="context" />
         <xsl:variable name="daolink" select="ape:checkLink($valueToCheck)"/>
-        <xsl:if test="normalize-space($daolink) != ''">
-            <dao>
-                <xsl:attribute name="xlink:href" select="$daolink"/>
-                <xsl:if test="normalize-space($title) != ''">
-                    <xsl:attribute name="xlink:title" select="$title"/>
-                </xsl:if>
-                <xsl:call-template name="daoRoleType"/>
-                <xsl:if test="none:isNotThumbnail($context)">
-                    <xsl:call-template name="daoDigitalType"/>
-                </xsl:if>
-            </dao>
-        </xsl:if>
+        <xsl:choose>
+            <xsl:when test="normalize-space($daolink) != ''">
+                <dao>
+                    <xsl:attribute name="xlink:href" select="$daolink"/>
+                    <xsl:if test="normalize-space($title) != ''">
+                        <xsl:attribute name="xlink:title" select="$title"/>
+                    </xsl:if>
+                    <xsl:call-template name="daoRoleType"/>
+                    <xsl:if test="none:isNotThumbnail($context)">
+                        <xsl:call-template name="daoDigitalType"/>
+                    </xsl:if>
+                </dao>
+            </xsl:when>
+            <xsl:otherwise>
+                <xsl:message>Link to digital object removed due to incomplete information (<xsl:value-of select="$valueToCheck"/>).</xsl:message>
+            </xsl:otherwise>
+        </xsl:choose>
     </xsl:template>
 
     <!-- filedesc -->
