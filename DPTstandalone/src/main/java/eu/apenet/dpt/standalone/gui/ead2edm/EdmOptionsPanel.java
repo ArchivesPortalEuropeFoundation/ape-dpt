@@ -1032,26 +1032,26 @@ public class EdmOptionsPanel extends JPanel {
             }
         }
 
-//        if (sourceOfFondsTitleGroup == null) {
-//            throw new Exception("useArchdescUnittitle is null");
-//        } else {
-//            if (!this.batch) {
-//                if (sourceOfFondsTitleGroup.getSelection().getActionCommand().equals(ARCHDESC_UNITTITLE)) {
-//                    if (StringUtils.isBlank(ead2EdmInformation.getArchdescUnittitle())) {
-//                        if (StringUtils.isNotBlank(ead2EdmInformation.getTitlestmtTitleproper())) {
-//                            throw new Exception("no content available from archdesc/did/unittile");
-//                        }
-//                    }
-//                }
-//                if (sourceOfFondsTitleGroup.getSelection().getActionCommand().equals(TITLESTMT_TITLEPROPER)) {
-//                    if (StringUtils.isBlank(ead2EdmInformation.getTitlestmtTitleproper())) {
-//                        if (StringUtils.isNotBlank(ead2EdmInformation.getArchdescUnittitle())) {
-//                            throw new Exception("no content available from titlestmt/titleproper");
-//                        }
-//                    }
-//                }
-//            }
-//        }
+        if (!this.batch) {
+            if (sourceOfFondsTitleGroup.getSelection() == null) {
+                sourceOfFondsTitle = TITLESTMT_TITLEPROPER;
+            } else {
+                if (sourceOfFondsTitleGroup.getSelection().getActionCommand().equals(ARCHDESC_UNITTITLE)) {
+                    if (StringUtils.isBlank(ead2EdmInformation.getArchdescUnittitle())) {
+                        if (StringUtils.isNotBlank(ead2EdmInformation.getTitlestmtTitleproper())) {
+                            throw new Exception("no content available from archdesc/did/unittile");
+                        }
+                    }
+                }
+                if (sourceOfFondsTitleGroup.getSelection().getActionCommand().equals(TITLESTMT_TITLEPROPER)) {
+                    if (StringUtils.isBlank(ead2EdmInformation.getTitlestmtTitleproper())) {
+                        if (StringUtils.isNotBlank(ead2EdmInformation.getArchdescUnittitle())) {
+                            throw new Exception("no content available from titlestmt/titleproper");
+                        }
+                    }
+                }
+            }
+        }
         if (landingPageButtonGroup == null) {
             throw new Exception("landingPage is null");
         } else {
