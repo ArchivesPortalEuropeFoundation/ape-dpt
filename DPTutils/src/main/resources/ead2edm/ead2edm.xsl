@@ -1875,14 +1875,9 @@
     </xsl:template>
     <xsl:template match="did/dao[not(@xlink:title='thumbnail')]" mode="additionalLinks">
         <xsl:choose>
-            <xsl:when test="@href">
+            <xsl:when test="@*:href != ''">
                 <edm:hasView>
                     <xsl:attribute name="rdf:resource" select="@href"/>
-                </edm:hasView>
-            </xsl:when>
-            <xsl:when test="@xlink:href">
-                <edm:hasView>
-                    <xsl:attribute name="rdf:resource" select="@xlink:href"/>
                 </edm:hasView>
             </xsl:when>
         </xsl:choose>
@@ -2039,12 +2034,14 @@
                 </xsl:otherwise>
             </xsl:choose>
         </xsl:variable>
-        <edm:isShownBy>
-            <xsl:attribute name="rdf:resource" select="$link"/>
-        </edm:isShownBy>
-        <edm:object>
-            <xsl:attribute name="rdf:resource" select="$link"/>
-        </edm:object>
+        <xsl:if test="$link != ''">
+            <edm:isShownBy>
+                <xsl:attribute name="rdf:resource" select="$link"/>
+            </edm:isShownBy>
+            <edm:object>
+                <xsl:attribute name="rdf:resource" select="$link"/>
+            </edm:object>
+        </xsl:if>
     </xsl:template>
     <xsl:template match="head">
         <xsl:value-of select="node()"/>
