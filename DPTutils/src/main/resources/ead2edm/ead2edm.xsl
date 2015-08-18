@@ -304,7 +304,7 @@
                 </xsl:call-template>
             </xsl:if>
             <xsl:choose>
-                <xsl:when test="/ead/archdesc/did/physdesc/genreform">
+                <xsl:when test="/ead/archdesc/did/physdesc/genreform != ''">
                     <dc:type><xsl:value-of select="/ead/archdesc/did/physdesc/genreform"/></dc:type>
                 </xsl:when>
                 <xsl:otherwise>
@@ -988,7 +988,7 @@
                 </xsl:when>
             </xsl:choose>
             <xsl:choose>
-                <xsl:when test="$currentnode/did/physdesc/genreform">
+                <xsl:when test="$currentnode/did/physdesc/genreform != ''">
                     <dc:type>
                         <xsl:value-of select="$currentnode/did/physdesc/genreform"/>
                     </dc:type>
@@ -1113,6 +1113,16 @@
                 <xsl:when test="$inheritUnittitle = &quot;true&quot; and $currentnode/did/unittitle != '' and $parentcnode/did/unittitle != '' and not($currentnode/c) and $hasDao">
                     <dc:title>
                         <xsl:value-of select="$parentcnode/did/unittitle[1]"/> >> <xsl:value-of select="$currentnode/did/unittitle"/>
+                    </dc:title>
+                </xsl:when>
+                <xsl:when test="$inheritUnittitle = &quot;true&quot; and $currentnode/did/unittitle != '' and $parentcnode/did/unittitle = '' and not($currentnode/c) and $hasDao">
+                    <dc:title>
+                        <xsl:value-of select="$currentnode/did/unittitle"/>
+                    </dc:title>
+                </xsl:when>
+                <xsl:when test="$inheritUnittitle = &quot;true&quot; and $currentnode/did/unittitle = '' and $parentcnode/did/unittitle != '' and not($currentnode/c) and $hasDao">
+                    <dc:title>
+                        <xsl:value-of select="$parentcnode/did/unittitle[1]"/>"/>
                     </dc:title>
                 </xsl:when>
                 <xsl:when test="$currentnode/did/unittitle != ''">
