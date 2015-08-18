@@ -35,6 +35,7 @@
     xmlns:xlink="http://www.w3.org/1999/xlink"
     xpath-default-namespace="urn:isbn:1-931666-22-9"
     exclude-result-prefixes="xlink fo fn">
+    <xsl:strip-space elements="*"/>
     <xsl:output method="xml" encoding="UTF-8" indent="yes"/>
 
     <!-- Params from Ead2Ese -->
@@ -396,12 +397,12 @@
             </xsl:attribute>
             <dc:description>
                 <xsl:choose>
-                    <xsl:when test="/ead/archdesc/did/unittitle">
-                        <xsl:for-each select="/ead/archdesc/did/unittitle">
-                            <xsl:apply-templates select="." mode="dcDescription"/>
-                            <xsl:if test="position() &lt; last()">
-                                <xsl:text> </xsl:text>
-                            </xsl:if>
+                    <xsl:when test="/ead/archdesc/did/unittitle[text() != '']">
+                        <xsl:for-each select="/ead/archdesc/did/unittitle[text() != '']">
+                                <xsl:apply-templates select="." mode="dcDescription"/>
+                                <xsl:if test="position() &lt; last()">
+                                    <xsl:text> </xsl:text>
+                                </xsl:if>
                         </xsl:for-each>
                     </xsl:when>
                     <xsl:otherwise>
@@ -1884,7 +1885,7 @@
             </xsl:attribute>
             <dc:description>
                 <xsl:choose>
-                    <xsl:when test="@*:title">
+                    <xsl:when test="@*:title != ''">
                         <xsl:value-of select="@*:title"/>
                     </xsl:when>
 <!--                    <xsl:when test="@xlink:title">
@@ -2070,9 +2071,11 @@
         <xsl:variable name="content">
             <xsl:apply-templates/>
         </xsl:variable>
-        <dc:description>
-            <xsl:value-of select="fn:replace(normalize-space($content), '[\n\t\r]', '')"/>
-        </dc:description>
+        <xsl:if test="fn:replace(normalize-space($content), '[\n\t\r]', '') != ''">
+            <dc:description>
+                <xsl:value-of select="fn:replace(normalize-space($content), '[\n\t\r]', '')"/>
+            </dc:description>
+        </xsl:if>
     </xsl:template>
     <xsl:template match="unitdate">
         <xsl:choose>
