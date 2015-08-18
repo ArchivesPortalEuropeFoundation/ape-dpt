@@ -433,8 +433,9 @@
             </xsl:with-param>
             <xsl:with-param name="inheritedCustodhists">
                 <xsl:if test="./custodhist">
-                    <xsl:call-template name="custodhist">
+                    <xsl:call-template name="custodhistOnlyOne">
                         <xsl:with-param name="custodhists" select="./custodhist"/>
+                        <xsl:with-param name="parentnode" select="."/>
                     </xsl:call-template>
                 </xsl:if>
             </xsl:with-param>
@@ -1071,21 +1072,8 @@
                         <xsl:when test="$minimalConversion = 'false' and $parentcnode/custodhist">
                             <xsl:call-template name="custodhistOnlyOne">
                                 <xsl:with-param name="custodhists" select="$parentcnode/custodhist"/>
+                                <xsl:with-param name="parentnode" select="$parentcnode"/>
                             </xsl:call-template>
-                            <xsl:if test="$minimalConversion = 'false' and (count($parentcnode/custodhist/head) > 1) or (count($parentcnode/custodhist/p) > 1) and $inheritElementsFromFileLevel = 'true'">
-                                <dcterms:provenance>
-                                    <xsl:attribute name="rdf:resource">
-                                        <xsl:choose>
-                                            <xsl:when test="/ead/eadheader/eadid/@url">
-                                                <xsl:value-of select="/ead/eadheader/eadid/@url"/>
-                                            </xsl:when>
-                                            <xsl:otherwise>
-                                                <xsl:value-of select="concat($id_base, normalize-space(/ead/eadheader/eadid))"/>
-                                            </xsl:otherwise>
-                                        </xsl:choose>
-                                    </xsl:attribute>
-                                </dcterms:provenance>
-                            </xsl:if>
                         </xsl:when>
                         <xsl:otherwise>
                             <xsl:if test="$inheritElementsFromFileLevel = 'true' and fn:string-length($inheritedCustodhists) > 0">
@@ -1667,11 +1655,11 @@
         <xsl:param name="custodhists"/>
         <xsl:for-each select="$custodhists">
             <xsl:variable name="content">
-                <xsl:for-each select="p">
+                <xsl:for-each select="head | p">
                     <xsl:apply-templates />
                     <xsl:if test="position() != last()"><xsl:text> </xsl:text></xsl:if>
                 </xsl:for-each>
-                <xsl:apply-templates select="*[not(local-name()='p')]"/>
+                <xsl:apply-templates select="*[not(local-name()='p') and not(local-name()='head')]"/>
             </xsl:variable>
             <dcterms:provenance>
                 <xsl:value-of select="fn:replace(normalize-space($content), '[\n\t\r]', ' ')"/>
@@ -1680,6 +1668,7 @@
     </xsl:template>
     <xsl:template name="custodhistOnlyOne">
         <xsl:param name="custodhists"/>
+        <xsl:param name="parentnode"/>
         <xsl:for-each select="$custodhists">
             <xsl:variable name="content">
                 <xsl:apply-templates select="head[1] | p[1]"/>
@@ -1687,6 +1676,20 @@
             <dcterms:provenance>
                 <xsl:value-of select="fn:replace(normalize-space($content), '[\n\t\r]', ' ')"/>
             </dcterms:provenance>
+            <xsl:if test="$minimalConversion = 'false' and (count($parentnode/custodhist/head) > 1) or (count($parentnode/custodhist/p) > 1) and $inheritElementsFromFileLevel = 'true'">
+                <dcterms:provenance>
+                    <xsl:attribute name="rdf:resource">
+                        <xsl:choose>
+                            <xsl:when test="/ead/eadheader/eadid/@url">
+                                <xsl:value-of select="/ead/eadheader/eadid/@url"/>
+                            </xsl:when>
+                            <xsl:otherwise>
+                                <xsl:value-of select="concat($id_base, normalize-space(/ead/eadheader/eadid))"/>
+                            </xsl:otherwise>
+                        </xsl:choose>
+                    </xsl:attribute>
+                </dcterms:provenance>
+            </xsl:if>
         </xsl:for-each>
     </xsl:template>
     <xsl:template name="detectFirstUnitid">
