@@ -235,14 +235,14 @@
                 <xsl:choose>
                     <xsl:when test="$useArchUnittitle = &quot;true&quot;">
                         <xsl:choose>
-                            <xsl:when test="/ead/archdesc/did/unittitle">
+                            <xsl:when test="/ead/archdesc/did/unittitle != ''">
                                 <dc:title><xsl:value-of select="/ead/archdesc/did/unittitle"/></dc:title>
                             </xsl:when>
                             <xsl:when test="/ead/eadheader/filedesc/titlestmt/titleproper != ''">
                                 <dc:title><xsl:value-of select="/ead/eadheader/filedesc/titlestmt/titleproper"/></dc:title>
                             </xsl:when>
                             <xsl:otherwise>
-                                <xsl:if test="not(/ead/archdesc/scopecontent[@encodinganalog='summary'])">
+                                <xsl:if test="not(/ead/archdesc/scopecontent[@encodinganalog='summary'] != '')">
                                     <dc:title><xsl:text>No title</xsl:text></dc:title>
                                 </xsl:if>
                             </xsl:otherwise>
@@ -253,11 +253,11 @@
                             <xsl:when test="/ead/eadheader/filedesc/titlestmt/titleproper != ''">
                                 <dc:title><xsl:value-of select="/ead/eadheader/filedesc/titlestmt/titleproper"/></dc:title>
                             </xsl:when>
-                            <xsl:when test="/ead/archdesc/did/unittitle">
+                            <xsl:when test="/ead/archdesc/did/unittitle != ''">
                                 <dc:title><xsl:value-of select="/ead/archdesc/did/unittitle"/></dc:title>
                             </xsl:when>
                             <xsl:otherwise>
-                                <xsl:if test="not(/ead/archdesc/scopecontent[@encodinganalog='summary'])">
+                                <xsl:if test="not(/ead/archdesc/scopecontent[@encodinganalog='summary'] != '')">
                                     <dc:title><xsl:text>No title</xsl:text></dc:title>
                                 </xsl:if>
                             </xsl:otherwise>
@@ -1109,18 +1109,18 @@
             </xsl:choose>
 
             <xsl:choose>
-                <xsl:when test="$inheritUnittitle = &quot;true&quot; and $currentnode/did/unittitle and $parentcnode/did/unittitle and not($currentnode/c) and $hasDao">
+                <xsl:when test="$inheritUnittitle = &quot;true&quot; and $currentnode/did/unittitle != '' and $parentcnode/did/unittitle != '' and not($currentnode/c) and $hasDao">
                     <dc:title>
                         <xsl:value-of select="$parentcnode/did/unittitle[1]"/> >> <xsl:value-of select="$currentnode/did/unittitle"/>
                     </dc:title>
                 </xsl:when>
-                <xsl:when test="$currentnode/did/unittitle">
+                <xsl:when test="$currentnode/did/unittitle != ''">
                     <dc:title>
                         <xsl:value-of select="$currentnode/did/unittitle"/>
                     </dc:title>
                 </xsl:when>
                 <xsl:otherwise>
-                    <xsl:if test="not($currentnode/scopecontent) and $inheritedScopecontent = ''">
+                    <xsl:if test="not($currentnode/scopecontent[@encodinganalog='summary'] != '') and $inheritedScopecontent = ''">
                         <dc:title>
                             <xsl:text>No title</xsl:text>
                         </dc:title>
@@ -1526,7 +1526,7 @@
                     </xsl:attribute>
                     <dc:description>
                         <xsl:choose>
-                            <xsl:when test="did/unittitle">
+                            <xsl:when test="did/unittitle != ''">
                                 <xsl:apply-templates select="did/unittitle" mode="dcDescription"/>
                             </xsl:when>
                             <xsl:otherwise>
