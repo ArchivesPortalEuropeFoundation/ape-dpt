@@ -1107,9 +1107,15 @@ public class EdmOptionsPanel extends JPanel {
                 if (!this.ead2EdmInformation.isLanguagesOnAllCLevels()) {
                     throw new Exception("At least one DAO does not have an associated language. Please inherit the language or provide it manually");
                 }
+                if (!useExistingLanguageCheckbox.isSelected()) {
+                    throw new Exception("Please provide a language manually if available language(s) should not be used");
+                }
             } else if (this.inheritLanguageGroup.getSelection().getActionCommand().equalsIgnoreCase(EdmOptionsPanel.YES)) {
                 if (!this.ead2EdmInformation.isLanguagesOnParent()) {
                     throw new Exception("The higher levels do not have an associated language");
+                }
+                if (!useExistingLanguageCheckbox.isSelected()) {
+                    throw new Exception("Please provide a language manually if available language(s) should not be used");
                 }
             }
 
@@ -1131,27 +1137,39 @@ public class EdmOptionsPanel extends JPanel {
          throw new Exception("providerTextField is empty");
          }
          */
-        if (licenseGroup == null) {
-            throw new Exception("licenseGroup is null");
-        } else if (!isRadioBtnChecked(licenseGroup)) {
-            throw new Exception("licenseGroup is not checked");
-        }
-
         if (!this.batch) {
+            if (inheritLicenseGroup == null) {
+                throw new Exception("inheritLicenseGroup is null");
+            } else if (!isRadioBtnChecked(inheritLicenseGroup)) {
+                throw new Exception("inheritLicenseeGroup is not checked");
+            }
+
             if (this.inheritLicenseGroup.getSelection().getActionCommand().equalsIgnoreCase(EdmOptionsPanel.PROVIDE)) {
-                if (this == null) {
-                    throw new Exception("Provided language is null");
-                } else if (!((LanguageBoxPanel) this.languageBoxPanel).hasSelections()) {
-                    throw new Exception("No provided language selected");
+                if (licenseGroup == null) {
+                    throw new Exception("licenseGroup is null");
+                } else if (!isRadioBtnChecked(licenseGroup)) {
+                    throw new Exception("licenseGroup is not checked");
                 }
             } else if (this.inheritLicenseGroup.getSelection().getActionCommand().equalsIgnoreCase(EdmOptionsPanel.NO)) {
                 if (!this.ead2EdmInformation.isLicensesOnAllCLevels()) {
                     throw new Exception("At least one DAO does not have an associated licence. Please inherit the licence or provide it manually");
                 }
+                if (!useExistingRightsInfoCheckbox.isSelected()) {
+                    throw new Exception("Please provide a licence manually if available licence information should not be used");
+                }
             } else if (this.inheritLicenseGroup.getSelection().getActionCommand().equalsIgnoreCase(EdmOptionsPanel.YES)) {
                 if (!this.ead2EdmInformation.isLicensesOnParent()) {
                     throw new Exception("At least one higher level does not have an associated licence");
                 }
+                if (!useExistingRightsInfoCheckbox.isSelected()) {
+                    throw new Exception("Please provide a licence manually if available licence information should not be used");
+                }
+            }
+        } else {
+            if (licenseGroup == null) {
+                throw new Exception("licenseGroup is null");
+            } else if (!isRadioBtnChecked(licenseGroup)) {
+                throw new Exception("licenseGroup is not checked");
             }
         }
     }
@@ -1337,7 +1355,7 @@ public class EdmOptionsPanel extends JPanel {
                     } catch (Exception ex1) {
                         if (ex1.getMessage().equals("At least one DAO does not have an associated language. Please inherit the language or provide it manually")) {
                             JOptionPane.showMessageDialog(parent, ex1.getMessage(), "Error", JOptionPane.WARNING_MESSAGE);
-                        } else if (ex1.getMessage().equals("At least one DAO does not have an associated licence. Please inherit the licence or provide it manually")){
+                        } else if (ex1.getMessage().equals("At least one DAO does not have an associated licence. Please inherit the licence or provide it manually")) {
                             JOptionPane.showMessageDialog(parent, ex1.getMessage(), "Error", JOptionPane.WARNING_MESSAGE);
                         } else {
                             DataPreparationToolGUI.createErrorOrWarningPanel(ex1, false, labels.getString("ese.formNotFilledError"), parent);

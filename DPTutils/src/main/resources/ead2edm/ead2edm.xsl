@@ -856,7 +856,7 @@
                                         <xsl:with-param name="rights" select="$currentnode/userestrict[@type='dao']"/>
                                     </xsl:call-template>
                                 </xsl:when>
-                                <xsl:when test="$inheritRightsInfo='true' and $inheritedRightsInfo">
+                                <xsl:when test="$inheritRightsInfo='true' and $inheritedRightsInfo != ''">
                                     <xsl:copy-of select="$inheritedRightsInfo"/>
                                 </xsl:when>
                                 <xsl:otherwise>
@@ -870,7 +870,7 @@
                         </xsl:when>
                         <xsl:otherwise>
                             <xsl:choose>
-                                <xsl:when test="$inheritRightsInfo=&quot;true&quot; and $inheritedRightsInfo">
+                                <xsl:when test="$inheritRightsInfo=&quot;true&quot; and $inheritedRightsInfo != ''">
                                     <xsl:copy-of select="$inheritedRightsInfo"/>
                                 </xsl:when>
                                 <xsl:otherwise>
@@ -1250,7 +1250,7 @@
                 </xsl:when>
                 <xsl:otherwise>
                     <xsl:choose>
-                        <!--<xsl:when test="$inheritLanguage = 'true'">
+                        <xsl:when test="$inheritLanguage = 'true'">
                             <xsl:choose>
                                 <xsl:when test="fn:string-length($inheritedLanguages) > 0">
                                     <xsl:copy-of select="$inheritedLanguages"/>
@@ -1263,7 +1263,7 @@
                                     </xsl:for-each>
                                 </xsl:otherwise>
                             </xsl:choose>
-                        </xsl:when>-->
+                        </xsl:when>
                         <xsl:when test="$inheritFromParent">
                             <xsl:choose>
                                 <xsl:when test="$parentcnode/did/langmaterial">
@@ -1902,7 +1902,7 @@
                                         <xsl:with-param name="rights" select="current()/../../userestrict[@type='dao']"/>
                                     </xsl:call-template> 
                                 </xsl:when>
-                                <xsl:when test="$inheritedRightsInfo">
+                                <xsl:when test="$inheritedRightsInfo != ''">
                                     <xsl:copy-of select="$inheritedRightsInfo"/>
                                 </xsl:when>
                                 <xsl:otherwise>
@@ -1916,7 +1916,7 @@
                         </xsl:when>
                         <xsl:otherwise>
                             <xsl:choose>
-                                <xsl:when test="$inheritedRightsInfo">
+                                <xsl:when test="$inheritedRightsInfo != ''">
                                     <xsl:copy-of select="$inheritedRightsInfo"/>
                                 </xsl:when>
                                 <xsl:otherwise>
@@ -1930,7 +1930,7 @@
                         </xsl:otherwise>
                     </xsl:choose>
                 </xsl:when>
-                <xsl:when test="$inheritRightsInfo">
+<!--                <xsl:when test="$inheritRightsInfo">
                     <xsl:choose>
                         <xsl:when test="$useExistingRightsInfo=&quot;true&quot;">
                             <xsl:choose>
@@ -1956,7 +1956,7 @@
                             </edm:rights>
                         </xsl:otherwise>
                     </xsl:choose>
-                </xsl:when>
+                </xsl:when>-->
                 <xsl:when test="$inheritRightsInfo=&quot;false&quot;">
                     <xsl:choose>
                         <xsl:when test="$useExistingRightsInfo=&quot;true&quot;">

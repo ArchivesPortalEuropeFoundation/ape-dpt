@@ -222,6 +222,9 @@ public class Ead2EdmInformation {
                 this.metsLicenceRetrieved = false;
             } else if (qName.equals("did")) {
                 this.inDid = true;
+                if (this.inC) {
+                    this.languageOnCLevel = false;
+                }
             } else if (qName.equals("dao")) {
                 this.hasDao = true;
                 if (this.typeRetrieved == false
@@ -229,7 +232,6 @@ public class Ead2EdmInformation {
                     roleType = atts.getValue("xlink:role");
                     this.typeRetrieved = true;
                 }
-                languageOnCLevel = false;
             } else if (qName.equals("repository")) {
                 this.inRepository = true;
             } else if (qName.equals("language")) {
@@ -237,13 +239,12 @@ public class Ead2EdmInformation {
                 if (this.inLangusage
                         && atts.getValue("langcode") != null) {
                     languagesCodes.add(atts.getValue("langcode"));
-                } else if (this.inArchdesc && this.inDid && !this.hasDao
+                } else if (this.inArchdesc && !this.inC && this.inDid && !this.hasDao
                         && atts.getValue("langcode") != null) {
                     // Check if the language is in element "<archdesc><langmaterial>".
                     languagesOnParent = true;
                     alternativeLanguages.add(atts.getValue("langcode"));
-                } else if (this.inArchdesc && this.inDid && this.hasDao
-                        && atts.getValue("langcode") != null) {
+                } else if (this.inC && this.inDid && atts.getValue("langcode") != null) {
                     // Check if the language is in element "<c>".
                     if ("".equals(languageCode)) {
                         languageCode = atts.getValue("langcode");
@@ -301,7 +302,7 @@ public class Ead2EdmInformation {
                 this.inArchdesc = false;
             } else if (qName.equals("c")) {
                 this.inC = false;
-                if (!this.metsLicenceRetrieved){
+                if (!this.metsLicenceRetrieved) {
                     licensesOnAllCLevels = false;
                     LOG.debug("No license present in c level.");
                 }
@@ -309,10 +310,11 @@ public class Ead2EdmInformation {
                 this.inDid = false;
 
                 // Set the value of no language present in all C Levels if necessary.
-                if (!this.languageOnCLevel
-                        && this.hasDao) {
-                    languagesOnAllCLevels = false;
-                    LOG.debug("No language present in c level.");
+                if (this.inC && this.hasDao) {
+                    if (!this.languageOnCLevel) {
+                        languagesOnAllCLevels = false;
+                        LOG.debug("No language present in c level.");
+                    }
                 }
 
                 this.hasDao = false;
