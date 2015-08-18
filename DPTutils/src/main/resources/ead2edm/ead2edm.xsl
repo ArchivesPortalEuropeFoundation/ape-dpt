@@ -945,7 +945,12 @@
             <xsl:attribute name="rdf:about" select="concat('providedCHO_', normalize-space(/ead/eadheader/eadid), '_', $identifier)"/>
             <xsl:if test="$idSource = 'unitid' and $currentnode/did/unitid">
                 <dc:identifier>
-                    <xsl:apply-templates select="$currentnode/did/unitid"/>
+                    <xsl:for-each select="$currentnode/did/unitid">
+                        <xsl:apply-templates select="."/>
+                        <xsl:if test="position() &lt; last()">
+                            <xsl:text> </xsl:text>
+                        </xsl:if>
+                    </xsl:for-each>
                 </dc:identifier>
             </xsl:if>
             <xsl:if test="$idSource = 'cid' and $currentnode/@id">
