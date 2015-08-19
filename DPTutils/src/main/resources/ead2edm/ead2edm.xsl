@@ -1420,7 +1420,7 @@
                                                 />
                                             </xsl:when>
                                             <xsl:otherwise>
-                                                <xsl:value-of select="concat('providedCHO_position_', normalize-space(/ead/eadheader/eadid), '_ERROR')"/>
+                                                <xsl:value-of select="concat('providedCHO_position_', normalize-space(/ead/eadheader/eadid), '_')"/>
                                             </xsl:otherwise>
                                         </xsl:choose>
                                     </xsl:with-param>
