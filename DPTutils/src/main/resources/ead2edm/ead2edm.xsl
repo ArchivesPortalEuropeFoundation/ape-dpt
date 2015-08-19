@@ -1878,7 +1878,7 @@
         <xsl:choose>
             <xsl:when test="@*:href != ''">
                 <edm:hasView>
-                    <xsl:attribute name="rdf:resource" select="@href"/>
+                    <xsl:attribute name="rdf:resource" select="@*:href"/>
                 </edm:hasView>
             </xsl:when>
         </xsl:choose>
@@ -2035,14 +2035,34 @@
                 </xsl:otherwise>
             </xsl:choose>
         </xsl:variable>
-        <xsl:if test="$link != ''">
+        <xsl:choose>
+            <xsl:when test="$link != ''">
             <edm:isShownBy>
                 <xsl:attribute name="rdf:resource" select="$link"/>
             </edm:isShownBy>
             <edm:object>
                 <xsl:attribute name="rdf:resource" select="$link"/>
             </edm:object>
-        </xsl:if>
+            </xsl:when>
+            <xsl:otherwise>
+                <edm:object>
+                <xsl:choose>
+                    <xsl:when test="fn:string-length($europeana_type) > 0">
+                        <xsl:call-template name="generateThumbnailLink">
+                            <xsl:with-param name="role" select="$europeana_type"/>
+                        </xsl:call-template>
+                    </xsl:when>
+                    <xsl:otherwise>
+                        <xsl:if test="./@xlink:role">
+                            <xsl:call-template name="generateThumbnailLink">
+                                <xsl:with-param name="role" select="./@xlink:role"/>
+                            </xsl:call-template>
+                        </xsl:if>
+                    </xsl:otherwise>
+                </xsl:choose>
+                </edm:object>
+            </xsl:otherwise>
+        </xsl:choose>
     </xsl:template>
     <xsl:template match="head">
         <xsl:value-of select="node()"/>
