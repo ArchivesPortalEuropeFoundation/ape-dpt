@@ -1827,7 +1827,7 @@
                 <xsl:value-of select="$replaceResult3"/>
             </xsl:when>
             <xsl:otherwise>
-                <xsl:value-of select="input"/>
+                <xsl:value-of select="$input"/>
             </xsl:otherwise>
         </xsl:choose>
     </xsl:template>
