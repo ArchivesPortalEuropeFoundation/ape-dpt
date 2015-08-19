@@ -1326,7 +1326,7 @@
                         <xsl:attribute name="rdf:resource" select="concat('providedCHO_', normalize-space(/ead/eadheader/eadid))"/>
                     </dcterms:isPartOf>
                 </xsl:when>
-                <xsl:when test="$idSource = 'unitid' and $parentdidnode/unitid[@type='call number'] and $isParentFirstUnitid">
+                <xsl:when test="$idSource = 'unitid' and $parentdidnode/unitid[@type='call number'] and $isParentFirstUnitid = 'true'">
                     <dcterms:isPartOf>
                         <xsl:attribute name="rdf:resource" select="concat('providedCHO_', normalize-space(/ead/eadheader/eadid), '_', normalize-space($parentdidnode/unitid[@type='call number'][1]))"/>
                     </dcterms:isPartOf>
