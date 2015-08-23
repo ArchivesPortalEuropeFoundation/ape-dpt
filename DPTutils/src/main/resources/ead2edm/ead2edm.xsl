@@ -2052,20 +2052,22 @@
             </xsl:when>
             <xsl:otherwise>
                 <edm:object>
-                <xsl:choose>
-                    <xsl:when test="fn:string-length($europeana_type) > 0">
-                        <xsl:call-template name="generateThumbnailLink">
-                            <xsl:with-param name="role" select="$europeana_type"/>
-                        </xsl:call-template>
-                    </xsl:when>
-                    <xsl:otherwise>
-                        <xsl:if test="./@xlink:role">
-                            <xsl:call-template name="generateThumbnailLink">
-                                <xsl:with-param name="role" select="./@xlink:role"/>
-                            </xsl:call-template>
-                        </xsl:if>
-                    </xsl:otherwise>
-                </xsl:choose>
+                    <xsl:attribute name="rdf:resource">
+                        <xsl:choose>
+                            <xsl:when test="fn:string-length($europeana_type) > 0">
+                                <xsl:call-template name="generateThumbnailLink">
+                                    <xsl:with-param name="role" select="$europeana_type"/>
+                                </xsl:call-template>
+                            </xsl:when>
+                            <xsl:otherwise>
+                                <xsl:if test="./@xlink:role">
+                                    <xsl:call-template name="generateThumbnailLink">
+                                        <xsl:with-param name="role" select="./@xlink:role"/>
+                                    </xsl:call-template>
+                                </xsl:if>
+                            </xsl:otherwise>
+                        </xsl:choose>
+                    </xsl:attribute>
                 </edm:object>
             </xsl:otherwise>
         </xsl:choose>
