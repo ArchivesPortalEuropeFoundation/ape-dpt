@@ -96,7 +96,7 @@
             <xsl:choose>
                 <xsl:when test="$useExistingRepository=&quot;true&quot;">
                     <xsl:choose>
-                        <xsl:when test="/ead/archdesc/did/repository[text() != ''][1]">
+                        <xsl:when test="/ead/archdesc/did/repository[descendant-or-self::text() != ''][1]">
                             <xsl:apply-templates select="/ead/archdesc/did/repository[1]"/>
                         </xsl:when>
                         <xsl:otherwise>
@@ -455,9 +455,9 @@
                 </xsl:if>
             </xsl:with-param>
             <xsl:with-param name="inheritedRepository">
-                <xsl:if test="./did/repository[text() != '']">
+                <xsl:if test="./did/repository[descendant-or-self::text() != '']">
                     <xsl:call-template name="repository">
-                        <xsl:with-param name="repository" select="./did/repository[text() != '']"/>
+                        <xsl:with-param name="repository" select="./did/repository[descendant-or-self::text() != '']"/>
                     </xsl:call-template>
                 </xsl:if>
             </xsl:with-param>
@@ -570,9 +570,9 @@
         </xsl:variable>
         <xsl:variable name="updatedInheritedRepository">
             <xsl:choose>
-                <xsl:when test="./did/repository[text() != '']">
+                <xsl:when test="./did/repository[descendant-or-self::text() != '']">
                     <xsl:call-template name="repository">
-                        <xsl:with-param name="repository" select="./did/repository[text() != '']"/>
+                        <xsl:with-param name="repository" select="./did/repository[descendant-or-self::text() != '']"/>
                     </xsl:call-template>
                 </xsl:when>
                 <xsl:otherwise>
@@ -766,8 +766,8 @@
             <xsl:choose>
                 <xsl:when test="$useExistingRepository=&quot;true&quot;">
                     <xsl:choose>
-                        <xsl:when test="$currentnode/did/repository[text() != ''][1]">
-                            <xsl:apply-templates select="$currentnode/did/repository[text() != ''][1]"/>
+                        <xsl:when test="$currentnode/did/repository[descendant-or-self::text() != ''][1]">
+                            <xsl:apply-templates select="$currentnode/did/repository[descendant-or-self::text() != ''][1]"/>
                         </xsl:when>
                         <xsl:when test="$inheritedRepository != ''">
                             <xsl:call-template name="repository">
@@ -1810,7 +1810,7 @@
         <xsl:param name="repository"/>
         <edm:dataProvider>
             <xsl:variable name="content">
-                <xsl:apply-templates select="$repository[text() != ''][1]"/>
+                <xsl:apply-templates select="$repository[descendant-or-self::text() != ''][1]"/>
             </xsl:variable>
             <xsl:value-of select="fn:replace(normalize-space($content), '[\n\t\r]', '')"/>
         </edm:dataProvider>
@@ -2112,7 +2112,10 @@
     </xsl:template>
     <xsl:template match="scopecontent">
         <xsl:variable name="content">
-            <xsl:apply-templates/>
+            <xsl:for-each select="*">
+                <xsl:apply-templates/>
+                <xsl:if test="position() &lt; last()"><text> </text></xsl:if>
+            </xsl:for-each>
         </xsl:variable>
         <xsl:if test="fn:replace(normalize-space($content), '[\n\t\r]', '') != ''">
             <dc:description>
