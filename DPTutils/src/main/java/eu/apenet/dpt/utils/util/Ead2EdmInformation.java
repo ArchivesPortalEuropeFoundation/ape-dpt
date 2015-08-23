@@ -310,14 +310,12 @@ public class Ead2EdmInformation {
                 this.inDid = false;
 
                 // Set the value of no language present in all C Levels if necessary.
-                if (this.inC && this.hasDao) {
+                if (this.inC) {
                     if (!this.languageOnCLevel) {
                         languagesOnAllCLevels = false;
                         LOG.debug("No language present in c level.");
                     }
                 }
-
-                this.hasDao = false;
             } else if (qName.equals("dao")) {
                 // Nothing to do here
             } else if (qName.equals("repository")) {

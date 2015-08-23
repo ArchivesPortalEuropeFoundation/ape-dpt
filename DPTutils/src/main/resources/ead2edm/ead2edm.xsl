@@ -1234,8 +1234,8 @@
                         </xsl:when>
                         <xsl:otherwise>
                             <xsl:choose>
-                                <xsl:when test="fn:string-length($language) > 0">
-                                    <xsl:for-each select="tokenize($language,' ')">
+                                <xsl:when test="fn:string-length($inheritedLanguages) > 0">
+                                    <xsl:for-each select="tokenize($inheritedLanguages,' ')">
                                         <dc:language>
                                             <xsl:value-of select="."/>
                                         </dc:language>
@@ -1286,7 +1286,7 @@
                             </xsl:choose>
                         </xsl:when>
                         <xsl:otherwise>
-                            <!--<xsl:choose>
+                            <xsl:choose>
                                 <xsl:when test="fn:string-length($language) > 0">
                                     <xsl:for-each select="tokenize($language,' ')">
                                         <dc:language>
@@ -1294,15 +1294,15 @@
                                         </dc:language>
                                     </xsl:for-each>
                                 </xsl:when>
-                                <xsl:otherwise>-->
+                                <xsl:otherwise>
                                     <xsl:for-each select="tokenize($language,' ')">
                                         <dc:language>
                                             <xsl:value-of select="."/>
                                         </dc:language>
                                     </xsl:for-each>
                                 </xsl:otherwise>
-                            <!--</xsl:choose>
-                        </xsl:otherwise>-->
+                            </xsl:choose>
+                        </xsl:otherwise>
                     </xsl:choose>
                 </xsl:otherwise>
             </xsl:choose>
@@ -1622,7 +1622,7 @@
         <edm:rights>
             <xsl:attribute name="rdf:resource">
                 <xsl:choose>
-                    <xsl:when test="$useExistingRightsInfo">
+                    <xsl:when test="$useExistingRightsInfo='true'">
                         <xsl:choose>
                             <xsl:when test="$rights[1]/p[1]/extref/@xlink:href">
                                 <xsl:variable name="currentRightsInfo">
@@ -1674,7 +1674,7 @@
                 <xsl:apply-templates select="head" />
                 <xsl:for-each select="p">
                     <xsl:apply-templates />
-                    <xsl:if test="position() != last()"><xsl:text> </xsl:text></xsl:if>
+                    <xsl:if test="position() &lt; last()"><xsl:text> </xsl:text></xsl:if>
                 </xsl:for-each>
                 <xsl:apply-templates select="*[not(local-name()='p') and not(local-name()='head')]"/>
             </xsl:variable>
@@ -1834,8 +1834,14 @@
     
     <xsl:template match="abbr|emph|expan|extref">
         <xsl:text> </xsl:text>
-        <xsl:value-of select="node()"/>
+        <xsl:apply-templates/>
         <xsl:text> </xsl:text>
+    </xsl:template>
+    <xsl:template match="address">
+        <xsl:for-each select="*">
+            <xsl:apply-templates/>
+            <xsl:if test="position() &lt; last()"><text> </text></xsl:if>
+        </xsl:for-each>
     </xsl:template>
     <xsl:template name="bibref">
         <xsl:param name="bibrefs"/>
@@ -2095,10 +2101,10 @@
         </dc:relation>
     </xsl:template>
     <xsl:template match="repository">
+        <xsl:variable name="content">
+            <xsl:apply-templates/>
+        </xsl:variable>
         <edm:dataProvider>
-            <xsl:variable name="content">
-                <xsl:apply-templates mode="all-but-address"/>
-            </xsl:variable>
             <xsl:value-of select="fn:replace(normalize-space($content), '[\n\t\r]', '')"/>
         </edm:dataProvider>
     </xsl:template>
@@ -2227,7 +2233,6 @@
         </xsl:analyze-string>
     </xsl:template>
     
-    <xsl:template mode="all-but-address" match="address"/>
     <xsl:template match="bibref/imprint" />
     <xsl:template match="bibref/name | bibref/title">
         <xsl:if test="local-name() = 'title' and local-name(preceding-sibling::*[1]) = 'name'">
