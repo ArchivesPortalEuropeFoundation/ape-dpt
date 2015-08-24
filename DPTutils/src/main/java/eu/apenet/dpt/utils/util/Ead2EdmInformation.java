@@ -209,6 +209,9 @@ public class Ead2EdmInformation {
         private boolean metsLicenceRetrieved;
         private boolean languageOnCLevel;
 
+        private boolean hasDataFromRepository = false;
+        private boolean stillInFirstDataRepository = true;
+
         @Override
         public void startElement(String namespaceURI, String localName,
                 String qName, Attributes atts) throws SAXException {
@@ -234,6 +237,9 @@ public class Ead2EdmInformation {
                 }
             } else if (qName.equals("repository")) {
                 this.inRepository = true;
+                if(hasDataFromRepository) {
+                    stillInFirstDataRepository = false;
+                }
             } else if (qName.equals("language")) {
                 // Check if the language is in element "<langusage>".
                 if (this.inLangusage
@@ -344,7 +350,7 @@ public class Ead2EdmInformation {
 
         @Override
         public void characters(char ch[], int start, int length) {
-            if (this.inRepository) {
+            if (this.inRepository && !hasDataFromRepository  && stillInFirstDataRepository) {
                 int index = 0;
                 String textBetween = new String(ch, start, length);
                 while (index < textBetween.length()) {
@@ -357,6 +363,9 @@ public class Ead2EdmInformation {
                 if (this.inArchdesc && !this.inC) {
                     archdescValue.append(textBetween.substring(0, index));
                     archdescRepository = archdescValue.toString();
+                    if(StringUtils.isNotBlank(archdescRepository)) {
+                        hasDataFromRepository = true;
+                    }
                 }
             }
             if (this.inP) {

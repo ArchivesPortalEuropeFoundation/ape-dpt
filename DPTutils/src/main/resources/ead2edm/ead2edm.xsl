@@ -96,8 +96,10 @@
             <xsl:choose>
                 <xsl:when test="$useExistingRepository=&quot;true&quot;">
                     <xsl:choose>
-                        <xsl:when test="/ead/archdesc/did/repository[descendant-or-self::text() != ''][1]">
-                            <xsl:apply-templates select="/ead/archdesc/did/repository[1]"/>
+                        <xsl:when test="/ead/archdesc/did/repository[descendant-or-self::text() != '']">
+                            <xsl:call-template name="repository">
+                                <xsl:with-param name="repository" select="/ead/archdesc/did/repository[descendant-or-self::text() != '']"/>
+                            </xsl:call-template>
                         </xsl:when>
                         <xsl:otherwise>
                             <edm:dataProvider>
@@ -169,12 +171,15 @@
         </ore:Aggregation>
         <edm:ProvidedCHO>
             <xsl:attribute name="rdf:about" select="concat('providedCHO_', .)"/>
-            <xsl:if test="$minimalConversion = 'false' and /ead/archdesc/did/origination[text() != '']">
-                <xsl:for-each select="/ead/archdesc/did/origination[text() != '']">
-                    <dc:creator>
-                        <xsl:value-of select="normalize-space(.)"/>
-                    </dc:creator>
-                </xsl:for-each>
+            <xsl:if test="$minimalConversion = 'false' and (/ead/archdesc/did/origination[text() != ''] or count(/ead/archdesc/did/origination/*) > 0)">
+                <xsl:call-template name="creator">
+                    <xsl:with-param name="originations" select="/ead/archdesc/did/origination"/>
+                </xsl:call-template>
+                <!--<xsl:for-each select="/ead/archdesc/did/origination[text() != '']">-->
+                    <!--<dc:creator>-->
+                        <!--<xsl:value-of select="normalize-space(.)"/>-->
+                    <!--</dc:creator>-->
+                <!--</xsl:for-each>-->
             </xsl:if>
             <xsl:if test="/ead/archdesc/scopecontent[@encodinganalog='summary']">
                 <xsl:apply-templates select="/ead/archdesc/scopecontent[@encodinganalog='summary']" />
@@ -510,9 +515,9 @@
 
         <xsl:variable name="updatedInheritedOriginations">
             <xsl:choose>
-                <xsl:when test="$minimalConversion = 'false' and $inheritOrigination = 'true' and ./did/origination[text() != '']">
+                <xsl:when test="$minimalConversion = 'false' and $inheritOrigination = 'true' and (./did/origination[text() != ''] or count(./did/origination/*) > 0)">
                     <xsl:call-template name="creator">
-                        <xsl:with-param name="originations" select="./did/origination[text() != '']"/>
+                        <xsl:with-param name="originations" select="./did/origination"/>
                     </xsl:call-template>
                 </xsl:when>
                 <xsl:otherwise>
@@ -959,9 +964,9 @@
                 </dc:identifier>
             </xsl:if>
             <xsl:choose>
-                <xsl:when test="$minimalConversion = 'false' and $currentnode/did/origination[text() != '']">
+                <xsl:when test="$minimalConversion = 'false' and ($currentnode/did/origination[text() != ''] or count($currentnode/did/origination/*) > 0)">
                     <xsl:call-template name="creator">
-                        <xsl:with-param name="originations" select="$currentnode/did/origination[text() != '']"/>
+                        <xsl:with-param name="originations" select="$currentnode/did/origination"/>
                     </xsl:call-template>
                 </xsl:when>
                 <xsl:when test="$inheritOrigination = 'true' and fn:string-length($inheritedOriginations) > 0">
@@ -1653,17 +1658,12 @@
         <xsl:param name="originations"/>
         <xsl:for-each select="$originations">
             <xsl:element name="dc:creator">
-                <xsl:for-each select="./corpname[text() != '']|./famname[text() != '']|./name[text() != '']|./persname[text() != '']">
-                    <xsl:value-of select="fn:replace(normalize-space(.), '[\n\t\r]', '')"/>
-                </xsl:for-each>
-                <xsl:for-each select=".[text() != '']">
-                    <xsl:variable name="text">
-                        <xsl:value-of select="fn:replace(normalize-space(.), '[\n\t\r]', '')"/>
-                    </xsl:variable>
-                    <xsl:if test="fn:string-length($text) > 0">
-                        <xsl:value-of select="$text"/>
-                    </xsl:if>
-                </xsl:for-each>
+                <xsl:variable name="text">
+                    <xsl:value-of select="fn:replace(normalize-space(string-join(., ' ')), '[\n\t\r]', '')"/>
+                </xsl:variable>
+                <xsl:if test="fn:string-length($text) > 0">
+                    <xsl:value-of select="$text"/>
+                </xsl:if>
             </xsl:element>
         </xsl:for-each>
     </xsl:template>
@@ -2073,8 +2073,10 @@
         </xsl:choose>
     </xsl:template>
     <xsl:template match="head">
-        <xsl:value-of select="node()"/>
-        <xsl:text>: </xsl:text>
+        <xsl:if test="normalize-space(node()) != ''">
+            <xsl:value-of select="node()"/>
+            <xsl:text>: </xsl:text>
+        </xsl:if>
     </xsl:template>
     <xsl:template match="lb">
         <xsl:text> </xsl:text>
