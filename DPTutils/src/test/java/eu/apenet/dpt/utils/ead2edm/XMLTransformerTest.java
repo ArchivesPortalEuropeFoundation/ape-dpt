@@ -12,7 +12,7 @@ import java.util.Properties;
  */
 public class XMLTransformerTest {
 
-    @Test
+    @Test @Ignore
     public void testTransformWithNoLanguage() throws TransformerException {
         Properties parameters = getParameters();
         XMLTransformer xmlTransformer = new XMLTransformer("/Users/yoannmoranville/Documents/Work/APE/dpt/branches/DPT-project-2.1/DPTutils/src/main/resources/ead2edm/ead2edm.xsl", parameters);
