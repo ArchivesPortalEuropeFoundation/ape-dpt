@@ -366,7 +366,6 @@ public class Ead2EdmInformation {
                     }
                     archdescValue.append(textBetween.substring(0, index));
                     archdescRepository = archdescValue.toString();
-                    LOG.info(stillInFirstDataRepository + " - " + archdescRepository);
                     if(StringUtils.isNotBlank(archdescRepository)) {
                         hasDataFromRepository = true;
                     }
