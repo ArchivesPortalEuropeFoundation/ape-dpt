@@ -237,9 +237,6 @@ public class Ead2EdmInformation {
                 }
             } else if (qName.equals("repository")) {
                 this.inRepository = true;
-                if(hasDataFromRepository) {
-                    stillInFirstDataRepository = false;
-                }
             } else if (qName.equals("language")) {
                 // Check if the language is in element "<langusage>".
                 if (this.inLangusage
@@ -326,6 +323,9 @@ public class Ead2EdmInformation {
                 // Nothing to do here
             } else if (qName.equals("repository")) {
                 this.inRepository = false;
+                if(hasDataFromRepository) {
+                    stillInFirstDataRepository = false;
+                }
             } else if (qName.equals("language")) {
                 // Nothing to do here
             } else if (qName.equals("userestrict")) {
@@ -350,7 +350,7 @@ public class Ead2EdmInformation {
 
         @Override
         public void characters(char ch[], int start, int length) {
-            if (this.inRepository && !hasDataFromRepository  && stillInFirstDataRepository) {
+            if (this.inRepository && (!hasDataFromRepository  || stillInFirstDataRepository)) {
                 int index = 0;
                 String textBetween = new String(ch, start, length);
                 while (index < textBetween.length()) {
@@ -361,8 +361,12 @@ public class Ead2EdmInformation {
                     }
                 }
                 if (this.inArchdesc && !this.inC) {
+                    if(archdescRepository != null && !archdescRepository.endsWith(" ")) {
+                        archdescValue.append(" ");
+                    }
                     archdescValue.append(textBetween.substring(0, index));
                     archdescRepository = archdescValue.toString();
+                    LOG.info(stillInFirstDataRepository + " - " + archdescRepository);
                     if(StringUtils.isNotBlank(archdescRepository)) {
                         hasDataFromRepository = true;
                     }
