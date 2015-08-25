@@ -369,6 +369,7 @@ public class Ead2EdmInformation {
                     if(StringUtils.isNotBlank(archdescRepository)) {
                         hasDataFromRepository = true;
                     }
+                    LOG.info(getArchdescRepository());
                 }
             }
             if (this.inP) {
