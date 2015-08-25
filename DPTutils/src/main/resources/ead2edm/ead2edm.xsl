@@ -424,9 +424,9 @@
     <xsl:template match="ead/archdesc">
         <xsl:apply-templates select="dsc/c">
             <xsl:with-param name="inheritedOriginations">
-                <xsl:if test="$minimalConversion = 'false' and ./did/origination[text() != '']">
+                <xsl:if test="$minimalConversion = 'false' and (./did/origination[text() != ''] or count(./did/origination/*) > 0)">
                     <xsl:call-template name="creator">
-                        <xsl:with-param name="originations" select="./did/origination[text() != '']"/>
+                        <xsl:with-param name="originations" select="./did/origination"/>
                     </xsl:call-template>
                 </xsl:if>
             </xsl:with-param>
@@ -1657,14 +1657,14 @@
     <xsl:template name="creator">
         <xsl:param name="originations"/>
         <xsl:for-each select="$originations">
-            <xsl:element name="dc:creator">
-                <xsl:variable name="text">
-                    <xsl:value-of select="fn:replace(normalize-space(string-join(., ' ')), '[\n\t\r]', '')"/>
-                </xsl:variable>
-                <xsl:if test="fn:string-length($text) > 0">
+            <xsl:variable name="text">
+                <xsl:value-of select="fn:replace(normalize-space(string-join(., ' ')), '[\n\t\r]', '')"/>
+            </xsl:variable>
+            <xsl:if test="fn:string-length($text) > 0">
+                <xsl:element name="dc:creator">
                     <xsl:value-of select="$text"/>
-                </xsl:if>
-            </xsl:element>
+                </xsl:element>
+            </xsl:if>
         </xsl:for-each>
     </xsl:template>
     <xsl:template name="custodhist">
