@@ -1230,7 +1230,7 @@
                                 </xsl:otherwise>
                             </xsl:choose>
                         </xsl:when>
-                        <xsl:when test="$inheritFromParent">
+                        <xsl:when test="$minimalConversion = 'false' and $inheritFromParent = true()">
                             <xsl:choose>
                                 <xsl:when test="$parentcnode/did/langmaterial">
                                     <xsl:call-template name="language">
@@ -1283,7 +1283,7 @@
                                 </xsl:otherwise>
                             </xsl:choose>
                         </xsl:when>
-                        <xsl:when test="$inheritFromParent">
+                        <xsl:when test="$minimalConversion = 'false' and $inheritFromParent = true()">
                             <xsl:choose>
                                 <xsl:when test="$parentcnode/did/langmaterial">
                                     <xsl:call-template name="language">
