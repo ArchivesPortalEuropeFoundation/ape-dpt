@@ -485,21 +485,21 @@ public class EdmOptionsPanel extends JPanel {
         }
 
 //        if (this.batch) {
-            panel = new JPanel(new GridLayout(1, 3));
-            panel.add(new JLabel(labels.getString("edm.panel.license.inheritLicense") + ":" + "*"));
-            useExistingRightsInfoCheckbox = new JCheckBox(labels.getString("ese.takeFromFileLicense"));
-            useExistingRightsInfoCheckbox.setSelected(true);
-            useExistingRightsInfoCheckbox.addItemListener(new ItemListener() {
-                @Override
-                public void itemStateChanged(ItemEvent e) {
-                    //empty method on purpose
-                }
-            });
-            panel.add(useExistingRightsInfoCheckbox);
-            panel.add(new JLabel());
-            panel.setBorder(BLACK_LINE);
-            panel.setVisible(true);
-            formPanel.add(panel);
+        panel = new JPanel(new GridLayout(1, 3));
+        panel.add(new JLabel(labels.getString("edm.panel.license.inheritLicense") + ":" + "*"));
+        useExistingRightsInfoCheckbox = new JCheckBox(labels.getString("ese.takeFromFileLicense"));
+        useExistingRightsInfoCheckbox.setSelected(true);
+        useExistingRightsInfoCheckbox.addItemListener(new ItemListener() {
+            @Override
+            public void itemStateChanged(ItemEvent e) {
+                //empty method on purpose
+            }
+        });
+        panel.add(useExistingRightsInfoCheckbox);
+        panel.add(new JLabel());
+        panel.setBorder(BLACK_LINE);
+        panel.setVisible(true);
+        formPanel.add(panel);
 //        } else {
 //            panel = new JPanel(new GridLayout(3, 3));
 //            inheritLicenseGroup = new ButtonGroup();
@@ -876,6 +876,9 @@ public class EdmOptionsPanel extends JPanel {
 
         config.setInheritLanguage(true);
         if (this.batch) {
+            if (!useExistingLanguageCheckbox.isSelected()) {
+                config.setInheritLanguage(false);
+            }
             StringBuilder result = new StringBuilder();
             Object[] languageValues = languageList.getSelectedValues();
             for (int i = 0; i < languageValues.length; i++) {
@@ -893,6 +896,9 @@ public class EdmOptionsPanel extends JPanel {
                     if (btn.getActionCommand().equals(NO)) {
                         config.setInheritLanguage(false);
                     } else if (btn.getActionCommand().equals(PROVIDE)) {
+                        if (!useExistingLanguageCheckbox.isSelected()) {
+                            config.setInheritLanguage(false);
+                        }
                         StringBuilder result = new StringBuilder();
                         Object[] languageValues = languageList.getSelectedValues();
                         for (int i = 0; i < languageValues.length; i++) {
@@ -912,14 +918,14 @@ public class EdmOptionsPanel extends JPanel {
 
 //        config.setInheritRightsInfo(false);
 //        if (this.batch) {
-            config.setInheritRightsInfo(true);
-            Enumeration<AbstractButton> licenseEnumeration = licenseGroup.getElements();
-            while (licenseEnumeration.hasMoreElements()) {
-                AbstractButton btn = licenseEnumeration.nextElement();
-                if (btn.isSelected()) {
-                    config.setRights(getCorrectRights(btn.getActionCommand()));
-                }
+        config.setInheritRightsInfo(true);
+        Enumeration<AbstractButton> licenseEnumeration = licenseGroup.getElements();
+        while (licenseEnumeration.hasMoreElements()) {
+            AbstractButton btn = licenseEnumeration.nextElement();
+            if (btn.isSelected()) {
+                config.setRights(getCorrectRights(btn.getActionCommand()));
             }
+        }
 //        } else {
 //            enumeration = inheritLicenseGroup.getElements();
 //            while (enumeration.hasMoreElements()) {
@@ -1161,11 +1167,11 @@ public class EdmOptionsPanel extends JPanel {
 //                }
 //            }
 //        } else {
-            if (licenseGroup == null) {
-                throw new Exception("licenseGroup is null");
-            } else if (!isRadioBtnChecked(licenseGroup)) {
-                throw new Exception("licenseGroup is not checked");
-            }
+        if (licenseGroup == null) {
+            throw new Exception("licenseGroup is null");
+        } else if (!isRadioBtnChecked(licenseGroup)) {
+            throw new Exception("licenseGroup is not checked");
+        }
 //        }
     }
 
