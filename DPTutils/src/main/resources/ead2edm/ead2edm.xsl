@@ -467,11 +467,21 @@
                 </xsl:if>
             </xsl:with-param>
             <xsl:with-param name="inheritedRightsInfo">
-                <xsl:if test="./userestrict[@type='dao']">
+                <xsl:choose>
+                    <xsl:when test="./userestrict[@type='dao']/p[1]/extref/@xlink:href != ''">
+                        <xsl:call-template name="createRights">
+                            <xsl:with-param name="rights" select="./userestrict[@type='dao']"/>
+                        </xsl:call-template>
+                    </xsl:when>
+                    <xsl:otherwise>
+                        <xsl:text>empty</xsl:text>
+                    </xsl:otherwise>
+                </xsl:choose>
+<!--                <xsl:if test="./userestrict[@type='dao']/p[1]/extref/@xlink:href != ''">
                     <xsl:call-template name="createRights">
                         <xsl:with-param name="rights" select="./userestrict[@type='dao']"/>
                     </xsl:call-template>
-                </xsl:if>
+                </xsl:if>-->
             </xsl:with-param>
             <xsl:with-param name="inheritedBibref">
                 <xsl:if test="$minimalConversion = 'false' and ./bibliography/bibref[text() != '']">
@@ -587,7 +597,7 @@
         </xsl:variable>
         <xsl:variable name="updatedInheritedRightsInfo">
             <xsl:choose>
-                <xsl:when test="$inheritRightsInfo = 'true' and ./userestrict[@type='dao']">
+                <xsl:when test="$inheritRightsInfo = 'true' and ./userestrict[@type='dao']/p[1]/extref/@xlink:href != ''">
                     <xsl:call-template name="createRights">
                         <xsl:with-param name="rights" select="./userestrict[@type='dao']"/>
                     </xsl:call-template>
@@ -858,12 +868,12 @@
                     <xsl:choose>
                         <xsl:when test="$useExistingRightsInfo='true'">
                             <xsl:choose>
-                                <xsl:when test="$currentnode/userestrict[@type='dao']">
+                                <xsl:when test="$currentnode/userestrict[@type='dao']/p[1]/extref/@xlink:href != ''">
                                     <xsl:call-template name="createRights">
                                         <xsl:with-param name="rights" select="$currentnode/userestrict[@type='dao']"/>
                                     </xsl:call-template>
                                 </xsl:when>
-                                <xsl:when test="$inheritRightsInfo='true' and $inheritedRightsInfo != ''">
+                                <xsl:when test="$inheritRightsInfo='true' and $inheritedRightsInfo != 'empty'">
                                     <xsl:copy-of select="$inheritedRightsInfo"/>
                                 </xsl:when>
                                 <xsl:otherwise>
@@ -877,7 +887,7 @@
                         </xsl:when>
                         <xsl:otherwise>
                             <xsl:choose>
-                                <xsl:when test="$inheritRightsInfo=&quot;true&quot; and $inheritedRightsInfo != ''">
+                                <xsl:when test="$inheritRightsInfo=&quot;true&quot; and $inheritedRightsInfo != 'empty'">
                                     <xsl:copy-of select="$inheritedRightsInfo"/>
                                 </xsl:when>
                                 <xsl:otherwise>
@@ -1925,7 +1935,7 @@
                                         <xsl:with-param name="rights" select="current()/../../userestrict[@type='dao']"/>
                                     </xsl:call-template> 
                                 </xsl:when>
-                                <xsl:when test="$inheritedRightsInfo != ''">
+                                <xsl:when test="$inheritedRightsInfo != 'empty'">
                                     <xsl:copy-of select="$inheritedRightsInfo"/>
                                 </xsl:when>
                                 <xsl:otherwise>
@@ -1939,7 +1949,7 @@
                         </xsl:when>
                         <xsl:otherwise>
                             <xsl:choose>
-                                <xsl:when test="$inheritedRightsInfo != ''">
+                                <xsl:when test="$inheritedRightsInfo != 'empty'">
                                     <xsl:copy-of select="$inheritedRightsInfo"/>
                                 </xsl:when>
                                 <xsl:otherwise>
