@@ -874,7 +874,7 @@ public class EdmOptionsPanel extends JPanel {
             }
         }
 
-        config.setInheritLanguage(false);
+        config.setInheritLanguage(true);
         if (this.batch) {
             StringBuilder result = new StringBuilder();
             Object[] languageValues = languageList.getSelectedValues();
@@ -890,8 +890,8 @@ public class EdmOptionsPanel extends JPanel {
             while (enumeration.hasMoreElements()) {
                 AbstractButton btn = enumeration.nextElement();
                 if (/*inheritLanguageCheckbox.isSelected() &&*/btn.isSelected()) {
-                    if (btn.getActionCommand().equals(YES)) {
-                        config.setInheritLanguage(true);
+                    if (btn.getActionCommand().equals(NO)) {
+                        config.setInheritLanguage(false);
                     } else if (btn.getActionCommand().equals(PROVIDE)) {
                         StringBuilder result = new StringBuilder();
                         Object[] languageValues = languageList.getSelectedValues();
