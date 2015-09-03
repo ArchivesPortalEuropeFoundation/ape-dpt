@@ -2590,7 +2590,7 @@
                 <xsl:choose>
                     <xsl:when test="child::chronlist and count(child::*) eq 1"/>
                     <xsl:when test="child::genreform[@type='typir'] and count(child::*) &gt; 1">
-                        <xsl:if test="not(child::head and count(child::*) = 2) and not(string-length(normalize-space(descendant-or-self::text())) = 0)">
+                        <xsl:if test="not(child::head and count(child::*) = 2) and not(string-length(normalize-space(string-join(descendant-or-self::text(), ''))) = 0)">
                             <controlaccess>
                             <!--../index/indexentry//geogname | ../index/indexentry//subject | ../index/indexentry//famname | ../index/indexentry//persname | ../index/indexentry//corpname | ../index/indexentry//occupation | ../index/indexentry//genreform | ../index/indexentry//function | ../index/indexentry//title | ../index/indexentry//name-->
                             <xsl:for-each
@@ -2609,7 +2609,7 @@
                         </xsl:if>
                     </xsl:when>
                     <xsl:otherwise>
-                        <xsl:if test="not(string-length(normalize-space(descendant-or-self::text())) = 0)">
+                        <xsl:if test="not(string-length(normalize-space(string-join(descendant-or-self::text(), ''))) = 0)">
                             <controlaccess>                                                                                                                           <!--../index/indexentry//geogname | ../index/indexentry//subject | ../index/indexentry//famname | ../index/indexentry//persname | ../index/indexentry//corpname | ../index/indexentry//occupation | ../index/indexentry//genreform | ../index/indexentry//function | ../index/indexentry//title | ../index/indexentry//name-->
                                 <xsl:for-each select="geogname | subject | famname | persname | corpname | occupation | genreform | function | title | p | head | name | indexentry//geogname | indexentry//subject | indexentry//famname | indexentry//persname | indexentry//corpname | indexentry//occupation | indexentry//genreform | indexentry//function | indexentry//title | indexentry//name | indexentry//ref">
                                     <xsl:if test="not(local-name()='genreform' and @type='typir') and not(local-name()='ref')">
