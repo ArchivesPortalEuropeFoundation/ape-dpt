@@ -12,10 +12,4 @@
 
     <xsl:template match="titlestmt/subtitle" mode="copy" />
 
-    <xsl:template match="archdesc/did/unitid" mode="copy">
-        <unitid encodinganalog="3.1.1" type="call number">
-            <xsl:value-of select="." />
-        </unitid>
-    </xsl:template>
-
 </xsl:stylesheet>
