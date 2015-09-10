@@ -29,9 +29,7 @@ import eu.apenet.dpt.utils.util.Xsd_enum;
 
 import java.awt.*;
 import java.awt.event.*;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.InputStream;
+import java.io.*;
 import java.util.*;
 
 import javax.swing.*;
@@ -40,6 +38,7 @@ import javax.swing.event.TreeExpansionListener;
 import javax.swing.tree.TreeModel;
 import javax.swing.tree.TreePath;
 
+import org.apache.commons.io.input.ReaderInputStream;
 import org.apache.log4j.Logger;
 import org.jdesktop.swingx.JXTreeTable;
 import org.w3c.dom.*;
@@ -383,13 +382,15 @@ public class APETabbedPane extends JTabbedPane {
 
 //        fileInstance.setLastOperation(FileInstance.Operation.CREATE_TREE);
         try {
-            InputStream is;
+            ReaderInputStream readerInputStream;
             if(fileInstance.getCurrentLocation() == null || fileInstance.getCurrentLocation().equals("")){
-                is = new FileInputStream(file.getAbsolutePath());
+                Reader reader = new FileReader(file.getAbsolutePath());
+                readerInputStream = new ReaderInputStream(reader, "UTF-8");
             } else {
-                is = new FileInputStream(fileInstance.getCurrentLocation());
+                Reader reader = new FileReader(fileInstance.getCurrentLocation());
+                readerInputStream = new ReaderInputStream(reader, "UTF-8");
             }
-            Document doc = DOMUtil.createDocument(is);
+            Document doc = DOMUtil.createDocument(readerInputStream);
             tree = new JXTreeTable();
             tree.setTreeTableModel(new XMLTreeTableModel(doc, dataPreparationToolGUI.getDateNormalization(), dataPreparationToolGUI.getLevelList(), labels, fileInstance, dataPreparationToolGUI));
             tree.setTreeCellRenderer(new XMLTreeTableRenderer());
