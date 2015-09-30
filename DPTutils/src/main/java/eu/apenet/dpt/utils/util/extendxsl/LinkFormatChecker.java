@@ -27,7 +27,13 @@ import org.apache.log4j.Logger;
 public class LinkFormatChecker extends ExtensionFunctionDefinition {
     private static final Logger LOG = Logger.getLogger(LinkFormatChecker.class);
     private static final StructuredQName FUNCTION_NAME = new StructuredQName("ape", "http://www.archivesportaleurope.net/functions", "checkLink");
-    private static final Pattern URL_PATTERN = Pattern.compile("^(http|https|ftp)\\://[a-zA-Z0-9\\-\\.]+\\.[a-zA-Z]{2,3}(:[a-zA-Z0-9]*)?/?([a-zA-Z0-9\\-\\._\\?\\,\\'/\\\\\\+&amp;%\\$\\:#\\=~\\[\\]\\(\\)@;!])*$");
+    
+    //First row: prefix; second row: alphanumeric URL; third row: IP4 URL; fourth row: optional port and anything after the /
+    private static final Pattern URL_PATTERN = Pattern.compile("^(http|https|ftp)\\://"
+            + "(([a-zA-Z0-9\\-\\.]+\\.[a-zA-Z]{2,3})?|"
+            + "(^([01]?\\d\\d?|2[0-4]\\d|25[0-5])\\.([01]?\\d\\d?|2[0-4]\\d|25[0-5])\\.\n([01]?\\d\\d?|2[0-4]\\d|25[0-5])\\.([01]?\\d\\d?|2[0-4]\\d|25[0-5])$)?)"
+            + "(:[a-zA-Z0-9]*)?/?([a-zA-Z0-9\\-\\._\\?\\,\\'/\\\\\\+&amp;%\\$\\:#\\=~\\[\\]\\(\\)@;!])*$");
+    
     private static final String[] FORBIDDEN_EXTENSIONS = {"bmp", "gif", "jpg", "png", "psd", "pspimage",
             "tif", "tiff", "dds", "indd", "pct", "pict", "tga", "yuv", "ai", "eps", "ps", "svg", "3dm",
             "3ds", "max", "obj", "doc", "docx", "log", "msg", "odt", "pages", "pdf", "rtf", "txt", "wpd",
