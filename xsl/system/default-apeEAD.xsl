@@ -403,14 +403,14 @@
                     </xsl:otherwise>
                 </xsl:choose>
             </xsl:if>
-            <xsl:if test="not(@url) and normalize-space($url)"><!-- todo -->
+            <xsl:if test="not(@url) and normalize-space($url)">
                 <xsl:variable name="daolink" select="ape:checkLink($url)"/>
                 <xsl:if test="normalize-space($daolink) != ''">
                     <xsl:attribute name="url" select="$daolink"/>
                 </xsl:if>
             </xsl:if>
             <xsl:if test="@url">
-                <xsl:variable name="daolink" select="ape:checkLink(@url)"/><!-- todo -->
+                <xsl:variable name="daolink" select="ape:checkLink(@url)"/>
                 <xsl:if test="normalize-space($daolink) != ''">
                     <xsl:attribute name="url" select="$daolink"/>
                 </xsl:if>
@@ -426,24 +426,29 @@
         </eadid>
     </xsl:template>
 
-    <xsl:function name="none:addDaolink"><!-- todo -->
+    <xsl:template name="none:addDaolink">
         <xsl:param name="valueToCheck" as="xs:anyAtomicType*"/>
         <xsl:param name="title" as="xs:anyAtomicType*"/>
-        <xsl:param name="context" as="xs:anyAtomicType*"/>
+        <xsl:param name="context" />
         <xsl:variable name="daolink" select="ape:checkLink($valueToCheck)"/>
-        <xsl:if test="normalize-space($daolink) != ''">
-            <dao>
-                <xsl:attribute name="xlink:href" select="$daolink"/>
-                <xsl:if test="normalize-space($title) != ''">
-                    <xsl:attribute name="xlink:title" select="$title"/>
-                </xsl:if>
-                <xsl:call-template name="daoRoleType"/>
-                <xsl:if test="none:isNotThumbnail($context)">
-                    <xsl:call-template name="daoDigitalType"/>
-                </xsl:if>
-            </dao>
-        </xsl:if>
-    </xsl:function>
+        <xsl:choose>
+            <xsl:when test="normalize-space($daolink) != ''">
+                <dao>
+                    <xsl:attribute name="xlink:href" select="$daolink"/>
+                    <xsl:if test="normalize-space($title) != ''">
+                        <xsl:attribute name="xlink:title" select="$title"/>
+                    </xsl:if>
+                    <xsl:call-template name="daoRoleType"/>
+                    <xsl:if test="none:isNotThumbnail($context)">
+                        <xsl:call-template name="daoDigitalType"/>
+                    </xsl:if>
+                </dao>
+            </xsl:when>
+            <xsl:otherwise>
+                <xsl:message>Link to digital object removed due to incomplete information (<xsl:value-of select="$valueToCheck"/>).</xsl:message>
+            </xsl:otherwise>
+        </xsl:choose>
+    </xsl:template>
 
     <!-- filedesc -->
     <xsl:template match="filedesc" mode="copy">
@@ -1139,28 +1144,28 @@
 
     <!-- archdesc/did/unitid -->
     <xsl:template match="archdesc/did/unitid" mode="copy">
-        <xsl:choose>
-            <xsl:when test="//eadid/@countrycode='NL'">
-                <unitid encodinganalog="3.1.1" type="call number">
-                    <xsl:value-of select="//eadid/text()"/>
-                </unitid>
-            </xsl:when>
-            <xsl:when test="@countrycode and @repositorycode">
-                <unitid encodinganalog="3.1.1" type="call number">
-                    <xsl:value-of
-                        select="concat(concat(concat(concat(@countrycode,'/'),@repositorycode), '/'), .)"
-                    />
-                </unitid>
-            </xsl:when>
-            <xsl:otherwise>
+        <!--<xsl:choose>-->
+            <!--<xsl:when test="//eadid/@countrycode='NL'">-->
+                <!--<unitid encodinganalog="3.1.1" type="call number">-->
+                    <!--<xsl:value-of select="//eadid/text()"/>-->
+                <!--</unitid>-->
+            <!--</xsl:when>-->
+            <!--<xsl:when test="@countrycode and @repositorycode">-->
+                <!--<unitid encodinganalog="3.1.1" type="call number">-->
+                    <!--<xsl:value-of-->
+                        <!--select="concat(concat(concat(concat(@countrycode,'/'),@repositorycode), '/'), .)"-->
+                    <!--/>-->
+                <!--</unitid>-->
+            <!--</xsl:when>-->
+            <!--<xsl:otherwise>-->
                 <unitid encodinganalog="3.1.1" type="call number">
                     <xsl:if test="extptr">
                         <xsl:apply-templates select="extptr" mode="#current"/>
                     </xsl:if>
                     <xsl:value-of select="."/>
                 </unitid>
-            </xsl:otherwise>
-        </xsl:choose>
+            <!--</xsl:otherwise>-->
+        <!--</xsl:choose>-->
     </xsl:template>
 
     <!-- archdesc/did/unitdate -->
@@ -1419,14 +1424,11 @@
 
     <!-- copy archdesc/did/dao -->
     <xsl:template match="archdesc/did/dao" mode="copy">
-        <dao>
-            <xsl:if test="@*:href!=''">
-                <xsl:attribute name="xlink:href" select="ape:checkLink(@*:href)"/>
-            </xsl:if>
-            <xsl:if test="@*:title!=''">
-                <xsl:attribute name="xlink:title" select="@*:title"/>
-            </xsl:if>
-        </dao>
+        <xsl:call-template name="none:addDaolink">
+            <xsl:with-param name="context" select="."/>
+            <xsl:with-param name="valueToCheck" select="@*:href"/>
+            <xsl:with-param name="title" select="@*:title"/>
+        </xsl:call-template>
     </xsl:template>
 
     <xsl:template match="physdesc" mode="copy level">
@@ -1680,14 +1682,11 @@
 
     <!--bioghist/dao ONLY on archdesc level!-->
     <xsl:template match="bioghist[not(ancestor::dsc)]/dao" mode="copy nested">
-        <dao>
-            <xsl:if test="@*:href!=''">
-                <xsl:attribute name="xlink:href" select="ape:checkLink(@*:href)"/>
-            </xsl:if>
-            <xsl:if test="@*:title!=''">
-                <xsl:attribute name="xlink:title" select="@*:title"/>
-            </xsl:if>
-        </dao>
+        <xsl:call-template name="none:addDaolink">
+            <xsl:with-param name="context" select="."/>
+            <xsl:with-param name="valueToCheck" select="@*:href"/>
+            <xsl:with-param name="title" select="@*:title"/>
+        </xsl:call-template>
     </xsl:template>
 
     <!-- appraisal -->
@@ -2289,14 +2288,11 @@
     </xsl:template>
 
     <xsl:template match="scopecontent/dao" mode="copy nested level">
-        <dao>
-            <xsl:if test="@*:href!=''">
-                <xsl:attribute name="xlink:href" select="ape:checkLink(@*:href)"/>
-            </xsl:if>
-            <xsl:if test="@*:title!=''">
-                <xsl:attribute name="xlink:title" select="@*:title"/>
-            </xsl:if>
-        </dao>
+        <xsl:call-template name="none:addDaolink">
+            <xsl:with-param name="context" select="."/>
+            <xsl:with-param name="valueToCheck" select="@*:href"/>
+            <xsl:with-param name="title" select="@*:title"/>
+        </xsl:call-template>
     </xsl:template>
 
     <xsl:template match="scopecontent/address" mode="copy nested level">
@@ -2594,7 +2590,7 @@
                 <xsl:choose>
                     <xsl:when test="child::chronlist and count(child::*) eq 1"/>
                     <xsl:when test="child::genreform[@type='typir'] and count(child::*) &gt; 1">
-                        <xsl:if test="not(child::head and count(child::*) = 2)">
+                        <xsl:if test="not(child::head and count(child::*) = 2) and not(string-length(normalize-space(string-join(descendant-or-self::text(), ''))) = 0)">
                             <controlaccess>
                             <!--../index/indexentry//geogname | ../index/indexentry//subject | ../index/indexentry//famname | ../index/indexentry//persname | ../index/indexentry//corpname | ../index/indexentry//occupation | ../index/indexentry//genreform | ../index/indexentry//function | ../index/indexentry//title | ../index/indexentry//name-->
                             <xsl:for-each
@@ -2613,38 +2609,40 @@
                         </xsl:if>
                     </xsl:when>
                     <xsl:otherwise>
-                        <controlaccess>                                                                                                                           <!--../index/indexentry//geogname | ../index/indexentry//subject | ../index/indexentry//famname | ../index/indexentry//persname | ../index/indexentry//corpname | ../index/indexentry//occupation | ../index/indexentry//genreform | ../index/indexentry//function | ../index/indexentry//title | ../index/indexentry//name-->
-                            <xsl:for-each select="geogname | subject | famname | persname | corpname | occupation | genreform | function | title | p | head | name | indexentry//geogname | indexentry//subject | indexentry//famname | indexentry//persname | indexentry//corpname | indexentry//occupation | indexentry//genreform | indexentry//function | indexentry//title | indexentry//name | indexentry//ref">
-                                <xsl:if test="not(local-name()='genreform' and @type='typir') and not(local-name()='ref')">
-                                    <xsl:element name="{local-name()}" namespace="urn:isbn:1-931666-22-9">
-                                        <xsl:apply-templates select="node()" mode="#current"/>
-                                    </xsl:element>
-                                </xsl:if>
-                                <xsl:if test="local-name()='ref'">
+                        <xsl:if test="not(string-length(normalize-space(string-join(descendant-or-self::text(), ''))) = 0)">
+                            <controlaccess>                                                                                                                           <!--../index/indexentry//geogname | ../index/indexentry//subject | ../index/indexentry//famname | ../index/indexentry//persname | ../index/indexentry//corpname | ../index/indexentry//occupation | ../index/indexentry//genreform | ../index/indexentry//function | ../index/indexentry//title | ../index/indexentry//name-->
+                                <xsl:for-each select="geogname | subject | famname | persname | corpname | occupation | genreform | function | title | p | head | name | indexentry//geogname | indexentry//subject | indexentry//famname | indexentry//persname | indexentry//corpname | indexentry//occupation | indexentry//genreform | indexentry//function | indexentry//title | indexentry//name | indexentry//ref">
+                                    <xsl:if test="not(local-name()='genreform' and @type='typir') and not(local-name()='ref')">
+                                        <xsl:element name="{local-name()}" namespace="urn:isbn:1-931666-22-9">
+                                            <xsl:apply-templates select="node()" mode="#current"/>
+                                        </xsl:element>
+                                    </xsl:if>
+                                    <xsl:if test="local-name()='ref'">
+                                        <p>
+                                            <extref>
+                                                <xsl:if test="@href">
+                                                    <xsl:attribute name="xlink:href" select="@href"/>
+                                                </xsl:if>
+                                                <xsl:if test="@xlink:href">
+                                                    <xsl:attribute name="xlink:href" select="@xlink:href"/>
+                                                </xsl:if>
+                                                <xsl:if test="text()">
+                                                    <xsl:attribute name="xlink:title" select="text()"/>
+                                                </xsl:if>
+                                            </extref>
+                                        </p>
+                                    </xsl:if>
+                                </xsl:for-each>
+                                <xsl:for-each select="list/item">
                                     <p>
-                                        <extref>
-                                            <xsl:if test="@href">
-                                                <xsl:attribute name="xlink:href" select="@href"/>
-                                            </xsl:if>
-                                            <xsl:if test="@xlink:href">
-                                                <xsl:attribute name="xlink:href" select="@xlink:href"/>
-                                            </xsl:if>
-                                            <xsl:if test="text()">
-                                                <xsl:attribute name="xlink:title" select="text()"/>
-                                            </xsl:if>
-                                        </extref>
+                                        <xsl:apply-templates mode="#current" />
                                     </p>
-                                </xsl:if>
-                            </xsl:for-each>
-                            <xsl:for-each select="list/item">
-                                <p>
-                                    <xsl:apply-templates mode="#current" />
-                                </p>
-                            </xsl:for-each>
-                            <xsl:for-each select="controlaccess">
-                                <xsl:call-template name="controlaccess"/>
-                            </xsl:for-each>
-                        </controlaccess>
+                                </xsl:for-each>
+                                <xsl:for-each select="controlaccess">
+                                    <xsl:call-template name="controlaccess"/>
+                                </xsl:for-each>
+                            </controlaccess>
+                        </xsl:if>
                     </xsl:otherwise>
                 </xsl:choose>
             </xsl:when>
@@ -2833,29 +2831,14 @@
                             </xsl:if>
                             <!--test-->
                             <xsl:choose>
-                                <xsl:when test="//eadid[@countrycode='NL']">
-                                    <xsl:choose>
-                                        <xsl:when test="starts-with(., //eadid/text())">
-                                            <xsl:value-of select="."/>
-                                        </xsl:when>
-                                        <xsl:otherwise>
-                                            <xsl:value-of
-                                                select="concat(//eadid/text(), concat(' - ', .))"/>
-                                        </xsl:otherwise>
-                                    </xsl:choose>
+                                <xsl:when
+                                    test="starts-with(string-join(., ''), string-join(//archdesc/did/unitid[1]/text(), '')) or //archdesc/did/unitid[@label='Cotes extrêmes']">
+                                    <xsl:value-of select="text()"/>
                                 </xsl:when>
                                 <xsl:otherwise>
-                                    <xsl:choose>
-                                        <xsl:when
-                                            test="starts-with(string-join(., ''), string-join(//archdesc/did/unitid[1]/text(), '')) or //archdesc/did/unitid[@label='Cotes extrêmes']">
-                                            <xsl:value-of select="text()"/>
-                                        </xsl:when>
-                                        <xsl:otherwise>
-                                            <xsl:value-of
-                                                select="concat(string-join(//archdesc/did/unitid[1]/text(), ''), concat(' - ', .))"
-                                            />
-                                        </xsl:otherwise>
-                                    </xsl:choose>
+                                    <xsl:value-of
+                                        select="concat(string-join(//archdesc/did/unitid[1]/text(), ''), concat(' - ', .))"
+                                    />
                                 </xsl:otherwise>
                             </xsl:choose>
                             <!--<xsl:apply-templates select="node()" mode="#current"/>-->
@@ -3021,42 +3004,14 @@
             </xsl:if>
             <xsl:apply-templates select="node()[not(local-name() = 'abstract') and not(local-name() = 'scopecontent') and not(local-name() = 'bioghist')]" mode="#current"/>
             <xsl:for-each select="following-sibling::dao">
-                <!--<dao xlink:href="{@href}"/>-->
                 <xsl:call-template name="dao"/>
             </xsl:for-each>
             <xsl:for-each select="../daogrp/daoloc | ../odd/daogrp/daoloc | ../daogrp/dao">
-                <dao>
-                    <xsl:if test="@href!=''">
-                        <xsl:attribute name="xlink:href" select="ape:checkLink(@href)"/>
-                    </xsl:if>
-                    <xsl:choose>
-                        <xsl:when test="@xlink:href!=''">
-                            <xsl:attribute name="xlink:href" select="ape:checkLink(@xlink:href)"/>
-                        </xsl:when>
-                        <xsl:otherwise>
-                            <xsl:if test="@*:href!=''">
-                                <xsl:attribute name="xlink:href" select="ape:checkLink(@*:href)"/>
-                            </xsl:if>
-                        </xsl:otherwise>
-                    </xsl:choose>
-                    <xsl:if test="@title!=''">
-                        <xsl:attribute name="xlink:title" select="@title"/>
-                    </xsl:if>
-                    <xsl:if test="@*:title!=''">
-                        <xsl:attribute name="xlink:title" select="@*:title"/>
-                    </xsl:if>
-                    <xsl:if
-                        test="not(@title) and not(@*:title) and ../daodesc[@label='reference']/p/text()">
-                        <xsl:attribute name="xlink:title"
-                                       select="../daodesc[@label='reference']/p/text()"/>
-                    </xsl:if>
-                    <xsl:if
-                        test="not(@title) and not(@*:title) and .[@label='reference']/daodesc/p/text()">
-                        <xsl:attribute name="xlink:title"
-                                       select=".[@label='reference']/daodesc/p/text()"/>
-                    </xsl:if>
-                    <xsl:call-template name="daoRoleType"/>
-                </dao>
+                <xsl:call-template name="none:addDaolink">
+                    <xsl:with-param name="context" select="."/>
+                    <xsl:with-param name="valueToCheck" select="@*:href"/>
+                    <xsl:with-param name="title" select="@*:title | ../daodesc[@label='reference']/p/text() | .[@label='reference']/daodesc/p/text()"/>
+                </xsl:call-template>
             </xsl:for-each>
             <xsl:for-each select="following-sibling::note">
                 <xsl:call-template name="note"/>
@@ -3141,33 +3096,11 @@
         mode="level"/>
 
     <xsl:template match="did/dao" name="dao" mode="level">
-        <dao>
-            <xsl:choose>
-                <xsl:when test="(@xlink:href != '') and (@href != '')">
-                    <xsl:attribute name="xlink:href" select="ape:checkLink(@xlink:href)"/>
-                </xsl:when>
-                <xsl:when test="@*:href != ''">
-                    <xsl:attribute name="xlink:href" select="ape:checkLink(@*:href)"/>
-                </xsl:when>
-                <xsl:otherwise>
-                    <xsl:if test="@href != ''">
-                        <xsl:attribute name="xlink:href" select="ape:checkLink(@href)"/>
-                    </xsl:if>
-                </xsl:otherwise>
-            </xsl:choose>
-            <xsl:if test="@title!=''">
-                <xsl:attribute name="xlink:title" select="@title"/>
-            </xsl:if>
-            <xsl:if test="@*:title!=''">
-                <xsl:attribute name="xlink:title" select="@*:title"/>
-            </xsl:if>
-            <xsl:if test="not(@title) and not(@*:title) and daodesc/p/text()">
-                <xsl:attribute name="xlink:title" select="daodesc/p/text()"/>
-            </xsl:if>
-            <xsl:if test="none:isNotThumbnail(.)">
-                <xsl:call-template name="daoDigitalType"/>
-            </xsl:if>
-        </dao>
+        <xsl:call-template name="none:addDaolink">
+            <xsl:with-param name="context" select="."/>
+            <xsl:with-param name="valueToCheck" select="@*:href"/>
+            <xsl:with-param name="title" select="@*:title"/>
+        </xsl:call-template>
     </xsl:template>
 
     <xsl:function name="none:isNotThumbnail" as="xs:boolean">
@@ -3209,20 +3142,18 @@
     <xsl:template match="did/daogrp/daoloc | did/daoloc" mode="level">
         <xsl:choose>
             <xsl:when test="@actuate='user'">
-                <dao>
-                    <xsl:attribute name="xlink:href" select="./text()"/>
-                </dao>
+                <xsl:call-template name="none:addDaolink">
+                    <xsl:with-param name="context" select="."/>
+                    <xsl:with-param name="valueToCheck" select="./text()"/>
+                    <xsl:with-param name="title" select="''"/>
+                </xsl:call-template>
             </xsl:when>
             <xsl:when test="@label='reference' or @label='thumb' or @linktype='locator'">
-                <dao>
-                    <xsl:if test="@href!=''">
-                        <xsl:attribute name="xlink:href" select="ape:checkLink(@href)"/>
-                    </xsl:if>
-                    <xsl:if test="@*:href!=''">
-                        <xsl:attribute name="xlink:href" select="ape:checkLink(@*:href)"/>
-                    </xsl:if>
-                    <xsl:call-template name="daoRoleType"/>
-                </dao>
+                <xsl:call-template name="none:addDaolink">
+                    <xsl:with-param name="context" select="."/>
+                    <xsl:with-param name="valueToCheck" select="@*:href"/>
+                    <xsl:with-param name="title" select="''"/>
+                </xsl:call-template>
             </xsl:when>
             <xsl:when test="@xlink:href">
                 <xsl:choose>
@@ -3231,24 +3162,13 @@
                         <xsl:call-template name="excludeElement"/>
                     </xsl:when>
                     <xsl:otherwise>
-                        <dao>
-                            <xsl:attribute name="xlink:href" select="ape:checkLink(@xlink:href)"/>
-                            <xsl:if test="@xlink:title">
-                                <xsl:attribute name="xlink:title" select="@xlink:title"/>
-                            </xsl:if>
-                            <xsl:call-template name="daoRoleType"/>
-                        </dao>
+                        <xsl:call-template name="none:addDaolink">
+                            <xsl:with-param name="context" select="."/>
+                            <xsl:with-param name="valueToCheck" select="@*:href"/>
+                            <xsl:with-param name="title" select="@*:title"/>
+                        </xsl:call-template>
                     </xsl:otherwise>
                 </xsl:choose>
-            </xsl:when>
-            <xsl:when test="@href">
-                <dao>
-                    <xsl:attribute name="xlink:href" select="ape:checkLink(@href)"/>
-                    <xsl:if test="@title">
-                        <xsl:attribute name="xlink:title" select="@title"/>
-                    </xsl:if>
-                    <xsl:call-template name="daoRoleType"/>
-                </dao>
             </xsl:when>
             <xsl:otherwise>
                 <xsl:call-template name="excludeElement"/>

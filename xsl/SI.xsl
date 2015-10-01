@@ -213,10 +213,10 @@
                             </xsl:if>
                         </physdesc>
                     </xsl:if>
-                    <xsl:variable name="detail_url">
-                        <xsl:value-of select="'http://arsq.gov.si/Query/detail.aspx?ID='"/>
-                        <xsl:value-of select="*:Record/@Id"/>
-                    </xsl:variable>
+                    <!--<xsl:variable name="detail_url">-->
+                        <!--<xsl:value-of select="'http://arsq.gov.si/Query/detail.aspx?ID='"/>-->
+                        <!--<xsl:value-of select="*:Record/@Id"/>-->
+                    <!--</xsl:variable>-->
                     <!--note>
                         <p>
                             <extref>
@@ -374,18 +374,20 @@
                         </extref>
                     </p>
                 </note>
-                <dao>
-                    <!--'http://arsq.gov.si/Query/detail.aspx?ID='|-->
-                    <xsl:variable name="detail_url">
-                        <xsl:value-of select="'http://arsq.gov.si/Query/detail.aspx?ID='"/>
-                        <xsl:value-of select="@Id"/>
-                    </xsl:variable>
-                    <xsl:attribute name="xlink:href" select="$detail_url"/>
-                    <xsl:attribute name="xlink:title" select="'Link to original'"/>
-                    <xsl:if test="normalize-space($roleType)">
-                        <xsl:attribute name="xlink:role" select="$roleType"/>
-                    </xsl:if>
-                </dao>
+                <xsl:if test="$myLevel = 'file' or $myLevel = 'item'">
+                    <dao>
+                        <!--'http://arsq.gov.si/Query/detail.aspx?ID='|-->
+                        <xsl:variable name="detail_url">
+                            <xsl:value-of select="'http://arsq.gov.si/Query/detail.aspx?ID='"/>
+                            <xsl:value-of select="@Id"/>
+                        </xsl:variable>
+                        <xsl:attribute name="xlink:href" select="$detail_url"/>
+                        <xsl:attribute name="xlink:title" select="'Link to original'"/>
+                        <xsl:if test="normalize-space($roleType)">
+                            <xsl:attribute name="xlink:role" select="$roleType"/>
+                        </xsl:if>
+                    </dao>
+                </xsl:if>
             </did>
             <xsl:variable name="detail_archival_history" select="*:DetailData/*:DataElement[@ElementId='10010']/*:ElementValue/*:TextValue/text()"/>
             <xsl:if test="$detail_archival_history">

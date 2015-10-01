@@ -5,6 +5,8 @@
 package eu.apenet.dpt.utils.ead2edm;
 
 import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
@@ -62,6 +64,13 @@ public class XMLTransformer {
         transformer.transform(inputSource, outputSource);
     }
 
+    public void transformForTest(File inputFile, File outputFile) throws TransformerException {
+        resetForTest();
+        Source inputSource = new StreamSource(inputFile);
+        Result outputSource = new StreamResult(outputFile);
+        transformer.transform(inputSource, outputSource);
+    }
+
     public void transform(String relativeFilename, File inputFile, File outputFile) throws TransformerException {
         transform(inputFile, outputFile);
     }
@@ -93,4 +102,16 @@ public class XMLTransformer {
         }
     }
 
+    private void resetForTest() throws TransformerConfigurationException {
+        Source xsltSource = new StreamSource(new File(xsltLocation));
+        TransformerFactory transformerFactory = TransformerFactory.newInstance();
+
+        transformer = transformerFactory.newTransformer(xsltSource);
+        transformer.reset();
+        if (parameters != null) {
+            for (Map.Entry<String, Object> entry : parameters.entrySet()) {
+                transformer.setParameter(entry.getKey(), entry.getValue());
+            }
+        }
+    }
 }

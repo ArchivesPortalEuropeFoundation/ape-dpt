@@ -25,6 +25,7 @@ import eu.apenet.dpt.utils.service.TransformationTool;
 import eu.apenet.dpt.utils.util.FileUtil;
 import eu.apenet.dpt.utils.util.HoldingsGuideCreationUtils;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.input.ReaderInputStream;
 import org.apache.log4j.Logger;
 import org.w3c.dom.DOMImplementation;
 import org.w3c.dom.Document;
@@ -42,10 +43,7 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.InputStream;
-import java.io.StringWriter;
+import java.io.*;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -163,7 +161,9 @@ public class LevelTreeActions {
                 if(xslMessages != null && xslMessages.toString().contains("NO_EADID_IN_FILE")){
                     filesWithoutEadid.add(file.getName());
                 } else {
-                    Node fileLevel = stringToNode(doc, fileUtil.readFileAsInputStream(outputFileTmp));
+                    Reader reader = new FileReader(outputFileTmp);
+                    ReaderInputStream readerInputStream = new ReaderInputStream(reader, "UTF-8");
+                    Node fileLevel = stringToNode(doc, readerInputStream);
                     return fileLevel;
 //                    el.getParentNode().appendChild(fileLevel);
                 }
@@ -207,8 +207,8 @@ public class LevelTreeActions {
         return null;
     }
 
-    private Node stringToNode(Document originalDoc, InputStream inputStream) throws Exception {
-        Document doc = DOMUtil.createDocument(inputStream);
+    private Node stringToNode(Document originalDoc, ReaderInputStream readerInputStream) throws Exception {
+        Document doc = DOMUtil.createDocument(readerInputStream);
         return originalDoc.adoptNode(doc.getFirstChild());
     }
 
