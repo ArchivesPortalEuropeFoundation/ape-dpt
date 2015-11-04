@@ -731,7 +731,7 @@ public abstract class EacCpfPanel extends CommonsPropertiesPanels {
 		for (Object object : nameEntryParallelOrNameEntryList) {
 			if (object instanceof NameEntryParallel) {
 				NameEntryParallel nameEntryParallel = (NameEntryParallel) object;
-				for (Object nameEntry : nameEntryParallel.getContent()) {
+				for (Object nameEntry : nameEntryParallel.getAuthorizedFormOrAlternativeForm()) {
 					if (nameEntry instanceof NameEntry) {
 						nameEntries.add((NameEntry) nameEntry);
 					}
