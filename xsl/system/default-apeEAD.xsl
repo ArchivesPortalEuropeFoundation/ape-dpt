@@ -1953,8 +1953,9 @@
         match="processinfo/list/item | relatedmaterial/list/item | relatedmaterial/p/list/item | bioghist/list/item | bioghist/p/list/item | odd/p/list/item | appraisal/list/item | accruals/list/item | odd/list/item | accessrestrict[not(ancestor::accessrestrict)]/list/item | userestrict/list/item | altformavail/list/item | otherfindaid/list/item | custodhist/list/item"
         mode="copy nested level">
         <item>
-            <xsl:value-of select="node()"/>
-            <xsl:apply-templates select="extref" mode="#current"/>
+            <xsl:apply-templates select="node()" mode="#current"/>
+<!--            <xsl:value-of select="node()"/>
+            <xsl:apply-templates select="extref" mode="#current"/>-->
         </item>
     </xsl:template>
 
