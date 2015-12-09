@@ -856,12 +856,24 @@
     <xsl:template match="p/extref | p/extptr" mode="#all">
         <xsl:text> </xsl:text>
         <extref>
-            <xsl:if test="@href">
-                <xsl:attribute name="xlink:href" select="ape:checkLink(@href)"/>
-            </xsl:if>
-            <xsl:if test="@*:href">
-                <xsl:attribute name="xlink:href" select="ape:checkLink(@*:href)"/>
-            </xsl:if>
+            <xsl:choose>
+                <xsl:when test="ancestor::otherfindaid and ancestor::c">
+                    <xsl:if test="@href">
+                        <xsl:attribute name="xlink:href" select="@href"/>
+                    </xsl:if>
+                    <xsl:if test="@*:href">
+                        <xsl:attribute name="xlink:href" select="@*:href"/>
+                    </xsl:if>
+                </xsl:when>
+                <xsl:otherwise>
+                    <xsl:if test="@href">
+                        <xsl:attribute name="xlink:href" select="ape:checkLink(@href)"/>
+                    </xsl:if>
+                    <xsl:if test="@*:href">
+                        <xsl:attribute name="xlink:href" select="ape:checkLink(@*:href)"/>
+                    </xsl:if>
+                </xsl:otherwise>
+            </xsl:choose>
             <xsl:if test="@title">
                 <xsl:attribute name="xlink:title" select="@title"/>
             </xsl:if>
