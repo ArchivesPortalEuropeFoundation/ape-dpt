@@ -33,6 +33,9 @@
             <plugin>
                 <artifactId>maven-javadoc-plugin</artifactId>
                 <version>2.5</version>
+                <configuration>
+                    <additionalparam>-Xdoclint:none</additionalparam>
+                </configuration>
                 <executions>
                     <execution>
                         <id>package-javadoc</id>
