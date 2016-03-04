@@ -856,12 +856,24 @@
     <xsl:template match="p/extref | p/extptr" mode="#all">
         <xsl:text> </xsl:text>
         <extref>
-            <xsl:if test="@href">
-                <xsl:attribute name="xlink:href" select="ape:checkLink(@href)"/>
-            </xsl:if>
-            <xsl:if test="@*:href">
-                <xsl:attribute name="xlink:href" select="ape:checkLink(@*:href)"/>
-            </xsl:if>
+            <xsl:choose>
+                <xsl:when test="ancestor::otherfindaid and ancestor::c">
+                    <xsl:if test="@href">
+                        <xsl:attribute name="xlink:href" select="@href"/>
+                    </xsl:if>
+                    <xsl:if test="@*:href">
+                        <xsl:attribute name="xlink:href" select="@*:href"/>
+                    </xsl:if>
+                </xsl:when>
+                <xsl:otherwise>
+                    <xsl:if test="@href">
+                        <xsl:attribute name="xlink:href" select="ape:checkLink(@href)"/>
+                    </xsl:if>
+                    <xsl:if test="@*:href">
+                        <xsl:attribute name="xlink:href" select="ape:checkLink(@*:href)"/>
+                    </xsl:if>
+                </xsl:otherwise>
+            </xsl:choose>
             <xsl:if test="@title">
                 <xsl:attribute name="xlink:title" select="@title"/>
             </xsl:if>
@@ -1099,7 +1111,8 @@
 
     <xsl:template match="did/note" name="note" mode="copy level">
         <xsl:if test="count(child::*) != 0 or normalize-space(text()) != ''">
-            <note>
+            <xsl:if test="not(@audience and @audience='internal')">
+                <note>
                 <xsl:if test="@encodinganalog !=''">
                     <xsl:attribute name="encodinganalog" select="@encodinganalog"/>
                 </xsl:if>
@@ -1115,7 +1128,8 @@
                     </xsl:otherwise>
                 </xsl:choose>
             </note>
-        </xsl:if>
+            </xsl:if>
+        </xsl:if>        
     </xsl:template>
 
     <xsl:template match="note/p" name="note_no_p" mode="copy level">
@@ -1953,8 +1967,9 @@
         match="processinfo/list/item | relatedmaterial/list/item | relatedmaterial/p/list/item | bioghist/list/item | bioghist/p/list/item | odd/p/list/item | appraisal/list/item | accruals/list/item | odd/list/item | accessrestrict[not(ancestor::accessrestrict)]/list/item | userestrict/list/item | altformavail/list/item | otherfindaid/list/item | custodhist/list/item"
         mode="copy nested level">
         <item>
-            <xsl:value-of select="node()"/>
-            <xsl:apply-templates select="extref" mode="#current"/>
+            <xsl:apply-templates select="node()" mode="#current"/>
+<!--            <xsl:value-of select="node()"/>
+            <xsl:apply-templates select="extref" mode="#current"/>-->
         </item>
     </xsl:template>
 
