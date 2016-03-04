@@ -1111,7 +1111,8 @@
 
     <xsl:template match="did/note" name="note" mode="copy level">
         <xsl:if test="count(child::*) != 0 or normalize-space(text()) != ''">
-            <note>
+            <xsl:if test="not(@audience and @audience='internal')">
+                <note>
                 <xsl:if test="@encodinganalog !=''">
                     <xsl:attribute name="encodinganalog" select="@encodinganalog"/>
                 </xsl:if>
@@ -1127,7 +1128,8 @@
                     </xsl:otherwise>
                 </xsl:choose>
             </note>
-        </xsl:if>
+            </xsl:if>
+        </xsl:if>        
     </xsl:template>
 
     <xsl:template match="note/p" name="note_no_p" mode="copy level">
