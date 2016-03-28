@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>eu.archivesportaleurope.dpt</groupId>
     <artifactId>DPT-project</artifactId>
-    <version>2015-10-SNAPSHOT</version>
+    <version>2016-03-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>APE DPT tool Project</name>
     <description>Maven Project for building the DPT tools</description>
