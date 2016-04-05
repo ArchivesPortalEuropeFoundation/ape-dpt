@@ -107,11 +107,11 @@
     <distributionManagement>
         <snapshotRepository>
             <id>snapshots</id>
-            <url>https://build.archivesportaleurope.net/nexus/content/repositories/snapshots/</url>
+            <url>http://nexus.archivesportaleurope.net/content/repositories/snapshots/</url>
         </snapshotRepository>
         <repository>
             <id>releases</id>
-            <url>https://build.archivesportaleurope.net/nexus/content/repositories/releases/</url>
+            <url>http://nexus.archivesportaleurope.net/content/repositories/releases/</url>
         </repository>
     </distributionManagement>
     <modules>
