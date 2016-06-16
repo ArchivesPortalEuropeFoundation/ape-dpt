@@ -1026,7 +1026,7 @@
 
     <!-- descgrp[@type='appendices'] -->
     <xsl:template match="archdesc/descgrp[@type='appendices']" mode="copy">
-        <xsl:apply-templates select="fileplan | index | odd" mode="copy"/>
+        <xsl:apply-templates select="fileplan | index | odd | otherfindaid" mode="copy"/>
     </xsl:template>
 
     <xsl:template
