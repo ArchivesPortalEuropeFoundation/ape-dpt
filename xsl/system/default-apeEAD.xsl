@@ -2846,6 +2846,19 @@
                             </xsl:if>
                             <!--test-->
                             <xsl:choose>
+                                <xsl:when test="//eadid[@countrycode='NL']">
+                                    <xsl:choose>
+                                        <xsl:when test="starts-with(., //eadid/text())">
+                                            <xsl:value-of select="."/>
+                                        </xsl:when>
+                                        <xsl:otherwise>
+                                            <xsl:value-of
+                                                select="concat(//eadid/text(), concat(' - ', .))"/>
+                                        </xsl:otherwise>
+                                    </xsl:choose>
+                                </xsl:when>
+                                <xsl:otherwise>
+                                    <xsl:choose>
                                 <xsl:when
                                     test="starts-with(string-join(., ''), string-join(//archdesc/did/unitid[1]/text(), '')) or //archdesc/did/unitid[@label='Cotes extrêmes']">
                                     <xsl:value-of select="text()"/>
@@ -2854,6 +2867,8 @@
                                     <xsl:value-of
                                         select="concat(string-join(//archdesc/did/unitid[1]/text(), ''), concat(' - ', .))"
                                     />
+                                </xsl:otherwise>
+                            </xsl:choose>
                                 </xsl:otherwise>
                             </xsl:choose>
                             <!--<xsl:apply-templates select="node()" mode="#current"/>-->
