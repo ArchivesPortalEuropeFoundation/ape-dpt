@@ -3178,7 +3178,8 @@
                     <xsl:with-param name="title" select="''"/>
                 </xsl:call-template>
             </xsl:when>
-            <xsl:when test="@label='reference' or @label='thumb' or @linktype='locator'">
+            <!--2016-06-14: Addition of check for @role after request from Archives Hub GB--> 
+            <xsl:when test="@label='reference' or @label='thumb' or @role='reference' or @role='thumb' or @linktype='locator'">
                 <xsl:call-template name="none:addDaolink">
                     <xsl:with-param name="context" select="."/>
                     <xsl:with-param name="valueToCheck" select="@*:href"/>
