@@ -1049,6 +1049,11 @@
             </xsl:when>
             <xsl:otherwise>
                 <did>
+                    <!-- Fix for missing high-level unitid in archdesc (JIRA ASUP-28) -->
+                    <xsl:if test="not(unitid)">
+                        <unitid type="call number" encodinganalog="3.1.1"><xsl:value-of select="/ead/eadheader/eadid"/></unitid>
+                    </xsl:if>
+                    <!-- End fix-->
                     <xsl:apply-templates select="node() except abstract" mode="copy"/>
                     <xsl:if test="not(repository) and normalize-space($repository)">
                         <xsl:call-template name="repository"/>
