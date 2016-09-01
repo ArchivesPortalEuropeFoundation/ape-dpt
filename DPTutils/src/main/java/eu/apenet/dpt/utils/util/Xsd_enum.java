@@ -9,7 +9,7 @@ import org.apache.commons.lang.StringUtils;
  * @author Yoann Moranville
  */
 public enum Xsd_enum {
-    XSD_APE_SCHEMA("apeEAD", "apeEAD.xsd"),
+    XSD_APE_SCHEMA("apeEAD", "apeEAD1.xsd"),
     XSD_EAD_SCHEMA("EAD 2002", "ead_2002.xsd"),
     DTD_EAD_2002("EAD 2002 DTD", "dtd/ead.dtd"),
     XSD_APE_EAC_SCHEMA("apeEAC-CPF", "apeEAC-CPF.xsd"),
@@ -17,6 +17,7 @@ public enum Xsd_enum {
     XSD_EAG_2012_SCHEMA("EAG 2012", "eag_2012.xsd"),
     XSD_METS_SCHEMA("apeMETS", "apeMETS.xsd"),
     XSD_METS_RIGHTS_SCHEMA("apeMETS Rights", "apeMETSRights.xsd"),
+    XSD_HUDAY_SCHEMA("EAD 3", "ead3.xsd"),
     XSD_METS_XLINK_SCHEMA("apeMETS Xlink", "apeMETSxlink.xsd");
 
     private String path;
