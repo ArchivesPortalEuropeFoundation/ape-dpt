@@ -11,6 +11,7 @@ import org.apache.commons.lang.StringUtils;
 public enum Xsd_enum {
     XSD_APE_SCHEMA("apeEAD", "apeEAD.xsd"),
     XSD_EAD_SCHEMA("EAD 2002", "ead_2002.xsd"),
+    XSD_EAD3_SCHEMA("EAD 3", "ead3.xsd"),
     DTD_EAD_2002("EAD 2002 DTD", "dtd/ead.dtd"),
     XSD_APE_EAC_SCHEMA("apeEAC-CPF", "apeEAC-CPF.xsd"),
     XSD_EAC_SCHEMA("EAC-CPF", "cpf.xsd"),
