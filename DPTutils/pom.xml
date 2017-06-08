@@ -2,10 +2,10 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
-		<artifactId>DPT-project</artifactId>
-		<groupId>eu.archivesportaleurope.dpt</groupId>
-		<version>2017-06-SNAPSHOT</version>
-		<relativePath>..</relativePath>
+        <artifactId>DPT-project</artifactId>
+        <groupId>eu.archivesportaleurope.dpt</groupId>
+        <version>2017-06-SNAPSHOT</version>
+        <relativePath>..</relativePath>
     </parent>
     <artifactId>DPTutils</artifactId>
     <packaging>jar</packaging>
@@ -17,45 +17,45 @@
     <inceptionYear>2009</inceptionYear>
     <build>
         <plugins>
-			<plugin>
-				<groupId>org.codehaus.mojo</groupId>
-				<artifactId>native2ascii-maven-plugin</artifactId>
-				<version>1.0-beta-1</version>
-				<executions>
-					<execution>
-						<goals>
-							<goal>native2ascii</goal>
-						</goals>
-						<!-- specific configurations -->
-						<configuration>
-							<dest>${project.build.directory}/classes</dest>
-							<src>src/main/resources</src>
-							<includes>
-								<include>**/*.properties</include>
-							</includes>
-							<encoding>UTF8</encoding>
-						</configuration>
-					</execution>
-				</executions>
-			</plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>native2ascii-maven-plugin</artifactId>
+                <version>1.0-beta-1</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>native2ascii</goal>
+                        </goals>
+                        <!-- specific configurations -->
+                        <configuration>
+                            <dest>${project.build.directory}/classes</dest>
+                            <src>src/main/resources</src>
+                            <includes>
+                                <include>**/*.properties</include>
+                            </includes>
+                            <encoding>UTF8</encoding>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
             <!--<plugin>-->
-                <!--<groupId>org.codehaus.mojo</groupId>-->
-                <!--<artifactId>license-maven-plugin</artifactId>-->
-                <!--<version>1.6</version>-->
-                <!--<configuration>-->
-                    <!--<licenseResolver>${project.baseUri}../license</licenseResolver>-->
-                    <!--<licenseName>eupl_apex</licenseName>-->
-                <!--</configuration>-->
-                <!--<executions>-->
-                    <!--<execution>-->
-                        <!--<id>first</id>-->
-                        <!--<goals>-->
-                            <!--<goal>update-file-header</goal>-->
-                            <!--<goal>add-third-party</goal>-->
-                        <!--</goals>-->
-                        <!--<phase>process-sources</phase>-->
-                    <!--</execution>-->
-                <!--</executions>-->
+            <!--<groupId>org.codehaus.mojo</groupId>-->
+            <!--<artifactId>license-maven-plugin</artifactId>-->
+            <!--<version>1.6</version>-->
+            <!--<configuration>-->
+            <!--<licenseResolver>${project.baseUri}../license</licenseResolver>-->
+            <!--<licenseName>eupl_apex</licenseName>-->
+            <!--</configuration>-->
+            <!--<executions>-->
+            <!--<execution>-->
+            <!--<id>first</id>-->
+            <!--<goals>-->
+            <!--<goal>update-file-header</goal>-->
+            <!--<goal>add-third-party</goal>-->
+            <!--</goals>-->
+            <!--<phase>process-sources</phase>-->
+            <!--</execution>-->
+            <!--</executions>-->
             <!--</plugin>-->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -102,8 +102,8 @@
             <artifactId>cupv</artifactId>
         </dependency>
         <dependency>
-			<groupId>xml-apis</groupId>
-			<artifactId>xml-apis</artifactId>
+            <groupId>xml-apis</groupId>
+            <artifactId>xml-apis</artifactId>
         </dependency>
         <!--End xerces-->
         <dependency>
