@@ -38,25 +38,7 @@
                     </execution>
                 </executions>
             </plugin>
-            <!--<plugin>-->
-            <!--<groupId>org.codehaus.mojo</groupId>-->
-            <!--<artifactId>license-maven-plugin</artifactId>-->
-            <!--<version>1.6</version>-->
-            <!--<configuration>-->
-            <!--<licenseResolver>${project.baseUri}../license</licenseResolver>-->
-            <!--<licenseName>eupl_apex</licenseName>-->
-            <!--</configuration>-->
-            <!--<executions>-->
-            <!--<execution>-->
-            <!--<id>first</id>-->
-            <!--<goals>-->
-            <!--<goal>update-file-header</goal>-->
-            <!--<goal>add-third-party</goal>-->
-            <!--</goals>-->
-            <!--<phase>process-sources</phase>-->
-            <!--</execution>-->
-            <!--</executions>-->
-            <!--</plugin>-->
+            
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
