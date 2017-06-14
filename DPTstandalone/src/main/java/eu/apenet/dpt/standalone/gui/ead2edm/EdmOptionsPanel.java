@@ -120,7 +120,6 @@ public class EdmOptionsPanel extends JPanel {
     private static final String CREATIVE_COMMONS_CC0 = "cc0";
     private static final String CREATIVE_COMMONS_PUBLIC_DOMAIN_MARK = "cpdm";
     private static final String EUROPEANA_RIGHTS_STATEMENTS = "europeana";
-    private static final String OUT_OF_COPYRIGHT = "outofcopyright";
     private static final String EMPTY_PANEL = "empty_panel";
     private String archdescRepository = null;
     private String archdescUnittitle = null;
@@ -500,7 +499,7 @@ public class EdmOptionsPanel extends JPanel {
         formPanel.add(panel);
 
         JPanel mainLicensePanel = new JPanel(new BorderLayout());
-        panel = new JPanel(new GridLayout(5, 2));
+        panel = new JPanel(new GridLayout(4, 2));
         licenseGroup = new ButtonGroup();
 
         panel.add(new Label(labels.getString("ese.specifyLicense") + ":" + "*"));
@@ -527,13 +526,6 @@ public class EdmOptionsPanel extends JPanel {
         panel.add(new JLabel(""));
         radioButton = new JRadioButton(this.labels.getString("edm.panel.label.europeana.rights"));
         radioButton.setActionCommand(EUROPEANA_RIGHTS_STATEMENTS);
-        radioButton.addActionListener(new ChangePanelActionListener(extraLicenseCardLayoutPanel));
-        licenseGroup.add(radioButton);
-        panel.add(radioButton);
-
-        panel.add(new JLabel(""));
-        radioButton = new JRadioButton(this.labels.getString("edm.panel.label.out.copyright"));
-        radioButton.setActionCommand(EdmOptionsPanel.OUT_OF_COPYRIGHT);
         radioButton.addActionListener(new ChangePanelActionListener(extraLicenseCardLayoutPanel));
         licenseGroup.add(radioButton);
         panel.add(radioButton);
@@ -894,17 +886,19 @@ public class EdmOptionsPanel extends JPanel {
             return MessageFormat.format(url, urlType);
         } else if (type.equals(EUROPEANA_RIGHTS_STATEMENTS)) {
             String europeanaRights = europeanaRightsComboBox.getSelectedItem().toString();
-            if (europeanaRights.equals(this.labels.getString("edm.panel.license.europeana.free"))) {
-                return "http://www.europeana.eu/rights/rr-f/";
-            } else if (europeanaRights.equals(this.labels.getString("edm.panel.license.europeana.paid"))) {
-                return "http://www.europeana.eu/rights/rr-p/";
-            } else if (europeanaRights.equals(this.labels.getString("edm.panel.license.europeana.orphan"))) {
-                return "http://www.europeana.eu/rights/orphan-work-eu/";
+            if (europeanaRights.equals(this.labels.getString("edm.panel.license.europeana.incopyright"))) {
+                return "http://rightsstatements.org/vocab/InC/1.0/";
+            } else if (europeanaRights.equals(this.labels.getString("edm.panel.license.europeana.incopyright.eduuse"))) {
+                return "http://rightsstatements.org/vocab/InC-EDU/1.0/";
+            } else if (europeanaRights.equals(this.labels.getString("edm.panel.license.europeana.incopyright.euorphan"))) {
+                return "http://rightsstatements.org/vocab/InC-OW-EU/1.0/";
+            } else if (europeanaRights.equals(this.labels.getString("edm.panel.license.europeana.nocopyright.noncommercial"))) {
+                return "http://rightsstatements.org/vocab/NoC-NC/1.0/";
+            } else if (europeanaRights.equals(this.labels.getString("edm.panel.license.europeana.nocopyright.otherlegal"))) {
+                return "http://rightsstatements.org/vocab/NoC-OKLR/1.0/";
             } else {
-                return "http://www.europeana.eu/rights/unknown/";
+                return "http://rightsstatements.org/vocab/CNE/1.0/";
             }
-        } else if (type.equalsIgnoreCase(EdmOptionsPanel.OUT_OF_COPYRIGHT)) {
-            return "http://www.europeana.eu/rights/out-of-copyright-non-commercial/";
         } else if (type.equals(CREATIVE_COMMONS_CC0)) {
             return "http://creativecommons.org/publicdomain/zero/1.0/";
         } else {
@@ -1092,8 +1086,7 @@ public class EdmOptionsPanel extends JPanel {
             if (extraCardLayoutPanel.getLayout() instanceof CardLayout) {
                 CardLayout cardLayout = (CardLayout) extraCardLayoutPanel.getLayout();
                 if (actionEvent.getActionCommand().equals(CREATIVE_COMMONS_CC0)
-                        || actionEvent.getActionCommand().equals(CREATIVE_COMMONS_PUBLIC_DOMAIN_MARK)
-                        || actionEvent.getActionCommand().equals(EdmOptionsPanel.OUT_OF_COPYRIGHT)) {
+                        || actionEvent.getActionCommand().equals(CREATIVE_COMMONS_PUBLIC_DOMAIN_MARK)) {
                     cardLayout.show(extraCardLayoutPanel, EMPTY_PANEL);
                 } else if (actionEvent.getActionCommand().equals(CREATIVE_COMMONS) || actionEvent.getActionCommand().equals(EUROPEANA_RIGHTS_STATEMENTS)) {
                     cardLayout.show(extraCardLayoutPanel, actionEvent.getActionCommand());
@@ -1325,7 +1318,7 @@ public class EdmOptionsPanel extends JPanel {
 
         EuropeanaRightsPanel() {
             super(new GridLayout(1, 1));
-            String[] rights = {labels.getString("edm.panel.license.europeana.free"), labels.getString("edm.panel.license.europeana.orphan"), labels.getString("edm.panel.license.europeana.paid"), labels.getString("edm.panel.license.europeana.unknown")};
+            String[] rights = {labels.getString("edm.panel.license.europeana.incopyright"), labels.getString("edm.panel.license.europeana.incopyright.eduuse"), labels.getString("edm.panel.license.europeana.incopyright.euorphan"), labels.getString("edm.panel.license.europeana.nocopyright.noncommercial"), labels.getString("edm.panel.license.europeana.nocopyright.otherlegal"), labels.getString("edm.panel.license.europeana.copyrightnotevaluated")};
             europeanaRightsComboBox = new JComboBox(rights);
             add(europeanaRightsComboBox);
         }
