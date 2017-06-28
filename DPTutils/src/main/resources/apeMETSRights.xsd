@@ -1,10 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- edited with Oxygen 15.0, build 2013071613, www.oxygenxml.com by Kerstin Arnold
      (Federal Archives of Germany / APEx project) in November 2013; based on the 
-     RightsDeclarationMD Extension Schema by Nancy J. Hoebelheinrich (Stanford University Libraries) 
-     
-     Update in June 2017 by Stefan Papp (Archives Portal Europe); see below for list of changes in this update
--->
+     RightsDeclarationMD Extension Schema by Nancy J. Hoebelheinrich (Stanford University Libraries) -->
 <!-- Changes made in comparison to the original schema:
     01. XMLSchema namespace added
     02. RightsDeclarationMD - @type="RightsDeclareMDTYPE" deleted; <xs:element> added
@@ -28,10 +25,6 @@
     20. Constraints - name="ConstraintsTYPE" changed to name="Constraints"
     21. Constraints/ConstraintDeception - xs:complexType with default values added
     22. Constraints/@OTHERCONSTRAINTTYPE - attribute with default value "RESTRICTED ACCESS" has been added specifically for apeMETS
--->
-<!-- Changes in June 2017 update:
-    01. changed values for attribute RIGHTSCATEGORY; new values are CC0, COPYRIGHTED, PUBLIC DOMAIN, OTHER
-    02. changed values for attribute OTHERRIGHTSCATEGORY in order to reflect changes of Europeana licensing categories 
 -->
 <xs:schema targetNamespace="http://www.archivesportaleurope.net/Portal/profiles/rights/"
     xmlns="http://www.archivesportaleurope.net/Portal/profiles/rights/"
@@ -92,16 +85,12 @@
             </xs:sequence>
             <xs:attribute name="RIGHTSDECID" type="xs:string" use="optional"/>
             <xs:attribute name="RIGHTSCATEGORY">
-                <xs:annotation>
-                    <xs:documentation xml:lang="en">
-                        apeMETSRights, 15 June 2017: default values changed
-                    </xs:documentation>
-                </xs:annotation>
                 <xs:simpleType>
                     <xs:restriction base="xs:string">
-                        <xs:enumeration value="CC0"/>
                         <xs:enumeration value="COPYRIGHTED"/>
+                        <xs:enumeration value="LICENSED"/>
                         <xs:enumeration value="PUBLIC DOMAIN"/>
+                        <xs:enumeration value="CONTRACTUAL"/>
                         <xs:enumeration value="OTHER"/>
                     </xs:restriction>
                 </xs:simpleType>
@@ -109,17 +98,14 @@
             <xs:attribute name="OTHERCATEGORYTYPE" use="optional">
                 <xs:annotation>
                     <xs:documentation xml:lang="en">
-                        apeMETSRights, 04 November 2013: @type="xs:string" deleted and default values added
-                        apeMETSRights, 15 June 2017: default values changed
+                        apeMETSRights, 04 November 2013: @type="xs:string" deleted and default values added -->
                     </xs:documentation>
                 </xs:annotation>
                 <xs:simpleType>
                     <xs:restriction base="xs:string">
-                        <xs:enumeration value="EDU-USE"/>
-                        <xs:enumeration value="EU-ORPHAN"/>
-                        <xs:enumeration value="NC-NON-COMMERCIAL"/>
-                        <xs:enumeration value="NC-OTHER-LEGAL-RESTR"/>
-                        <xs:enumeration value="NOT-EVALUATED"/>
+                        <xs:enumeration value="CC0"/>
+                        <xs:enumeration value="FREE ACCESS"/>
+                        <xs:enumeration value="UNKNOWN"/>
                     </xs:restriction>
                 </xs:simpleType>
             </xs:attribute>
