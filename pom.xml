@@ -8,7 +8,6 @@
     <name>APE DPT tool Project</name>
     <description>Maven Project for building the DPT tools</description>
     <scm>
-        <url>https://github.com/ArchivesPortalEuropeFoundation/ape-dpt</url>
         <connection>scm:git:git://github.com/ArchivesPortalEuropeFoundation/ape-dpt.git</connection>
         <developerConnection>scm:git:git@github.com:ArchivesPortalEuropeFoundation/ape-dpt.git</developerConnection>
     </scm>
