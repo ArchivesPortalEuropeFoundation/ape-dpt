@@ -8,9 +8,14 @@
     <name>APE DPT tool Project</name>
     <description>Maven Project for building the DPT tools</description>
     <scm>
+        <url>https://github.com/ArchivesPortalEuropeFoundation/ape-dpt</url>
+        <connection>scm:git:git://github.com/ArchivesPortalEuropeFoundation/ape-dpt.git</connection>
+        <developerConnection>scm:git:git@github.com:ArchivesPortalEuropeFoundation/ape-dpt.git</developerConnection>
+    </scm>
+    <!--    <scm>
         <connection>scm:svn:https://build.archivesportaleurope.net/svn/apex-dpt/branches/DPT-project-2.5</connection>
         <developerConnection>scm:svn:https://build.archivesportaleurope.net/svn/apex-dpt/branches/DPT-project-2.5</developerConnection>
-    </scm>
+    </scm>-->
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.javadoc.failOnError>false</maven.javadoc.failOnError>
