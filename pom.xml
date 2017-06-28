@@ -8,8 +8,8 @@
     <name>APE DPT tool Project</name>
     <description>Maven Project for building the DPT tools</description>
     <scm>
-        <connection>scm:git:https://github.com/ArchivesPortalEuropeFoundation/ape-dpt.git</connection>
-        <developerConnection>scm:git:https://github.com/ArchivesPortalEuropeFoundation/ape-dpt.git</developerConnection>
+        <connection>scm:git:git://github.com/ArchivesPortalEuropeFoundation/ape-dpt.git</connection>
+        <developerConnection>scm:git:git://github.com/ArchivesPortalEuropeFoundation/ape-dpt.git</developerConnection>
     </scm>
     <!--    <scm>
         <connection>scm:svn:https://build.archivesportaleurope.net/svn/apex-dpt/branches/DPT-project-2.5</connection>
