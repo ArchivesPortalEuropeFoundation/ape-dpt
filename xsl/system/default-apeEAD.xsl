@@ -2618,6 +2618,11 @@
                                 <xsl:if test="not(local-name()='genreform' and @type='typir')">
                                     <xsl:element name="{local-name()}"
                                                  namespace="urn:isbn:1-931666-22-9">
+                                        <xsl:if test="local-name() = 'corpname' or local-name() = 'persname' or local-name() = 'famname' or local-name() = 'name'">
+                                            <xsl:if test="./@authfilenumber">
+                                                <xsl:attribute name="authfilenumber" select="./@authfilenumber"/>
+                                            </xsl:if>
+                                        </xsl:if>
                                         <xsl:apply-templates select="node()" mode="#current"/>
                                     </xsl:element>
                                 </xsl:if>
@@ -2634,6 +2639,11 @@
                                 <xsl:for-each select="geogname | subject | famname | persname | corpname | occupation | genreform | function | title | p | head | name | indexentry//geogname | indexentry//subject | indexentry//famname | indexentry//persname | indexentry//corpname | indexentry//occupation | indexentry//genreform | indexentry//function | indexentry//title | indexentry//name | indexentry//ref">
                                     <xsl:if test="not(local-name()='genreform' and @type='typir') and not(local-name()='ref')">
                                         <xsl:element name="{local-name()}" namespace="urn:isbn:1-931666-22-9">
+                                            <xsl:if test="local-name() = 'corpname' or local-name() = 'persname' or local-name() = 'famname' or local-name() = 'name'">
+                                                <xsl:if test="./@authfilenumber">
+                                                    <xsl:attribute name="authfilenumber" select="./@authfilenumber"/>
+                                                </xsl:if>
+                                            </xsl:if>
                                             <xsl:apply-templates select="node()" mode="#current"/>
                                         </xsl:element>
                                     </xsl:if>
@@ -2671,6 +2681,11 @@
                     select="geogname|subject|famname|persname|corpname|occupation|genreform|function|title|p|name | ../did//geogname[parent::item|parent::entry|parent::p|parent::unittitle] | ../did//subject[parent::item|parent::entry|parent::p|parent::unittitle] | ../did//famname[parent::item|parent::entry|parent::p|parent::unittitle] | ../did//persname[parent::item|parent::entry|parent::p|parent::unittitle] | ../did//corpname[parent::item|parent::entry|parent::p|parent::unittitle] | ../did//occupation[parent::item|parent::entry|parent::p|parent::unittitle] | ../did//genreform[parent::item|parent::entry|parent::p|parent::unittitle] | ../did//function[parent::item|parent::entry|parent::p|parent::unittitle] | ../did//title[parent::item|parent::entry|parent::p|parent::unittitle] | ../did//name[parent::item|parent::entry|parent::p|parent::unittitle]">
                     <xsl:if test="not(local-name()='genreform' and @type='typir')">
                         <xsl:element name="{local-name()}" namespace="urn:isbn:1-931666-22-9">
+                            <xsl:if test="local-name() = 'corpname' or local-name() = 'persname' or local-name() = 'famname' or local-name() = 'name'">
+                                <xsl:if test="./@authfilenumber">
+                                    <xsl:attribute name="authfilenumber" select="./@authfilenumber"/>
+                                </xsl:if>
+                            </xsl:if>
                             <xsl:apply-templates select="node()" mode="#current"/>
                         </xsl:element>
                     </xsl:if>
