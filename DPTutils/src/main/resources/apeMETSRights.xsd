@@ -34,9 +34,9 @@
     02. changed values for attribute OTHERRIGHTSCATEGORY in order to reflect changes of Europeana licensing categories 
 -->
 <xs:schema targetNamespace="http://www.archivesportaleurope.net/Portal/profiles/rights/"
-    xmlns="http://www.archivesportaleurope.net/Portal/profiles/rights/"
-    xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified"
-    attributeFormDefault="unqualified">
+           xmlns="http://www.archivesportaleurope.net/Portal/profiles/rights/"
+           xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified"
+           attributeFormDefault="unqualified">
     <!-- November 2013: XMLSchema namespace added -->
     <xs:element name="RightsDeclarationMD">
         <!-- 04 November 2013: @type="RightsDeclareMDTYPE" deleted; <xs:element> added -->
