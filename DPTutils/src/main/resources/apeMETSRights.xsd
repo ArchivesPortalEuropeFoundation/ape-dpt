@@ -99,9 +99,10 @@
                 </xs:annotation>
                 <xs:simpleType>
                     <xs:restriction base="xs:string">
-                        <xs:enumeration value="CC0"/>
                         <xs:enumeration value="COPYRIGHTED"/>
+                        <xs:enumeration value="LICENSED"/>
                         <xs:enumeration value="PUBLIC DOMAIN"/>
+                        <xs:enumeration value="CONTRACTUAL"/>
                         <xs:enumeration value="OTHER"/>
                     </xs:restriction>
                 </xs:simpleType>
@@ -115,6 +116,7 @@
                 </xs:annotation>
                 <xs:simpleType>
                     <xs:restriction base="xs:string">
+                        <xs:enumeration value="CC0"/>
                         <xs:enumeration value="EDU-USE"/>
                         <xs:enumeration value="EU-ORPHAN"/>
                         <xs:enumeration value="NC-NON-COMMERCIAL"/>
