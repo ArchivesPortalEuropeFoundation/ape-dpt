@@ -111,17 +111,18 @@
                 <xs:annotation>
                     <xs:documentation xml:lang="en">
                         apeMETSRights, 04 November 2013: @type="xs:string" deleted and default values added
-                        apeMETSRights, 15 June 2017: default values changed
+                        apeMETSRights, 28 August 2017: default values changed after introduction of new rights statement system by Europeana
                     </xs:documentation>
                 </xs:annotation>
                 <xs:simpleType>
                     <xs:restriction base="xs:string">
                         <xs:enumeration value="CC0"/>
-                        <xs:enumeration value="EDU-USE"/>
-                        <xs:enumeration value="EU-ORPHAN"/>
-                        <xs:enumeration value="NC-NON-COMMERCIAL"/>
-                        <xs:enumeration value="NC-OTHER-LEGAL-RESTR"/>
-                        <xs:enumeration value="NOT-EVALUATED"/>
+                        <xs:enumeration value="CNE"/>
+                        <xs:enumeration value="INC"/>
+                        <xs:enumeration value="INC-EDU"/>
+                        <xs:enumeration value="INC-EU-OW"/>
+                        <xs:enumeration value="NOC-NC"/>
+                        <xs:enumeration value="NOC-OKLR"/>
                     </xs:restriction>
                 </xs:simpleType>
             </xs:attribute>
