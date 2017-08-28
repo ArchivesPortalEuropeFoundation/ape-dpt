@@ -120,7 +120,7 @@
                         <xs:enumeration value="CNE"/>
                         <xs:enumeration value="INC"/>
                         <xs:enumeration value="INC-EDU"/>
-                        <xs:enumeration value="INC-EU-OW"/>
+                        <xs:enumeration value="INC-OW-EU"/>
                         <xs:enumeration value="NOC-NC"/>
                         <xs:enumeration value="NOC-OKLR"/>
                     </xs:restriction>
