@@ -3,14 +3,14 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>eu.archivesportaleurope.dpt</groupId>
     <artifactId>DPT-project</artifactId>
-    <version>2017-10.1</version>
+    <version>2017-10.2-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>APE DPT tool Project</name>
     <description>Maven Project for building the DPT tools</description>
     <scm>
         <connection>scm:git:git@github.com:ArchivesPortalEuropeFoundation/ape-dpt.git</connection>
         <developerConnection>scm:git:git@github.com:ArchivesPortalEuropeFoundation/ape-dpt.git</developerConnection>
-      <tag>DPT-project-2017-10.1</tag>
+      <tag>HEAD</tag>
   </scm>
     <!--    <scm>
         <connection>scm:svn:https://build.archivesportaleurope.net/svn/apex-dpt/branches/DPT-project-2.5</connection>
