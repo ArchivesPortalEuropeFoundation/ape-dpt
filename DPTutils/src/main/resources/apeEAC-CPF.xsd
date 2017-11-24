@@ -361,6 +361,12 @@ Change log:
                         <xs:enumeration value="alias"/>
                         <xs:enumeration value="patronymic"/>
                         <xs:enumeration value="legalform"/>
+                        <!-- Five types added on 2017-11-24, see below-->
+                        <xs:enumeration value="infix"/>
+                        <xs:enumeration value="initials"/>
+                        <xs:enumeration value="pretitle"/>
+                        <xs:enumeration value="infixtitle"/>
+                        <xs:enumeration value="posttitle"/>                        
                     </xs:restriction>
                 </xs:simpleType>
             </xs:attribute>
