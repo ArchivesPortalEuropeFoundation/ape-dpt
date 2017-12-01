@@ -78,7 +78,7 @@
 
     <xsl:template match="/">
         <rdf:RDF
-            xsi:schemaLocation="http://www.europeana.eu/schemas/edm/ http://www.europeana.eu/schemas/edm/EDM.xsd">
+            xsi:schemaLocation="http://www.w3.org/1999/02/22-rdf-syntax-ns# http://www.europeana.eu/schemas/edm/EDM.xsd">
             <xsl:apply-templates/>
         </rdf:RDF>
     </xsl:template>
