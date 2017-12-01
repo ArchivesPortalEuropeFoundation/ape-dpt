@@ -103,14 +103,14 @@
                         </xsl:when>
                         <xsl:otherwise>
                             <edm:dataProvider>
-                                <xsl:value-of select="$europeana_dataprovider"/>
+                                <xsl:value-of select="normalize-space($europeana_dataprovider)"/>
                             </edm:dataProvider>
                         </xsl:otherwise>
                     </xsl:choose>
                 </xsl:when>
                 <xsl:otherwise>
                     <edm:dataProvider>
-                        <xsl:value-of select="$europeana_dataprovider"/>
+                        <xsl:value-of select="normalize-space($europeana_dataprovider)"/>
                     </edm:dataProvider>
                 </xsl:otherwise>
             </xsl:choose>
@@ -791,14 +791,14 @@
                         </xsl:when>
                         <xsl:otherwise>
                             <edm:dataProvider>
-                                <xsl:value-of select="$europeana_dataprovider"/>
+                                <xsl:value-of select="normalize-space($europeana_dataprovider)"/>
                             </edm:dataProvider>
                         </xsl:otherwise>
                     </xsl:choose>
                 </xsl:when>
                 <xsl:otherwise>
                     <edm:dataProvider>
-                        <xsl:value-of select="$europeana_dataprovider"/>
+                        <xsl:value-of select="normalize-space($europeana_dataprovider)"/>
                     </edm:dataProvider>
                 </xsl:otherwise>
             </xsl:choose>
