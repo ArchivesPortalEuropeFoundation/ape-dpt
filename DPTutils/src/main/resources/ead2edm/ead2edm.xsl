@@ -78,7 +78,7 @@
 
     <xsl:template match="/">
         <rdf:RDF
-            xsi:schemaLocation="http://www.europeana.eu/schemas/edm/ http://www.europeana.eu/schemas/edm/EDM.xsd">
+            xsi:schemaLocation="http://www.w3.org/1999/02/22-rdf-syntax-ns# http://www.europeana.eu/schemas/edm/EDM.xsd">
             <xsl:apply-templates/>
         </rdf:RDF>
     </xsl:template>
@@ -103,14 +103,14 @@
                         </xsl:when>
                         <xsl:otherwise>
                             <edm:dataProvider>
-                                <xsl:value-of select="$europeana_dataprovider"/>
+                                <xsl:value-of select="normalize-space($europeana_dataprovider)"/>
                             </edm:dataProvider>
                         </xsl:otherwise>
                     </xsl:choose>
                 </xsl:when>
                 <xsl:otherwise>
                     <edm:dataProvider>
-                        <xsl:value-of select="$europeana_dataprovider"/>
+                        <xsl:value-of select="normalize-space($europeana_dataprovider)"/>
                     </edm:dataProvider>
                 </xsl:otherwise>
             </xsl:choose>
@@ -791,14 +791,14 @@
                         </xsl:when>
                         <xsl:otherwise>
                             <edm:dataProvider>
-                                <xsl:value-of select="$europeana_dataprovider"/>
+                                <xsl:value-of select="normalize-space($europeana_dataprovider)"/>
                             </edm:dataProvider>
                         </xsl:otherwise>
                     </xsl:choose>
                 </xsl:when>
                 <xsl:otherwise>
                     <edm:dataProvider>
-                        <xsl:value-of select="$europeana_dataprovider"/>
+                        <xsl:value-of select="normalize-space($europeana_dataprovider)"/>
                     </edm:dataProvider>
                 </xsl:otherwise>
             </xsl:choose>

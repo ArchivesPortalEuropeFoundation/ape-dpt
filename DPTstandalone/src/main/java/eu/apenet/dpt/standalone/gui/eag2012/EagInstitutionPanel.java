@@ -259,7 +259,7 @@ public class EagInstitutionPanel extends EagPanels {
         for (Parform parform : eag.getArchguide().getIdentity().getParform()) {
             TextFieldWithLanguage textFieldWithLanguage = new TextFieldWithLanguage(parform.getContent(), parform.getLang());
             parallelNameTfs.add(textFieldWithLanguage);
-            builder.addLabel(labels.getString("eag2012.commons.parallelNameOfInstitution"), cc.xy(1, rowNb));
+            builder.addLabel(labels.getString("eag2012.commons.alternativeCurrentNameOfInstitution"), cc.xy(1, rowNb));
             builder.add(textFieldWithLanguage.getTextField(), cc.xy(3, rowNb));
             builder.addLabel(labels.getString("eag2012.commons.language"), cc.xy(5, rowNb));
             builder.add(textFieldWithLanguage.getLanguageBox(), cc.xy(7, rowNb));

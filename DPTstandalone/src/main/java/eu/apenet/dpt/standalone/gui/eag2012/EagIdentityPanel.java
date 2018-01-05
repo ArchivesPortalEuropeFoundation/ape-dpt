@@ -144,7 +144,7 @@ public class EagIdentityPanel extends EagPanels {
             builder.add(textFieldWithLanguage.getLanguageBox(), cc.xy(7, rowNb));
             setNextRow();
         }
-        JButton addNewNameInstitutionBtn = new ButtonTab(labels.getString("eag2012.identity.addAnotherForm"));
+        JButton addNewNameInstitutionBtn = new ButtonTab(labels.getString("eag2012.identity.addTranslationOfName"));
         addNewNameInstitutionBtn.addActionListener(new AddNameInstitutionAction(eag, tabbedPane, model));
         builder.add(addNewNameInstitutionBtn, cc.xy(1, rowNb));
         setNextRow();
@@ -156,13 +156,13 @@ public class EagIdentityPanel extends EagPanels {
             parallelNameTfs.add(textFieldWithLanguage);
             if(loop++ == 0 && StringUtils.isNotEmpty(textFieldWithLanguage.getTextValue()))
                 textFieldWithLanguage.getTextField().setEnabled(false);
-            builder.addLabel(labels.getString("eag2012.commons.parallelNameOfInstitution"),    cc.xy (1, rowNb));
+            builder.addLabel(labels.getString("eag2012.commons.alternativeCurrentNameOfInstitution"),    cc.xy (1, rowNb));
             builder.add(textFieldWithLanguage.getTextField(), cc.xy(3, rowNb));
             builder.addLabel(labels.getString("eag2012.commons.language"),    cc.xy (5, rowNb));
             builder.add(textFieldWithLanguage.getLanguageBox(), cc.xy(7, rowNb));
             setNextRow();
         }
-        JButton addNewParallelNameInstitutionBtn = new ButtonTab(labels.getString("eag2012.identity.addAnotherParallelName"));
+        JButton addNewParallelNameInstitutionBtn = new ButtonTab(labels.getString("eag2012.identity.addTranslationOfAlternativeCurrentName"));
         addNewParallelNameInstitutionBtn.addActionListener(new AddParallelNameInstitutionAction(eag, tabbedPane, model));
         builder.add(addNewParallelNameInstitutionBtn, cc.xy(1, rowNb));
         setNextRow();
@@ -211,7 +211,7 @@ public class EagIdentityPanel extends EagPanels {
             FormerlyUsedName formerlyUsedName = new FormerlyUsedName(nameStr, nonpreform.getLang(), datesForFormerlyUsedName);
             formerlyUsedName.setOrderInXmlFile(formerNameCounter);
             formerlyUsedNameTfs.add(formerlyUsedName);
-            builder.addLabel(labels.getString("eag2012.identity.previousNameOfArchive"),    cc.xy (1, rowNb));
+            builder.addLabel(labels.getString("eag2012.identity.previousNameOfInstitution"),    cc.xy (1, rowNb));
             builder.add(formerlyUsedName.getNameTextField(), cc.xy (3, rowNb));
             builder.addLabel(labels.getString("eag2012.commons.language"),    cc.xy (5, rowNb));
             builder.add(formerlyUsedName.getLanguageBox(), cc.xy (7, rowNb));
@@ -245,7 +245,7 @@ public class EagIdentityPanel extends EagPanels {
                 setNextRow();
             }
         }
-        JButton addNewNonpreNameInstitutionBtn = new ButtonTab(labels.getString("eag2012.identity.addAnotherFormerlyUsedName"));
+        JButton addNewNonpreNameInstitutionBtn = new ButtonTab(labels.getString("eag2012.identity.addPreviouslyUsedName"));
         addNewNonpreNameInstitutionBtn.addActionListener(new AddNonpreNameInstitutionAction(eag, tabbedPane, model));
         builder.add(addNewNonpreNameInstitutionBtn, cc.xy(1, rowNb));
         setNextRow();
@@ -526,7 +526,7 @@ public class EagIdentityPanel extends EagPanels {
 	            }
 	            
 	            if (empty)
-    				JOptionPane.showMessageDialog(eag2012Frame, labels.getString("eag2012.errors.parallelNameOfInstitution"));
+    				JOptionPane.showMessageDialog(eag2012Frame, labels.getString("eag2012.errors.alternativeCurrentNameOfInstitution"));
             }
     
             eag.getArchguide().getIdentity().getParform().add(new Parform());
