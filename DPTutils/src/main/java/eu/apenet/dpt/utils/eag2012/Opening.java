@@ -38,6 +38,9 @@ public class Opening {
     protected String content;
     @XmlAttribute(name = "lang", namespace = "http://www.w3.org/XML/1998/namespace")
     protected String lang;
+    @XmlAttribute(name = "href")
+    @XmlSchemaType(name = "anyURI")
+    protected String href;
 
     /**
      * Gets the value of the content property.
@@ -69,5 +72,13 @@ public class Opening {
 
     public void setLang(String lang) {
         this.lang = lang;
+    }
+
+    public String getHref() {
+        return href;
+    }
+
+    public void setHref(String href) {
+        this.href = href;
     }
 }

@@ -199,11 +199,12 @@ public class EagInstitutionPanel extends EagPanels {
 
         otherRecordIdTfs = new ArrayList<TextFieldWithCheckbox>(eag.getControl().getOtherRecordId().size());
         for (OtherRecordId otherRecordId : eag.getControl().getOtherRecordId()) {
-           
-        	String mandatoryStar = "*";
-            if(otherRecordId !=  eag.getControl().getOtherRecordId().get(0))
+
+            String mandatoryStar = "*";
+            if (otherRecordId != eag.getControl().getOtherRecordId().get(0)) {
                 mandatoryStar = "";
-            
+            }
+
             TextFieldWithCheckbox textFieldWithCheckbox = new TextFieldWithCheckbox(otherRecordId.getValue(), otherRecordId.getLocalType());
             otherRecordIdTfs.add(textFieldWithCheckbox);
             builder.addLabel(labels.getString("eag2012.control.identifierInstitution") + mandatoryStar, cc.xy(1, rowNb));
@@ -213,9 +214,9 @@ public class EagInstitutionPanel extends EagPanels {
             builder.add(textFieldWithCheckbox.getIsilOrNotCombo(), cc.xy(7, rowNb));
             textFieldWithCheckbox.getIsilOrNotCombo().addActionListener(new ComboboxActionListener(textFieldWithCheckbox));
             setNextRow();
-        }       
-        if(errors.contains("otherRecordIdTfs")) {
-            builder.add(createErrorLabel(labels.getString("eag2012.errors.notIdentifierInstitution")), cc.xy (1, rowNb));
+        }
+        if (errors.contains("otherRecordIdTfs")) {
+            builder.add(createErrorLabel(labels.getString("eag2012.errors.notIdentifierInstitution")), cc.xy(1, rowNb));
             setNextRow();
         }
 
@@ -356,10 +357,10 @@ public class EagInstitutionPanel extends EagPanels {
                 builder.add(locationType.getCountryTf().getTextField(), cc.xy(3, rowNb));
                 builder.addLabel(labels.getString("eag2012.commons.language"), cc.xy(5, rowNb));
                 builder.add(locationType.getCountryTf().getLanguageBox(), cc.xy(7, rowNb));
-	            if(errors.contains("countryTf") && StringUtils.isEmpty(locationType.getCountryTfValue())) {
-	                setNextRow();
-	                builder.add(createErrorLabel(labels.getString("eag2012.errors.country")), cc.xy(1, rowNb));
-	            }
+                if (errors.contains("countryTf") && StringUtils.isEmpty(locationType.getCountryTfValue())) {
+                    setNextRow();
+                    builder.add(createErrorLabel(labels.getString("eag2012.errors.country")), cc.xy(1, rowNb));
+                }
                 setNextRow();
 
                 builder.addLabel(labels.getString("eag2012.commons.latitude"), cc.xy(1, rowNb));
@@ -441,11 +442,14 @@ public class EagInstitutionPanel extends EagPanels {
         openingHoursTfs = new ArrayList<TextFieldWithLanguage>(repository.getTimetable().getOpening().size());
         for (Opening opening : repository.getTimetable().getOpening()) {
             builder.addLabel(labels.getString("eag2012.commons.openingHours") + "*", cc.xy(1, rowNb));
-            TextFieldWithLanguage textFieldWithLanguage = new TextFieldWithLanguage(opening.getContent(), opening.getLang());
+            TextFieldWithLanguage textFieldWithLanguage = new TextFieldWithLanguage(opening.getContent(), opening.getLang(), opening.getHref());
             openingHoursTfs.add(textFieldWithLanguage);
             builder.add(textFieldWithLanguage.getTextField(), cc.xy(3, rowNb));
             builder.addLabel(labels.getString("eag2012.commons.language"), cc.xy(5, rowNb));
             builder.add(textFieldWithLanguage.getLanguageBox(), cc.xy(7, rowNb));
+            setNextRow();
+            builder.addLabel(labels.getString("eag2012.commons.openingHours.link"), cc.xy(1, rowNb));
+            builder.add(textFieldWithLanguage.getExtraField(), cc.xy(3, rowNb));
             setNextRow();
         }
         if (errors.contains("openingHoursTfs")) {
@@ -503,7 +507,6 @@ public class EagInstitutionPanel extends EagPanels {
 //            setNextRow();
 //        }
 //        }
-
         builder.addSeparator("", cc.xyw(1, rowNb, 7));
         setNextRow();
 
@@ -534,32 +537,32 @@ public class EagInstitutionPanel extends EagPanels {
         this.removeChangeListener();
         this.tabbedPane.addChangeListener(new ChangeTabListener(this.eag, this.tabbedPane, this.model, 0));
 
-		JPanel panel = builder.getPanel();
-		KeyboardFocusManager.getCurrentKeyboardFocusManager().addPropertyChangeListener(new FocusManagerListener(panel));
-		return panel;
+        JPanel panel = builder.getPanel();
+        KeyboardFocusManager.getCurrentKeyboardFocusManager().addPropertyChangeListener(new FocusManagerListener(panel));
+        return panel;
     }
 
-	/**
-	 * Method that removes the existing "ChangeTabListener".
-	 */
-	private void removeChangeListener() {
-		// Check the current "ChangeListeners" and remove the non desired ones.
-		ChangeListener[] changeListeners = this.tabbedPane.getChangeListeners();
-		List<ChangeListener> changeListenerList = new LinkedList<ChangeListener>();
-		for (int i = 0; i < changeListeners.length; i++) {
-			ChangeListener changeListener = changeListeners[i];
+    /**
+     * Method that removes the existing "ChangeTabListener".
+     */
+    private void removeChangeListener() {
+        // Check the current "ChangeListeners" and remove the non desired ones.
+        ChangeListener[] changeListeners = this.tabbedPane.getChangeListeners();
+        List<ChangeListener> changeListenerList = new LinkedList<ChangeListener>();
+        for (int i = 0; i < changeListeners.length; i++) {
+            ChangeListener changeListener = changeListeners[i];
 
-			if (changeListener instanceof ChangeTabListener) {
-				changeListenerList.add(changeListener);
-			}
-		}
+            if (changeListener instanceof ChangeTabListener) {
+                changeListenerList.add(changeListener);
+            }
+        }
 
-		if (changeListenerList != null) {
-			for (int i = 0; i < changeListenerList.size(); i++) {
-				this.tabbedPane.removeChangeListener(changeListenerList.get(i));
-			}
-		}
-	}
+        if (changeListenerList != null) {
+            for (int i = 0; i < changeListenerList.size(); i++) {
+                this.tabbedPane.removeChangeListener(changeListenerList.get(i));
+            }
+        }
+    }
 
     public class ChangeComboActioin extends UpdateEagObject {
 
@@ -605,8 +608,9 @@ public class EagInstitutionPanel extends EagPanels {
     }
 
     public class AddRepositoryTabButton implements ActionListener {
+
         public void actionPerformed(ActionEvent actionEvent) {
-        	// Remove the current change tab listener and add it again.
+            // Remove the current change tab listener and add it again.
             removeChangeListener();
 
 //            mainTabbedPane.add(labels.getString("eag2012.tab.extraRepository") + " " + mainTabbedPane.getTabCount(), null);
@@ -619,6 +623,7 @@ public class EagInstitutionPanel extends EagPanels {
     }
 
     public class NextTabBtnAction extends UpdateEagObject {
+
         NextTabBtnAction(Eag eag, JTabbedPane tabbedPane, ProfileListModel model) {
             super(eag, tabbedPane, model);
         }
@@ -627,7 +632,7 @@ public class EagInstitutionPanel extends EagPanels {
         public void actionPerformed(ActionEvent actionEvent) {
             try {
                 super.updateJAXBObject(true);
-				removeChangeListener();
+                removeChangeListener();
 
                 reloadTabbedPanel(new EagIdentityPanel(eag, tabbedPane, mainTabbedPane, eag2012Frame, model, labels, repositoryNb).buildEditorPanel(errors), 1);
             } catch (Eag2012FormException e) {
@@ -637,6 +642,7 @@ public class EagInstitutionPanel extends EagPanels {
     }
 
     public class NextInstitutionTabBtnAction extends UpdateEagObject {
+
         NextInstitutionTabBtnAction(Eag eag, JTabbedPane tabbedPane, ProfileListModel model) {
             super(eag, tabbedPane, model);
         }
@@ -647,7 +653,7 @@ public class EagInstitutionPanel extends EagPanels {
 
                 int currentTabIndex = mainTabbedPane.getSelectedIndex();
                 if (currentTabIndex + 1 < mainTabbedPane.getTabCount()) {
-					reloadTabbedPanel(new EagContactPanel(eag, tabbedPane, mainTabbedPane, eag2012Frame, model, isNew, labels, repositoryNb).buildEditorPanel(errors), 2);
+                    reloadTabbedPanel(new EagContactPanel(eag, tabbedPane, mainTabbedPane, eag2012Frame, model, isNew, labels, repositoryNb).buildEditorPanel(errors), 2);
                     mainTabbedPane.setEnabledAt(currentTabIndex, false);
                     mainTabbedPane.setEnabledAt(currentTabIndex + 1, true);
                     mainTabbedPane.setSelectedIndex(currentTabIndex + 1);
@@ -659,6 +665,7 @@ public class EagInstitutionPanel extends EagPanels {
     }
 
     public class AddOtherIdentifierAction<otherRecordIdTfs> extends UpdateEagObject {
+
         AddOtherIdentifierAction(Eag eag, JTabbedPane tabbedPane, ProfileListModel model) {
             super(eag, tabbedPane, model);
         }
@@ -887,9 +894,9 @@ public class EagInstitutionPanel extends EagPanels {
                         eag.getControl().getOtherRecordId().add(otherRecordId);
                         hasChanged = true;
                     }
-                    if(textFieldWithCheckbox == otherRecordIdTfs.get(0)
-                    		&& (textFieldWithCheckbox.getTextFieldValue()==null  || StringUtils.isEmpty(textFieldWithCheckbox.getTextFieldValue().trim()))) {
-                    	errors.add("otherRecordIdTfs");
+                    if (textFieldWithCheckbox == otherRecordIdTfs.get(0)
+                            && (textFieldWithCheckbox.getTextFieldValue() == null || StringUtils.isEmpty(textFieldWithCheckbox.getTextFieldValue().trim()))) {
+                        errors.add("otherRecordIdTfs");
                     }
                 }
             }
@@ -1018,6 +1025,7 @@ public class EagInstitutionPanel extends EagPanels {
                         Opening opening = new Opening();
                         opening.setContent(textFieldWithLanguage.getTextValue());
                         opening.setLang(textFieldWithLanguage.getLanguage());
+                        opening.setHref(textFieldWithLanguage.getExtraValue());
                         repository.getTimetable().getOpening().add(opening);
                         openingTimeExists = true;
                     }
@@ -1052,32 +1060,31 @@ public class EagInstitutionPanel extends EagPanels {
             }
             repository.getAccessibility().get(0).setQuestion(facilitiesForDisabledCombo.getSelectedItem().toString());
 
-            if (eag.getRelations() == null)
-//                eag.setRelations(new Relations());
-//            if(eag.getRelations().getResourceRelation().size() > 0) {
-//                if(StringUtils.isNotEmpty(refInstitutionHoldingsGuideTf.getText()) && !refInstitutionHoldingsGuideTf.getText().equals(eag.getRelations().getResourceRelation().get(0).getHref())) {
-//                    eag.getRelations().getResourceRelation().get(0).setHref(refInstitutionHoldingsGuideTf.getText());
-//                    if(!StringUtils.startsWithAny(refInstitutionHoldingsGuideTf.getText(), webPrefixes))
-//                        errors.add("refInstitutionHoldingsGuideTf");
-//                    hasChanged = true;
-//                }
-//
-//                if(eag.getRelations().getResourceRelation().get(0).getRelationEntry() != null) {
-//                    if(StringUtils.isNotEmpty(refInstitutionHoldingsGuideTitleTf.getText())) {
-//                        eag.getRelations().getResourceRelation().get(0).getRelationEntry().setContent(refInstitutionHoldingsGuideTitleTf.getText());
-//                        hasChanged = true;
-//                    }
-//                }
-//                if(StringUtils.isEmpty(refInstitutionHoldingsGuideTf.getText())) {
-//                    eag.getRelations().getResourceRelation().remove(0);
-//                }
-//            } else if(StringUtils.isNotEmpty(refInstitutionHoldingsGuideTf.getText())) {
-//                eag.getRelations().getResourceRelation().add(new ResourceRelation());
-//                eag.getRelations().getResourceRelation().get(0).setResourceRelationType("creatorOf");
-//                eag.getRelations().getResourceRelation().get(0).setHref(refInstitutionHoldingsGuideTf.getText());
-//                eag.getRelations().getResourceRelation().get(0).setRelationEntry(new RelationEntry());
-//                eag.getRelations().getResourceRelation().get(0).getRelationEntry().setContent(refInstitutionHoldingsGuideTitleTf.getText());
-//            } else if(eag.getRelations().getEagRelation().size() == 0) {
+            if (eag.getRelations() == null) //                eag.setRelations(new Relations());
+            //            if(eag.getRelations().getResourceRelation().size() > 0) {
+            //                if(StringUtils.isNotEmpty(refInstitutionHoldingsGuideTf.getText()) && !refInstitutionHoldingsGuideTf.getText().equals(eag.getRelations().getResourceRelation().get(0).getHref())) {
+            //                    eag.getRelations().getResourceRelation().get(0).setHref(refInstitutionHoldingsGuideTf.getText());
+            //                    if(!StringUtils.startsWithAny(refInstitutionHoldingsGuideTf.getText(), webPrefixes))
+            //                        errors.add("refInstitutionHoldingsGuideTf");
+            //                    hasChanged = true;
+            //                }
+            //
+            //                if(eag.getRelations().getResourceRelation().get(0).getRelationEntry() != null) {
+            //                    if(StringUtils.isNotEmpty(refInstitutionHoldingsGuideTitleTf.getText())) {
+            //                        eag.getRelations().getResourceRelation().get(0).getRelationEntry().setContent(refInstitutionHoldingsGuideTitleTf.getText());
+            //                        hasChanged = true;
+            //                    }
+            //                }
+            //                if(StringUtils.isEmpty(refInstitutionHoldingsGuideTf.getText())) {
+            //                    eag.getRelations().getResourceRelation().remove(0);
+            //                }
+            //            } else if(StringUtils.isNotEmpty(refInstitutionHoldingsGuideTf.getText())) {
+            //                eag.getRelations().getResourceRelation().add(new ResourceRelation());
+            //                eag.getRelations().getResourceRelation().get(0).setResourceRelationType("creatorOf");
+            //                eag.getRelations().getResourceRelation().get(0).setHref(refInstitutionHoldingsGuideTf.getText());
+            //                eag.getRelations().getResourceRelation().get(0).setRelationEntry(new RelationEntry());
+            //                eag.getRelations().getResourceRelation().get(0).getRelationEntry().setContent(refInstitutionHoldingsGuideTitleTf.getText());
+            //            } else if(eag.getRelations().getEagRelation().size() == 0) {
             {
                 eag.setRelations(null);
             }
@@ -1150,7 +1157,6 @@ public class EagInstitutionPanel extends EagPanels {
 //			if (!found)
 //				JOptionPane.showMessageDialog(eag2012Frame, labels.getString("eag2012.errors.typeOfInstitutionRepeated"));
 //        }
-
         public void actionPerformed(ActionEvent actionEvent) {
             if (textFieldWithCheckbox.getisilOrNotComboValue().equals("yes")) {
                 int counter = 0;
@@ -1181,7 +1187,8 @@ public class EagInstitutionPanel extends EagPanels {
     }
 
     /**
-     * This class adds another repositoryType only if there is a selected type, if no, it shows an error message
+     * This class adds another repositoryType only if there is a selected type,
+     * if no, it shows an error message
      *
      * @author fernando
      *
@@ -1257,63 +1264,66 @@ public class EagInstitutionPanel extends EagPanels {
         }
     }
 
-	/**
-	 * Class to performs the actions when the user clicks in other tab.
-	 */
-	public class ChangeTabListener extends UpdateEagObject implements ChangeListener {
-		private int currentTab;
-		/**
-		 * Constructor.
-		 *
-		 * @param eaccpf
-		 * @param tabbedPane
-		 * @param model
-		 * @param indexTab
-		 */
-		public ChangeTabListener(Eag eag, JTabbedPane tabbedPane, ProfileListModel model, int indexTab) {
-			super (eag, tabbedPane, model);
-			this.currentTab = indexTab;
-		}
+    /**
+     * Class to performs the actions when the user clicks in other tab.
+     */
+    public class ChangeTabListener extends UpdateEagObject implements ChangeListener {
 
-		@Override
-		public void stateChanged(ChangeEvent e) {
-			int selectedIndex = this.tabbedPane.getSelectedIndex();
-			// Checks if clicks in different tab.
-			if (this.currentTab != selectedIndex) {
-				try {
-					super.updateJAXBObject(true);
-					removeChangeListener();
-					switch (selectedIndex) {
-						case 1:
-							reloadTabbedPanel(new EagIdentityPanel(eag, tabbedPane, mainTabbedPane, eag2012Frame, model, labels, repositoryNb).buildEditorPanel(errors), 1);
-							break;
-						case 2:
-							reloadTabbedPanel(new EagContactPanel(eag, tabbedPane, mainTabbedPane, eag2012Frame, model, false, labels, repositoryNb).buildEditorPanel(errors), 2);
-							break;
-						case 3:
-							reloadTabbedPanel(new EagAccessAndServicesPanel(eag, tabbedPane, mainTabbedPane, eag2012Frame, model, labels, repositoryNb).buildEditorPanel(errors), 3);
-							break;
-						case 4:
-							reloadTabbedPanel(new EagDescriptionPanel(eag, tabbedPane, mainTabbedPane, eag2012Frame, model, labels, repositoryNb).buildEditorPanel(errors), 4);
-							break;
-						case 5:
-							reloadTabbedPanel(new EagControlPanel(eag, tabbedPane, mainTabbedPane, eag2012Frame, model, labels, repositoryNb).buildEditorPanel(errors), 5);
-							break;
-						case 6:
-							reloadTabbedPanel(new EagRelationsPanel(eag, tabbedPane, mainTabbedPane, eag2012Frame, model, labels, repositoryNb).buildEditorPanel(errors), 6);
-							break;
-						default:
-							reloadTabbedPanel(new EagInstitutionPanel(eag, tabbedPane, mainTabbedPane, eag2012Frame, model, isNew, labels, repositoryNb).buildEditorPanel(errors), 0);
-					}
-				} catch (Eag2012FormException ex) {
-					reloadTabbedPanel(new EagInstitutionPanel(eag, tabbedPane, mainTabbedPane, eag2012Frame, model, isNew, labels, repositoryNb).buildEditorPanel(errors), 0);
-				}
-			}
-		}
-		@Override
-		public void actionPerformed(ActionEvent actionEvent) {
-			// Empty.
-		}
-	}
+        private int currentTab;
+
+        /**
+         * Constructor.
+         *
+         * @param eaccpf
+         * @param tabbedPane
+         * @param model
+         * @param indexTab
+         */
+        public ChangeTabListener(Eag eag, JTabbedPane tabbedPane, ProfileListModel model, int indexTab) {
+            super(eag, tabbedPane, model);
+            this.currentTab = indexTab;
+        }
+
+        @Override
+        public void stateChanged(ChangeEvent e) {
+            int selectedIndex = this.tabbedPane.getSelectedIndex();
+            // Checks if clicks in different tab.
+            if (this.currentTab != selectedIndex) {
+                try {
+                    super.updateJAXBObject(true);
+                    removeChangeListener();
+                    switch (selectedIndex) {
+                        case 1:
+                            reloadTabbedPanel(new EagIdentityPanel(eag, tabbedPane, mainTabbedPane, eag2012Frame, model, labels, repositoryNb).buildEditorPanel(errors), 1);
+                            break;
+                        case 2:
+                            reloadTabbedPanel(new EagContactPanel(eag, tabbedPane, mainTabbedPane, eag2012Frame, model, false, labels, repositoryNb).buildEditorPanel(errors), 2);
+                            break;
+                        case 3:
+                            reloadTabbedPanel(new EagAccessAndServicesPanel(eag, tabbedPane, mainTabbedPane, eag2012Frame, model, labels, repositoryNb).buildEditorPanel(errors), 3);
+                            break;
+                        case 4:
+                            reloadTabbedPanel(new EagDescriptionPanel(eag, tabbedPane, mainTabbedPane, eag2012Frame, model, labels, repositoryNb).buildEditorPanel(errors), 4);
+                            break;
+                        case 5:
+                            reloadTabbedPanel(new EagControlPanel(eag, tabbedPane, mainTabbedPane, eag2012Frame, model, labels, repositoryNb).buildEditorPanel(errors), 5);
+                            break;
+                        case 6:
+                            reloadTabbedPanel(new EagRelationsPanel(eag, tabbedPane, mainTabbedPane, eag2012Frame, model, labels, repositoryNb).buildEditorPanel(errors), 6);
+                            break;
+                        default:
+                            reloadTabbedPanel(new EagInstitutionPanel(eag, tabbedPane, mainTabbedPane, eag2012Frame, model, isNew, labels, repositoryNb).buildEditorPanel(errors), 0);
+                    }
+                } catch (Eag2012FormException ex) {
+                    reloadTabbedPanel(new EagInstitutionPanel(eag, tabbedPane, mainTabbedPane, eag2012Frame, model, isNew, labels, repositoryNb).buildEditorPanel(errors), 0);
+                }
+            }
+        }
+
+        @Override
+        public void actionPerformed(ActionEvent actionEvent) {
+            // Empty.
+        }
+    }
 
 }

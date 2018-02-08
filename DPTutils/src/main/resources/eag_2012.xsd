@@ -874,6 +874,7 @@
 
     </xs:complexType>
     <xs:complexType name="opening" mixed="true">
+        <xs:attributeGroup ref="href"/>
         <xs:attribute ref="xml:lang"/>
         <xs:attributeGroup ref="sourceAttribute"/>
     </xs:complexType>
