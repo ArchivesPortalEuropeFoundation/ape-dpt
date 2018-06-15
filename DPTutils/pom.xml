@@ -67,21 +67,25 @@
             <artifactId>Saxon-HE</artifactId>
         </dependency>
         <!--Begin xerces-->
+        <!--<dependency>-->
+            <!--<groupId>xerces</groupId>-->
+            <!--<artifactId>xercesImpl-schema</artifactId>-->
+        <!--</dependency>-->
+        <!--<dependency>-->
+            <!--<groupId>xerces</groupId>-->
+            <!--<artifactId>xercesImpl-resolver</artifactId>-->
+        <!--</dependency>-->
+        <!--<dependency>-->
+            <!--<groupId>org.eclipse.wst</groupId>-->
+            <!--<artifactId>xpath2processor</artifactId>-->
+        <!--</dependency>-->
+        <!--<dependency>-->
+            <!--<groupId>cupv</groupId>-->
+            <!--<artifactId>cupv</artifactId>-->
+        <!--</dependency>-->
         <dependency>
             <groupId>xerces</groupId>
-            <artifactId>xercesImpl-schema</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>xerces</groupId>
-            <artifactId>xercesImpl-resolver</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.eclipse.wst</groupId>
-            <artifactId>xpath2processor</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>cupv</groupId>
-            <artifactId>cupv</artifactId>
+            <artifactId>xercesImpl</artifactId>
         </dependency>
         <dependency>
             <groupId>xml-apis</groupId>
