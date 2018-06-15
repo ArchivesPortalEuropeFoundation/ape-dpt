@@ -64,7 +64,7 @@
     <dependencies>
         <dependency>
             <groupId>net.sf.saxon</groupId>
-            <artifactId>saxon-HE</artifactId>
+            <artifactId>Saxon-HE</artifactId>
         </dependency>
         <!--Begin xerces-->
         <dependency>
