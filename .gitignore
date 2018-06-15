@@ -38,3 +38,7 @@ buildNumber.properties
 /DPTstandalone/apeoptions/
 /DPTstandalone/output/
 /DPTstandalone/xsl/
+
+# Ignore idea files
+.idea
+**/*.iml
