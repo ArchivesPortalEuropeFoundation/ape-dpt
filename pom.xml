@@ -150,26 +150,6 @@
                 <artifactId>xercesImpl</artifactId>
                 <version>2.11.0</version>
             </dependency>
-            <!--<dependency>-->
-                <!--<groupId>xerces</groupId>-->
-                <!--<artifactId>xercesImpl-schema</artifactId>-->
-                <!--<version>2.10.0</version>-->
-            <!--</dependency>-->
-            <!--<dependency>-->
-                <!--<groupId>xerces</groupId>-->
-                <!--<artifactId>xercesImpl-resolver</artifactId>-->
-                <!--<version>2.11.0</version>-->
-            <!--</dependency>-->
-            <!--<dependency>-->
-                <!--<groupId>org.eclipse.wst</groupId>-->
-                <!--<artifactId>xpath2processor</artifactId>-->
-                <!--<version>1.0.0</version>-->
-            <!--</dependency>-->
-            <!--<dependency>-->
-                <!--<groupId>cupv</groupId>-->
-                <!--<artifactId>cupv</artifactId>-->
-                <!--<version>1.0</version>-->
-            <!--</dependency>-->
             <dependency>
                 <groupId>xml-apis</groupId>
                 <artifactId>xml-apis</artifactId>
@@ -212,28 +192,16 @@
                     </exclusion>
                 </exclusions>
             </dependency>
-            <!-- https://mvnrepository.com/artifact/com.jgoodies/jgoodies-common -->
             <dependency>
                 <groupId>com.jgoodies</groupId>
                 <artifactId>jgoodies-common</artifactId>
                 <version>1.8.1</version>
             </dependency>
-            <!--<dependency>-->
-                <!--<groupId>com.jgoodies</groupId>-->
-                <!--<artifactId>forms</artifactId>-->
-                <!--<version>1.6.0</version>-->
-            <!--</dependency>-->
-            <!-- https://mvnrepository.com/artifact/com.jgoodies/jgoodies-forms -->
             <dependency>
                 <groupId>com.jgoodies</groupId>
                 <artifactId>jgoodies-forms</artifactId>
                 <version>1.8.0</version>
             </dependency>
-            <!--<dependency>-->
-                <!--<groupId>com.jgoodies</groupId>-->
-                <!--<artifactId>commons</artifactId>-->
-                <!--<version>1.4.0</version>-->
-            <!--</dependency>-->
             <dependency>
                 <groupId>eu.archivesportaleurope.dpt</groupId>
                 <artifactId>DPTutils</artifactId>
