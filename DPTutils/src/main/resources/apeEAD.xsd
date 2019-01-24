@@ -984,6 +984,7 @@
             <xs:element name="titlestmt" type="titlestmt"/>
             <xs:element minOccurs="0" name="publicationstmt" type="publicationstmt"/>
             <xs:element minOccurs="0" name="seriesstmt" type="seriesstmt"/>
+            <xs:element minOccurs="0" name="notestmt" type="notestmt"/>
         </xs:sequence>
     </xs:complexType>
     <xs:complexType name="titlestmt">
@@ -1005,6 +1006,13 @@
         <xs:choice maxOccurs="unbounded">
             <xs:element name="titleproper" type="titleproper"/>
         </xs:choice>
+    </xs:complexType>
+    <xs:complexType name="notestmt">
+        <xs:sequence>
+            <xs:element maxOccurs="unbounded" name="note" type="note"/>
+        </xs:sequence>
+        <xs:attributeGroup ref="a.common"/>
+        <xs:attribute name="encodinganalog"/>
     </xs:complexType>
     <xs:complexType name="profiledesc">
         <xs:sequence>
