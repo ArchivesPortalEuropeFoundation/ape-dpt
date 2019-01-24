@@ -998,6 +998,7 @@
             <xs:element name="publisher" type="publisher"/>
             <xs:element name="date" type="date"/>
             <xs:element name="address" type="address"/>
+            <xs:element name="p" type="p"/>
         </xs:choice>
     </xs:complexType>
     <xs:complexType name="seriesstmt">
