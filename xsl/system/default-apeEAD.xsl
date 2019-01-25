@@ -477,7 +477,7 @@
         </publicationstmt>
     </xsl:template>
 
-    <!-- publicationstmt/p => publisher for Poland -->
+    <!-- publicationstmt/p -->
     <xsl:template match="publicationstmt/p" mode="copy">
         <xsl:choose>
             <xsl:when test="//eadid/@countrycode = 'PL' or //eadid/@countrycode = 'pl'">
@@ -486,7 +486,7 @@
                 </publisher>
             </xsl:when>
             <xsl:otherwise>
-                <xsl:call-template name="excludeElement"/>
+                <p><xsl:apply-templates select="node()" mode="#current"/></p>
             </xsl:otherwise>
         </xsl:choose>
     </xsl:template>
@@ -517,7 +517,21 @@
             </xsl:if>
         </seriesstmt>
     </xsl:template>
-
+    
+    <!-- notestmt -->
+    <xsl:template match="notestmt" mode="copy">
+        <notestmt>
+            <xsl:apply-templates select="node()" mode="copy"/>
+        </notestmt>
+    </xsl:template>
+    
+    <!-- note -->
+    <xsl:template match="note" mode="copy">
+        <note>
+            <xsl:apply-templates select="node()" mode="copy"/>
+        </note>
+    </xsl:template>
+    
     <!-- filedesc/titlestmt/author -->
     <xsl:template match="filedesc/titlestmt/author" name="author" mode="copy">
         <xsl:choose>
