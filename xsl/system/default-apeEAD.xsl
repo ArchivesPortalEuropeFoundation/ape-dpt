@@ -6,13 +6,13 @@
             - other modes: specific for special purposes
 -->
 <xsl:stylesheet version="2.0" xmlns="urn:isbn:1-931666-22-9"
-    xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:fo="http://www.w3.org/1999/XSL/Format"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:none="none"
-    xmlns:ape="http://www.archivesportaleurope.net/functions"
-    xmlns:xlink="http://www.w3.org/1999/xlink"
-    xsi:schemaLocation="urn:isbn:1-931666-22-9 http://www.loc.gov/ead/ead.xsd"
-    xpath-default-namespace="urn:isbn:1-931666-22-9" exclude-result-prefixes="xsl fo xs none ape">
+                xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:fo="http://www.w3.org/1999/XSL/Format"
+                xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:none="none"
+                xmlns:ape="http://www.archivesportaleurope.net/functions"
+                xmlns:xlink="http://www.w3.org/1999/xlink"
+                xsi:schemaLocation="urn:isbn:1-931666-22-9 http://www.loc.gov/ead/ead.xsd"
+                xpath-default-namespace="urn:isbn:1-931666-22-9" exclude-result-prefixes="xsl fo xs none ape">
 
     <!--Will be used in the next version to use specialized xsl templates for partners-->
     <!--<xsl:include href="xsl/import.xsl"/>-->
@@ -36,23 +36,15 @@
     <xsl:param name="defaultRoleType" select="'UNSPECIFIED'"/>
     <xsl:param name="useDefaultRoleType" select="'false'"/>
     <!-- Parameters related to rights statement for digital objects. -->
-    <xsl:param name="defaultRightsDigitalObject" select="''"/>
-    <!-- The rights URL: see comment 9 or 10 on issue #1699 to know the links -->
-    <xsl:param name="defaultRightsDigitalObjectText" select="''"/>
-    <!-- The rights URL text -->
-    <xsl:param name="defaultRightsDigitalObjectDescription" select="''"/>
-    <!-- Any text. -->
-    <xsl:param name="defaultRightsDigitalObjectHolder" select="''"/>
-    <!-- Any text. -->
+    <xsl:param name="defaultRightsDigitalObject" select="''"/> <!-- The rights URL: see comment 9 or 10 on issue #1699 to know the links -->
+    <xsl:param name="defaultRightsDigitalObjectText" select="''"/> <!-- The rights URL text -->
+    <xsl:param name="defaultRightsDigitalObjectDescription" select="''"/> <!-- Any text. -->
+    <xsl:param name="defaultRightsDigitalObjectHolder" select="''"/> <!-- Any text. -->
     <!-- Parameters related to rights statement for EAD data. -->
-    <xsl:param name="defaultRightsEadData" select="''"/>
-    <!-- The rights URL: see comment 9 or 10 on issue #1699 to know the links -->
-    <xsl:param name="defaultRightsEadDataText" select="''"/>
-    <!-- The rights URL text -->
-    <xsl:param name="defaultRightsEadDataDescription" select="''"/>
-    <!-- Any text. -->
-    <xsl:param name="defaultRightsEadDataHolder" select="''"/>
-    <!-- Any text. -->
+    <xsl:param name="defaultRightsEadData" select="''"/> <!-- The rights URL: see comment 9 or 10 on issue #1699 to know the links -->
+    <xsl:param name="defaultRightsEadDataText" select="''"/> <!-- The rights URL text -->
+    <xsl:param name="defaultRightsEadDataDescription" select="''"/> <!-- Any text. -->
+    <xsl:param name="defaultRightsEadDataHolder" select="''"/> <!-- Any text. -->
 
     <xsl:param name="url" select="''"/>
     <xsl:param name="provider" select="''"/>
@@ -76,52 +68,52 @@
         <xsl:variable name="excludedElement">
             <xsl:if test="name(../../../../../../../..) != ''">
                 <xsl:value-of select="name(../../../../../../../..)"/>
-                <xsl:if test="name(../../../../../../../..) = 'c'">@<xsl:value-of
+                <xsl:if test="name(../../../../../../../..)='c'">@<xsl:value-of
                         select="../../../../../../../../@level"/>
                 </xsl:if>
                 <xsl:text>/</xsl:text>
             </xsl:if>
             <xsl:if test="name(../../../../../../..) != ''">
                 <xsl:value-of select="name(../../../../../../..)"/>
-                <xsl:if test="name(../../../../../../..) = 'c'">@<xsl:value-of
+                <xsl:if test="name(../../../../../../..)='c'">@<xsl:value-of
                         select="../../../../../../../@level"/>
                 </xsl:if>
                 <xsl:text>/</xsl:text>
             </xsl:if>
             <xsl:if test="name(../../../../../..) != ''">
                 <xsl:value-of select="name(../../../../../..)"/>
-                <xsl:if test="name(../../../../../..) = 'c'">@<xsl:value-of
+                <xsl:if test="name(../../../../../..)='c'">@<xsl:value-of
                         select="../../../../../../@level"/>
                 </xsl:if>
                 <xsl:text>/</xsl:text>
             </xsl:if>
             <xsl:if test="name(../../../../..) != ''">
                 <xsl:value-of select="name(../../../../..)"/>
-                <xsl:if test="name(../../../../..) = 'c'">@<xsl:value-of
+                <xsl:if test="name(../../../../..)='c'">@<xsl:value-of
                         select="../../../../../@level"/>
                 </xsl:if>
                 <xsl:text>/</xsl:text>
             </xsl:if>
             <xsl:if test="name(../../../..) != ''">
                 <xsl:value-of select="name(../../../..)"/>
-                <xsl:if test="name(../../../..) = 'c'">@<xsl:value-of select="../../../../@level"/>
+                <xsl:if test="name(../../../..)='c'">@<xsl:value-of select="../../../../@level"
+                    />
                 </xsl:if>
                 <xsl:text>/</xsl:text>
             </xsl:if>
             <xsl:if test="name(../../..) != ''">
                 <xsl:value-of select="name(../../..)"/>
-                <xsl:if test="name(../../..) = 'c'">@<xsl:value-of select="../../../@level"
-                    /></xsl:if>
+                <xsl:if test="name(../../..)='c'">@<xsl:value-of select="../../../@level"/></xsl:if>
                 <xsl:text>/</xsl:text>
             </xsl:if>
             <xsl:value-of select="name(../..)"/>
-            <xsl:if test="name(../..) = 'c'">@<xsl:value-of select="../../@level"/></xsl:if>
+            <xsl:if test="name(../..)='c'">@<xsl:value-of select="../../@level"/></xsl:if>
             <xsl:text>/</xsl:text>
             <xsl:value-of select="name(..)"/>
-            <xsl:if test="name(..) = 'c'">@<xsl:value-of select="../@level"/></xsl:if>
+            <xsl:if test="name(..)='c'">@<xsl:value-of select="../@level"/></xsl:if>
             <xsl:text>/</xsl:text>
             <xsl:value-of select="name(.)"/>
-            <xsl:if test="name(.) = 'c'">@<xsl:value-of select="@level"/></xsl:if>
+            <xsl:if test="name(.)='c'">@<xsl:value-of select="@level"/></xsl:if>
         </xsl:variable>
         <xsl:message select="normalize-space($excludedElement)"/>
     </xsl:template>
@@ -180,7 +172,7 @@
                 <xsl:value-of select="normalize-space(.)"/>
                 <xsl:text> </xsl:text>
             </xsl:when>
-            <xsl:when test="@render = 'bold' or @render = 'italic'">
+            <xsl:when test="@render='bold' or @render='italic'">
                 <emph>
                     <xsl:if test="@render != ''">
                         <xsl:attribute name="render" select="@render"/>
@@ -199,12 +191,8 @@
     <xsl:template match="abbr" mode="#all">
         <xsl:choose>
             <xsl:when test="parent::unitdate">
-                <xsl:text> </xsl:text>
-                <xsl:value-of select="text()"/>
-                <xsl:text> </xsl:text>
-                <xsl:if test="@expan != ''">
-                    <xsl:value-of select="concat(' (', concat(@expan, ') '))"/>
-                </xsl:if>
+                <xsl:text> </xsl:text><xsl:value-of select="text()"/><xsl:text> </xsl:text>
+                <xsl:if test="@expan != ''"><xsl:value-of select="concat(' (', concat(@expan, ') '))"/></xsl:if>
             </xsl:when>
             <xsl:otherwise>
                 <abbr>
@@ -246,9 +234,9 @@
     <!-- ead -->
     <xsl:template match="ead" name="ead" mode="top">
         <ead xmlns="urn:isbn:1-931666-22-9" xmlns:xlink="http://www.w3.org/1999/xlink"
-            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-            xsi:schemaLocation="urn:isbn:1-931666-22-9 http://www.archivesportaleurope.net/Portal/profiles/apeEAD.xsd http://www.w3.org/1999/xlink http://www.loc.gov/standards/xlink/xlink.xsd"
-            audience="external">
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xsi:schemaLocation="urn:isbn:1-931666-22-9 http://www.archivesportaleurope.net/Portal/profiles/apeEAD.xsd http://www.w3.org/1999/xlink http://www.loc.gov/standards/xlink/xlink.xsd"
+             audience="external">
             <xsl:apply-templates select="node()" mode="copy"/>
         </ead>
     </xsl:template>
@@ -256,16 +244,15 @@
     <!-- eadheader -->
     <xsl:template match="eadheader" mode="copy">
         <eadheader countryencoding="iso3166-1" dateencoding="iso8601" langencoding="iso639-2b"
-            repositoryencoding="iso15511" scriptencoding="iso15924">
+                   repositoryencoding="iso15511" scriptencoding="iso15924">
             <xsl:attribute name="relatedencoding" select="'MARC21'"/>
             <xsl:if test="not(eadid)">
                 <xsl:call-template name="addEadid"/>
             </xsl:if>
             <xsl:apply-templates select="node() except revisiondesc" mode="copy"/>
-            <xsl:if
-                test="not(profiledesc) and (normalize-space($defaultRightsDigitalObject) or normalize-space($defaultRightsEadData))">
+            <xsl:if test="not(profiledesc) and (normalize-space($defaultRightsDigitalObject) or normalize-space($defaultRightsEadData))">
                 <profiledesc>
-                    <xsl:call-template name="descrules_extref_rights"/>
+                    <xsl:call-template name="descrules_extref_rights" />
                 </profiledesc>
             </xsl:if>
             <xsl:apply-templates select="revisiondesc" mode="copy"/>
@@ -287,7 +274,7 @@
     <!-- revisiondesc -->
     <xsl:template match="revisiondesc" mode="copy">
         <xsl:choose>
-            <xsl:when test="@audience = 'internal'">
+            <xsl:when test="@audience='internal'">
                 <xsl:call-template name="revisiondesc_ape"/>
             </xsl:when>
             <xsl:otherwise>
@@ -395,7 +382,7 @@
                         <xsl:if test="@countrycode">
                             <xsl:variable name="myCode_2">
                                 <xsl:value-of
-                                    select="ape:normalizeDate(concat(concat(@countrycode, '-'), @mainagencycode), 'mainagencycode')"
+                                    select="ape:normalizeDate(concat(concat(@countrycode,'-'),@mainagencycode), 'mainagencycode')"
                                 />
                             </xsl:variable>
                             <xsl:choose>
@@ -442,7 +429,7 @@
     <xsl:template name="none:addDaolink">
         <xsl:param name="valueToCheck" as="xs:anyAtomicType*"/>
         <xsl:param name="title" as="xs:anyAtomicType*"/>
-        <xsl:param name="context"/>
+        <xsl:param name="context" />
         <xsl:variable name="daolink" select="ape:checkLink($valueToCheck)"/>
         <xsl:choose>
             <xsl:when test="normalize-space($daolink) != ''">
@@ -458,8 +445,7 @@
                 </dao>
             </xsl:when>
             <xsl:otherwise>
-                <xsl:message>Link to digital object removed due to incomplete information
-                        (<xsl:value-of select="$valueToCheck"/>).</xsl:message>
+                <xsl:message>Link to digital object removed due to incomplete information (<xsl:value-of select="$valueToCheck"/>).</xsl:message>
             </xsl:otherwise>
         </xsl:choose>
     </xsl:template>
@@ -500,9 +486,7 @@
                 </publisher>
             </xsl:when>
             <xsl:otherwise>
-                <p>
-                    <xsl:apply-templates select="node()" mode="#current"/>
-                </p>
+                <p><xsl:apply-templates select="node()" mode="#current"/></p>
             </xsl:otherwise>
         </xsl:choose>
     </xsl:template>
@@ -533,21 +517,21 @@
             </xsl:if>
         </seriesstmt>
     </xsl:template>
-
+    
     <!-- notestmt -->
     <xsl:template match="notestmt" mode="copy">
         <notestmt>
             <xsl:apply-templates select="node()" mode="copy"/>
         </notestmt>
     </xsl:template>
-
+    
     <!-- note -->
     <xsl:template match="note" mode="copy">
         <note>
             <xsl:apply-templates select="node()" mode="copy"/>
         </note>
     </xsl:template>
-
+    
     <!-- filedesc/titlestmt/author -->
     <xsl:template match="filedesc/titlestmt/author" name="author" mode="copy">
         <xsl:choose>
@@ -571,10 +555,10 @@
         <xsl:choose>
             <xsl:when test="text()[string-length(normalize-space(.)) ge 1]">
                 <publisher>
-                    <xsl:if test="@encodinganalog = ''">
+                    <xsl:if test="@encodinganalog=''">
                         <xsl:attribute name="encodinganalog" select="'260$b'"/>
                     </xsl:if>
-                    <xsl:if test="@encodinganalog != ''">
+                    <xsl:if test="@encodinganalog!=''">
                         <xsl:attribute name="encodinganalog" select="@encodinganalog"/>
                     </xsl:if>
                     <xsl:value-of select="text()"/>
@@ -597,7 +581,7 @@
         <date encodinganalog="260$c">
             <xsl:attribute name="calendar" select="'gregorian'"/>
             <xsl:attribute name="era" select="'ce'"/>
-            <xsl:if test="@encodinganalog != ''">
+            <xsl:if test="@encodinganalog!=''">
                 <xsl:attribute name="encodinganalog" select="@encodinganalog"/>
             </xsl:if>
             <xsl:call-template name="normalizeDate"/>
@@ -630,11 +614,11 @@
     <!-- titleproper -->
     <xsl:template match="titleproper" mode="copy">
         <titleproper encodinganalog="245">
-            <xsl:if test="@type != ''">
+            <xsl:if test="@type!=''">
                 <xsl:attribute name="type" select="@type"/>
             </xsl:if>
-            <xsl:if test="@encodinganalog != ''">
-                <xsl:attribute name="encodinganalog" select="@encodinganalog"/>
+            <xsl:if test="@encodinganalog !=''">
+                <xsl:attribute name="encodinganalog" select="@encodinganalog "/>
             </xsl:if>
             <xsl:apply-templates select="node()" mode="copy"/>
             <!-- For Portugal-->
@@ -651,8 +635,7 @@
             <xsl:if test="not(langusage)">
                 <xsl:call-template name="langusage"/>
             </xsl:if>
-            <xsl:if
-                test="(not(descrules) or descrules[@audience = 'internal']) and (normalize-space($defaultRightsDigitalObject) or normalize-space($defaultRightsEadData))">
+            <xsl:if test="(not(descrules) or descrules[@audience='internal']) and (normalize-space($defaultRightsDigitalObject) or normalize-space($defaultRightsEadData))">
                 <xsl:call-template name="descrules_extref_rights"/>
             </xsl:if>
         </profiledesc>
@@ -660,7 +643,7 @@
 
     <!-- profiledesc/creation -->
     <xsl:template match="profiledesc/creation" mode="copy">
-        <xsl:if test="not(@audience = 'internal')">
+        <xsl:if test="not(@audience='internal')">
             <creation>
                 <xsl:for-each select="descendant::text()">
                     <xsl:value-of select="concat(normalize-space(.), ' ')"/>
@@ -692,20 +675,20 @@
                 <xsl:when test="normalize-space($langusage)">
                     <xsl:for-each select="tokenize(normalize-space($langusage), ';')">
                         <xsl:if
-                            test="current()[normalize-space()] and exists($langfile//none:language[@code = normalize-space(current())])">
+                            test="current()[normalize-space()] and exists($langfile//none:language[@code=normalize-space(current())])">
                             <language encodinganalog="041">
                                 <xsl:attribute name="langcode">
                                     <xsl:value-of
-                                        select="$langfile//none:language[@code = normalize-space(current())]/none:langcode"
+                                        select="$langfile//none:language[@code=normalize-space(current())]/none:langcode"
                                     />
                                 </xsl:attribute>
                                 <xsl:attribute name="scriptcode">
                                     <xsl:value-of
-                                        select="$langfile//none:language[@code = normalize-space(current())]/none:scriptcode"
+                                        select="$langfile//none:language[@code=normalize-space(current())]/none:scriptcode"
                                     />
                                 </xsl:attribute>
                                 <xsl:value-of
-                                    select="$langfile//none:language[@code = normalize-space(current())]/none:langname[@language = '0x409']"
+                                    select="$langfile//none:language[@code=normalize-space(current())]/none:langname[@language='0x409']"
                                 />
                             </language>
                         </xsl:if>
@@ -714,16 +697,16 @@
                 <xsl:otherwise>
                     <xsl:choose>
                         <xsl:when
-                            test="exists($langfile//none:language[@code = normalize-space(current()/@langcode)])">
+                            test="exists($langfile//none:language[@code=normalize-space(current()/@langcode)])">
                             <language encodinganalog="041">
                                 <xsl:attribute name="langcode">
                                     <xsl:value-of
-                                        select="$langfile//none:language[@code = normalize-space(current()/@langcode)]/none:langcode"
+                                        select="$langfile//none:language[@code=normalize-space(current()/@langcode)]/none:langcode"
                                     />
                                 </xsl:attribute>
                                 <xsl:attribute name="scriptcode">
                                     <xsl:value-of
-                                        select="$langfile//none:language[@code = normalize-space(current()/@langcode)]/none:scriptcode"
+                                        select="$langfile//none:language[@code=normalize-space(current()/@langcode)]/none:scriptcode"
                                     />
                                 </xsl:attribute>
                                 <xsl:apply-templates select="node()" mode="#current"/>
@@ -746,16 +729,13 @@
         </xsl:choose>
     </xsl:template>
 
-    <xsl:template match="profiledesc/descrules[not(@audience = 'internal')]" mode="copy">
+    <xsl:template match="profiledesc/descrules[not(@audience='internal')]" mode="copy">
         <descrules>
             <xsl:if test="@audience">
                 <xsl:attribute name="audience" select="@audience"/>
             </xsl:if>
-            <xsl:if
-                test="normalize-space($defaultRightsDigitalObject) or normalize-space($defaultRightsEadData)">
-                <extref
-                    xlink:href="http://www.archivesportaleurope.net/Portal/profiles/apeMETSRights.xsd"
-                    xlink:title="rts:rightscategory in userestrict/encodinganalog"/>
+            <xsl:if test="normalize-space($defaultRightsDigitalObject) or normalize-space($defaultRightsEadData)">
+                <extref xlink:href="http://www.archivesportaleurope.net/Portal/profiles/apeMETSRights.xsd" xlink:title="rts:rightscategory in userestrict/encodinganalog"/>
             </xsl:if>
             <xsl:apply-templates select="node()" mode="#current"/>
         </descrules>
@@ -763,11 +743,8 @@
 
     <xsl:template name="descrules_extref_rights">
         <descrules>
-            <xsl:if
-                test="normalize-space($defaultRightsDigitalObject) or normalize-space($defaultRightsEadData)">
-                <extref
-                    xlink:href="http://www.archivesportaleurope.net/Portal/profiles/apeMETSRights.xsd"
-                    xlink:title="rts:rightscategory in userestrict/encodinganalog"/>
+            <xsl:if test="normalize-space($defaultRightsDigitalObject) or normalize-space($defaultRightsEadData)">
+                <extref xlink:href="http://www.archivesportaleurope.net/Portal/profiles/apeMETSRights.xsd" xlink:title="rts:rightscategory in userestrict/encodinganalog"/>
             </xsl:if>
         </descrules>
     </xsl:template>
@@ -784,7 +761,7 @@
         </extref>
     </xsl:template>
 
-    <xsl:template match="descrules//*[not(local-name() = 'extref')]" mode="copy">
+    <xsl:template match="descrules//*[not(local-name()='extref')]" mode="copy">
         <xsl:apply-templates select="node()" mode="#current"/>
     </xsl:template>
 
@@ -795,20 +772,20 @@
                 <langusage>
                     <xsl:for-each select="tokenize(normalize-space($langusage), ';')">
                         <xsl:if
-                            test="current()[normalize-space()] and exists($langfile//none:language[@code = normalize-space(current())])">
+                            test="current()[normalize-space()] and exists($langfile//none:language[@code=normalize-space(current())])">
                             <language encodinganalog="041">
                                 <xsl:attribute name="langcode">
                                     <xsl:value-of
-                                        select="$langfile//none:language[@code = normalize-space(current())]/none:langcode"
+                                        select="$langfile//none:language[@code=normalize-space(current())]/none:langcode"
                                     />
                                 </xsl:attribute>
                                 <xsl:attribute name="scriptcode">
                                     <xsl:value-of
-                                        select="$langfile//none:language[@code = normalize-space(current())]/none:scriptcode"
+                                        select="$langfile//none:language[@code=normalize-space(current())]/none:scriptcode"
                                     />
                                 </xsl:attribute>
                                 <xsl:value-of
-                                    select="$langfile//none:language[@code = normalize-space(current())]/none:langname[@language = '0x409']"
+                                    select="$langfile//none:language[@code=normalize-space(current())]/none:langname[@language='0x409']"
                                 />
                             </language>
                         </xsl:if>
@@ -822,7 +799,7 @@
     </xsl:template>
 
     <xsl:template match="frontmatter" mode="copy">
-        <xsl:if test="not($countrycode = 'FR')">
+        <xsl:if test="not($countrycode='FR')">
             <xsl:call-template name="excludeElement"/>
         </xsl:if>
     </xsl:template>
@@ -838,12 +815,11 @@
                     </p>
                 </prefercite>
             </xsl:if>
-            <xsl:apply-templates select="node() except (did | dsc)" mode="copy"/>
+            <xsl:apply-templates select="node() except (did|dsc)" mode="copy"/>
             <xsl:if test="normalize-space($defaultRightsEadData)">
                 <userestrict type="ead" encodinganalog="rts:rightscategory">
                     <p>
-                        <extref xlink:href="{$defaultRightsEadData}"
-                            xlink:title="{$defaultRightsEadDataText}"/>
+                        <extref xlink:href="{$defaultRightsEadData}" xlink:title="{$defaultRightsEadDataText}" />
                     </p>
                     <xsl:if test="normalize-space($defaultRightsEadDataDescription)">
                         <p>
@@ -860,8 +836,7 @@
             <xsl:if test="normalize-space($defaultRightsDigitalObject)">
                 <userestrict type="dao" encodinganalog="rts:rightscategory">
                     <p>
-                        <extref xlink:href="{$defaultRightsDigitalObject}"
-                            xlink:title="{$defaultRightsDigitalObjectText}"/>
+                        <extref xlink:href="{$defaultRightsDigitalObject}" xlink:title="{$defaultRightsDigitalObjectText}" />
                     </p>
                     <xsl:if test="normalize-space($defaultRightsDigitalObjectDescription)">
                         <p>
@@ -876,7 +851,7 @@
                 </userestrict>
             </xsl:if>
             <xsl:if
-                test="descendant::geogname[parent::item | parent::entry | parent::p | parent::unittitle] or descendant::subject[parent::item | parent::entry | parent::p | parent::unittitle] or descendant::famname[parent::item | parent::entry | parent::p | parent::unittitle] or descendant::persname[parent::item | parent::entry | parent::p | parent::unittitle] or descendant::corpname[parent::item | parent::entry | parent::p | parent::unittitle] or descendant::occupation[parent::item | parent::entry | parent::p | parent::unittitle] or descendant::genreform[parent::item | parent::entry | parent::p | parent::unittitle] or descendant::function[parent::item | parent::entry | parent::p | parent::unittitle] or descendant::title[parent::item | parent::entry | parent::p | parent::unittitle] or descendant::name[parent::item | parent::entry | parent::p | parent::unittitle]">
+                test="descendant::geogname[parent::item|parent::entry|parent::p|parent::unittitle] or descendant::subject[parent::item|parent::entry|parent::p|parent::unittitle] or descendant::famname[parent::item|parent::entry|parent::p|parent::unittitle] or descendant::persname[parent::item|parent::entry|parent::p|parent::unittitle] or descendant::corpname[parent::item|parent::entry|parent::p|parent::unittitle] or descendant::occupation[parent::item|parent::entry|parent::p|parent::unittitle] or descendant::genreform[parent::item|parent::entry|parent::p|parent::unittitle] or descendant::function[parent::item|parent::entry|parent::p|parent::unittitle] or descendant::title[parent::item|parent::entry|parent::p|parent::unittitle] or descendant::name[parent::item|parent::entry|parent::p|parent::unittitle]">
                 <xsl:call-template name="createControlaccess">
                     <xsl:with-param name="context" select="*[not(c)]"/>
                 </xsl:call-template>
@@ -938,7 +913,7 @@
     <!--todo: Ok, this WILL need to be changed, here we pass other info that are not sent to the user but instead are just discarded-->
     <!-- descgrp -->
 
-    <xsl:template match="archdesc/descgrp[not(@type = 'appendices')]" mode="copy">
+    <xsl:template match="archdesc/descgrp[not(@type='appendices')]" mode="copy">
         <xsl:apply-templates
             select="bibliography | bioghist | custodhist | custodhist/acqinfo | accruals | appraisal | arrangement | originalsloc | processinfo | scopecontent | accessrestrict | userestrict | otherfindaid | prefercite | separatedmaterial | odd | controlaccess | phystech | relatedmaterial | index"
             mode="copy"/>
@@ -978,8 +953,8 @@
     <xsl:template match="archdesc/descgrp/custodhist" mode="copy">
         <custodhist encodinganalog="3.2.3">
             <!-- "acqinfo" goes one level uo to the same level as "custodhist" -->
-            <xsl:apply-templates select="node()[not(name() = 'acqinfo' or name() = 'custodhist')]"
-                mode="copy"/>
+            <xsl:apply-templates select="node()[not(name()='acqinfo' or name()='custodhist')]"
+                                 mode="copy"/>
             <xsl:apply-templates select="custodhist" mode="nested"/>
             <xsl:if test="not(p)">
                 <p/>
@@ -1021,11 +996,11 @@
     </xsl:template>
 
     <!-- descgrp[@type='allied_materials'][altformavail] -->
-    <xsl:template match="archdesc/descgrp[@type = 'allied_materials'][altformavail]" priority="10"
-        mode="copy">
+    <xsl:template match="archdesc/descgrp[@type='allied_materials'][altformavail]" priority="10"
+                  mode="copy">
         <altformavail encodinganalog="3.5.2">
             <xsl:apply-templates select="altformavail/node() except altformavail/altformavail"
-                mode="copy"/>
+                                 mode="copy"/>
             <xsl:apply-templates select="altformavail/altformavail/*" mode="nested"/>
         </altformavail>
     </xsl:template>
@@ -1057,22 +1032,22 @@
     </xsl:template>
 
     <!--descgrp/bibliography -->
-<!--    <xsl:template match="archdesc/descgrp/bibliography" mode="copy">
+    <!--<xsl:template match="archdesc/descgrp/bibliography" mode="copy">
         <bibliography encodinganalog="3.5.4">
             <xsl:apply-templates mode="copy"/>
         </bibliography>
     </xsl:template>-->
 
     <!-- descgrp[@type='appendices'] -->
-    <xsl:template match="archdesc/descgrp[@type = 'appendices']" mode="copy">
+    <xsl:template match="archdesc/descgrp[@type='appendices']" mode="copy">
         <xsl:apply-templates select="fileplan | index | odd | otherfindaid" mode="copy"/>
     </xsl:template>
 
     <xsl:template
-        match="archdesc/descgrp[@type = 'content_and_structure']/controlaccess[@audience = 'internal']"
+        match="archdesc/descgrp[@type='content_and_structure']/controlaccess[@audience='internal']"
         mode="copy"/>
 
-    <xsl:template match="archdesc/descgrp[@type = 'access_and_use']/phystech">
+    <xsl:template match="archdesc/descgrp[@type='access_and_use']/phystech">
         <xsl:apply-templates select="phystech" mode="copy"/>
     </xsl:template>
 
@@ -1081,7 +1056,7 @@
     <!-- archdesc/did -->
     <xsl:template match="archdesc/did" mode="copy">
         <xsl:choose>
-            <xsl:when test="count(child::*) = 1 and child::*[local-name() = 'abstract']">
+            <xsl:when test="count(child::*) = 1 and child::*[local-name()='abstract']">
                 <did>
                     <unitid/>
                 </did>
@@ -1090,9 +1065,7 @@
                 <did>
                     <!-- Fix for missing high-level unitid in archdesc (JIRA ASUP-28) -->
                     <xsl:if test="not(unitid)">
-                        <unitid type="call number" encodinganalog="3.1.1">
-                            <xsl:value-of select="/ead/eadheader/eadid"/>
-                        </unitid>
+                        <unitid type="call number" encodinganalog="3.1.1"><xsl:value-of select="/ead/eadheader/eadid"/></unitid>
                     </xsl:if>
                     <!-- End fix-->
                     <xsl:apply-templates select="node() except abstract" mode="copy"/>
@@ -1108,7 +1081,7 @@
                 </did>
             </xsl:otherwise>
         </xsl:choose>
-        <xsl:if test="//eadid/@countrycode = 'fr' and /ead/frontmatter">
+        <xsl:if test="//eadid/@countrycode='fr' and /ead/frontmatter">
             <xsl:call-template name="frontmatter2scopecontent"/>
         </xsl:if>
         <!--<xsl:choose>
@@ -1116,9 +1089,7 @@
                 <xsl:apply-templates select="abstract[@encodinganalog='Zusammenfassung']" mode="abstractGer"/>
             </xsl:when>
             <xsl:otherwise>
-                -->
-        <xsl:apply-templates select="abstract" mode="#current"/>
-        <!--
+                --><xsl:apply-templates select="abstract" mode="#current"/><!--
             </xsl:otherwise>
         </xsl:choose>-->
     </xsl:template>
@@ -1159,25 +1130,25 @@
 
     <xsl:template match="did/note" name="note" mode="copy level">
         <xsl:if test="count(child::*) != 0 or normalize-space(text()) != ''">
-            <xsl:if test="not(@audience and @audience = 'internal')">
+            <xsl:if test="not(@audience and @audience='internal')">
                 <note>
-                    <xsl:if test="@encodinganalog != ''">
-                        <xsl:attribute name="encodinganalog" select="@encodinganalog"/>
-                    </xsl:if>
-                    <xsl:if test="@label != ''">
-                        <xsl:attribute name="label" select="@label"/>
-                    </xsl:if>
-                    <xsl:choose>
-                        <xsl:when test="count(child::text()) > 0">
-                            <xsl:call-template name="note_no_p"/>
-                        </xsl:when>
-                        <xsl:otherwise>
-                            <xsl:apply-templates mode="#current"/>
-                        </xsl:otherwise>
-                    </xsl:choose>
-                </note>
+                <xsl:if test="@encodinganalog !=''">
+                    <xsl:attribute name="encodinganalog" select="@encodinganalog"/>
+                </xsl:if>
+                <xsl:if test="@label!=''">
+                    <xsl:attribute name="label" select="@label"/>
+                </xsl:if>
+                <xsl:choose>
+                    <xsl:when test="count(child::text()) &gt; 0">
+                        <xsl:call-template name="note_no_p"/>
+                    </xsl:when>
+                    <xsl:otherwise>
+                        <xsl:apply-templates mode="#current"/>
+                    </xsl:otherwise>
+                </xsl:choose>
+            </note>
             </xsl:if>
-        </xsl:if>
+        </xsl:if>        
     </xsl:template>
 
     <xsl:template match="note/p" name="note_no_p" mode="copy level">
@@ -1207,26 +1178,26 @@
     <!-- archdesc/did/unitid -->
     <xsl:template match="archdesc/did/unitid" mode="copy">
         <!--<xsl:choose>-->
-        <!--<xsl:when test="//eadid/@countrycode='NL'">-->
-        <!--<unitid encodinganalog="3.1.1" type="call number">-->
-        <!--<xsl:value-of select="//eadid/text()"/>-->
-        <!--</unitid>-->
-        <!--</xsl:when>-->
-        <!--<xsl:when test="@countrycode and @repositorycode">-->
-        <!--<unitid encodinganalog="3.1.1" type="call number">-->
-        <!--<xsl:value-of-->
-        <!--select="concat(concat(concat(concat(@countrycode,'/'),@repositorycode), '/'), .)"-->
-        <!--/>-->
-        <!--</unitid>-->
-        <!--</xsl:when>-->
-        <!--<xsl:otherwise>-->
-        <unitid encodinganalog="3.1.1" type="call number">
-            <xsl:if test="extptr">
-                <xsl:apply-templates select="extptr" mode="#current"/>
-            </xsl:if>
-            <xsl:value-of select="."/>
-        </unitid>
-        <!--</xsl:otherwise>-->
+            <!--<xsl:when test="//eadid/@countrycode='NL'">-->
+                <!--<unitid encodinganalog="3.1.1" type="call number">-->
+                    <!--<xsl:value-of select="//eadid/text()"/>-->
+                <!--</unitid>-->
+            <!--</xsl:when>-->
+            <!--<xsl:when test="@countrycode and @repositorycode">-->
+                <!--<unitid encodinganalog="3.1.1" type="call number">-->
+                    <!--<xsl:value-of-->
+                        <!--select="concat(concat(concat(concat(@countrycode,'/'),@repositorycode), '/'), .)"-->
+                    <!--/>-->
+                <!--</unitid>-->
+            <!--</xsl:when>-->
+            <!--<xsl:otherwise>-->
+                <unitid encodinganalog="3.1.1" type="call number">
+                    <xsl:if test="extptr">
+                        <xsl:apply-templates select="extptr" mode="#current"/>
+                    </xsl:if>
+                    <xsl:value-of select="."/>
+                </unitid>
+            <!--</xsl:otherwise>-->
         <!--</xsl:choose>-->
     </xsl:template>
 
@@ -1243,9 +1214,7 @@
 
     <!-- archdesc/did/abstract -->
     <!-- todo: Here modifications has to be done, we only accept @encodinganalog=('summary'|'preface') -->
-    <xsl:template
-        match="archdesc/did/abstract[not(@encodinganalog = 'Kopfzeile') and not(@encodinganalog = 'Zusammenfassung')]"
-        mode="copy">
+    <xsl:template match="archdesc/did/abstract[not(@encodinganalog='Kopfzeile') and not(@encodinganalog='Zusammenfassung')]" mode="copy">
         <scopecontent encodinganalog="summary">
             <xsl:if test="@type">
                 <head>
@@ -1259,37 +1228,31 @@
     </xsl:template>
 
     <!-- Special archdesc/did/abstract templates for German software -->
-    <xsl:template match="archdesc/did/abstract[@encodinganalog = 'Kopfzeile']" mode="copy">
+    <xsl:template match="archdesc/did/abstract[@encodinganalog='Kopfzeile']" mode="copy">
         <scopecontent encodinganalog="summary">
             <head>
                 <xsl:apply-templates select="node()" mode="copy"/>
             </head>
-            <xsl:if
-                test="following-sibling::abstract[@encodinganalog = 'Zusammenfassung' and position() = 1]">
+            <xsl:if test="following-sibling::abstract[@encodinganalog='Zusammenfassung' and position()=1]">
                 <p>
-                    <xsl:apply-templates
-                        select="following-sibling::abstract[@encodinganalog = 'Zusammenfassung' and position() = 1]/node()"
-                        mode="copy"/>
+                    <xsl:apply-templates select="following-sibling::abstract[@encodinganalog='Zusammenfassung' and position()=1]/node()" mode="copy"/>
                 </p>
             </xsl:if>
-            <xsl:if
-                test="preceding-sibling::abstract[@encodinganalog = 'Zusammenfassung' and position() = 1]">
+            <xsl:if test="preceding-sibling::abstract[@encodinganalog='Zusammenfassung' and position()=1]">
                 <p>
-                    <xsl:apply-templates
-                        select="preceding-sibling::abstract[@encodinganalog = 'Zusammenfassung' and position() = 1]/node()"
-                        mode="copy"/>
+                    <xsl:apply-templates select="preceding-sibling::abstract[@encodinganalog='Zusammenfassung' and position()=1]/node()" mode="copy"/>
                 </p>
             </xsl:if>
         </scopecontent>
     </xsl:template>
 
-    <xsl:template match="archdesc/did/abstract[@encodinganalog = 'Zusammenfassung']" mode="copy"/>
+    <xsl:template match="archdesc/did/abstract[@encodinganalog='Zusammenfassung']" mode="copy" />
 
     <!-- todo: We only accept @encoding=('pre'|'final'|'organisational unit') -->
     <xsl:template match="did/origination" mode="copy level">
         <origination>
             <xsl:attribute name="encodinganalog" select="'3.2.1'"/>
-            <xsl:if test="@label != ''">
+            <xsl:if test="@label!=''">
                 <xsl:choose>
                     <xsl:when test="@label = 'Organisationseinheit'">
                         <xsl:attribute name="label" select="'organisational unit'"/>
@@ -1304,8 +1267,7 @@
     </xsl:template>
 
     <xsl:template
-        match="did/origination/name | did/origination/persname | did/origination/corpname | did/origination/famname"
-        mode="copy level">
+        match="did/origination/name | did/origination/persname | did/origination/corpname | did/origination/famname" mode="copy level">
         <xsl:element name="{local-name()}" namespace="urn:isbn:1-931666-22-9">
             <xsl:if test="@authfilenumber">
                 <xsl:attribute name="authfilenumber" select="@authfilenumber"/>
@@ -1328,20 +1290,20 @@
                 <xsl:when test="normalize-space($langmaterial)">
                     <xsl:for-each select="tokenize(normalize-space($langmaterial), ';')">
                         <xsl:if
-                            test="current()[normalize-space()] and exists($langfile//none:language[@code = normalize-space(current())])">
+                            test="current()[normalize-space()] and exists($langfile//none:language[@code=normalize-space(current())])">
                             <language>
                                 <xsl:attribute name="langcode">
                                     <xsl:value-of
-                                        select="$langfile//none:language[@code = normalize-space(current())]/none:langcode"
+                                        select="$langfile//none:language[@code=normalize-space(current())]/none:langcode"
                                     />
                                 </xsl:attribute>
                                 <xsl:attribute name="scriptcode">
                                     <xsl:value-of
-                                        select="$langfile//none:language[@code = normalize-space(current())]/none:scriptcode"
+                                        select="$langfile//none:language[@code=normalize-space(current())]/none:scriptcode"
                                     />
                                 </xsl:attribute>
                                 <xsl:value-of
-                                    select="$langfile//none:language[@code = normalize-space(current())]/none:langname[@language = '0x409']"
+                                    select="$langfile//none:language[@code=normalize-space(current())]/none:langname[@language='0x409']"
                                 />
                             </language>
                         </xsl:if>
@@ -1350,16 +1312,16 @@
                 <xsl:otherwise>
                     <xsl:choose>
                         <xsl:when
-                            test="exists($langfile//none:language[@code = normalize-space(current()/@langcode)])">
+                            test="exists($langfile//none:language[@code=normalize-space(current()/@langcode)])">
                             <language>
                                 <xsl:attribute name="langcode">
                                     <xsl:value-of
-                                        select="$langfile//none:language[@code = normalize-space(current()/@langcode)]/none:langcode"
+                                        select="$langfile//none:language[@code=normalize-space(current()/@langcode)]/none:langcode"
                                     />
                                 </xsl:attribute>
                                 <xsl:attribute name="scriptcode">
                                     <xsl:value-of
-                                        select="$langfile//none:language[@code = normalize-space(current()/@langcode)]/none:scriptcode"
+                                        select="$langfile//none:language[@code=normalize-space(current()/@langcode)]/none:scriptcode"
                                     />
                                 </xsl:attribute>
                                 <xsl:apply-templates select="node()" mode="#current"/>
@@ -1428,7 +1390,7 @@
     </xsl:template>
 
     <xsl:template match="repository/corpname" mode="copy level">
-        <xsl:apply-templates select="node()" mode="#current"/>
+        <xsl:apply-templates select="node()" mode="#current" />
     </xsl:template>
 
     <xsl:template match="repository/address/addressline" mode="copy level">
@@ -1480,7 +1442,7 @@
 
     <xsl:template match="physloc" mode="copy level">
         <physloc>
-            <xsl:if test="@label != ''">
+            <xsl:if test="@label!=''">
                 <xsl:attribute name="label" select="@label"/>
             </xsl:if>
             <xsl:value-of select="normalize-space(.)"/>
@@ -1510,7 +1472,7 @@
 
     <xsl:template match="physdesc/physfacet" mode="copy level">
         <physfacet>
-            <xsl:if test="@type = 'condition' or @type = 'damage'">
+            <xsl:if test="@type='condition' or @type='damage'">
                 <xsl:attribute name="type" select="@type"/>
             </xsl:if>
             <xsl:apply-templates select="node()" mode="#current"/>
@@ -1578,19 +1540,20 @@
     </xsl:template>
 
     <!-- relatedmaterial/archref -->
-    <xsl:template match="relatedmaterial/archref | relatedmaterial/ref" mode="copy nested level">
+    <xsl:template match="relatedmaterial/archref | relatedmaterial/ref"
+                  mode="copy nested level">
         <p>
             <xsl:for-each select="./title">
                 <xsl:apply-templates mode="#current"/>
             </xsl:for-each>
             <extref>
-                <xsl:if test="@*:href != '' and not(contains(@*:href, '['))">
+                <xsl:if test="@*:href!='' and not(contains(@*:href, '['))">
                     <xsl:attribute name="xlink:href" select="ape:checkLink(@*:href)"/>
                 </xsl:if>
-                <xsl:if test="@*:target != ''">
+                <xsl:if test="@*:target!=''">
                     <xsl:attribute name="xlink:href" select="ape:checkLink(@*:target)"/>
                 </xsl:if>
-                <xsl:if test="@*:title != ''">
+                <xsl:if test="@*:title!=''">
                     <xsl:attribute name="xlink:title" select="@*:title"/>
                 </xsl:if>
                 <xsl:apply-templates select="node()" mode="#current"/>
@@ -1599,20 +1562,25 @@
     </xsl:template>
 
     <xsl:template match="relatedmaterial/archref/title" mode="copy nested level"/>
-    <xsl:template match="relatedmaterial/archref/unitid" mode="copy nested level">
+    <xsl:template match="relatedmaterial/archref/unitid"
+                  mode="copy nested level">
         <xsl:text>, </xsl:text>
         <xsl:apply-templates mode="#current"/>
     </xsl:template>
-    <xsl:template match="relatedmaterial/archref/unittitle" mode="copy nested level">
+    <xsl:template match="relatedmaterial/archref/unittitle"
+                  mode="copy nested level">
         <xsl:apply-templates mode="#current"/>
     </xsl:template>
-    <xsl:template match="relatedmaterial/archref/unittitle/ref" mode="copy nested level">
+    <xsl:template match="relatedmaterial/archref/unittitle/ref"
+                  mode="copy nested level">
         <xsl:apply-templates mode="#current"/>
     </xsl:template>
-    <xsl:template match="relatedmaterial/archref/repository" mode="copy nested level">
+    <xsl:template match="relatedmaterial/archref/repository"
+                  mode="copy nested level">
         <xsl:apply-templates mode="#current"/>
     </xsl:template>
-    <xsl:template match="relatedmaterial/archref/repository/extref" mode="copy nested level">
+    <xsl:template match="relatedmaterial/archref/repository/extref"
+                  mode="copy nested level">
         <xsl:apply-templates mode="#current"/>
     </xsl:template>
     <xsl:template match="relatedmaterial/p/repository" mode="copy nested level">
@@ -1627,11 +1595,7 @@
                     <xsl:value-of select="text()"/>
                 </p>
             </xsl:if>
-            <xsl:apply-templates
-                select="
-                    node() except altformavail,
-                    text()"
-                mode="#current"/>
+            <xsl:apply-templates select="node() except altformavail, text()" mode="#current"/>
             <xsl:apply-templates select="altformavail/*" mode="nested"/>
         </altformavail>
     </xsl:template>
@@ -1710,10 +1674,10 @@
     <!-- fileplan/p/archref -->
     <xsl:template match="fileplan/p/archref" mode="copy level nested">
         <archref>
-            <xsl:if test="@*:href != ''">
+            <xsl:if test="@*:href!=''">
                 <xsl:attribute name="xlink:href" select="ape:checkLink(@*:href)"/>
             </xsl:if>
-            <xsl:if test="@*:title != ''">
+            <xsl:if test="@*:title!=''">
                 <xsl:attribute name="xlink:title" select="@*:title"/>
             </xsl:if>
             <xsl:apply-templates select="node()" mode="#current"/>
@@ -1721,7 +1685,8 @@
     </xsl:template>
 
     <!-- processinfo -->
-    <xsl:template match="processinfo[not(ancestor::processinfo)]" mode="copy level">
+    <xsl:template match="processinfo[not(ancestor::processinfo)]"
+                  mode="copy level">
         <xsl:if test="count(child::*) != 0 or normalize-space(text()) != ''">
             <processinfo encodinganalog="3.7.1">
                 <xsl:apply-templates select="node() except processinfo" mode="#current"/>
@@ -1797,7 +1762,8 @@
     </xsl:template>
 
     <!-- accessrestrict -->
-    <xsl:template match="accessrestrict[not(ancestor::accessrestrict)]" mode="copy level">
+    <xsl:template match="accessrestrict[not(ancestor::accessrestrict)]"
+                  mode="copy level">
         <xsl:if test="string-length(string-join(./*, '')) > 0">
             <accessrestrict encodinganalog="3.4.1">
                 <xsl:apply-templates select="node() except accessrestrict" mode="#current"/>
@@ -1870,10 +1836,10 @@
         match="processinfo/p | relatedmaterial/p | bioghist/p | appraisal/p | accruals/p | odd/p | accessrestrict/p | accessrestrict/legalstatus | userestrict/p | altformavail/p | otherfindaid/p | custodhist/p | phystech/p"
         mode="copy nested level">
         <xsl:if
-            test="(count(child::node()[not(name() = 'list' or name() = 'chronlist' or name() = 'table')]) > 0) or (not(following-sibling::p) and not(preceding-sibling::list) and not(following-sibling::list) and not(preceding-sibling::chronlist) and not(following-sibling::chronlist) and not(preceding-sibling::table) and not(following-sibling::table))">
+            test="(count(child::node()[not(name()='list' or name()='chronlist' or name()='table')]) &gt; 0) or (not(following-sibling::p) and not(preceding-sibling::list) and not(following-sibling::list) and not(preceding-sibling::chronlist) and not(following-sibling::chronlist) and not(preceding-sibling::table) and not(following-sibling::table))">
             <p>
                 <xsl:apply-templates
-                    select="node()[not(name() = 'list' or name() = 'chronlist' or name() = 'table')]"
+                    select="node()[not(name()='list' or name()='chronlist' or name()='table')]"
                     mode="#current"/>
             </p>
         </xsl:if>
@@ -1895,11 +1861,11 @@
         match="acqinfo/p | separatedmaterial/p | prefercite/p | arrangement/p | originalsloc/p | fileplan/p"
         mode="copy level nested">
         <xsl:if
-            test="(count(child::node()[not(name() = 'list' or name() = 'chronlist' or name() = 'table')]) > 0) or (not(following-sibling::p) and not(preceding-sibling::list) and not(following-sibling::list) and not(preceding-sibling::chronlist) and not(following-sibling::chronlist) and not(preceding-sibling::table) and not(following-sibling::table))">
+            test="(count(child::node()[not(name()='list' or name()='chronlist' or name()='table')]) &gt; 0) or (not(following-sibling::p) and not(preceding-sibling::list) and not(following-sibling::list) and not(preceding-sibling::chronlist) and not(following-sibling::chronlist) and not(preceding-sibling::table) and not(following-sibling::table))">
             <p>
                 <!--not(preceding-sibling::p) and -->
                 <xsl:apply-templates
-                    select="node()[not(name() = 'list' or name() = 'chronlist' or name() = 'table')]"
+                    select="node()[not(name()='list' or name()='chronlist' or name()='table')]"
                     mode="#current"/>
             </p>
         </xsl:if>
@@ -1909,21 +1875,21 @@
     <xsl:template match="otherfindaid/p/ref" mode="level">
         <xsl:apply-templates mode="#current"/>
     </xsl:template>
-    <xsl:template match="otherfindaid/p/ref/archref/note | otherfindaid/p/ref/note" mode="level">
+    <xsl:template match="otherfindaid/p/ref/archref/note | otherfindaid/p/ref/note"
+                  mode="level">
         <xsl:apply-templates mode="#current"/>
     </xsl:template>
-    <xsl:template match="otherfindaid/p/ref/archref/note/p | otherfindaid/p/ref/note/p" mode="level"
-        priority="1">
+    <xsl:template match="otherfindaid/p/ref/archref/note/p | otherfindaid/p/ref/note/p"
+                  mode="level" priority="1">
         <xsl:apply-templates mode="#current"/>
     </xsl:template>
     <xsl:template match="otherfindaid/p/ref/archref/note/p/emph | otherfindaid/p/ref/note/p/emph"
-        mode="level" priority="1">
+                  mode="level" priority="1">
         <xsl:apply-templates mode="#current"/>
     </xsl:template>
 
-    <xsl:template
-        match="otherfindaid/p/archref | otherfindaid/p/ref/archref | otherfindaid/p/ref[@*:href]"
-        mode="copy level">
+    <xsl:template match="otherfindaid/p/archref | otherfindaid/p/ref/archref | otherfindaid/p/ref[@*:href]"
+                  mode="copy level">
         <extref>
             <xsl:if test="@*:href">
                 <xsl:attribute name="xlink:href" select="ape:checkLink(@*:href)"/>
@@ -1947,7 +1913,7 @@
         match="processinfo/list | relatedmaterial/list | relatedmaterial/p/list | bioghist/list | bioghist/p/list | appraisal/list | accruals/list | odd/list | odd/p/list | accessrestrict[not(ancestor::accessrestrict)]/list | userestrict/list | altformavail/list | otherfindaid/list | custodhist/list | phystech/list | phystech/p/list"
         mode="copy nested level" name="p_list">
         <xsl:choose>
-            <xsl:when test="@type = 'deflist' or (not(@type) and ./child::*[name() = 'defitem'])">
+            <xsl:when test="@type='deflist' or (not(@type) and ./child::*[name()='defitem'])">
                 <table>
                     <xsl:call-template name="deflist_table"/>
                 </table>
@@ -1955,13 +1921,13 @@
             <xsl:otherwise>
                 <xsl:if test="not(parent::otherfindaid and item/archref[@href])">
                     <list>
-                        <xsl:if test="@type = 'ordered' or @type = 'marked'">
+                        <xsl:if test="@type='ordered' or @type='marked'">
                             <xsl:attribute name="type" select="@type"/>
                         </xsl:if>
-                        <xsl:if test="@type = 'simple'">
+                        <xsl:if test="@type='simple'">
                             <xsl:attribute name="type" select="'marked'"/>
                         </xsl:if>
-                        <xsl:if test="@type = 'ordered'">
+                        <xsl:if test="@type='ordered'">
                             <xsl:attribute name="numeration" select="'arabic'"/>
                         </xsl:if>
                         <xsl:if test="not(./item)">
@@ -1978,17 +1944,17 @@
         match="acqinfo/list | acqinfo/p/list | separatedmaterial/list | prefercite/list | arrangement/list | arrangement/p/list | originalsloc/list | fileplan/list"
         mode="copy nested level">
         <xsl:choose>
-            <xsl:when test="@type = 'deflist' or (not(@type) and ./child::*[name() = 'defitem'])">
+            <xsl:when test="@type='deflist' or (not(@type) and ./child::*[name()='defitem'])">
                 <table>
                     <xsl:call-template name="deflist_table"/>
                 </table>
             </xsl:when>
             <xsl:otherwise>
                 <list>
-                    <xsl:if test="@type = 'ordered' or @type = 'marked'">
+                    <xsl:if test="@type='ordered' or @type='marked'">
                         <xsl:attribute name="type" select="@type"/>
                     </xsl:if>
-                    <xsl:if test="@type = 'ordered'">
+                    <xsl:if test="@type='ordered'">
                         <xsl:attribute name="numeration" select="'arabic'"/>
                     </xsl:if>
                     <xsl:apply-templates select="node()" mode="#current"/>
@@ -2021,7 +1987,7 @@
         mode="copy nested level">
         <item>
             <xsl:apply-templates select="node()" mode="#current"/>
-            <!--            <xsl:value-of select="node()"/>
+<!--            <xsl:value-of select="node()"/>
             <xsl:apply-templates select="extref" mode="#current"/>-->
         </item>
     </xsl:template>
@@ -2038,7 +2004,7 @@
     <!--ITEM//*-->
     <!-- #all -->
     <xsl:template
-        match="processinfo/list/item//* | relatedmaterial/list/item//* | relatedmaterial/p/list/item//* | bioghist/list/item//* | appraisal/list/item//* | accruals/list/item//* | odd/list/item//* | odd/p/list/item//*[not(local-name = 'extref')] | accessrestrict[not(ancestor::accessrestrict)]/list/item//* | userestrict/list/item//* | altformavail/list/item//* | otherfindaid/list/item//* | custodhist/list/item//*"
+        match="processinfo/list/item//* | relatedmaterial/list/item//* | relatedmaterial/p/list/item//* | bioghist/list/item//* | appraisal/list/item//* | accruals/list/item//* | odd/list/item//* | odd/p/list/item//*[not(local-name='extref')] | accessrestrict[not(ancestor::accessrestrict)]/list/item//* | userestrict/list/item//* | altformavail/list/item//* | otherfindaid/list/item//* | custodhist/list/item//*"
         mode="copy nested level">
         <xsl:value-of select="text()"/>
     </xsl:template>
@@ -2050,7 +2016,8 @@
     </xsl:template>
 
     <!-- ITEM/extref (gets higher priority due to avoiding ambiguous matching) -->
-    <xsl:template match="extref[parent::item]" mode="copy nested level" priority="5">
+    <xsl:template match="extref[parent::item]" mode="copy nested level"
+                  priority="5">
         <extref>
             <xsl:if test="@href">
                 <xsl:attribute name="xlink:href" select="ape:checkLink(@href)"/>
@@ -2086,7 +2053,7 @@
 
     <xsl:template match="userestrict/note | accessrestrict/note" mode="copy nested level">
         <xsl:choose>
-            <xsl:when test="child::*[local-name() = 'p']">
+            <xsl:when test="child::*[local-name()='p']">
                 <xsl:apply-templates mode="#current"/>
             </xsl:when>
             <xsl:otherwise>
@@ -2101,7 +2068,8 @@
         <xsl:apply-templates mode="#current"/>
     </xsl:template>
 
-    <xsl:template match="userestrict/address/addressline" mode="copy nested level">
+    <xsl:template match="userestrict/address/addressline"
+                  mode="copy nested level">
         <p>
             <xsl:apply-templates mode="#current"/>
         </p>
@@ -2149,7 +2117,7 @@
                 </xsl:when>
                 <xsl:otherwise>
                     <xsl:attribute name="cols"
-                        select="count(./child::tbody[position() = 1]/child::row[position() = 1]/entry)"
+                                   select="count(./child::tbody[position()=1]/child::row[position()=1]/entry)"
                     />
                 </xsl:otherwise>
             </xsl:choose>
@@ -2196,18 +2164,19 @@
     <xsl:template match="table/tgroup/tbody/row/entry/extref" mode="copy nested level">
         <xsl:value-of select="concat(' ', normalize-space(text()), ' ')"/>
     </xsl:template>
-
-    <xsl:template
-        match="table/tgroup/tbody/row/entry/corpname | table/tgroup/tbody/row/entry/famname | table/tgroup/tbody/row/entry/function | table/tgroup/tbody/row/entry/genreform | table/tgroup/tbody/row/entry/geogname | table/tgroup/tbody/row/entry/name | table/tgroup/tbody/row/entry/occupation | table/tgroup/tbody/row/entry/persname | table/tgroup/tbody/row/entry/subject | table/tgroup/tbody/row/entry/title"
-        mode="copy nested level">
+    
+    <xsl:template match="table/tgroup/tbody/row/entry/corpname | table/tgroup/tbody/row/entry/famname | table/tgroup/tbody/row/entry/function | table/tgroup/tbody/row/entry/genreform | table/tgroup/tbody/row/entry/geogname | table/tgroup/tbody/row/entry/name | table/tgroup/tbody/row/entry/occupation | table/tgroup/tbody/row/entry/persname | table/tgroup/tbody/row/entry/subject | table/tgroup/tbody/row/entry/title"
+                  mode="copy nested level">
         <xsl:apply-templates select="node()" mode="#current"/>
     </xsl:template>
 
-    <xsl:template match="table/tgroup/tbody/row/entry/unittitle" mode="copy nested level">
+    <xsl:template match="table/tgroup/tbody/row/entry/unittitle"
+                  mode="copy nested level">
         <xsl:apply-templates select="node()" mode="#current"/>
     </xsl:template>
 
-    <xsl:template match="table/tgroup/tbody/row/entry/emph" mode="copy nested level">
+    <xsl:template match="table/tgroup/tbody/row/entry/emph"
+                  mode="copy nested level">
         <xsl:apply-templates select="node()" mode="#current"/>
     </xsl:template>
     <!--End of big chunk-->
@@ -2225,26 +2194,24 @@
         <xsl:apply-templates select="node()" mode="#current"/>
     </xsl:template>
 
-    <xsl:template
-        match="scopecontent[not(@encodinganalog = 'preface' or @encodinganalog = 'Vorwort')]"
-        mode="copy level">
+    <xsl:template match="scopecontent[not(@encodinganalog='preface' or @encodinganalog='Vorwort')]"
+                  mode="copy level">
         <xsl:if test="count(child::*) != 0 or normalize-space(text()) != ''">
-            <xsl:if
-                test="not(count(child::*) eq 1 and (child::arrangement or child::daogrp)) and not(count(child::*) eq 2 and (child::head and child::daogrp))">
+            <xsl:if test="not(count(child::*) eq 1 and (child::arrangement or child::daogrp)) and not(count(child::*) eq 2 and (child::head and child::daogrp))">
                 <scopecontent encodinganalog="summary">
                     <xsl:choose>
                         <xsl:when test="normalize-space(text()) != '' and not(child::p)">
                             <p>
                                 <xsl:apply-templates
-                                    select="node()[not(name() = 'arrangement' or name() = 'scopecontent')]"
+                                    select="node()[not(name()='arrangement' or name()='scopecontent')]"
                                     mode="#current"/>
                             </p>
                             <xsl:apply-templates select="scopecontent" mode="nested"/>
                         </xsl:when>
                         <xsl:otherwise>
                             <xsl:apply-templates
-                                select="node()[not(name() = 'arrangement' or name() = 'scopecontent')]"
-                                mode="#current"/>
+                                    select="node()[not(name()='arrangement' or name()='scopecontent')]"
+                                    mode="#current"/>
                             <xsl:apply-templates select="scopecontent" mode="nested"/>
                         </xsl:otherwise>
                     </xsl:choose>
@@ -2258,12 +2225,11 @@
         <xsl:apply-templates select="node()" mode="nested"/>
     </xsl:template>
 
-    <xsl:template match="scopecontent[@encodinganalog = 'preface' or @encodinganalog = 'Vorwort']"
-        mode="copy level">
+    <xsl:template match="scopecontent[@encodinganalog='preface' or @encodinganalog='Vorwort']"
+                  mode="copy level">
         <scopecontent encodinganalog="preface">
-            <xsl:apply-templates
-                select="node()[not(name() = 'arrangement' or name() = 'scopecontent')]"
-                mode="#current"/>
+            <xsl:apply-templates select="node()[not(name()='arrangement' or name()='scopecontent')]"
+                                 mode="#current"/>
             <xsl:apply-templates select="scopecontent" mode="nested"/>
         </scopecontent>
         <xsl:apply-templates select="arrangement" mode="#current"/>
@@ -2287,7 +2253,7 @@
     <xsl:template match="scopecontent/p" mode="copy nested level">
         <p>
             <xsl:apply-templates
-                select="node()[not(name() = 'list' or name() = 'chronlist' or name() = 'table')]"
+                select="node()[not(name()='list' or name()='chronlist' or name()='table')]"
                 mode="#current"/>
         </p>
         <xsl:for-each select="list">
@@ -2319,19 +2285,20 @@
         <xsl:call-template name="p_list_scopecontent"/>
     </xsl:template>
 
-    <xsl:template match="scopecontent/list" name="p_list_scopecontent" mode="copy nested level">
+    <xsl:template match="scopecontent/list" name="p_list_scopecontent"
+                  mode="copy nested level">
         <xsl:choose>
-            <xsl:when test="@type = 'deflist' or (not(@type) and ./child::*[name() = 'defitem'])">
+            <xsl:when test="@type='deflist' or (not(@type) and ./child::*[name()='defitem'])">
                 <table>
                     <xsl:call-template name="deflist_table"/>
                 </table>
             </xsl:when>
             <xsl:otherwise>
                 <list>
-                    <xsl:if test="@type = 'ordered' or @type = 'marked'">
+                    <xsl:if test="@type='ordered' or @type='marked'">
                         <xsl:attribute name="type" select="@type"/>
                     </xsl:if>
-                    <xsl:if test="@type = 'ordered'">
+                    <xsl:if test="@type='ordered'">
                         <xsl:attribute name="numeration" select="'arabic'"/>
                     </xsl:if>
                     <xsl:apply-templates select="node()" mode="#current"/>
@@ -2349,7 +2316,7 @@
     </xsl:template>
 
     <xsl:template
-        match="scopecontent/list/item/*[not(name() = 'list')] | scopecontent/p/list/item/*[not(name() = 'list')]"
+        match="scopecontent/list/item/*[not(name()='list')] | scopecontent/p/list/item/*[not(name()='list')]"
         mode="copy nested level">
         <xsl:apply-templates select="text()" mode="#current"/>
     </xsl:template>
@@ -2366,51 +2333,44 @@
         <xsl:apply-templates mode="#current"/>
     </xsl:template>
 
-    <xsl:template match="scopecontent/address/addressline" mode="copy nested level">
+    <xsl:template match="scopecontent/address/addressline"
+                  mode="copy nested level">
         <p>
             <xsl:apply-templates mode="#current"/>
         </p>
     </xsl:template>
 
     <xsl:template match="bibliography[not(ancestor::bibliography)]" mode="copy level">
-        <xsl:if test="count(child::*) != 0 or normalize-space(text()) != ''">
-            <bibliography encodinganalog="3.5.4">
-                <xsl:apply-templates select="node() except bibliography" mode="#current"/>
-                <xsl:apply-templates select="bibliography/*" mode="nested"/>
-            </bibliography>
-        </xsl:if>
+        <bibliography encodinganalog="3.5.4">
+            <xsl:apply-templates select="node()" mode="#current"/>
+        </bibliography>
     </xsl:template>
 
-    <xsl:template match="bibliography[ancestor::bibliography]" mode="copy level"/>
-
-    <xsl:template match="bibliography[ancestor::bibliography]" mode="nested">
+    <xsl:template match="bibliography[ancestor::bibliography]" mode="copy level">
         <xsl:apply-templates select="node()" mode="#current"/>
     </xsl:template>
 
     <xsl:template match="bibliography/head" mode="copy level">
-        <head>
-            <xsl:apply-templates select="text()" mode="#current"/>
-        </head>
-    </xsl:template>
-    
-    <xsl:template match="bibliography/head" mode="nested">
-        <xsl:if test="../descendant::bibref">
-            <p><emph>
-                <xsl:apply-templates select="text()" mode="#current"/>
-            </emph></p>
-        </xsl:if>
-    </xsl:template>
-    
-    <xsl:template match="bibliography/p" mode="copy level nested">
-        <xsl:if test="local-name() != 'list' and local-name() != 'table'">
-            <xsl:for-each select="node() except (list | table | bibref | archref)">
+        <xsl:choose>
+            <xsl:when test="count(ancestor::bibliography) eq 1">
+                <head>
+                    <xsl:apply-templates select="text()" mode="#current"/>
+                </head>
+            </xsl:when>
+            <xsl:otherwise>
                 <p>
-                    <xsl:apply-templates select="node() except (list | table | bibref | archref)" mode="#current"/>
+                    <emph render="bold">
+                        <xsl:apply-templates select="text()" mode="#current"/>
+                    </emph>
                 </p>
-            </xsl:for-each>
-        </xsl:if>
-        <xsl:if test="descendant::bibref">
+            </xsl:otherwise>
+        </xsl:choose>
+    </xsl:template>
+
+    <xsl:template match="bibliography/p" mode="copy level">
+        <xsl:if test="local-name()!='list' and local-name()!='table'">
             <p>
+                <xsl:apply-templates select="node() except (list | table | bibref)" mode="#current"/>
                 <xsl:for-each select="bibref">
                     <xsl:apply-templates select="node()" mode="#current"/>
                     <lb></lb>
@@ -2425,7 +2385,7 @@
         </xsl:for-each>
     </xsl:template>
 
-    <xsl:template match="bibliography/bibref" mode="copy level nested">
+    <xsl:template match="bibliography/bibref" mode="copy level">
         <bibref>
             <xsl:if test="@*:href">
                 <xsl:attribute name="xlink:href" select="ape:checkLink(@*:href)"/>
@@ -2449,19 +2409,20 @@
         <xsl:call-template name="p_list_bibliography"/>
     </xsl:template>
 
-    <xsl:template match="bibliography/list" name="p_list_bibliography" mode="copy nested level">
+    <xsl:template match="bibliography/list" name="p_list_bibliography"
+        mode="copy nested level">
         <xsl:choose>
-            <xsl:when test="@type = 'deflist' or (not(@type) and ./child::*[name() = 'defitem'])">
+            <xsl:when test="@type='deflist' or (not(@type) and ./child::*[name()='defitem'])">
                 <table>
                     <xsl:call-template name="deflist_table"/>
                 </table>
             </xsl:when>
             <xsl:otherwise>
                 <list>
-                    <xsl:if test="@type = 'ordered' or @type = 'marked'">
+                    <xsl:if test="@type='ordered' or @type='marked'">
                         <xsl:attribute name="type" select="@type"/>
                     </xsl:if>
-                    <xsl:if test="@type = 'ordered'">
+                    <xsl:if test="@type='ordered'">
                         <xsl:attribute name="numeration" select="'arabic'"/>
                     </xsl:if>
                     <xsl:apply-templates select="node()" mode="#current"/>
@@ -2479,12 +2440,13 @@
     </xsl:template>
 
     <xsl:template
-        match="bibliography/list/item/*[not(name() = 'list')] | bibliography/p/list/item/*[not(name() = 'list')]"
+        match="bibliography/list/item/*[not(name()='list')] | bibliography/p/list/item/*[not(name()='list')]"
         mode="copy nested level">
         <xsl:apply-templates select="text()" mode="#current"/>
     </xsl:template>
 
-    <xsl:template match="otherfindaid/bibref | relatedmaterial/bibref" mode="copy nested level">
+    <xsl:template match="otherfindaid/bibref | relatedmaterial/bibref"
+                  mode="copy nested level">
         <p>
             <xsl:if test="@href or @*:href">
                 <extref>
@@ -2509,8 +2471,7 @@
         </p>
     </xsl:template>
 
-    <xsl:template match="separatedmaterial/bibref | separatedmaterial/archref"
-        mode="copy nested level">
+    <xsl:template match="separatedmaterial/bibref | separatedmaterial/archref" mode="copy nested level">
         <p>
             <xsl:if test="@href or @*:href">
                 <extref>
@@ -2540,25 +2501,21 @@
         </title>
     </xsl:template>
     <xsl:template match="separatedmaterial/archref/unittitle" mode="copy nested level">
-        <xsl:if test="preceding-sibling::*"> - </xsl:if>
-        <xsl:apply-templates select="node()" mode="#current"/>
+        <xsl:if test="preceding-sibling::*"> - </xsl:if><xsl:apply-templates select="node()" mode="#current"/>
     </xsl:template>
     <xsl:template match="separatedmaterial/archref/unittitle/emph" mode="copy nested level">
         <emph>
             <xsl:if test="@render">
                 <xsl:attribute name="render" select="@render"/>
             </xsl:if>
-            <xsl:if test="preceding-sibling::*"> - </xsl:if>
-            <xsl:apply-templates select="node()" mode="#current"/>
+            <xsl:if test="preceding-sibling::*"> - </xsl:if><xsl:apply-templates select="node()" mode="#current"/>
         </emph>
     </xsl:template>
     <xsl:template match="separatedmaterial/archref/unitid" mode="copy nested level">
-        <xsl:if test="preceding-sibling::*"> - </xsl:if>
-        <xsl:apply-templates select="node()" mode="#current"/>
+        <xsl:if test="preceding-sibling::*"> - </xsl:if><xsl:apply-templates select="node()" mode="#current"/>
     </xsl:template>
     <xsl:template match="separatedmaterial/archref/repository" mode="copy nested level">
-        <xsl:if test="preceding-sibling::*"> - </xsl:if>
-        <xsl:apply-templates select="node()" mode="#current"/>
+        <xsl:if test="preceding-sibling::*"> - </xsl:if><xsl:apply-templates select="node()" mode="#current"/>
     </xsl:template>
 
     <xsl:template name="deflist_table">
@@ -2582,7 +2539,7 @@
     </xsl:template>
 
     <xsl:template match="otherfindaid/bibref/extref | relatedmaterial/bibref/extref"
-        mode="copy nested level">
+                  mode="copy nested level">
         <extref>
             <xsl:if test="@href">
                 <xsl:attribute name="xlink:href" select="ape:checkLink(@href)"/>
@@ -2640,23 +2597,23 @@
 
     <!-- phystech -->
     <!--<xsl:template match="phystech" mode="#all">-->
-    <!--<phystech encodinganalog="3.4.4">-->
-    <!--<xsl:apply-templates mode="#current"/>-->
-    <!--</phystech>-->
+        <!--<phystech encodinganalog="3.4.4">-->
+            <!--<xsl:apply-templates mode="#current"/>-->
+        <!--</phystech>-->
     <!--</xsl:template>-->
 
     <!--&lt;!&ndash; phystech/head &ndash;&gt;-->
     <!--<xsl:template match="phystech/head" mode="#all">-->
-    <!--<head>-->
-    <!--<xsl:apply-templates mode="#current"/>-->
-    <!--</head>-->
+        <!--<head>-->
+            <!--<xsl:apply-templates mode="#current"/>-->
+        <!--</head>-->
     <!--</xsl:template>-->
 
     <!--&lt;!&ndash; phystech/p &ndash;&gt;-->
     <!--<xsl:template match="phystech/p" mode="#all">-->
-    <!--<p>-->
-    <!--<xsl:apply-templates mode="#current"/>-->
-    <!--</p>-->
+        <!--<p>-->
+            <!--<xsl:apply-templates mode="#current"/>-->
+        <!--</p>-->
     <!--</xsl:template>-->
     <xsl:template match="phystech" mode="copy level">
         <xsl:if test="count(child::*) != 0 or normalize-space(text()) != ''">
@@ -2682,68 +2639,55 @@
             <xsl:when test="not(ancestor::controlaccess)">
                 <xsl:choose>
                     <xsl:when test="child::chronlist and count(child::*) eq 1"/>
-                    <xsl:when test="child::genreform[@type = 'typir'] and count(child::*) > 1">
-                        <xsl:if
-                            test="not(child::head and count(child::*) = 2) and not(string-length(normalize-space(string-join(descendant-or-self::text(), ''))) = 0)">
+                    <xsl:when test="child::genreform[@type='typir'] and count(child::*) &gt; 1">
+                        <xsl:if test="not(child::head and count(child::*) = 2) and not(string-length(normalize-space(string-join(descendant-or-self::text(), ''))) = 0)">
                             <controlaccess>
-                                <!--../index/indexentry//geogname | ../index/indexentry//subject | ../index/indexentry//famname | ../index/indexentry//persname | ../index/indexentry//corpname | ../index/indexentry//occupation | ../index/indexentry//genreform | ../index/indexentry//function | ../index/indexentry//title | ../index/indexentry//name-->
-                                <xsl:for-each
-                                    select="geogname | subject | famname | persname | corpname | occupation | genreform | function | title | p | head | name | indexentry//geogname | indexentry//subject | indexentry//famname | indexentry//persname | indexentry//corpname | indexentry//occupation | indexentry//genreform | indexentry//function | indexentry//title | indexentry//name | ../did//geogname[parent::item | parent::entry | parent::p | parent::unittitle] | ../did//subject[parent::item | parent::entry | parent::p | parent::unittitle] | ../did//famname[parent::item | parent::entry | parent::p | parent::unittitle] | ../did//persname[parent::item | parent::entry | parent::p | parent::unittitle] | ../did//corpname[parent::item | parent::entry | parent::p | parent::unittitle] | ../did//occupation[parent::item | parent::entry | parent::p | parent::unittitle] | ../did//genreform[parent::item | parent::entry | parent::p | parent::unittitle] | ../did//function[parent::item | parent::entry | parent::p | parent::unittitle] | ../did//title[parent::item | parent::entry | parent::p | parent::unittitle] | ../did//name[parent::item | parent::entry | parent::p | parent::unittitle]">
-                                    <xsl:if
-                                        test="not(local-name() = 'genreform' and @type = 'typir')">
-                                        <xsl:element name="{local-name()}"
-                                            namespace="urn:isbn:1-931666-22-9">
-                                            <xsl:if
-                                                test="local-name() = 'corpname' or local-name() = 'persname' or local-name() = 'famname' or local-name() = 'name'">
-                                                <xsl:if test="./@authfilenumber">
-                                                  <xsl:attribute name="authfilenumber"
-                                                  select="./@authfilenumber"/>
-                                                </xsl:if>
+                            <!--../index/indexentry//geogname | ../index/indexentry//subject | ../index/indexentry//famname | ../index/indexentry//persname | ../index/indexentry//corpname | ../index/indexentry//occupation | ../index/indexentry//genreform | ../index/indexentry//function | ../index/indexentry//title | ../index/indexentry//name-->
+                            <xsl:for-each
+                                select="geogname | subject | famname | persname | corpname | occupation | genreform | function | title | p | head | name | indexentry//geogname | indexentry//subject | indexentry//famname | indexentry//persname | indexentry//corpname | indexentry//occupation | indexentry//genreform | indexentry//function | indexentry//title | indexentry//name | ../did//geogname[parent::item|parent::entry|parent::p|parent::unittitle] | ../did//subject[parent::item|parent::entry|parent::p|parent::unittitle] | ../did//famname[parent::item|parent::entry|parent::p|parent::unittitle] | ../did//persname[parent::item|parent::entry|parent::p|parent::unittitle] | ../did//corpname[parent::item|parent::entry|parent::p|parent::unittitle] | ../did//occupation[parent::item|parent::entry|parent::p|parent::unittitle] | ../did//genreform[parent::item|parent::entry|parent::p|parent::unittitle] | ../did//function[parent::item|parent::entry|parent::p|parent::unittitle] | ../did//title[parent::item|parent::entry|parent::p|parent::unittitle] | ../did//name[parent::item|parent::entry|parent::p|parent::unittitle]">
+                                <xsl:if test="not(local-name()='genreform' and @type='typir')">
+                                    <xsl:element name="{local-name()}"
+                                                 namespace="urn:isbn:1-931666-22-9">
+                                        <xsl:if test="local-name() = 'corpname' or local-name() = 'persname' or local-name() = 'famname' or local-name() = 'name'">
+                                            <xsl:if test="./@authfilenumber">
+                                                <xsl:attribute name="authfilenumber" select="./@authfilenumber"/>
                                             </xsl:if>
-                                            <xsl:apply-templates select="node()" mode="#current"/>
-                                        </xsl:element>
-                                    </xsl:if>
-                                </xsl:for-each>
-                                <xsl:for-each select="controlaccess">
-                                    <xsl:call-template name="controlaccess"/>
-                                </xsl:for-each>
-                            </controlaccess>
+                                        </xsl:if>
+                                        <xsl:apply-templates select="node()" mode="#current"/>
+                                    </xsl:element>
+                                </xsl:if>
+                            </xsl:for-each>
+                            <xsl:for-each select="controlaccess">
+                                <xsl:call-template name="controlaccess"/>
+                            </xsl:for-each>
+                        </controlaccess>
                         </xsl:if>
                     </xsl:when>
                     <xsl:otherwise>
-                        <xsl:if
-                            test="not(string-length(normalize-space(string-join(descendant-or-self::text(), ''))) = 0)">
-                            <controlaccess>
-                                <!--../index/indexentry//geogname | ../index/indexentry//subject | ../index/indexentry//famname | ../index/indexentry//persname | ../index/indexentry//corpname | ../index/indexentry//occupation | ../index/indexentry//genreform | ../index/indexentry//function | ../index/indexentry//title | ../index/indexentry//name-->
-                                <xsl:for-each
-                                    select="geogname | subject | famname | persname | corpname | occupation | genreform | function | title | p | head | name | indexentry//geogname | indexentry//subject | indexentry//famname | indexentry//persname | indexentry//corpname | indexentry//occupation | indexentry//genreform | indexentry//function | indexentry//title | indexentry//name | indexentry//ref">
-                                    <xsl:if
-                                        test="not(local-name() = 'genreform' and @type = 'typir') and not(local-name() = 'ref')">
-                                        <xsl:element name="{local-name()}"
-                                            namespace="urn:isbn:1-931666-22-9">
-                                            <xsl:if
-                                                test="local-name() = 'corpname' or local-name() = 'persname' or local-name() = 'famname' or local-name() = 'name'">
+                        <xsl:if test="not(string-length(normalize-space(string-join(descendant-or-self::text(), ''))) = 0)">
+                            <controlaccess>                                                                                                                           <!--../index/indexentry//geogname | ../index/indexentry//subject | ../index/indexentry//famname | ../index/indexentry//persname | ../index/indexentry//corpname | ../index/indexentry//occupation | ../index/indexentry//genreform | ../index/indexentry//function | ../index/indexentry//title | ../index/indexentry//name-->
+                                <xsl:for-each select="geogname | subject | famname | persname | corpname | occupation | genreform | function | title | p | head | name | indexentry//geogname | indexentry//subject | indexentry//famname | indexentry//persname | indexentry//corpname | indexentry//occupation | indexentry//genreform | indexentry//function | indexentry//title | indexentry//name | indexentry//ref">
+                                    <xsl:if test="not(local-name()='genreform' and @type='typir') and not(local-name()='ref')">
+                                        <xsl:element name="{local-name()}" namespace="urn:isbn:1-931666-22-9">
+                                            <xsl:if test="local-name() = 'corpname' or local-name() = 'persname' or local-name() = 'famname' or local-name() = 'name'">
                                                 <xsl:if test="./@authfilenumber">
-                                                  <xsl:attribute name="authfilenumber"
-                                                  select="./@authfilenumber"/>
+                                                    <xsl:attribute name="authfilenumber" select="./@authfilenumber"/>
                                                 </xsl:if>
                                             </xsl:if>
                                             <xsl:apply-templates select="node()" mode="#current"/>
                                         </xsl:element>
                                     </xsl:if>
-                                    <xsl:if test="local-name() = 'ref'">
+                                    <xsl:if test="local-name()='ref'">
                                         <p>
                                             <extref>
                                                 <xsl:if test="@href">
-                                                  <xsl:attribute name="xlink:href" select="@href"/>
+                                                    <xsl:attribute name="xlink:href" select="@href"/>
                                                 </xsl:if>
                                                 <xsl:if test="@xlink:href">
-                                                  <xsl:attribute name="xlink:href"
-                                                  select="@xlink:href"/>
+                                                    <xsl:attribute name="xlink:href" select="@xlink:href"/>
                                                 </xsl:if>
                                                 <xsl:if test="text()">
-                                                  <xsl:attribute name="xlink:title" select="text()"
-                                                  />
+                                                    <xsl:attribute name="xlink:title" select="text()"/>
                                                 </xsl:if>
                                             </extref>
                                         </p>
@@ -2751,7 +2695,7 @@
                                 </xsl:for-each>
                                 <xsl:for-each select="list/item">
                                     <p>
-                                        <xsl:apply-templates mode="#current"/>
+                                        <xsl:apply-templates mode="#current" />
                                     </p>
                                 </xsl:for-each>
                                 <xsl:for-each select="controlaccess">
@@ -2764,14 +2708,12 @@
             </xsl:when>
             <xsl:otherwise>
                 <xsl:for-each
-                    select="geogname | subject | famname | persname | corpname | occupation | genreform | function | title | p | name | ../did//geogname[parent::item | parent::entry | parent::p | parent::unittitle] | ../did//subject[parent::item | parent::entry | parent::p | parent::unittitle] | ../did//famname[parent::item | parent::entry | parent::p | parent::unittitle] | ../did//persname[parent::item | parent::entry | parent::p | parent::unittitle] | ../did//corpname[parent::item | parent::entry | parent::p | parent::unittitle] | ../did//occupation[parent::item | parent::entry | parent::p | parent::unittitle] | ../did//genreform[parent::item | parent::entry | parent::p | parent::unittitle] | ../did//function[parent::item | parent::entry | parent::p | parent::unittitle] | ../did//title[parent::item | parent::entry | parent::p | parent::unittitle] | ../did//name[parent::item | parent::entry | parent::p | parent::unittitle]">
-                    <xsl:if test="not(local-name() = 'genreform' and @type = 'typir')">
+                    select="geogname|subject|famname|persname|corpname|occupation|genreform|function|title|p|name | ../did//geogname[parent::item|parent::entry|parent::p|parent::unittitle] | ../did//subject[parent::item|parent::entry|parent::p|parent::unittitle] | ../did//famname[parent::item|parent::entry|parent::p|parent::unittitle] | ../did//persname[parent::item|parent::entry|parent::p|parent::unittitle] | ../did//corpname[parent::item|parent::entry|parent::p|parent::unittitle] | ../did//occupation[parent::item|parent::entry|parent::p|parent::unittitle] | ../did//genreform[parent::item|parent::entry|parent::p|parent::unittitle] | ../did//function[parent::item|parent::entry|parent::p|parent::unittitle] | ../did//title[parent::item|parent::entry|parent::p|parent::unittitle] | ../did//name[parent::item|parent::entry|parent::p|parent::unittitle]">
+                    <xsl:if test="not(local-name()='genreform' and @type='typir')">
                         <xsl:element name="{local-name()}" namespace="urn:isbn:1-931666-22-9">
-                            <xsl:if
-                                test="local-name() = 'corpname' or local-name() = 'persname' or local-name() = 'famname' or local-name() = 'name'">
+                            <xsl:if test="local-name() = 'corpname' or local-name() = 'persname' or local-name() = 'famname' or local-name() = 'name'">
                                 <xsl:if test="./@authfilenumber">
-                                    <xsl:attribute name="authfilenumber" select="./@authfilenumber"
-                                    />
+                                    <xsl:attribute name="authfilenumber" select="./@authfilenumber"/>
                                 </xsl:if>
                             </xsl:if>
                             <xsl:apply-templates select="node()" mode="#current"/>
@@ -2857,12 +2799,11 @@
             </xsl:for-each>
         </xsl:if>
     </xsl:template>
-    <xsl:template
-        match="unittitle/corpname | unittitle/famname | unittitle/function | unittitle/genreform | unittitle/geogname | unittitle/name | unittitle/occupation | unittitle/persname | unittitle/subject | unittitle/title | unittitle/date"
-        mode="level">
+    <xsl:template match="unittitle/corpname | unittitle/famname | unittitle/function | unittitle/genreform | unittitle/geogname | unittitle/name | unittitle/occupation | unittitle/persname | unittitle/subject | unittitle/title | unittitle/date"
+                  mode="level">
         <xsl:apply-templates select="node()" mode="#current"/>
     </xsl:template>
-
+    
     <xsl:template match="unittitle/imprint" mode="copy level">
         <xsl:for-each select="*">
             <xsl:if test="position() eq 1">
@@ -2884,17 +2825,15 @@
     <!-- class: unitid -->
     <xsl:template match="unitid" mode="level">
         <xsl:choose>
-            <xsl:when test="$countrycode = 'NL' and ../../@otherlevel = 'subfile'">
+            <xsl:when test="$countrycode='NL' and ../../@otherlevel='subfile'">
                 <xsl:apply-templates select="../../../did/unitid" mode="#current"/>
             </xsl:when>
-            <xsl:when test="@audience = 'internal' and @type = 'handle'"/>
+            <xsl:when test="@audience='internal' and @type='handle'"/>
             <xsl:when
-                test="(@type = &quot;cote d'archives&quot; or @type = 'call number' or @type = 'ABS' or @type = 'bestellnummer' or @type = 'Bestellnummer' or @type = 'series_code' or @type = 'reference' or @type = 'Sygnatura' or @type = 'REFERENCE_CODE' or @type = 'cote-de-consultation' or @type = 'cote-groupee' or @type = 'identifiant' or @type = 'cote' or @type = 'persistent' or (not(@type))) and (text()[string-length(normalize-space(.)) ge 1] or exists(extptr))">
+                test="(@type=&quot;cote d'archives&quot; or @type='call number' or @type='ABS' or @type='bestellnummer' or @type='Bestellnummer' or @type='series_code' or @type='reference' or @type='Sygnatura' or @type='REFERENCE_CODE' or @type='cote-de-consultation' or @type='cote-groupee' or @type='identifiant' or @type='cote' or @type='persistent' or (not(@type))) and (text()[string-length(normalize-space(.)) ge 1] or exists(extptr))">
                 <!-- and not(preceding-sibling::unitid) and not(following-sibling::unitid)-->
                 <xsl:choose>
-                    <xsl:when
-                        test="@type = 'cote-groupee' and (following-sibling::unitid or preceding-sibling::unitid)"/>
-                    <!-- todo: test with french data, ticket #935 -->
+                    <xsl:when test="@type = 'cote-groupee' and (following-sibling::unitid or preceding-sibling::unitid)"/> <!-- todo: test with french data, ticket #935 -->
                     <xsl:when test="@countrycode and @repositorycode">
                         <xsl:choose>
                             <xsl:when test="//eadid/@countrycode = 'SE'">
@@ -2915,7 +2854,7 @@
                                         <xsl:apply-templates select="extptr" mode="#current"/>
                                     </xsl:if>
                                     <xsl:value-of
-                                        select="concat(concat(concat(normalize-space($eadid), '/'), normalize-space($above)), .)"
+                                        select="concat(concat(concat(normalize-space($eadid), '/'), normalize-space($above)),.)"
                                     />
                                 </unitid>
                             </xsl:when>
@@ -2926,12 +2865,12 @@
                                     </xsl:if>
                                     <xsl:choose>
                                         <xsl:when
-                                            test="starts-with(., concat(concat(@countrycode, '/'), @repositorycode))">
+                                            test="starts-with(., concat(concat(@countrycode,'/'),@repositorycode))">
                                             <xsl:value-of select="text()"/>
                                         </xsl:when>
                                         <xsl:otherwise>
                                             <xsl:value-of
-                                                select="concat(concat(concat(concat(@countrycode, '/'), @repositorycode), '/'), .)"
+                                                select="concat(concat(concat(concat(@countrycode,'/'),@repositorycode), '/'), .)"
                                             />
                                         </xsl:otherwise>
                                     </xsl:choose>
@@ -2947,17 +2886,17 @@
                                 <xsl:apply-templates select="extptr" mode="#current"/>
                             </xsl:if>
                             <!-- For Netherlands -->
-                            <xsl:if test="following-sibling::*/@type = 'handle'">
+                            <xsl:if test="following-sibling::*/@type='handle'">
                                 <extptr>
                                     <xsl:attribute name="xlink:href">
                                         <xsl:value-of
-                                            select="following-sibling::*[@type = 'handle']/text()"/>
+                                            select="following-sibling::*[@type='handle']/text()"/>
                                     </xsl:attribute>
                                 </extptr>
                             </xsl:if>
                             <!--test-->
                             <xsl:choose>
-                                <xsl:when test="//eadid[@countrycode = 'NL']">
+                                <xsl:when test="//eadid[@countrycode='NL']">
                                     <xsl:choose>
                                         <xsl:when test="starts-with(., //eadid/text())">
                                             <xsl:value-of select="."/>
@@ -2970,16 +2909,16 @@
                                 </xsl:when>
                                 <xsl:otherwise>
                                     <xsl:choose>
-                                        <xsl:when
-                                            test="starts-with(string-join(., ''), string-join(//archdesc/did/unitid[1]/text(), '')) or //archdesc/did/unitid[@label = 'Cotes extrêmes']">
-                                            <xsl:value-of select="text()"/>
-                                        </xsl:when>
-                                        <xsl:otherwise>
-                                            <xsl:value-of
-                                                select="concat(string-join(//archdesc/did/unitid[1]/text(), ''), concat(' - ', .))"
-                                            />
-                                        </xsl:otherwise>
-                                    </xsl:choose>
+                                <xsl:when
+                                    test="starts-with(string-join(., ''), string-join(//archdesc/did/unitid[1]/text(), '')) or //archdesc/did/unitid[@label='Cotes extrêmes']">
+                                    <xsl:value-of select="text()"/>
+                                </xsl:when>
+                                <xsl:otherwise>
+                                    <xsl:value-of
+                                        select="concat(string-join(//archdesc/did/unitid[1]/text(), ''), concat(' - ', .))"
+                                    />
+                                </xsl:otherwise>
+                            </xsl:choose>
                                 </xsl:otherwise>
                             </xsl:choose>
                             <!--<xsl:apply-templates select="node()" mode="#current"/>-->
@@ -2988,7 +2927,7 @@
                 </xsl:choose>
             </xsl:when>
             <xsl:when
-                test="@type = 'former call number' or @type = 'obsolete' or @type = 'former' or @type = 'altsignatur' or @type = 'Altsignatur' or @type = 'Sygnatura dawna' or @type = 'ancienne_cote' or @type = 'OLD_REFERENCE_CODE' or @type = 'nouvelle-foliotation' or @type = 'cote-forgée'">
+                test="@type='former call number' or @type='obsolete' or @type='former' or @type='altsignatur' or @type='Altsignatur' or @type='Sygnatura dawna' or @type='ancienne_cote' or @type='OLD_REFERENCE_CODE' or @type='nouvelle-foliotation' or @type='cote-forgée'">
                 <xsl:if test="text()[string-length(normalize-space(.)) ge 1]">
                     <unitid>
                         <xsl:attribute name="type" select="'former call number'"/>
@@ -3001,7 +2940,7 @@
                 </xsl:if>
             </xsl:when>
             <xsl:when
-                test="@type = 'file reference' or @type = 'code-de-communication' or @type = 'cote de communication' or @type = 'Aktenzeichen' or @type = 'aktenzeichen' or @type = 'Znak teczki'">
+                test="@type='file reference' or @type='code-de-communication' or @type='cote de communication' or @type='Aktenzeichen' or @type='aktenzeichen' or @type='Znak teczki'">
                 <xsl:if test="text()[string-length(normalize-space(.)) ge 1]">
                     <unitid>
                         <xsl:attribute name="type" select="'file reference'"/>
@@ -3021,7 +2960,7 @@
             <!--<xsl:value-of select="concat(//eadid/text(), ' - empty')" />-->
             <!--</unitid>-->
             <!--</xsl:when>-->
-            <xsl:when test="@type = 'blank'"/>
+            <xsl:when test="@type='blank'"/>
             <xsl:otherwise>
                 <xsl:call-template name="excludeElement"/>
             </xsl:otherwise>
@@ -3036,16 +2975,16 @@
 
     <xsl:template match="unitid/extptr" mode="level">
         <extptr>
-            <xsl:if test="@href != ''">
+            <xsl:if test="@href!=''">
                 <xsl:attribute name="xlink:href" select="ape:checkLink(@href)"/>
             </xsl:if>
-            <xsl:if test="@*:href != ''">
+            <xsl:if test="@*:href!=''">
                 <xsl:attribute name="xlink:href" select="ape:checkLink(@*:href)"/>
             </xsl:if>
-            <xsl:if test="@title != ''">
+            <xsl:if test="@title!=''">
                 <xsl:attribute name="xlink:title" select="@title"/>
             </xsl:if>
-            <xsl:if test="@*:title != ''">
+            <xsl:if test="@*:title!=''">
                 <xsl:attribute name="xlink:title" select="@*:title"/>
             </xsl:if>
             <xsl:apply-templates select="node()" mode="#current"/>
@@ -3054,16 +2993,16 @@
 
     <xsl:template match="unitid/extref" mode="copy level">
         <extptr>
-            <xsl:if test="@href != ''">
+            <xsl:if test="@href!=''">
                 <xsl:attribute name="xlink:href" select="ape:checkLink(@href)"/>
             </xsl:if>
-            <xsl:if test="@*:href != ''">
+            <xsl:if test="@*:href!=''">
                 <xsl:attribute name="xlink:href" select="ape:checkLink(@*:href)"/>
             </xsl:if>
-            <xsl:if test="@title != ''">
+            <xsl:if test="@title!=''">
                 <xsl:attribute name="xlink:title" select="@title"/>
             </xsl:if>
-            <xsl:if test="@*:title != ''">
+            <xsl:if test="@*:title!=''">
                 <xsl:attribute name="xlink:title" select="@*:title"/>
             </xsl:if>
             <xsl:apply-templates select="node()" mode="#current"/>
@@ -3091,7 +3030,7 @@
             <xsl:when test="@label or @role">
                 <xsl:choose>
                     <xsl:when
-                        test="@label = 'thumb' or @role = 'thumb' or @role = 'image_thumb' or @*:role = 'image_thumb'">
+                        test="@label='thumb' or @role='thumb' or @role='image_thumb' or @*:role='image_thumb'">
                         <xsl:attribute name="xlink:title" select="'thumbnail'"/>
                     </xsl:when>
                     <xsl:when test="@label = 'Document'">
@@ -3106,11 +3045,11 @@
                         <xsl:attribute name="xlink:title" select="@label"/>
                         <xsl:attribute name="xlink:role" select="'IMAGE'"/>
                     </xsl:when>
-                    <xsl:when test="@label = 'reference' and daodesc/p/text()">
+                    <xsl:when test="@label='reference' and daodesc/p/text()">
                         <xsl:attribute name="xlink:title" select="daodesc/p/text()"/>
                         <xsl:attribute name="xlink:role" select="'UNSPECIFIED'"/>
                     </xsl:when>
-                    <xsl:when test="@role = 'reference' and ../daodesc/p/text()">
+                    <xsl:when test="@role='reference' and ../daodesc/p/text()">
                         <xsl:attribute name="xlink:title" select="../daodesc/p/text()"/>
                         <xsl:attribute name="xlink:role" select="'UNSPECIFIED'"/>
                     </xsl:when>
@@ -3143,9 +3082,7 @@
             <xsl:if test="not(unittitle)">
                 <unittitle/>
             </xsl:if>
-            <xsl:apply-templates
-                select="node()[not(local-name() = 'abstract') and not(local-name() = 'scopecontent') and not(local-name() = 'bioghist')]"
-                mode="#current"/>
+            <xsl:apply-templates select="node()[not(local-name() = 'abstract') and not(local-name() = 'scopecontent') and not(local-name() = 'bioghist')]" mode="#current"/>
             <xsl:for-each select="following-sibling::dao">
                 <xsl:call-template name="dao"/>
             </xsl:for-each>
@@ -3153,9 +3090,7 @@
                 <xsl:call-template name="none:addDaolink">
                     <xsl:with-param name="context" select="."/>
                     <xsl:with-param name="valueToCheck" select="@*:href"/>
-                    <xsl:with-param name="title"
-                        select="@*:title | ../daodesc[@label = 'reference']/p/text() | .[@label = 'reference']/daodesc/p/text()"
-                    />
+                    <xsl:with-param name="title" select="@*:title | ../daodesc[@label='reference']/p/text() | .[@label='reference']/daodesc/p/text()"/>
                 </xsl:call-template>
             </xsl:for-each>
             <xsl:for-each select="following-sibling::note">
@@ -3181,13 +3116,13 @@
             <!--</xsl:if>-->
         </did>
         <xsl:if
-            test="not(controlaccess) and (descendant::geogname[parent::item | parent::entry | parent::p | parent::unittitle] or descendant::subject[parent::item | parent::entry | parent::p | parent::unittitle] or descendant::famname[parent::item | parent::entry | parent::p | parent::unittitle] or descendant::persname[parent::item | parent::entry | parent::p | parent::unittitle] or descendant::corpname[parent::item | parent::entry | parent::p | parent::unittitle] or descendant::occupation[parent::item | parent::entry | parent::p | parent::unittitle] or descendant::genreform[parent::item | parent::entry | parent::p | parent::unittitle] or descendant::function[parent::item | parent::entry | parent::p | parent::unittitle] or descendant::title[parent::item | parent::entry | parent::p | parent::unittitle] or descendant::name[parent::item | parent::entry | parent::p | parent::unittitle])">
+            test="not(controlaccess) and (descendant::geogname[parent::item|parent::entry|parent::p|parent::unittitle] or descendant::subject[parent::item|parent::entry|parent::p|parent::unittitle] or descendant::famname[parent::item|parent::entry|parent::p|parent::unittitle] or descendant::persname[parent::item|parent::entry|parent::p|parent::unittitle] or descendant::corpname[parent::item|parent::entry|parent::p|parent::unittitle] or descendant::occupation[parent::item|parent::entry|parent::p|parent::unittitle] or descendant::genreform[parent::item|parent::entry|parent::p|parent::unittitle] or descendant::function[parent::item|parent::entry|parent::p|parent::unittitle] or descendant::title[parent::item|parent::entry|parent::p|parent::unittitle] or descendant::name[parent::item|parent::entry|parent::p|parent::unittitle])">
             <xsl:call-template name="createControlaccess">
                 <xsl:with-param name="context" select=".."/>
             </xsl:call-template>
         </xsl:if>
 
-        <xsl:apply-templates select="abstract | scopecontent | bioghist" mode="#current"/>
+        <xsl:apply-templates select="abstract | scopecontent | bioghist" mode="#current" />
     </xsl:template>
 
     <xsl:template
@@ -3251,7 +3186,7 @@
     <xsl:function name="none:isNotThumbnail" as="xs:boolean">
         <xsl:param name="dao"/>
         <xsl:choose>
-            <xsl:when test="$dao[@*:title] and $dao[@*:title = 'thumbnail']">
+            <xsl:when test="$dao[@*:title] and $dao[@*:title='thumbnail']">
                 <xsl:value-of select="false()"/>
             </xsl:when>
             <xsl:otherwise>
@@ -3286,16 +3221,15 @@
 
     <xsl:template match="did/daogrp/daoloc | did/daoloc" mode="level">
         <xsl:choose>
-            <xsl:when test="@actuate = 'user'">
+            <xsl:when test="@actuate='user'">
                 <xsl:call-template name="none:addDaolink">
                     <xsl:with-param name="context" select="."/>
                     <xsl:with-param name="valueToCheck" select="./text()"/>
                     <xsl:with-param name="title" select="''"/>
                 </xsl:call-template>
             </xsl:when>
-            <!--2016-06-14: Addition of check for @role after request from Archives Hub GB-->
-            <xsl:when
-                test="@label = 'reference' or @label = 'thumb' or @role = 'reference' or @role = 'thumb' or @linktype = 'locator'">
+            <!--2016-06-14: Addition of check for @role after request from Archives Hub GB--> 
+            <xsl:when test="@label='reference' or @label='thumb' or @role='reference' or @role='thumb' or @linktype='locator'">
                 <xsl:call-template name="none:addDaolink">
                     <xsl:with-param name="context" select="."/>
                     <xsl:with-param name="valueToCheck" select="@*:href"/>
@@ -3354,7 +3288,7 @@
 
     <xsl:template match="did/head" mode="copy level">
         <head>
-            <xsl:apply-templates mode="#current"/>
+            <xsl:apply-templates mode="#current" />
         </head>
     </xsl:template>
 
@@ -3370,7 +3304,7 @@
                     </xsl:when>
                     <xsl:otherwise>
                         <xsl:apply-templates
-                            select="node()[not(name() = 'acqinfo' or name() = 'custodhist')]"
+                            select="node()[not(name()='acqinfo' or name()='custodhist')]"
                             mode="#current"/>
                         <!--except acqinfo?-->
                         <xsl:apply-templates select="custodhist" mode="nested"/>
@@ -3382,7 +3316,7 @@
 
     <xsl:template match="custodhist/date" mode="copy level">
         <xsl:choose>
-            <xsl:when test="preceding-sibling::*[name() = 'p']">
+            <xsl:when test="preceding-sibling::*[name()='p']">
                 <p>
                     <xsl:apply-templates mode="#current"/>
                 </p>
@@ -3473,16 +3407,16 @@
 
     <!--todo: WARNING!! Those are just taken away and are NOT provided to the user as missing elements-->
     <xsl:template match="arrangement | originalsloc | separatedmaterial | acqinfo | prefercite"
-        mode="level"/>
+                  mode="level"/>
 
     <!-- c-level -->
     <xsl:template match="c | c01 | c02 | c03 | c04 | c05 | c06 | c07 | c08 | c09 | c10 | c11 | c12"
-        mode="copy level">
+                  mode="copy level">
         <!--Counter-->
         <xsl:value-of select="ape:counterclevel()"/>
         <xsl:choose>
-            <xsl:when test="@level = 'collection' and did/unitid = '' and did/unittitle = ''">
-                <xsl:apply-templates select="child::*[not(name() = 'did')]" mode="copy"/>
+            <xsl:when test="@level='collection' and did/unitid='' and did/unittitle=''">
+                <xsl:apply-templates select="child::*[not(name()='did')]" mode="copy"/>
             </xsl:when>
             <xsl:otherwise>
                 <c>
@@ -3492,9 +3426,8 @@
                             <xsl:when test="normalize-space(@id)">
                                 <xsl:value-of select="normalize-space(@id)"/>
                             </xsl:when>
-                            <xsl:when test="normalize-space(child::*[name() = 'did']/@id)">
-                                <xsl:value-of select="normalize-space(child::*[name() = 'did']/@id)"
-                                />
+                            <xsl:when test="normalize-space(child::*[name()='did']/@id)">
+                                <xsl:value-of select="normalize-space(child::*[name()='did']/@id)"/>
                             </xsl:when>
                             <xsl:otherwise>
                                 <xsl:value-of select="generate-id()"/>
@@ -3504,7 +3437,7 @@
 
                     <xsl:if test="not(exists(did))">
                         <did>
-                            <unittitle/>
+                            <unittitle />
                         </did>
                     </xsl:if>
                     <xsl:apply-templates mode="level"/>
