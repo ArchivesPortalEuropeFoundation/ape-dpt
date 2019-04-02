@@ -477,7 +477,7 @@
         </publicationstmt>
     </xsl:template>
 
-    <!-- publicationstmt/p => publisher for Poland -->
+    <!-- publicationstmt/p -->
     <xsl:template match="publicationstmt/p" mode="copy">
         <xsl:choose>
             <xsl:when test="//eadid/@countrycode = 'PL' or //eadid/@countrycode = 'pl'">
@@ -486,7 +486,7 @@
                 </publisher>
             </xsl:when>
             <xsl:otherwise>
-                <xsl:call-template name="excludeElement"/>
+                <p><xsl:apply-templates select="node()" mode="#current"/></p>
             </xsl:otherwise>
         </xsl:choose>
     </xsl:template>
@@ -517,7 +517,21 @@
             </xsl:if>
         </seriesstmt>
     </xsl:template>
-
+    
+    <!-- notestmt -->
+    <xsl:template match="notestmt" mode="copy">
+        <notestmt>
+            <xsl:apply-templates select="node()" mode="copy"/>
+        </notestmt>
+    </xsl:template>
+    
+    <!-- note -->
+    <xsl:template match="note" mode="copy">
+        <note>
+            <xsl:apply-templates select="node()" mode="copy"/>
+        </note>
+    </xsl:template>
+    
     <!-- filedesc/titlestmt/author -->
     <xsl:template match="filedesc/titlestmt/author" name="author" mode="copy">
         <xsl:choose>
@@ -1018,11 +1032,11 @@
     </xsl:template>
 
     <!--descgrp/bibliography -->
-    <xsl:template match="archdesc/descgrp/bibliography" mode="copy">
+    <!--<xsl:template match="archdesc/descgrp/bibliography" mode="copy">
         <bibliography encodinganalog="3.5.4">
             <xsl:apply-templates mode="copy"/>
         </bibliography>
-    </xsl:template>
+    </xsl:template>-->
 
     <!-- descgrp[@type='appendices'] -->
     <xsl:template match="archdesc/descgrp[@type='appendices']" mode="copy">
@@ -2326,16 +2340,31 @@
         </p>
     </xsl:template>
 
-    <xsl:template match="bibliography" mode="copy level">
+    <xsl:template match="bibliography[not(ancestor::bibliography)]" mode="copy level">
         <bibliography encodinganalog="3.5.4">
             <xsl:apply-templates select="node()" mode="#current"/>
         </bibliography>
     </xsl:template>
 
+    <xsl:template match="bibliography[ancestor::bibliography]" mode="copy level">
+        <xsl:apply-templates select="node()" mode="#current"/>
+    </xsl:template>
+
     <xsl:template match="bibliography/head" mode="copy level">
-        <head>
-            <xsl:apply-templates select="text()" mode="#current"/>
-        </head>
+        <xsl:choose>
+            <xsl:when test="count(ancestor::bibliography) eq 1">
+                <head>
+                    <xsl:apply-templates select="text()" mode="#current"/>
+                </head>
+            </xsl:when>
+            <xsl:otherwise>
+                <p>
+                    <emph render="bold">
+                        <xsl:apply-templates select="text()" mode="#current"/>
+                    </emph>
+                </p>
+            </xsl:otherwise>
+        </xsl:choose>
     </xsl:template>
 
     <xsl:template match="bibliography/p" mode="copy level">
@@ -2344,6 +2373,7 @@
                 <xsl:apply-templates select="node() except (list | table | bibref)" mode="#current"/>
                 <xsl:for-each select="bibref">
                     <xsl:apply-templates select="node()" mode="#current"/>
+                    <lb></lb>
                 </xsl:for-each>
             </p>
         </xsl:if>
