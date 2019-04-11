@@ -571,7 +571,8 @@
                 </publisher>
             </xsl:when>
             <xsl:otherwise>
-                <publisher/>
+                <!--prevent creation of empty publisher element; commented out for now in case of occurrance of side effects-->
+                <!--<publisher/>-->
             </xsl:otherwise>
         </xsl:choose>
     </xsl:template>
