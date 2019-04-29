@@ -19,7 +19,7 @@
         <!--dependency>
             <groupId>eu.archivesportaleurope.backend</groupId>
             <artifactId>persistence</artifactId>
-            <version>2019-02.1-SNAPSHOT</version>
+            <version>2019-04-SNAPSHOT</version>
         </dependency-->
     </dependencies>
 </project>
