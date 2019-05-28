@@ -1864,7 +1864,7 @@
     <xs:complexType mixed="true" name="item">
         <xs:choice maxOccurs="unbounded" minOccurs="0">
             <xs:group maxOccurs="unbounded" minOccurs="0" ref="group.item"/>
-            <xs:element maxOccurs="unbounded" minOccures="0" name="ref" type="ref"/>
+            <xs:element maxOccurs="unbounded" minOccurs="0" name="ref" type="ref"/>
         </xs:choice>
     </xs:complexType>
     <xs:group name="group.item">
