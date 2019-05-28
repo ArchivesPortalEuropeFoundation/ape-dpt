@@ -5,8 +5,6 @@
 package eu.apenet.dpt.utils.ead2edm;
 
 import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
@@ -31,23 +29,24 @@ import org.w3c.dom.Document;
  * @author bverhoef
  */
 public class XMLTransformer {
+
     private static final Logger LOG = Logger.getLogger(XMLTransformer.class);
 
     private Transformer transformer;
     private Map<String, Object> parameters = new HashMap<String, Object>();
     private String xsltLocation;
 
-    public XMLTransformer(String xsltLocation, Properties properties){
-    	parameters = new HashMap<String, Object>();
+    public XMLTransformer(String xsltLocation, Properties properties) {
+        parameters = new HashMap<String, Object>();
         System.setProperty("javax.xml.transform.TransformerFactory", "net.sf.saxon.TransformerFactoryImpl");
-        if (parameters != null){
+        if (parameters != null) {
             for (Map.Entry<Object, Object> entry : properties.entrySet()) {
-            	String key = entry.getKey().toString();
-            	String value = entry.getValue().toString();
-            	if (StringUtils.isBlank(value)){
-            		value = null;
-            	}
-            	parameters.put(key, value);
+                String key = entry.getKey().toString();
+                String value = entry.getValue().toString();
+                if (StringUtils.isBlank(value)) {
+                    value = null;
+                }
+                parameters.put(key, value);
             }
         }
         this.xsltLocation = xsltLocation;
@@ -82,10 +81,17 @@ public class XMLTransformer {
         transformer.transform(inputSource, outputSource);
     }
 
-        public void transform(Document inputFile, File outputFile) throws TransformerException {
+    public void transform(Document inputFile, File outputFile) throws TransformerException {
         reset();
         Source inputSource = new DOMSource(inputFile);
         Result outputSource = new StreamResult(outputFile);
+        transformer.transform(inputSource, outputSource);
+    }
+    
+    public void transform(File inputFile) throws TransformerException {
+        reset();
+        Source inputSource = new StreamSource(inputFile);
+        Result outputSource = new DOMResult();
         transformer.transform(inputSource, outputSource);
     }
 

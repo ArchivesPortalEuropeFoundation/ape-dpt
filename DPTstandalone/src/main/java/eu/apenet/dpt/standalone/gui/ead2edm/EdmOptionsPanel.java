@@ -72,9 +72,11 @@ import eu.apenet.dpt.standalone.gui.progress.ProgressFrame;
 import eu.apenet.dpt.utils.ead2edm.XMLUtil;
 import eu.apenet.dpt.utils.ead2edm.EdmConfig;
 import eu.apenet.dpt.utils.service.TransformationTool;
+import eu.apenet.dpt.utils.util.EAD2002Utils;
 import eu.apenet.dpt.utils.util.Ead2EdmInformation;
 import eu.apenet.dpt.utils.util.extendxsl.EdmQualityCheckerCall;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
@@ -858,6 +860,8 @@ public class EdmOptionsPanel extends JPanel {
             config.setUseArchUnittitle(false);
         }
 
+        config.setOutputBaseDirectory(retrieveFromDb.retrieveDefaultSaveFolder());
+
         //EDM identifier used for OAI-PMH; not needed for DPT purposes, so set to empty string
         config.setEdmIdentifier("");
 
@@ -1136,14 +1140,18 @@ public class EdmOptionsPanel extends JPanel {
                                     Future<?> future = executor.submit(new TransformEdm(edmConfig, selectedIndexFile, fileInstance));
                                     try {
                                         future.get();
-                                        apeTabbedPane.appendEdmConversionErrorText(MessageFormat.format(labels.getString("edm.convertedAndSaved"), selectedIndexFile.getAbsolutePath(), retrieveFromDb.retrieveDefaultSaveFolder()) + "\n");
-                                        writer.append(MessageFormat.format(labels.getString("edm.convertedAndSaved"), selectedIndexFile.getAbsolutePath(), retrieveFromDb.retrieveDefaultSaveFolder()) + "\n");
+                                        File edmFolder = new File(fileInstance.getEdmLocation());
+                                        apeTabbedPane.appendEdmConversionErrorText(MessageFormat.format(labels.getString("edm.convertedAndSaved"), selectedIndexFile.getAbsolutePath(), edmFolder.toString()) + "\n");
+                                        writer.append(MessageFormat.format(labels.getString("edm.convertedAndSaved"), selectedIndexFile.getAbsolutePath(), edmFolder.toString()) + "\n");
 
                                         //Do a XML Quality check
                                         EdmQualityCheckerCall edmQualityCheckerCall = new EdmQualityCheckerCall();
                                         File xslFile = Utilities.EDM_QUALITY_FILE;
-                                        TransformationTool.createTransformation(FileUtils.openInputStream(new File(fileInstance.getEdmLocation())), null, xslFile, null, true, true, null, false, edmQualityCheckerCall);
-
+                                        ArrayList<File> edmFiles = new ArrayList<File>(Arrays.asList(edmFolder.listFiles()));
+                                        for (File edmFile : edmFiles) {
+                                            TransformationTool.createTransformation(FileUtils.openInputStream(edmFile), null, xslFile, null, true, true, null, false, edmQualityCheckerCall);
+                                        }
+                                        /* TODO: Update quality report
                                         int duplicateElements = 0;
                                         StringWriter duplicates = new StringWriter();
                                         Map<String, Integer> unitids = edmQualityCheckerCall.getIdentifiers();
@@ -1178,6 +1186,7 @@ public class EdmOptionsPanel extends JPanel {
                                         writer.append(": ");
                                         writer.append(duplicates.toString());
                                         writer.append("\r\n");
+                                        */
 
                                         fileInstance.setEuropeanaConversionErrors(writer.toString());
                                         writer.getBuffer().setLength(0);
@@ -1253,25 +1262,25 @@ public class EdmOptionsPanel extends JPanel {
         public Void call() throws Exception {
             try {
                 RetrieveFromDb retrieveFromDb = new RetrieveFromDb();
-                int lastIndex = selectedIndex.getName().lastIndexOf('.');
-                String xmlOutputFilename = retrieveFromDb.retrieveDefaultSaveFolder() + selectedIndex.getName().substring(0, lastIndex) + "-edm" + selectedIndex.getName().substring(lastIndex);
+                String eadid = EAD2002Utils.retrieveEadid(selectedIndex.getAbsoluteFile());
+                String xmlOutputFolder = retrieveFromDb.retrieveDefaultSaveFolder() + eadid + "/";
                 String loc;
                 if (fileInstance.isConverted() || fileInstance.getLastOperation().equals(FileInstance.Operation.SAVE)) {
                     loc = fileInstance.getCurrentLocation();
                 } else {
                     loc = fileInstance.getOriginalPath();
                 }
-                File outputFile = new File(xmlOutputFilename);
-                config.getTransformerXML2XML().transform(new File(loc), outputFile);
-                if (XMLUtil.analyzeESEXML(outputFile).getNumberOfProvidedCHO() <= 1) {
+                config.getTransformerXML2XML().transform(new File(loc));
+                File outputFolder = new File(xmlOutputFolder);
+                if (XMLUtil.countFilesInEDMfolder(outputFolder) <= 1) {
                     apeTabbedPane.appendEdmConversionErrorText(labels.getString("ese.fileEmpty"));
                 } else {
                     fileInstance.setEdm(true);
-                    fileInstance.setEdmLocation(outputFile.getAbsolutePath());
+                    fileInstance.setEdmLocation(outputFolder.getAbsolutePath());
                     if (StringUtils.isNotEmpty(fileInstance.getEdmLocation())) {
                         fileInstance.setMinimalConverted(config.isMinimalConversion());
                     }
-                    fileInstance.setEuropeanaConversionErrors(MessageFormat.format(labels.getString("edm.convertedAndSaved"), outputFile.getAbsolutePath(), retrieveFromDb.retrieveDefaultSaveFolder()) + "\n");
+                    fileInstance.setEuropeanaConversionErrors(MessageFormat.format(labels.getString("edm.convertedAndSaved"), outputFolder.getAbsolutePath(), retrieveFromDb.retrieveDefaultSaveFolder()) + "\n");
                     fileInstance.setLastOperation(FileInstance.Operation.CONVERT_EDM);
                 }
             } catch (TransformerException e) {
@@ -1280,10 +1289,6 @@ public class EdmOptionsPanel extends JPanel {
                 throw e;
             } catch (XMLStreamException e) {
                 LOG.error("XMLStreamException when converting file into EDM");
-                fileInstance.setEuropeanaConversionErrors(MessageFormat.format(labels.getString("edm.errorOccurred"), selectedIndex.getAbsolutePath()) + ": " + e.getMessage() + "\n");
-                return null;
-            } catch (SAXException e) {
-                LOG.error("SAXException when converting file into EDM");
                 fileInstance.setEuropeanaConversionErrors(MessageFormat.format(labels.getString("edm.errorOccurred"), selectedIndex.getAbsolutePath()) + ": " + e.getMessage() + "\n");
                 return null;
             } catch (IOException e) {

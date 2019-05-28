@@ -37,6 +37,7 @@ public class EdmConfig implements Serializable {
     private String xmlTypeName;
     private String landingPage;
     private boolean useArchUnittitle;
+    private String outputBaseDirectory;
     private Properties properties;
 
     public EdmConfig() {
@@ -222,7 +223,7 @@ public class EdmConfig implements Serializable {
 
     public XMLTransformer getTransformerXML2XML() {
         if (transformerXML2XML == null) {
-            transformerXML2XML = new XMLTransformer("/ead2edm/ead2edm.xsl", getProperties());
+            transformerXML2XML = new XMLTransformer("/ead2edm/ead2edmV2.xsl", getProperties());
         }
         return transformerXML2XML;
     }
@@ -291,6 +292,14 @@ public class EdmConfig implements Serializable {
     public void setUseArchUnittitle(boolean fondsTitleSource) {
         this.useArchUnittitle = fondsTitleSource;
     }
+
+    public String getOutputBaseDirectory() {
+        return outputBaseDirectory;
+    }
+
+    public void setOutputBaseDirectory(String outputBaseDirectory) {
+        this.outputBaseDirectory = outputBaseDirectory;
+    }
     
     public Properties getProperties() {
         if (properties == null) {
@@ -321,6 +330,7 @@ public class EdmConfig implements Serializable {
             properties.put("xml_type_name", getString(getXmlTypeName()));
             properties.put("landingPage", getString(getLandingPage()));
             properties.put("useArchUnittitle", getString(new Boolean(isUseArchUnittitle()).toString()));
+            properties.put("outputBaseDirectory", getString(getOutputBaseDirectory()));
         }
         return properties;
     }
