@@ -816,17 +816,17 @@ Change log:
             </xs:attribute>
             <xs:attributeGroup ref="m.entryLanguageAttributes"/>
     </xs:complexType>
-    <xs:complexType name="objectXMLWrap">
+    <!-- <xs:complexType name="objectXMLWrap">
             <xs:group ref="e.anyName"/>
             <xs:attribute ref="xml:id"/>
-    </xs:complexType>
-    <xs:complexType name="objectBinWrap">
+    </xs:complexType> -->
+    <!-- <xs:complexType name="objectBinWrap">
             <xs:simpleContent>
                 <xs:extension base="xs:base64Binary">
                     <xs:attribute ref="xml:id"/>
                 </xs:extension>
             </xs:simpleContent>
-    </xs:complexType>
+    </xs:complexType> -->
     <xs:complexType name="m.relationBody">
         <xs:sequence>
             <xs:element maxOccurs="unbounded" minOccurs="0" name="relationEntry" type="relationEntry"/>
