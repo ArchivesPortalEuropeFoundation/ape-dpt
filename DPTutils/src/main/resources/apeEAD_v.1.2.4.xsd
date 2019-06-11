@@ -1,246 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<xs:schema elementFormDefault="qualified" targetNamespace="urn:isbn:1-931666-22-9"
-    xmlns="urn:isbn:1-931666-22-9" xmlns:xlink="http://www.w3.org/1999/xlink"
-    xmlns:xs="http://www.w3.org/2001/XMLSchema">
-    <xs:import namespace="http://www.w3.org/1999/xlink"
-        schemaLocation="http://www.loc.gov/standards/xlink/xlink.xsd"/>
-
-    <!--
+<!--
     apeEAD Schema
-    Version: 2.0
-    Date: 20190524
-    Editor: Archives Portal Europe Foundation
-    
-    The apeEAD schema has been written from the official EAD 2002 schema to accommodate the needs of the Archives Portal Europe and
-    based on the use cases for EAD 2002 at its partner institutions.
-    Originally developed during the APEnet project (2009 - 2012) and followed through during the APEx project (2012 - 2015), the 
-    apeEAD schema is now maintained and further developed by the Archives Portal Europe Foundation and its Working Group on Standards.
-    
-    Initial changes from the EAD 2002 schema (as per apeEAD Schema, Version 1.2.4, 20150101):
-    
-    #Additional requirements and definitions
-    * apeEAD requires the attribute @countrycode with <eadid>
-    * apeEAD requires the attribute @mainagencycode with <eadid>
-    * apeEAD specifically defines elements <accessrestrict>, <accruals>, <acqinfo>, <altformavail>, <appraisal>, <arrangement>, <bibliography>, 
-      <bioghist>, <controlaccess>, <custodhist>, <fileplan>, <odd>, <originalsloc>, <otherfindaid>, <phystech>, <prefercite>, <processinfo>, 
-      <relatedmaterial>, <scopecontent>, <separatedmaterial>, and <userestrict> as optional and repeatable
-    
-    #Additional attribute values
-    * apeEAD includes the additional country codes RS, ME, EU, IM
-    
-    #Root element <ead>
-    * apeEAD does not include the attribute @relatedencoding for the element <ead>
-    
-    #Element <eadheader> and sub-elements
-    * apeEAD does not include the attribute group a.common, nor the attribute @findingaidstatus, nor the attribute @encodinganalog for the element <eadheader> 
-    * apeEAD does not include attributes @publicid, @urn or @encodinganalog for the element <eadid>
-    * apeEAD does not include the elements <editionstmt> or <notestmt>, nor the attribute group a.common, nor the attribute @encodinganalog for the element 
-      <filedesc>
-    * apeEAD does not include the element <sponsor>, nor the attribute group a.common, nor the attribute @encodinganalog for the element <titlestmt>
-    * apeEAD does not include the elements <p> or <num>, nor the attribute group a.common, nor the attribute @encodinganalog for the element <publicationstmt>
-    * apeEAD does not include the elements <p> or <num>, nor the attribute group a.common, nor the attribute @encodinganalog for the element <seriesstmt>
-    * apeEAD does neither include the attribute group a.common, nor the attribute @encodinganalog for the element <profiledesc>
-    * apeEAD uses the element <creation> only with <date> as sub-element, i.e. without any other sub-elements and without any attributes
-    * apeEAD uses the element <langusage> only with <language> as sub-element, i.e. without any other sub-elements and without any attributes
-    * apeEAD uses the element <descrules> only with <extref> as sub-element, but without any other sub-elements
-    * apeEAD uses the element <titleproper> only with sub-elements <emph> and <lb> and only with attributes @type and @encodinganalog
-    * apeEAD uses the element <subtitle> only with sub-elements <emph> and <lb>, but with no other sub-elements, nor any attributes
-    * apeEAD uses the element <author> only as #PCDATA and only with the attribute @encodinganalog
-    
-    #Element <archdesc>
-    * apeEAD uses the element <archdesc> only with the element group m.desc.base and the elements <did> and <dsc>
-    * apeEAD does not include the elements <dao>, <daogrp>, <note> and <runner> as direct sub-elements of the element <archdesc>
-    * apeEAD does require the mandatory attribute @level to have the value "fonds" for the element <archdesc> 
-    * apeEAD does not include the attribute group a.common for the element <archdesc>
-    
-    #Elements <dsc> and <c>
-    * apeEAD does not allow the element <dsc> to be nested within itself
-    * apeEAD only uses unnumbered <c> elements, i.e. does not include <c01> as sub-element of the element <dsc>
-    * apeEAD only uses <head>, <p>, <list>, and <table> as formatting sub-elements of <dsc> 
-    * apeEAD uses the element <dsc> only with attribute @type, but without any other attributes
-    * apeEAD uses the default value "othertype" for attribute @type for the element <dsc>
-    * apeEAD does not include the elements <head>, <dsc>, <dao>, <daogrp>, <note>, or <thead> as sub-elements of the element <c>
-    * apeEAD does not include the attribute @tpattern for the element <c>
-        
-    #Element <did> and its sub-elements
-    * apeEAD does not use any attributes with the element <did>
-    * apeEAD does not include the element group m.phrase.basic for the element <unitid>, but only m.phrase.basic.norefs  
-    * apeEAD uses the elements <extptr> and <title> directly as sub-elements of <unitid>
-    * apeEAD does neither include the attribute group a.common, nor the attributes @label, @countrycode, @repositorycode, @identifier for the element <unitid>
-    * apeEAD uses the element <unitdate> only as #PCDATA and only with attributes @calendar, @era, @normal, and @encodinganalog
-    * apeEAD uses the element <unittitle> only with element group m.phrase.basic.norefs instead of m.phrase.basic and not with any other sub-elements
-    * apeEAD uses the element <unittitle> only with attributes @encodinganalog and @type
-    * apeEAD uses the element <origination> only with sub-elements <corpname>, <famname>, <persname>, and <name>, but without any formatting or linking sub-elements
-    * apeEAD does not include the attribute group a.common for the element <origination>
-    * apeEAD uses the element <repository> only with sub-elements <corpname>, <name>, <address>, and <extref>, but without any other formatting or linking sub-elements
-    * apeEAD does not include any attributes for the element <repository>
-    * apeEAD does not include the element group m.phrase.basic, nor the attribute group a.common, nor the attribute @label for the element <langmaterial>
-    * apeEAD uses the element <language> only as #PCDATA and does not include the attribute group a.common for the element <language>
-    * apeEAD does not include the element group m.phrase.basic, nor the element group m.access, nor the element <date>, nor the attribute group a.common, 
-      nor the attributes @label, @source, @rules for the element <physdesc>
-    * apeEAD uses the element <genreform> directly as sub-element of <physdesc>
-    * apeEAD uses the element <physfacet> only as #PCDATA and only with the attribute @type, but without any sub-elements or other attributes
-    * apeEAD uses the element <extent> only as #PCDATA and only with the attribute @unit, but without any sub-elements or other attributes
-    * apeEAD uses the element <dimensions> only as #PCDATA and only with attributes @type and @unit, but without any sub-elements or other attributes
-    * apeEAD uses the element <materialspec> only as #PCDATA without any sub-elements or attributes
-    * apeEAD uses the element <physloc> only as #PCDATA and only with the attribute @label, but without any sub-elements or other attributes
-    * apeEAD uses the element <container> only as #PCDATA and only with the attributes @type and @parent, but without any sub-elements or other attributes
-    * apeEAD uses the element <dao> only with the attribute group a.external.ptr
-    * apeEAD does not include the element <daodesc> nor the attribute a.common for the element <dao>
-    
-    #Sibling elements of <did>
-    * apeEAD does not allow any nesting of sibling elements of the element <did> (i.e. <accessrestrict>, <accruals>, <acqinfo>, <altformavail>, <appraisal>,
-      <arrangement>, <bibliography>, <bioghist>, <controlaccess>, <custodhist>, <fileplan>, <odd>, <originalsloc>, <otherfindaid>, <phystech>, <prefercite>, 
-      <processinfo>, <relatedmaterial>, <scopecontent>, <separatedmaterial>, <userestrict>) within themselves or within each other
-    * apeEAD only uses <head>, <p>, <list>, and <table> as sub-elements of sibling elements of the element <did>
-      * In addition to the above (<head>, <p>, <list>, and table>), apeEAD uses the element <dao> as a sub-element of the elements <bioghist> and <scopecontent>
-      * In addition to the above (<head>, <p>, <list>, and table>), apeEAD uses the element <bibref> as sub-element of the element <bibliography>
-      * In addition to the above (<head>, <p>, <list>, and table>), apeEAD uses the element group m.access as sub-elements of the element <controlaccess>
-      * More restrictively than the above, apeEAD only uses <head> and <p> for the element <phystech>
-    * apeEAD does not include <address>, <chronlist>, or <note>, nor <blockquote> as sub-elements of sibling elements of the element <did>
-    * apeEAD only uses the attribute @encodinganalog for sibling elements of the element <did>
-      * In addition to the above, apeEAD uses the attribute @type for the element <userestrict>
-      * More restrictively than the above, apeEAD does not use any attributes with the element <fileplan>
-    * apeEAD does not include the element <bibref> as sub-element of <otherfindaid>
-    * apeEAD does not include the element <archref> as sub-element of <relatedmaterial>
-    
-    #Elements of group m.access
-    * apeEAD uses the elements <corpname>, <famname>, <name>, and <persname> only as #PCDATA and only with the attribute @authfilenumber, but 
-      without any other sub-elements or attributes
-    * apeEAD uses the elements <occupcation>, <subject>, <genreform>, and <function> only as #PCDATA without any sub-elements or attributes
-    * apeEAD uses the element <title> directly as part of the element group m.access instead of m.access.title
-    * apeEAD uses the element <title> only as #PCDATA without any sub-elements or attributes
-    * apeEAD uses the element <geogname> only as #PCDATA without any sub-elements or attributes
-        
-    #Formatting and linking elements
-    * apeEAD uses the element <head> only as #PCDATA and without any attributes
-    * apeEAD uses only the elements <emph>, <lb>, <abbr>, <expan> and <extref> as sub-elements of the element <p>
-    * apeEAD does neither include m.data nor other m.refs sub-elements for the element <p>
-    * apeEAD does neither include element group m.inter, nor element <blockquote> for the element <p>
-    * apeEAD does not include the attribute group a.common for the element <p>
-    * apeEAD uses the element <list> only with sub-elements <head> and <item> and only with attributes @type and @numeration
-    * apeEAD only uses the values "marked" and "ordered" for the attribute @type for the element <list>
-    * apeEAD only uses the value "arabic" for the attribute @numeration for the element <list>
-    * apeEAD does not include the elements <listhead> or <defitem> as sub-elements of the element <list>
-    * apeEAD only includes the elements <emph>, <lb>, <list> and <extref> as sub-elements of the element <item>, but no other sub-elements nor any attributes
-    * apeEAD does not include any attributes for the element <table> 
-    * apeEAD only includes the attribute @cols for the element <tgroup> 
-    * apeEAD only includes the attributes @colnum and @colname for the element <colspec> 
-    * apeEAD does not include any attributes for the element <tbody>
-    * apeEAD does not include any attributes for the element <thead>
-    * apeEAD does not include any attributes for the element <row>
-    * apeEAD uses the element <entry> only as #PCDATA without any sub-elements or attributes
-    * apeEAD uses the element <emph> only with the attribute @render and only with the values of "bold" and "italic"
-    * apeEAD uses the element <extref> only as #PCDATA and only with the attribute group xlink:simpleLink, but without any sub-elements or other attributes
-    * apeEAD does not include the attribute group a.common for the element <extptr>
-    * apeEAD uses the element <bibref> only with sub-elements <imprint>, <name>, and <title> and only with the attribute group xlink:simpleLink 
-    * apeEAD uses the element group m.phrase.basic.norefs only with the sub-elements of group m.render instead of the sub-elements of group m.phrase.bare
-    * apeEAD uses the attribute group a.external.ptr only with attribute group xlink:simpleLink
-    
-    #Other elements
-    * apeEAD uses the element <imprint> only with sub-elements <publisher>, <geogname>, and <date>, but without any other sub-elements and without any attributes
-    * apeEAD uses the element <publisher> only as #PCDATA and only with the attribute @encodinganalog
-    * apeEAD uses the element <date> only as #PCDATA and only with attributes @calendar, @era, @normal, and @encodinganalog
-    * apeEAD uses the elements <abbr> and <expan> without the attribute group a.common
-    * apeEAD uses the element <address> without the attribute group a.common
-    * apeEAD uses the element <addressline> only as #PCDATA and without any attributes
-    * apeEAD uses the element <note> only with sub-element <p>, but without any other sub-elements
-    * apeEAD does not include the attributes @show nor @actuate for the element <note>
+    Version: 1.2.4
+    Date: 20150101
+    Editor: APEnet project
 
-    #Excluded element groups and elements
-    * apeEAD does not include the element group m.refs as it only uses <extref>, <bibref>, and <title>, and only uses the latter two in specific contexts
-    * apeEAD does not include the element group m.data, but uses its sub-elements with the exception of <num> separately in different contexts
-    * apeEAD does not include the element group m.phrase.bare as it only uses <extptr>
-    * apeEAD does not include the element group m.phrase.basic
-    * apeEAD does not include the element group m.phrase.plus
-    * apeEAD does not include the element group m.inter.noquote, but uses the elements <list> and <table> directly as part of the element group m.blocks
-    * apeEAD does not include the element group m.inter as it does not include <blockquote>
-    * apeEAD does not include the element group m.desc.full
-    * apeEAD does not include the element group m.para.content
-    * apeEAD does not include the element group m.para.content.norefs
-    * apeEAD does not include the element group extended.els, nor the element group extended
-    * apeEAD does not include the element <editionstmt>
-    * apeEAD does not include the element <notestmt>
-    * apeEAD does not include the element <sponsor>
-    * apeEAD does not include the element <frontmatter>
-    * apeEAD does not include the element <titlepage>
-    * apeEAD does not include the element <descgrp>
-    * apeEAD does not include the element <runner>
-    * apeEAD does not include the element <div>
-    * apeEAD does not include the element <daodesc>
-    * apeEAD does not include the element <daogrp>
-    * apeEAD does not include the element <daoloc>
-    * apeEAD does not include the element <abstract>
-    * apeEAD does not include the element <subarea>
-    * apeEAD does not include the element <index>
-    * apeEAD does not include the element <indexentry>
-    * apeEAD does not include the element <namegrp>
-    * apeEAD does not include the element <ptrgrp>
-    * apeEAD does not include the elements <c01> through to <c12>
-    * apeEAD does not include the element <chronlist>
-    * apeEAD does not include the element <chronitem>
-    * apeEAD does not include the element <event>
-    * apeEAD does not include the element <eventgrp>
-    * apeEAD does not include the element <defitem>
-    * apeEAD does not include the element <label>
-    * apeEAD does not include the element <listhead>
-    * apeEAD does neither include the element <head01> nor the element <head02>
-    * apeEAD does not include the element <blockquote>
-    * apeEAD does not include the element <linkgrp>
-    * apeEAD does not include the element <ref>
-    * apeEAD does not include the element <archref>
-    * apeEAD does not include the element <ptr>
-    * apeEAD does not include the element <ptrloc>
-    * apeEAD does not include the element <extptrloc>
-    * apeEAD does not include the element <refloc>
-    * apeEAD does not include the element <extrefloc>
-    * apeEAD does not include the element <resource>
-    * apeEAD does not include the element <arc>
-    * apeEAD does not include the element <num>
-    * apeEAD does not include the element <edition>
-    * apeEAD does not include the element <bibseries>
-        
-    #Excluded attribute groups, attributes and attribute values
-    * apeEAD does not include the attribute group am.dsctab.tpattern
-    * apeEAD does not include the attribute group a.access, but only uses @authfilenumber
-    * apeEAD does not include the attribute group a.internal.ptr
-    * apeEAD does not include the attribute group a.loc.internal.ptr
-    * apeEAD does not include the attribute group a.loc.external.ptr
-    * apeEAD does not include the attribute @repositorycode
-    * apeEAD does not include the attribute @altrender
-    * apeEAD does not include the attribute @source
-    * apeEAD does not include the attribute @rules
-    * apeEAD does not include the attribute @entityref
-    * apeEAD does not include the attribute @xpointer
-    * apeEAD does not include the attribute @target
-    * apeEAD does not include the attribute @datechar
-    * apeEAD does not include the attribute @certainty
-    * apeEAD does not include the attribute @show
-    * apeEAD does not include the attribute @actuate
-    * apeEAD does not include the attribute @altrender in the attribute group a.common
-    * apeEAD does not include the attributes @entityref or @xpointer in the attribute group a.external.ptr
-    * apeEAD does not include the attribute group am.dsctab.tpattern in the attribute group a.desc.c.level
-    * apeEAD does not include the definitions of "yesorno", nor of "av.level" nor of "av.render" for attribute values
-    
-    
-    Revision history (as per apeEAD Schema, Version 2.0, 20190524):
-    
-    * Re-establish element <notestmt> as sub-element of the element <filedesc>
-    * Re-establish element <p> as sub-element of the element <publicationstmt>
-    * Re-establish element <note> as sub-element of the element <p>
-    * Re-establish attribute group a.common for the element <note>
-    * Re-establish attribute @authfilenumber for the elements <function>, <genreform>, <geogname>, <occupation>, <subject>, and <title>
-    * Re-establish attribute @id for the element <container>
-    * Re-establish the element <ref>
-      ** apeEAD uses the element <ref> only with sub-elements <emph>, <lb>, <abbr>, and <expan>, but without any other sub-elements
-      ** apeEAD does not include the attribute group a.common for the element <ref>
-    * Re-establish the element <ref> as sub-element of elements <container>, <dimensions>, <materialspec>, <physdesc>, <physfacet>, <physloc>, 
-      <unitid>, <unittitle>, <entry>, <item>, and <p>
-    * Re-establish the attribute group a.internal.ptr
-      ** apeEAD does not include the attribute @xpointer in the attribute group a.internal.ptr
-    
+    This version of the apeEAD schema has been written from the official 2002 schema to accommodate the needs of the APEnet project.
 -->
-
+<xs:schema elementFormDefault="qualified" targetNamespace="urn:isbn:1-931666-22-9"
+           xmlns="urn:isbn:1-931666-22-9" xmlns:xlink="http://www.w3.org/1999/xlink"
+           xmlns:xs="http://www.w3.org/2001/XMLSchema">
+    <xs:import namespace="http://www.w3.org/1999/xlink" schemaLocation="http://www.loc.gov/standards/xlink/xlink.xsd"/>
     <xs:attributeGroup name="am.date.normal">
         <xs:attribute name="normal">
             <xs:simpleType>
@@ -1051,18 +821,10 @@
             <xs:element name="title" type="title"/>
         </xs:choice>
     </xs:group>
-    <xs:complexType mixed="true" name="occupation">
-        <xs:attribute name="authfilenumber"/>
-    </xs:complexType>
-    <xs:complexType mixed="true" name="subject">
-        <xs:attribute name="authfilenumber"/>
-    </xs:complexType>
-    <xs:complexType mixed="true" name="genreform">
-        <xs:attribute name="authfilenumber"/>
-    </xs:complexType>
-    <xs:complexType mixed="true" name="function">
-        <xs:attribute name="authfilenumber"/>
-    </xs:complexType>
+    <xs:complexType mixed="true" name="occupation" />
+    <xs:complexType mixed="true" name="subject" />
+    <xs:complexType mixed="true" name="genreform" />
+    <xs:complexType mixed="true" name="function" />
     <xs:group name="m.phrase.basic.norefs">
         <xs:choice>
             <xs:group ref="m.render"/>
@@ -1093,34 +855,26 @@
     </xs:complexType>
     <xs:complexType mixed="true" name="physdesc">
         <xs:choice maxOccurs="unbounded" minOccurs="0">
-            <xs:element name="genreform" type="genreform"/>
+            <xs:element name="genreform" type="genreform" />
             <xs:element name="dimensions" type="dimensions"/>
             <xs:element name="physfacet" type="physfacet"/>
             <xs:element name="extent" type="extent"/>
-            <xs:element name="ref" type="ref"/>
         </xs:choice>
         <xs:attribute name="encodinganalog"/>
     </xs:complexType>
     <xs:complexType mixed="true" name="physfacet">
-        <xs:choice maxOccurs="unbounded" minOccurs="0">
-            <xs:element name="ref" type="ref"/>
-        </xs:choice>
         <xs:attribute name="type"/>
     </xs:complexType>
     <xs:complexType mixed="true" name="extent">
         <xs:attribute name="unit"/>
     </xs:complexType>
     <xs:complexType mixed="true" name="physloc">
-        <xs:choice maxOccurs="unbounded" minOccurs="0">
-            <xs:element name="ref" type="ref"/>
-        </xs:choice>
         <xs:attribute name="label"/>
     </xs:complexType>
     <xs:complexType mixed="true" name="unitid">
         <xs:choice>
             <xs:group maxOccurs="unbounded" minOccurs="0" ref="m.phrase.basic.norefs"/>
             <xs:element minOccurs="0" name="extptr" type="extptr"/>
-            <xs:element maxOccurs="unbounded" minOccurs="0" name="ref" type="ref"/>
             <xs:element name="title" type="title"/>
         </xs:choice>
         <xs:attribute name="type"/>
@@ -1133,24 +887,20 @@
             <xs:element maxOccurs="unbounded" minOccurs="0" name="fileplan" type="fileplan"/>
             <xs:element maxOccurs="unbounded" minOccurs="0" name="originalsloc" type="originalsloc"/>
             <xs:element maxOccurs="unbounded" minOccurs="0" name="prefercite" type="prefercite"/>
-            <xs:element maxOccurs="unbounded" minOccurs="0" name="separatedmaterial"
-                type="separatedmaterial"/>
-            <xs:element maxOccurs="unbounded" minOccurs="0" name="accessrestrict"
-                type="accessrestrict"/>
+            <xs:element maxOccurs="unbounded" minOccurs="0" name="separatedmaterial" type="separatedmaterial"/>
+            <xs:element maxOccurs="unbounded" minOccurs="0" name="accessrestrict" type="accessrestrict"/>
             <xs:element maxOccurs="unbounded" minOccurs="0" name="accruals" type="accruals"/>
             <xs:element maxOccurs="unbounded" minOccurs="0" name="altformavail" type="altformavail"/>
             <xs:element maxOccurs="unbounded" minOccurs="0" name="appraisal" type="appraisal"/>
             <xs:element maxOccurs="unbounded" minOccurs="0" name="bibliography" type="bibliography"/>
             <xs:element maxOccurs="unbounded" minOccurs="0" name="bioghist" type="bioghist"/>
-            <xs:element maxOccurs="unbounded" minOccurs="0" name="controlaccess"
-                type="controlaccess"/>
+            <xs:element maxOccurs="unbounded" minOccurs="0" name="controlaccess" type="controlaccess"/>
             <xs:element maxOccurs="unbounded" minOccurs="0" name="custodhist" type="custodhist"/>
             <xs:element maxOccurs="unbounded" minOccurs="0" name="odd" type="odd"/>
             <xs:element maxOccurs="unbounded" minOccurs="0" name="otherfindaid" type="otherfindaid"/>
             <xs:element maxOccurs="unbounded" minOccurs="0" name="phystech" type="phystech"/>
             <xs:element maxOccurs="unbounded" minOccurs="0" name="processinfo" type="processinfo"/>
-            <xs:element maxOccurs="unbounded" minOccurs="0" name="relatedmaterial"
-                type="relatedmaterial"/>
+            <xs:element maxOccurs="unbounded" minOccurs="0" name="relatedmaterial" type="relatedmaterial"/>
             <xs:element maxOccurs="unbounded" minOccurs="0" name="scopecontent" type="scopecontent"/>
             <xs:element maxOccurs="unbounded" minOccurs="0" name="userestrict" type="userestrict"/>
         </xs:choice>
@@ -1167,7 +917,7 @@
             <xs:simpleType>
                 <xs:restriction base="xs:token">
                     <xs:enumeration value="external"/>
-                    <xs:enumeration value="internal"/>
+                    <xs:enumeration value="internal"/><!--Or maybe only external...-->
                 </xs:restriction>
             </xs:simpleType>
         </xs:attribute>
@@ -1196,11 +946,6 @@
             </xs:simpleType>
         </xs:attribute>
         <xs:attributeGroup ref="a.desc.base"/>
-    </xs:attributeGroup>
-    <xs:attributeGroup name="a.internal.ptr">
-        <xs:attribute name="target" type="xs:IDREF"/>
-        <!-- <xs:attribute name="xpointer"/> -->
-        <xs:attributeGroup ref="xlink:simpleLink"/>
     </xs:attributeGroup>
     <xs:attributeGroup name="a.external.ptr">
         <xs:attributeGroup ref="xlink:simpleLink"/>
@@ -1365,9 +1110,6 @@
         </xs:choice>
     </xs:group>
     <xs:complexType mixed="true" name="dimensions">
-        <xs:choice maxOccurs="unbounded" minOccurs="0">
-            <xs:element name="ref" type="ref"/>
-        </xs:choice>
         <xs:attribute name="type"/>
         <xs:attribute name="unit"/>
     </xs:complexType>
@@ -1398,7 +1140,6 @@
     <xs:complexType mixed="true" name="unittitle">
         <xs:choice maxOccurs="unbounded" minOccurs="0">
             <xs:group ref="m.phrase.basic.norefs"/>
-            <xs:element name="ref" type="ref"/>
         </xs:choice>
         <xs:attribute name="encodinganalog"/>
         <xs:attribute name="type"/>
@@ -1518,11 +1259,7 @@
         </xs:attribute>
         <xs:attribute name="encodinganalog"/>
     </xs:complexType>
-    <xs:complexType mixed="true" name="materialspec">
-        <xs:choice maxOccurs="unbounded" minOccurs="0">
-            <xs:element name="ref" type="ref"/>
-        </xs:choice>
-    </xs:complexType>
+    <xs:complexType mixed="true" name="materialspec" />
     <xs:complexType name="accruals">
         <xs:sequence>
             <xs:element minOccurs="0" name="head" type="head"/>
@@ -1717,18 +1454,18 @@
         </xs:sequence>
         <xs:attribute name="encodinganalog"/>
     </xs:complexType>
-    <!--<xs:complexType name="index"> 
-            <xs:choice>
-                <xs:element maxOccurs="unbounded" name="indexentry" type="indexentry"/>
-            </xs:choice>
-        </xs:complexType>-->
-    <!--<xs:complexType name="indexentry">
-            <xs:sequence>
-                <xs:choice>
-                    <xs:group ref="m.access"/>
-                </xs:choice>
-            </xs:sequence>
-        </xs:complexType>-->
+    <!--<xs:complexType name="index">-->
+    <!--<xs:choice>-->
+    <!--<xs:element maxOccurs="unbounded" name="indexentry" type="indexentry"/>-->
+    <!--</xs:choice>-->
+    <!--</xs:complexType>-->
+    <!--<xs:complexType name="indexentry">-->
+    <!--<xs:sequence>-->
+    <!--<xs:choice>-->
+    <!--<xs:group ref="m.access"/>-->
+    <!--</xs:choice>-->
+    <!--</xs:sequence>-->
+    <!--</xs:complexType>-->
     <xs:complexType name="dsc">
         <xs:sequence minOccurs="0">
             <xs:sequence>
@@ -1736,7 +1473,7 @@
                 <xs:group maxOccurs="unbounded" minOccurs="0" ref="m.blocks"/>
             </xs:sequence>
             <xs:choice maxOccurs="unbounded">
-                <xs:element name="c" type="c.level"/>
+                <xs:element name="c" type="c.level" />
             </xs:choice>
         </xs:sequence>
         <xs:attribute name="type">
@@ -1752,40 +1489,33 @@
             <xs:element name="did" type="did"/>
             <xs:group maxOccurs="unbounded" minOccurs="0" ref="m.desc.base"/>
             <xs:choice maxOccurs="unbounded" minOccurs="0">
-                <xs:element name="c" type="c.level"/>
+                <xs:element name="c" type="c.level" />
             </xs:choice>
         </xs:sequence>
         <xs:attributeGroup ref="a.desc.c.level"/>
     </xs:complexType>
-    <xs:complexType mixed="true" name="head"/>
+    <xs:complexType mixed="true" name="head" />
     <xs:complexType mixed="true" name="p">
         <xs:choice maxOccurs="unbounded" minOccurs="0">
             <xs:group maxOccurs="unbounded" minOccurs="0" ref="m.phrase.basic.norefs"/>
             <xs:element maxOccurs="unbounded" minOccurs="0" name="extref" type="extref"/>
-            <xs:element maxOccurs="unbounded" minOccurs="0" name="ref" type="ref"/>
             <xs:element maxOccurs="unbounded" minOccurs="0" name="note" type="note"/>
         </xs:choice>
     </xs:complexType>
     <xs:complexType mixed="true" name="container">
-        <xs:choice maxOccurs="unbounded" minOccurs="0">
-            <xs:element name="ref" type="ref"/>
-        </xs:choice>
         <xs:attribute name="type" type="xs:NMTOKEN"/>
-        <xs:attribute name="id" type="xs:ID"/>
         <xs:attribute name="parent" type="xs:IDREFS"/>
     </xs:complexType>
     <xs:complexType name="dao">
         <xs:attributeGroup ref="a.external.ptr"/>
     </xs:complexType>
-    <xs:complexType mixed="true" name="title">
-        <xs:attribute name="authfilenumber"/>
-    </xs:complexType>
-    <!--<xs:complexType mixed="true" name="archref">
-            <xs:choice maxOccurs="unbounded" minOccurs="0">
-                <xs:element name="dao" type="dao"/>
-            </xs:choice>
-            <xs:attributeGroup ref="xlink:simpleLink"/>
-        </xs:complexType>-->
+    <xs:complexType mixed="true" name="title" />
+    <!--<xs:complexType mixed="true" name="archref">-->
+    <!--<xs:choice maxOccurs="unbounded" minOccurs="0">-->
+    <!--<xs:element name="dao" type="dao"/>-->
+    <!--</xs:choice>-->
+    <!--<xs:attributeGroup ref="xlink:simpleLink"/>-->
+    <!--</xs:complexType>-->
     <xs:complexType mixed="true" name="bibref">
         <xs:choice maxOccurs="unbounded" minOccurs="0">
             <!--<xs:group ref="m.phrase.basic.norefs"/>-->
@@ -1806,20 +1536,18 @@
         <xs:attribute name="encodinganalog"/>
     </xs:complexType>
     <xs:complexType mixed="true" name="corpname">
-        <xs:attribute name="authfilenumber"/>
+        <xs:attribute name="authfilenumber" />
     </xs:complexType>
     <xs:complexType mixed="true" name="famname">
-        <xs:attribute name="authfilenumber"/>
+        <xs:attribute name="authfilenumber" />
     </xs:complexType>
     <xs:complexType mixed="true" name="name">
-        <xs:attribute name="authfilenumber"/>
+        <xs:attribute name="authfilenumber" />
     </xs:complexType>
     <xs:complexType mixed="true" name="persname">
-        <xs:attribute name="authfilenumber"/>
+        <xs:attribute name="authfilenumber" />
     </xs:complexType>
-    <xs:complexType mixed="true" name="geogname">
-        <xs:attribute name="authfilenumber"/>
-    </xs:complexType>
+    <xs:complexType mixed="true" name="geogname" />
     <xs:complexType mixed="true" name="date">
         <xs:attributeGroup ref="am.dates.era"/>
         <xs:attributeGroup ref="am.dates.calendar"/>
@@ -1862,10 +1590,7 @@
         </xs:attribute>
     </xs:complexType>
     <xs:complexType mixed="true" name="item">
-        <xs:choice maxOccurs="unbounded" minOccurs="0">
-            <xs:group maxOccurs="unbounded" minOccurs="0" ref="group.item"/>
-            <xs:element maxOccurs="unbounded" minOccurs="0" name="ref" type="ref"/>
-        </xs:choice>
+        <xs:group maxOccurs="unbounded" minOccurs="0" ref="group.item"/>
     </xs:complexType>
     <xs:group name="group.item">
         <xs:choice>
@@ -1912,30 +1637,14 @@
             <xs:element maxOccurs="unbounded" name="entry" type="entry"/>
         </xs:sequence>
     </xs:complexType>
-    <xs:complexType mixed="true" name="entry">
-        <xs:choice maxOccurs="unbounded" minOccurs="0">
-            <xs:element name="ref" type="ref"/>
-        </xs:choice>
-    </xs:complexType>
+    <xs:complexType mixed="true" name="entry" />
     <xs:complexType name="note">
         <xs:choice>
             <xs:element maxOccurs="unbounded" name="p" type="p"/>
         </xs:choice>
-        <xs:attributeGroup ref="a.common"/>
         <xs:attribute name="type"/>
         <xs:attribute name="label"/>
         <xs:attribute name="encodinganalog"/>
-    </xs:complexType>
-    <xs:complexType mixed="true" name="ref">
-        <xs:choice maxOccurs="unbounded" minOccurs="0">
-            <xs:group ref="m.phrase.basic.norefs"/>
-            <!-- <xs:element name="bibref" type="bibref"/>
-            <xs:element name="title" type="title"/>
-            <xs:element name="extref" type="extref"/>
-            <xs:element name="archref" type="archref"/> -->
-        </xs:choice>
-        <!-- <xs:attributeGroup ref="a.common"/> -->
-        <xs:attributeGroup ref="a.internal.ptr"/>
     </xs:complexType>
     <xs:complexType mixed="true" name="extref">
         <xs:attributeGroup ref="xlink:simpleLink"/>
