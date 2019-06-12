@@ -2370,7 +2370,6 @@
 
     <xsl:template match="bibliography/p" mode="copy level">
         <xsl:if test="local-name()!='list' and local-name()!='table'">
-            <xsl:if test="not(descendant::archref)">
             <p>
                 <xsl:apply-templates select="node() except (list | table | bibref)" mode="#current"/>
                 <xsl:for-each select="bibref">
@@ -2378,7 +2377,6 @@
                     <lb></lb>
                 </xsl:for-each>
             </p>
-            </xsl:if>
         </xsl:if>
         <xsl:for-each select="list">
             <xsl:call-template name="p_list_bibliography"/>
@@ -2387,6 +2385,22 @@
             <xsl:call-template name="table_all"/>
         </xsl:for-each>
     </xsl:template>
+    
+    <!-- bibliography/p/archref -->
+    <xsl:template match="bibliography/p/archref" mode="copy level nested">
+        <xsl:choose>
+            <xsl:when test="@*:href!=''">
+                <extref>
+                    <xsl:attribute name="xlink:href" select="ape:checkLink(@*:href)"/>
+                    <xsl:value-of select="text()"/>
+                </extref>
+            </xsl:when>
+            <xsl:otherwise>
+                <xsl:value-of select="text()"/>
+            </xsl:otherwise>
+        </xsl:choose>        
+    </xsl:template>
+    
 
     <xsl:template match="bibliography/bibref" mode="copy level">
         <bibref>
