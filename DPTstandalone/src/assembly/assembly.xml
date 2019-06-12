@@ -49,11 +49,6 @@
             <filtered>false</filtered>
         </fileSet>
         <fileSet>
-            <outputDirectory>.</outputDirectory>
-            <directory>src/assembly/files/documentation</directory>
-            <filtered>false</filtered>
-        </fileSet>
-        <fileSet>
             <outputDirectory>xsl</outputDirectory>
             <directory>../xsl/</directory>
             <filtered>false</filtered>
