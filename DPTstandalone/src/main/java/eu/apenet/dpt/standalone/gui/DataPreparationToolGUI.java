@@ -413,7 +413,7 @@ public class DataPreparationToolGUI extends JFrame {
         editionWindowItem.setText(labels.getString("edition"));
 
         helpMenu.setText(labels.getString("about"));
-        internetApexItem.setText(labels.getString("projectWebsite"));
+        internetApexItem.setText(labels.getString("websiteManuals"));
 
 //        validateSelectionBtn.setText(labels.getString("validateSelected"));
 //        convertEdmSelectionBtn.setText(labels.getString("convertEseSelectionBtn"));
@@ -828,7 +828,7 @@ public class DataPreparationToolGUI extends JFrame {
 
         internetApexItem.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent actionEvent) {
-                BareBonesBrowserLaunch.openURL("http://www.apex-project.eu/");
+                BareBonesBrowserLaunch.openURL("http://wiki.archivesportaleurope.net/index.php/Main_Page");
             }
         });
 
