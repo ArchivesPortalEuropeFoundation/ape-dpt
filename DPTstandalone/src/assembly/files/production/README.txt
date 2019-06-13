@@ -18,5 +18,4 @@ You need Java JDK 5 (1.5) or later to run the tool.
 
 4. MANUAL OF THE TOOL
 
-The manual is available on the project website document section under WP4.
-Its name is "APE_data_preparation_tool_vx.x.pdf".
+The manual is available on the Archives Portal Europe Wiki at http://wiki.archivesportaleurope.net/index.php/Main_Page.
