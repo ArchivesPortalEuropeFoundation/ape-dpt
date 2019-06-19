@@ -1,13 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
     EAG 2012 Schema
-    Version: 0.3
-    Date: 20140625
-    Editor: APEx project (www.apex-project.eu)
+    Version: 0.4
+    Date: 20190619
+    Editor: Archives Portal Europe Foundation, Working Group on Standards
 -->
 <!--
     Change log:
 
+    20190619
+    0.4     - made <street> optional as sub-element of <location>
+
+    20140625
     0.3     - added new elements <actingMaintenanceForGroup>, <actingMaintenance>, <placeEntry>
             - restricted @localType for <nameEntry> to values "authorized", "alternative", "preferred", "abbreviation", "other"
             - added elements <useDates>, <authorizedForm>, <aternativeForm> to element <nameEntry>
@@ -628,7 +632,7 @@
             <xs:element name="secondem" type="secondem" minOccurs="0"/>
             <xs:element name="municipalityPostalcode" type="municipalityPostalcode"/>
             <xs:element name="localentity" type="localentity" minOccurs="0"/>
-            <xs:element name="street" type="street"/>
+            <xs:element name="street" type="street" minOccurs="0"/>
         </xs:sequence>
         <xs:attribute name="localType" use="required">
             <xs:simpleType>
