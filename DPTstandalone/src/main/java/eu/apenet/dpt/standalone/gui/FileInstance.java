@@ -47,7 +47,6 @@ public class FileInstance {
     private Operation lastOperation;
     private boolean isXml;
     Map<String, Map<String, Boolean>> xmlQualityErrors;
-    private boolean isMinimalConverted;
 
     public FileInstance(File file, boolean checkXml, String defaultXsl, String defaultXsd) {
         if(checkXml && !isXml)
@@ -66,7 +65,6 @@ public class FileInstance {
         this.validationSchema = Utilities.getXsdObjectFromName(defaultXsd);
         this.fileType = FileType.EAD;
         this.lastOperation = Operation.NONE;
-        this.isMinimalConverted = true;
     }
 
     @Override
@@ -213,14 +211,6 @@ public class FileInstance {
 
     public void setXmlQualityErrors(Map<String, Map<String, Boolean>> xmlQualityErrors) {
         this.xmlQualityErrors = xmlQualityErrors;
-    }
-
-    public boolean isMinimalConverted() {
-        return isMinimalConverted;
-    }
-
-    public void setMinimalConverted(boolean isMinimalConverted) {
-        this.isMinimalConverted = isMinimalConverted;
     }
 
     public File getFile() {
