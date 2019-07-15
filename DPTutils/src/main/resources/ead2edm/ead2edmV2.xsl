@@ -46,6 +46,7 @@
     <xsl:param name="europeana_type"/>
     <xsl:param name="useISODates"/>
     <xsl:param name="language"/>
+    <xsl:param name="inheritUnittitle"/>
     <xsl:param name="useExistingDaoRole"/>
     <xsl:param name="useExistingRepository"/>
     <xsl:param name="useExistingLanguage"/>
@@ -1244,18 +1245,18 @@
                     </xsl:choose>
 
                     <xsl:choose>
-                        <xsl:when test="$currentnode/did/unittitle != '' and $parentcnode/did/unittitle != '' and not($currentnode/c) and $hasDao">
+                        <xsl:when test="$inheritUnittitle = true() and $currentnode/did/unittitle != '' and $parentcnode/did/unittitle != '' and not($currentnode/c) and $hasDao">
                             <dc:title>
                                 <xsl:value-of select="$parentcnode/did/unittitle[1]"/> >>
                                     <xsl:value-of select="$currentnode/did/unittitle"/>
                             </dc:title>
                         </xsl:when>
-                        <xsl:when test="$currentnode/did/unittitle != '' and $parentcnode/did/unittitle = '' and not($currentnode/c) and $hasDao">
+                        <xsl:when test="$inheritUnittitle = true() and $currentnode/did/unittitle != '' and $parentcnode/did/unittitle = '' and not($currentnode/c) and $hasDao">
                             <dc:title>
                                 <xsl:value-of select="$currentnode/did/unittitle"/>
                             </dc:title>
                         </xsl:when>
-                        <xsl:when test="$currentnode/did/unittitle = '' and $parentcnode/did/unittitle != '' and not($currentnode/c) and $hasDao">
+                        <xsl:when test="$inheritUnittitle = true() and $currentnode/did/unittitle = '' and $parentcnode/did/unittitle != '' and not($currentnode/c) and $hasDao">
                             <dc:title>
                                 <xsl:value-of select="$parentcnode/did/unittitle[1]"/>"/>
                             </dc:title>

@@ -20,7 +20,7 @@ public class EdmConfig implements Serializable {
     private File htmlSourcesDir;
 //    private boolean inheritElementsFromFileLevel;
 //    private boolean inheritOrigination;
-//    private boolean inheritUnittitle;
+    private boolean inheritUnittitle;
 //    private boolean inheritLanguage;
 //    private boolean inheritRightsInfo;
     private String rights;
@@ -113,13 +113,13 @@ public class EdmConfig implements Serializable {
 //        this.inheritLanguage = inheritLanguage;
 //    }
 //
-//    public boolean isInheritUnittitle() {
-//        return inheritUnittitle;
-//    }
-//
-//    public void setInheritUnittitle(boolean inheritUnittitle) {
-//        this.inheritUnittitle = inheritUnittitle;
-//    }
+    public boolean isInheritUnittitle() {
+        return inheritUnittitle;
+    }
+
+    public void setInheritUnittitle(boolean inheritUnittitle) {
+        this.inheritUnittitle = inheritUnittitle;
+    }
 //
 //    public boolean isInheritRightsInfo() {
 //        return inheritRightsInfo;
@@ -315,7 +315,7 @@ public class EdmConfig implements Serializable {
 //            properties.put("inheritElementsFromFileLevel",
 //                    getString(new Boolean(isInheritElementsFromFileLevel()).toString()));
 //            properties.put("inheritOrigination", getString(new Boolean(isInheritOrigination()).toString()));
-//            properties.put("inheritUnittitle", getString(new Boolean(isInheritUnittitle()).toString()));
+            properties.put("inheritUnittitle", getString(new Boolean(isInheritUnittitle()).toString()));
 //            properties.put("inheritLanguage", getString(new Boolean(isInheritLanguage()).toString()));
 //            properties.put("inheritRightsInfo", getString(new Boolean(isInheritRightsInfo()).toString()));
             properties.put("useExistingDaoRole", getString(new Boolean(isUseExistingDaoRole()).toString()));

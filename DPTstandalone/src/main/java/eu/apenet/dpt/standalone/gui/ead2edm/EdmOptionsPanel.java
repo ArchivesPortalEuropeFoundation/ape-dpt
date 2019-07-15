@@ -135,6 +135,7 @@ public class EdmOptionsPanel extends JPanel {
     private ButtonGroup landingPageButtonGroup;
     private JTextArea landingPageTextArea;
     private ButtonGroup typeGroup;
+    private ButtonGroup concatUnittitleButtonGroup;
     private ButtonGroup licenseGroup;
     private ButtonGroup creativeCommonsBtnGrp;
     private JComboBox creativeCommonsComboBox;
@@ -175,7 +176,7 @@ public class EdmOptionsPanel extends JPanel {
         JPanel europeanaRightsPanel = new EuropeanaRightsPanel();
         JPanel emptyPanel = new JPanel();
 
-        JPanel formPanel = new JPanel(new GridLayout(9, 1));
+        JPanel formPanel = new JPanel(new GridLayout(10, 1));
 
         JPanel extraLicenseCardLayoutPanel = new JPanel(new CardLayout());
         extraLicenseCardLayoutPanel.add(creativeCommonsPanel, CREATIVE_COMMONS);
@@ -225,6 +226,23 @@ public class EdmOptionsPanel extends JPanel {
             sourceOfFondsTitleGroup.add(radioButton);
             panel.add(radioButton);
         }
+        formPanel.add(panel);
+        
+        panel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        
+        concatUnittitleButtonGroup = new ButtonGroup();
+
+        panel.add(new Label(this.labels.getString("edm.generalOptionsForm.concatUnittitles.header")));
+        radioButton = new JRadioButton(this.labels.getString("ese.yes"));
+        radioButton.setActionCommand(YES);
+        concatUnittitleButtonGroup.add(radioButton);
+        panel.add(radioButton);
+        radioButton = new JRadioButton(this.labels.getString("ese.no"));
+        radioButton.setActionCommand(NO);
+        radioButton.setSelected(true);
+        concatUnittitleButtonGroup.add(radioButton);
+        panel.add(radioButton);
+
         formPanel.add(panel);
 
         panel = new JPanel(new GridLayout(2, 2));
@@ -541,6 +559,20 @@ public class EdmOptionsPanel extends JPanel {
                     config.setIdSource(EdmOptionsPanel.UNITID);
                 } else if (EdmOptionsPanel.CID.equals(btn.getActionCommand())) {
                     config.setIdSource(EdmOptionsPanel.CID);
+                }
+                found = true;
+            }
+        }
+
+        enumeration = concatUnittitleButtonGroup.getElements();
+        found = false;
+        while (!found && enumeration.hasMoreElements()) {
+            AbstractButton btn = enumeration.nextElement();
+            if (btn.isSelected()) {
+                if (EdmOptionsPanel.YES.equals(btn.getActionCommand())) {
+                    config.setInheritUnittitle(true);
+                } else if (EdmOptionsPanel.NO.equals(btn.getActionCommand())) {
+                    config.setInheritUnittitle(false);
                 }
                 found = true;
             }
