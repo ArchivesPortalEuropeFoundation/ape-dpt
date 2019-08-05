@@ -451,6 +451,10 @@ public class EagInstitutionPanel extends EagPanels {
             builder.addLabel(labels.getString("eag2012.commons.openingHours.link"), cc.xy(1, rowNb));
             builder.add(textFieldWithLanguage.getExtraField(), cc.xy(3, rowNb));
             setNextRow();
+            if ((StringUtils.isNotBlank(textFieldWithLanguage.getExtraField().getText()) && !StringUtils.startsWithAny(textFieldWithLanguage.getExtraField().getText(), webPrefixes))) {
+                builder.add(createErrorLabel(labels.getString("eag2012.errors.webpageProtocol")), cc.xy(1, rowNb));
+                setNextRow();
+            }
         }
         if (errors.contains("openingHoursTfs")) {
             builder.add(createErrorLabel(labels.getString("eag2012.errors.openingHours")), cc.xy(1, rowNb));
@@ -1026,6 +1030,11 @@ public class EagInstitutionPanel extends EagPanels {
                         opening.setContent(textFieldWithLanguage.getTextValue());
                         opening.setLang(textFieldWithLanguage.getLanguage());
                         opening.setHref(textFieldWithLanguage.getExtraValue());
+                        if (StringUtils.isNotEmpty(textFieldWithLanguage.getExtraValue().trim())) {
+                            if (!StringUtils.startsWithAny(textFieldWithLanguage.getExtraValue(), webPrefixes)) {
+                                errors.add("webpageProtocol");
+                            }
+                        }
                         repository.getTimetable().getOpening().add(opening);
                         openingTimeExists = true;
                     }
