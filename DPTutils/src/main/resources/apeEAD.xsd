@@ -32,7 +32,7 @@
     * apeEAD does not include the attribute @relatedencoding for the element <ead>
     
     #Element <eadheader> and sub-elements
-    * apeEAD does not include the attribute group a.common, nor the attribute @findingaidstatus, nor the attribute @encodinganalog for the element <eadheader> 
+    * apeEAD does not include the attribute group a.common, nor the attribute @findaidstatus, nor the attribute @encodinganalog for the element <eadheader> 
     * apeEAD does not include attributes @publicid, @urn or @encodinganalog for the element <eadid>
     * apeEAD does not include the elements <editionstmt> or <notestmt>, nor the attribute group a.common, nor the attribute @encodinganalog for the element 
       <filedesc>
