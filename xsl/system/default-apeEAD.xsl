@@ -3299,6 +3299,9 @@
             <xsl:if test="@parent">
                 <xsl:attribute name="parent" select="@parent"/>
             </xsl:if>
+            <xsl:if test="@id">
+                <xsl:attribute name="id" select="@id"/>
+            </xsl:if>
             <xsl:apply-templates select="node()" mode="#current"/>
         </container>
     </xsl:template>
