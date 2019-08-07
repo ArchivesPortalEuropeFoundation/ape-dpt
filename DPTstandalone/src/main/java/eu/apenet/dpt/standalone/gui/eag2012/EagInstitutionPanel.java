@@ -1029,8 +1029,8 @@ public class EagInstitutionPanel extends EagPanels {
                         Opening opening = new Opening();
                         opening.setContent(textFieldWithLanguage.getTextValue());
                         opening.setLang(textFieldWithLanguage.getLanguage());
-                        opening.setHref(textFieldWithLanguage.getExtraValue());
                         if (StringUtils.isNotEmpty(textFieldWithLanguage.getExtraValue().trim())) {
+                            opening.setHref(textFieldWithLanguage.getExtraValue());
                             if (!StringUtils.startsWithAny(textFieldWithLanguage.getExtraValue(), webPrefixes)) {
                                 errors.add("webpageProtocol");
                             }

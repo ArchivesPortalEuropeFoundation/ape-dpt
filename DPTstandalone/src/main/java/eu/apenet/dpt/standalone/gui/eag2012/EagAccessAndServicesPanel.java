@@ -2938,8 +2938,8 @@ public class EagAccessAndServicesPanel extends EagPanels {
                         Opening opening = new Opening();
                         opening.setContent(textAreaWithLanguage.getTextValue());
                         opening.setLang(textAreaWithLanguage.getLanguage());
-                        opening.setHref(textAreaWithLanguage.getExtraValue());
                         if (StringUtils.isNotEmpty(textAreaWithLanguage.getExtraValue().trim())) {
+                            opening.setHref(textAreaWithLanguage.getExtraValue());
                             if (!StringUtils.startsWithAny(textAreaWithLanguage.getExtraValue(), webPrefixes)) {
                                 errors.add("webpageProtocol");
                             }
