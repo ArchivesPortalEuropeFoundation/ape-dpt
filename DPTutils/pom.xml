@@ -4,7 +4,7 @@
     <parent>
         <artifactId>DPT-project</artifactId>
         <groupId>eu.archivesportaleurope.dpt</groupId>
-        <version>2019-07</version>
+        <version>2019-08-SNAPSHOT</version>
         <relativePath>..</relativePath>
     </parent>
     <artifactId>DPTutils</artifactId>
