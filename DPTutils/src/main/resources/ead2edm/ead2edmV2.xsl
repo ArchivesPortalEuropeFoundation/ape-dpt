@@ -1488,7 +1488,7 @@
                 </edm:ProvidedCHO>
                 <xsl:choose>
                     <xsl:when test="$hasDao">
-                        <xsl:apply-templates select="did/dao[normalize-space(@xlink:href) != '']"
+                        <xsl:apply-templates select="did/dao[1][normalize-space(@xlink:href) != '']"
                             mode="webResource">
                             <xsl:with-param name="inheritedRightsInfo" select="$inheritedRightsInfo"
                             />
@@ -1873,14 +1873,14 @@
     <xsl:template match="did/dao[not(@xlink:title='thumbnail')]" mode="firstLink">
         <xsl:choose>
             <xsl:when test="@href">
-                <edm:isShownAt>
+                <edm:isShownBy>
                     <xsl:attribute name="rdf:resource" select="@href"/>
-                </edm:isShownAt>
+                </edm:isShownBy>
             </xsl:when>
             <xsl:when test="@xlink:href">
-                <edm:isShownAt>
+                <edm:isShownBy>
                     <xsl:attribute name="rdf:resource" select="@xlink:href"/>
-                </edm:isShownAt>
+                </edm:isShownBy>
             </xsl:when>
         </xsl:choose>
     </xsl:template>
