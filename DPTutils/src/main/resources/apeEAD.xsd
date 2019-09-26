@@ -1677,7 +1677,6 @@
             <xs:choice maxOccurs="unbounded">
                 <xs:group ref="m.blocks"/>
                 <xs:element name="bibref" type="bibref"/>
-                <xs:element name="bibliography" type="bibliography"/>
             </xs:choice>
         </xs:sequence>
         <xs:attribute name="encodinganalog"/>
