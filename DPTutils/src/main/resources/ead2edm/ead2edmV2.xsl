@@ -953,6 +953,11 @@
                             <edm:provider>
                                 <xsl:value-of select="$europeana_provider"/>
                             </edm:provider>
+                            <xsl:if test="$dc_rights and normalize-space($dc_rights) != ''">
+                                <dc:rights>
+                                    <xsl:value-of select="$dc_rights"/>
+                                </dc:rights>
+                            </xsl:if>
                             <xsl:choose>
                                 <xsl:when test="$useExistingRightsInfo = 'true'">
                                     <xsl:choose>
@@ -1919,6 +1924,11 @@
                     </xsl:otherwise>
                 </xsl:choose>
             </dc:description>
+            <xsl:if test="$dc_rights and normalize-space($dc_rights) != ''">
+                <dc:rights>
+                    <xsl:value-of select="$dc_rights"/>
+                </dc:rights>
+            </xsl:if>
             <xsl:choose>
                 <xsl:when test="$useExistingRightsInfo = &quot;true&quot;">
                     <xsl:choose>
