@@ -26,8 +26,16 @@ public final class EdmFileUtils {
 		String path = repoDirPath + SEPARATOR + getRelativeEADDirPath(countryISOname, aiId) + SEPARATOR + OUTPUT_DIR_NAME + SEPARATOR + OUTPUT_XML_DIR_NAME;
 		return new File(path);
 	}
+        
+        public static File getOutputEDMDir(String baseDir, String eadid) {
+            return new File(baseDir + SEPARATOR + eadid);
+        }
 
-	public static File getOutputHTMLDir(String repoDirPath, String countryISOname, int aiId) {
+	public static String getOutputEDMDirPath(String repoDirPath, String countryISOname, int aiId) {
+		return repoDirPath + SEPARATOR + getRelativeEADDirPath(countryISOname, aiId) + SEPARATOR + OUTPUT_DIR_NAME + SEPARATOR + OUTPUT_XML_DIR_NAME;
+	}
+        
+        public static File getOutputHTMLDir(String repoDirPath, String countryISOname, int aiId) {
 		String path = repoDirPath + SEPARATOR + getRelativeEADDirPath(countryISOname, aiId) + SEPARATOR + OUTPUT_DIR_NAME + SEPARATOR + OUTPUT_HTML_DIR_NAME;
 		return new File(path);
 	}

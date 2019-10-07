@@ -68,20 +68,20 @@ public class EdmConfig implements Serializable {
     }
 
     /**
-	 * @return the idSource
-	 */
-	public String getIdSource() {
-		return idSource;
-	}
+     * @return the idSource
+     */
+    public String getIdSource() {
+        return idSource;
+    }
 
-	/**
-	 * @param idSource the idSource to set
-	 */
-	public void setIdSource(String idSource) {
-		this.idSource = idSource;
-	}
+    /**
+     * @param idSource the idSource to set
+     */
+    public void setIdSource(String idSource) {
+        this.idSource = idSource;
+    }
 
-	public void setGenerateHtml(boolean generateHtml) {
+    public void setGenerateHtml(boolean generateHtml) {
         this.generateHtml = generateHtml;
     }
 
@@ -241,7 +241,6 @@ public class EdmConfig implements Serializable {
 //    public void setMinimalConversion(boolean minimalConversion) {
 //        this.minimalConversion = minimalConversion;
 //    }
-
     public String getEdmIdentifier() {
         return edmIdentifier;
     }
@@ -275,7 +274,7 @@ public class EdmConfig implements Serializable {
     }
 
     public String getLandingPage() {
-        if(landingPage == null){
+        if (landingPage == null) {
             landingPage = "ape";
         }
         return landingPage;
@@ -300,37 +299,37 @@ public class EdmConfig implements Serializable {
     public void setOutputBaseDirectory(String outputBaseDirectory) {
         this.outputBaseDirectory = outputBaseDirectory;
     }
-    
+
     public Properties getProperties() {
         if (properties == null) {
             properties = new Properties();
-            properties.put("europeana_provider", getString(getProvider()));
-            properties.put("europeana_dataprovider", getString(getDataProvider()));
-            properties.put("europeana_rights", getString(getRights()));
-            properties.put("dc_rights", getString(getRightsAdditionalInformation()));
-            properties.put("europeana_type", getString(getType()));
-            properties.put("idSource", getString(getIdSource()));
-            properties.put("useISODates", getString("false"));
-            properties.put("language", getString(getLanguage()));
+        properties.put("europeana_provider", getString(getProvider()));
+        properties.put("europeana_dataprovider", getString(getDataProvider()));
+        properties.put("europeana_rights", getString(getRights()));
+        properties.put("dc_rights", getString(getRightsAdditionalInformation()));
+        properties.put("europeana_type", getString(getType()));
+        properties.put("idSource", getString(getIdSource()));
+        properties.put("useISODates", getString("false"));
+        properties.put("language", getString(getLanguage()));
 //            properties.put("inheritElementsFromFileLevel",
 //                    getString(new Boolean(isInheritElementsFromFileLevel()).toString()));
 //            properties.put("inheritOrigination", getString(new Boolean(isInheritOrigination()).toString()));
-            properties.put("inheritUnittitle", getString(new Boolean(isInheritUnittitle()).toString()));
+        properties.put("inheritUnittitle", getString(new Boolean(isInheritUnittitle()).toString()));
 //            properties.put("inheritLanguage", getString(new Boolean(isInheritLanguage()).toString()));
 //            properties.put("inheritRightsInfo", getString(new Boolean(isInheritRightsInfo()).toString()));
-            properties.put("useExistingDaoRole", getString(new Boolean(isUseExistingDaoRole()).toString()));
-            properties.put("useExistingLanguage", getString(new Boolean(isUseExistingLanguage()).toString()));
-            properties.put("useExistingRepository", getString(new Boolean(isUseExistingRepository()).toString()));
-            properties.put("useExistingRightsInfo", getString(new Boolean(isUseExistingRightsInfo()).toString()));
+        properties.put("useExistingDaoRole", getString(new Boolean(isUseExistingDaoRole()).toString()));
+        properties.put("useExistingLanguage", getString(new Boolean(isUseExistingLanguage()).toString()));
+        properties.put("useExistingRepository", getString(new Boolean(isUseExistingRepository()).toString()));
+        properties.put("useExistingRightsInfo", getString(new Boolean(isUseExistingRightsInfo()).toString()));
 //            properties.put("minimalConversion", getString(new Boolean(isMinimalConversion()).toString()));
-            properties.put("edm_identifier", getString(getEdmIdentifier()));
-            properties.put("host", getString(getHost()));
-            String repCodeAfterReplacement = getString(getRepositoryCode()).replace('/', '_');
-            properties.put("repository_code", getString(repCodeAfterReplacement));
-            properties.put("xml_type_name", getString(getXmlTypeName()));
-            properties.put("landingPage", getString(getLandingPage()));
-            properties.put("useArchUnittitle", getString(new Boolean(isUseArchUnittitle()).toString()));
-            properties.put("outputBaseDirectory", getString(getOutputBaseDirectory()));
+        properties.put("edm_identifier", getString(getEdmIdentifier()));
+        properties.put("host", getString(getHost()));
+        String repCodeAfterReplacement = getString(getRepositoryCode()).replace('/', '_');
+        properties.put("repository_code", getString(repCodeAfterReplacement));
+        properties.put("xml_type_name", getString(getXmlTypeName()));
+        properties.put("landingPage", getString(getLandingPage()));
+        properties.put("useArchUnittitle", getString(new Boolean(isUseArchUnittitle()).toString()));
+        properties.put("outputBaseDirectory", getString(getOutputBaseDirectory()));
         }
         return properties;
     }
@@ -349,7 +348,7 @@ public class EdmConfig implements Serializable {
             return string;
         }
     }
-     
+
     public static File getQualityReportXSLTFile() {
         return new File("/ead2edm/edmQuality.xsl");
     }
