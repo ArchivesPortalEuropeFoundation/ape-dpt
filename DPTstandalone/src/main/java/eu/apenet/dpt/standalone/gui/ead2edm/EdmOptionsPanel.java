@@ -403,7 +403,7 @@ public class EdmOptionsPanel extends JPanel {
             formPanel.add(panel);
         } else {
             inheritLanguagePanel = new JPanel(new GridLayout(1, 3));
-            inheritLanguagePanel.add(new Label(labels.getString("ese.inheritLanguage") + ":" + "*"));
+            inheritLanguagePanel.add(new Label(labels.getString("ese.selectLanguage") + ":" + "*"));
 
             JPanel rbPanel = new JPanel(new GridLayout(1, 1));
             languageBoxPanel.setVisible(true);
