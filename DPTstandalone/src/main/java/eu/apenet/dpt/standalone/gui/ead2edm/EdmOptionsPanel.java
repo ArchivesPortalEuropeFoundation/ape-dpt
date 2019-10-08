@@ -1027,7 +1027,7 @@ public class EdmOptionsPanel extends JPanel {
             try {
                 RetrieveFromDb retrieveFromDb = new RetrieveFromDb();
                 String eadid = EAD2002Utils.retrieveEadid(selectedIndex.getAbsoluteFile());
-                String xmlOutputFolder = retrieveFromDb.retrieveDefaultSaveFolder() + eadid + "/";
+                String xmlOutputFolder = retrieveFromDb.retrieveDefaultSaveFolder() + convertToFilename(eadid) + "/";
                 String loc;
                 if (fileInstance.isConverted() || fileInstance.getLastOperation().equals(FileInstance.Operation.SAVE)) {
                     loc = fileInstance.getCurrentLocation();
@@ -1271,5 +1271,9 @@ public class EdmOptionsPanel extends JPanel {
                 dataProviderTextArea.setText(archdescRepository);
             }
         }
+    }
+    
+    private String convertToFilename(String name) {
+        return name.replaceAll("[^a-zA-Z0-9\\-\\.]", "_");
     }
 }
