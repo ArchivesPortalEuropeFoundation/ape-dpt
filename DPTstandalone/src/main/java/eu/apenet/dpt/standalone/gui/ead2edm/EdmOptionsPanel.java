@@ -131,7 +131,7 @@ public class EdmOptionsPanel extends JPanel {
     private JFrame parent;
     private APETabbedPane apeTabbedPane;
     private ButtonGroup cLevelIdSourceButtonGroup;
-    private ButtonGroup sourceOfFondsTitleGroup;
+    private ButtonGroup sourceOfFondsTitleButtonGroup;
     private ButtonGroup landingPageButtonGroup;
     private JTextArea landingPageTextArea;
     private ButtonGroup typeGroup;
@@ -209,7 +209,7 @@ public class EdmOptionsPanel extends JPanel {
         formPanel.add(panel);
 
         panel = new JPanel(new FlowLayout(FlowLayout.CENTER));
-        sourceOfFondsTitleGroup = new ButtonGroup();
+        sourceOfFondsTitleButtonGroup = new ButtonGroup();
 
         determineDaoInformation();
         panel.add(new Label(this.labels.getString("edm.generalOptionsForm.sourceOfFondsTitle")));
@@ -219,17 +219,17 @@ public class EdmOptionsPanel extends JPanel {
             radioButton = new JRadioButton(this.labels.getString("edm.generalOptionsForm.sourceOfFondsTitle.archdescUnittitle"));
             radioButton.setActionCommand(ARCHDESC_UNITTITLE);
             radioButton.setSelected(true);
-            sourceOfFondsTitleGroup.add(radioButton);
+            sourceOfFondsTitleButtonGroup.add(radioButton);
             panel.add(radioButton);
             radioButton = new JRadioButton(this.labels.getString("edm.generalOptionsForm.sourceOfFondsTitle.titlestmtTitleproper"));
             radioButton.setActionCommand(TITLESTMT_TITLEPROPER);
-            sourceOfFondsTitleGroup.add(radioButton);
+            sourceOfFondsTitleButtonGroup.add(radioButton);
             panel.add(radioButton);
         }
         formPanel.add(panel);
-        
+
         panel = new JPanel(new FlowLayout(FlowLayout.CENTER));
-        
+
         concatUnittitleButtonGroup = new ButtonGroup();
 
         panel.add(new Label(this.labels.getString("edm.generalOptionsForm.concatUnittitles.header")));
@@ -467,7 +467,7 @@ public class EdmOptionsPanel extends JPanel {
             }
         });
         mainLicensePanel.add(useExistingRightsInfoCheckbox);
-        
+
         mainLicensePanel.setBorder(BLACK_LINE);
         formPanel.add(mainLicensePanel);
 
@@ -559,6 +559,20 @@ public class EdmOptionsPanel extends JPanel {
                     config.setIdSource(EdmOptionsPanel.UNITID);
                 } else if (EdmOptionsPanel.CID.equals(btn.getActionCommand())) {
                     config.setIdSource(EdmOptionsPanel.CID);
+                }
+                found = true;
+            }
+        }
+
+        enumeration = sourceOfFondsTitleButtonGroup.getElements();
+        found = false;
+        while (!found && enumeration.hasMoreElements()) {
+            AbstractButton btn = enumeration.nextElement();
+            if (btn.isSelected()) {
+                if (ARCHDESC_UNITTITLE.equals(sourceOfFondsTitle)) {
+                    config.setUseArchUnittitle(true);
+                } else {
+                    config.setUseArchUnittitle(false);
                 }
                 found = true;
             }
@@ -671,12 +685,6 @@ public class EdmOptionsPanel extends JPanel {
             config.setRightsAdditionalInformation(additionalRightsTextArea.getText());
         }
 
-        if (ARCHDESC_UNITTITLE.equals(sourceOfFondsTitle)) {
-            config.setUseArchUnittitle(true);
-        } else {
-            config.setUseArchUnittitle(false);
-        }
-
         config.setOutputBaseDirectory(retrieveFromDb.retrieveDefaultSaveFolder());
 
         //EDM identifier used for OAI-PMH; not needed for DPT purposes, so set to empty string
@@ -748,17 +756,17 @@ public class EdmOptionsPanel extends JPanel {
         }
 
         if (!this.batch) {
-            if (sourceOfFondsTitleGroup.getSelection() == null) {
+            if (sourceOfFondsTitleButtonGroup.getSelection() == null) {
                 sourceOfFondsTitle = TITLESTMT_TITLEPROPER;
             } else {
-                if (sourceOfFondsTitleGroup.getSelection().getActionCommand().equals(ARCHDESC_UNITTITLE)) {
+                if (sourceOfFondsTitleButtonGroup.getSelection().getActionCommand().equals(ARCHDESC_UNITTITLE)) {
                     if (StringUtils.isBlank(ead2EdmInformation.getArchdescUnittitle())) {
                         if (StringUtils.isNotBlank(ead2EdmInformation.getTitlestmtTitleproper())) {
                             throw new Exception("no content available from archdesc/did/unittile");
                         }
                     }
                 }
-                if (sourceOfFondsTitleGroup.getSelection().getActionCommand().equals(TITLESTMT_TITLEPROPER)) {
+                if (sourceOfFondsTitleButtonGroup.getSelection().getActionCommand().equals(TITLESTMT_TITLEPROPER)) {
                     if (StringUtils.isBlank(ead2EdmInformation.getTitlestmtTitleproper())) {
                         if (StringUtils.isNotBlank(ead2EdmInformation.getArchdescUnittitle())) {
                             throw new Exception("no content available from titlestmt/titleproper");
@@ -1272,7 +1280,7 @@ public class EdmOptionsPanel extends JPanel {
             }
         }
     }
-    
+
     private String convertToFilename(String name) {
         return name.replaceAll("[^a-zA-Z0-9\\-\\.]", "_");
     }
