@@ -69,6 +69,11 @@
             <xsl:with-param name="input" select="normalize-space(/ead/eadheader/eadid)"/>
         </xsl:call-template>
     </xsl:variable>
+    <xsl:variable name="eadidFilenameEncoded">
+        <xsl:call-template name="filenameReplace">
+            <xsl:with-param name="input" select="normalize-space(/ead/eadheader/eadid)"/>
+        </xsl:call-template>
+    </xsl:variable>
     <!-- Key for detection of unitid duplicates -->
     <xsl:key name="unitids" match="unitid" use="text()"></xsl:key>
 
@@ -81,7 +86,7 @@
     </xsl:template>
 
     <xsl:template match="eadid">
-        <xsl:result-document href="{$outputBaseDirectory}/{.}/{.}.xml" xpath-default-namespace="urn:isbn:1-931666-22-9">
+        <xsl:result-document href="{$outputBaseDirectory}/{$eadidFilenameEncoded}/{$eadidFilenameEncoded}.xml" xpath-default-namespace="urn:isbn:1-931666-22-9">
             <rdf:RDF xmlns:adms="http://www.w3.org/ns/adms#"
                 xmlns:cc="http://creativecommons.org/ns#"
                 xmlns:crm="http://www.cidoc-crm.org/rdfs/cidoc_crm_v5.0.2_english_label.rdfs#"
@@ -228,8 +233,9 @@
                         </xsl:otherwise>
                     </xsl:choose>
 
+                    <dc:title><xsl:value-of select="$useArchUnittitle"/></dc:title>
                     <xsl:choose>
-                        <xsl:when test="$useArchUnittitle = &quot;true&quot;">
+                        <xsl:when test="$useArchUnittitle = true()">
                             <xsl:choose>
                                 <xsl:when test="/ead/archdesc/did/unittitle != ''">
                                     <dc:title>
@@ -473,14 +479,6 @@
                 <xsl:if test="./did/langmaterial">
                     <xsl:call-template name="language">
                         <xsl:with-param name="langmaterials" select="./did/langmaterial"/>
-                    </xsl:call-template>
-                </xsl:if>
-            </xsl:with-param>
-            <xsl:with-param name="inheritedCustodhists">
-                <xsl:if test="./custodhist[descendant::text() != '']">
-                    <xsl:call-template name="custodhistOnlyOne">
-                        <xsl:with-param name="custodhists" select="./custodhist[descendant::text() != '']"/>
-                        <xsl:with-param name="parentnode" select="."/>
                     </xsl:call-template>
                 </xsl:if>
             </xsl:with-param>
@@ -816,13 +814,18 @@
                 </xsl:otherwise>
             </xsl:choose>
         </xsl:variable>
+        <xsl:variable name="identifierFilename">
+            <xsl:call-template name="filenameReplace">
+                <xsl:with-param name="input" select="$identifier"/>
+            </xsl:call-template>
+        </xsl:variable>
         <xsl:variable name="hasDao" select="if(did/dao[normalize-space(@xlink:href) != '']) then true() else false()" />
         
         <!-- for each dao found, create a set of classes -->
         <!--<xsl:for-each select="did/dao[not(@xlink:title=&quot;thumbnail&quot;)]">-->
 
         <!-- ACTUAL CONVERSION BEGINS HERE -->
-        <xsl:result-document href="{$outputBaseDirectory}/{/ead/eadheader/eadid}/{$identifier}.xml">
+        <xsl:result-document href="{$outputBaseDirectory}/{$eadidFilenameEncoded}/{$identifierFilename}.xml">
             <rdf:RDF xmlns:adms="http://www.w3.org/ns/adms#"
                 xmlns:cc="http://creativecommons.org/ns#"
                 xmlns:crm="http://www.cidoc-crm.org/rdfs/cidoc_crm_v5.0.2_english_label.rdfs#"
@@ -887,7 +890,7 @@
                             <xsl:apply-templates
                                 select="did/dao[not(@xlink:title = 'thumbnail')][1]"
                                 mode="firstLink"/>
-                            <xsl:choose>
+                            <!--<xsl:choose>
                                 <xsl:when test="did/dao[@xlink:title = 'thumbnail']">
                                     <xsl:apply-templates
                                         select="did/dao[@xlink:title = 'thumbnail'][1]"
@@ -899,11 +902,9 @@
                                             test="did/dao[not(@xlink:title = 'thumbnail')][1]/@xlink:role">
                                             <edm:object>
                                                 <xsl:attribute name="rdf:resource">
-                                                  <xsl:call-template name="generateThumbnailLink">
-                                                  <xsl:with-param name="role"
-                                                  select="did/dao[not(@xlink:title = 'thumbnail')][1]/@xlink:role"
+                                                  <xsl:value-of
+                                                      select="did/dao[not(@xlink:title = 'thumbnail')]"
                                                   />
-                                                  </xsl:call-template>
                                                 </xsl:attribute>
                                             </edm:object>
                                         </xsl:when>
@@ -911,10 +912,9 @@
                                             <xsl:if test="fn:string-length($europeana_type) > 0">
                                                 <edm:object>
                                                   <xsl:attribute name="rdf:resource">
-                                                  <xsl:call-template name="generateThumbnailLink">
-                                                  <xsl:with-param name="role"
-                                                  select="$europeana_type"/>
-                                                  </xsl:call-template>
+                                                  <xsl:value-of
+                                                      select="did/dao[not(@xlink:title = 'thumbnail')]"
+                                                  />
                                                   </xsl:attribute>
                                                 </edm:object>
                                             </xsl:if>
@@ -926,10 +926,9 @@
                                         <xsl:when test="fn:string-length($europeana_type) > 0">
                                             <edm:object>
                                                 <xsl:attribute name="rdf:resource">
-                                                  <xsl:call-template name="generateThumbnailLink">
-                                                  <xsl:with-param name="role"
-                                                  select="$europeana_type"/>
-                                                  </xsl:call-template>
+                                                  <xsl:value-of
+                                                      select="did/dao[not(@xlink:title = 'thumbnail')]"
+                                                  />
                                                 </xsl:attribute>
                                             </edm:object>
                                         </xsl:when>
@@ -938,18 +937,16 @@
                                                 test="did/dao[not(@xlink:title = 'thumbnail')][1]/@xlink:role">
                                                 <edm:object>
                                                   <xsl:attribute name="rdf:resource">
-                                                  <xsl:call-template name="generateThumbnailLink">
-                                                  <xsl:with-param name="role"
-                                                  select="did/dao[not(@xlink:title = 'thumbnail')][1]/@xlink:role"
+                                                  <xsl:value-of
+                                                      select="did/dao[not(@xlink:title = 'thumbnail')]"
                                                   />
-                                                  </xsl:call-template>
                                                   </xsl:attribute>
                                                 </edm:object>
                                             </xsl:if>
                                         </xsl:otherwise>
                                     </xsl:choose>
                                 </xsl:otherwise>
-                            </xsl:choose>
+                            </xsl:choose>-->
                             <edm:provider>
                                 <xsl:value-of select="$europeana_provider"/>
                             </edm:provider>
@@ -1115,12 +1112,12 @@
                             <xsl:copy-of select="$inheritedMaterialspecs"/>
                         </xsl:when>
                     </xsl:choose>
-                    <xsl:if
+                    <!--<xsl:if
                         test="$currentnode/did/materialspec[text() != '']">
                         <dc:format>
                             <xsl:value-of select="$currentnode/did/materialspec[text() != '']"/>
                         </dc:format>
-                    </xsl:if>
+                    </xsl:if>-->
                     <xsl:choose>
                         <xsl:when test="$currentnode/relatedmaterial[text() != '']">
                             <xsl:apply-templates select="$currentnode/relatedmaterial[text() != '']"
@@ -1681,11 +1678,10 @@
         <xsl:for-each select="$custodhists">
             <xsl:variable name="content">
                 <xsl:apply-templates select="head" />
-                <xsl:for-each select="p">
+                <xsl:for-each select="p | list/item | table">
                     <xsl:apply-templates />
                     <xsl:if test="position() &lt; last()"><xsl:text> </xsl:text></xsl:if>
                 </xsl:for-each>
-                <xsl:apply-templates select="*[not(local-name()='p') and not(local-name()='head')]"/>
             </xsl:variable>
             <dcterms:provenance>
                 <xsl:value-of select="fn:replace(normalize-space($content), '[\n\t\r]', ' ')"/>
@@ -1695,6 +1691,16 @@
     <xsl:template name="custodhistOnlyOne">
         <xsl:param name="custodhists"/>
         <xsl:param name="parentnode"/>
+        <xsl:variable name="needsLinkToEadUrl">
+            <xsl:choose>
+                <xsl:when test="exists($custodhists/head[2]) or exists($custodhists/p[2])">
+                    <xsl:value-of select="true()"/>
+                </xsl:when>
+                <xsl:otherwise>
+                    <xsl:value-of select="false()"/>
+                </xsl:otherwise>
+            </xsl:choose>
+        </xsl:variable>
         <xsl:for-each select="$custodhists">
             <xsl:variable name="content">
                 <xsl:apply-templates select="head[1] | p[1]"/>
@@ -1702,21 +1708,22 @@
             <dcterms:provenance>
                 <xsl:value-of select="fn:replace(normalize-space($content), '[\n\t\r]', ' ')"/>
             </dcterms:provenance>
-            <xsl:if test="(count($parentnode/custodhist/head) > 1) or (count($parentnode/custodhist/p) > 1)">
-                <dcterms:provenance>
-                    <xsl:attribute name="rdf:resource">
-                        <xsl:choose>
-                            <xsl:when test="/ead/eadheader/eadid/@url">
-                                <xsl:value-of select="/ead/eadheader/eadid/@url"/>
-                            </xsl:when>
-                            <xsl:otherwise>
-                                <xsl:value-of select="concat($id_base, normalize-space(/ead/eadheader/eadid))"/>
-                            </xsl:otherwise>
-                        </xsl:choose>
-                    </xsl:attribute>
-                </dcterms:provenance>
-            </xsl:if>
         </xsl:for-each>
+        <xsl:if test="$needsLinkToEadUrl = true()">
+            <dcterms:provenance>
+                <xsl:attribute name="rdf:resource">
+                    <xsl:choose>
+                        <xsl:when test="/ead/eadheader/eadid/@url">
+                            <xsl:value-of select="/ead/eadheader/eadid/@url"/>
+                        </xsl:when>
+                        <xsl:otherwise>
+                            <xsl:value-of
+                                select="concat($id_base, normalize-space(/ead/eadheader/eadid))"/>
+                        </xsl:otherwise>
+                    </xsl:choose>
+                </xsl:attribute>
+            </dcterms:provenance>
+        </xsl:if>
     </xsl:template>
     <xsl:template name="detectFirstUnitid">
         <xsl:param name="positionInDocument"/>
@@ -1750,7 +1757,7 @@
             </xsl:otherwise>
         </xsl:choose>
     </xsl:template>
-    <xsl:template name="generateThumbnailLink">
+<!--    <xsl:template name="generateThumbnailLink">
         <xsl:param name="role"/>
         <xsl:choose>
             <xsl:when test="&quot;TEXT&quot; eq fn:string($role)">
@@ -1784,7 +1791,7 @@
                 </xsl:call-template>
             </xsl:otherwise>
         </xsl:choose>
-    </xsl:template>
+    </xsl:template>-->
     <xsl:template name="language">
         <xsl:param name="langmaterials"/>
         <xsl:for-each select="$langmaterials/language/@langcode">
@@ -1840,6 +1847,22 @@
             </xsl:otherwise>
         </xsl:choose>
     </xsl:template>
+    <xsl:template name="filenameReplace">
+        <xsl:param name="input"/>
+        <xsl:choose>
+            <xsl:when test="contains($input, '+') or contains($input, '/') or contains($input, ':') or contains($input, '*') or contains($input, '&amp;') or contains($input, ',') or contains($input, '&lt;') or contains($input, '&gt;')
+                or contains($input, '~') or contains($input, '[') or contains($input, ']') or contains($input, ' ') or contains($input, '%') or contains($input, '@') or contains($input, '&quot;') or contains($input, '$')
+                or contains($input, '=') or contains($input, '#') or contains($input, '^') or contains($input, '(') or contains($input, ')') or contains($input, '!') or contains($input, ';') or contains($input, '\')">
+                <xsl:variable name="replaceResult1" select="replace(replace(replace(replace(replace(replace(replace(replace($input, '\+', '_'), '&#47;', '_'), ':', '_'), '\*', '_'), '&amp;', '_'), ',', '_'), '&lt;', '_'), '&gt;', '_')"/>
+                <xsl:variable name="replaceResult2" select="replace(replace(replace(replace(replace(replace(replace(replace($replaceResult1, '~', '_'), '\[', '_'), '\]', '_'), ' ', '_'), '%', '_'), '@', '_'), '&quot;', '_'), '\$', '_')"/>
+                <xsl:variable name="replaceResult3" select="replace(replace(replace(replace(replace(replace(replace(replace($replaceResult2, '=', '_'), '#', '_'), '\^', '_'), '\(', '_'), '\)', '_'), '!', '_'), ';', '_'), '\\', '_')"/>
+                <xsl:value-of select="$replaceResult3"/>
+            </xsl:when>
+            <xsl:otherwise>
+                <xsl:value-of select="$input"/>
+            </xsl:otherwise>
+        </xsl:choose>
+    </xsl:template>
     
     <xsl:template match="abbr|emph|expan|extref">
         <xsl:text> </xsl:text>
@@ -1881,11 +1904,17 @@
                 <edm:isShownBy>
                     <xsl:attribute name="rdf:resource" select="@href"/>
                 </edm:isShownBy>
+                <edm:object>
+                    <xsl:attribute name="rdf:resource" select="@href"/>
+                </edm:object>
             </xsl:when>
             <xsl:when test="@xlink:href">
                 <edm:isShownBy>
                     <xsl:attribute name="rdf:resource" select="@xlink:href"/>
                 </edm:isShownBy>
+                <edm:object>
+                    <xsl:attribute name="rdf:resource" select="@xlink:href"/>
+                </edm:object>
             </xsl:when>
         </xsl:choose>
     </xsl:template>
@@ -1974,7 +2003,10 @@
                     </xsl:choose>
                 </xsl:when>
                 <xsl:otherwise>
-                    <xsl:choose>
+                    <xsl:if test="./@xlink:role">
+                        <xsl:value-of select="did/dao[not(@xlink:title = 'thumbnail')][1]"/>
+                    </xsl:if>
+                    <!--<xsl:choose>
                         <xsl:when test="fn:string-length($europeana_type) > 0">
                             <xsl:call-template name="generateThumbnailLink">
                                 <xsl:with-param name="role" select="$europeana_type"/>
@@ -1987,7 +2019,7 @@
                                 </xsl:call-template>
                             </xsl:if>
                         </xsl:otherwise>
-                    </xsl:choose>
+                    </xsl:choose>-->
                 </xsl:otherwise>
             </xsl:choose>
         </xsl:variable>
@@ -2003,7 +2035,10 @@
             <xsl:otherwise>
                 <edm:object>
                     <xsl:attribute name="rdf:resource">
-                        <xsl:choose>
+                        <xsl:if test="./@xlink:role">
+                            <xsl:value-of select="did/dao[not(@xlink:title = 'thumbnail')][1]"/>
+                        </xsl:if>
+                        <!--<xsl:choose>
                             <xsl:when test="fn:string-length($europeana_type) > 0">
                                 <xsl:call-template name="generateThumbnailLink">
                                     <xsl:with-param name="role" select="$europeana_type"/>
@@ -2016,16 +2051,26 @@
                                     </xsl:call-template>
                                 </xsl:if>
                             </xsl:otherwise>
-                        </xsl:choose>
+                        </xsl:choose>-->
                     </xsl:attribute>
                 </edm:object>
             </xsl:otherwise>
         </xsl:choose>
     </xsl:template>
+    <xsl:template match="entry">
+        <xsl:if test="normalize-space(node()) != ''">
+            <xsl:value-of select="node()"/>
+        </xsl:if>
+    </xsl:template>
     <xsl:template match="head">
         <xsl:if test="normalize-space(node()) != ''">
             <xsl:value-of select="node()"/>
             <xsl:text>: </xsl:text>
+        </xsl:if>
+    </xsl:template>
+    <xsl:template match="item">
+        <xsl:if test="normalize-space(node()) != ''">
+            <xsl:value-of select="node()"/>
         </xsl:if>
     </xsl:template>
     <xsl:template match="lb">
@@ -2064,9 +2109,10 @@
     </xsl:template>
     <xsl:template match="scopecontent">
         <xsl:variable name="content">
-            <xsl:for-each select="*">
-                <xsl:apply-templates/>
-                <xsl:if test="position() &lt; last()"><text> </text></xsl:if>
+            <xsl:apply-templates select="head" />
+            <xsl:for-each select="p | list/item | table">
+                <xsl:apply-templates />
+                <xsl:if test="position() &lt; last()"><xsl:text> </xsl:text></xsl:if>
             </xsl:for-each>
         </xsl:variable>
         <xsl:if test="fn:replace(normalize-space($content), '[\n\t\r]', '') != ''">
@@ -2188,6 +2234,13 @@
                 </dcterms:created>
             </xsl:matching-substring>
         </xsl:analyze-string>
+    </xsl:template>
+    
+    <xsl:template match="list | table | tgroup | tbody | row">
+        <xsl:for-each select="*">
+            <xsl:apply-templates />
+            <xsl:if test="position() &lt; last() and normalize-space(.) != ''"><xsl:text> </xsl:text></xsl:if>
+        </xsl:for-each>
     </xsl:template>
     
     <xsl:template match="bibref/imprint" />
