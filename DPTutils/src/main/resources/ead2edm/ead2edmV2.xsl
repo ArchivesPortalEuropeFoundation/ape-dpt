@@ -361,9 +361,9 @@
                         </dcterms:extent>
                     </xsl:if>
                     <xsl:if
-                        test="/ead/archdesc/dsc/descendant::dao[normalize-space(@xlink:href) != '']">
+                        test="/ead/archdesc/dsc/descendant::dao[normalize-space(@xlink:href) != '' and not(@xlink:title='thumbnail')]">
                         <xsl:for-each
-                            select="/ead/archdesc/dsc/descendant::c[did/dao[normalize-space(@xlink:href) != '']]">
+                            select="/ead/archdesc/dsc/descendant::c[did/dao[normalize-space(@xlink:href) != '' and not(@xlink:title='thumbnail')]]">
                             <xsl:variable name="currentCPosition">
                                 <xsl:call-template name="number">
                                     <xsl:with-param name="node" select="."/>
@@ -709,7 +709,7 @@
         </xsl:variable>
 
         <!-- CREATE LEVEL INFORMATION IF C OR DESCENDANT OF C HAS DAO WITH NON-EMPTY LINK-->
-        <xsl:if test="did/dao[normalize-space(@xlink:href) != '']">
+        <xsl:if test="did/dao[normalize-space(@xlink:href) != '' and not(@xlink:title='thumbnail')]">
             <xsl:call-template name="addRecord">
                 <xsl:with-param name="currentnode" select="."/>
                 <xsl:with-param name="inheritedRepository" select="$updatedInheritedRepository"/>
@@ -819,7 +819,7 @@
                 <xsl:with-param name="input" select="$identifier"/>
             </xsl:call-template>
         </xsl:variable>
-        <xsl:variable name="hasDao" select="if(did/dao[normalize-space(@xlink:href) != '']) then true() else false()" />
+        <xsl:variable name="hasDao" select="if(did/dao[normalize-space(@xlink:href) != '' and not(@xlink:title='thumbnail')]) then true() else false()" />
         
         <!-- for each dao found, create a set of classes -->
         <!--<xsl:for-each select="did/dao[not(@xlink:title=&quot;thumbnail&quot;)]">-->
