@@ -1219,7 +1219,29 @@
                             </xsl:if>
                         </xsl:otherwise>
                     </xsl:choose>
-
+                    
+                    <!-- relatedmaterial -->
+                    <xsl:choose>
+                        <xsl:when test="$currentnode/relatedmaterial[descendant::text() != '']">
+                            <xsl:call-template name="relatedmaterial">
+                                <xsl:with-param name="relatedmaterials"
+                                    select="$currentnode/relatedmaterial[descendant::text() != '']"/>
+                            </xsl:call-template>
+                        </xsl:when>
+                        <xsl:when test="$parentcnode/relatedmaterial[descendant::text() != '']">
+                            <xsl:call-template name="relatedmaterialOnlyOne">
+                                <xsl:with-param name="relatedmaterials"
+                                    select="$parentcnode/relatedmaterial[descendant::text() != '']"/>
+                                <xsl:with-param name="parentnode" select="$parentcnode"/>
+                            </xsl:call-template>
+                        </xsl:when>
+                        <xsl:otherwise>
+                            <xsl:if test="fn:string-length($inheritedRelatedmaterial) > 0">
+                                <xsl:copy-of select="$inheritedRelatedmaterial"/>
+                            </xsl:if>
+                        </xsl:otherwise>
+                    </xsl:choose>
+                    
                     <xsl:choose>
                         <xsl:when test="$currentnode/altformavail[text() != '']">
                             <xsl:call-template name="altformavail">
@@ -1831,6 +1853,58 @@
             <xsl:value-of select="fn:replace(normalize-space($content), '[\n\t\r]', '')"/>
         </edm:dataProvider>
     </xsl:template>
+    <xsl:template name="relatedmaterial">
+        <xsl:param name="relatedmaterials"/>
+        <xsl:for-each select="$relatedmaterials">
+            <xsl:variable name="content">
+                <xsl:apply-templates select="head" />
+                <xsl:for-each select="p | list/item | table">
+                    <xsl:apply-templates />
+                    <xsl:if test="position() &lt; last()"><xsl:text> </xsl:text></xsl:if>
+                </xsl:for-each>
+            </xsl:variable>
+            <dc:relation>
+                <xsl:value-of select="fn:replace(normalize-space($content), '[\n\t\r]', ' ')"/>
+            </dc:relation>
+        </xsl:for-each>
+    </xsl:template>
+    <xsl:template name="relatedmaterialOnlyOne">
+        <xsl:param name="relatedmaterials"/>
+        <xsl:param name="parentnode"/>
+        <xsl:variable name="needsLinkToEadUrl">
+            <xsl:choose>
+                <xsl:when test="exists($relatedmaterials/head[2]) or exists($relatedmaterials/p[2])">
+                    <xsl:value-of select="true()"/>
+                </xsl:when>
+                <xsl:otherwise>
+                    <xsl:value-of select="false()"/>
+                </xsl:otherwise>
+            </xsl:choose>
+        </xsl:variable>
+        <xsl:for-each select="$relatedmaterials">
+            <xsl:variable name="content">
+                <xsl:apply-templates select="head[1] | p[1]"/>
+            </xsl:variable>
+            <dc:relation>
+                <xsl:value-of select="fn:replace(normalize-space($content), '[\n\t\r]', ' ')"/>
+            </dc:relation>
+        </xsl:for-each>
+        <xsl:if test="$needsLinkToEadUrl = true()">
+            <dc:relation>
+                <xsl:attribute name="rdf:resource">
+                    <xsl:choose>
+                        <xsl:when test="/ead/eadheader/eadid/@url">
+                            <xsl:value-of select="/ead/eadheader/eadid/@url"/>
+                        </xsl:when>
+                        <xsl:otherwise>
+                            <xsl:value-of
+                                select="concat($id_base, normalize-space(/ead/eadheader/eadid))"/>
+                        </xsl:otherwise>
+                    </xsl:choose>
+                </xsl:attribute>
+            </dc:relation>
+        </xsl:if>
+    </xsl:template>
     <xsl:template name="simpleReplace">
         <xsl:param name="input"/>
         <xsl:choose>
@@ -2090,14 +2164,6 @@
         <p>
             <xsl:value-of select="fn:replace(normalize-space($content), '[\n\t\r]', ' ')"/>
         </p>
-    </xsl:template>
-    <xsl:template match="relatedmaterial">
-        <xsl:variable name="content">
-            <xsl:apply-templates/>
-        </xsl:variable>
-        <dc:relation>
-            <xsl:value-of select="fn:replace(normalize-space($content), '[\n\t\r]', '')"/>
-        </dc:relation>
     </xsl:template>
     <xsl:template match="repository">
         <xsl:variable name="content">
