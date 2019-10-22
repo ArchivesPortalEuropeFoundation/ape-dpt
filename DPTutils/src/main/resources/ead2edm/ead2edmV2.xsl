@@ -335,7 +335,9 @@
                         <xsl:otherwise>
                             <xsl:if test="not(/ead/archdesc/controlaccess/*/text())">
                                 <dc:type>
-                                    <xsl:value-of select="'Archival material'"/>
+                                    <xsl:attribute name="rdf:about">
+                                        <xsl:text>http://vocab.getty.edu/aat/300379505</xsl:text>
+                                    </xsl:attribute>
                                 </dc:type>
                             </xsl:if>
                         </xsl:otherwise>
@@ -1137,7 +1139,9 @@
                         <xsl:otherwise>
                             <xsl:if test="not($currentnode/controlaccess/*/text()) and not($inheritedControlaccesses/*/text())">
                                 <dc:type>
-                                    <xsl:value-of select="'Archival material'"/>
+                                    <xsl:attribute name="rdf:about">
+                                        <xsl:text>http://vocab.getty.edu/aat/300379505</xsl:text>
+                                    </xsl:attribute>
                                 </dc:type>
                             </xsl:if>
                         </xsl:otherwise>
