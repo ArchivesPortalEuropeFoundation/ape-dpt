@@ -77,8 +77,6 @@ import eu.apenet.dpt.utils.util.Ead2EdmInformation;
 import eu.apenet.dpt.utils.util.extendxsl.EdmQualityCheckerCall;
 import java.io.IOException;
 import java.util.Arrays;
-import java.util.EnumSet;
-import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.Set;
 import java.util.concurrent.Callable;
@@ -577,7 +575,7 @@ public class EdmOptionsPanel extends JPanel {
         while (!found && enumeration.hasMoreElements()) {
             AbstractButton btn = enumeration.nextElement();
             if (btn.isSelected()) {
-                if (ARCHDESC_UNITTITLE.equals(sourceOfFondsTitle)) {
+                if (ARCHDESC_UNITTITLE.equals(btn.getActionCommand())) {
                     config.setUseArchUnittitle(true);
                 } else {
                     config.setUseArchUnittitle(false);
