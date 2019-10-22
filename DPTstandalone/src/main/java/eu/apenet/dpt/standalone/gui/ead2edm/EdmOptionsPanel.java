@@ -77,6 +77,10 @@ import eu.apenet.dpt.utils.util.Ead2EdmInformation;
 import eu.apenet.dpt.utils.util.extendxsl.EdmQualityCheckerCall;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.EnumSet;
+import java.util.Iterator;
+import java.util.LinkedHashSet;
+import java.util.Set;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
@@ -137,7 +141,6 @@ public class EdmOptionsPanel extends JPanel {
     private ButtonGroup typeGroup;
     private ButtonGroup concatUnittitleButtonGroup;
     private ButtonGroup licenseGroup;
-    private ButtonGroup creativeCommonsBtnGrp;
     private JComboBox creativeCommonsComboBox;
     private JComboBox europeanaRightsComboBox;
     private JTextArea dataProviderTextArea;
@@ -156,6 +159,11 @@ public class EdmOptionsPanel extends JPanel {
     private JPanel languageBoxPanel = new LanguageBoxPanel();
     private String sourceOfFondsTitle = ARCHDESC_UNITTITLE;
     private JPanel inheritLanguagePanel;
+    private JCheckBox ccRemixingCheckBox;
+    private JCheckBox ccProhibitCheckBox;
+    private JCheckBox ccShareCheckBox;
+
+        
 
     public EdmOptionsPanel(ResourceBundle labels, DataPreparationToolGUI dataPreparationToolGUI, JFrame parent, APETabbedPane apeTabbedPane, boolean batch) {
         super(new BorderLayout());
@@ -702,12 +710,15 @@ public class EdmOptionsPanel extends JPanel {
     private String getCorrectRights(String type) {
         if (type.equals(CREATIVE_COMMONS)) {
             CreativeCommonsType creativeCommonsType = new CreativeCommonsType();
-            Enumeration<AbstractButton> enumeration = creativeCommonsBtnGrp.getElements();
-            while (enumeration.hasMoreElements()) {
-                AbstractButton btn = enumeration.nextElement();
-                if (btn.isSelected()) {
-                    creativeCommonsType.setBtnChecked(btn.getActionCommand());
-                }
+            
+            Set<AbstractButton> ccCheckBoxes = new LinkedHashSet<AbstractButton>();
+            ccCheckBoxes.add(ccShareCheckBox);
+            ccCheckBoxes.add(ccRemixingCheckBox);
+            ccCheckBoxes.add(ccProhibitCheckBox);
+            for (AbstractButton ccCheckBox : ccCheckBoxes) {
+                if (ccCheckBox.isSelected()) {
+                    creativeCommonsType.setBtnChecked(ccCheckBox.getActionCommand());
+                }                
             }
             String urlType = creativeCommonsType.getUrlType();
             CreativeCommons creativeCommons = CreativeCommons.getCreativeCommonsByCountryName(creativeCommonsComboBox.getSelectedItem().toString());
@@ -1073,18 +1084,38 @@ public class EdmOptionsPanel extends JPanel {
 
         CreativeCommonsPanel() {
             super(new GridLayout(4, 1));
-            creativeCommonsBtnGrp = new ButtonGroup();
-            JCheckBox checkBox = new JCheckBox(labels.getString("edm.panel.license.cc.remixing"));
-            add(checkBox);
-            creativeCommonsBtnGrp.add(checkBox);
-            checkBox = new JCheckBox(labels.getString("edm.panel.license.cc.prohibit"));
-            add(checkBox);
-            creativeCommonsBtnGrp.add(checkBox);
-            checkBox = new JCheckBox(labels.getString("edm.panel.license.cc.share"));
-            add(checkBox);
-            creativeCommonsBtnGrp.add(checkBox);
+            ccRemixingCheckBox = new JCheckBox(labels.getString("edm.panel.license.cc.remixing"));
+            ccRemixingCheckBox.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent event) {
+                    if (ccRemixingCheckBox.isSelected()){
+                        ccShareCheckBox.setEnabled(true);
+                    } else {
+                        ccShareCheckBox.setSelected(false);
+                        ccShareCheckBox.setEnabled(false);
+                    }
+                }
+            });
+            add(ccRemixingCheckBox);
+            ccProhibitCheckBox = new JCheckBox(labels.getString("edm.panel.license.cc.prohibit"));
+            add(ccProhibitCheckBox);
+            ccShareCheckBox = new JCheckBox(labels.getString("edm.panel.license.cc.share"));
+            ccShareCheckBox.setEnabled(false);
+            add(ccShareCheckBox);
             creativeCommonsComboBox = new JComboBox(CreativeCommons.getCountryNames().toArray());
             add(creativeCommonsComboBox);
+        }
+        
+        public boolean isCcRemixingChecked() {
+            return ccRemixingCheckBox.isSelected();
+        }
+        
+        public boolean isCcProhibitChecked() {
+            return ccProhibitCheckBox.isSelected();
+        }
+        
+        public boolean isCcShareChecked() {
+            return ccShareCheckBox.isSelected();
         }
     }
 
