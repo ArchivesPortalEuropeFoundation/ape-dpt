@@ -331,11 +331,16 @@
                                 <xsl:value-of
                                     select="/ead/archdesc/did/physdesc/genreform[text() != '']"/>
                             </dc:type>
+                            <dc:type>
+                                <xsl:attribute name="rdf:resource">
+                                    <xsl:text>http://vocab.getty.edu/aat/300379505</xsl:text>
+                                </xsl:attribute>
+                            </dc:type>
                         </xsl:when>
                         <xsl:otherwise>
                             <xsl:if test="not(/ead/archdesc/controlaccess/*/text())">
                                 <dc:type>
-                                    <xsl:attribute name="rdf:about">
+                                    <xsl:attribute name="rdf:resource">
                                         <xsl:text>http://vocab.getty.edu/aat/300379505</xsl:text>
                                     </xsl:attribute>
                                 </dc:type>
@@ -1135,11 +1140,16 @@
                                 <xsl:value-of
                                     select="$currentnode/did/physdesc/genreform[text() != '']"/>
                             </dc:type>
+                            <dc:type>
+                                <xsl:attribute name="rdf:resource">
+                                    <xsl:text>http://vocab.getty.edu/aat/300379505</xsl:text>
+                                </xsl:attribute>
+                            </dc:type>
                         </xsl:when>
                         <xsl:otherwise>
                             <xsl:if test="not($currentnode/controlaccess/*/text()) and not($inheritedControlaccesses/*/text())">
                                 <dc:type>
-                                    <xsl:attribute name="rdf:about">
+                                    <xsl:attribute name="rdf:resource">
                                         <xsl:text>http://vocab.getty.edu/aat/300379505</xsl:text>
                                     </xsl:attribute>
                                 </dc:type>
