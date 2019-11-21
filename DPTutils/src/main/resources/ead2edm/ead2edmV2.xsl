@@ -18,19 +18,13 @@
   -->
 <xsl:stylesheet version="2.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
     xmlns:fo="http://www.w3.org/1999/XSL/Format"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xmlns:edm="http://www.europeana.eu/schemas/edm/"
-    xmlns:enrichment="http://www.europeana.eu/schemas/edm/enrichment"
     xmlns:owl="http://www.w3.org/2002/07/owl#"
-    xmlns:wgs84="http://www.w3.org/2003/01/geo/wgs84_pos#"
     xmlns:skos="http://www.w3.org/2004/02/skos/core#"
     xmlns:ore="http://www.openarchives.org/ore/terms/"
-    xmlns:oai="http://www.openarchives.org/OAI/2.0"
     xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
     xmlns:dcterms="http://purl.org/dc/terms/"
     xmlns:dc="http://purl.org/dc/elements/1.1/"
-    xmlns:europeana="http://www.europeana.eu/schemas/ese/"
-    xmlns="http://www.europeana.eu/schemas/edm/"
     xmlns:fn="http://www.w3.org/2005/xpath-functions"
     xmlns:xlink="http://www.w3.org/1999/xlink"
     xpath-default-namespace="urn:isbn:1-931666-22-9"
@@ -86,7 +80,7 @@
     </xsl:template>
 
     <xsl:template match="eadid">
-        <xsl:result-document href="{$outputBaseDirectory}/{$eadidFilenameEncoded}/{$eadidFilenameEncoded}.xml" xpath-default-namespace="urn:isbn:1-931666-22-9">
+        <xsl:result-document href="{$outputBaseDirectory}/{$eadidFilenameEncoded}/{$eadidFilenameEncoded}.xml" xpath-default-namespace="urn:isbn:1-931666-22-9" >
             <rdf:RDF xmlns:adms="http://www.w3.org/ns/adms#"
                 xmlns:cc="http://creativecommons.org/ns#"
                 xmlns:crm="http://www.cidoc-crm.org/rdfs/cidoc_crm_v5.0.2_english_label.rdfs#"
@@ -102,8 +96,7 @@
                 xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
                 xmlns:skos="http://www.w3.org/2004/02/skos/core#"
                 xmlns:svcs="http://rdfs.org/sioc/services#"
-                xmlns:wgs84_pos="http://www.w3.org/2003/01/geo/wgs84_pos#"
-                xmlns="http://www.europeana.eu/schemas/edm/">
+                xmlns:wgs84_pos="http://www.w3.org/2003/01/geo/wgs84_pos#">
                 <ore:Aggregation>
                     <xsl:attribute name="rdf:about" select="concat('aggregation_', .)"/>
                     <edm:aggregatedCHO>
@@ -832,7 +825,7 @@
         <!--<xsl:for-each select="did/dao[not(@xlink:title=&quot;thumbnail&quot;)]">-->
 
         <!-- ACTUAL CONVERSION BEGINS HERE -->
-        <xsl:result-document href="{$outputBaseDirectory}/{$eadidFilenameEncoded}/{$identifierFilename}.xml">
+        <xsl:result-document href="{$outputBaseDirectory}/{$eadidFilenameEncoded}/{$identifierFilename}.xml" xpath-default-namespace="urn:isbn:1-931666-22-9" >
             <rdf:RDF xmlns:adms="http://www.w3.org/ns/adms#"
                 xmlns:cc="http://creativecommons.org/ns#"
                 xmlns:crm="http://www.cidoc-crm.org/rdfs/cidoc_crm_v5.0.2_english_label.rdfs#"
@@ -848,8 +841,7 @@
                 xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
                 xmlns:skos="http://www.w3.org/2004/02/skos/core#"
                 xmlns:svcs="http://rdfs.org/sioc/services#"
-                xmlns:wgs84_pos="http://www.w3.org/2003/01/geo/wgs84_pos#"
-                xmlns="http://www.europeana.eu/schemas/edm/">
+                xmlns:wgs84_pos="http://www.w3.org/2003/01/geo/wgs84_pos#">
                 <ore:Aggregation>
                     <xsl:attribute name="rdf:about"
                         select="concat('aggregation_', normalize-space(/ead/eadheader/eadid), '_', $identifier)"/>
