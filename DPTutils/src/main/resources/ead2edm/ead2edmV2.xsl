@@ -395,9 +395,7 @@
                                 <xsl:otherwise>
                                     <dcterms:hasPart>
                                         <xsl:attribute name="rdf:resource">
-                                            <xsl:call-template name="number">
-                                                <xsl:with-param name="prefix"
-                                                  select="concat('providedCHO_position_', normalize-space(/ead/eadheader/eadid), '_')"/>
+                                            <xsl:call-template name="positionForHasPart">
                                                 <xsl:with-param name="node" select="."/>
                                             </xsl:call-template>
                                         </xsl:attribute>
@@ -1849,6 +1847,27 @@
             <xsl:number count="c" level="single" select="$node[1]"/>
         </xsl:variable>
         <xsl:value-of select="concat($prefix, 'c', $number - 1)"/>
+    </xsl:template>
+    <xsl:template name="positionForHasPart">
+        <xsl:param name="node"/>
+        <xsl:param name="postfix"/>
+        <xsl:variable name="number">
+            <xsl:number count="c" level="single" select="$node[1]"/>
+        </xsl:variable>
+        <xsl:choose>
+            <xsl:when test="$node/parent::c">
+                <xsl:call-template name="positionForHasPart">
+                    <xsl:with-param name="node" select="$node/parent::c"/>
+                    <xsl:with-param name="postfix" select="concat('_c',$number - 1, $postfix)"/>
+                </xsl:call-template>
+            </xsl:when>
+            <xsl:when test="$node/parent::dsc">
+                <xsl:value-of select="concat('providedCHO_', normalize-space(/ead/eadheader/eadid), '_position_c', $number - 1, $postfix)"/>
+            </xsl:when>
+            <xsl:otherwise>
+                <xsl:text>Error while calculating position</xsl:text>
+            </xsl:otherwise>
+        </xsl:choose>
     </xsl:template>
     <xsl:template name="repository">
         <xsl:param name="repository"/>
