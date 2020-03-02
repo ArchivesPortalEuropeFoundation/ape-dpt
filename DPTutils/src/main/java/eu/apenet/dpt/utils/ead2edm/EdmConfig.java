@@ -18,11 +18,11 @@ public class EdmConfig implements Serializable {
     private String sourceFilename;
     private String language;
     private File htmlSourcesDir;
-    private boolean inheritElementsFromFileLevel;
-    private boolean inheritOrigination;
+//    private boolean inheritElementsFromFileLevel;
+//    private boolean inheritOrigination;
     private boolean inheritUnittitle;
-    private boolean inheritLanguage;
-    private boolean inheritRightsInfo;
+//    private boolean inheritLanguage;
+//    private boolean inheritRightsInfo;
     private String rights;
     private String rightsAdditionalInformation;
     private String dataProvider;
@@ -30,7 +30,7 @@ public class EdmConfig implements Serializable {
     private boolean useExistingLanguage;
     private boolean useExistingRepository;
     private boolean useExistingRightsInfo;
-    private boolean minimalConversion;
+//    private boolean minimalConversion;
     private String edmIdentifier;
     private String host;
     private String repositoryCode;
@@ -68,20 +68,20 @@ public class EdmConfig implements Serializable {
     }
 
     /**
-	 * @return the idSource
-	 */
-	public String getIdSource() {
-		return idSource;
-	}
+     * @return the idSource
+     */
+    public String getIdSource() {
+        return idSource;
+    }
 
-	/**
-	 * @param idSource the idSource to set
-	 */
-	public void setIdSource(String idSource) {
-		this.idSource = idSource;
-	}
+    /**
+     * @param idSource the idSource to set
+     */
+    public void setIdSource(String idSource) {
+        this.idSource = idSource;
+    }
 
-	public void setGenerateHtml(boolean generateHtml) {
+    public void setGenerateHtml(boolean generateHtml) {
         this.generateHtml = generateHtml;
     }
 
@@ -89,30 +89,30 @@ public class EdmConfig implements Serializable {
         this.validateLinks = validateLinks;
     }
 
-    public boolean isInheritElementsFromFileLevel() {
-        return inheritElementsFromFileLevel;
-    }
-
-    public void setInheritElementsFromFileLevel(boolean inheritElementsFromFileLevel) {
-        this.inheritElementsFromFileLevel = inheritElementsFromFileLevel;
-    }
-
-    public boolean isInheritOrigination() {
-        return inheritOrigination;
-    }
-
-    public void setInheritOrigination(boolean inheritOrigination) {
-        this.inheritOrigination = inheritOrigination;
-    }
-
-    public boolean isInheritLanguage() {
-        return inheritLanguage;
-    }
-
-    public void setInheritLanguage(boolean inheritLanguage) {
-        this.inheritLanguage = inheritLanguage;
-    }
-
+//    public boolean isInheritElementsFromFileLevel() {
+//        return inheritElementsFromFileLevel;
+//    }
+//
+//    public void setInheritElementsFromFileLevel(boolean inheritElementsFromFileLevel) {
+//        this.inheritElementsFromFileLevel = inheritElementsFromFileLevel;
+//    }
+//
+//    public boolean isInheritOrigination() {
+//        return inheritOrigination;
+//    }
+//
+//    public void setInheritOrigination(boolean inheritOrigination) {
+//        this.inheritOrigination = inheritOrigination;
+//    }
+//
+//    public boolean isInheritLanguage() {
+//        return inheritLanguage;
+//    }
+//
+//    public void setInheritLanguage(boolean inheritLanguage) {
+//        this.inheritLanguage = inheritLanguage;
+//    }
+//
     public boolean isInheritUnittitle() {
         return inheritUnittitle;
     }
@@ -120,14 +120,14 @@ public class EdmConfig implements Serializable {
     public void setInheritUnittitle(boolean inheritUnittitle) {
         this.inheritUnittitle = inheritUnittitle;
     }
-
-    public boolean isInheritRightsInfo() {
-        return inheritRightsInfo;
-    }
-
-    public void setInheritRightsInfo(boolean inheritRightsInfo) {
-        this.inheritRightsInfo = inheritRightsInfo;
-    }
+//
+//    public boolean isInheritRightsInfo() {
+//        return inheritRightsInfo;
+//    }
+//
+//    public void setInheritRightsInfo(boolean inheritRightsInfo) {
+//        this.inheritRightsInfo = inheritRightsInfo;
+//    }
 
     public String getLanguage() {
         return language;
@@ -228,20 +228,19 @@ public class EdmConfig implements Serializable {
         return transformerXML2XML;
     }
 
-    /**
-     * @return the minimalConversion
-     */
-    public boolean isMinimalConversion() {
-        return this.minimalConversion;
-    }
-
-    /**
-     * @param minimalConversion the minimalConversion to set
-     */
-    public void setMinimalConversion(boolean minimalConversion) {
-        this.minimalConversion = minimalConversion;
-    }
-
+//    /**
+//     * @return the minimalConversion
+//     */
+//    public boolean isMinimalConversion() {
+//        return this.minimalConversion;
+//    }
+//
+//    /**
+//     * @param minimalConversion the minimalConversion to set
+//     */
+//    public void setMinimalConversion(boolean minimalConversion) {
+//        this.minimalConversion = minimalConversion;
+//    }
     public String getEdmIdentifier() {
         return edmIdentifier;
     }
@@ -275,7 +274,7 @@ public class EdmConfig implements Serializable {
     }
 
     public String getLandingPage() {
-        if(landingPage == null){
+        if (landingPage == null) {
             landingPage = "ape";
         }
         return landingPage;
@@ -300,37 +299,37 @@ public class EdmConfig implements Serializable {
     public void setOutputBaseDirectory(String outputBaseDirectory) {
         this.outputBaseDirectory = outputBaseDirectory;
     }
-    
+
     public Properties getProperties() {
         if (properties == null) {
             properties = new Properties();
-            properties.put("europeana_provider", getString(getProvider()));
-            properties.put("europeana_dataprovider", getString(getDataProvider()));
-            properties.put("europeana_rights", getString(getRights()));
-            properties.put("dc_rights", getString(getRightsAdditionalInformation()));
-            properties.put("europeana_type", getString(getType()));
-            properties.put("idSource", getString(getIdSource()));
-            properties.put("useISODates", getString("false"));
-            properties.put("language", getString(getLanguage()));
-            properties.put("inheritElementsFromFileLevel",
-                    getString(new Boolean(isInheritElementsFromFileLevel()).toString()));
-            properties.put("inheritOrigination", getString(new Boolean(isInheritOrigination()).toString()));
-            properties.put("inheritUnittitle", getString(new Boolean(isInheritUnittitle()).toString()));
-            properties.put("inheritLanguage", getString(new Boolean(isInheritLanguage()).toString()));
-            properties.put("inheritRightsInfo", getString(new Boolean(isInheritRightsInfo()).toString()));
-            properties.put("useExistingDaoRole", getString(new Boolean(isUseExistingDaoRole()).toString()));
-            properties.put("useExistingLanguage", getString(new Boolean(isUseExistingLanguage()).toString()));
-            properties.put("useExistingRepository", getString(new Boolean(isUseExistingRepository()).toString()));
-            properties.put("useExistingRightsInfo", getString(new Boolean(isUseExistingRightsInfo()).toString()));
-            properties.put("minimalConversion", getString(new Boolean(isMinimalConversion()).toString()));
-            properties.put("edm_identifier", getString(getEdmIdentifier()));
-            properties.put("host", getString(getHost()));
-            String repCodeAfterReplacement = getString(getRepositoryCode()).replace('/', '_');
-            properties.put("repository_code", getString(repCodeAfterReplacement));
-            properties.put("xml_type_name", getString(getXmlTypeName()));
-            properties.put("landingPage", getString(getLandingPage()));
-            properties.put("useArchUnittitle", getString(new Boolean(isUseArchUnittitle()).toString()));
-            properties.put("outputBaseDirectory", getString(getOutputBaseDirectory()));
+        properties.put("europeana_provider", getString(getProvider()));
+        properties.put("europeana_dataprovider", getString(getDataProvider()));
+        properties.put("europeana_rights", getString(getRights()));
+        properties.put("dc_rights", getString(getRightsAdditionalInformation()));
+        properties.put("europeana_type", getString(getType()));
+        properties.put("idSource", getString(getIdSource()));
+        properties.put("useISODates", getString("false"));
+        properties.put("language", getString(getLanguage()));
+//            properties.put("inheritElementsFromFileLevel",
+//                    getString(new Boolean(isInheritElementsFromFileLevel()).toString()));
+//            properties.put("inheritOrigination", getString(new Boolean(isInheritOrigination()).toString()));
+        properties.put("inheritUnittitle", getString(new Boolean(isInheritUnittitle()).toString()));
+//            properties.put("inheritLanguage", getString(new Boolean(isInheritLanguage()).toString()));
+//            properties.put("inheritRightsInfo", getString(new Boolean(isInheritRightsInfo()).toString()));
+        properties.put("useExistingDaoRole", getString(new Boolean(isUseExistingDaoRole()).toString()));
+        properties.put("useExistingLanguage", getString(new Boolean(isUseExistingLanguage()).toString()));
+        properties.put("useExistingRepository", getString(new Boolean(isUseExistingRepository()).toString()));
+        properties.put("useExistingRightsInfo", getString(new Boolean(isUseExistingRightsInfo()).toString()));
+//            properties.put("minimalConversion", getString(new Boolean(isMinimalConversion()).toString()));
+        properties.put("edm_identifier", getString(getEdmIdentifier()));
+        properties.put("host", getString(getHost()));
+        String repCodeAfterReplacement = getString(getRepositoryCode()).replace('/', '_');
+        properties.put("repository_code", getString(repCodeAfterReplacement));
+        properties.put("xml_type_name", getString(getXmlTypeName()));
+        properties.put("landingPage", getString(getLandingPage()));
+        properties.put("useArchUnittitle", getString(new Boolean(isUseArchUnittitle()).toString()));
+        properties.put("outputBaseDirectory", getString(getOutputBaseDirectory()));
         }
         return properties;
     }
@@ -349,7 +348,7 @@ public class EdmConfig implements Serializable {
             return string;
         }
     }
-     
+
     public static File getQualityReportXSLTFile() {
         return new File("/ead2edm/edmQuality.xsl");
     }

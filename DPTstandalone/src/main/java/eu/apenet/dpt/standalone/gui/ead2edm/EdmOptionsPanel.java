@@ -77,6 +77,8 @@ import eu.apenet.dpt.utils.util.Ead2EdmInformation;
 import eu.apenet.dpt.utils.util.extendxsl.EdmQualityCheckerCall;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.LinkedHashSet;
+import java.util.Set;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
@@ -101,8 +103,6 @@ public class EdmOptionsPanel extends JPanel {
      */
     private static final long serialVersionUID = -832102808180688015L;
     private static final Logger LOG = Logger.getLogger(EdmOptionsPanel.class);
-    private static final String MINIMAL = "minimal";
-    private static final String FULL = "full";
     private static final String UNITID = "unitid";
     private static final String CID = "cid";
     private static final String ARCHDESC_UNITTITLE = "archdescUnittitle";
@@ -132,18 +132,13 @@ public class EdmOptionsPanel extends JPanel {
     private List<File> selectedIndices;
     private JFrame parent;
     private APETabbedPane apeTabbedPane;
-    private ButtonGroup conversionModeGroup;
     private ButtonGroup cLevelIdSourceButtonGroup;
-    private ButtonGroup sourceOfFondsTitleGroup;
+    private ButtonGroup sourceOfFondsTitleButtonGroup;
     private ButtonGroup landingPageButtonGroup;
     private JTextArea landingPageTextArea;
     private ButtonGroup typeGroup;
-    private ButtonGroup inheritParentGroup;
-    private ButtonGroup inheritOriginationGroup;
-    private ButtonGroup inheritUnittitleGroup;
-    private ButtonGroup inheritLanguageGroup;
+    private ButtonGroup concatUnittitleButtonGroup;
     private ButtonGroup licenseGroup;
-    private ButtonGroup creativeCommonsBtnGrp;
     private JComboBox creativeCommonsComboBox;
     private JComboBox europeanaRightsComboBox;
     private JTextArea dataProviderTextArea;
@@ -160,27 +155,13 @@ public class EdmOptionsPanel extends JPanel {
     private JCheckBox useExistingLanguageCheckbox;
     private JCheckBox useExistingRightsInfoCheckbox;
     private JPanel languageBoxPanel = new LanguageBoxPanel();
-    private String conversionMode = MINIMAL;
     private String sourceOfFondsTitle = ARCHDESC_UNITTITLE;
-    private JPanel inheritParentPanel;
-    private JPanel inheritOriginationPanel;
-    private JPanel inheritUnittitlePanel;
     private JPanel inheritLanguagePanel;
-    private JCheckBox inheritParentCheckbox;
-    private JCheckBox inheritOriginationCheckbox;
-    private JCheckBox inheritUnittitleCheckbox;
-    private JRadioButton inhParYesRadioButton;
-    private JRadioButton inhParNoRadioButton;
-    private JRadioButton inhOriYesRadioButton;
-    private JRadioButton inhOriNoRadioButton;
-    private JRadioButton inhTitleYesRadioButton;
-    private JRadioButton inhTitleNoRadioButton;
-    private JRadioButton inhLanYesRadioButton;
-    private JRadioButton inhLanNoRadioButton;
-    private JRadioButton inhLanProvideRadioButton;
-    private JRadioButton inhLicYesRadioButton;
-    private JRadioButton inhLicNoRadioButton;
-    private JRadioButton inhLicProvideRadioButton;
+    private JCheckBox ccRemixingCheckBox;
+    private JCheckBox ccProhibitCheckBox;
+    private JCheckBox ccShareCheckBox;
+
+        
 
     public EdmOptionsPanel(ResourceBundle labels, DataPreparationToolGUI dataPreparationToolGUI, JFrame parent, APETabbedPane apeTabbedPane, boolean batch) {
         super(new BorderLayout());
@@ -201,7 +182,7 @@ public class EdmOptionsPanel extends JPanel {
         JPanel europeanaRightsPanel = new EuropeanaRightsPanel();
         JPanel emptyPanel = new JPanel();
 
-        JPanel formPanel = new JPanel(new GridLayout(14, 1));
+        JPanel formPanel = new JPanel(new GridLayout(10, 1));
 
         JPanel extraLicenseCardLayoutPanel = new JPanel(new CardLayout());
         extraLicenseCardLayoutPanel.add(creativeCommonsPanel, CREATIVE_COMMONS);
@@ -211,25 +192,8 @@ public class EdmOptionsPanel extends JPanel {
         cardLayout.show(extraLicenseCardLayoutPanel, EMPTY_PANEL);
 
         JPanel panel = new JPanel(new FlowLayout(FlowLayout.CENTER));
-        conversionModeGroup = new ButtonGroup();
         JRadioButton radioButton;
 
-        panel.add(new Label(this.labels.getString("edm.panel.label.choose.mode")));
-        radioButton = new JRadioButton(this.labels.getString("edm.panel.label.mode.minimal"));
-        radioButton.setActionCommand(MINIMAL);
-        radioButton.setSelected(true);
-        radioButton.addActionListener(new ConversionModeListener());
-        conversionModeGroup.add(radioButton);
-        panel.add(radioButton);
-        radioButton = new JRadioButton(this.labels.getString("edm.panel.label.mode.full"));
-        radioButton.setActionCommand(FULL);
-        radioButton.addActionListener(new ConversionModeListener());
-        conversionModeGroup.add(radioButton);
-        panel.add(radioButton);
-
-        formPanel.add(panel);
-
-        panel = new JPanel(new FlowLayout(FlowLayout.CENTER));
         cLevelIdSourceButtonGroup = new ButtonGroup();
 
         panel.add(new Label(this.labels.getString("edm.generalOptionsForm.identifierSource.header")));
@@ -251,7 +215,7 @@ public class EdmOptionsPanel extends JPanel {
         formPanel.add(panel);
 
         panel = new JPanel(new FlowLayout(FlowLayout.CENTER));
-        sourceOfFondsTitleGroup = new ButtonGroup();
+        sourceOfFondsTitleButtonGroup = new ButtonGroup();
 
         determineDaoInformation();
         panel.add(new Label(this.labels.getString("edm.generalOptionsForm.sourceOfFondsTitle")));
@@ -261,15 +225,30 @@ public class EdmOptionsPanel extends JPanel {
             radioButton = new JRadioButton(this.labels.getString("edm.generalOptionsForm.sourceOfFondsTitle.archdescUnittitle"));
             radioButton.setActionCommand(ARCHDESC_UNITTITLE);
             radioButton.setSelected(true);
-            radioButton.addActionListener(new ConversionModeListener());
-            sourceOfFondsTitleGroup.add(radioButton);
+            sourceOfFondsTitleButtonGroup.add(radioButton);
             panel.add(radioButton);
             radioButton = new JRadioButton(this.labels.getString("edm.generalOptionsForm.sourceOfFondsTitle.titlestmtTitleproper"));
             radioButton.setActionCommand(TITLESTMT_TITLEPROPER);
-            radioButton.addActionListener(new ConversionModeListener());
-            sourceOfFondsTitleGroup.add(radioButton);
+            sourceOfFondsTitleButtonGroup.add(radioButton);
             panel.add(radioButton);
         }
+        formPanel.add(panel);
+
+        panel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+
+        concatUnittitleButtonGroup = new ButtonGroup();
+
+        panel.add(new Label(this.labels.getString("edm.generalOptionsForm.concatUnittitles.header")));
+        radioButton = new JRadioButton(this.labels.getString("ese.yes"));
+        radioButton.setActionCommand(YES);
+        concatUnittitleButtonGroup.add(radioButton);
+        panel.add(radioButton);
+        radioButton = new JRadioButton(this.labels.getString("ese.no"));
+        radioButton.setActionCommand(NO);
+        radioButton.setSelected(true);
+        concatUnittitleButtonGroup.add(radioButton);
+        panel.add(radioButton);
+
         formPanel.add(panel);
 
         panel = new JPanel(new GridLayout(2, 2));
@@ -343,18 +322,6 @@ public class EdmOptionsPanel extends JPanel {
         panel.setBorder(BLACK_LINE);
         formPanel.add(panel);
 
-        /*        panel = new JPanel(new GridLayout(1, 3));
-         panel.add(new Label(labels.getString("ese.provider") + ":" + "*"));
-         providerTextArea = new JTextArea();
-         providerTextArea.setLineWrap(true);
-         providerTextArea.setWrapStyleWord(true);
-         JScrollPane ptaScrollPane = new JScrollPane(providerTextArea);
-         ptaScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
-         panel.add(ptaScrollPane);
-         panel.add(new Label(""));
-         panel.setBorder(BLACK_LINE);
-         formPanel.add(panel);
-         */
         panel = new JPanel(new GridLayout(5, 3));
         typeGroup = new ButtonGroup();
 
@@ -370,7 +337,6 @@ public class EdmOptionsPanel extends JPanel {
             radioButton.setSelected(true);
         }
         radioButton.setActionCommand(TEXT);
-        radioButton.addActionListener(new ConversionModeListener());
         typeGroup.add(radioButton);
         panel.add(radioButton);
         panel.add(new JLabel(""));
@@ -381,7 +347,6 @@ public class EdmOptionsPanel extends JPanel {
             radioButton.setSelected(true);
         }
         radioButton.setActionCommand(IMAGE);
-        radioButton.addActionListener(new ConversionModeListener());
         typeGroup.add(radioButton);
         panel.add(radioButton);
         panel.add(new JLabel(""));
@@ -392,7 +357,6 @@ public class EdmOptionsPanel extends JPanel {
             radioButton.setSelected(true);
         }
         radioButton.setActionCommand(VIDEO);
-        radioButton.addActionListener(new ConversionModeListener());
         typeGroup.add(radioButton);
         panel.add(radioButton);
 
@@ -411,7 +375,6 @@ public class EdmOptionsPanel extends JPanel {
             radioButton.setSelected(true);
         }
         radioButton.setActionCommand(SOUND);
-        radioButton.addActionListener(new ConversionModeListener());
         typeGroup.add(radioButton);
         panel.add(radioButton);
         panel.add(new JLabel(""));
@@ -422,7 +385,6 @@ public class EdmOptionsPanel extends JPanel {
             radioButton.setSelected(true);
         }
         radioButton.setActionCommand(THREE_D);
-        radioButton.addActionListener(new ConversionModeListener());
         typeGroup.add(radioButton);
         panel.add(radioButton);
         panel.add(new JLabel(""));
@@ -447,25 +409,12 @@ public class EdmOptionsPanel extends JPanel {
             formPanel.add(panel);
         } else {
             inheritLanguagePanel = new JPanel(new GridLayout(1, 3));
-            inheritLanguagePanel.add(new Label(labels.getString("ese.inheritLanguage") + ":" + "*"));
+            inheritLanguagePanel.add(new Label(labels.getString("ese.selectLanguage") + ":" + "*"));
 
-            JPanel rbPanel = new JPanel(new GridLayout(4, 1));
-            inheritLanguageGroup = new ButtonGroup();
-            inhLanYesRadioButton = new JRadioButton(labels.getString("ese.yes"));
-            inhLanYesRadioButton.setActionCommand(YES);
-            inhLanYesRadioButton.addActionListener(new ChangePanelActionListener(languageBoxPanel));
-            inheritLanguageGroup.add(inhLanYesRadioButton);
-            rbPanel.add(inhLanYesRadioButton);
-            inhLanNoRadioButton = new JRadioButton(labels.getString("ese.no"), true);
-            inhLanNoRadioButton.setActionCommand(NO);
-            inhLanNoRadioButton.addActionListener(new ChangePanelActionListener(languageBoxPanel));
-            inheritLanguageGroup.add(inhLanNoRadioButton);
-            rbPanel.add(inhLanNoRadioButton);
-            inhLanProvideRadioButton = new JRadioButton(labels.getString("ese.provide"));
-            inhLanProvideRadioButton.setActionCommand(PROVIDE);
-            inhLanProvideRadioButton.addActionListener(new ChangePanelActionListener(languageBoxPanel));
-            inheritLanguageGroup.add(inhLanProvideRadioButton);
-            rbPanel.add(inhLanProvideRadioButton);
+            JPanel rbPanel = new JPanel(new GridLayout(1, 1));
+            languageBoxPanel.setVisible(true);
+            inheritLanguagePanel.add(languageBoxPanel, BorderLayout.WEST);
+
             useExistingLanguageCheckbox = new JCheckBox(labels.getString("ese.takeFromFileLanguage"));
             useExistingLanguageCheckbox.setSelected(true);
             useExistingLanguageCheckbox.addItemListener(new ItemListener() {
@@ -475,57 +424,37 @@ public class EdmOptionsPanel extends JPanel {
                 }
             });
             rbPanel.add(useExistingLanguageCheckbox);
-            inheritLanguagePanel.add(rbPanel, BorderLayout.WEST);
+            inheritLanguagePanel.add(rbPanel, BorderLayout.EAST);
 
-            languageBoxPanel.setVisible(true);
-            inheritLanguagePanel.add(languageBoxPanel, BorderLayout.EAST);
             inheritLanguagePanel.setBorder(BLACK_LINE);
             inheritLanguagePanel.setVisible(true);
             formPanel.add(inheritLanguagePanel);
         }
 
-        panel = new JPanel(new GridLayout(1, 3));
-        panel.add(new JLabel(labels.getString("edm.panel.license.inheritLicense") + ":" + "*"));
-        useExistingRightsInfoCheckbox = new JCheckBox(labels.getString("ese.takeFromFileLicense"));
-        useExistingRightsInfoCheckbox.setSelected(true);
-        useExistingRightsInfoCheckbox.addItemListener(new ItemListener() {
-            @Override
-            public void itemStateChanged(ItemEvent e) {
-                //empty method on purpose
-            }
-        });
-        panel.add(useExistingRightsInfoCheckbox);
-        panel.add(new JLabel());
-        panel.setBorder(BLACK_LINE);
-        panel.setVisible(true);
-        formPanel.add(panel);
+        JPanel mainLicensePanel = new JPanel(new GridLayout(1, 4));
+        mainLicensePanel.add(new Label(labels.getString("ese.specifyLicense") + ":" + "*"));
 
-        JPanel mainLicensePanel = new JPanel(new BorderLayout());
-        panel = new JPanel(new GridLayout(4, 2));
+        panel = new JPanel(new GridLayout(4, 1));
         licenseGroup = new ButtonGroup();
 
-        panel.add(new Label(labels.getString("ese.specifyLicense") + ":" + "*"));
         radioButton = new JRadioButton(this.labels.getString("edm.panel.label.cc"));
         radioButton.setActionCommand(CREATIVE_COMMONS);
         radioButton.addActionListener(new ChangePanelActionListener(extraLicenseCardLayoutPanel));
         licenseGroup.add(radioButton);
         panel.add(radioButton);
 
-        panel.add(new JLabel(""));
         radioButton = new JRadioButton(this.labels.getString("edm.panel.label.cc.zero"));
         radioButton.setActionCommand(CREATIVE_COMMONS_CC0);
         radioButton.addActionListener(new ChangePanelActionListener(extraLicenseCardLayoutPanel));
         licenseGroup.add(radioButton);
         panel.add(radioButton);
 
-        panel.add(new JLabel(""));
         radioButton = new JRadioButton(this.labels.getString("edm.panel.label.cc.public"));
         radioButton.setActionCommand(CREATIVE_COMMONS_PUBLIC_DOMAIN_MARK);
         radioButton.addActionListener(new ChangePanelActionListener(extraLicenseCardLayoutPanel));
         licenseGroup.add(radioButton);
         panel.add(radioButton);
 
-        panel.add(new JLabel(""));
         radioButton = new JRadioButton(this.labels.getString("edm.panel.label.europeana.rights"));
         radioButton.setActionCommand(EUROPEANA_RIGHTS_STATEMENTS);
         radioButton.addActionListener(new ChangePanelActionListener(extraLicenseCardLayoutPanel));
@@ -534,6 +463,17 @@ public class EdmOptionsPanel extends JPanel {
         mainLicensePanel.add(panel, BorderLayout.WEST);
 
         mainLicensePanel.add(extraLicenseCardLayoutPanel, BorderLayout.EAST);
+
+        useExistingRightsInfoCheckbox = new JCheckBox(labels.getString("ese.takeFromFileLicense"));
+        useExistingRightsInfoCheckbox.setSelected(true);
+        useExistingRightsInfoCheckbox.addItemListener(new ItemListener() {
+            @Override
+            public void itemStateChanged(ItemEvent e) {
+                //empty method on purpose
+            }
+        });
+        mainLicensePanel.add(useExistingRightsInfoCheckbox);
+
         mainLicensePanel.setBorder(BLACK_LINE);
         formPanel.add(mainLicensePanel);
 
@@ -547,99 +487,6 @@ public class EdmOptionsPanel extends JPanel {
         panel.add(artaScrollPane);
         panel.setBorder(GREY_LINE);
         formPanel.add(panel);
-
-        inheritParentPanel = new JPanel(new GridLayout(2, 3));
-        inheritParentCheckbox = new JCheckBox(labels.getString("ese.inheritParent") + ":" + "*");
-        inheritParentCheckbox.setSelected(true);
-        inheritParentCheckbox.addItemListener(new ItemListener() {
-            @Override
-            public void itemStateChanged(ItemEvent e) {
-                if (e.getStateChange() == ItemEvent.SELECTED) {
-                    inhParYesRadioButton.setEnabled(true);
-                    inhParNoRadioButton.setEnabled(true);
-                }
-                if (e.getStateChange() == ItemEvent.DESELECTED) {
-                    inhParYesRadioButton.setEnabled(false);
-                    inhParNoRadioButton.setEnabled(false);
-                }
-            }
-        });
-        inheritParentPanel.add(inheritParentCheckbox);
-        inheritParentGroup = new ButtonGroup();
-        inhParYesRadioButton = new JRadioButton(labels.getString("ese.yes"));
-        inhParYesRadioButton.setActionCommand(YES);
-        inheritParentGroup.add(inhParYesRadioButton);
-        inheritParentPanel.add(inhParYesRadioButton);
-        inheritParentPanel.add(new JLabel(""));
-        inhParNoRadioButton = new JRadioButton(labels.getString("ese.no"), true);
-        inhParNoRadioButton.setActionCommand(NO);
-        inheritParentGroup.add(inhParNoRadioButton);
-        inheritParentPanel.add(inhParNoRadioButton);
-        inheritParentPanel.setBorder(GREY_LINE);
-        inheritParentPanel.setVisible(false);
-        formPanel.add(inheritParentPanel);
-
-        inheritOriginationPanel = new JPanel(new GridLayout(2, 3));
-        inheritOriginationCheckbox = new JCheckBox(labels.getString("ese.inheritOrigination") + ":" + "*");
-        inheritOriginationCheckbox.setSelected(true);
-        inheritOriginationCheckbox.addItemListener(new ItemListener() {
-            @Override
-            public void itemStateChanged(ItemEvent e) {
-                if (e.getStateChange() == ItemEvent.SELECTED) {
-                    inhOriYesRadioButton.setEnabled(true);
-                    inhOriNoRadioButton.setEnabled(true);
-                }
-                if (e.getStateChange() == ItemEvent.DESELECTED) {
-                    inhOriYesRadioButton.setEnabled(false);
-                    inhOriNoRadioButton.setEnabled(false);
-                }
-            }
-        });
-        inheritOriginationPanel.add(inheritOriginationCheckbox);
-        inheritOriginationGroup = new ButtonGroup();
-        inhOriYesRadioButton = new JRadioButton(labels.getString("ese.yes"));
-        inhOriYesRadioButton.setActionCommand(YES);
-        inheritOriginationGroup.add(inhOriYesRadioButton);
-        inheritOriginationPanel.add(inhOriYesRadioButton);
-        inheritOriginationPanel.add(new JLabel(""));
-        inhOriNoRadioButton = new JRadioButton(labels.getString("ese.no"), true);
-        inhOriNoRadioButton.setActionCommand(NO);
-        inheritOriginationGroup.add(inhOriNoRadioButton);
-        inheritOriginationPanel.add(inhOriNoRadioButton);
-        inheritOriginationPanel.setBorder(BLACK_LINE);
-        inheritOriginationPanel.setVisible(false);
-        formPanel.add(inheritOriginationPanel);
-
-        inheritUnittitlePanel = new JPanel(new GridLayout(2, 3));
-        inheritUnittitleCheckbox = new JCheckBox(labels.getString("ese.inheritUnittitle") + ":" + "*");
-        inheritUnittitleCheckbox.setSelected(true);
-        inheritUnittitleCheckbox.addItemListener(new ItemListener() {
-            @Override
-            public void itemStateChanged(ItemEvent e) {
-                if (e.getStateChange() == ItemEvent.SELECTED) {
-                    inhTitleYesRadioButton.setEnabled(true);
-                    inhTitleNoRadioButton.setEnabled(true);
-                }
-                if (e.getStateChange() == ItemEvent.DESELECTED) {
-                    inhTitleYesRadioButton.setEnabled(false);
-                    inhTitleNoRadioButton.setEnabled(false);
-                }
-            }
-        });
-        inheritUnittitlePanel.add(inheritUnittitleCheckbox);
-        inheritUnittitleGroup = new ButtonGroup();
-        inhTitleYesRadioButton = new JRadioButton(labels.getString("ese.yes"));
-        inhTitleYesRadioButton.setActionCommand(YES);
-        inheritUnittitleGroup.add(inhTitleYesRadioButton);
-        inheritUnittitlePanel.add(inhTitleYesRadioButton);
-        inheritUnittitlePanel.add(new JLabel(""));
-        inhTitleNoRadioButton = new JRadioButton(labels.getString("ese.no"), true);
-        inhTitleNoRadioButton.setActionCommand(NO);
-        inheritUnittitleGroup.add(inhTitleNoRadioButton);
-        inheritUnittitlePanel.add(inhTitleNoRadioButton);
-        inheritUnittitlePanel.setBorder(BLACK_LINE);
-        inheritUnittitlePanel.setVisible(false);
-        formPanel.add(inheritUnittitlePanel);
 
         JButton createEdmBtn = new JButton(labels.getString("ese.createEseBtn"));
         JButton cancelBtn = new JButton(labels.getString("ese.cancelBtn"));
@@ -723,6 +570,34 @@ public class EdmOptionsPanel extends JPanel {
             }
         }
 
+        enumeration = sourceOfFondsTitleButtonGroup.getElements();
+        found = false;
+        while (!found && enumeration.hasMoreElements()) {
+            AbstractButton btn = enumeration.nextElement();
+            if (btn.isSelected()) {
+                if (ARCHDESC_UNITTITLE.equals(btn.getActionCommand())) {
+                    config.setUseArchUnittitle(true);
+                } else {
+                    config.setUseArchUnittitle(false);
+                }
+                found = true;
+            }
+        }
+
+        enumeration = concatUnittitleButtonGroup.getElements();
+        found = false;
+        while (!found && enumeration.hasMoreElements()) {
+            AbstractButton btn = enumeration.nextElement();
+            if (btn.isSelected()) {
+                if (EdmOptionsPanel.YES.equals(btn.getActionCommand())) {
+                    config.setInheritUnittitle(true);
+                } else if (EdmOptionsPanel.NO.equals(btn.getActionCommand())) {
+                    config.setInheritUnittitle(false);
+                }
+                found = true;
+            }
+        }
+
         enumeration = landingPageButtonGroup.getElements();
         found = false;
         while (!found && enumeration.hasMoreElements()) {
@@ -770,28 +645,8 @@ public class EdmOptionsPanel extends JPanel {
             config.setUseExistingDaoRole(true);
         }
 
-        config.setInheritElementsFromFileLevel(false);
-        enumeration = inheritParentGroup.getElements();
-        while (enumeration.hasMoreElements()) {
-            AbstractButton btn = enumeration.nextElement();
-            if (FULL.equals(conversionMode) && inheritParentCheckbox.isSelected() && btn.isSelected() && btn.getActionCommand().equals(YES)) {
-                config.setInheritElementsFromFileLevel(true);
-            }
-        }
-
-        config.setInheritOrigination(false);
-        enumeration = inheritOriginationGroup.getElements();
-        while (enumeration.hasMoreElements()) {
-            AbstractButton btn = enumeration.nextElement();
-            if (FULL.equals(conversionMode) && inheritOriginationCheckbox.isSelected() && btn.isSelected() && btn.getActionCommand().equals(YES)) {
-                config.setInheritOrigination(true);
-            }
-        }
-
-        config.setInheritLanguage(true);
         if (this.batch) {
             if (!useExistingLanguageCheckbox.isSelected()) {
-                config.setInheritLanguage(false);
             }
             StringBuilder result = new StringBuilder();
             Object[] languageValues = languageList.getSelectedValues();
@@ -803,34 +658,22 @@ public class EdmOptionsPanel extends JPanel {
             }
             config.setLanguage(result.toString());
         } else {
-            enumeration = inheritLanguageGroup.getElements();
-            while (enumeration.hasMoreElements()) {
-                AbstractButton btn = enumeration.nextElement();
-                if (/*inheritLanguageCheckbox.isSelected() &&*/btn.isSelected()) {
-                    if (btn.getActionCommand().equals(NO)) {
-                        config.setInheritLanguage(false);
-                    } else if (btn.getActionCommand().equals(PROVIDE)) {
-                        if (!useExistingLanguageCheckbox.isSelected()) {
-                            config.setInheritLanguage(false);
-                        }
-                        StringBuilder result = new StringBuilder();
-                        Object[] languageValues = languageList.getSelectedValues();
-                        for (int i = 0; i < languageValues.length; i++) {
-                            result.append(languages.get(languageValues[i].toString()));
-                            if (languageValues.length > 0 && i < (languageValues.length - 1)) {
-                                result.append(" ");
-                            }
-                        }
-                        config.setLanguage(result.toString());
-                    }
+            if (!useExistingLanguageCheckbox.isSelected()) {
+            }
+            StringBuilder result = new StringBuilder();
+            Object[] languageValues = languageList.getSelectedValues();
+            for (int i = 0; i < languageValues.length; i++) {
+                result.append(languages.get(languageValues[i].toString()));
+                if (languageValues.length > 0 && i < (languageValues.length - 1)) {
+                    result.append(" ");
                 }
             }
+            config.setLanguage(result.toString());
         }
         if (useExistingLanguageCheckbox.isSelected()) {
             config.setUseExistingLanguage(true);
         }
 
-        config.setInheritRightsInfo(true);
         Enumeration<AbstractButton> licenseEnumeration = licenseGroup.getElements();
         while (licenseEnumeration.hasMoreElements()) {
             AbstractButton btn = licenseEnumeration.nextElement();
@@ -846,18 +689,6 @@ public class EdmOptionsPanel extends JPanel {
 
         if (additionalRightsTextArea != null && StringUtils.isNotEmpty(additionalRightsTextArea.getText())) {
             config.setRightsAdditionalInformation(additionalRightsTextArea.getText());
-        }
-
-        if (MINIMAL.equals(conversionMode)) {
-            config.setMinimalConversion(true);
-        } else {
-            config.setMinimalConversion(false);
-        }
-
-        if (ARCHDESC_UNITTITLE.equals(sourceOfFondsTitle)) {
-            config.setUseArchUnittitle(true);
-        } else {
-            config.setUseArchUnittitle(false);
         }
 
         config.setOutputBaseDirectory(retrieveFromDb.retrieveDefaultSaveFolder());
@@ -877,12 +708,15 @@ public class EdmOptionsPanel extends JPanel {
     private String getCorrectRights(String type) {
         if (type.equals(CREATIVE_COMMONS)) {
             CreativeCommonsType creativeCommonsType = new CreativeCommonsType();
-            Enumeration<AbstractButton> enumeration = creativeCommonsBtnGrp.getElements();
-            while (enumeration.hasMoreElements()) {
-                AbstractButton btn = enumeration.nextElement();
-                if (btn.isSelected()) {
-                    creativeCommonsType.setBtnChecked(btn.getActionCommand());
-                }
+            
+            Set<AbstractButton> ccCheckBoxes = new LinkedHashSet<AbstractButton>();
+            ccCheckBoxes.add(ccShareCheckBox);
+            ccCheckBoxes.add(ccRemixingCheckBox);
+            ccCheckBoxes.add(ccProhibitCheckBox);
+            for (AbstractButton ccCheckBox : ccCheckBoxes) {
+                if (ccCheckBox.isSelected()) {
+                    creativeCommonsType.setBtnChecked(ccCheckBox.getActionCommand());
+                }                
             }
             String urlType = creativeCommonsType.getUrlType();
             CreativeCommons creativeCommons = CreativeCommons.getCreativeCommonsByCountryName(creativeCommonsComboBox.getSelectedItem().toString());
@@ -931,17 +765,17 @@ public class EdmOptionsPanel extends JPanel {
         }
 
         if (!this.batch) {
-            if (sourceOfFondsTitleGroup.getSelection() == null) {
+            if (sourceOfFondsTitleButtonGroup.getSelection() == null) {
                 sourceOfFondsTitle = TITLESTMT_TITLEPROPER;
             } else {
-                if (sourceOfFondsTitleGroup.getSelection().getActionCommand().equals(ARCHDESC_UNITTITLE)) {
+                if (sourceOfFondsTitleButtonGroup.getSelection().getActionCommand().equals(ARCHDESC_UNITTITLE)) {
                     if (StringUtils.isBlank(ead2EdmInformation.getArchdescUnittitle())) {
                         if (StringUtils.isNotBlank(ead2EdmInformation.getTitlestmtTitleproper())) {
                             throw new Exception("no content available from archdesc/did/unittile");
                         }
                     }
                 }
-                if (sourceOfFondsTitleGroup.getSelection().getActionCommand().equals(TITLESTMT_TITLEPROPER)) {
+                if (sourceOfFondsTitleButtonGroup.getSelection().getActionCommand().equals(TITLESTMT_TITLEPROPER)) {
                     if (StringUtils.isBlank(ead2EdmInformation.getTitlestmtTitleproper())) {
                         if (StringUtils.isNotBlank(ead2EdmInformation.getArchdescUnittitle())) {
                             throw new Exception("no content available from titlestmt/titleproper");
@@ -974,55 +808,10 @@ public class EdmOptionsPanel extends JPanel {
             }
         }
 
-        if (inheritOriginationGroup == null) {
-            throw new Exception("inheritOriginationGroup is null");
-        } else {
-            if (!isRadioBtnChecked(inheritOriginationGroup)) {
-                throw new Exception("inheritOriginationGroup is not checked");
-            }
-        }
-
-        if (inheritParentGroup == null) {
-            throw new Exception("inheritParentGroup is null");
-        } else if (!isRadioBtnChecked(inheritParentGroup)) {
-            throw new Exception("inheritParentGroup is not checked");
-        }
-
-        if (!this.batch) {
-            if (inheritLanguageGroup == null) {
-                throw new Exception("inheritLanguageGroup is null");
-            } else if (!isRadioBtnChecked(inheritLanguageGroup)) {
-                throw new Exception("inheritLanguageGroup is not checked");
-            }
-
-            if (this.inheritLanguageGroup.getSelection().getActionCommand().equalsIgnoreCase(EdmOptionsPanel.PROVIDE)) {
-                if (this.languageBoxPanel == null) {
-                    throw new Exception("Provided language is null");
-                } else if (!((LanguageBoxPanel) this.languageBoxPanel).hasSelections()) {
-                    throw new Exception("No provided language selected");
-                }
-            } else if (this.inheritLanguageGroup.getSelection().getActionCommand().equalsIgnoreCase(EdmOptionsPanel.NO)) {
-                if (!this.ead2EdmInformation.isLanguagesOnAllCLevels()) {
-                    throw new Exception("At least one of the <c> elements in the file does not have an associated language. Please inherit the language or provide it manually");
-                }
-                if (!useExistingLanguageCheckbox.isSelected()) {
-                    throw new Exception("Please provide a language manually if available language(s) should not be used");
-                }
-            } else if (this.inheritLanguageGroup.getSelection().getActionCommand().equalsIgnoreCase(EdmOptionsPanel.YES)) {
-                if (!this.ead2EdmInformation.isLanguagesOnParent()) {
-                    throw new Exception("The higher levels do not have an associated language");
-                }
-                if (!useExistingLanguageCheckbox.isSelected()) {
-                    throw new Exception("Please provide a language manually if available language(s) should not be used");
-                }
-            }
-
-        } else {
-            if (this.languageBoxPanel == null) {
-                throw new Exception("language is null");
-            } else if (!((LanguageBoxPanel) this.languageBoxPanel).hasSelections()) {
-                throw new Exception("no language selected");
-            }
+        if (this.languageBoxPanel == null) {
+            throw new Exception("language is null");
+        } else if (!((LanguageBoxPanel) this.languageBoxPanel).hasSelections()) {
+            throw new Exception("no language selected");
         }
 
         if (StringUtils.isEmpty(dataProviderTextArea.getText())) {
@@ -1063,14 +852,6 @@ public class EdmOptionsPanel extends JPanel {
         if (ead2EdmInformation.getTitlestmtTitleproper() != null) {
             titlestmtTitleproper = ead2EdmInformation.getTitlestmtTitleproper();
         }
-    }
-
-    public JPanel getInheritParentPanel() {
-        return inheritParentPanel;
-    }
-
-    public JPanel getInheritOriginationPanel() {
-        return inheritOriginationPanel;
     }
 
     public JPanel getInheritLanguagePanel() {
@@ -1186,7 +967,7 @@ public class EdmOptionsPanel extends JPanel {
                                         writer.append(": ");
                                         writer.append(duplicates.toString());
                                         writer.append("\r\n");
-                                        */
+                                         */
 
                                         fileInstance.setEuropeanaConversionErrors(writer.toString());
                                         writer.getBuffer().setLength(0);
@@ -1263,7 +1044,7 @@ public class EdmOptionsPanel extends JPanel {
             try {
                 RetrieveFromDb retrieveFromDb = new RetrieveFromDb();
                 String eadid = EAD2002Utils.retrieveEadid(selectedIndex.getAbsoluteFile());
-                String xmlOutputFolder = retrieveFromDb.retrieveDefaultSaveFolder() + eadid + "/";
+                String xmlOutputFolder = retrieveFromDb.retrieveDefaultSaveFolder() + convertToFilename(eadid) + "/";
                 String loc;
                 if (fileInstance.isConverted() || fileInstance.getLastOperation().equals(FileInstance.Operation.SAVE)) {
                     loc = fileInstance.getCurrentLocation();
@@ -1277,9 +1058,6 @@ public class EdmOptionsPanel extends JPanel {
                 } else {
                     fileInstance.setEdm(true);
                     fileInstance.setEdmLocation(outputFolder.getAbsolutePath());
-                    if (StringUtils.isNotEmpty(fileInstance.getEdmLocation())) {
-                        fileInstance.setMinimalConverted(config.isMinimalConversion());
-                    }
                     fileInstance.setEuropeanaConversionErrors(MessageFormat.format(labels.getString("edm.convertedAndSaved"), outputFolder.getAbsolutePath(), retrieveFromDb.retrieveDefaultSaveFolder()) + "\n");
                     fileInstance.setLastOperation(FileInstance.Operation.CONVERT_EDM);
                 }
@@ -1304,18 +1082,38 @@ public class EdmOptionsPanel extends JPanel {
 
         CreativeCommonsPanel() {
             super(new GridLayout(4, 1));
-            creativeCommonsBtnGrp = new ButtonGroup();
-            JCheckBox checkBox = new JCheckBox(labels.getString("edm.panel.license.cc.remixing"));
-            add(checkBox);
-            creativeCommonsBtnGrp.add(checkBox);
-            checkBox = new JCheckBox(labels.getString("edm.panel.license.cc.prohibit"));
-            add(checkBox);
-            creativeCommonsBtnGrp.add(checkBox);
-            checkBox = new JCheckBox(labels.getString("edm.panel.license.cc.share"));
-            add(checkBox);
-            creativeCommonsBtnGrp.add(checkBox);
+            ccRemixingCheckBox = new JCheckBox(labels.getString("edm.panel.license.cc.remixing"));
+            ccRemixingCheckBox.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent event) {
+                    if (ccRemixingCheckBox.isSelected()){
+                        ccShareCheckBox.setEnabled(true);
+                    } else {
+                        ccShareCheckBox.setSelected(false);
+                        ccShareCheckBox.setEnabled(false);
+                    }
+                }
+            });
+            add(ccRemixingCheckBox);
+            ccProhibitCheckBox = new JCheckBox(labels.getString("edm.panel.license.cc.prohibit"));
+            add(ccProhibitCheckBox);
+            ccShareCheckBox = new JCheckBox(labels.getString("edm.panel.license.cc.share"));
+            ccShareCheckBox.setEnabled(false);
+            add(ccShareCheckBox);
             creativeCommonsComboBox = new JComboBox(CreativeCommons.getCountryNames().toArray());
             add(creativeCommonsComboBox);
+        }
+        
+        public boolean isCcRemixingChecked() {
+            return ccRemixingCheckBox.isSelected();
+        }
+        
+        public boolean isCcProhibitChecked() {
+            return ccProhibitCheckBox.isSelected();
+        }
+        
+        public boolean isCcShareChecked() {
+            return ccShareCheckBox.isSelected();
         }
     }
 
@@ -1512,22 +1310,7 @@ public class EdmOptionsPanel extends JPanel {
         }
     }
 
-    private class ConversionModeListener implements ActionListener {
-
-        @Override
-        public void actionPerformed(ActionEvent e) {
-            if (MINIMAL.equals(e.getActionCommand())) {
-                conversionMode = MINIMAL;
-                inheritOriginationPanel.setVisible(false);
-                inheritParentPanel.setVisible(false);
-                inheritUnittitlePanel.setVisible(false);
-            }
-            if (FULL.equals(e.getActionCommand())) {
-                conversionMode = FULL;
-                inheritOriginationPanel.setVisible(true);
-                inheritParentPanel.setVisible(true);
-                inheritUnittitlePanel.setVisible(true);
-            }
-        }
+    private String convertToFilename(String name) {
+        return name.replaceAll("[^a-zA-Z0-9\\-\\.]", "_");
     }
 }

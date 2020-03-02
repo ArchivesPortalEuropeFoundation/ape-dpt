@@ -18,6 +18,7 @@ import eu.apenet.dpt.utils.ead2edm.stax.EDMParser;
 import eu.apenet.dpt.utils.ead2edm.stax.ProvidedCHOParser;
 import eu.apenet.dpt.utils.ead2edm.stax.WebResourceParser;
 import eu.apenet.dpt.utils.util.APEXmlCatalogResolver;
+import java.util.Arrays;
 import javanet.staxutils.IndentingXMLStreamWriter;
 
 import javax.xml.XMLConstants;
@@ -105,27 +106,33 @@ public class XMLUtil {
         return files;
     }
 
-    public static DigitalObjectCounter analyzeESEXML(File outputFile) throws XMLStreamException, SAXException,
+    public static DigitalObjectCounter analyzeEdmXml(File outputFolder) throws XMLStreamException, SAXException,
             IOException {
 
-        XMLStreamReader xmlReader = XMLUtil.getXMLStreamReader(outputFile);
-        EDMParser parser = new EDMParser();
-        ProvidedCHOParser providedCHOParser = new ProvidedCHOParser();
-        WebResourceParser webResourceParser = new WebResourceParser();
-        parser.registerParser(providedCHOParser);
-        parser.registerParser(webResourceParser);
-        // count number of records
-        parser.parse(xmlReader, null);
-        int numberOfProvidedCHO = providedCHOParser.getNumberOfProvidedCHO();
-        int numberOfWebResource = webResourceParser.getNumberOfWebResource();
+        ArrayList<File> edmFiles = new ArrayList<File>(Arrays.asList(outputFolder.listFiles()));
+        int numberOfProvidedCHO = 0;
+        int numberOfWebResource = 0;
+
+        for (File edmFile : edmFiles) {
+            XMLStreamReader xmlReader = XMLUtil.getXMLStreamReader(edmFile);
+            EDMParser parser = new EDMParser();
+            ProvidedCHOParser providedCHOParser = new ProvidedCHOParser();
+            WebResourceParser webResourceParser = new WebResourceParser();
+            parser.registerParser(providedCHOParser);
+            parser.registerParser(webResourceParser);
+            // count number of records per file
+            parser.parse(xmlReader, null);
+            numberOfProvidedCHO += providedCHOParser.getNumberOfProvidedCHO();
+            numberOfWebResource += webResourceParser.getNumberOfWebResource();
+            xmlReader.close();
+        }
         DigitalObjectCounter digitalObjectCounter = new DigitalObjectCounter(numberOfProvidedCHO, numberOfWebResource);
         if (numberOfProvidedCHO == 0) {
-            outputFile.delete();
+            outputFolder.delete();
 //TODO Re-enable validation; currently disabled because of strange exception in code (although oXygen says file is valid)
 //		} else {
-//			XMLUtil.validateEDM(outputFile);
+//			XMLUtil.validateEDM(outputFolder);
         }
-        xmlReader.close();
         return digitalObjectCounter;
     }
 
