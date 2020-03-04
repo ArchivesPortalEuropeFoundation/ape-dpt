@@ -152,16 +152,18 @@ public class EdmOptionsPanel extends JPanel {
     private Ead2EdmInformation ead2EdmInformation;
     private JCheckBox useExistingRepoCheckbox;
     private JCheckBox useExistingDaoRoleCheckbox;
-    private JCheckBox useExistingLanguageCheckbox;
+    private JCheckBox useExistingLanguageMaterialCheckbox;
+    private JCheckBox sameLanguageAsMaterialCheckbox;
     private JCheckBox useExistingRightsInfoCheckbox;
-    private JPanel languageBoxPanel = new LanguageBoxPanel();
+    private JPanel languageBoxPanelMaterial = new LanguageBoxPanel();
+    private JPanel languageBoxPanelDescription = new LanguageBoxPanel();
     private String sourceOfFondsTitle = ARCHDESC_UNITTITLE;
-    private JPanel inheritLanguagePanel;
+    private JPanel languageOfMaterialPanel;
+    private JPanel languageOfDescriptionPanel;
     private JCheckBox ccRemixingCheckBox;
     private JCheckBox ccProhibitCheckBox;
     private JCheckBox ccShareCheckBox;
-
-        
+    private JCheckBox useExistingLanguageDescriptionCheckbox;
 
     public EdmOptionsPanel(ResourceBundle labels, DataPreparationToolGUI dataPreparationToolGUI, JFrame parent, APETabbedPane apeTabbedPane, boolean batch) {
         super(new BorderLayout());
@@ -182,7 +184,7 @@ public class EdmOptionsPanel extends JPanel {
         JPanel europeanaRightsPanel = new EuropeanaRightsPanel();
         JPanel emptyPanel = new JPanel();
 
-        JPanel formPanel = new JPanel(new GridLayout(10, 1));
+        JPanel formPanel = new JPanel(new GridLayout(11, 1));
 
         JPanel extraLicenseCardLayoutPanel = new JPanel(new CardLayout());
         extraLicenseCardLayoutPanel.add(creativeCommonsPanel, CREATIVE_COMMONS);
@@ -394,42 +396,76 @@ public class EdmOptionsPanel extends JPanel {
 
         if (this.batch) {
             panel = new JPanel(new GridLayout(1, 3));
-            panel.add(new Label(labels.getString("ese.selectLanguage") + ":" + "*"));
-            panel.add(languageBoxPanel);
-            useExistingLanguageCheckbox = new JCheckBox(labels.getString("ese.takeFromFileLanguage"));
-            useExistingLanguageCheckbox.setSelected(true);
-            useExistingLanguageCheckbox.addItemListener(new ItemListener() {
+            panel.add(new Label(labels.getString("ese.selectLanguageMaterial") + ":" + "*"));
+            panel.add(languageBoxPanelMaterial);
+            useExistingLanguageMaterialCheckbox = new JCheckBox(labels.getString("ese.takeFromFileLanguage"));
+            useExistingLanguageMaterialCheckbox.setSelected(true);
+            useExistingLanguageMaterialCheckbox.addItemListener(new ItemListener() {
                 @Override
                 public void itemStateChanged(ItemEvent e) {
                     //empty method on purpose
                 }
             });
-            panel.add(useExistingLanguageCheckbox);
+            panel.add(useExistingLanguageMaterialCheckbox);
             panel.setBorder(BLACK_LINE);
             formPanel.add(panel);
         } else {
-            inheritLanguagePanel = new JPanel(new GridLayout(1, 3));
-            inheritLanguagePanel.add(new Label(labels.getString("ese.selectLanguage") + ":" + "*"));
+            languageOfMaterialPanel = new JPanel(new GridLayout(1, 3));
+            languageOfMaterialPanel.add(new Label(labels.getString("ese.selectLanguageMaterial") + ":" + "*"));
 
             JPanel rbPanel = new JPanel(new GridLayout(1, 1));
-            languageBoxPanel.setVisible(true);
-            inheritLanguagePanel.add(languageBoxPanel, BorderLayout.WEST);
+            languageBoxPanelMaterial.setVisible(true);
+            languageOfMaterialPanel.add(languageBoxPanelMaterial, BorderLayout.WEST);
 
-            useExistingLanguageCheckbox = new JCheckBox(labels.getString("ese.takeFromFileLanguage"));
-            useExistingLanguageCheckbox.setSelected(true);
-            useExistingLanguageCheckbox.addItemListener(new ItemListener() {
+            useExistingLanguageMaterialCheckbox = new JCheckBox(labels.getString("ese.takeFromFileLanguage"));
+            useExistingLanguageMaterialCheckbox.setSelected(true);
+            useExistingLanguageMaterialCheckbox.addItemListener(new ItemListener() {
                 @Override
                 public void itemStateChanged(ItemEvent e) {
                     //empty method on purpose
                 }
             });
-            rbPanel.add(useExistingLanguageCheckbox);
-            inheritLanguagePanel.add(rbPanel, BorderLayout.EAST);
+            rbPanel.add(useExistingLanguageMaterialCheckbox);
+            languageOfMaterialPanel.add(rbPanel, BorderLayout.EAST);
 
-            inheritLanguagePanel.setBorder(BLACK_LINE);
-            inheritLanguagePanel.setVisible(true);
-            formPanel.add(inheritLanguagePanel);
+            languageOfMaterialPanel.setBorder(BLACK_LINE);
+            languageOfMaterialPanel.setVisible(true);
+            formPanel.add(languageOfMaterialPanel);
         }
+
+        languageOfDescriptionPanel = new JPanel(new GridLayout(1, 3));
+        languageOfDescriptionPanel.add(new Label(labels.getString("ese.selectLanguageDescription") + ":" + "*"));
+
+        JPanel rbPanel = new JPanel(new GridLayout(1, 1));
+        languageBoxPanelDescription.setVisible(true);
+        languageOfDescriptionPanel.add(languageBoxPanelDescription, BorderLayout.WEST);
+
+        JPanel checkboxPanel = new JPanel(new GridLayout(2, 1));
+        sameLanguageAsMaterialCheckbox = new JCheckBox(labels.getString("ese.sameLanguageAsMaterial"));
+        sameLanguageAsMaterialCheckbox.setSelected(true);
+        sameLanguageAsMaterialCheckbox.addItemListener(new ItemListener() {
+            @Override
+            public void itemStateChanged(ItemEvent e) {
+                //empty method on purpose
+            }
+        });
+        checkboxPanel.add(sameLanguageAsMaterialCheckbox);
+        useExistingLanguageDescriptionCheckbox = new JCheckBox(labels.getString("ese.takeFromFileLanguage"));
+        useExistingLanguageDescriptionCheckbox.setSelected(false);
+        useExistingLanguageDescriptionCheckbox.addItemListener(new ItemListener() {
+            @Override
+            public void itemStateChanged(ItemEvent e) {
+                //empty method on purpose
+            }
+        });
+        checkboxPanel.add(sameLanguageAsMaterialCheckbox);
+        checkboxPanel.add(useExistingLanguageDescriptionCheckbox);
+        rbPanel.add(checkboxPanel);
+        languageOfDescriptionPanel.add(rbPanel, BorderLayout.EAST);
+
+        languageOfDescriptionPanel.setBorder(BLACK_LINE);
+        languageOfDescriptionPanel.setVisible(true);
+        formPanel.add(languageOfDescriptionPanel);
 
         JPanel mainLicensePanel = new JPanel(new GridLayout(1, 4));
         mainLicensePanel.add(new Label(labels.getString("ese.specifyLicense") + ":" + "*"));
@@ -646,7 +682,7 @@ public class EdmOptionsPanel extends JPanel {
         }
 
         if (this.batch) {
-            if (!useExistingLanguageCheckbox.isSelected()) {
+            if (!useExistingLanguageMaterialCheckbox.isSelected()) {
             }
             StringBuilder result = new StringBuilder();
             Object[] languageValues = languageList.getSelectedValues();
@@ -658,7 +694,7 @@ public class EdmOptionsPanel extends JPanel {
             }
             config.setLanguage(result.toString());
         } else {
-            if (!useExistingLanguageCheckbox.isSelected()) {
+            if (!useExistingLanguageMaterialCheckbox.isSelected()) {
             }
             StringBuilder result = new StringBuilder();
             Object[] languageValues = languageList.getSelectedValues();
@@ -670,7 +706,7 @@ public class EdmOptionsPanel extends JPanel {
             }
             config.setLanguage(result.toString());
         }
-        if (useExistingLanguageCheckbox.isSelected()) {
+        if (useExistingLanguageMaterialCheckbox.isSelected()) {
             config.setUseExistingLanguage(true);
         }
 
@@ -708,7 +744,7 @@ public class EdmOptionsPanel extends JPanel {
     private String getCorrectRights(String type) {
         if (type.equals(CREATIVE_COMMONS)) {
             CreativeCommonsType creativeCommonsType = new CreativeCommonsType();
-            
+
             Set<AbstractButton> ccCheckBoxes = new LinkedHashSet<AbstractButton>();
             ccCheckBoxes.add(ccShareCheckBox);
             ccCheckBoxes.add(ccRemixingCheckBox);
@@ -716,7 +752,7 @@ public class EdmOptionsPanel extends JPanel {
             for (AbstractButton ccCheckBox : ccCheckBoxes) {
                 if (ccCheckBox.isSelected()) {
                     creativeCommonsType.setBtnChecked(ccCheckBox.getActionCommand());
-                }                
+                }
             }
             String urlType = creativeCommonsType.getUrlType();
             CreativeCommons creativeCommons = CreativeCommons.getCreativeCommonsByCountryName(creativeCommonsComboBox.getSelectedItem().toString());
@@ -808,9 +844,9 @@ public class EdmOptionsPanel extends JPanel {
             }
         }
 
-        if (this.languageBoxPanel == null) {
+        if (this.languageBoxPanelMaterial == null) {
             throw new Exception("language is null");
-        } else if (!((LanguageBoxPanel) this.languageBoxPanel).hasSelections()) {
+        } else if (!((LanguageBoxPanel) this.languageBoxPanelMaterial).hasSelections()) {
             throw new Exception("no language selected");
         }
 
@@ -854,8 +890,8 @@ public class EdmOptionsPanel extends JPanel {
         }
     }
 
-    public JPanel getInheritLanguagePanel() {
-        return inheritLanguagePanel;
+    public JPanel getLanguageOfMaterialPanel() {
+        return languageOfMaterialPanel;
     }
 
     public class ChangePanelActionListener implements ActionListener {
@@ -1086,7 +1122,7 @@ public class EdmOptionsPanel extends JPanel {
             ccRemixingCheckBox.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent event) {
-                    if (ccRemixingCheckBox.isSelected()){
+                    if (ccRemixingCheckBox.isSelected()) {
                         ccShareCheckBox.setEnabled(true);
                     } else {
                         ccShareCheckBox.setSelected(false);
@@ -1103,15 +1139,15 @@ public class EdmOptionsPanel extends JPanel {
             creativeCommonsComboBox = new JComboBox(CreativeCommons.getCountryNames().toArray());
             add(creativeCommonsComboBox);
         }
-        
+
         public boolean isCcRemixingChecked() {
             return ccRemixingCheckBox.isSelected();
         }
-        
+
         public boolean isCcProhibitChecked() {
             return ccProhibitCheckBox.isSelected();
         }
-        
+
         public boolean isCcShareChecked() {
             return ccShareCheckBox.isSelected();
         }
