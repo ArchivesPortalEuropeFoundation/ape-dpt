@@ -223,7 +223,7 @@ public class EdmConfig implements Serializable {
 
     public XMLTransformer getTransformerXML2XML() {
         if (transformerXML2XML == null) {
-            transformerXML2XML = new XMLTransformer("/ead2edm/ead2edmV2.xsl", getProperties());
+            transformerXML2XML = new XMLTransformer("/ead2edm/ead2edm.xsl", getProperties());
         }
         return transformerXML2XML;
     }
