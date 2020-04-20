@@ -39,11 +39,14 @@
     <xsl:param name="dc_rights"/>
     <xsl:param name="europeana_type"/>
     <xsl:param name="useISODates"/>
-    <xsl:param name="language"/>
+    <xsl:param name="languageMaterial"/>
+    <xsl:param name="languageDescription"/>
     <xsl:param name="inheritUnittitle"/>
     <xsl:param name="useExistingDaoRole"/>
     <xsl:param name="useExistingRepository"/>
-    <xsl:param name="useExistingLanguage"/>
+    <xsl:param name="useExistingLanguageMaterial"/>
+    <xsl:param name="useExistingLanguageDescription"/>
+    <xsl:param name="languageDescriptionSameAsLanguageMaterial"/>
     <xsl:param name="useExistingRightsInfo"/>
     <xsl:param name="idSource"/>
     <xsl:param name="landingPage"/>
@@ -67,6 +70,23 @@
         <xsl:call-template name="filenameReplace">
             <xsl:with-param name="input" select="normalize-space(/ead/eadheader/eadid)"/>
         </xsl:call-template>
+    </xsl:variable>
+    <xsl:variable name="languageUsedForDescription">
+        <xsl:choose>
+            <xsl:when test="$useExistingLanguageDescription = true()">
+                <xsl:choose>
+                    <xsl:when test="/ead/eadheader/profiledesc/langusage/language/@langcode">
+                        <xsl:value-of select="/ead/eadheader/profiledesc/langusage/language/@langcode"/>
+                    </xsl:when>
+                    <xsl:otherwise>
+                        <xsl:value-of select="$languageDescription"/>
+                    </xsl:otherwise>
+                </xsl:choose>
+            </xsl:when>
+            <xsl:otherwise>
+                <xsl:value-of select="$languageDescription"/>
+            </xsl:otherwise>
+        </xsl:choose>
     </xsl:variable>
     <!-- Key for detection of unitid duplicates -->
     <xsl:key name="unitids" match="unitid" use="text()"></xsl:key>
@@ -178,7 +198,7 @@
                         </dc:identifier>
                     </xsl:if>
                     <xsl:choose>
-                        <xsl:when test="$useExistingLanguage = 'true'">
+                        <xsl:when test="$useExistingLanguageMaterial = 'true'">
                             <xsl:choose>
                                 <xsl:when test="/ead/archdesc/did/langmaterial">
                                     <xsl:call-template name="language">
@@ -187,64 +207,43 @@
                                     </xsl:call-template>
                                 </xsl:when>
                                 <xsl:otherwise>
-                                    <xsl:choose>
-                                        <xsl:when test="fn:string-length($language) > 0">
-                                            <xsl:for-each select="tokenize($language, ' ')">
-                                                <dc:language>
-                                                  <xsl:value-of select="."/>
-                                                </dc:language>
-                                            </xsl:for-each>
-                                        </xsl:when>
-                                        <xsl:otherwise>
-                                            <xsl:for-each select="tokenize($language, ' ')">
-                                                <dc:language>
-                                                  <xsl:value-of select="."/>
-                                                </dc:language>
-                                            </xsl:for-each>
-                                        </xsl:otherwise>
-                                    </xsl:choose>
+                                    <xsl:for-each select="tokenize($languageMaterial, ' ')">
+                                        <dc:language>
+                                            <xsl:value-of select="."/>
+                                        </dc:language>
+                                    </xsl:for-each>
                                 </xsl:otherwise>
                             </xsl:choose>
                         </xsl:when>
                         <xsl:otherwise>
-                            <xsl:choose>
-                                <xsl:when test="fn:string-length($language) > 0">
-                                    <xsl:for-each select="tokenize($language, ' ')">
-                                        <dc:language>
-                                            <xsl:value-of select="."/>
-                                        </dc:language>
-                                    </xsl:for-each>
-                                </xsl:when>
-                                <xsl:otherwise>
-                                    <xsl:for-each select="tokenize($language, ' ')">
-                                        <dc:language>
-                                            <xsl:value-of select="."/>
-                                        </dc:language>
-                                    </xsl:for-each>
-                                </xsl:otherwise>
-                            </xsl:choose>
+                            <xsl:for-each select="tokenize($languageMaterial, ' ')">
+                                <dc:language>
+                                    <xsl:value-of select="."/>
+                                </dc:language>
+                            </xsl:for-each>
                         </xsl:otherwise>
                     </xsl:choose>
 
-                    <dc:title><xsl:value-of select="$useArchUnittitle"/></dc:title>
                     <xsl:choose>
                         <xsl:when test="$useArchUnittitle = true()">
                             <xsl:choose>
                                 <xsl:when test="/ead/archdesc/did/unittitle != ''">
                                     <dc:title>
+                                        <xsl:attribute name="xml:lang" select="$languageUsedForDescription"/>
                                         <xsl:value-of select="/ead/archdesc/did/unittitle"/>
                                     </dc:title>
                                 </xsl:when>
                                 <xsl:when test="/ead/eadheader/filedesc/titlestmt/titleproper != ''">
                                     <dc:title>
-                                        <xsl:value-of
-                                            select="/ead/eadheader/filedesc/titlestmt/titleproper"/>
+                                        <xsl:attribute name="xml:lang" select="$languageUsedForDescription"/>
+                                        <xsl:value-of select="/ead/eadheader/filedesc/titlestmt/titleproper"/>
                                     </dc:title>
                                 </xsl:when>
                                 <xsl:otherwise>
                                     <xsl:if
                                         test="not(/ead/archdesc/scopecontent[@encodinganalog = 'summary'] != '')">
                                         <dc:title>
+                                            <xsl:attribute name="xml:lang" select="$languageUsedForDescription"/>
                                             <xsl:text>No title</xsl:text>
                                         </dc:title>
                                     </xsl:if>
@@ -255,12 +254,13 @@
                             <xsl:choose>
                                 <xsl:when test="/ead/eadheader/filedesc/titlestmt/titleproper != ''">
                                     <dc:title>
-                                        <xsl:value-of
-                                            select="/ead/eadheader/filedesc/titlestmt/titleproper"/>
+                                        <xsl:attribute name="xml:lang" select="$languageUsedForDescription"/>
+                                        <xsl:value-of select="/ead/eadheader/filedesc/titlestmt/titleproper"/>
                                     </dc:title>
                                 </xsl:when>
                                 <xsl:when test="/ead/archdesc/did/unittitle != ''">
                                     <dc:title>
+                                        <xsl:attribute name="xml:lang" select="$languageUsedForDescription"/>
                                         <xsl:value-of select="/ead/archdesc/did/unittitle"/>
                                     </dc:title>
                                 </xsl:when>
@@ -268,6 +268,7 @@
                                     <xsl:if
                                         test="not(/ead/archdesc/scopecontent[@encodinganalog = 'summary'] != '')">
                                         <dc:title>
+                                            <xsl:attribute name="xml:lang" select="$languageUsedForDescription"/>
                                             <xsl:text>No title</xsl:text>
                                         </dc:title>
                                     </xsl:if>
@@ -321,10 +322,11 @@
                     <xsl:choose>
                         <xsl:when test="/ead/archdesc/did/physdesc/genreform[text() != '']">
                             <dc:type>
-                                <xsl:value-of
-                                    select="/ead/archdesc/did/physdesc/genreform[text() != '']"/>
+                                <xsl:attribute name="xml:lang" select="$languageUsedForDescription"/>
+                                <xsl:value-of select="/ead/archdesc/did/physdesc/genreform[text() != '']"/>
                             </dc:type>
                             <dc:type>
+                                <xsl:attribute name="xml:lang" select="$languageUsedForDescription"/>
                                 <xsl:attribute name="rdf:resource">
                                     <xsl:text>http://vocab.getty.edu/aat/300379505</xsl:text>
                                 </xsl:attribute>
@@ -333,6 +335,7 @@
                         <xsl:otherwise>
                             <xsl:if test="not(/ead/archdesc/controlaccess/*/text())">
                                 <dc:type>
+                                    <xsl:attribute name="xml:lang" select="$languageUsedForDescription"/>
                                     <xsl:attribute name="rdf:resource">
                                         <xsl:text>http://vocab.getty.edu/aat/300379505</xsl:text>
                                     </xsl:attribute>
@@ -343,8 +346,8 @@
                     <xsl:if
                         test="/ead/archdesc/did/physdesc/physfacet[text() != '']">
                         <dc:format>
-                            <xsl:value-of
-                                select="/ead/archdesc/did/physdesc/physfacet[text() != '']"/>
+                            <xsl:attribute name="xml:lang" select="$languageUsedForDescription"/>
+                            <xsl:value-of select="/ead/archdesc/did/physdesc/physfacet[text() != '']"/>
                         </dc:format>
                     </xsl:if>
                     <xsl:if
@@ -407,6 +410,7 @@
                     <xsl:if
                         test="/ead/archdesc/did/unitdate[text() != '']">
                         <dcterms:temporal>
+                            <xsl:attribute name="xml:lang" select="$languageUsedForDescription"/>
                             <xsl:value-of select="/ead/archdesc/did/unitdate[text() != '']"/>
                         </dcterms:temporal>
                     </xsl:if>
@@ -435,6 +439,7 @@
                         </xsl:choose>
                     </xsl:attribute>
                     <dc:description>
+                        <xsl:attribute name="xml:lang" select="$languageUsedForDescription"/>
                         <xsl:choose>
                             <xsl:when test="/ead/archdesc/did/unittitle[text() != '']">
                                 <xsl:for-each select="/ead/archdesc/did/unittitle[text() != '']">
@@ -1109,12 +1114,6 @@
                             <xsl:copy-of select="$inheritedMaterialspecs"/>
                         </xsl:when>
                     </xsl:choose>
-                    <!--<xsl:if
-                        test="$currentnode/did/materialspec[text() != '']">
-                        <dc:format>
-                            <xsl:value-of select="$currentnode/did/materialspec[text() != '']"/>
-                        </dc:format>
-                    </xsl:if>-->
                     <xsl:choose>
                         <xsl:when test="$currentnode/relatedmaterial[text() != '']">
                             <xsl:apply-templates select="$currentnode/relatedmaterial[text() != '']"
@@ -1127,10 +1126,11 @@
                     <xsl:choose>
                         <xsl:when test="$currentnode/did/physdesc/genreform[text() != '']">
                             <dc:type>
-                                <xsl:value-of
-                                    select="$currentnode/did/physdesc/genreform[text() != '']"/>
+                                <xsl:attribute name="xml:lang" select="$languageUsedForDescription"/>
+                                <xsl:value-of select="$currentnode/did/physdesc/genreform[text() != '']"/>
                             </dc:type>
                             <dc:type>
+                                <xsl:attribute name="xml:lang" select="$languageUsedForDescription"/>
                                 <xsl:attribute name="rdf:resource">
                                     <xsl:text>http://vocab.getty.edu/aat/300379505</xsl:text>
                                 </xsl:attribute>
@@ -1139,6 +1139,7 @@
                         <xsl:otherwise>
                             <xsl:if test="not($currentnode/controlaccess/*/text()) and not($inheritedControlaccesses/*/text())">
                                 <dc:type>
+                                    <xsl:attribute name="xml:lang" select="$languageUsedForDescription"/>
                                     <xsl:attribute name="rdf:resource">
                                         <xsl:text>http://vocab.getty.edu/aat/300379505</xsl:text>
                                     </xsl:attribute>
@@ -1150,8 +1151,8 @@
                     <xsl:if
                         test="$currentnode/did/physdesc/physfacet[text() != '']">
                         <dc:format>
-                            <xsl:value-of select="$currentnode/did/physdesc/physfacet[text() != '']"
-                            />
+                            <xsl:attribute name="xml:lang" select="$languageUsedForDescription"/>
+                            <xsl:value-of select="$currentnode/did/physdesc/physfacet[text() != '']" />
                         </dc:format>
                     </xsl:if>
                     <xsl:if
@@ -1275,28 +1276,33 @@
                     <xsl:choose>
                         <xsl:when test="$inheritUnittitle = true() and $currentnode/did/unittitle != '' and $parentcnode/did/unittitle != '' and not($currentnode/c) and $hasDao">
                             <dc:title>
+                                <xsl:attribute name="xml:lang" select="$languageUsedForDescription"/>
                                 <xsl:value-of select="$parentcnode/did/unittitle[1]"/> >>
                                     <xsl:value-of select="$currentnode/did/unittitle"/>
                             </dc:title>
                         </xsl:when>
                         <xsl:when test="$inheritUnittitle = true() and $currentnode/did/unittitle != '' and $parentcnode/did/unittitle = '' and not($currentnode/c) and $hasDao">
                             <dc:title>
+                                <xsl:attribute name="xml:lang" select="$languageUsedForDescription"/>
                                 <xsl:value-of select="$currentnode/did/unittitle"/>
                             </dc:title>
                         </xsl:when>
                         <xsl:when test="$inheritUnittitle = true() and $currentnode/did/unittitle = '' and $parentcnode/did/unittitle != '' and not($currentnode/c) and $hasDao">
                             <dc:title>
+                                <xsl:attribute name="xml:lang" select="$languageUsedForDescription"/>
                                 <xsl:value-of select="$parentcnode/did/unittitle[1]"/>"/>
                             </dc:title>
                         </xsl:when>
                         <xsl:when test="$currentnode/did/unittitle != ''">
                             <dc:title>
+                                <xsl:attribute name="xml:lang" select="$languageUsedForDescription"/>
                                 <xsl:value-of select="$currentnode/did/unittitle"/>
                             </dc:title>
                         </xsl:when>
                         <xsl:otherwise>
                             <xsl:if test="not($currentnode/scopecontent[@encodinganalog = 'summary'] != '') and $inheritedScopecontent = ''">
                                 <dc:title>
+                                    <xsl:attribute name="xml:lang" select="$languageUsedForDescription"/>
                                     <xsl:text>No title</xsl:text>
                                 </dc:title>
                             </xsl:if>
@@ -1304,7 +1310,7 @@
                     </xsl:choose>
 
                     <xsl:choose>
-                        <xsl:when test="$useExistingLanguage = &quot;true&quot;">
+                        <xsl:when test="$useExistingLanguageMaterial = &quot;true&quot;">
                             <xsl:choose>
                                 <xsl:when test="$currentnode/did/langmaterial">
                                     <xsl:call-template name="language">
@@ -1332,7 +1338,7 @@
                                             </xsl:for-each>
                                         </xsl:when>
                                         <xsl:otherwise>
-                                            <xsl:for-each select="tokenize($language, ' ')">
+                                            <xsl:for-each select="tokenize($languageMaterial, ' ')">
                                                 <dc:language>
                                                   <xsl:value-of select="."/>
                                                 </dc:language>
@@ -1355,15 +1361,15 @@
                                 </xsl:when>
                                 <xsl:otherwise>
                                     <xsl:choose>
-                                        <xsl:when test="fn:string-length($language) > 0">
-                                            <xsl:for-each select="tokenize($language, ' ')">
+                                        <xsl:when test="fn:string-length($languageMaterial) > 0">
+                                            <xsl:for-each select="tokenize($languageMaterial, ' ')">
                                                 <dc:language>
                                                   <xsl:value-of select="."/>
                                                 </dc:language>
                                             </xsl:for-each>
                                         </xsl:when>
                                         <xsl:otherwise>
-                                            <xsl:for-each select="tokenize($language, ' ')">
+                                            <xsl:for-each select="tokenize($languageMaterial, ' ')">
                                                 <dc:language>
                                                   <xsl:value-of select="."/>
                                                 </dc:language>
@@ -1574,6 +1580,7 @@
                                 </xsl:choose>
                             </xsl:attribute>
                             <dc:description>
+                                <xsl:attribute name="xml:lang" select="$languageUsedForDescription"/>
                                 <xsl:choose>
                                     <xsl:when test="did/unittitle != ''">
                                         <xsl:apply-templates select="did/unittitle"
@@ -1610,6 +1617,7 @@
         <xsl:for-each select="$controlaccesses/corpname | $controlaccesses/persname | $controlaccesses/famname | $controlaccesses/name">
             <xsl:if test="text() != ''">
                 <dc:coverage>
+                    <xsl:attribute name="xml:lang" select="$languageUsedForDescription"/>
                     <xsl:value-of select="."/>
                 </dc:coverage>
             </xsl:if>
@@ -1617,6 +1625,7 @@
         <xsl:for-each select="$controlaccesses/geogname">
             <xsl:if test="text() != ''">
                 <dcterms:spatial>
+                    <xsl:attribute name="xml:lang" select="$languageUsedForDescription"/>
                     <xsl:value-of select="."/>
                 </dcterms:spatial>
             </xsl:if>
@@ -1624,6 +1633,7 @@
         <xsl:for-each select="$controlaccesses/function | $controlaccesses/occupation | $controlaccesses/subject">
             <xsl:if test="text() != ''">
                 <dc:subject>
+                    <xsl:attribute name="xml:lang" select="$languageUsedForDescription"/>
                     <xsl:value-of select="."/>
                 </dc:subject>
             </xsl:if>
@@ -1710,6 +1720,7 @@
                 </xsl:for-each>
             </xsl:variable>
             <dcterms:provenance>
+                <xsl:attribute name="xml:lang" select="$languageUsedForDescription"/>
                 <xsl:value-of select="fn:replace(normalize-space($content), '[\n\t\r]', ' ')"/>
             </dcterms:provenance>
         </xsl:for-each>
@@ -1732,11 +1743,13 @@
                 <xsl:apply-templates select="head[1] | p[1]"/>
             </xsl:variable>
             <dcterms:provenance>
+                <xsl:attribute name="xml:lang" select="$languageUsedForDescription"/>
                 <xsl:value-of select="fn:replace(normalize-space($content), '[\n\t\r]', ' ')"/>
             </dcterms:provenance>
         </xsl:for-each>
         <xsl:if test="$needsLinkToEadUrl = true()">
             <dcterms:provenance>
+                <xsl:attribute name="xml:lang" select="$languageUsedForDescription"/>
                 <xsl:attribute name="rdf:resource">
                     <xsl:choose>
                         <xsl:when test="/ead/eadheader/eadid/@url">
@@ -1821,16 +1834,16 @@
     <xsl:template name="language">
         <xsl:param name="langmaterials"/>
         <xsl:for-each select="$langmaterials/language/@langcode">
-            <xsl:variable name="languageWithoutSpaces">
+            <xsl:variable name="languageMaterialWithoutSpaces">
                 <xsl:value-of select="fn:replace(normalize-space(.), '[\n\t\r]', '')"/>
             </xsl:variable>
             <dc:language>
                 <xsl:choose>
-                    <xsl:when test="fn:string-length($languageWithoutSpaces) > 0">
-                        <xsl:value-of select="$languageWithoutSpaces"/>
+                    <xsl:when test="fn:string-length($languageMaterialWithoutSpaces) > 0">
+                        <xsl:value-of select="$languageMaterialWithoutSpaces"/>
                     </xsl:when>
                     <xsl:otherwise>
-                        <xsl:for-each select="tokenize($language,' ')">
+                        <xsl:for-each select="tokenize($languageMaterial,' ')">
                             <dc:language>
                                 <xsl:value-of select="."/>
                             </dc:language>
@@ -1889,6 +1902,7 @@
                 </xsl:for-each>
             </xsl:variable>
             <dc:relation>
+                <xsl:attribute name="xml:lang" select="$languageUsedForDescription"/>
                 <xsl:value-of select="fn:replace(normalize-space($content), '[\n\t\r]', ' ')"/>
             </dc:relation>
         </xsl:for-each>
@@ -1911,11 +1925,13 @@
                 <xsl:apply-templates select="head[1] | p[1]"/>
             </xsl:variable>
             <dc:relation>
+                <xsl:attribute name="xml:lang" select="$languageUsedForDescription"/>
                 <xsl:value-of select="fn:replace(normalize-space($content), '[\n\t\r]', ' ')"/>
             </dc:relation>
         </xsl:for-each>
         <xsl:if test="$needsLinkToEadUrl = true()">
             <dc:relation>
+                <xsl:attribute name="xml:lang" select="$languageUsedForDescription"/>
                 <xsl:attribute name="rdf:resource">
                     <xsl:choose>
                         <xsl:when test="/ead/eadheader/eadid/@url">
@@ -1980,11 +1996,13 @@
             <xsl:apply-templates select="$bibrefs/text() | $bibrefs/name | $bibrefs/title | $bibrefs/extref" />
         </xsl:variable>
         <dcterms:isReferencedBy>
+            <xsl:attribute name="xml:lang" select="$languageUsedForDescription"/>
             <xsl:value-of select="fn:replace(normalize-space($bibrefContent), '[\n\t\r]', '')"/>
         </dcterms:isReferencedBy>
         <xsl:if test="$bibrefs/@xlink:href">
             <xsl:for-each select="$bibrefs">
                 <dcterms:isReferencedBy>
+                    <xsl:attribute name="xml:lang" select="$languageUsedForDescription"/>
                     <xsl:attribute name="rdf:resource" select="./@xlink:href"/>
                 </dcterms:isReferencedBy>
             </xsl:for-each>
@@ -1992,6 +2010,7 @@
         <xsl:if test="$bibrefs/extref/@xlink:href">
             <xsl:for-each select="$bibrefs/extref">
                 <dcterms:isReferencedBy>
+                    <xsl:attribute name="xml:lang" select="$languageUsedForDescription"/>
                     <xsl:attribute name="rdf:resource" select="./@xlink:href"/>
                 </dcterms:isReferencedBy>
             </xsl:for-each>
@@ -2040,13 +2059,11 @@
                 </xsl:choose>
             </xsl:attribute>
             <dc:description>
+                <xsl:attribute name="xml:lang" select="$languageUsedForDescription"/>
                 <xsl:choose>
                     <xsl:when test="@*:title != ''">
                         <xsl:value-of select="@*:title"/>
                     </xsl:when>
-<!--                    <xsl:when test="@xlink:title">
-                        <xsl:value-of select="@xlink:title"/>
-                    </xsl:when>-->
                     <xsl:otherwise>
                         <xsl:value-of select="'Archival material'"/>
                     </xsl:otherwise>
@@ -2178,6 +2195,7 @@
     <xsl:template match="otherfindaid">
         <xsl:if test="p/extref/@xlink:href">
             <dcterms:isReferencedBy>
+                <xsl:attribute name="xml:lang" select="$languageUsedForDescription"/>
                 <xsl:attribute name="rdf:resource" select="p/extref/@xlink:href"/>
             </dcterms:isReferencedBy>
         </xsl:if>
@@ -2208,6 +2226,7 @@
         </xsl:variable>
         <xsl:if test="fn:replace(normalize-space($content), '[\n\t\r]', '') != ''">
             <dc:description>
+                <xsl:attribute name="xml:lang" select="$languageUsedForDescription"/>
                 <xsl:value-of select="fn:replace(normalize-space($content), '[\n\t\r]', '')"/>
             </dc:description>
         </xsl:if>
@@ -2279,6 +2298,7 @@
             <xsl:apply-templates/>
         </xsl:variable>
         <dc:title>
+            <xsl:attribute name="xml:lang" select="$languageUsedForDescription"/>
             <xsl:value-of select="fn:replace(normalize-space($content), '[\n\t\r]', '')"/>
         </dc:title>
     </xsl:template>
@@ -2355,6 +2375,7 @@
         <xsl:param name="materialspecs"/>
         <xsl:for-each select="$materialspecs">
             <dc:format>
+                <xsl:attribute name="xml:lang" select="$languageUsedForDescription"/>
                 <xsl:value-of select="."/>
             </dc:format>
         </xsl:for-each>
