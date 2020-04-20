@@ -362,9 +362,10 @@ public class DataPreparationToolGUI extends JFrame {
 
         nameComponents();
         wireUp();
-        setSize(Toolkit.getDefaultToolkit().getScreenSize());
-        setMinimumSize(Toolkit.getDefaultToolkit().getScreenSize());
-        setExtendedState(JFrame.MAXIMIZED_BOTH);
+        setSize(1024,768);
+//        setSize(Toolkit.getDefaultToolkit().getScreenSize());
+//        setMinimumSize(Toolkit.getDefaultToolkit().getScreenSize());
+//        setExtendedState(JFrame.MAXIMIZED_BOTH);
     }
 
     private void nameComponents() {

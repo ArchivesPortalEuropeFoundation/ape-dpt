@@ -16,21 +16,19 @@ public class EdmConfig implements Serializable {
     private String idSource;
     private boolean generateHtml;
     private String sourceFilename;
-    private String language;
+    private String languageMaterial;
+    private String languageDescription;
     private File htmlSourcesDir;
-//    private boolean inheritElementsFromFileLevel;
-//    private boolean inheritOrigination;
     private boolean inheritUnittitle;
-//    private boolean inheritLanguage;
-//    private boolean inheritRightsInfo;
     private String rights;
     private String rightsAdditionalInformation;
     private String dataProvider;
     private boolean useExistingDaoRole;
-    private boolean useExistingLanguage;
+    private boolean useExistingLanguageMaterial;
+    private boolean useExistingLanguageDescription;
+    private boolean languageDescriptionSameAsLanguageMaterial;
     private boolean useExistingRepository;
     private boolean useExistingRightsInfo;
-//    private boolean minimalConversion;
     private String edmIdentifier;
     private String host;
     private String repositoryCode;
@@ -89,30 +87,6 @@ public class EdmConfig implements Serializable {
         this.validateLinks = validateLinks;
     }
 
-//    public boolean isInheritElementsFromFileLevel() {
-//        return inheritElementsFromFileLevel;
-//    }
-//
-//    public void setInheritElementsFromFileLevel(boolean inheritElementsFromFileLevel) {
-//        this.inheritElementsFromFileLevel = inheritElementsFromFileLevel;
-//    }
-//
-//    public boolean isInheritOrigination() {
-//        return inheritOrigination;
-//    }
-//
-//    public void setInheritOrigination(boolean inheritOrigination) {
-//        this.inheritOrigination = inheritOrigination;
-//    }
-//
-//    public boolean isInheritLanguage() {
-//        return inheritLanguage;
-//    }
-//
-//    public void setInheritLanguage(boolean inheritLanguage) {
-//        this.inheritLanguage = inheritLanguage;
-//    }
-//
     public boolean isInheritUnittitle() {
         return inheritUnittitle;
     }
@@ -120,21 +94,21 @@ public class EdmConfig implements Serializable {
     public void setInheritUnittitle(boolean inheritUnittitle) {
         this.inheritUnittitle = inheritUnittitle;
     }
-//
-//    public boolean isInheritRightsInfo() {
-//        return inheritRightsInfo;
-//    }
-//
-//    public void setInheritRightsInfo(boolean inheritRightsInfo) {
-//        this.inheritRightsInfo = inheritRightsInfo;
-//    }
 
-    public String getLanguage() {
-        return language;
+    public String getLanguageMaterial() {
+        return languageMaterial;
     }
 
-    public void setLanguage(String language) {
-        this.language = language;
+    public void setLanguageMaterial(String languageMaterial) {
+        this.languageMaterial = languageMaterial;
+    }
+
+    public String getLanguageDescription() {
+        return languageDescription;
+    }
+
+    public void setLanguageDescription(String languageDescription) {
+        this.languageDescription = languageDescription;
     }
 
     public File getHtmlSourcesDir() {
@@ -197,12 +171,28 @@ public class EdmConfig implements Serializable {
         this.useExistingDaoRole = useExistingDaoRole;
     }
 
-    public boolean isUseExistingLanguage() {
-        return useExistingLanguage;
+    public boolean isUseExistingLanguageMaterial() {
+        return useExistingLanguageMaterial;
     }
 
-    public void setUseExistingLanguage(boolean useExistingLanguage) {
-        this.useExistingLanguage = useExistingLanguage;
+    public void setUseExistingLanguageMaterial(boolean useExistingLanguageMaterial) {
+        this.useExistingLanguageMaterial = useExistingLanguageMaterial;
+    }
+
+    public boolean isUseExistingLanguageDescription() {
+        return useExistingLanguageDescription;
+    }
+
+    public void setUseExistingLanguageDescription(boolean useExistingLanguageDescription) {
+        this.useExistingLanguageDescription = useExistingLanguageDescription;
+    }
+
+    public boolean isLanguageDescriptionSameAsLanguageMaterial() {
+        return languageDescriptionSameAsLanguageMaterial;
+    }
+
+    public void setLanguageDescriptionSameAsLanguageMaterial(boolean languageDescriptionSameAsLanguageMaterial) {
+        this.languageDescriptionSameAsLanguageMaterial = languageDescriptionSameAsLanguageMaterial;
     }
 
     public boolean isUseExistingRepository() {
@@ -228,19 +218,6 @@ public class EdmConfig implements Serializable {
         return transformerXML2XML;
     }
 
-//    /**
-//     * @return the minimalConversion
-//     */
-//    public boolean isMinimalConversion() {
-//        return this.minimalConversion;
-//    }
-//
-//    /**
-//     * @param minimalConversion the minimalConversion to set
-//     */
-//    public void setMinimalConversion(boolean minimalConversion) {
-//        this.minimalConversion = minimalConversion;
-//    }
     public String getEdmIdentifier() {
         return edmIdentifier;
     }
@@ -310,18 +287,15 @@ public class EdmConfig implements Serializable {
         properties.put("europeana_type", getString(getType()));
         properties.put("idSource", getString(getIdSource()));
         properties.put("useISODates", getString("false"));
-        properties.put("language", getString(getLanguage()));
-//            properties.put("inheritElementsFromFileLevel",
-//                    getString(new Boolean(isInheritElementsFromFileLevel()).toString()));
-//            properties.put("inheritOrigination", getString(new Boolean(isInheritOrigination()).toString()));
+        properties.put("languageMaterial", getString(getLanguageMaterial()));
+        properties.put("languageDescription", getString(getLanguageDescription()));
         properties.put("inheritUnittitle", getString(new Boolean(isInheritUnittitle()).toString()));
-//            properties.put("inheritLanguage", getString(new Boolean(isInheritLanguage()).toString()));
-//            properties.put("inheritRightsInfo", getString(new Boolean(isInheritRightsInfo()).toString()));
         properties.put("useExistingDaoRole", getString(new Boolean(isUseExistingDaoRole()).toString()));
-        properties.put("useExistingLanguage", getString(new Boolean(isUseExistingLanguage()).toString()));
+        properties.put("useExistingLanguageMaterial", getString(new Boolean(isUseExistingLanguageMaterial()).toString()));
+        properties.put("useExistingLanguageDescription", getString(new Boolean(isUseExistingLanguageDescription()).toString()));
+        properties.put("languageDescriptionSameAsLanguageMaterial", getString(new Boolean(isLanguageDescriptionSameAsLanguageMaterial()).toString()));
         properties.put("useExistingRepository", getString(new Boolean(isUseExistingRepository()).toString()));
         properties.put("useExistingRightsInfo", getString(new Boolean(isUseExistingRightsInfo()).toString()));
-//            properties.put("minimalConversion", getString(new Boolean(isMinimalConversion()).toString()));
         properties.put("edm_identifier", getString(getEdmIdentifier()));
         properties.put("host", getString(getHost()));
         String repCodeAfterReplacement = getString(getRepositoryCode()).replace('/', '_');

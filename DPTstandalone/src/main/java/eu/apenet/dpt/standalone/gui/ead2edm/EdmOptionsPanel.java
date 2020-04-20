@@ -142,7 +142,8 @@ public class EdmOptionsPanel extends JPanel {
     private JComboBox creativeCommonsComboBox;
     private JComboBox europeanaRightsComboBox;
     private JTextArea dataProviderTextArea;
-    private JList languageList;
+    private LanguageList languageListMaterial = new LanguageList(true);
+    private LanguageList languageListDescription = new LanguageList(false);
     private JTextArea additionalRightsTextArea;
     private Map<String, String> languages;
     private static final Border BLACK_LINE = BorderFactory.createLineBorder(Color.BLACK);
@@ -155,8 +156,8 @@ public class EdmOptionsPanel extends JPanel {
     private JCheckBox useExistingLanguageMaterialCheckbox;
     private JCheckBox sameLanguageAsMaterialCheckbox;
     private JCheckBox useExistingRightsInfoCheckbox;
-    private JPanel languageBoxPanelMaterial = new LanguageBoxPanel();
-    private JPanel languageBoxPanelDescription = new LanguageBoxPanel();
+    private JPanel languageBoxPanelMaterial = new LanguageBoxPanel(languageListMaterial);
+    private JPanel languageBoxPanelDescription = new LanguageBoxPanel(languageListDescription);
     private String sourceOfFondsTitle = ARCHDESC_UNITTITLE;
     private JPanel languageOfMaterialPanel;
     private JPanel languageOfDescriptionPanel;
@@ -437,12 +438,19 @@ public class EdmOptionsPanel extends JPanel {
         languageOfDescriptionPanel.add(new Label(labels.getString("ese.selectLanguageDescription") + ":" + "*"));
 
         JPanel rbPanel = new JPanel(new GridLayout(1, 1));
-        languageBoxPanelDescription.setVisible(true);
+        languageBoxPanelDescription.setVisible(false);
         languageOfDescriptionPanel.add(languageBoxPanelDescription, BorderLayout.WEST);
 
         JPanel checkboxPanel = new JPanel(new GridLayout(2, 1));
         sameLanguageAsMaterialCheckbox = new JCheckBox(labels.getString("ese.sameLanguageAsMaterial"));
         sameLanguageAsMaterialCheckbox.setSelected(true);
+        sameLanguageAsMaterialCheckbox.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent ae) {
+                languageBoxPanelDescription.setVisible(!sameLanguageAsMaterialCheckbox.isSelected());
+                useExistingLanguageDescriptionCheckbox.setVisible(!sameLanguageAsMaterialCheckbox.isSelected());
+            }
+        });
         sameLanguageAsMaterialCheckbox.addItemListener(new ItemListener() {
             @Override
             public void itemStateChanged(ItemEvent e) {
@@ -452,6 +460,7 @@ public class EdmOptionsPanel extends JPanel {
         checkboxPanel.add(sameLanguageAsMaterialCheckbox);
         useExistingLanguageDescriptionCheckbox = new JCheckBox(labels.getString("ese.takeFromFileLanguage"));
         useExistingLanguageDescriptionCheckbox.setSelected(false);
+        useExistingLanguageDescriptionCheckbox.setVisible(false);
         useExistingLanguageDescriptionCheckbox.addItemListener(new ItemListener() {
             @Override
             public void itemStateChanged(ItemEvent e) {
@@ -681,33 +690,46 @@ public class EdmOptionsPanel extends JPanel {
             config.setUseExistingDaoRole(true);
         }
 
+        StringBuilder languageMaterial = new StringBuilder();
         if (this.batch) {
             if (!useExistingLanguageMaterialCheckbox.isSelected()) {
             }
-            StringBuilder result = new StringBuilder();
-            Object[] languageValues = languageList.getSelectedValues();
+            Object[] languageValues = languageListMaterial.getSelectedValues();
             for (int i = 0; i < languageValues.length; i++) {
-                result.append(languages.get(languageValues[i].toString()));
+                languageMaterial.append(languages.get(languageValues[i].toString()));
                 if (languageValues.length > 0 && i < (languageValues.length - 1)) {
-                    result.append(" ");
+                    languageMaterial.append(" ");
                 }
             }
-            config.setLanguage(result.toString());
+            config.setLanguageMaterial(languageMaterial.toString());
         } else {
             if (!useExistingLanguageMaterialCheckbox.isSelected()) {
             }
-            StringBuilder result = new StringBuilder();
-            Object[] languageValues = languageList.getSelectedValues();
+            Object[] languageValues = languageListMaterial.getSelectedValues();
             for (int i = 0; i < languageValues.length; i++) {
-                result.append(languages.get(languageValues[i].toString()));
+                languageMaterial.append(languages.get(languageValues[i].toString()));
                 if (languageValues.length > 0 && i < (languageValues.length - 1)) {
-                    result.append(" ");
+                    languageMaterial.append(" ");
                 }
             }
-            config.setLanguage(result.toString());
+            config.setLanguageMaterial(languageMaterial.toString());
         }
         if (useExistingLanguageMaterialCheckbox.isSelected()) {
-            config.setUseExistingLanguage(true);
+            config.setUseExistingLanguageMaterial(true);
+        }
+
+        if (!useExistingLanguageDescriptionCheckbox.isSelected()) {
+        }
+        if (sameLanguageAsMaterialCheckbox.isSelected()) {
+            config.setLanguageDescription(languageMaterial.substring(0, 2));
+        } else {
+            StringBuilder result = new StringBuilder();
+            Object[] languageValues = languageListDescription.getSelectedValues();
+            result.append(languages.get(languageValues[0].toString()));
+            config.setLanguageDescription(result.toString());
+            if (useExistingLanguageDescriptionCheckbox.isSelected()) {
+                config.setUseExistingLanguageDescription(true);
+            }
         }
 
         Enumeration<AbstractButton> licenseEnumeration = licenseGroup.getElements();
@@ -844,10 +866,22 @@ public class EdmOptionsPanel extends JPanel {
             }
         }
 
-        if (this.languageBoxPanelMaterial == null) {
-            throw new Exception("language is null");
-        } else if (!((LanguageBoxPanel) this.languageBoxPanelMaterial).hasSelections()) {
-            throw new Exception("no language selected");
+        if (this.languageListMaterial == null) {
+            throw new Exception("language for material is null");
+        } else if (!languageListMaterial.hasSelections()) {
+            throw new Exception("no language for material selected");
+        }
+        
+        if (this.sameLanguageAsMaterialCheckbox.isSelected() && this.languageListMaterial.hasMultipleSelections()){
+            throw new Exception("Language for description unclear as multiple values for language of the material exist. Please provide language for description manually.");
+        }
+
+        if (!this.sameLanguageAsMaterialCheckbox.isSelected()) {
+            if (this.languageListDescription == null) {
+                throw new Exception("language for description is null");
+            } else if (!languageListDescription.hasSelections()) {
+                throw new Exception("no language for description selected");
+            }
         }
 
         if (StringUtils.isEmpty(dataProviderTextArea.getText())) {
@@ -1165,15 +1199,29 @@ public class EdmOptionsPanel extends JPanel {
 
     private class LanguageBoxPanel extends JPanel {
 
-        LanguageBoxPanel() {
+        LanguageBoxPanel(JList languageList) {
             super(new GridLayout(1, 1));
-            languageList = new JList(getAllLanguages());
-            languageList.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
             add(new JScrollPane(languageList));
+        }
+    }
+
+    private class LanguageList extends JList {
+
+        LanguageList(boolean multipleLanguages) {
+            super(getAllLanguages());
+            if (multipleLanguages) {
+                this.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
+            } else {
+                this.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+            }
         }
 
         public boolean hasSelections() {
-            return !languageList.isSelectionEmpty();
+            return !this.isSelectionEmpty();
+        }
+        
+        public boolean hasMultipleSelections() {
+            return this.getSelectedIndices().length > 1;
         }
     }
 
