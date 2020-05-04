@@ -7,19 +7,19 @@ package eu.apenet.dpt.utils.ead2edm;
  * @author yoannmoranville
  */
 public class DigitalObjectCounter {
-    private int numberOfProvidedCHO;
-    private int numberOfWebResource;
+    private final int numberOfProvidedCHO;
+    private final int numberOfDigitalObjects;
 
-    public DigitalObjectCounter(int numberOfProvidedCHO, int numberOfWebResource) {
+    public DigitalObjectCounter(int numberOfProvidedCHO, int digitalObjects) {
         this.numberOfProvidedCHO = numberOfProvidedCHO;
-        this.numberOfWebResource = numberOfWebResource;
+        this.numberOfDigitalObjects = digitalObjects;
     }
 
     public int getNumberOfProvidedCHO() {
         return numberOfProvidedCHO;
     }
 
-    public int getNumberOfWebResource() {
-        return numberOfWebResource;
+    public int getNumberOfDigitalObjects() {
+        return numberOfDigitalObjects;
     }
 }

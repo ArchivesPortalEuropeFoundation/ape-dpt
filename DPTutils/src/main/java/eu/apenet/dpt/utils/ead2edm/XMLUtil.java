@@ -15,8 +15,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import eu.apenet.dpt.utils.ead2edm.stax.EDMParser;
+import eu.apenet.dpt.utils.ead2edm.stax.HasViewParser;
+import eu.apenet.dpt.utils.ead2edm.stax.IsShownByParser;
 import eu.apenet.dpt.utils.ead2edm.stax.ProvidedCHOParser;
-import eu.apenet.dpt.utils.ead2edm.stax.WebResourceParser;
 import eu.apenet.dpt.utils.util.APEXmlCatalogResolver;
 import java.util.Arrays;
 import javanet.staxutils.IndentingXMLStreamWriter;
@@ -111,22 +112,24 @@ public class XMLUtil {
 
         ArrayList<File> edmFiles = new ArrayList<File>(Arrays.asList(outputFolder.listFiles()));
         int numberOfProvidedCHO = 0;
-        int numberOfWebResource = 0;
+        int numberOfDigitalObjects = 0;
 
         for (File edmFile : edmFiles) {
             XMLStreamReader xmlReader = XMLUtil.getXMLStreamReader(edmFile);
             EDMParser parser = new EDMParser();
             ProvidedCHOParser providedCHOParser = new ProvidedCHOParser();
-            WebResourceParser webResourceParser = new WebResourceParser();
+            IsShownByParser isShownByParser = new IsShownByParser();
+            HasViewParser hasViewParser = new HasViewParser();
             parser.registerParser(providedCHOParser);
-            parser.registerParser(webResourceParser);
-            // count number of records per file
+            parser.registerParser(isShownByParser);
+            parser.registerParser(hasViewParser);
             parser.parse(xmlReader, null);
             numberOfProvidedCHO += providedCHOParser.getNumberOfProvidedCHO();
-            numberOfWebResource += webResourceParser.getNumberOfWebResource();
+            numberOfDigitalObjects += isShownByParser.getNumberOfIsShownBy();
+            numberOfDigitalObjects += hasViewParser.getNumberOfHasView();
             xmlReader.close();
         }
-        DigitalObjectCounter digitalObjectCounter = new DigitalObjectCounter(numberOfProvidedCHO, numberOfWebResource);
+        DigitalObjectCounter digitalObjectCounter = new DigitalObjectCounter(numberOfProvidedCHO, numberOfDigitalObjects);
         if (numberOfProvidedCHO == 0) {
             outputFolder.delete();
 //TODO Re-enable validation; currently disabled because of strange exception in code (although oXygen says file is valid)

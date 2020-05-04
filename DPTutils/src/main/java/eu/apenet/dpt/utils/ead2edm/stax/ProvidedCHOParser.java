@@ -1,5 +1,4 @@
 package eu.apenet.dpt.utils.ead2edm.stax;
-import org.apache.log4j.Logger;
 
 import javax.xml.namespace.QName;
 import javax.xml.stream.XMLStreamConstants;
@@ -10,7 +9,7 @@ import javax.xml.stream.XMLStreamWriter;
 public class ProvidedCHOParser extends AbstractParser {
 
 	private static final QName PROVIDED_CHO = new QName(EDM, "ProvidedCHO");
-	private int numberOfProvidedCHO = 0;
+	private boolean hasProvidedCHO = false;
 
 	public ProvidedCHOParser() {
 		super(PROVIDED_CHO);
@@ -24,7 +23,6 @@ public class ProvidedCHOParser extends AbstractParser {
 	public String parse(XMLStreamReader xmlReader, XMLStreamWriter xmlWriter) throws XMLStreamException {
 		QName elementName = xmlReader.getName();
 		writeStartElement(xmlWriter);
-		numberOfProvidedCHO++;
 		boolean foundEndElement = false;
 		String identifier = null;
 		for (int event = xmlReader.next(); !foundEndElement && event != XMLStreamConstants.END_DOCUMENT; event = xmlReader.next()) {
@@ -39,6 +37,7 @@ public class ProvidedCHOParser extends AbstractParser {
 				elementName = xmlReader.getName();
 				if (getQName().equals(elementName)) {
 					foundEndElement = true;
+                                        hasProvidedCHO = true;
 					writeEndElement(xmlWriter);
 				}
 			}
@@ -48,8 +47,9 @@ public class ProvidedCHOParser extends AbstractParser {
 
 	}
 
-	public int getNumberOfProvidedCHO() {
-		return numberOfProvidedCHO;
-	}
+    public int getNumberOfProvidedCHO() {
+        return hasProvidedCHO ? 1 : 0;
+    }
 
+        
 }
