@@ -19,6 +19,7 @@ import eu.apenet.dpt.utils.ead2edm.stax.HasViewParser;
 import eu.apenet.dpt.utils.ead2edm.stax.IsShownByParser;
 import eu.apenet.dpt.utils.ead2edm.stax.ProvidedCHOParser;
 import eu.apenet.dpt.utils.util.APEXmlCatalogResolver;
+import java.time.Clock;
 import java.util.Arrays;
 import javanet.staxutils.IndentingXMLStreamWriter;
 
@@ -110,24 +111,30 @@ public class XMLUtil {
     public static DigitalObjectCounter analyzeEdmXml(File outputFolder) throws XMLStreamException, SAXException,
             IOException {
 
-        ArrayList<File> edmFiles = new ArrayList<File>(Arrays.asList(outputFolder.listFiles()));
+        ArrayList<File> edmFiles = new ArrayList<>(Arrays.asList(outputFolder.listFiles()));
         int numberOfProvidedCHO = 0;
         int numberOfDigitalObjects = 0;
+        XMLInputFactory inputFactory = (XMLInputFactory) XMLInputFactory.newInstance();
 
         for (File edmFile : edmFiles) {
-            XMLStreamReader xmlReader = XMLUtil.getXMLStreamReader(edmFile);
-            EDMParser parser = new EDMParser();
-            ProvidedCHOParser providedCHOParser = new ProvidedCHOParser();
-            IsShownByParser isShownByParser = new IsShownByParser();
-            HasViewParser hasViewParser = new HasViewParser();
-            parser.registerParser(providedCHOParser);
-            parser.registerParser(isShownByParser);
-            parser.registerParser(hasViewParser);
-            parser.parse(xmlReader, null);
-            numberOfProvidedCHO += providedCHOParser.getNumberOfProvidedCHO();
-            numberOfDigitalObjects += isShownByParser.getNumberOfIsShownBy();
-            numberOfDigitalObjects += hasViewParser.getNumberOfHasView();
-            xmlReader.close();
+            try (FileInputStream fileInputStream = new FileInputStream(edmFile)) {
+                XMLStreamReader xmlReader = inputFactory.createXMLStreamReader(fileInputStream, UTF_8);
+                EDMParser parser = new EDMParser();
+                ProvidedCHOParser providedCHOParser = new ProvidedCHOParser();
+                IsShownByParser isShownByParser = new IsShownByParser();
+                HasViewParser hasViewParser = new HasViewParser();
+                parser.registerParser(providedCHOParser);
+                parser.registerParser(isShownByParser);
+                parser.registerParser(hasViewParser);
+                parser.parse(xmlReader, null);
+                numberOfProvidedCHO += providedCHOParser.getNumberOfProvidedCHO();
+                numberOfDigitalObjects += isShownByParser.getNumberOfIsShownBy();
+                numberOfDigitalObjects += hasViewParser.getNumberOfHasView();
+                xmlReader.close();
+            } catch (Exception e) {
+                System.err.println("Error while analyzing EDM file "+edmFile.getName());
+                throw e;
+            }
         }
         DigitalObjectCounter digitalObjectCounter = new DigitalObjectCounter(numberOfProvidedCHO, numberOfDigitalObjects);
         if (numberOfProvidedCHO == 0) {
@@ -140,7 +147,7 @@ public class XMLUtil {
     }
 
     private static void validateEDM(File file) throws SAXException, IOException, XMLStreamException {
-        List<URL> schemaURLs = new ArrayList<URL>();
+        List<URL> schemaURLs = new ArrayList<>();
         schemaURLs.add(XMLUtil.class.getResource("/ead2edm/edm/CONTEXTS.xsd"));
         schemaURLs.add(XMLUtil.class.getResource("/ead2edm/edm/DC.xsd"));
         schemaURLs.add(XMLUtil.class.getResource("/ead2edm/edm/DCTERMS.xsd"));
