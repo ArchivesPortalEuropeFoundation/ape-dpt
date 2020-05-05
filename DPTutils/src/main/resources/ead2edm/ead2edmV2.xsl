@@ -319,30 +319,18 @@
                                 select="/ead/archdesc/altformavail[text() != '']"/>
                         </xsl:call-template>
                     </xsl:if>
-                    <xsl:choose>
-                        <xsl:when test="/ead/archdesc/did/physdesc/genreform[text() != '']">
-                            <dc:type>
-                                <xsl:attribute name="xml:lang" select="$languageUsedForDescription"/>
-                                <xsl:value-of select="/ead/archdesc/did/physdesc/genreform[text() != '']"/>
-                            </dc:type>
-                            <dc:type>
-                                <xsl:attribute name="xml:lang" select="$languageUsedForDescription"/>
-                                <xsl:attribute name="rdf:resource">
-                                    <xsl:text>http://vocab.getty.edu/aat/300379505</xsl:text>
-                                </xsl:attribute>
-                            </dc:type>
-                        </xsl:when>
-                        <xsl:otherwise>
-                            <xsl:if test="not(/ead/archdesc/controlaccess/*/text())">
-                                <dc:type>
-                                    <xsl:attribute name="xml:lang" select="$languageUsedForDescription"/>
-                                    <xsl:attribute name="rdf:resource">
-                                        <xsl:text>http://vocab.getty.edu/aat/300379505</xsl:text>
-                                    </xsl:attribute>
-                                </dc:type>
-                            </xsl:if>
-                        </xsl:otherwise>
-                    </xsl:choose>
+                    <dc:type>
+                        <xsl:attribute name="xml:lang" select="$languageUsedForDescription"/>
+                        <xsl:attribute name="rdf:resource">
+                            <xsl:text>http://vocab.getty.edu/aat/300379505</xsl:text>
+                        </xsl:attribute>
+                    </dc:type>
+                    <xsl:if test="/ead/archdesc/did/physdesc/genreform[text() != '']">
+                        <dc:type>
+                            <xsl:attribute name="xml:lang" select="$languageUsedForDescription"/>
+                            <xsl:value-of select="/ead/archdesc/did/physdesc/genreform[text() != '']"/>
+                        </dc:type>
+                    </xsl:if>
                     <xsl:if
                         test="/ead/archdesc/did/physdesc/physfacet[text() != '']">
                         <dc:format>
@@ -1123,30 +1111,18 @@
                             <xsl:copy-of select="$inheritedRelatedmaterial"/>
                         </xsl:when>
                     </xsl:choose>
-                    <xsl:choose>
-                        <xsl:when test="$currentnode/did/physdesc/genreform[text() != '']">
-                            <dc:type>
-                                <xsl:attribute name="xml:lang" select="$languageUsedForDescription"/>
-                                <xsl:value-of select="$currentnode/did/physdesc/genreform[text() != '']"/>
-                            </dc:type>
-                            <dc:type>
-                                <xsl:attribute name="xml:lang" select="$languageUsedForDescription"/>
-                                <xsl:attribute name="rdf:resource">
-                                    <xsl:text>http://vocab.getty.edu/aat/300379505</xsl:text>
-                                </xsl:attribute>
-                            </dc:type>
-                        </xsl:when>
-                        <xsl:otherwise>
-                            <xsl:if test="not($currentnode/controlaccess/*/text()) and not($inheritedControlaccesses/*/text())">
-                                <dc:type>
-                                    <xsl:attribute name="xml:lang" select="$languageUsedForDescription"/>
-                                    <xsl:attribute name="rdf:resource">
-                                        <xsl:text>http://vocab.getty.edu/aat/300379505</xsl:text>
-                                    </xsl:attribute>
-                                </dc:type>
-                            </xsl:if>
-                        </xsl:otherwise>
-                    </xsl:choose>
+                    <dc:type>
+                        <xsl:attribute name="xml:lang" select="$languageUsedForDescription"/>
+                        <xsl:attribute name="rdf:resource">
+                            <xsl:text>http://vocab.getty.edu/aat/300379505</xsl:text>
+                        </xsl:attribute>
+                    </dc:type>
+                    <xsl:if test="$currentnode/did/physdesc/genreform[text() != '']">
+                        <dc:type>
+                            <xsl:attribute name="xml:lang" select="$languageUsedForDescription"/>
+                            <xsl:value-of select="$currentnode/did/physdesc/genreform[text() != '']"/>
+                        </dc:type>
+                    </xsl:if>
 
                     <xsl:if
                         test="$currentnode/did/physdesc/physfacet[text() != '']">
