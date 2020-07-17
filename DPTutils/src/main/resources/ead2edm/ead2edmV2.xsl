@@ -875,6 +875,17 @@
                             <xsl:apply-templates
                                 select="did/dao[not(@xlink:title = 'thumbnail')][1]"
                                 mode="firstLink"/>
+                            <xsl:call-template name="createIsShownAt">
+                                <xsl:with-param name="landingPage" select="$landingPage"/>
+                                <xsl:with-param name="idSource" select="$idSource"/>
+                                <xsl:with-param name="currentnode" select="$currentnode"/>
+                                <xsl:with-param name="isFirstUnitid" select="$isFirstUnitid"/>
+                                <xsl:with-param name="id_base" select="$id_base"/>
+                                <xsl:with-param name="eadidEncoded" select="$eadidEncoded"/>
+                                <xsl:with-param name="mainIdentifier" select="$mainIdentifier"/>
+                                <xsl:with-param name="identifier" select="$identifier"/>
+                            </xsl:call-template>
+                            
                             <edm:provider>
                                 <xsl:value-of select="$europeana_provider"/>
                             </edm:provider>
@@ -922,57 +933,16 @@
                             </xsl:choose>
                         </xsl:when>
                         <xsl:otherwise>
-                            <edm:isShownAt>
-                                <xsl:choose>
-                                    <xsl:when test="@url">
-                                        <xsl:attribute name="rdf:resource" select="@url"/>
-                                    </xsl:when>
-                                    <xsl:otherwise>
-                                        <xsl:attribute name="rdf:resource">
-                                            <xsl:choose>
-                                                <xsl:when test="$landingPage = 'ape'">
-                                                  <xsl:choose>
-                                                  <xsl:when
-                                                  test="$idSource = 'unitid' and $currentnode/did/unitid[text() != '' and @type = 'call number'][1] and $isFirstUnitid = 'true'">
-                                                  <xsl:variable name="unitidEncoded">
-                                                  <xsl:call-template name="simpleReplace">
-                                                  <xsl:with-param name="input"
-                                                  select="normalize-space($currentnode/did/unitid[text() != '' and @type = 'call number'][1])"
-                                                  />
-                                                  </xsl:call-template>
-                                                  </xsl:variable>
-                                                  <xsl:value-of
-                                                  select="concat($id_base, $eadidEncoded, '/unitid/', $unitidEncoded)"
-                                                  />
-                                                  </xsl:when>
-                                                  <xsl:when test="$idSource = 'cid' and @id">
-                                                  <xsl:value-of
-                                                  select="concat($id_base, $eadidEncoded, '/cid/', @id)"
-                                                  />
-                                                  </xsl:when>
-                                                  <xsl:when test="$mainIdentifier">
-                                                  <xsl:value-of
-                                                  select="concat($id_base, $eadidEncoded, '/position/', $mainIdentifier)"
-                                                  />
-                                                  </xsl:when>
-                                                  <xsl:otherwise>
-                                                  <xsl:call-template name="number">
-                                                  <xsl:with-param name="prefix"
-                                                  select="concat($id_base, normalize-space(/ead/eadheader/eadid), '/position/')"/>
-                                                  <xsl:with-param name="node" select="."/>
-                                                  </xsl:call-template>
-                                                  </xsl:otherwise>
-                                                  </xsl:choose>
-                                                </xsl:when>
-                                                <xsl:otherwise>
-                                                  <xsl:value-of
-                                                  select="concat($landingPage, '/', $identifier)"/>
-                                                </xsl:otherwise>
-                                            </xsl:choose>
-                                        </xsl:attribute>
-                                    </xsl:otherwise>
-                                </xsl:choose>
-                            </edm:isShownAt>
+                            <xsl:call-template name="createIsShownAt">
+                                <xsl:with-param name="landingPage" select="$landingPage"/>
+                                <xsl:with-param name="idSource" select="$idSource"/>
+                                <xsl:with-param name="currentnode" select="$currentnode"/>
+                                <xsl:with-param name="isFirstUnitid" select="$isFirstUnitid"/>
+                                <xsl:with-param name="id_base" select="$id_base"/>
+                                <xsl:with-param name="eadidEncoded" select="$eadidEncoded"/>
+                                <xsl:with-param name="mainIdentifier" select="$mainIdentifier"/>
+                                <xsl:with-param name="identifier" select="$identifier"/>
+                            </xsl:call-template>
                             <edm:object>
                                 <xsl:attribute name="rdf:resource"
                                     select="concat('http://', $host, '/Portal-theme/images/ape/icons/dao_types/europeana/text.png')"
@@ -1513,6 +1483,68 @@
                 <!--</xsl:for-each>-->
             </rdf:RDF>
         </xsl:result-document>
+    </xsl:template>
+    <xsl:template name="createIsShownAt">
+        <xsl:param name="landingPage"/>
+        <xsl:param name="idSource"/>
+        <xsl:param name="currentnode"/>
+        <xsl:param name="isFirstUnitid"/>
+        <xsl:param name="id_base"/>
+        <xsl:param name="eadidEncoded"/>
+        <xsl:param name="mainIdentifier"/>
+        <xsl:param name="identifier"/>
+        <edm:isShownAt>
+            <xsl:choose>
+                <xsl:when test="@url">
+                    <xsl:attribute name="rdf:resource" select="@url"/>
+                </xsl:when>
+                <xsl:when test="$currentnode/did/unitid[@type = 'call number']/extptr[@xlink:href != '']/@xlink:href">
+                    <xsl:attribute name="rdf:resource" select="$currentnode/did/unitid[@type = 'call number']/extptr[@xlink:href != '']/@xlink:href"/>
+                </xsl:when>
+                <xsl:otherwise>
+                    <xsl:attribute name="rdf:resource">
+                        <xsl:choose>
+                            <xsl:when test="$landingPage = 'ape'">
+                                <xsl:choose>
+                                    <xsl:when
+                                        test="$idSource = 'unitid' and $currentnode/did/unitid[text() != '' and @type = 'call number'][1] and $isFirstUnitid = 'true'">
+                                        <xsl:variable name="unitidEncoded">
+                                            <xsl:call-template name="simpleReplace">
+                                                <xsl:with-param name="input"
+                                                  select="normalize-space($currentnode/did/unitid[text() != '' and @type = 'call number'][1])"
+                                                />
+                                            </xsl:call-template>
+                                        </xsl:variable>
+                                        <xsl:value-of
+                                            select="concat($id_base, $eadidEncoded, '/unitid/', $unitidEncoded)"
+                                        />
+                                    </xsl:when>
+                                    <xsl:when test="$idSource = 'cid' and @id">
+                                        <xsl:value-of
+                                            select="concat($id_base, $eadidEncoded, '/cid/', @id)"/>
+                                    </xsl:when>
+                                    <xsl:when test="$mainIdentifier">
+                                        <xsl:value-of
+                                            select="concat($id_base, $eadidEncoded, '/position/', $mainIdentifier)"
+                                        />
+                                    </xsl:when>
+                                    <xsl:otherwise>
+                                        <xsl:call-template name="number">
+                                            <xsl:with-param name="prefix"
+                                                select="concat($id_base, normalize-space(/ead/eadheader/eadid), '/position/')"/>
+                                            <xsl:with-param name="node" select="."/>
+                                        </xsl:call-template>
+                                    </xsl:otherwise>
+                                </xsl:choose>
+                            </xsl:when>
+                            <xsl:otherwise>
+                                <xsl:value-of select="concat($landingPage, '/', $identifier)"/>
+                            </xsl:otherwise>
+                        </xsl:choose>
+                    </xsl:attribute>
+                </xsl:otherwise>
+            </xsl:choose>
+        </edm:isShownAt>
     </xsl:template>
 
     <xsl:template name="altformavail">
