@@ -691,8 +691,6 @@
                 </xsl:otherwise>
             </xsl:choose>
         </xsl:variable>
-        <!--<xsl:variable name="parentcnode" select="parent::node()"/>-->
-        <!--<xsl:variable name="parentdidnode" select="$parentcnode/did"/>-->
         <xsl:variable name="positionInDocument">
             <xsl:call-template name="number">
                 <xsl:with-param name="node" select="node()"/>
@@ -812,9 +810,6 @@
         </xsl:variable>
         <xsl:variable name="hasDao" select="if(did/dao[normalize-space(@xlink:href) != '' and not(@xlink:title='thumbnail')]) then true() else false()" />
         
-        <!-- for each dao found, create a set of classes -->
-        <!--<xsl:for-each select="did/dao[not(@xlink:title=&quot;thumbnail&quot;)]">-->
-
         <!-- ACTUAL CONVERSION BEGINS HERE -->
         <xsl:result-document href="{$outputBaseDirectory}/{$eadidFilenameEncoded}/{$identifierFilename}.xml" xpath-default-namespace="urn:isbn:1-931666-22-9" >
             <rdf:RDF xmlns:adms="http://www.w3.org/ns/adms#"
@@ -880,63 +875,6 @@
                             <xsl:apply-templates
                                 select="did/dao[not(@xlink:title = 'thumbnail')][1]"
                                 mode="firstLink"/>
-                            <!--<xsl:choose>
-                                <xsl:when test="did/dao[@xlink:title = 'thumbnail']">
-                                    <xsl:apply-templates
-                                        select="did/dao[@xlink:title = 'thumbnail'][1]"
-                                        mode="thumbnail"/>
-                                </xsl:when>
-                                <xsl:when test="$useExistingDaoRole = 'true'">
-                                    <xsl:choose>
-                                        <xsl:when
-                                            test="did/dao[not(@xlink:title = 'thumbnail')][1]/@xlink:role">
-                                            <edm:object>
-                                                <xsl:attribute name="rdf:resource">
-                                                  <xsl:value-of
-                                                      select="did/dao[not(@xlink:title = 'thumbnail')]"
-                                                  />
-                                                </xsl:attribute>
-                                            </edm:object>
-                                        </xsl:when>
-                                        <xsl:otherwise>
-                                            <xsl:if test="fn:string-length($europeana_type) > 0">
-                                                <edm:object>
-                                                  <xsl:attribute name="rdf:resource">
-                                                  <xsl:value-of
-                                                      select="did/dao[not(@xlink:title = 'thumbnail')]"
-                                                  />
-                                                  </xsl:attribute>
-                                                </edm:object>
-                                            </xsl:if>
-                                        </xsl:otherwise>
-                                    </xsl:choose>
-                                </xsl:when>
-                                <xsl:otherwise>
-                                    <xsl:choose>
-                                        <xsl:when test="fn:string-length($europeana_type) > 0">
-                                            <edm:object>
-                                                <xsl:attribute name="rdf:resource">
-                                                  <xsl:value-of
-                                                      select="did/dao[not(@xlink:title = 'thumbnail')]"
-                                                  />
-                                                </xsl:attribute>
-                                            </edm:object>
-                                        </xsl:when>
-                                        <xsl:otherwise>
-                                            <xsl:if
-                                                test="did/dao[not(@xlink:title = 'thumbnail')][1]/@xlink:role">
-                                                <edm:object>
-                                                  <xsl:attribute name="rdf:resource">
-                                                  <xsl:value-of
-                                                      select="did/dao[not(@xlink:title = 'thumbnail')]"
-                                                  />
-                                                  </xsl:attribute>
-                                                </edm:object>
-                                            </xsl:if>
-                                        </xsl:otherwise>
-                                    </xsl:choose>
-                                </xsl:otherwise>
-                            </xsl:choose>-->
                             <edm:provider>
                                 <xsl:value-of select="$europeana_provider"/>
                             </edm:provider>
@@ -1772,41 +1710,6 @@
             </xsl:otherwise>
         </xsl:choose>
     </xsl:template>
-<!--    <xsl:template name="generateThumbnailLink">
-        <xsl:param name="role"/>
-        <xsl:choose>
-            <xsl:when test="&quot;TEXT&quot; eq fn:string($role)">
-                <xsl:value-of
-                    select="concat('http://', $host, '/Portal-theme/images/ape/icons/dao_types/europeana/text.png')"
-                />
-            </xsl:when>
-            <xsl:when test="&quot;IMAGE&quot; eq fn:string($role)">
-                <xsl:value-of
-                    select="concat('http://', $host, '/Portal-theme/images/ape/icons/dao_types/europeana/image.png')"
-                />
-            </xsl:when>
-            <xsl:when test="&quot;SOUND&quot; eq fn:string($role)">
-                <xsl:value-of
-                    select="concat('http://', $host, '/Portal-theme/images/ape/icons/dao_types/europeana/sound.png')"
-                />
-            </xsl:when>
-            <xsl:when test="&quot;VIDEO&quot; eq fn:string($role)">
-                <xsl:value-of
-                    select="concat('http://', $host, '/Portal-theme/images/ape/icons/dao_types/europeana/video.png')"
-                />
-            </xsl:when>
-            <xsl:when test="&quot;3D&quot; eq fn:string($role)">
-                <xsl:value-of
-                    select="concat('http://', $host, '/Portal-theme/images/ape/icons/dao_types/europeana/3d.png')"
-                />
-            </xsl:when>
-            <xsl:otherwise>
-                <xsl:call-template name="generateThumbnailLink">
-                    <xsl:with-param name="role" select="$europeana_type"/>
-                </xsl:call-template>
-            </xsl:otherwise>
-        </xsl:choose>
-    </xsl:template>-->
     <xsl:template name="language">
         <xsl:param name="langmaterials"/>
         <xsl:for-each select="$langmaterials/language/@langcode">
@@ -2029,9 +1932,6 @@
                     <xsl:when test="@*:href">
                         <xsl:value-of select="@*:href"/>
                     </xsl:when>
-<!--                    <xsl:when test="@xlink:href">
-                        <xsl:value-of select="@xlink:href"/>
-                    </xsl:when>-->
                 </xsl:choose>
             </xsl:attribute>
             <dc:description>
@@ -2098,20 +1998,6 @@
                     <xsl:if test="./@xlink:role">
                         <xsl:value-of select="did/dao[not(@xlink:title = 'thumbnail')][1]"/>
                     </xsl:if>
-                    <!--<xsl:choose>
-                        <xsl:when test="fn:string-length($europeana_type) > 0">
-                            <xsl:call-template name="generateThumbnailLink">
-                                <xsl:with-param name="role" select="$europeana_type"/>
-                            </xsl:call-template>
-                        </xsl:when>
-                        <xsl:otherwise>
-                            <xsl:if test="./@xlink:role">
-                                <xsl:call-template name="generateThumbnailLink">
-                                    <xsl:with-param name="role" select="./@xlink:role"/>
-                                </xsl:call-template>
-                            </xsl:if>
-                        </xsl:otherwise>
-                    </xsl:choose>-->
                 </xsl:otherwise>
             </xsl:choose>
         </xsl:variable>
@@ -2130,20 +2016,6 @@
                         <xsl:if test="./@xlink:role">
                             <xsl:value-of select="did/dao[not(@xlink:title = 'thumbnail')][1]"/>
                         </xsl:if>
-                        <!--<xsl:choose>
-                            <xsl:when test="fn:string-length($europeana_type) > 0">
-                                <xsl:call-template name="generateThumbnailLink">
-                                    <xsl:with-param name="role" select="$europeana_type"/>
-                                </xsl:call-template>
-                            </xsl:when>
-                            <xsl:otherwise>
-                                <xsl:if test="./@xlink:role">
-                                    <xsl:call-template name="generateThumbnailLink">
-                                        <xsl:with-param name="role" select="./@xlink:role"/>
-                                    </xsl:call-template>
-                                </xsl:if>
-                            </xsl:otherwise>
-                        </xsl:choose>-->
                     </xsl:attribute>
                 </edm:object>
             </xsl:otherwise>
