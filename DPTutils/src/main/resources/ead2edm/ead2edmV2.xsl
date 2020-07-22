@@ -76,7 +76,7 @@
             <xsl:when test="$useExistingLanguageDescription = true()">
                 <xsl:choose>
                     <xsl:when test="/ead/eadheader/profiledesc/langusage/language/@langcode">
-                        <xsl:value-of select="/ead/eadheader/profiledesc/langusage/language/@langcode"/>
+                        <xsl:value-of select="/ead/eadheader/profiledesc/langusage/language/@langcode[1]"/>
                     </xsl:when>
                     <xsl:otherwise>
                         <xsl:value-of select="$languageDescription"/>
@@ -320,7 +320,6 @@
                         </xsl:call-template>
                     </xsl:if>
                     <dc:type>
-                        <xsl:attribute name="xml:lang" select="$languageUsedForDescription"/>
                         <xsl:attribute name="rdf:resource">
                             <xsl:text>http://vocab.getty.edu/aat/300379505</xsl:text>
                         </xsl:attribute>
@@ -1020,7 +1019,6 @@
                         </xsl:when>
                     </xsl:choose>
                     <dc:type>
-                        <xsl:attribute name="xml:lang" select="$languageUsedForDescription"/>
                         <xsl:attribute name="rdf:resource">
                             <xsl:text>http://vocab.getty.edu/aat/300379505</xsl:text>
                         </xsl:attribute>
@@ -1913,7 +1911,6 @@
         <xsl:if test="$bibrefs/@xlink:href">
             <xsl:for-each select="$bibrefs">
                 <dcterms:isReferencedBy>
-                    <xsl:attribute name="xml:lang" select="$languageUsedForDescription"/>
                     <xsl:attribute name="rdf:resource" select="./@xlink:href"/>
                 </dcterms:isReferencedBy>
             </xsl:for-each>
@@ -1921,7 +1918,6 @@
         <xsl:if test="$bibrefs/extref/@xlink:href">
             <xsl:for-each select="$bibrefs/extref">
                 <dcterms:isReferencedBy>
-                    <xsl:attribute name="xml:lang" select="$languageUsedForDescription"/>
                     <xsl:attribute name="rdf:resource" select="./@xlink:href"/>
                 </dcterms:isReferencedBy>
             </xsl:for-each>
@@ -2075,7 +2071,6 @@
     <xsl:template match="otherfindaid">
         <xsl:if test="p/extref/@xlink:href">
             <dcterms:isReferencedBy>
-                <xsl:attribute name="xml:lang" select="$languageUsedForDescription"/>
                 <xsl:attribute name="rdf:resource" select="p/extref/@xlink:href"/>
             </dcterms:isReferencedBy>
         </xsl:if>
