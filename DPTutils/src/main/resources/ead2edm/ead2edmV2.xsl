@@ -1493,10 +1493,10 @@
         <xsl:param name="identifier"/>
         <edm:isShownAt>
             <xsl:choose>
-                <xsl:when test="@url">
+                <xsl:when test="@url and @url != ''">
                     <xsl:attribute name="rdf:resource" select="@url"/>
                 </xsl:when>
-                <xsl:when test="$currentnode/did/unitid[@type = 'call number']/extptr[@xlink:href != '']/@xlink:href">
+                <xsl:when test="$currentnode/did/unitid[@type = 'call number']/extptr[@xlink:href != '']/@xlink:href and $currentnode/did/unitid[@type = 'call number']/extptr[@xlink:href != '']/@xlink:href != ''">
                     <xsl:attribute name="rdf:resource" select="$currentnode/did/unitid[@type = 'call number']/extptr[@xlink:href != '']/@xlink:href"/>
                 </xsl:when>
                 <xsl:otherwise>
