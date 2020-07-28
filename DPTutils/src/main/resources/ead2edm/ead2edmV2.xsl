@@ -75,16 +75,18 @@
         <xsl:choose>
             <xsl:when test="$useExistingLanguageDescription = true()">
                 <xsl:choose>
-                    <xsl:when test="/ead/eadheader/profiledesc/langusage/language/@langcode">
-                        <xsl:value-of select="/ead/eadheader/profiledesc/langusage/language/@langcode[1]"/>
+                    <xsl:when test="/ead/eadheader/profiledesc/langusage/language[@langcode != '']">
+                        <xsl:value-of select="/ead/eadheader/profiledesc/langusage/language[@langcode != ''][1]/@langcode"/>
                     </xsl:when>
                     <xsl:otherwise>
-                        <xsl:value-of select="$languageDescription"/>
+                        <!--<xsl:value-of select="$languageDescription"/>-->
+                        <xsl:text>holo</xsl:text>
                     </xsl:otherwise>
                 </xsl:choose>
             </xsl:when>
             <xsl:otherwise>
-                <xsl:value-of select="$languageDescription"/>
+                <!--<xsl:value-of select="$languageDescription"/>-->
+                <xsl:text>hulu</xsl:text>
             </xsl:otherwise>
         </xsl:choose>
     </xsl:variable>
