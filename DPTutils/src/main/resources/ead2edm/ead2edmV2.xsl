@@ -61,14 +61,16 @@
     <!-- Variables -->
     <xsl:variable name="id_base"
         select="concat('http://', $host, '/ead-display/-/ead/pl/aicode/' , $repository_code, '/type/', $xml_type_name, '/id/')"/>
+    <!--<xsl:variable name="eadidEncoded" select="encode-for-uri(/ead/eadheader/eadid)"/>-->
     <xsl:variable name="eadidEncoded">
         <xsl:call-template name="simpleReplace">
-            <xsl:with-param name="input" select="normalize-space(/ead/eadheader/eadid)"/>
+            <xsl:with-param name="input" select="normalize-space(encode-for-uri(/ead/eadheader/eadid))"/>
         </xsl:call-template>
     </xsl:variable>
+    <!--<xsl:variable name="eadidFilenameEncoded" select="encode-for-uri(/ead/eadheader/eadid)"/>-->
     <xsl:variable name="eadidFilenameEncoded">
         <xsl:call-template name="filenameReplace">
-            <xsl:with-param name="input" select="normalize-space(/ead/eadheader/eadid)"/>
+            <xsl:with-param name="input" select="normalize-space(encode-for-uri(/ead/eadheader/eadid))"/>
         </xsl:call-template>
     </xsl:variable>
     <xsl:variable name="languageUsedForDescription">
@@ -79,14 +81,12 @@
                         <xsl:value-of select="/ead/eadheader/profiledesc/langusage/language[@langcode != ''][1]/@langcode"/>
                     </xsl:when>
                     <xsl:otherwise>
-                        <!--<xsl:value-of select="$languageDescription"/>-->
-                        <xsl:text>holo</xsl:text>
+                        <xsl:value-of select="$languageDescription"/>
                     </xsl:otherwise>
                 </xsl:choose>
             </xsl:when>
             <xsl:otherwise>
-                <!--<xsl:value-of select="$languageDescription"/>-->
-                <xsl:text>hulu</xsl:text>
+                <xsl:value-of select="$languageDescription"/>
             </xsl:otherwise>
         </xsl:choose>
     </xsl:variable>
@@ -151,7 +151,7 @@
                     </xsl:choose>
                     <edm:isShownAt>
                         <xsl:choose>
-                            <xsl:when test="@url">
+                            <xsl:when test="@url != ''">
                                 <xsl:attribute name="rdf:resource" select="@url"/>
                             </xsl:when>
                             <xsl:otherwise>
@@ -373,14 +373,14 @@
                                     test="$idSource = 'unitid' and did/unitid[text() != '' and @type = 'call number'] and $isFirstUnitid = 'true'">
                                     <dcterms:hasPart>
                                         <xsl:attribute name="rdf:resource"
-                                            select="concat('providedCHO_', normalize-space(/ead/eadheader/eadid), '_', normalize-space(did/unitid[text() != '' and @type = 'call number'][1]))"
+                                            select="concat('providedCHO_', normalize-space($eadidEncoded), '_', normalize-space(did/unitid[text() != '' and @type = 'call number'][1]))"
                                         />
                                     </dcterms:hasPart>
                                 </xsl:when>
                                 <xsl:when test="$idSource = 'cid' and @id">
                                     <dcterms:hasPart>
                                         <xsl:attribute name="rdf:resource"
-                                            select="concat('providedCHO_', normalize-space(/ead/eadheader/eadid), '_', normalize-space(@id))"
+                                            select="concat('providedCHO_', normalize-space($eadidEncoded), '_', normalize-space(@id))"
                                         />
                                     </dcterms:hasPart>
                                 </xsl:when>
@@ -831,10 +831,10 @@
                 xmlns:wgs84_pos="http://www.w3.org/2003/01/geo/wgs84_pos#">
                 <ore:Aggregation>
                     <xsl:attribute name="rdf:about"
-                        select="concat('aggregation_', normalize-space(/ead/eadheader/eadid), '_', $identifier)"/>
+                        select="concat('aggregation_', normalize-space($eadidEncoded), '_', $identifier)"/>
                     <edm:aggregatedCHO>
                         <xsl:attribute name="rdf:resource"
-                            select="concat('providedCHO_', normalize-space(/ead/eadheader/eadid), '_', $identifier)"
+                            select="concat('providedCHO_', normalize-space($eadidEncoded), '_', $identifier)"
                         />
                     </edm:aggregatedCHO>
                     <xsl:choose>
@@ -959,7 +959,7 @@
                 </ore:Aggregation>
                 <edm:ProvidedCHO>
                     <xsl:attribute name="rdf:about"
-                        select="concat('providedCHO_', normalize-space(/ead/eadheader/eadid), '_', $identifier)"/>
+                        select="concat('providedCHO_', normalize-space($eadidEncoded), '_', $identifier)"/>
                     <xsl:if test="$idSource = 'unitid' and $currentnode/did/unitid[text() != '']">
                         <dc:identifier>
                             <xsl:for-each select="$currentnode/did/unitid[text() != '']">
@@ -1280,7 +1280,7 @@
 
                     <dcterms:isPartOf>
                         <xsl:attribute name="rdf:resource"
-                            select="concat('providedCHO_', normalize-space(/ead/eadheader/eadid))"/>
+                            select="concat('providedCHO_', normalize-space($eadidEncoded))"/>
                     </dcterms:isPartOf>
 
                     <xsl:if test="$currentnode/preceding-sibling::c">
@@ -1303,7 +1303,7 @@
                                 test="$idSource = 'unitid' and $currentnode/preceding-sibling::*[descendant::did/dao[normalize-space(@xlink:href) != '']][1]/did/unitid[text() != '' and @type = 'call number'] and not(key('unitids', $currentnode/preceding-sibling::*[descendant::did/dao[normalize-space(@xlink:href) != '']][1]/did/unitid[text() != '' and @type = 'call number'])[2])">
                                 <edm:isNextInSequence>
                                     <xsl:attribute name="rdf:resource"
-                                        select="concat('providedCHO_', normalize-space(/ead/eadheader/eadid), '_', normalize-space($currentnode/preceding-sibling::*[descendant::did/dao[normalize-space(@xlink:href) != '']][1]/did/unitid[text() != '' and @type = 'call number'][1]))"
+                                        select="concat('providedCHO_', normalize-space($eadidEncoded), '_', normalize-space($currentnode/preceding-sibling::*[descendant::did/dao[normalize-space(@xlink:href) != '']][1]/did/unitid[text() != '' and @type = 'call number'][1]))"
                                     />
                                 </edm:isNextInSequence>
                             </xsl:when>
@@ -1311,7 +1311,7 @@
                                 test="$idSource = 'cid' and $currentnode/preceding-sibling::*[descendant::did/dao[normalize-space(@xlink:href) != '']][1]/@id">
                                 <edm:isNextInSequence>
                                     <xsl:attribute name="rdf:resource"
-                                        select="concat('providedCHO_', normalize-space(/ead/eadheader/eadid), '_', normalize-space($currentnode/preceding-sibling::*[descendant::did/dao[normalize-space(@xlink:href) != '']][1]/@id))"
+                                        select="concat('providedCHO_', normalize-space($eadidEncoded), '_', normalize-space($currentnode/preceding-sibling::*[descendant::did/dao[normalize-space(@xlink:href) != '']][1]/@id))"
                                     />
                                 </edm:isNextInSequence>
                             </xsl:when>
@@ -1324,12 +1324,12 @@
                                                 <xsl:choose>
                                                   <xsl:when test="$positionChain">
                                                   <xsl:value-of
-                                                  select="concat('providedCHO_position_', normalize-space(/ead/eadheader/eadid), '_', $positionChain, '-')"
+                                                  select="concat('providedCHO_position_', normalize-space($eadidEncoded), '_', $positionChain, '-')"
                                                   />
                                                   </xsl:when>
                                                   <xsl:otherwise>
                                                   <xsl:value-of
-                                                  select="concat('providedCHO_position_', normalize-space(/ead/eadheader/eadid), '_')"
+                                                  select="concat('providedCHO_position_', normalize-space($eadidEncoded), '_')"
                                                   />
                                                   </xsl:otherwise>
                                                 </xsl:choose>
@@ -1449,7 +1449,7 @@
                                                   <xsl:otherwise>
                                                   <xsl:call-template name="number">
                                                   <xsl:with-param name="prefix"
-                                                  select="concat($id_base, normalize-space(/ead/eadheader/eadid), '/position/')"/>
+                                                  select="concat($id_base, normalize-space($eadidEncoded), '/position/')"/>
                                                   <xsl:with-param name="node" select="."/>
                                                   </xsl:call-template>
                                                   </xsl:otherwise>
@@ -1531,7 +1531,7 @@
                                     <xsl:otherwise>
                                         <xsl:call-template name="number">
                                             <xsl:with-param name="prefix"
-                                                select="concat($id_base, normalize-space(/ead/eadheader/eadid), '/position/')"/>
+                                                select="concat($id_base, normalize-space($eadidEncoded), '/position/')"/>
                                             <xsl:with-param name="node" select="."/>
                                         </xsl:call-template>
                                     </xsl:otherwise>
@@ -1703,7 +1703,7 @@
                         </xsl:when>
                         <xsl:otherwise>
                             <xsl:value-of
-                                select="concat($id_base, normalize-space(/ead/eadheader/eadid))"/>
+                                select="concat($id_base, normalize-space($eadidEncoded))"/>
                         </xsl:otherwise>
                     </xsl:choose>
                 </xsl:attribute>
@@ -1786,7 +1786,7 @@
                 </xsl:call-template>
             </xsl:when>
             <xsl:when test="$node/parent::dsc">
-                <xsl:value-of select="concat('providedCHO_', normalize-space(/ead/eadheader/eadid), '_position_c', $number - 1, $postfix)"/>
+                <xsl:value-of select="concat('providedCHO_', normalize-space($eadidEncoded), '_position_c', $number - 1, $postfix)"/>
             </xsl:when>
             <xsl:otherwise>
                 <xsl:text>Error while calculating position</xsl:text>
@@ -1850,7 +1850,7 @@
                         </xsl:when>
                         <xsl:otherwise>
                             <xsl:value-of
-                                select="concat($id_base, normalize-space(/ead/eadheader/eadid))"/>
+                                select="concat($id_base, normalize-space($eadidEncoded))"/>
                         </xsl:otherwise>
                     </xsl:choose>
                 </xsl:attribute>
@@ -1860,12 +1860,12 @@
     <xsl:template name="simpleReplace">
         <xsl:param name="input"/>
         <xsl:choose>
-            <xsl:when test="contains($input, '+') or contains($input, '/') or contains($input, ':') or contains($input, '*') or contains($input, '&amp;') or contains($input, ',') or contains($input, '&lt;') or contains($input, '&gt;')
-                or contains($input, '~') or contains($input, '[') or contains($input, ']') or contains($input, ' ') or contains($input, '%') or contains($input, '@') or contains($input, '&quot;') or contains($input, '$')
-                or contains($input, '=') or contains($input, '#') or contains($input, '^') or contains($input, '(') or contains($input, ')') or contains($input, '!') or contains($input, ';') or contains($input, '\')">
-                <xsl:variable name="replaceResult1" select="replace(replace(replace(replace(replace(replace(replace(replace($input, '\+', '_PLUS_'), '&#47;', '_SLASH_'), ':', '_COLON_'), '\*', '_ASTERISK_'), '&amp;', '_AMP_'), ',', '_COMMA_'), '&lt;', '_LT_'), '&gt;', '_RT_')"/>
-                <xsl:variable name="replaceResult2" select="replace(replace(replace(replace(replace(replace(replace(replace($replaceResult1, '~', '_TILDE_'), '\[', '_LSQBRKT_'), '\]', '_RSQBRKT_'), ' ', '+'), '%', '_PERCENT_'), '@', '_ATCHAR_'), '&quot;', '_QUOTE_'), '\$', '_DOLLAR_')"/>
-                <xsl:variable name="replaceResult3" select="replace(replace(replace(replace(replace(replace(replace(replace($replaceResult2, '=', '_COMP_'), '#', '_HASH_'), '\^', '_CFLEX_'), '\(', '_LRDBRKT_'), '\)', '_RRDBRKT_'), '!', '_EXCLMARK_'), ';', '_SEMICOLON_'), '\\', '_BSLASH_')"/>
+            <xsl:when test="contains($input, '%2B') or contains($input, '%2F') or contains($input, '%3A') or contains($input, '%2A') or contains($input, '%26') or contains($input, '%2C') or contains($input, '&lt;') or contains($input, '&gt;')
+                or contains($input, '~') or contains($input, '%5B') or contains($input, '%5D') or contains($input, '%20') or contains($input, '%5C') or contains($input, '%40') or contains($input, '%22') or contains($input, '%24')
+                or contains($input, '%3D') or contains($input, '%23') or contains($input, '%5E') or contains($input, '%28') or contains($input, '%29') or contains($input, '%21') or contains($input, '%3B') or contains($input, '%25')">
+                <xsl:variable name="replaceResult1" select="replace(replace(replace(replace(replace(replace(replace(replace($input, '%2B', '_PLUS_'), '%2F', '_SLASH_'), '%3A  ', '_COLON_'), '%2A', '_ASTERISK_'), '%26', '_AMP_'), '%2C', '_COMMA_'), '&lt;', '_LT_'), '&gt;', '_RT_')"/>
+                <xsl:variable name="replaceResult2" select="replace(replace(replace(replace(replace(replace(replace(replace($replaceResult1, '~', '_TILDE_'), '%5B', '_LSQBRKT_'), '%5D', '_RSQBRKT_'), '%20', '+'), '%5C', '_BSLASH_'), '%40', '_ATCHAR_'), '%22', '_QUOTE_'), '%24', '_DOLLAR_')"/>
+                <xsl:variable name="replaceResult3" select="replace(replace(replace(replace(replace(replace(replace(replace($replaceResult2, '%3D', '_COMP_'), '%23', '_HASH_'), '%5E', '_CFLEX_'), '%28', '_LRDBRKT_'), '%29', '_RRDBRKT_'), '%21', '_EXCLMARK_'), '%3B', '_SEMICOLON_'), '%25', '_PERCENT_')"/>
                 <xsl:value-of select="$replaceResult3"/>
             </xsl:when>
             <xsl:otherwise>
@@ -1876,12 +1876,12 @@
     <xsl:template name="filenameReplace">
         <xsl:param name="input"/>
         <xsl:choose>
-            <xsl:when test="contains($input, '+') or contains($input, '/') or contains($input, ':') or contains($input, '*') or contains($input, '&amp;') or contains($input, ',') or contains($input, '&lt;') or contains($input, '&gt;')
-                or contains($input, '~') or contains($input, '[') or contains($input, ']') or contains($input, ' ') or contains($input, '%') or contains($input, '@') or contains($input, '&quot;') or contains($input, '$')
-                or contains($input, '=') or contains($input, '#') or contains($input, '^') or contains($input, '(') or contains($input, ')') or contains($input, '!') or contains($input, ';') or contains($input, '\')">
-                <xsl:variable name="replaceResult1" select="replace(replace(replace(replace(replace(replace(replace(replace($input, '\+', '_PLUS_'), '&#47;', '_SLASH_'), ':', '_COLON_'), '\*', '_ASTERISK_'), '&amp;', '_AMP_'), ',', '_COMMA_'), '&lt;', '_LT_'), '&gt;', '_RT_')"/>
-                <xsl:variable name="replaceResult2" select="replace(replace(replace(replace(replace(replace(replace(replace($replaceResult1, '~', '_TILDE_'), '\[', '_LSQBRKT_'), '\]', '_RSQBRKT_'), ' ', '+'), '%', '_PERCENT_'), '@', '_ATCHAR_'), '&quot;', '_QUOTE_'), '\$', '_DOLLAR_')"/>
-                <xsl:variable name="replaceResult3" select="replace(replace(replace(replace(replace(replace(replace(replace($replaceResult2, '=', '_COMP_'), '#', '_HASH_'), '\^', '_CFLEX_'), '\(', '_LRDBRKT_'), '\)', '_RRDBRKT_'), '!', '_EXCLMARK_'), ';', '_SEMICOLON_'), '\\', '_BSLASH_')"/>
+            <xsl:when test="contains($input, '%2B') or contains($input, '%2F') or contains($input, '%3A') or contains($input, '%2A') or contains($input, '%26') or contains($input, '%2C') or contains($input, '&lt;') or contains($input, '&gt;')
+                or contains($input, '~') or contains($input, '%5B') or contains($input, '%5D') or contains($input, '%20') or contains($input, '%5C') or contains($input, '%40') or contains($input, '%22') or contains($input, '%24')
+                or contains($input, '%3D') or contains($input, '%23') or contains($input, '%5E') or contains($input, '%28') or contains($input, '%29') or contains($input, '%21') or contains($input, '%3B') or contains($input, '%25')">
+                <xsl:variable name="replaceResult1" select="replace(replace(replace(replace(replace(replace(replace(replace($input, '%2B', '_PLUS_'), '%2F', '_SLASH_'), '%3A  ', '_COLON_'), '%2A', '_ASTERISK_'), '%26', '_AMP_'), '%2C', '_COMMA_'), '&lt;', '_LT_'), '&gt;', '_RT_')"/>
+                <xsl:variable name="replaceResult2" select="replace(replace(replace(replace(replace(replace(replace(replace($replaceResult1, '~', '_TILDE_'), '%5B', '_LSQBRKT_'), '%5D', '_RSQBRKT_'), '%20', '+'), '%5C', '_BSLASH_'), '%40', '_ATCHAR_'), '%22', '_QUOTE_'), '%24', '_DOLLAR_')"/>
+                <xsl:variable name="replaceResult3" select="replace(replace(replace(replace(replace(replace(replace(replace($replaceResult2, '%3D', '_COMP_'), '%23', '_HASH_'), '%5E', '_CFLEX_'), '%28', '_LRDBRKT_'), '%29', '_RRDBRKT_'), '%21', '_EXCLMARK_'), '%3B', '_SEMICOLON_'), '%25', '_PERCENT_')"/>
                 <xsl:value-of select="$replaceResult3"/>
             </xsl:when>
             <xsl:otherwise>

@@ -71,11 +71,13 @@ import eu.apenet.dpt.standalone.gui.progress.ApexActionListener;
 import eu.apenet.dpt.standalone.gui.progress.ProgressFrame;
 import eu.apenet.dpt.utils.ead2edm.XMLUtil;
 import eu.apenet.dpt.utils.ead2edm.EdmConfig;
+import eu.apenet.dpt.utils.ead2edm.EdmFileUtils;
 import eu.apenet.dpt.utils.service.TransformationTool;
 import eu.apenet.dpt.utils.util.EAD2002Utils;
 import eu.apenet.dpt.utils.util.Ead2EdmInformation;
 import eu.apenet.dpt.utils.util.extendxsl.EdmQualityCheckerCall;
 import java.io.IOException;
+import java.text.Normalizer;
 import java.util.Arrays;
 import java.util.LinkedHashSet;
 import java.util.Set;
@@ -84,6 +86,7 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
+import java.util.regex.Pattern;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.transform.TransformerException;
@@ -871,8 +874,8 @@ public class EdmOptionsPanel extends JPanel {
         } else if (!languageListMaterial.hasSelections()) {
             throw new Exception("no language for material selected");
         }
-        
-        if (this.sameLanguageAsMaterialCheckbox.isSelected() && this.languageListMaterial.hasMultipleSelections()){
+
+        if (this.sameLanguageAsMaterialCheckbox.isSelected() && this.languageListMaterial.hasMultipleSelections()) {
             throw new Exception("Language for description unclear as multiple values for language of the material exist. Please provide language for description manually.");
         }
 
@@ -1219,7 +1222,7 @@ public class EdmOptionsPanel extends JPanel {
         public boolean hasSelections() {
             return !this.isSelectionEmpty();
         }
-        
+
         public boolean hasMultipleSelections() {
             return this.getSelectedIndices().length > 1;
         }
@@ -1395,6 +1398,6 @@ public class EdmOptionsPanel extends JPanel {
     }
 
     private String convertToFilename(String name) {
-        return name.replaceAll("[^a-zA-Z0-9\\-\\.]", "_");
+        return EdmFileUtils.encodeSpecialCharactersForFilename(name);
     }
 }
