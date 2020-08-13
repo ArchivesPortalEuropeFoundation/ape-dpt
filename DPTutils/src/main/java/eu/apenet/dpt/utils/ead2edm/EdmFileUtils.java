@@ -237,37 +237,38 @@ public final class EdmFileUtils {
     public static String encodeSpecialCharactersForFilename(String input) {
         if (input != null) {
             //Step 1: Replace diacritical characters with their standard variants
-            String nfdNormalizedString = Normalizer.normalize(input, Normalizer.Form.NFD);
-            Pattern pattern = Pattern.compile("\\p{InCombiningDiacriticalMarks}+");
-            String result = pattern.matcher(nfdNormalizedString).replaceAll("");
+//            String nfdNormalizedString = Normalizer.normalize(input, Normalizer.Form.NFD);
+//            Pattern pattern = Pattern.compile("\\p{InCombiningDiacriticalMarks}+");
+//            String result = pattern.matcher(nfdNormalizedString).replaceAll("");
 
             //Step 2: Replace special characters
             //result = result.replaceAll(":", "_COLON_");
-            result = result.replaceAll("\\*", "_ASTERISK_");
-            result = result.replaceAll("=", "_COMP_");
-            result = result.replaceAll("/", "_SLASH_");
+//            result = result.replaceAll("\\*", "_ASTERISK_");
+//            result = result.replaceAll("=", "_COMP_");
+            //result = result.replaceAll("/", "_SLASH_");
+            String result = input.replaceAll("/", "_SLASH_");
             result = result.replaceAll("\\\\", "_BSLASH_");
-            result = result.replaceAll("\\[", "_LSQBRKT_");
-            result = result.replaceAll("\\]", "_RSQBRKT_");
-            result = result.replaceAll("\\+", "_PLUS_");
-            result = result.replaceAll("%", "_PERCENT_");
-            result = result.replaceAll("@", "_ATCHAR_");
-            result = result.replaceAll("\\$", "_DOLLAR_");
-            result = result.replaceAll("#", "_HASH_");
-            result = result.replaceAll("\\^", "_CFLEX_");
-            result = result.replaceAll("&", "_AMP_");
-            result = result.replaceAll("\\(", "_LRDBRKT_");
-            result = result.replaceAll("\\)", "_RRDBRKT_");
-            result = result.replaceAll("!", "_EXCLMARK_");
-            result = result.replaceAll("~", "_TILDE_");
-            result = result.replaceAll("<", "_LT_");
-            result = result.replaceAll(">", "_GT_");
-            result = result.replaceAll("\"", "_QUOTE_");
-            result = result.replaceAll("'", "_SQUOTE_");
-            result = result.replaceAll(",", "_COMMA_");
-            result = result.replaceAll(";", "_SEMICOLON_");
-            result = result.replaceAll("\\{", "_LSCUBRKT_");
-            result = result.replaceAll("\\}", "_RSCUBRKT_");
+//            result = result.replaceAll("\\[", "_LSQBRKT_");
+//            result = result.replaceAll("\\]", "_RSQBRKT_");
+//            result = result.replaceAll("\\+", "_PLUS_");
+//            result = result.replaceAll("%", "_PERCENT_");
+//            result = result.replaceAll("@", "_ATCHAR_");
+//            result = result.replaceAll("\\$", "_DOLLAR_");
+//            result = result.replaceAll("#", "_HASH_");
+//            result = result.replaceAll("\\^", "_CFLEX_");
+//            result = result.replaceAll("&", "_AMP_");
+//            result = result.replaceAll("\\(", "_LRDBRKT_");
+//            result = result.replaceAll("\\)", "_RRDBRKT_");
+//            result = result.replaceAll("!", "_EXCLMARK_");
+//            result = result.replaceAll("~", "_TILDE_");
+//            result = result.replaceAll("<", "_LT_");
+//            result = result.replaceAll(">", "_GT_");
+//            result = result.replaceAll("\"", "_QUOTE_");
+//            result = result.replaceAll("'", "_SQUOTE_");
+//            result = result.replaceAll(",", "_COMMA_");
+//            result = result.replaceAll(";", "_SEMICOLON_");
+//            result = result.replaceAll("\\{", "_LSCUBRKT_");
+//            result = result.replaceAll("\\}", "_RSCUBRKT_");
             result = result.replaceAll("\\s", "+");
             return result;
         } else {

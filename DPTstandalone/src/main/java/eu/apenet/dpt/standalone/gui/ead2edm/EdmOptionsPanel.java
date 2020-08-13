@@ -77,6 +77,8 @@ import eu.apenet.dpt.utils.util.EAD2002Utils;
 import eu.apenet.dpt.utils.util.Ead2EdmInformation;
 import eu.apenet.dpt.utils.util.extendxsl.EdmQualityCheckerCall;
 import java.io.IOException;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.text.Normalizer;
 import java.util.Arrays;
 import java.util.LinkedHashSet;
@@ -1397,7 +1399,9 @@ public class EdmOptionsPanel extends JPanel {
         }
     }
 
-    private String convertToFilename(String name) {
+    private String convertToFilename(String name) throws Exception{
+        // return URLEncoder.encode(name, StandardCharsets.UTF_8.toString());
         return EdmFileUtils.encodeSpecialCharactersForFilename(name);
+        // return name;
     }
 }
