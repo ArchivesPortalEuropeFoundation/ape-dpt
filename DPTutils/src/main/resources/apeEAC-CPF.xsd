@@ -72,7 +72,7 @@ Change log:
             <xs:element name="maintenanceAgency" type="maintenanceAgency"/>
             <xs:element minOccurs="0" name="languageDeclaration" type="languageDeclaration"/>
             <xs:element maxOccurs="unbounded" minOccurs="0" name="conventionDeclaration" type="conventionDeclaration"/>
-            <xs:element minOccurs="0" maxOccurs="unbounded" name="rightsDeclaration"/>
+            <xs:element minOccurs="0" maxOccurs="unbounded" name="rightsDeclaration" type="rightsDeclaration"/>
             <xs:element maxOccurs="unbounded" minOccurs="0" name="localTypeDeclaration" type="localTypeDeclaration"/>
             <xs:element maxOccurs="unbounded" minOccurs="0" name="localControl" type="localControl"/>
             <xs:element name="maintenanceHistory" type="maintenanceHistory"/>
