@@ -9,7 +9,9 @@
     Change log:
 
     20200818
-    05.     - added @href to <restaccess>
+    05.     - added new element <rightsDeclaration> as optional and repeatable sub-element of <control>; uses the same sub-elements as <conventionDeclaration>, but does not allow <citation> to be repeated
+            - added @href to <restaccess>
+            - added new element <image> as optional and repeatable sub-element of <repositories> and of <repository>; uses attributes @href (required), @linkTitle and @localType
 
     20190619
     0.4     - made <street> optional as sub-element of <location>
@@ -51,6 +53,10 @@
     <xs:attributeGroup name="href">
         <xs:attribute name="href" type="xs:anyURI"/>
     </xs:attributeGroup>
+    
+    <xs:attributeGroup name="linkTitle">
+        <xs:attribute name="linkTitle" type="xs:token"/>
+    </xs:attributeGroup>
 
     <!-- ###############
        CONTROL
@@ -66,6 +72,8 @@
             <xs:element name="maintenanceHistory" type="maintenanceHistory"/>
             <xs:element name="languageDeclarations" type="languageDeclarations" minOccurs="0"/>
             <xs:element name="conventionDeclaration" type="conventionDeclaration" minOccurs="0"
+                maxOccurs="unbounded"/>
+            <xs:element name="rightsDeclaration" type="rightsDeclaration" minOccurs="0"
                 maxOccurs="unbounded"/>
             <xs:element name="localControl" type="localControl" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element name="localTypeDeclaration" type="localTypeDeclaration" minOccurs="0"
@@ -275,6 +283,16 @@
         <xs:attributeGroup ref="href"/>
         <xs:attribute name="lastDateTimeVerified" type="m.data.standardDateTime"/>
         <xs:attributeGroup ref="sourceAttribute"/>
+    </xs:complexType>
+
+    <xs:complexType name="rightsDeclaration">
+        <xs:sequence>
+            <xs:element name="abbreviation" type="abbreviation" minOccurs="0"/>
+            <xs:element name="citation" type="citation"/>
+            <xs:element name="descriptiveNote" type="descriptiveNote" minOccurs="0"/>
+        </xs:sequence>
+        <xs:attribute ref="xml:lang"/>
+        <xs:attributeGroup ref="href"/>
     </xs:complexType>
 
     <xs:complexType name="localControl">
@@ -562,6 +580,7 @@
     <xs:complexType name="repositories">
         <xs:sequence>
             <xs:element name="repository" type="repository" maxOccurs="unbounded"/>
+            <xs:element name="image" type="image" minOccurs="0" maxOccurs="unbounded"/>
         </xs:sequence>
     </xs:complexType>
 
@@ -588,9 +607,16 @@
             <xs:element name="accessibility" type="accessibility" maxOccurs="unbounded"/>
             <xs:element name="services" type="services" minOccurs="0"/>
             <xs:element name="descriptiveNote" type="descriptiveNote" minOccurs="0"/>
+            <xs:element name="image" type="image" minOccurs="0" maxOccurs="unbounded"/>
         </xs:sequence>
     </xs:complexType>
 
+    <xs:complexType name="image">
+        <xs:attribute ref="href"/>
+        <xs:attributeGroup ref="linkTitle"/>
+        <xs:attributeGroup ref="localType"/>
+    </xs:complexType>
+    
     <xs:complexType name="repositoryName" mixed="true">
         <xs:attribute ref="xml:lang"/>
         <xs:attributeGroup ref="sourceAttribute"/>
