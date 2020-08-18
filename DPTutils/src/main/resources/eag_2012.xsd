@@ -1,12 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
     EAG 2012 Schema
-    Version: 0.4
-    Date: 20190619
+    Version: 0.5
+    Date: 20200818
     Editor: Archives Portal Europe Foundation, Working Group on Standards
 -->
 <!--
     Change log:
+
+    20200818
+    05.     - added @href to <restaccess>
 
     20190619
     0.4     - made <street> optional as sub-element of <location>
@@ -910,6 +913,7 @@
 
     <xs:complexType name="restaccess" mixed="true">
         <xs:attribute ref="xml:lang"/>
+        <xs:attributeGroup ref="href"/>
         <xs:attributeGroup ref="sourceAttribute"/>
     </xs:complexType>
 
