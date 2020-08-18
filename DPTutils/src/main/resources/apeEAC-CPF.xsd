@@ -1,15 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
     apeEAC-CPF Schema (XSD 1.1)
-    Version: 0.3
-    Date: 20140612
-    Editor: APEx project, Work Package 4. Send comments to s.waidmann.apex@bundesarchiv.de
+    Version: 0.4
+    Date: 20200818
+    Editor: Archives Portal Europe Foundation, Working Group on Standards
 
-This version of the apeEAC-CPF schema has been written from the official 2010 eac-cpf schema to accommodate the needs of the APEx project due to the Archivesportal Europe.
+This version of the apeEAC-CPF schema has been written from the official 2010 eac-cpf schema to accommodate the needs of the Archives Portal Europe.
 
 -->
 <!--
 Change log:
+
+0.4    - Added <rightsDeclaration> as an optional and repeatable sub-element of <control>
 
 0.3    - Removed @xml:lang from resourceRelation and functionRelation
        - Re-inserted @localtype to date and dateRange
@@ -70,6 +72,7 @@ Change log:
             <xs:element name="maintenanceAgency" type="maintenanceAgency"/>
             <xs:element minOccurs="0" name="languageDeclaration" type="languageDeclaration"/>
             <xs:element maxOccurs="unbounded" minOccurs="0" name="conventionDeclaration" type="conventionDeclaration"/>
+            <xs:element minOccurs="0" maxOccurs="unbounded" ref="rightsDeclaration"/>
             <xs:element maxOccurs="unbounded" minOccurs="0" name="localTypeDeclaration" type="localTypeDeclaration"/>
             <xs:element maxOccurs="unbounded" minOccurs="0" name="localControl" type="localControl"/>
             <xs:element name="maintenanceHistory" type="maintenanceHistory"/>
@@ -224,6 +227,16 @@ Change log:
             </xs:sequence>
             <!--			<xs:attribute ref="xml:id"/>-->
             <!--			<xs:attribute ref="xml:lang"/>-->
+    </xs:complexType>
+    <xs:complexType name="rightsDeclaration">
+      <xs:sequence>
+          <xs:element minOccurs="0" name="abbreviation" type="abbreviation"/>
+          <xs:element name="citation" type="citation"/>
+          <xs:element minOccurs="0" name="descriptiveNote" type="descriptiveNote"/>
+      </xs:sequence>
+      <!-- <xs:attribute ref="xml:id"/> -->
+      <xs:attribute ref="xml:lang"/>
+      <xs:attribute name="localType" type="xs:anyURI"/>
     </xs:complexType>
     <xs:complexType name="localTypeDeclaration">
             <xs:sequence>
