@@ -292,7 +292,7 @@
             <xs:element name="descriptiveNote" type="descriptiveNote" minOccurs="0"/>
         </xs:sequence>
         <xs:attribute ref="xml:lang"/>
-        <xs:attributeGroup ref="href"/>
+        <xs:attributeGroup ref="localType"/>
     </xs:complexType>
 
     <xs:complexType name="localControl">
