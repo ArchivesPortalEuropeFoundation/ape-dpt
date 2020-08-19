@@ -612,7 +612,7 @@
     </xs:complexType>
 
     <xs:complexType name="image">
-        <xs:attributeGroup ref="href"/>
+        <xs:attributeGroup ref="href" use="required"/>
         <xs:attributeGroup ref="linkTitle"/>
         <xs:attributeGroup ref="localType"/>
     </xs:complexType>
