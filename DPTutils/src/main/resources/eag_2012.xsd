@@ -10,6 +10,7 @@
 
     20200818
     05.     - added new element <rightsDeclaration> as optional and repeatable sub-element of <control>; uses the same sub-elements as <conventionDeclaration>, but does not allow <citation> to be repeated
+            - made <useDates> optional as sub-element of <nonpreform>
             - added @href to <restaccess>
             - added new element <image> as optional and repeatable sub-element of <repositories> and of <repository>; uses attributes @href (required), @linkTitle and @localType
 
@@ -512,7 +513,7 @@
 
     <xs:complexType name="nonpreform" mixed="true">
         <xs:sequence>
-            <xs:element name="useDates" type="useDates"/>
+            <xs:element name="useDates" type="useDates" minOccurs="0"/>
         </xs:sequence>
         <xs:attribute ref="xml:lang"/>
         <xs:attributeGroup ref="sourceAttribute"/>
