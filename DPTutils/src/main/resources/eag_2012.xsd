@@ -9,7 +9,7 @@
     Change log:
 
     20200818
-    05.     - added new element <rightsDeclaration> as optional and repeatable sub-element of <control>; uses the same sub-elements as <conventionDeclaration>, but does not allow <citation> to be repeated
+    0.5     - added new element <rightsDeclaration> as optional and repeatable sub-element of <control>; uses the same sub-elements as <conventionDeclaration>, but does not allow <citation> to be repeated
             - made <useDates> optional as sub-element of <nonpreform>
             - added @href to <restaccess>
             - added new element <image> as optional and repeatable sub-element of <repositories> and of <repository>; uses attributes @href (required), @linkTitle and @localType
