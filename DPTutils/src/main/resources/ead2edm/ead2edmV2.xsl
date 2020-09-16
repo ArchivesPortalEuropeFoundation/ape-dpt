@@ -121,6 +121,7 @@
                 xmlns:wgs84_pos="http://www.w3.org/2003/01/geo/wgs84_pos#">
                 <ore:Aggregation>
                     <xsl:attribute name="rdf:about" select="concat('aggregation_', .)"/>
+                    <edm:uriEncodedFilename><xsl:value-of select="$eadidFilenameEncoded"/></edm:uriEncodedFilename>
                     <edm:aggregatedCHO>
                         <xsl:attribute name="rdf:resource" select="concat('providedCHO_', .)"/>
                     </edm:aggregatedCHO>
@@ -1876,11 +1877,15 @@
     <xsl:template name="filenameReplace">
         <xsl:param name="input"/>
         <xsl:choose>
-            <xsl:when test="contains($input, '%2F') or contains($input, '%5C') or contains($input, '%20')">
+<!--            <xsl:when test="contains($input, '%2F') or contains($input, '%5C') or contains($input, '%20')">
                 <xsl:variable name="replaceResult1" select="replace(replace(replace($input, '%2F', '_SLASH_'), '%5C', '_BSLASH_'), '%20', '+')"/>
                 <xsl:value-of select="$replaceResult1"/>
-            </xsl:when>
-            <xsl:otherwise>
+            </xsl:when>-->
+            <xsl:when test="contains($input, '%')">
+                <xsl:variable name="replaceResult1" select="replace($input, '%20', '+')"></xsl:variable>
+                <xsl:variable name="replaceResult2" select="replace($replaceResult1, '%', '%25')"/>
+                <xsl:value-of select="$replaceResult2"/>
+            </xsl:when><xsl:otherwise>
                 <xsl:value-of select="$input"/>
             </xsl:otherwise>
         </xsl:choose>
