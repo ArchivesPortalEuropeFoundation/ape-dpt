@@ -121,7 +121,6 @@
                 xmlns:wgs84_pos="http://www.w3.org/2003/01/geo/wgs84_pos#">
                 <ore:Aggregation>
                     <xsl:attribute name="rdf:about" select="concat('aggregation_', .)"/>
-                    <edm:uriEncodedFilename><xsl:value-of select="$eadidFilenameEncoded"/></edm:uriEncodedFilename>
                     <edm:aggregatedCHO>
                         <xsl:attribute name="rdf:resource" select="concat('providedCHO_', .)"/>
                     </edm:aggregatedCHO>
@@ -807,13 +806,13 @@
         </xsl:variable>
         <xsl:variable name="identifierFilename">
             <xsl:call-template name="filenameReplace">
-                <xsl:with-param name="input" select="$identifier"/>
+                <xsl:with-param name="input" select="normalize-space(encode-for-uri($identifier))"/>
             </xsl:call-template>
         </xsl:variable>
         <xsl:variable name="hasDao" select="if(did/dao[normalize-space(@xlink:href) != '' and not(@xlink:title='thumbnail')]) then true() else false()" />
         
         <!-- ACTUAL CONVERSION BEGINS HERE -->
-        <xsl:result-document href="{$outputBaseDirectory}/{$eadidFilenameEncoded}/{$identifierFilename}.xml" xpath-default-namespace="urn:isbn:1-931666-22-9" >
+            <xsl:result-document href="{$outputBaseDirectory}/{$eadidFilenameEncoded}/{$identifierFilename}.xml" xpath-default-namespace="urn:isbn:1-931666-22-9" >
             <rdf:RDF xmlns:adms="http://www.w3.org/ns/adms#"
                 xmlns:cc="http://creativecommons.org/ns#"
                 xmlns:crm="http://www.cidoc-crm.org/rdfs/cidoc_crm_v5.0.2_english_label.rdfs#"
@@ -1877,10 +1876,6 @@
     <xsl:template name="filenameReplace">
         <xsl:param name="input"/>
         <xsl:choose>
-<!--            <xsl:when test="contains($input, '%2F') or contains($input, '%5C') or contains($input, '%20')">
-                <xsl:variable name="replaceResult1" select="replace(replace(replace($input, '%2F', '_SLASH_'), '%5C', '_BSLASH_'), '%20', '+')"/>
-                <xsl:value-of select="$replaceResult1"/>
-            </xsl:when>-->
             <xsl:when test="contains($input, '%')">
                 <xsl:variable name="replaceResult1" select="replace($input, '%20', '+')"></xsl:variable>
                 <xsl:variable name="replaceResult2" select="replace($replaceResult1, '%', '%25')"/>

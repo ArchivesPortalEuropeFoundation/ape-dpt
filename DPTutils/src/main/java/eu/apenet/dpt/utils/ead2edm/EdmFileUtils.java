@@ -242,7 +242,14 @@ public final class EdmFileUtils {
     public static String encodeSpecialCharactersForFilename(String input) {
         if (input != null) {
             try {
-                return URLEncoder.encode(input, StandardCharsets.UTF_8.toString());
+                String result = URLEncoder.encode(input, StandardCharsets.UTF_8.toString());
+                result = result.replaceAll("\\*", "%2A");
+                result = result.replaceAll("\\/", "%2F");
+                result = result.replaceAll("\\[", "%5B");
+                result = result.replaceAll("\\]", "%5D");
+                result = result.replaceAll("\\#", "%23");
+                result = result.replaceAll("\\?", "%3F");
+                return result;
             } catch (UnsupportedEncodingException ex) {
                 LOGGER.log(Priority.ERROR, null, ex);
             }
