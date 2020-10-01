@@ -1860,10 +1860,10 @@
     <xsl:template name="simpleReplace">
         <xsl:param name="input"/>
         <xsl:choose>
-            <xsl:when test="contains($input, '%2B') or contains($input, '%2F') or contains($input, '%3A') or contains($input, '%2A') or contains($input, '%26') or contains($input, '%2C') or contains($input, '&lt;') or contains($input, '&gt;')
+            <xsl:when test="contains($input, '%2B') or contains($input, '%2F') or contains($input, '%3A') or contains($input, '%2A') or contains($input, '%26') or contains($input, '%2C') or contains($input, '&lt;') or contains($input, '&gt;')or contains($input, '%27')
                 or contains($input, '~') or contains($input, '%5B') or contains($input, '%5D') or contains($input, '%20') or contains($input, '%5C') or contains($input, '%40') or contains($input, '%22') or contains($input, '%24')
                 or contains($input, '%3D') or contains($input, '%23') or contains($input, '%5E') or contains($input, '%28') or contains($input, '%29') or contains($input, '%21') or contains($input, '%3B') or contains($input, '%25')">
-                <xsl:variable name="replaceResult1" select="replace(replace(replace(replace(replace(replace(replace(replace($input, '%2B', '_PLUS_'), '%2F', '_SLASH_'), '%3A  ', '_COLON_'), '%2A', '_ASTERISK_'), '%26', '_AMP_'), '%2C', '_COMMA_'), '&lt;', '_LT_'), '&gt;', '_RT_')"/>
+                <xsl:variable name="replaceResult1" select="replace(replace(replace(replace(replace(replace(replace(replace(replace($input, '%2B', '_PLUS_'), '%2F', '_SLASH_'), '%3A', '_COLON_'), '%2A', '_ASTERISK_'), '%26', '_AMP_'), '%2C', '_COMMA_'), '&lt;', '_LT_'), '&gt;', '_RT_'), '%27', '_SQUOTE_')"/>
                 <xsl:variable name="replaceResult2" select="replace(replace(replace(replace(replace(replace(replace(replace($replaceResult1, '~', '_TILDE_'), '%5B', '_LSQBRKT_'), '%5D', '_RSQBRKT_'), '%20', '+'), '%5C', '_BSLASH_'), '%40', '_ATCHAR_'), '%22', '_QUOTE_'), '%24', '_DOLLAR_')"/>
                 <xsl:variable name="replaceResult3" select="replace(replace(replace(replace(replace(replace(replace(replace($replaceResult2, '%3D', '_COMP_'), '%23', '_HASH_'), '%5E', '_CFLEX_'), '%28', '_LRDBRKT_'), '%29', '_RRDBRKT_'), '%21', '_EXCLMARK_'), '%3B', '_SEMICOLON_'), '%25', '_PERCENT_')"/>
                 <xsl:value-of select="$replaceResult3"/>
