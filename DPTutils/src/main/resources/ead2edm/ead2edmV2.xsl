@@ -410,7 +410,7 @@
                 <edm:WebResource>
                     <xsl:attribute name="rdf:about">
                         <xsl:choose>
-                            <xsl:when test="@url">
+                            <xsl:when test="@url != ''">
                                 <xsl:value-of select="@url"/>
                             </xsl:when>
                             <xsl:otherwise>
