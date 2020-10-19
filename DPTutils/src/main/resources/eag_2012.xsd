@@ -1,12 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
     EAG 2012 Schema
-    Version: 0.5
-    Date: 20200818
+    Version: 0.6
+    Date: 20201019
     Editor: Archives Portal Europe Foundation, Working Group on Standards
 -->
 <!--
     Change log:
+
+    20201019
+    0.6     - added the value "cubicmetre" as an option for @unit with <num> as sub-element of <extent>
+            - changed the latest possible date from "2099" to "9999"
 
     20200818
     0.5     - added new element <rightsDeclaration> as optional and repeatable sub-element of <control>; uses the same sub-elements as <conventionDeclaration>, but does not allow <citation> to be repeated
@@ -185,22 +189,22 @@
         <xs:union>
             <xs:simpleType>
                 <xs:restriction base="xs:date">
-                    <xs:maxInclusive value="2099-12-31"/>
+                    <xs:maxInclusive value="9999-12-31"/>
                 </xs:restriction>
             </xs:simpleType>
             <xs:simpleType>
                 <xs:restriction base="xs:gYear">
-                    <xs:maxInclusive value="2099"/>
+                    <xs:maxInclusive value="9999"/>
                 </xs:restriction>
             </xs:simpleType>
             <xs:simpleType>
                 <xs:restriction base="xs:gYearMonth">
-                    <xs:maxInclusive value="2099-12"/>
+                    <xs:maxInclusive value="9999-12"/>
                 </xs:restriction>
             </xs:simpleType>
             <xs:simpleType>
                 <xs:restriction base="xs:dateTime">
-                    <xs:maxInclusive value="2099-12-31T23:59:59"/>
+                    <xs:maxInclusive value="9999-12-31T23:59:59"/>
                 </xs:restriction>
             </xs:simpleType>
         </xs:union>
@@ -364,17 +368,17 @@
         <xs:union>
             <xs:simpleType>
                 <xs:restriction base="xs:date">
-                    <xs:maxInclusive value="2099-12-31"/>
+                    <xs:maxInclusive value="9999-12-31"/>
                 </xs:restriction>
             </xs:simpleType>
             <xs:simpleType>
                 <xs:restriction base="xs:gYear">
-                    <xs:maxInclusive value="2099"/>
+                    <xs:maxInclusive value="9999"/>
                 </xs:restriction>
             </xs:simpleType>
             <xs:simpleType>
                 <xs:restriction base="xs:gYearMonth">
-                    <xs:maxInclusive value="2099-12"/>
+                    <xs:maxInclusive value="9999-12"/>
                 </xs:restriction>
             </xs:simpleType>
         </xs:union>
@@ -791,6 +795,7 @@
                 <xs:restriction base="xs:token">
                     <xs:enumeration value="squaremetre"/>
                     <xs:enumeration value="linearmetre"/>
+                    <xs:enumeration value="cubicmetre"/>
                     <xs:enumeration value="site"/>
                     <xs:enumeration value="book"/>
                     <xs:enumeration value="title"/>
