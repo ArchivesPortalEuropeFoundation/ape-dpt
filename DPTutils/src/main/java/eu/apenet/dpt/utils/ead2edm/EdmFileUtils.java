@@ -243,6 +243,7 @@ public final class EdmFileUtils {
         if (input != null) {
             try {
                 String result = URLEncoder.encode(input, StandardCharsets.UTF_8.toString());
+                result = result.replaceAll(" ", "%20");
                 result = result.replaceAll("\\*", "%2A");
                 result = result.replaceAll("\\/", "%2F");
                 result = result.replaceAll("\\[", "%5B");
