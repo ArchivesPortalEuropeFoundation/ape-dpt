@@ -59,30 +59,42 @@
                     <target>1.7</target>
                 </configuration>
             </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>8</source>
+                    <target>8</target>
+                </configuration>
+            </plugin>
         </plugins>
     </build>
     <dependencies>
         <dependency>
             <groupId>net.sf.saxon</groupId>
-            <artifactId>saxon-HE</artifactId>
+            <artifactId>Saxon-HE</artifactId>
         </dependency>
         <!--Begin xerces-->
         <dependency>
             <groupId>xerces</groupId>
-            <artifactId>xercesImpl-schema</artifactId>
+            <artifactId>xercesImpl</artifactId>
         </dependency>
-        <dependency>
-            <groupId>xerces</groupId>
-            <artifactId>xercesImpl-resolver</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.eclipse.wst</groupId>
-            <artifactId>xpath2processor</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>cupv</groupId>
-            <artifactId>cupv</artifactId>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>xerces</groupId>-->
+<!--            <artifactId>xercesImpl-schema</artifactId>-->
+<!--        </dependency>-->
+<!--        <dependency>-->
+<!--            <groupId>xerces</groupId>-->
+<!--            <artifactId>xercesImpl-resolver</artifactId>-->
+<!--        </dependency>-->
+<!--        <dependency>-->
+<!--            <groupId>org.eclipse.wst</groupId>-->
+<!--            <artifactId>xpath2processor</artifactId>-->
+<!--        </dependency>-->
+<!--        <dependency>-->
+<!--            <groupId>cupv</groupId>-->
+<!--            <artifactId>cupv</artifactId>-->
+<!--        </dependency>-->
         <dependency>
             <groupId>xml-apis</groupId>
             <artifactId>xml-apis</artifactId>

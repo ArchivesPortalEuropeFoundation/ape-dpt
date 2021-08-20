@@ -178,11 +178,12 @@
 		</dependency>
         <dependency>
             <groupId>com.jgoodies</groupId>
-            <artifactId>forms</artifactId>
+            <artifactId>jgoodies-forms</artifactId>
+            <version>1.8.0</version>
         </dependency>
         <dependency>
             <groupId>com.jgoodies</groupId>
-            <artifactId>commons</artifactId>
+            <artifactId>jgoodies-common</artifactId>
         </dependency>
         <!--<dependency>-->
             <!--<groupId>javax.xml.bind</groupId>-->
