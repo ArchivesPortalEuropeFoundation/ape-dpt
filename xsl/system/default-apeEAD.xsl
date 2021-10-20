@@ -3461,6 +3461,42 @@
                         </did>
                     </xsl:if>
                     <xsl:apply-templates mode="level"/>
+
+                    <xsl:if test="normalize-space($defaultRightsEadData)">
+                        <userestrict type="ead" encodinganalog="rts:rightscategory">
+                            <p>
+                                <extref xlink:href="{$defaultRightsEadData}" xlink:title="{$defaultRightsEadDataText}" />
+                            </p>
+                            <xsl:if test="normalize-space($defaultRightsEadDataDescription)">
+                                <p>
+                                    <xsl:value-of select="$defaultRightsEadDataDescription"/>
+                                </p>
+                            </xsl:if>
+                            <xsl:if test="normalize-space($defaultRightsEadDataHolder)">
+                                <p>
+                                    <xsl:value-of select="$defaultRightsEadDataHolder"/>
+                                </p>
+                            </xsl:if>
+                        </userestrict>
+                    </xsl:if>
+                    <xsl:if test="normalize-space($defaultRightsDigitalObject)">
+                        <userestrict type="dao" encodinganalog="rts:rightscategory">
+                            <p>
+                                <extref xlink:href="{$defaultRightsDigitalObject}" xlink:title="{$defaultRightsDigitalObjectText}" />
+                            </p>
+                            <xsl:if test="normalize-space($defaultRightsDigitalObjectDescription)">
+                                <p>
+                                    <xsl:value-of select="$defaultRightsDigitalObjectDescription"/>
+                                </p>
+                            </xsl:if>
+                            <xsl:if test="normalize-space($defaultRightsDigitalObjectHolder)">
+                                <p>
+                                    <xsl:value-of select="$defaultRightsDigitalObjectHolder"/>
+                                </p>
+                            </xsl:if>
+                        </userestrict>
+                    </xsl:if>
+
                 </c>
             </xsl:otherwise>
         </xsl:choose>
