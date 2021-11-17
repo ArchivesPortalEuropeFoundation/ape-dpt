@@ -1966,12 +1966,12 @@
                     </xsl:when>
                 </xsl:choose>
             </xsl:attribute>
-            <xsl:if test="$manifestDao">
+            <xsl:if test="$manifestDao and $manifestDao/@xlink:href and not($manifestDao/@xlink:href='')">
                 <dcterms:isReferencedBy>
-                    <xsl:value-of select="$manifestDao/@xlink:href"></xsl:value-of>
+                    <xsl:attribute name="rdf:resource" select="$manifestDao/@xlink:href"/>
                 </dcterms:isReferencedBy>
             </xsl:if>
-            <xsl:if test="$serviceDao">
+            <xsl:if test="$serviceDao and $serviceDao/@xlink:href and not($serviceDao/@xlink:href='')">
                 <svcs:has_service>
                     <xsl:attribute name="rdf:resource">
                         <xsl:value-of select="$serviceDao/@xlink:href"></xsl:value-of>
@@ -2024,7 +2024,7 @@
                 </xsl:otherwise>
             </xsl:choose>
         </edm:WebResource>
-        <xsl:if test="$manifestDao">
+        <xsl:if test="$serviceDao and $serviceDao/@xlink:href and not($serviceDao/@xlink:href='')">
             <svcs:Service>
                 <xsl:attribute name="rdf:about">
                     <xsl:value-of select="$serviceDao/@xlink:href"></xsl:value-of>
@@ -2032,11 +2032,13 @@
                 <dcterms:conformsTo>
                     <xsl:attribute name="rdf:resource">http://iiif.io/api/image</xsl:attribute>
                 </dcterms:conformsTo>
-                <doap:implements>
-                    <xsl:attribute name="rdf:resource">
-                        <xsl:value-of select="$serviceDao/@xlink:arcrole"></xsl:value-of>
-                    </xsl:attribute>
-                </doap:implements>
+                <xsl:if test="$serviceDao/@xlink:arcrole and not($serviceDao/@xlink:arcrole='')">
+                    <doap:implements>
+                        <xsl:attribute name="rdf:resource">
+                            <xsl:value-of select="$serviceDao/@xlink:arcrole"></xsl:value-of>
+                        </xsl:attribute>
+                    </doap:implements>
+                </xsl:if>
             </svcs:Service>
         </xsl:if>
     </xsl:template>
