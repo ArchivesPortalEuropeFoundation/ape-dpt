@@ -1,13 +1,15 @@
-<?xml version="1.0" encoding="UTF-8"?>
 <!--
     EAG 2012 Schema
-    Version: 0.6
-    Date: 20201019
+    Version: 0.7
+    Date: 20211122
     Editor: Archives Portal Europe Foundation, Working Group on Standards
 -->
 <!--
     Change log:
 
+    20211122
+    0.7     - added <eventDescription> as optional and repeatable sub-element of <maintenanceEvent>
+    
     20201019
     0.6     - added the value "cubicmetre" as an option for @unit with <num> as sub-element of <extent>
             - changed the latest possible date from "2099" to "9999"
@@ -158,10 +160,16 @@
             <xs:element name="agentType" type="agentType"/>
             <xs:element name="eventDateTime" type="eventDateTime"/>
             <xs:element name="eventType" type="eventType"/>
+            <xs:element name="eventDescription" type="eventDescription" minOccurs="0" maxOccurs="unbounded"/>
         </xs:sequence>
         <xs:attribute ref="xml:lang"/>
     </xs:complexType>
 
+    <xs:complexType name="eventDescription" mixed="true">
+        <xs:attribute ref="xml:lang"/>
+        <xs:attributeGroup ref="sourceAttribute"/>
+    </xs:complexType>
+    
     <xs:complexType name="eventType">
         <xs:simpleContent>
             <xs:restriction base="xs:anyType">
