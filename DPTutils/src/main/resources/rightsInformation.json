@@ -1,0 +1,79 @@
+[
+  {
+    "abbreviation":"PDM",
+    "url": "http://creativecommons.org/publicdomain/mark/1.0/",
+    "name": "Public Domain Mark",
+    "description": "This object is not or no longer protected by copyright and has been labelled with the Public Domain Mark. It can be used by anyone without any restrictions.",
+    "extra": "The maintenance agency for this object is the"
+  },
+  {
+    "abbreviation":"CC0",
+    "url": "http://creativecommons.org/publicdomain/zero/1.0/",
+    "name": "Creative Commons CC0 Public Domain Dedication",
+    "description": "This object is made available under the Creative Commons CC0 1.0 Public Domain Dedication. All possible existing rights in the content are waived, and the object can be used by anyone without any restrictions.",
+    "extra": "The rights holder is the"
+  },
+  {
+    "abbreviation":"CC BY",
+    "url": "http://creativecommons.org/licenses/by/4.0/",
+    "name": "Creative Commons Attribution",
+    "description": "This object is made available under the terms of the Creative Commons - Attribution (BY) licence. You can copy, redistribute, remix, tweak, and build upon the licensed object, even commercially, as long as you attribute the rights holder as described in the licence.",
+    "extra": "The rights holder is the"
+  },
+  {
+    "abbreviation":"CC BY-SA",
+    "url": "http://creativecommons.org/licenses/by-sa/4.0/",
+    "name": "Creative Commons Attribution, ShareAlike",
+    "description": "This object is made available under the terms of the Creative Commons - Attribution, ShareAlike (BY-SA) licence. You can copy, redistribute, remix, tweak and build upon the licensed object, even for commercial purposes, as long as you attribute the rights holder as described in the licence, and you license your adaptations of the object under the same terms.",
+    "extra": "The rights holder is the"
+  },
+  {
+    "abbreviation":"CC BY-ND",
+    "url": "http://creativecommons.org/licenses/by-nd/4.0/",
+    "name": "Creative Commons Attribution, No Derivatives",
+    "description": "This object is made available under the terms of the Creative Commons - Attribution, No Derivates (BY-ND) licence. You can copy and redistribute the object, even commercially, as long as no alteration is made to the object and you attribute the rights holder as described in the licence. If you remix, transform or build upon the object, you may not distribute the modified material.",
+    "extra": "The rights holder is the"
+  },
+  {
+    "abbreviation":"CC BY-NC",
+    "url": "http://creativecommons.org/licenses/by-nc/4.0/",
+    "name": "Creative Commons Attribution, Non-Commercial",
+    "description": "This object is made available under the terms of the Creative Commons - Attribution, Non-Commercial (BY-NC) licence. You can copy, redistribute, remix, tweak, and build upon the licensed object for non-commercial use only and as long as you attribute the rights holder as described in the licence.",
+    "extra": "The rights holder is the"
+  },
+  {
+    "abbreviation":"CC BY-NC-SA",
+    "url": "http://creativecommons.org/licenses/by-nc-sa/4.0/",
+    "name": "Creative Commons Attribution, Non-Commercial, ShareAlike",
+    "description": "This object is made available under the terms of the Creative Commons - Attribution, Non-Commercial, ShareAlike (BY-NC-SA) licence. You can copy, redistribute, remix, tweak, and build upon the licensed object for non-commercial use only, as long as you attribute the rights holder as described in the licence, and as long as you license your adaptations of the object under the same terms.",
+    "extra": "The rights holder is the"
+  },
+  {
+    "abbreviation":"CC BY-NC-ND",
+    "url": "http://creativecommons.org/licenses/by-nc-nd/4.0/",
+    "name": "Creative Commons Attribution, Non-Commercial, No Derivatives",
+    "description": "This object is made available under the terms of the Creative Commons - Attribution, Non-Commercial, No Derivates (BY-NC-ND) licence. You can copy and redistribute the object for non-commercial use only, as long as no alteration is made to the object and as long as you attribute the rights holder as described in the licence. If you remix, transform or build upon the object, you may not distribute the modified material.",
+    "extra": "The rights holder is the"
+  },
+  {
+    "abbreviation":"InC",
+    "url": "http://rightsstatements.org/vocab/InC/1.0/",
+    "name": "In Copyright",
+    "description": "This object is currently in copyright. Please contact the providing institution for more information and in order to acquire additional permissions for re-use.",
+    "extra": "The rights holder is the"
+  },
+  {
+    "abbreviation":"InC-EDU",
+    "url": "http://rightsstatements.org/vocab/InC-EDU/1.0//",
+    "name": "In Copyright, Education Use Permitted",
+    "description": "This object is currently in copyright and the rights holder(s) have allowed re-use for educational purposes only. You are free to use this object in any way that is permitted by the copyright and related rights legislation that applies to your use. Please note that you are responsible for your own use, including the need to obtain other permissions e.g. with regard to publicity, privacy or moral rights. Please contact the providing institution for more information and in order to acquire additional permissions for any other uses.",
+    "extra": "The rights holder is the"
+  },
+  {
+    "abbreviation":"NoC-NC",
+    "url": "http://rightsstatements.org/vocab/NoC-NC/1.0/",
+    "name": "No Copyright, Non-Commercial Use Only",
+    "description": "This object is in the public domain, but has been digitised as the outcome of a public-private partnership, where the terms of the contractual agreement limit commercial use for a certain period of time. You can copy, redistribute, remix, tweak, and build upon the object for non-commercial use only.",
+    "extra": "The maintenance agency for this object is the"
+  }
+]

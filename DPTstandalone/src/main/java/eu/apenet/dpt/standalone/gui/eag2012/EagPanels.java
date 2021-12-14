@@ -18,12 +18,19 @@ package eu.apenet.dpt.standalone.gui.eag2012;
  * #L%
  */
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.ResourceBundle;
 
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JTabbedPane;
 
+import eu.apenet.dpt.standalone.gui.commons.swingstructures.TextFieldWithLanguage;
+import eu.apenet.dpt.standalone.gui.options.DigitalObjectAndRightsOptionFrame;
+import eu.apenet.dpt.utils.eag2012.RightsDeclaration;
+import eu.apenet.dpt.utils.util.RightsInformation;
+import eu.apenet.dpt.utils.util.RightsInformationList;
 import org.apache.log4j.Logger;
 
 import eu.apenet.dpt.standalone.gui.ProfileListModel;
@@ -45,11 +52,13 @@ public abstract class EagPanels extends CommonsPropertiesPanels{
     protected final String[] photographAllowance = {"---", "depending on the material", "no", "yes", "yes (without flash)"};
     protected final String[] repositoryRoles = {"---", "Branch", "Head quarter", "Interim archive"};
     protected final String[] webPrefixes = {"http://", "https://", "ftp://"};
+    protected final String[] rightsInformationList = RightsInformationList.getRightsInformationStringList();
 
     protected JComboBox continentCombo = new JComboBox(continents);
     protected JComboBox accessiblePublicCombo = new JComboBox(yesOrNo);
     protected JComboBox facilitiesForDisabledCombo = new JComboBox(yesOrNo);
     protected JComboBox photographAllowanceCombo = new JComboBox(photographAllowance);
+    protected JComboBox rightsCombo = new JComboBox(rightsInformationList);
 
     protected Eag eag;
     protected JFrame eag2012Frame;
