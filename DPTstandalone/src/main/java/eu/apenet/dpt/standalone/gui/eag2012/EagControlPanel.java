@@ -25,16 +25,13 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.ResourceBundle;
 
-import javax.swing.JButton;
-import javax.swing.JComponent;
-import javax.swing.JFrame;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JTabbedPane;
-import javax.swing.JTextField;
+import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
+import eu.apenet.dpt.utils.eag2012.*;
+import eu.apenet.dpt.utils.util.RightsInformation;
+import eu.apenet.dpt.utils.util.RightsInformationList;
 import org.apache.commons.lang.StringUtils;
 
 import com.jgoodies.forms.builder.PanelBuilder;
@@ -48,15 +45,6 @@ import eu.apenet.dpt.standalone.gui.commons.DefaultBtnAction;
 import eu.apenet.dpt.standalone.gui.commons.swingstructures.LanguageWithScript;
 import eu.apenet.dpt.standalone.gui.commons.swingstructures.TextFieldWithLanguage;
 import eu.apenet.dpt.standalone.gui.listener.FocusManagerListener;
-import eu.apenet.dpt.utils.eag2012.Abbreviation;
-import eu.apenet.dpt.utils.eag2012.Citation;
-import eu.apenet.dpt.utils.eag2012.ConventionDeclaration;
-import eu.apenet.dpt.utils.eag2012.Eag;
-import eu.apenet.dpt.utils.eag2012.Language;
-import eu.apenet.dpt.utils.eag2012.LanguageDeclaration;
-import eu.apenet.dpt.utils.eag2012.LanguageDeclarations;
-import eu.apenet.dpt.utils.eag2012.MaintenanceEvent;
-import eu.apenet.dpt.utils.eag2012.Script;
 import eu.apenet.dpt.utils.util.LanguageIsoList;
 
 /**
@@ -69,6 +57,9 @@ public class EagControlPanel extends EagPanels {
     private List<LanguageWithScript> languageWithScriptTfs;
     private List<TextFieldWithLanguage> rulesConventionTfs;
     private TextFieldWithLanguage personInstitutionRespTf;
+
+    private TextFieldWithLanguage descriptionAndRightsHolderFields;
+    private JTextArea descriptionTextArea;
 
     public EagControlPanel(Eag eag, JTabbedPane tabbedPane, JTabbedPane mainTabbedPane, JFrame eag2012Frame, ProfileListModel model, ResourceBundle labels, int repositoryNb) {
         super(eag, tabbedPane, mainTabbedPane, eag2012Frame, model, labels, repositoryNb);
@@ -147,7 +138,34 @@ public class EagControlPanel extends EagPanels {
         builder.add(addLanguagesBtn, cc.xy(5, rowNb));
         addLanguagesBtn.addActionListener(new AddLanguagesBtnAction(eag, tabbedPane, model));
         setNextRow();
-        
+
+        RightsDeclaration rightsDeclaration = null;
+        if (eag.getControl().getRightsDeclaration().size()>0) {
+            rightsDeclaration = eag.getControl().getRightsDeclaration().get(0);
+        }
+        builder.addSeparator("", cc.xyw(1, rowNb, 7));
+        setNextRow();
+        builder.addSeparator(labels.getString("eag2012.tab.yourInstitution"), cc.xyw(1, rowNb, 7));
+        setNextRow();
+        builder.addLabel(labels.getString("eag2012.commons.personResponsible"), cc.xy(1, rowNb));
+        if (rightsDeclaration != null) {
+            rightsCombo.setSelectedItem(rightsDeclaration.getCitation().getContent());
+        }
+        builder.add(rightsCombo, cc.xyw(3, rowNb,3));
+        setNextRow();
+        builder.addLabel(labels.getString("eag2012.commons.personResponsible"), cc.xy(1, rowNb));
+        descriptionAndRightsHolderFields = new TextFieldWithLanguage(rightsDeclaration == null ? "" : rightsDeclaration.getDescriptiveNote().getP().get(1).getContent(), rightsDeclaration == null ? "" : rightsDeclaration.getLang(), "");
+        descriptionTextArea = new JTextArea(rightsDeclaration == null ? "" : rightsDeclaration.getDescriptiveNote().getP().get(0).getContent(),5,20);
+        builder.add(descriptionTextArea, cc.xyw(3, rowNb,1));
+        builder.addLabel(labels.getString("eag2012.commons.language"), cc.xy(5, rowNb));
+        builder.add(descriptionAndRightsHolderFields.getLanguageBox(), cc.xy(7, rowNb));
+        setNextRow();
+        builder.addLabel(labels.getString("eag2012.commons.personResponsible"), cc.xy(1, rowNb));
+        builder.add(descriptionAndRightsHolderFields.getTextField(), cc.xyw(3, rowNb,1));
+        setNextRow();
+        builder.addSeparator("", cc.xyw(1, rowNb, 7));
+        setNextRow();
+
         builder.addSeparator(labels.getString("eag2012.control.conventions"), cc.xyw(1, rowNb, 7));
         setNextRow();
 
@@ -404,6 +422,66 @@ public class EagControlPanel extends EagPanels {
                     }
                 }
             }
+
+            String newRightsInformationName = rightsCombo.getSelectedItem().toString();
+            boolean hasChangedRightsInformation = false;
+            if (eag.getControl().getRightsDeclaration().size() > 0) {
+                RightsDeclaration rightsDeclaration = eag.getControl().getRightsDeclaration().get(0);
+                if (!rightsDeclaration.getCitation().getContent().equals(newRightsInformationName)) {
+                    hasChangedRightsInformation = true;
+                }
+                if (rightsDeclaration.getLang() != descriptionAndRightsHolderFields.getLanguage()){
+                    hasChangedRightsInformation = true;
+                }
+                if (!rightsDeclaration.getDescriptiveNote().getP().get(0).getContent().equals(descriptionTextArea.getText())){
+                    hasChangedRightsInformation = true;
+                }
+                if (!rightsDeclaration.getDescriptiveNote().getP().get(1).getContent().equals(descriptionAndRightsHolderFields.getTextField().getText())){
+                    hasChangedRightsInformation = true;
+                }
+            }
+            else {
+                if (StringUtils.isNotEmpty(newRightsInformationName)){
+                    hasChangedRightsInformation = true;
+                }
+            }
+
+            if (hasChangedRightsInformation) {
+                eag.getControl().getRightsDeclaration().clear();
+
+                RightsInformation rightsInformation = RightsInformationList.getRightsInformationByName(newRightsInformationName);
+                if (rightsInformation!=null) {
+                    //Rights declaration
+                    RightsDeclaration rightsDeclaration = new RightsDeclaration();
+                    rightsDeclaration.setLang(descriptionAndRightsHolderFields.getLanguage());
+                    //Abbreviation
+                    Abbreviation abbreviation = new Abbreviation();
+                    abbreviation.setContent(rightsInformation.getAbbreviation());
+                    rightsDeclaration.setAbbreviation(abbreviation);
+                    //Citation
+                    Citation citation = new Citation();
+                    citation.setHref(rightsInformation.getUrl());
+                    citation.setContent(rightsInformation.getName());
+                    rightsDeclaration.setCitation(citation);
+                    //DescriptiveNote
+                    if (StringUtils.isNotEmpty(descriptionTextArea.getText()) || StringUtils.isNotEmpty(descriptionAndRightsHolderFields.getTextField().getText())) {
+                        DescriptiveNote descriptiveNote = new DescriptiveNote();
+                        if (StringUtils.isNotEmpty(descriptionTextArea.getText())) {
+                            P p1 = new P();
+                            p1.setContent(descriptionTextArea.getText());
+                            descriptiveNote.getP().add(p1);
+                        }
+                        if (StringUtils.isNotEmpty(descriptionAndRightsHolderFields.getTextField().getText())) {
+                            P p2 = new P();
+                            p2.setContent(descriptionAndRightsHolderFields.getTextField().getText());
+                            descriptiveNote.getP().add(p2);
+                        }
+                        rightsDeclaration.setDescriptiveNote(descriptiveNote);
+                    }
+                    eag.getControl().getRightsDeclaration().add(rightsDeclaration);
+                }
+            }
+
 
             if(!errors.isEmpty()) {
                 throw new Eag2012FormException("Errors in validation of EAG 2012");

@@ -35,17 +35,13 @@ import java.util.List;
 import java.util.ResourceBundle;
 import java.util.Set;
 
-import javax.swing.JButton;
-import javax.swing.JComboBox;
-import javax.swing.JComponent;
-import javax.swing.JFrame;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JTabbedPane;
-import javax.swing.JTextField;
+import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
+import eu.apenet.dpt.utils.eag2012.*;
+import eu.apenet.dpt.utils.util.RightsInformation;
+import eu.apenet.dpt.utils.util.RightsInformationList;
 import org.apache.commons.lang.StringUtils;
 
 import com.jgoodies.forms.builder.PanelBuilder;
@@ -61,28 +57,6 @@ import eu.apenet.dpt.standalone.gui.commons.swingstructures.TextFieldWithLanguag
 import eu.apenet.dpt.standalone.gui.eag2012.SwingStructures.LocationType;
 import eu.apenet.dpt.standalone.gui.eag2012.SwingStructures.TextFieldWithCheckbox;
 import eu.apenet.dpt.standalone.gui.listener.FocusManagerListener;
-import eu.apenet.dpt.utils.eag2012.Access;
-import eu.apenet.dpt.utils.eag2012.Accessibility;
-import eu.apenet.dpt.utils.eag2012.Agent;
-import eu.apenet.dpt.utils.eag2012.AgentType;
-import eu.apenet.dpt.utils.eag2012.Autform;
-import eu.apenet.dpt.utils.eag2012.Closing;
-import eu.apenet.dpt.utils.eag2012.Country;
-import eu.apenet.dpt.utils.eag2012.Eag;
-import eu.apenet.dpt.utils.eag2012.Email;
-import eu.apenet.dpt.utils.eag2012.EventDateTime;
-import eu.apenet.dpt.utils.eag2012.EventType;
-import eu.apenet.dpt.utils.eag2012.Location;
-import eu.apenet.dpt.utils.eag2012.MaintenanceEvent;
-import eu.apenet.dpt.utils.eag2012.MunicipalityPostalcode;
-import eu.apenet.dpt.utils.eag2012.Opening;
-import eu.apenet.dpt.utils.eag2012.OtherRecordId;
-import eu.apenet.dpt.utils.eag2012.Parform;
-import eu.apenet.dpt.utils.eag2012.Repository;
-import eu.apenet.dpt.utils.eag2012.RepositoryType;
-import eu.apenet.dpt.utils.eag2012.Street;
-import eu.apenet.dpt.utils.eag2012.Telephone;
-import eu.apenet.dpt.utils.eag2012.Webpage;
 
 /**
  * User: Yoann Moranville Date: 03/10/2012
@@ -107,6 +81,8 @@ public class EagInstitutionPanel extends EagPanels {
     private List<TextFieldWithLanguage> closingDatesTfs;
     private JTextField refInstitutionHoldingsGuideTf;
     private JTextField refInstitutionHoldingsGuideTitleTf;
+    private TextFieldWithLanguage descriptionAndRightsHolderFields;
+    private JTextArea descriptionTextArea;
 
     private boolean isNew;
     private String countrycode;
@@ -511,6 +487,31 @@ public class EagInstitutionPanel extends EagPanels {
 //            setNextRow();
 //        }
 //        }
+
+        RightsDeclaration rightsDeclaration = null;
+        if (eag.getControl().getRightsDeclaration().size()>0) {
+            rightsDeclaration = eag.getControl().getRightsDeclaration().get(0);
+        }
+        builder.addSeparator("", cc.xyw(1, rowNb, 7));
+        setNextRow();
+        builder.addSeparator(labels.getString("eag2012.rightsinformation.section"), cc.xyw(1, rowNb, 7));
+        setNextRow();
+        builder.addLabel(labels.getString("eag2012.rightsinformation.licence"), cc.xy(1, rowNb));
+        if (rightsDeclaration != null) {
+            rightsCombo.setSelectedItem(rightsDeclaration.getCitation().getContent());
+        }
+        builder.add(rightsCombo, cc.xyw(3, rowNb,3));
+        setNextRow();
+        builder.addLabel(labels.getString("eag2012.rightsinformation.description"), cc.xy(1, rowNb));
+        descriptionAndRightsHolderFields = new TextFieldWithLanguage(rightsDeclaration == null ? "" : rightsDeclaration.getDescriptiveNote().getP().get(1).getContent(), rightsDeclaration == null ? "" : rightsDeclaration.getLang(), "");
+        descriptionTextArea = new JTextArea(rightsDeclaration == null ? "" : rightsDeclaration.getDescriptiveNote().getP().get(0).getContent(),5,20);
+        builder.add(descriptionTextArea, cc.xyw(3, rowNb,1));
+        builder.addLabel(labels.getString("eag2012.commons.language"), cc.xy(5, rowNb));
+        builder.add(descriptionAndRightsHolderFields.getLanguageBox(), cc.xy(7, rowNb));
+        setNextRow();
+        builder.addLabel(labels.getString("eag2012.rightsinformation.rightsHolder"), cc.xy(1, rowNb));
+        builder.add(descriptionAndRightsHolderFields.getTextField(), cc.xyw(3, rowNb,1));
+        setNextRow();
         builder.addSeparator("", cc.xyw(1, rowNb, 7));
         setNextRow();
 
@@ -1099,6 +1100,68 @@ public class EagInstitutionPanel extends EagPanels {
             }
 //            }
 //            }
+
+
+            String newRightsInformationName = rightsCombo.getSelectedItem().toString();
+            boolean hasChangedRightsInformation = false;
+            if (eag.getControl().getRightsDeclaration().size() > 0) {
+                RightsDeclaration rightsDeclaration = eag.getControl().getRightsDeclaration().get(0);
+                if (!rightsDeclaration.getCitation().getContent().equals(newRightsInformationName)) {
+                    hasChangedRightsInformation = true;
+                }
+                if (rightsDeclaration.getLang() != descriptionAndRightsHolderFields.getLanguage()){
+                    hasChangedRightsInformation = true;
+                }
+                if (!rightsDeclaration.getDescriptiveNote().getP().get(0).getContent().equals(descriptionTextArea.getText())){
+                    hasChangedRightsInformation = true;
+                }
+                if (!rightsDeclaration.getDescriptiveNote().getP().get(1).getContent().equals(descriptionAndRightsHolderFields.getTextField().getText())){
+                    hasChangedRightsInformation = true;
+                }
+            }
+            else {
+                if (StringUtils.isNotEmpty(newRightsInformationName)){
+                    hasChangedRightsInformation = true;
+                }
+            }
+
+            if (hasChangedRightsInformation) {
+                eag.getControl().getRightsDeclaration().clear();
+                hasChanged = true;
+
+                RightsInformation rightsInformation = RightsInformationList.getRightsInformationByName(newRightsInformationName);
+                if (rightsInformation!=null) {
+                    //Rights declaration
+                    RightsDeclaration rightsDeclaration = new RightsDeclaration();
+                    rightsDeclaration.setLang(descriptionAndRightsHolderFields.getLanguage());
+                    //Abbreviation
+                    Abbreviation abbreviation = new Abbreviation();
+                    abbreviation.setContent(rightsInformation.getAbbreviation());
+                    rightsDeclaration.setAbbreviation(abbreviation);
+                    //Citation
+                    Citation citation = new Citation();
+                    citation.setHref(rightsInformation.getUrl());
+                    citation.setContent(rightsInformation.getName());
+                    rightsDeclaration.setCitation(citation);
+                    //DescriptiveNote
+                    if (StringUtils.isNotEmpty(descriptionTextArea.getText()) || StringUtils.isNotEmpty(descriptionAndRightsHolderFields.getTextField().getText())) {
+                        DescriptiveNote descriptiveNote = new DescriptiveNote();
+                        if (StringUtils.isNotEmpty(descriptionTextArea.getText())) {
+                            P p1 = new P();
+                            p1.setContent(descriptionTextArea.getText());
+                            descriptiveNote.getP().add(p1);
+                        }
+                        if (StringUtils.isNotEmpty(descriptionAndRightsHolderFields.getTextField().getText())) {
+                            P p2 = new P();
+                            p2.setContent(descriptionAndRightsHolderFields.getTextField().getText());
+                            descriptiveNote.getP().add(p2);
+                        }
+                        rightsDeclaration.setDescriptiveNote(descriptiveNote);
+                    }
+                    eag.getControl().getRightsDeclaration().add(rightsDeclaration);
+                }
+            }
+
 
             for (int i = 0; i < eag.getControl().getMaintenanceHistory().getMaintenanceEvent().size(); i++) {
                 MaintenanceEvent maintenanceEvent = eag.getControl().getMaintenanceHistory().getMaintenanceEvent().get(i);
