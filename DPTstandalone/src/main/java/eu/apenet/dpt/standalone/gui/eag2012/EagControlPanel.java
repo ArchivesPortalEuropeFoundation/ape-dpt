@@ -148,14 +148,29 @@ public class EagControlPanel extends EagPanels {
         builder.addSeparator(labels.getString("eag2012.tab.yourInstitution"), cc.xyw(1, rowNb, 7));
         setNextRow();
         builder.addLabel(labels.getString("eag2012.commons.personResponsible"), cc.xy(1, rowNb));
+        String description = "";
+        String rightsHolder = "";
+        String language = "";
         if (rightsDeclaration != null) {
-            rightsCombo.setSelectedItem(rightsDeclaration.getCitation().getContent());
+            if (rightsDeclaration.getCitation().getContent() != null) {
+                rightsCombo.setSelectedItem(rightsDeclaration.getCitation().getContent());
+            }
+            for (P p : rightsDeclaration.getDescriptiveNote().getP()){
+                language = p.getLang();
+
+                if ("dpt_description".equals(p.getSource())){
+                    description = p.getContent();
+                }
+                if ("dpt_rights-holder".equals(p.getSource())){
+                    rightsHolder = p.getContent();
+                }
+            }
         }
         builder.add(rightsCombo, cc.xyw(3, rowNb,3));
         setNextRow();
         builder.addLabel(labels.getString("eag2012.commons.personResponsible"), cc.xy(1, rowNb));
-        descriptionAndRightsHolderFields = new TextFieldWithLanguage(rightsDeclaration == null ? "" : rightsDeclaration.getDescriptiveNote().getP().get(1).getContent(), rightsDeclaration == null ? "" : rightsDeclaration.getLang(), "");
-        descriptionTextArea = new JTextArea(rightsDeclaration == null ? "" : rightsDeclaration.getDescriptiveNote().getP().get(0).getContent(),5,20);
+        descriptionAndRightsHolderFields = new TextFieldWithLanguage(rightsHolder, language, "");
+        descriptionTextArea = new JTextArea(description,5,20);
         builder.add(descriptionTextArea, cc.xyw(3, rowNb,1));
         builder.addLabel(labels.getString("eag2012.commons.language"), cc.xy(5, rowNb));
         builder.add(descriptionAndRightsHolderFields.getLanguageBox(), cc.xy(7, rowNb));
@@ -423,25 +438,50 @@ public class EagControlPanel extends EagPanels {
                 }
             }
 
+            boolean hasValuesForRightsDeclaration = false;
             String newRightsInformationName = rightsCombo.getSelectedItem().toString();
+            String newDescription = descriptionTextArea.getText();
+            String newRightsHolder = descriptionAndRightsHolderFields.getTextField().getText();
+            String newLanguage = descriptionAndRightsHolderFields.getLanguage();
+            RightsInformation rightsInformation = RightsInformationList.getRightsInformationByName(newRightsInformationName);
+            if (rightsInformation!=null || StringUtils.isNotEmpty(newDescription) || StringUtils.isNotEmpty(newRightsHolder)) {
+                hasValuesForRightsDeclaration = true;
+            }
+
             boolean hasChangedRightsInformation = false;
             if (eag.getControl().getRightsDeclaration().size() > 0) {
                 RightsDeclaration rightsDeclaration = eag.getControl().getRightsDeclaration().get(0);
-                if (!rightsDeclaration.getCitation().getContent().equals(newRightsInformationName)) {
+                if (!newRightsInformationName.equals(rightsDeclaration.getCitation().getContent())) {
                     hasChangedRightsInformation = true;
                 }
-                if (rightsDeclaration.getLang() != descriptionAndRightsHolderFields.getLanguage()){
+                String description = "";
+                String rightsHolder = "";
+                String language = "";
+                if (rightsDeclaration != null) {
+                    for (P p : rightsDeclaration.getDescriptiveNote().getP()){
+                        language = p.getLang();
+
+                        if ("dpt_description".equals(p.getSource())){
+                            description = p.getContent();
+                        }
+                        if ("dpt_rights-holder".equals(p.getSource())){
+                            rightsHolder = p.getContent();
+                        }
+                    }
+                }
+
+                if (language != newLanguage){
                     hasChangedRightsInformation = true;
                 }
-                if (!rightsDeclaration.getDescriptiveNote().getP().get(0).getContent().equals(descriptionTextArea.getText())){
+                if (!description.equals(newDescription)){
                     hasChangedRightsInformation = true;
                 }
-                if (!rightsDeclaration.getDescriptiveNote().getP().get(1).getContent().equals(descriptionAndRightsHolderFields.getTextField().getText())){
+                if (!rightsHolder.equals(newRightsHolder)){
                     hasChangedRightsInformation = true;
                 }
             }
             else {
-                if (StringUtils.isNotEmpty(newRightsInformationName)){
+                if (hasValuesForRightsDeclaration){
                     hasChangedRightsInformation = true;
                 }
             }
@@ -449,37 +489,41 @@ public class EagControlPanel extends EagPanels {
             if (hasChangedRightsInformation) {
                 eag.getControl().getRightsDeclaration().clear();
 
-                RightsInformation rightsInformation = RightsInformationList.getRightsInformationByName(newRightsInformationName);
+                //Rights declaration
+                RightsDeclaration rightsDeclaration = new RightsDeclaration();
                 if (rightsInformation!=null) {
-                    //Rights declaration
-                    RightsDeclaration rightsDeclaration = new RightsDeclaration();
-                    rightsDeclaration.setLang(descriptionAndRightsHolderFields.getLanguage());
                     //Abbreviation
                     Abbreviation abbreviation = new Abbreviation();
                     abbreviation.setContent(rightsInformation.getAbbreviation());
                     rightsDeclaration.setAbbreviation(abbreviation);
-                    //Citation
-                    Citation citation = new Citation();
+                }
+                //Citation
+                Citation citation = new Citation();
+                if (rightsInformation!=null) {
                     citation.setHref(rightsInformation.getUrl());
                     citation.setContent(rightsInformation.getName());
-                    rightsDeclaration.setCitation(citation);
-                    //DescriptiveNote
-                    if (StringUtils.isNotEmpty(descriptionTextArea.getText()) || StringUtils.isNotEmpty(descriptionAndRightsHolderFields.getTextField().getText())) {
-                        DescriptiveNote descriptiveNote = new DescriptiveNote();
-                        if (StringUtils.isNotEmpty(descriptionTextArea.getText())) {
-                            P p1 = new P();
-                            p1.setContent(descriptionTextArea.getText());
-                            descriptiveNote.getP().add(p1);
-                        }
-                        if (StringUtils.isNotEmpty(descriptionAndRightsHolderFields.getTextField().getText())) {
-                            P p2 = new P();
-                            p2.setContent(descriptionAndRightsHolderFields.getTextField().getText());
-                            descriptiveNote.getP().add(p2);
-                        }
-                        rightsDeclaration.setDescriptiveNote(descriptiveNote);
-                    }
-                    eag.getControl().getRightsDeclaration().add(rightsDeclaration);
                 }
+                rightsDeclaration.setCitation(citation);
+                //DescriptiveNote
+                if (StringUtils.isNotEmpty(newDescription) || StringUtils.isNotEmpty(newRightsHolder)) {
+                    DescriptiveNote descriptiveNote = new DescriptiveNote();
+                    if (StringUtils.isNotEmpty(newDescription)) {
+                        P p1 = new P();
+                        p1.setLang(newLanguage);
+                        p1.setSource("dpt_description");
+                        p1.setContent(newDescription);
+                        descriptiveNote.getP().add(p1);
+                    }
+                    if (StringUtils.isNotEmpty(newRightsHolder)) {
+                        P p2 = new P();
+                        p2.setLang(newLanguage);
+                        p2.setSource("dpt_rights-holder");
+                        p2.setContent(newRightsHolder);
+                        descriptiveNote.getP().add(p2);
+                    }
+                    rightsDeclaration.setDescriptiveNote(descriptiveNote);
+                }
+                eag.getControl().getRightsDeclaration().add(rightsDeclaration);
             }
 
 
