@@ -84,7 +84,8 @@
 <!--                        <xjbSource>src/main/resources/global.xjb</xjbSource>-->
 <!--                    </xjbSources>-->
 <!--                    <sources>-->
-<!--                        <source>src/main/resources/eag_2012.xsd</source>-->
+<!--&lt;!&ndash;                        <source>src/main/resources/eag_2012.xsd</source>&ndash;&gt;-->
+<!--                        <source>src/main/resources/apeEAC-CPF.xsd</source>-->
 <!--                    </sources>-->
 <!--&lt;!&ndash;                    <outputDirectory>${basedir}/src/main/java-generated</outputDirectory>&ndash;&gt;-->
 <!--&lt;!&ndash;                    <clearOutputDir>false</clearOutputDir>&ndash;&gt;-->
