@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
     apeEAC-CPF Schema (XSD 1.1)
-    Version: 0.4
-    Date: 20200818
+    Version: 0.5
+    Date: 20220114
     Editor: Archives Portal Europe Foundation, Working Group on Standards
 
 This version of the apeEAC-CPF schema has been written from the official 2010 eac-cpf schema to accommodate the needs of the Archives Portal Europe.
@@ -10,6 +10,9 @@ This version of the apeEAC-CPF schema has been written from the official 2010 ea
 -->
 <!--
 Change log:
+
+0.5    - Enabled the @xml:id attribute with <p> for data processing reasons within Archives Portal Europe in the context of the implementation
+         of the Metadata Exchange Agreement
 
 0.4    - Added <rightsDeclaration> as an optional and repeatable sub-element of <control>
 
@@ -1140,7 +1143,7 @@ Change log:
     <xs:complexType name="p">
             <xs:complexContent>
                 <xs:extension base="m.mixedContent">
-                    <!--					<xs:attribute ref="xml:id"/>-->
+                    <xs:attribute ref="xml:id"/>
                     <xs:attribute ref="xml:lang"/>
                 </xs:extension>
             </xs:complexContent>
