@@ -2847,7 +2847,7 @@
             </xsl:when>
             <xsl:when test="@audience='internal' and @type='handle'"/>
             <xsl:when
-                test="(@type=&quot;cote d'archives&quot; or @type='call number' or @type='ABS' or @type='bestellnummer' or @type='Bestellnummer' or @type='series_code' or @type='reference' or @type='Sygnatura' or @type='REFERENCE_CODE' or @type='cote-de-consultation' or @type='cote-groupee' or @type='identifiant' or @type='cote' or @type='persistent' or (not(@type))) and (text()[string-length(normalize-space(.)) ge 1] or exists(extptr))">
+                test="(@type=&quot;cote d'archives&quot; or @type='call number' or @type='ABS' or @type='bestellnummer' or @type='Bestellnummer' or @type='series_code' or @type='reference' or @type='Sygnatura' or @type='REFERENCE_CODE' or @type='cote-de-consultation' or @type='cote-groupee' or @type='identifiant' or @type='cote' or @type='persistent' or @type='alternative' or (not(@type))) and (text()[string-length(normalize-space(.)) ge 1] or exists(extptr))">
                 <!-- and not(preceding-sibling::unitid) and not(following-sibling::unitid)-->
                 <xsl:choose>
                     <xsl:when test="@type = 'cote-groupee' and (following-sibling::unitid or preceding-sibling::unitid)"/> <!-- todo: test with french data, ticket #935 -->
