@@ -96,36 +96,25 @@
     <dependencies>
         <dependency>
             <groupId>net.sf.saxon</groupId>
-            <artifactId>Saxon-HE</artifactId>
+            <artifactId>saxon-HE</artifactId>
         </dependency>
         <!--Begin xerces-->
-<!--    For XercesImpl... read more: https://blog.adamretter.org.uk/xerces-xsd11-maven/-->
         <dependency>
-            <groupId>org.exist-db.thirdparty.xerces</groupId>
-            <artifactId>xercesImpl</artifactId>
-            <version>2.12.0</version>
-            <classifier>xml-schema-1.1</classifier>
-        </dependency>
-        <!-- xpath2 and java-cup are needed at runtime for xercesImpl Schema 1.1 support -->
-        <dependency>
-            <groupId>org.exist-db.thirdparty.org.eclipse.wst.xml</groupId>
-            <artifactId>xpath2</artifactId>
-            <version>1.2.0</version>
-            <scope>runtime</scope>
+            <groupId>xerces</groupId>
+            <artifactId>xercesImpl-schema</artifactId>
         </dependency>
         <dependency>
-            <groupId>edu.princeton.cup</groupId>
-            <artifactId>java-cup</artifactId>
-            <version>10k</version>
-            <scope>runtime</scope>
+            <groupId>xerces</groupId>
+            <artifactId>xercesImpl-resolver</artifactId>
         </dependency>
-<!--    Apache XML resolver replaced by this in order to solve dependency error-->
         <dependency>
-            <groupId>xml-resolver</groupId>
-            <artifactId>xml-resolver</artifactId>
-            <version>1.2</version>
+            <groupId>org.eclipse.wst</groupId>
+            <artifactId>xpath2processor</artifactId>
         </dependency>
-
+        <dependency>
+            <groupId>cupv</groupId>
+            <artifactId>cupv</artifactId>
+        </dependency>
         <dependency>
             <groupId>xml-apis</groupId>
             <artifactId>xml-apis</artifactId>
