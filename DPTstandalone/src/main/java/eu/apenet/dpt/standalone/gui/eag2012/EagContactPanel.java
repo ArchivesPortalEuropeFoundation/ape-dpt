@@ -866,7 +866,7 @@ public class EagContactPanel extends EagPanels {
                         if(StringUtils.isNotEmpty(textFieldWithLanguage.getTextValue())) {
                             if(!passedFirstName) {
                                 passedFirstName = true;
-                                mainTabbedPane.setTitleAt(this.currentRepositoryNb, textFieldWithLanguage.getTextValue());
+                                //mainTabbedPane.setTitleAt(this.currentRepositoryNb, textFieldWithLanguage.getTextValue());
                             }
                             RepositoryName repositoryName = new RepositoryName();
                             repositoryName.setContent(textFieldWithLanguage.getTextValue());
