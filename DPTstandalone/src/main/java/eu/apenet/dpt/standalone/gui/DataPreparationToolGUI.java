@@ -829,7 +829,7 @@ public class DataPreparationToolGUI extends JFrame {
 
         internetApexItem.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent actionEvent) {
-                BareBonesBrowserLaunch.openURL("http://wiki.archivesportaleurope.net/index.php/Main_Page");
+                BareBonesBrowserLaunch.openURL("https://www.archivesportaleurope.net/tools/for-content-providers/");
             }
         });
 
