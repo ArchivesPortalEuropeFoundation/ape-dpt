@@ -834,7 +834,7 @@
                     </xsl:if>
                 </userestrict>
             </xsl:if>
-            <xsl:if test="normalize-space($defaultRightsDigitalObject)">
+            <xsl:if test="did/dao and normalize-space($defaultRightsDigitalObject)">
                 <userestrict type="dao" encodinganalog="rts:rightscategory">
                     <p>
                         <extref xlink:href="{$defaultRightsDigitalObject}" xlink:title="{$defaultRightsDigitalObjectText}" />
@@ -3132,6 +3132,42 @@
             <!--</origination>-->
             <!--</xsl:if>-->
         </did>
+
+        <xsl:if test="normalize-space($defaultRightsEadData)">
+            <userestrict type="ead" encodinganalog="rts:rightscategory">
+                <p>
+                    <extref xlink:href="{$defaultRightsEadData}" xlink:title="{$defaultRightsEadDataText}" />
+                </p>
+                <xsl:if test="normalize-space($defaultRightsEadDataDescription)">
+                    <p>
+                        <xsl:value-of select="$defaultRightsEadDataDescription"/>
+                    </p>
+                </xsl:if>
+                <xsl:if test="normalize-space($defaultRightsEadDataHolder)">
+                    <p>
+                        <xsl:value-of select="$defaultRightsEadDataHolder"/>
+                    </p>
+                </xsl:if>
+            </userestrict>
+        </xsl:if>
+        <xsl:if test="dao and normalize-space($defaultRightsDigitalObject)">
+            <userestrict type="dao" encodinganalog="rts:rightscategory">
+                <p>
+                    <extref xlink:href="{$defaultRightsDigitalObject}" xlink:title="{$defaultRightsDigitalObjectText}" />
+                </p>
+                <xsl:if test="normalize-space($defaultRightsDigitalObjectDescription)">
+                    <p>
+                        <xsl:value-of select="$defaultRightsDigitalObjectDescription"/>
+                    </p>
+                </xsl:if>
+                <xsl:if test="normalize-space($defaultRightsDigitalObjectHolder)">
+                    <p>
+                        <xsl:value-of select="$defaultRightsDigitalObjectHolder"/>
+                    </p>
+                </xsl:if>
+            </userestrict>
+        </xsl:if>
+
         <xsl:if
             test="not(controlaccess) and (descendant::geogname[parent::item|parent::entry|parent::p|parent::unittitle] or descendant::subject[parent::item|parent::entry|parent::p|parent::unittitle] or descendant::famname[parent::item|parent::entry|parent::p|parent::unittitle] or descendant::persname[parent::item|parent::entry|parent::p|parent::unittitle] or descendant::corpname[parent::item|parent::entry|parent::p|parent::unittitle] or descendant::occupation[parent::item|parent::entry|parent::p|parent::unittitle] or descendant::genreform[parent::item|parent::entry|parent::p|parent::unittitle] or descendant::function[parent::item|parent::entry|parent::p|parent::unittitle] or descendant::title[parent::item|parent::entry|parent::p|parent::unittitle] or descendant::name[parent::item|parent::entry|parent::p|parent::unittitle])">
             <xsl:call-template name="createControlaccess">
@@ -3454,49 +3490,12 @@
                             </xsl:otherwise>
                         </xsl:choose>
                     </xsl:attribute>
-
                     <xsl:if test="not(exists(did))">
                         <did>
                             <unittitle />
                         </did>
                     </xsl:if>
                     <xsl:apply-templates mode="level"/>
-
-                    <xsl:if test="normalize-space($defaultRightsEadData)">
-                        <userestrict type="ead" encodinganalog="rts:rightscategory">
-                            <p>
-                                <extref xlink:href="{$defaultRightsEadData}" xlink:title="{$defaultRightsEadDataText}" />
-                            </p>
-                            <xsl:if test="normalize-space($defaultRightsEadDataDescription)">
-                                <p>
-                                    <xsl:value-of select="$defaultRightsEadDataDescription"/>
-                                </p>
-                            </xsl:if>
-                            <xsl:if test="normalize-space($defaultRightsEadDataHolder)">
-                                <p>
-                                    <xsl:value-of select="$defaultRightsEadDataHolder"/>
-                                </p>
-                            </xsl:if>
-                        </userestrict>
-                    </xsl:if>
-                    <xsl:if test="normalize-space($defaultRightsDigitalObject)">
-                        <userestrict type="dao" encodinganalog="rts:rightscategory">
-                            <p>
-                                <extref xlink:href="{$defaultRightsDigitalObject}" xlink:title="{$defaultRightsDigitalObjectText}" />
-                            </p>
-                            <xsl:if test="normalize-space($defaultRightsDigitalObjectDescription)">
-                                <p>
-                                    <xsl:value-of select="$defaultRightsDigitalObjectDescription"/>
-                                </p>
-                            </xsl:if>
-                            <xsl:if test="normalize-space($defaultRightsDigitalObjectHolder)">
-                                <p>
-                                    <xsl:value-of select="$defaultRightsDigitalObjectHolder"/>
-                                </p>
-                            </xsl:if>
-                        </userestrict>
-                    </xsl:if>
-
                 </c>
             </xsl:otherwise>
         </xsl:choose>
