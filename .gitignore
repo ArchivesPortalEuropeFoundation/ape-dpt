@@ -39,5 +39,9 @@ buildNumber.properties
 /DPTstandalone/output/
 /DPTstandalone/xsl/
 
+/apeoptions/
+/output/
+/temp/
+
 # IDE Specific
 *.iml
