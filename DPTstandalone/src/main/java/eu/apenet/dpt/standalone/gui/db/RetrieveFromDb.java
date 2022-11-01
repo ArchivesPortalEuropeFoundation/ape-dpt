@@ -257,19 +257,21 @@ public class RetrieveFromDb {
             throw new RuntimeException(e);
         }
 
+        doCheckUpdate = true;
         if(doCheckUpdate){
             try {
-                URL url = new URL("http://www.archivesportaleurope.net/Portal/dptupdate/version?versionNb=" + versionNb);
+                URL url = new URL("https://archivesportaleurope.net/Dashboard/dptVersionApi.action?versionNb=" + versionNb);
 //                URL url = new URL("http://localhost:8080/Portal/dptupdate/version?versionNb=" + versionNb);
                 HttpURLConnection connection = (HttpURLConnection) url.openConnection();
                 if(connection.getResponseCode() == 200){
                     String newVersionNb = IOUtils.toString(connection.getInputStream());
                     LOG.info("New version available: " + newVersionNb);
                     if(JOptionPane.showConfirmDialog(contentPane, textNewAvailableVersion) == 0) {
-                        BareBonesBrowserLaunch.openURL("http://dpt.archivesportaleurope.net/APE_data_preparation_tool_" + newVersionNb + ".zip");
+                        BareBonesBrowserLaunch.openURL("https://github.com/ArchivesPortalEuropeFoundation/ape-dpt/releases/tag/DPT-project-" + newVersionNb);
                         System.exit(0);
                     }
                 }
+                int responseCode = connection.getResponseCode();
             } catch (Exception e) {
                 LOG.error("Error to connect for checking the new version (probably no internet connection)", e);
             }
