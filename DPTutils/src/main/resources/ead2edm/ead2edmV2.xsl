@@ -62,7 +62,7 @@
 
     <!-- Variables -->
     <xsl:variable name="id_base"
-                  select="concat('http://', $host, '/ead-display/-/ead/pl/aicode/' , $repository_code, '/type/', $xml_type_name, '/id/')"/>
+                  select="concat('https://', $host, '/archive/aicode/' , $repository_code, '/type/', $xml_type_name, '/id/')"/>
     <!--<xsl:variable name="eadidEncoded" select="encode-for-uri(/ead/eadheader/eadid)"/>-->
     <xsl:variable name="eadidEncoded">
         <xsl:call-template name="simpleReplace">
