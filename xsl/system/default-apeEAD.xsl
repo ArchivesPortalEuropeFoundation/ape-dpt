@@ -153,7 +153,7 @@
     <xsl:template match="lb" mode="#all">
         <xsl:choose>
             <xsl:when
-                test="parent::unitdate or parent::emph or parent::origination or parent::physdesc or parent::entry or parent::item or parent::head or parent::physfacet or parent::bibref or parent::langusage or parent::title or parent::dimensions">
+                test="parent::unitdate or parent::emph or parent::origination or parent::physdesc or parent::entry or parent::item or parent::head or parent::physfacet or parent::bibref or parent::langusage or parent::title or parent::dimensions or parent::langmaterial">
                 <xsl:text> - </xsl:text>
             </xsl:when>
             <xsl:otherwise>
