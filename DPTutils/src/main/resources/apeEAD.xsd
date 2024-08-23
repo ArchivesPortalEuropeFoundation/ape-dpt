@@ -7,14 +7,18 @@
 
     <!--
     apeEAD Schema
-    Version: 1.4
-    Date: 20210312
+    Version: 1.5
+    Date: 20240823
     Editor: Archives Portal Europe Foundation
     
     The apeEAD schema has been written from the official EAD 2002 schema to accommodate the needs of the Archives Portal Europe and
     based on the use cases for EAD 2002 at its partner institutions.
     Originally developed during the APEnet project (2009 - 2012) and followed through during the APEx project (2012 - 2015), the 
     apeEAD schema is now maintained and further developed by the Archives Portal Europe Foundation and its Working Group on Standards.
+    
+    Revision history (as per apeEAD Schema, Version 1.5, 20240823):
+    * Re-establish attribute @id for element <physloc> 
+
     
     Revision history (as per apeEAD Schema, Version 1.4, 20210312):
     * Add the country code XK 
