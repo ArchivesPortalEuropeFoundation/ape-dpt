@@ -1124,6 +1124,7 @@
         <xs:choice maxOccurs="unbounded" minOccurs="0">
             <xs:element name="ref" type="ref"/>
         </xs:choice>
+        <xs:attribute name="id" type="xs:ID"/>
         <xs:attribute name="label"/>
     </xs:complexType>
     <xs:complexType mixed="true" name="unitid">
